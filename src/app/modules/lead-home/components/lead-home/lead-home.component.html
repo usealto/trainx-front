@@ -207,7 +207,11 @@
             <tr *ngFor="let chal of challengesByTeam">
               <td>{{ chal.name }}</td>
               <td>
-                <alto-colored-pill-list [hasDynamicColor]="true" [data]="chal.teams"></alto-colored-pill-list>
+                <alto-colored-pill-list
+                  [hasDynamicColor]="true"
+                  [data]="chal.teams"
+                  [limit]="2"
+                ></alto-colored-pill-list>
               </td>
               <td>
                 <span
@@ -233,7 +237,13 @@
       </ng-template>
 
       <p class="text-end">
-        <a [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]">{{ I18ns.shared.showMore }}</a>
+        <a
+          [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
+          [fragment]="'byTeamAnchor'"
+          class="fw-medium"
+        >
+          {{ I18ns.shared.showMore }}
+        </a>
       </p>
     </div>
   </div>
@@ -276,6 +286,16 @@
           <p>{{ I18ns.leadHome.ongoingChallenges.noTeamChallengesSubtitle }}</p>
         </div>
       </ng-template>
+
+      <p class="text-end">
+        <a
+          [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
+          [fragment]="'byUserAnchor'"
+          class="fw-medium"
+        >
+          {{ I18ns.shared.showMore }}
+        </a>
+      </p>
     </div>
   </div>
 </div>

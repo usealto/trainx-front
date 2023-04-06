@@ -1,13 +1,16 @@
 <h1 class="mt-4">{{ I18ns.programs.title }}</h1>
 <p class="mb-4">{{ I18ns.programs.subtitle }}</p>
 <div class="pb-4 border-bottom">
-  <alto-anchor-navigator></alto-anchor-navigator>
-  <a type="button" class="btn btn-outline-secondary me-4" href="#byTeamAnchor">
-    {{ I18ns.challenges.team.shortTitle }}
-  </a>
-  <a type="button" class="btn btn-outline-secondary me-4" href="#byUserAnchor">
-    {{ I18ns.challenges.individual.shortTitle }}
-  </a>
+  <alto-anchor-navigator [fragment]="'byTeamAnchor'">
+    <button class="btn btn-outline-secondary me-4">
+      {{ I18ns.challenges.team.shortTitle }}
+    </button>
+  </alto-anchor-navigator>
+  <alto-anchor-navigator [fragment]="'byUserAnchor'">
+    <button class="btn btn-outline-secondary me-4">
+      {{ I18ns.challenges.individual.shortTitle }}
+    </button>
+  </alto-anchor-navigator>
 </div>
 <div class="py-4 border-bottom">
   <button type="button" class="btn btn-primary float-end">
@@ -16,9 +19,7 @@
 
   <h1 id="byTeamAnchor">{{ I18ns.challenges.team.title }}</h1>
   <p class="mb-4">{{ I18ns.challenges.team.subtitle }}</p>
-  <div class="panel" *ngIf="true; else teamChallenges">
-    <div [style.height]="'200px'"></div>
-  </div>
+  <div class="panel" *ngIf="true; else teamChallenges"></div>
   <ng-template #teamChallenges>
     <div class="dropdown">
       <button class="btn btn-outline-secondary dropdown-toggle" type="button">Équipes</button>

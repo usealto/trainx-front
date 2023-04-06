@@ -23,7 +23,10 @@ import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 export class LeadHomeComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+
+  // TODO -----------
   name = 'Thomas';
+
   active = 1;
   sharedData: LeadHomeStatistics[] = [
     { title: I18ns.leadHome.statistics.globalScore, toolTip: I18ns.leadHome.statistics.globalScoreToolTip },
