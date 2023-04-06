@@ -1,0 +1,283 @@
+<h1>{{ isEdit ? I18ns.programs.forms.edit : I18ns.programs.forms.create }}</h1>
+<div class="row mt-4">
+  <div
+    class="col-4 step"
+    [ngClass]="{
+      'cursor-pointer': isEdit,
+      'highlight-step': currentStep === 1,
+      'passed-step': currentStep > 1
+    }"
+    (click)="isEdit && changeTab(1)"
+  >
+    {{ I18ns.programs.forms.step1.title }}
+  </div>
+  <div
+    class="col-4 step"
+    [ngClass]="{
+      'cursor-pointer': isEdit,
+      'highlight-step': currentStep === 2,
+      'passed-step': currentStep > 2
+    }"
+    (click)="isEdit && changeTab(2)"
+  >
+    {{ I18ns.programs.forms.step2.title }}
+  </div>
+  <div
+    class="col-4 step"
+    [ngClass]="{ 'cursor-pointer': isEdit, 'highlight-step': currentStep === 3 }"
+    (click)="isEdit && changeTab(3)"
+  >
+    {{ I18ns.programs.forms.step3.title }}
+  </div>
+</div>
+
+<div [ngSwitch]="currentStep" class="mt-5">
+  <!-- INFORMATIONS -->
+  <div *ngSwitchCase="1" class="page-max-width">
+    <div class="mb-5 row">
+      <div class="col-6">
+        <h2>{{ I18ns.programs.forms.step1.title }}</h2>
+        <p class="fs-7">{{ I18ns.programs.forms.step1.subtitle }}</p>
+      </div>
+      <div class="text-end col-6">
+        <button class="btn btn-outline-secondary me-2" (click)="cancel()">
+          {{ I18ns.shared.cancel }}
+        </button>
+        <button class="btn btn-primary" (click)="goNext()" [disabled]="programForm && !programForm.valid">
+          {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
+        </button>
+      </div>
+    </div>
+    <alto-programs-form [isEdit]="isEdit" [form]="programForm"></alto-programs-form>
+    <div class="row">
+      <div class="col-6">
+        <a class="cursor-pointer" [ngClass]="{ invisible: true }" (click)="delete()">
+          <i class="bi bi-trash"></i> {{ I18ns.shared.delete }}
+        </a>
+      </div>
+      <div class="col-6 text-end">
+        <button class="btn btn-outline-secondary me-2" (click)="cancel()">
+          {{ I18ns.shared.cancel }}
+        </button>
+        <button class="btn btn-primary" (click)="goNext()" [disabled]="programForm && !programForm.valid">
+          {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- QUESTIONS -->
+  <div *ngSwitchCase="2">
+    <div class="row">
+      <div class="col-6">
+        <h2>{{ I18ns.programs.forms.step2.title }}</h2>
+      </div>
+      <div class="col-6 text-end">
+        <button class="btn btn-outline-secondary me-2" (click)="isEdit ? cancel() : changeTab(1)">
+          {{ I18ns.shared.cancel }}
+        </button>
+        <button class="btn btn-primary" (click)="goNext()">
+          {{ I18ns.shared.save }}
+        </button>
+      </div>
+    </div>
+
+    <p class="fs-7">{{ I18ns.programs.forms.step2.subtitle }}</p>
+    <hr />
+    <div class="row">
+      <div class="col-4">
+        <p>{{ I18ns.programs.forms.step2.new }}</p>
+        <p class="fs-7">{{ I18ns.programs.forms.step2.newSubtitle }}</p>
+      </div>
+      <div class="col-8 text-center">
+        <div class="panel">
+          <button class="btn btn-primary" (click)="openQuestionForm()">+</button>
+          <p class="fs-7 mt-2">{{ I18ns.programs.forms.step2.newText }}</p>
+          <p class="fs-7 mt-2">{{ I18ns.programs.forms.step2.newText2 }}</p>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-4">
+        <p>{{ I18ns.programs.forms.step2.existing }}</p>
+        <p class="fs-7">{{ I18ns.programs.forms.step2.existingSubtitle }}</p>
+      </div>
+      <div class="col-8">
+        <div class="panel">
+          <div class="row mb-3">
+            <p class="col-7">{{ I18ns.programs.forms.step2.title }}</p>
+            <div class="col-5">
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input
+                  type="search"
+                  class="form-control"
+                  placeholder="Search"
+                  #qSearch
+                  (keyup)="searchQuestions(qSearch.value)"
+                  (search)="searchQuestions(qSearch.value)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <ng-select
+            [items]="programStore.tags.value$ | async"
+            [multiple]="true"
+            bindValue="id"
+            bindLabel="name"
+            [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder"
+            [closeOnSelect]="false"
+            [(ngModel)]="selectedTags"
+            (ngModelChange)="getQuestions()"
+          >
+            <ng-template ng-label-tmp let-item="item" let-clear="clear">
+              <div class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+                <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+                  <i class="bi bi-x-lg"></i>
+                </span>
+                <span>{{ item.name }}</span>
+              </div>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+              <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+                {{ item.name }}
+              </span>
+            </ng-template>
+          </ng-select>
+          <hr />
+          <!-- QUESTION LIST -->
+          <ng-container
+            *ngFor="
+              let quest of questionsDisplay
+                | slice : (questionPage - 1) * questionPageSize : questionPage * questionPageSize
+            "
+          >
+            <div class="row px-3">
+              <div class="form-check form-switch col-1">
+                <input
+                  class="form-check-input cursor-pointer"
+                  #switchQuestion
+                  type="checkbox"
+                  [checked]="quest.isChecked"
+                  (change)="addOrRemoveQuestion(quest.id, !switchQuestion.checked)"
+                />
+              </div>
+              <div class="col-9">{{ quest.title }}</div>
+              <div class="col-2 text-end"><i class="bi bi-pen"></i></div>
+            </div>
+            <hr />
+          </ng-container>
+          <ngb-pagination
+            [(page)]="questionPage"
+            [pageSize]="questionPageSize"
+            [collectionSize]="questionsDisplay.length"
+          ></ngb-pagination>
+        </div>
+      </div>
+    </div>
+
+    <div class="my-3 text-end">
+      <button class="btn btn-outline-secondary me-2" (click)="cancel()">
+        {{ I18ns.shared.cancel }}
+      </button>
+      <button class="btn btn-primary" (click)="goNext()">
+        {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
+      </button>
+    </div>
+  </div>
+  <!-- SHARE -->
+  <div *ngSwitchCase="3" class="page-max-width-lg">
+    <div class="mb-5 row">
+      <div class="col-6">
+        <h2>{{ I18ns.programs.forms.step3.title2 }}</h2>
+        <p class="fs-7">{{ I18ns.programs.forms.step3.subtitle }}</p>
+      </div>
+      <div class="text-end col-6">
+        <button class="btn btn-primary" (click)="copyToClipBoard()" [title]="I18ns.shared.clipboard">
+          {{ I18ns.shared.share }}
+        </button>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-4">
+        <p>{{ I18ns.programs.forms.step3.summary }}</p>
+        <p class="fs-7">{{ I18ns.programs.forms.step3.summarySubtitle }}</p>
+      </div>
+      <div class="col-8">
+        <div class="panel">
+          <h2>{{ programForm.controls.name.value }}</h2>
+          <p>{{ programForm.controls.description.value }}</p>
+          <div class="row mt-3 p-1">
+            <div class="col-5">{{ I18ns.programs.forms.step1.teams }}</div>
+            <div class="col-6 p-0 text-end">
+              <span
+                *ngFor="let id of programForm.controls.teams.value"
+                class="badge rounded-pill p-2 ms-1"
+                [style.backgroundColor]="id | uuid2color"
+              >
+                {{ findTeamName(id) }}
+              </span>
+            </div>
+            <div class="col-1">
+              <span class="ms-1 icon-btn-small btn btn-secondary" (click)="changeTab(1)">
+                <i class="bi bi-plus-lg"></i>
+              </span>
+            </div>
+          </div>
+          <div class="row p-1">
+            <div class="col-5">{{ I18ns.programs.forms.step1.tags }}</div>
+            <div class="col-6 p-0 text-end">
+              <span
+                *ngFor="let id of programForm.controls.tags.value"
+                class="badge rounded-pill p-2 ms-1"
+                [style.backgroundColor]="id | uuid2color"
+              >
+                {{ findTagName(id) }}
+              </span>
+            </div>
+            <div class="col-1">
+              <span class="ms-1 icon-btn-small btn btn-secondary" (click)="changeTab(1)">
+                <i class="bi bi-plus-lg"></i>
+              </span>
+            </div>
+          </div>
+          <div class="row p-1">
+            <div class="col-5">{{ I18ns.programs.forms.step1.expectation }}</div>
+            <div class="col-6 p-0 text-end">{{ programForm.controls.expectation.value }}%</div>
+            <div class="col-1">
+              <span class="ms-1 icon-btn-small btn btn-secondary" (click)="changeTab(1)">
+                <i class="bi bi-pen"></i>
+              </span>
+            </div>
+          </div>
+          <div class="row p-1">
+            <div class="col-5">{{ I18ns.programs.forms.questionCount }}</div>
+            <div class="col-6 p-0 text-end">
+              {{ getquestionsCount() }}
+            </div>
+
+            <div class="col-1">
+              <span class="ms-1 icon-btn-small btn btn-secondary" (click)="changeTab(2)">
+                <i class="bi bi-pen"></i>
+              </span>
+            </div>
+          </div>
+          <div class="row p-1">
+            <div class="col-5">{{ I18ns.programs.forms.step1.priority }}</div>
+            <div class="col-6 p-0 text-end">
+              {{ programForm.controls.priority.value }}
+            </div>
+
+            <div class="col-1">
+              <span class="ms-1 icon-btn-small btn btn-secondary" (click)="changeTab(1)">
+                <i class="bi bi-pen"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

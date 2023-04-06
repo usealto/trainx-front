@@ -1,0 +1,30 @@
+<div class="logo">
+  <img src="assets/img/logo.svg" alt="Alto Logo" />
+  <span class="company-name">Alto</span>
+</div>
+
+<div class="menu">
+  <div>
+    <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadHome" routerLinkActive="menu-selected">
+      {{ I18ns.menu.home }}
+    </a>
+    <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.programs" routerLinkActive="menu-selected">
+      {{ I18ns.menu.programs }}
+    </a>
+    <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadTeams" routerLinkActive="menu-selected">
+      {{ I18ns.menu.team }}
+    </a>
+    <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.challenges" routerLinkActive="menu-selected">
+      {{ I18ns.menu.challenges }}
+    </a>
+  </div>
+  <div class="bottom-block">
+    <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.settings" routerLinkActive="menu-selected">
+      {{ I18ns.menu.settings }}
+    </a>
+    <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile" routerLinkActive="menu-selected">
+      {{ I18ns.menu.profile }}
+    </a>
+    <p class="build-time fs-8" title="Build Time">Version: {{ buildTime | date : 'medium' }}</p>
+  </div>
+</div>

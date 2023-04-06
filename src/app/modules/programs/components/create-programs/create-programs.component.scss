@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  padding: 2rem;
+}
+.step {
+  padding-bottom: 1rem;
+  border-bottom: 2px #eaecf0 solid;
+}
+.highlight-step {
+  border-bottom: 2px var(--bs-primary) solid;
+}
+.passed-step {
+  border-bottom: 2px var(--alto-blue) solid;
+}

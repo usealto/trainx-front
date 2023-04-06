@@ -1,0 +1,103 @@
+// --- FORMS ---
+.required-star {
+  color: var(--bs-danger);
+}
+
+.ng-submitted .ng-invalid,
+.ngb-timepicker.ng-touched.ng-invalid .ngb-tp-input,
+.ng-touched.ng-invalid,
+:invalid {
+  border-color: var(--bs-danger);
+}
+// ---
+.page-max-width {
+  max-width: 900px;
+}
+.page-max-width-lg {
+  max-width: 1200px;
+}
+
+.required::after {
+  content: ' *';
+  color: red;
+}
+
+// *::placeholder {
+//   opacity: 0.5;
+//   font-size: 0.9rem;
+//   font-style: italic;
+// }
+
+.alto-badge {
+  height: 1.58rem;
+  display: inline-block;
+  font-size: 0.85rem;
+  line-height: 1.6rem;
+  border-radius: 25px;
+  padding: 0 0.5rem;
+  color: var(--alto-blue);
+  background-color: var(--alto-medium-grey);
+  font-weight: 500;
+}
+
+.subtitles {
+  color: var(--alto-text-second-color);
+}
+
+.panel {
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid #eaecf0;
+  padding: 1rem;
+}
+
+// TODO
+.icon-btn {
+  width: 1.8rem;
+  height: 1.8rem;
+  font-size: 0.9rem;
+  padding: 0.2rem;
+}
+
+.icon-btn-small {
+  width: 1.8rem;
+  height: 1.8rem;
+  font-size: 0.9rem;
+  padding: 0.2rem;
+}
+// --- TABLES
+.table {
+  --bs-table-hover-bg: #ccebff;
+  tr {
+    background-color: white;
+  }
+}
+.table > :not(caption) > * > * {
+  padding: 0.5rem 0.2rem;
+  line-height: 1.9rem;
+}
+
+table {
+  .line-edge {
+    position: absolute;
+    width: 4px;
+    min-height: 40px;
+    height: 100%;
+    border-radius: 4px 0 0 4px;
+  }
+  .clickable-row:hover {
+    cursor: pointer;
+    background-color: #cde7ff;
+  }
+}
+
+// Used in modals
+.close-button {
+  padding: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  i {
+    font-size: 1.9rem;
+    line-height: 2.5rem;
+  }
+}

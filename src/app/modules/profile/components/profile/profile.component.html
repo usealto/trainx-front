@@ -1,0 +1,17 @@
+<h1 class="mt-4">{{ I18ns.profile.title }}</h1>
+<ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+  <li [ngbNavItem]="1">
+    <a ngbNavLink>{{ I18ns.profile.profile.shortTitle }}</a>
+    <ng-template ngbNavContent>
+      <alto-profile-account></alto-profile-account>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="2">
+    <a ngbNavLink>{{ I18ns.profile.password.title }}</a>
+    <ng-template ngbNavContent>
+      <alto-profile-password></alto-profile-password>
+    </ng-template>
+  </li>
+</ul>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>

@@ -1,0 +1,125 @@
+<div class="text-end px-4 mt-3">
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
+</div>
+<div class="p-4">
+  <h2>{{ I18ns.questions.form.title }}</h2>
+  <p class="fs-7">{{ I18ns.questions.form.subtitle }}</p>
+</div>
+<hr />
+<div class="offcanvas-body px-4">
+  <form *ngIf="questionForm" [formGroup]="questionForm">
+    <label class="form-label required">{{ I18ns.questions.form.name }}</label>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="title"
+      placeholder="{{ I18ns.questions.form.namePlaceholder }}"
+    />
+
+    <label class="form-label required mt-3">{{ I18ns.questions.form.goodAnswer }}</label>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="answersAccepted"
+      placeholder="{{ I18ns.questions.form.answerPlaceholder + ' 1' }}"
+    />
+
+    <label class="form-label required mt-3">{{ I18ns.questions.form.badAnswer }}</label>
+    <input
+      type="text"
+      class="form-control mb-1"
+      formControlName="answersWrong1"
+      placeholder="{{ I18ns.questions.form.answerPlaceholder + ' 1' }}"
+    />
+    <input
+      type="text"
+      class="form-control mb-1"
+      formControlName="answersWrong2"
+      placeholder="{{ I18ns.questions.form.answerPlaceholder + ' 2' }}"
+    />
+    <input
+      type="text"
+      class="form-control"
+      formControlName="answersWrong3"
+      placeholder="{{ I18ns.questions.form.answerPlaceholder + ' 3' }}"
+    />
+
+    <label class="form-label required mt-3">{{ I18ns.questions.form.programs }}</label>
+    <ng-select
+      required
+      [items]="programs"
+      [multiple]="true"
+      bindLabel="name"
+      [placeholder]="I18ns.questions.form.programsPlaceholder"
+      [selectableGroup]="true"
+      [closeOnSelect]="false"
+      bindValue="id"
+      formControlName="programs"
+    >
+      <ng-template ng-label-tmp let-item="item" let-clear="clear">
+        <div class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+          <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+            <i class="bi bi-x-lg"></i>
+          </span>
+          <span>{{ item.name }}</span>
+        </div>
+      </ng-template>
+      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+        <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+          {{ item.name }}
+        </span>
+      </ng-template>
+    </ng-select>
+
+    <label class="form-label required mt-3">{{ I18ns.questions.form.tags }}</label>
+    <ng-select
+      required
+      [items]="tags"
+      [multiple]="true"
+      bindLabel="name"
+      [placeholder]="I18ns.questions.form.tagsPlaceholder"
+      [selectableGroup]="true"
+      [closeOnSelect]="false"
+      bindValue="id"
+      formControlName="tags"
+    >
+      <ng-template ng-label-tmp let-item="item" let-clear="clear">
+        <div class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+          <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+            <i class="bi bi-x-lg"></i>
+          </span>
+          <span>{{ item.name }}</span>
+        </div>
+      </ng-template>
+      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+        <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+          {{ item.name }}
+        </span>
+      </ng-template>
+    </ng-select>
+
+    <label class="form-label mt-3">{{ I18ns.questions.form.explanation }}</label>
+    <textarea
+      class="form-control"
+      rows="5"
+      formControlName="explanation"
+      placeholder="{{ I18ns.questions.form.explanationPlaceholder }}"
+    ></textarea>
+
+    <label class="form-label mt-3">{{ I18ns.questions.form.link }}</label>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="link"
+      placeholder="{{ I18ns.questions.form.linkPlaceholder }}"
+    />
+
+    <input
+      type="submit"
+      [disabled]="!questionForm.valid"
+      class="w-100 btn btn-primary my-4"
+      [value]="I18ns.shared.save"
+      (click)="createQuestion()"
+    />
+  </form>
+</div>

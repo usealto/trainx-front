@@ -1,0 +1,36 @@
+<div class="panel" *ngIf="program">
+  <div class="d-flex justify-content-between">
+    <h2>{{ program.name }}</h2>
+    <div class="form-check form-switch" [ngClass]="{ invisible: !displayToggle }">
+      <input
+        #activate
+        type="checkbox"
+        class="form-check-input"
+        [checked]="program.isActive"
+        (click)="changeIsActive(program.id, activate.checked)"
+      />
+    </div>
+  </div>
+  <alto-colored-pill-list [hasDynamicColor]="true" [data]="program.teams"></alto-colored-pill-list>
+  <p class="my-2 description-box fs-7">{{ program.description | slice : 0 : 150 }}</p>
+  <p>
+    {{ I18ns.programs.programs.involvement }}
+    <span class="float-end badge rounded-pill" [class]="100 | pillColor">100%</span>
+  </p>
+  <p>
+    {{ I18ns.programs.programs.progress }}
+    <span class="float-end badge rounded-pill" [class]="0 | pillColor">N/A</span>
+  </p>
+  <p>
+    {{ I18ns.programs.programs.score }}
+    <span class="float-end badge rounded-pill" [class]="programScore * 100 | pillColor">{{
+      programScore | percent
+    }}</span>
+  </p>
+  <hr />
+  <a
+    class="d-block text-end"
+    [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, program.id]"
+    >{{ I18ns.shared.edit }}</a
+  >
+</div>

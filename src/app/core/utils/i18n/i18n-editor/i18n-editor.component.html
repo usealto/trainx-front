@@ -1,0 +1,8 @@
+<div class="container-gl m-4">
+  <div *ngFor="let item of data | keyvalue" class="row g-4">
+    <span class="col-3">{{ item.key }}</span>
+    <div class="col" *ngFor="let val of item.value">
+      <input type="text" [value]="val" class="w-90" />
+    </div>
+  </div>
+</div>

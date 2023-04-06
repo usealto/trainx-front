@@ -1,0 +1,18 @@
+<div class="toast-container">
+  <ng-container *ngFor="let item of msg.toasts.value$ | async">
+    <div [style.top.px]="toastTop" [ngClass]="getClass(item)" id="{{ item.id }}">
+      <div class="d-flex justify-content-between pb-2">
+        <span class="w-100 fw-bold">{{ item.title }}</span>
+
+        <span class="cross-btn" (click)="remove(item.id)">
+          <svg viewBox="0 0 32 32" fill="currentColor" class="cross">
+            <path d="M4 8 L8 4 L16 12 L24 4 L28 8 L20 16 L28 24 L24 28 L16 20 L8 28 L4 24 L12 16 z"></path>
+          </svg>
+        </span>
+      </div>
+      <div class="msg-body">
+        {{ item.message }}
+      </div>
+    </div>
+  </ng-container>
+</div>

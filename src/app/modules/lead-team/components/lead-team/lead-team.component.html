@@ -1,0 +1,103 @@
+<h1 class="mt-4">{{ I18ns.leadTeam.title }}</h1>
+<p class="mb-4">{{ I18ns.leadTeam.subtitle }}</p>
+<div class="pb-4 border-bottom">
+  <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.leadTeam.teams.title }}</button>
+  <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.leadTeam.members.title }}</button>
+</div>
+<div class="py-4 border-bottom">
+  <button type="button" class="btn btn-primary float-end">
+    {{ I18ns.leadTeam.teams.createTeam }}
+  </button>
+  <h1>{{ I18ns.leadTeam.teams.title }}</h1>
+  <p class="mb-4">{{ I18ns.leadTeam.teams.subtitle }}</p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">{{ I18ns.leadTeam.teams.table.name }}</th>
+        <th scope="col">{{ I18ns.leadTeam.teams.table.initials }}</th>
+        <th scope="col">{{ I18ns.leadTeam.teams.table.membersNumber }}</th>
+        <th scope="col">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
+        <th scope="col">{{ I18ns.leadTeam.teams.table.createdAt }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Team Test</th>
+        <td>
+          <span class="badge rounded-pill bg-primary">TT</span>
+        </td>
+        <td>
+          <span class="badge rounded-pill bg-light text-dark">3</span>
+        </td>
+        <td>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 50%"></div>
+          </div>
+          50%
+        </td>
+        <td>23/03/2023</td>
+        <td>
+          <button type="button" class="btn btn-light">
+            <i class="fs-5 bi bi-pencil-fill"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="py-4 border-bottom">
+  <button type="button" class="btn btn-outline-secondary float-end">
+    {{ I18ns.leadTeam.members.invite }}
+  </button>
+  <h1>{{ I18ns.leadTeam.members.title }}</h1>
+  <p class="mb-4">{{ I18ns.leadTeam.members.subtitle }}</p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">{{ I18ns.leadTeam.members.table.name }}</th>
+        <th scope="col">{{ I18ns.leadTeam.members.table.status }}</th>
+        <th scope="col">{{ I18ns.leadTeam.members.table.team }}</th>
+        <th scope="col">{{ I18ns.leadTeam.members.table.averageScore }}</th>
+        <th scope="col">{{ I18ns.leadTeam.members.table.questionsPerMonth }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="row">
+          <div class="col-1">
+            <span class="me-4 badge badge-circle bg-primary rounded-pill align-middle">AB</span>
+          </div>
+          <div class="col">
+            <p><strong>Hugo (admin)</strong></p>
+            <p>hugo@uselato.com</p>
+          </div>
+        </td>
+        <td>
+          <span class="badge rounded-pill bg-success">
+            <i class="bi bi-dot"></i>
+            Actif
+          </span>
+        </td>
+        <td>
+          <span class="badge rounded-pill bg-primary">TT</span>
+        </td>
+        <td>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 50%"></div>
+          </div>
+          50%
+        </td>
+        <td>
+          <span class="badge rounded-pill bg-light text-dark">3</span>
+        </td>
+        <td>
+          <button type="button" class="btn btn-light">
+            <i class="fs-5 bi bi-pencil-fill"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

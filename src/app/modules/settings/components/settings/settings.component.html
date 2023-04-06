@@ -1,0 +1,17 @@
+<h1 class="mt-4">{{ I18ns.settings.title }}</h1>
+<ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+  <li [ngbNavItem]="1">
+    <a ngbNavLink>{{ I18ns.settings.users.title }}</a>
+    <ng-template ngbNavContent>
+      <alto-settings-users></alto-settings-users>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="2">
+    <a ngbNavLink>{{ I18ns.settings.integrations.title }}</a>
+    <ng-template ngbNavContent>
+      <alto-settings-integrations></alto-settings-integrations>
+    </ng-template>
+  </li>
+</ul>
+
+<div [ngbNavOutlet]="nav" class="mt-4"></div>

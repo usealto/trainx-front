@@ -1,0 +1,5 @@
+<div class="panel">
+  <p>{{ data.title }}</p>
+  <p>{{ data.number }}<span *ngIf="data.isPercent">%</span></p>
+  <p *ngIf="data.displayEvolution">{{ data.evolution }}</p>
+</div>

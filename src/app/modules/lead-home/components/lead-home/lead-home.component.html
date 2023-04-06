@@ -1,0 +1,281 @@
+<h1 class="mt-4">{{ I18ns.leadHome.title | replaceInTranslation : name }}</h1>
+<p class="mb-4">{{ I18ns.leadHome.subtitle }}</p>
+<div class="row">
+  <div class="col-6">
+    <div class="panel">
+      <div class="float-start mx-3"><i class="fs-3 bi bi-chat-text"></i></div>
+      <div class="d-inline-block align-bottom">
+        <p class="fw-bold">
+          {{ I18ns.leadHome.comments | plural : commentsCount }}
+        </p>
+        <p class="fs-7">
+          {{ I18ns.leadHome.subtitleComment | plural : commentsCount }}
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="panel">
+      <div class="float-start mx-3"><i class="fs-3 bi bi-question-circle"></i></div>
+      <div class="d-inline-block align-bottom">
+        <p class="fw-bold">
+          {{ I18ns.leadHome.question | plural : questionsCount }}
+        </p>
+        <p class="fs-7">
+          {{ I18ns.leadHome.subtitleQuestion | plural : questionsCount }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h1 class="mt-4">{{ I18ns.leadHome.statistics.title }}</h1>
+
+<div class="btn-group d-inline-block mb-3" role="group" aria-label="Basic example">
+  <select class="form-select" [ngModel]="statisticTimeRange" (change)="updateScore($event.target)">
+    <option value="week">{{ I18ns.leadHome.statistics.tabs.week }}</option>
+    <option value="month">{{ I18ns.leadHome.statistics.tabs.month }}</option>
+    <option value="year">{{ I18ns.leadHome.statistics.tabs.year }}</option>
+  </select>
+</div>
+
+<div class="row">
+  <div class="col-3">
+    <div class="panel">
+      <p>
+        {{ I18ns.leadHome.statistics.globalScore }}
+        <i
+          class="fs-5 bi bi-question-circle"
+          placement="top"
+          ngbTooltip="{{ I18ns.leadHome.statistics.globalScoreToolTip }}"
+        ></i>
+      </p>
+      <p>{{ globalScore | percent }}</p>
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="panel">
+      <p>
+        {{ I18ns.leadHome.statistics.averageCompletion }}
+        <i
+          class="fs-5 bi bi-question-circle"
+          placement="top"
+          ngbTooltip="{{ I18ns.leadHome.statistics.averageCompletionToolTip }}"
+        ></i>
+      </p>
+      <div class="row">
+        <p class="col">{{ averageCompletion | percent }}</p>
+        <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge>
+      </div>
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="panel">
+      <p>
+        {{ I18ns.leadHome.statistics.activeMembers }}
+        <i
+          class="fs-5 bi bi-question-circle"
+          placement="top"
+          ngbTooltip="{{ I18ns.leadHome.statistics.activeMembersToolTip }}"
+        ></i>
+      </p>
+      <div class="row">
+        <p class="col">N/A</p>
+        <!-- <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge> -->
+      </div>
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="panel">
+      <p>
+        {{ I18ns.leadHome.statistics.inactiveMembers }}
+        <i
+          class="fs-5 bi bi-question-circle"
+          placement="top"
+          ngbTooltip="{{ I18ns.leadHome.statistics.inactiveMembersToolTip }}"
+        ></i>
+      </p>
+      <div class="row">
+        <p class="col">N/A</p>
+        <!-- <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<h1 class="mt-4">{{ I18ns.leadHome.globalEvolution.title }}</h1>
+
+<div class="btn-group d-inline-block mb-3" role="group" aria-label="Basic example">
+  <button type="button" class="btn btn-outline-primary">{{ I18ns.leadHome.statistics.tabs.week }}</button>
+  <button type="button" class="btn btn-outline-primary">{{ I18ns.leadHome.statistics.tabs.month }}</button>
+  <button type="button" class="btn btn-outline-primary">{{ I18ns.leadHome.statistics.tabs.year }}</button>
+</div>
+
+<div class="row">
+  <div class="col-6">
+    <div class="panel h-100">
+      <div class="btn-group d-inline-block mb-3" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-outline-primary">
+          {{ I18ns.leadHome.globalEvolution.tabs.program }}
+        </button>
+        <button type="button" class="btn btn-outline-primary">
+          {{ I18ns.leadHome.globalEvolution.tabs.tag }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="panel mb-3">
+      <div class="btn-group d-inline-block mb-3" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-outline-primary">
+          {{ I18ns.leadHome.globalEvolution.tabs.program }}
+        </button>
+        <button type="button" class="btn btn-outline-primary">
+          {{ I18ns.leadHome.globalEvolution.tabs.tag }}
+        </button>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
+          <div class="panel height-100">&nbsp;</div>
+        </div>
+        <div class="col-6">
+          <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
+          <div class="panel height-100">&nbsp;</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="btn-group d-inline-block mb-3" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-outline-primary">
+          {{ I18ns.leadHome.globalEvolution.tabs.team }}
+        </button>
+        <button type="button" class="btn btn-outline-primary">
+          {{ I18ns.leadHome.globalEvolution.tabs.member }}
+        </button>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
+          <div class="panel height-100">&nbsp;</div>
+        </div>
+        <div class="col-6">
+          <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
+          <div class="panel height-100">&nbsp;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h1 class="my-4">{{ I18ns.leadHome.ongoingPrograms.title }}</h1>
+
+<div class="row mb-3">
+  <!-- <div class="col-6 col-xl-4 col-xxxl-3" *ngFor="let prog of programs"> -->
+  <div class="col-4 mb-3" *ngFor="let prog of programs">
+    <alto-program-card [displayToggle]="true" [programRun]="prog"></alto-program-card>
+  </div>
+</div>
+<ngb-pagination
+  [collectionSize]="programsCount"
+  [(page)]="programsPage"
+  (pageChange)="changeProgramPage()"
+  [pageSize]="programPageSize"
+  [maxSize]="10"
+  aria-label="Default pagination"
+></ngb-pagination>
+
+<!-- CHALLENGES -->
+<h1 class="my-4">{{ I18ns.leadHome.ongoingChallenges.title }}</h1>
+
+<div class="row">
+  <div class="col-6">
+    <div class="panel">
+      <h2>{{ I18ns.leadHome.ongoingChallenges.byTeam }}</h2>
+
+      <ng-container *ngIf="challengesByTeam.length > 0; else noChallenges">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
+              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
+              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
+              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let chal of challengesByTeam">
+              <td>{{ chal.name }}</td>
+              <td>
+                <alto-colored-pill-list [hasDynamicColor]="true" [data]="chal.teams"></alto-colored-pill-list>
+              </td>
+              <td>
+                <span
+                  *ngIf="chal.leadTeam"
+                  class="alto-badge"
+                  [style.backgroundColor]="chal.leadTeam.id | uuid2color"
+                  [style.color]="'white'"
+                >
+                  {{ chal.leadTeam.shortName }}
+                </span>
+              </td>
+              <td>{{ chal.endDate | date : 'shortDate' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+      <ng-template #noChallenges>
+        <div class="panel text-center">
+          <i class="bi bi-controller fs-5"></i>
+          <h2>{{ I18ns.leadHome.ongoingChallenges.noTeamChallenges }}</h2>
+          <p>{{ I18ns.leadHome.ongoingChallenges.noTeamChallengesSubtitle }}</p>
+        </div>
+      </ng-template>
+
+      <p class="text-end">
+        <a [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]">{{ I18ns.shared.showMore }}</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="col-6">
+    <div class="panel">
+      <h2>{{ I18ns.leadHome.ongoingChallenges.individual }}</h2>
+      <ng-container *ngIf="challengesByUser.length > 0; else noChallenges">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
+              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
+              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
+              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let chal of challengesByUser">
+              <td>{{ chal.name }}</td>
+              <td>
+                <alto-colored-pill-list
+                  [hasDynamicColor]="true"
+                  [data]="chal.teams"
+                  [limit]="2"
+                ></alto-colored-pill-list>
+              </td>
+              <td>
+                <alto-img-badge [url]="(getUser(chal.leadUser) | async)?.pictureUrl"></alto-img-badge>
+              </td>
+              <td>{{ chal.endDate | date : 'shortDate' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-container>
+      <ng-template #noChallenges>
+        <div class="panel text-center">
+          <i class="bi bi-controller fs-5"></i>
+          <h2>{{ I18ns.leadHome.ongoingChallenges.noTeamChallenges }}</h2>
+          <p>{{ I18ns.leadHome.ongoingChallenges.noTeamChallengesSubtitle }}</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

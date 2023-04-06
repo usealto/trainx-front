@@ -1,0 +1,11 @@
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=827846
+  "recommendations": [
+    "angular.ng-template",
+    "eamodio.gitlens",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "lucono.karma-test-explorer",
+    "ms-vsliveshare.vsliveshare"
+  ]
+}

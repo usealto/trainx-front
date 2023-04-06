@@ -1,0 +1,48 @@
+:host {
+  background-color: var(--alto-blue);
+  height: 100vh;
+  position: fixed;
+  color: white;
+
+  width: 312px;
+  @media (max-width: 1300px) {
+    width: 230px;
+  }
+}
+.logo {
+  margin: 2.286rem 0 2rem 1.714rem;
+
+  .company-name {
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    font-weight: 600;
+    font-size: 1.429rem;
+  }
+}
+.menu {
+  a {
+    display: block;
+    border-radius: 6px;
+    margin: 0 1.143rem 0.286rem 1.143rem;
+    height: 2.857rem;
+    padding: 0.571rem 0.857rem;
+    color: white;
+    font-weight: 500;
+    font-size: 1.143rem;
+    &.menu-selected,
+    &:hover {
+      background-color: var(--alto-blue-second);
+    }
+  }
+  .bottom-block {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0.5rem;
+    .build-time {
+      color: var(--alto-blue);
+      &:hover {
+        color: grey;
+      }
+    }
+  }
+}

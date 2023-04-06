@@ -1,0 +1,9 @@
+<span
+  class="alto-badge me-1"
+  [style.backgroundColor]="!hasDynamicColor || (d.id | uuid2color)"
+  [style.color]="!hasDynamicColor || 'white'"
+  *ngFor="let d of data | slice : 0 : limit || 50"
+>
+  {{ d.shortName || d.name || d.title }}
+</span>
+<span *ngIf="limit && data.length > limit" class="alto-badge me-2"> +{{ data.length - limit }}</span>

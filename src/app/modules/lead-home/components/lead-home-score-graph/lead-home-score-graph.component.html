@@ -1,0 +1,16 @@
+<ul ngbNav #navScores="ngbNav" class="nav-tabs">
+  <li [ngbNavItem]="1">
+    <a ngbNavLink>{{ I18ns.leadHome.globalEvolution.tabs.program }}</a>
+    <ng-template ngbNavContent>
+      <div class="row"></div>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="2">
+    <a ngbNavLink>{{ I18ns.leadHome.globalEvolution.tabs.tag }}</a>
+    <ng-template ngbNavContent>
+      <div class="row"></div>
+    </ng-template>
+  </li>
+</ul>
+
+<div [ngbNavOutlet]="navScores" class="mt-2"></div>

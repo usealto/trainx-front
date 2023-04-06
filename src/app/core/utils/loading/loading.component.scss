@@ -1,0 +1,33 @@
+:host {
+  display: block;
+}
+.mask {
+  position: fixed;
+  background-color: #ffffff87;
+  height: 100vh;
+  left: 0;
+  right: 0;
+  top: 0;
+  text-align: center;
+  z-index: 150;
+}
+.loader-container {
+  width: 150px;
+  padding: 12px 0;
+  margin: 45vh auto;
+}
+.spin-loader {
+  width: 42px;
+  height: 42px;
+  border-radius: 25px;
+  border: solid 6px white;
+  border-bottom-color: grey;
+  border-top-color: grey;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
