@@ -57,7 +57,8 @@ export class ProgramsComponent implements OnInit {
   tagsCount = 0;
   tagsPageSize = 10;
   isTagsLoading = true;
-  tagsPrograms = new Map<TagApi, string[]>();
+  tagPrograms = new Map<string, string[]>();
+  isTagProgramsLoading = true;
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -129,7 +130,7 @@ export class ProgramsComponent implements OnInit {
       .pipe(
         tap((scores) => {
           ids?.forEach((id) =>
-            this.questionsScore.set(id, scores.scores.some((score) => score.id === id) ? 0.72 : 0),
+            this.questionsScore.set(id, scores.scores.some((score) => score.id === id) ? 0.42 : 0),
           );
         }),
       );
@@ -190,8 +191,31 @@ export class ProgramsComponent implements OnInit {
 
   getProgramsfromTags(tags: TagApi[]) {
     const ids = tags.map((tag) => tag.id);
-    this.programService.getPrograms({tagIds: ids.join(',')}).pipe(
-      // tap(console.log)
-    )
+    this.programService
+      .getPrograms({ tagIds: ids.join(',') })
+      .pipe(
+        tap((programs) => {
+          ids.forEach((tagId) => {
+            this.tagPrograms.set(tagId, this.tagProgramsLoop(tagId, programs));
+          });
+        }),
+        tap(() => (this.isTagProgramsLoading = false)),
+      )
+      .subscribe();
+  }
+
+  tagProgramsLoop(tagId: string, programs: ProgramApi[]): string[] {
+    const programList: string[] = [];
+    programs.forEach((program) => {
+      if (program.tags?.some((tag) => tag.id === tagId)) {
+        programList.push(program.name);
+      }
+    });
+    return programList;
+  }
+
+  @memoize()
+  getTagPrograms(id: string) {
+    return this.tagPrograms.get(id);
   }
 }

@@ -138,14 +138,13 @@
       <tr *ngFor="let tag of tags">
         <th scope="row">{{ tag.name }}</th>
         <td>
-          <span class="badge rounded-pill" [class]="70 | pillColor">70%</span>
+          <span class="badge rounded-pill" [class]="70 | pillColor">42%</span>
         </td>
         <td>
           <alto-img-badge [url]="getUser(tag.createdBy)?.pictureUrl"></alto-img-badge>
         </td>
-        <td>
-          <span class="badge rounded-pill bg-secondary me-2">Test</span>
-          <span class="badge rounded-pill bg-secondary">Step</span>
+        <td *ngIf="!isTagProgramsLoading">
+          <alto-colored-pill-list [data]="getTagPrograms(tag.id) ?? []" [limit]="5"></alto-colored-pill-list>
         </td>
         <td>
           <i class="fs-5 bi bi-trash"></i>
