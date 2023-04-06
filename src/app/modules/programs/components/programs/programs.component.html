@@ -155,4 +155,12 @@
       </tr>
     </tbody>
   </table>
+  <ngb-pagination
+  [collectionSize]="tagsCount"
+  [(page)]="tagsPage"
+  (pageChange)="changeTagsPage()"
+  [pageSize]="tagsPageSize"
+  [maxSize]="10"
+  aria-label="Default pagination"
+></ngb-pagination>
 </div>

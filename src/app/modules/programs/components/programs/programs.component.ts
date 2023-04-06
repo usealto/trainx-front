@@ -218,4 +218,8 @@ export class ProgramsComponent implements OnInit {
   getTagPrograms(id: string) {
     return this.tagPrograms.get(id);
   }
+
+  changeTagsPage() {
+    this.getTags();
+  }
 }
