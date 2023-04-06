@@ -56,6 +56,9 @@ export const FR = {
       involvement: 'Participation',
       progress: 'Avancement',
       score: 'Score',
+      filters: {
+        team: 'Équipe',
+      },
     },
     ongoingChallenges: {
       title: 'Challenges en cours',

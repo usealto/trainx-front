@@ -168,7 +168,18 @@
   </div>
 </div>
 
-<h1 class="my-4">{{ I18ns.leadHome.ongoingPrograms.title }}</h1>
+<div class="row my-4">
+  <div class="col-5">
+    <h1>{{ I18ns.leadHome.ongoingPrograms.title }}</h1>
+  </div>
+  <div class="col-7 text-end">
+    <alto-dropdown-filter
+      [data]="teamStore.teams.value"
+      [displayLabel]="'shortName'"
+      [placeholder]="I18ns.leadHome.ongoingPrograms.filters.team"
+    ></alto-dropdown-filter>
+  </div>
+</div>
 
 <div class="row mb-3">
   <!-- <div class="col-6 col-xl-4 col-xxxl-3" *ngFor="let prog of programs"> -->
