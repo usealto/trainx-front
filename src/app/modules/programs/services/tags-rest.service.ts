@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
-import { GetTagsRequestParams, TagApi, TagPaginatedResponseApi, TagsApiService } from 'src/app/sdk';
+import {
+  CreateTagDtoApi,
+  CreateTagRequestParams,
+  GetTagsRequestParams,
+  TagApi,
+  TagPaginatedResponseApi,
+  TagsApiService,
+} from 'src/app/sdk';
 import { ProgramsStore } from '../programs.store';
 
 @Injectable({
@@ -35,5 +42,9 @@ export class TagsRestService {
       sortBy: req?.sortBy ?? 'name:asc',
     };
     return this.tagApi.getTags(par).pipe();
+  }
+
+  createTag(createTagDtoApi: CreateTagDtoApi) {
+    return this.tagApi.createTag({ createTagDtoApi }).pipe(map((r) => r.data));
   }
 }

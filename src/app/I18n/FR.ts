@@ -104,8 +104,6 @@ export const FR = {
       table: {
         question: 'Intitulé',
         author: 'Ajouté par',
-        goodAnswer: 'Bonne réponse',
-        badAnswers: 'Mauvaises réponses',
       },
     },
     tags: {
@@ -181,6 +179,21 @@ export const FR = {
       explanationPlaceholder: 'Écrire une brève explication de la question.',
       link: 'Référence (facultatif)',
       linkPlaceholder: 'Lien vers une ressource utile',
+    },
+  },
+  tags: {
+    form: {
+      title: 'Créer un tag',
+      subtitle:
+        'Indiquer le nom de votre nouveau tag ainsi que les programmes et questions auxquels vous souhaitez l’associer.',
+      tagName: 'Nom du tage',
+      tagNamePlaceholder: 'Exemple: RGPD',
+      programs: 'Programmes',
+      programsPlaceholder: 'Rechercher dans vos programmes',
+      questions: 'Questions',
+      questionsPlaceholder: 'Rechercher dans vos questions',
+      description: 'Description',
+      optional: '(facultatif)',
     },
   },
   leadTeam: {
