@@ -8,6 +8,7 @@ export const FR = {
     share: 'Partager',
     clipboard: 'Copier dans le presse-papier',
     showMore: 'Voir plus',
+    showAll: 'Voir tout',
     priorities: {
       high: 'High',
       medium: 'Medium',
