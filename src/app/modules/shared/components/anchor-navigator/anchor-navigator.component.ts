@@ -1,6 +1,10 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { tap } from 'rxjs';
+
+@UntilDestroy()
 @Component({
   selector: 'alto-anchor-navigator',
   templateUrl: './anchor-navigator.component.html',
@@ -8,17 +12,30 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AnchorNavigatorComponent {
   @HostListener('click', ['$event.target'])
-  onClick(btn: any) {
-    // console.log('button', btn, 'number of clicks:', this.numberOfClicks++);
-    console.log(btn);
+  onClick() {
+    this.scrollToAnchor();
   }
 
+  @Input() fragment = '';
+  // @Input() routerLink: string[] = [];
+
   constructor(private route: ActivatedRoute) {
-    this.route.fragment.subscribe((fragment) => {
-      if (fragment) {
-        console.log(fragment);
-        document.querySelector('#' + fragment)?.scrollIntoView();
-      }
-    });
+    this.route.fragment
+      .pipe(
+        tap((fragment) => {
+          if (fragment && this.fragment === fragment) {
+            console.log(fragment);
+            this.scrollToAnchor();
+          }
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
+  }
+
+  scrollToAnchor() {
+    if (this.fragment) {
+      document.querySelector('#' + this.fragment)?.scrollIntoView();
+    }
   }
 }

@@ -13,6 +13,8 @@ import { LeadHomeStatistics } from '../statistics/lead-home-statistics.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ProgramsStore } from 'src/app/modules/programs/programs.store';
+import { TeamStore } from 'src/app/modules/lead-team/team.store';
 
 @UntilDestroy()
 @Component({
@@ -23,7 +25,10 @@ import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 export class LeadHomeComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+
+  // TODO -----------
   name = 'Thomas';
+
   active = 1;
   sharedData: LeadHomeStatistics[] = [
     { title: I18ns.leadHome.statistics.globalScore, toolTip: I18ns.leadHome.statistics.globalScoreToolTip },
@@ -66,6 +71,7 @@ export class LeadHomeComponent implements OnInit {
     private readonly programRunsService: ProgramRunsRestService,
     private readonly challengesRestService: ChallengesRestService,
     private readonly userService: UsersRestService,
+    public readonly teamStore: TeamStore,
   ) {}
 
   ngOnInit(): void {

@@ -63,11 +63,11 @@
         <td *ngIf="question.tags && question.tags.length > 0">
           <alto-colored-pill-list [data]="question.tags" [limit]="3"></alto-colored-pill-list>
         </td>
-        <td *ngIf="!question.tags || question.tags.length < 1">No tags</td>
+        <td *ngIf="!question.tags || question.tags.length < 1">-</td>
         <td *ngIf="question.programs && question.programs.length > 0">
           <alto-colored-pill-list [data]="question.programs" [limit]="3"></alto-colored-pill-list>
         </td>
-        <td *ngIf="!question.programs || question.programs.length < 1">No programs</td>
+        <td *ngIf="!question.programs || question.programs.length < 1">-</td>
         <td>
           <i class="fs-5 bi bi-pencil-fill"></i>
         </td>
@@ -118,7 +118,7 @@
   ></ngb-pagination>
 </div>
 <div class="py-4 border-bottom">
-  <button type="button" class="btn btn-primary float-end">
+  <button type="button" class="btn btn-primary float-end" (click)="openTagForm()">
     {{ I18ns.programs.tags.createTag }}
   </button>
   <h1>{{ I18ns.programs.tags.title }}</h1>
@@ -138,14 +138,13 @@
       <tr *ngFor="let tag of tags">
         <th scope="row">{{ tag.name }}</th>
         <td>
-          <span class="badge rounded-pill" [class]="70 | pillColor">70%</span>
+          <span class="badge rounded-pill" [class]="70 | pillColor">42%</span>
         </td>
         <td>
           <alto-img-badge [url]="getUser(tag.createdBy)?.pictureUrl"></alto-img-badge>
         </td>
-        <td>
-          <span class="badge rounded-pill bg-secondary me-2">Test</span>
-          <span class="badge rounded-pill bg-secondary">Step</span>
+        <td *ngIf="!isTagProgramsLoading">
+          <alto-colored-pill-list [data]="getTagPrograms(tag.id) ?? []" [limit]="5"></alto-colored-pill-list>
         </td>
         <td>
           <i class="fs-5 bi bi-trash"></i>
@@ -156,4 +155,12 @@
       </tr>
     </tbody>
   </table>
+  <ngb-pagination
+    [collectionSize]="tagsCount"
+    [(page)]="tagsPage"
+    (pageChange)="changeTagsPage()"
+    [pageSize]="tagsPageSize"
+    [maxSize]="10"
+    aria-label="Default pagination"
+  ></ngb-pagination>
 </div>

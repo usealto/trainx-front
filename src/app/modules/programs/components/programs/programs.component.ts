@@ -23,6 +23,7 @@ import { QuestionFormComponent } from '../questions/question-form/question-form.
 import { ScoresRestService } from '../../services/scores-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
+import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
 
 @UntilDestroy()
 @Component({
@@ -57,7 +58,8 @@ export class ProgramsComponent implements OnInit {
   tagsCount = 0;
   tagsPageSize = 10;
   isTagsLoading = true;
-  tagsPrograms = new Map<TagApi, string[]>();
+  tagPrograms = new Map<string, string[]>();
+  isTagProgramsLoading = true;
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -73,11 +75,17 @@ export class ProgramsComponent implements OnInit {
     this.getPrograms();
     this.getQuestions();
     this.getSubmittedQuestions();
-    this.getTags();
+    this.getTags().subscribe();
   }
 
   openQuestionForm() {
-    this.offcanvasService.open(QuestionFormComponent, { position: 'end', panelClass: 'overflow-auto' });
+    const canvasRef = this.offcanvasService.open(QuestionFormComponent, { position: 'end', panelClass: 'overflow-auto' });
+    canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
+  }
+
+  openTagForm() {
+    const canvasRef = this.offcanvasService.open(TagsFormComponent, { position: 'end', panelClass: 'overflow-auto' });
+    canvasRef.componentInstance.createdTag.pipe(switchMap(() => this.getTags())).subscribe();
   }
 
   changeProgramPage() {
@@ -129,7 +137,7 @@ export class ProgramsComponent implements OnInit {
       .pipe(
         tap((scores) => {
           ids?.forEach((id) =>
-            this.questionsScore.set(id, scores.scores.some((score) => score.id === id) ? 0.72 : 0),
+            this.questionsScore.set(id, scores.scores.some((score) => score.id === id) ? 0.42 : 0),
           );
         }),
       );
@@ -157,6 +165,7 @@ export class ProgramsComponent implements OnInit {
       })
       .pipe(
         tap((q) => (this.submittedQuestions = q.data ?? [])),
+        tap((q) => (this.submittedQuestionsCount = q.meta.itemsPerPage ?? 0)),
         map((questions) => questions.data?.map((q) => q.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
         switchMap((ids) => this.getUsersfromQuestions(ids)),
@@ -170,7 +179,7 @@ export class ProgramsComponent implements OnInit {
     this.getSubmittedQuestions();
   }
 
-  getTags() {
+  getTags(): Observable<UserApi[]> {
     return this.tagRestService
       .getTagsPaginated({
         page: this.tagsPage,
@@ -178,6 +187,7 @@ export class ProgramsComponent implements OnInit {
       })
       .pipe(
         tap((t) => (this.tags = t.data ?? [])),
+        tap((t) => (this.tagsCount = t.meta.totalItems ?? 0)),
         tap((t) => this.getProgramsfromTags(t.data ?? [])),
         map((tags) => tags.data?.map((t) => t.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
@@ -185,13 +195,40 @@ export class ProgramsComponent implements OnInit {
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
         tap(() => (this.isTagsLoading = false)),
       )
-      .subscribe();
   }
 
   getProgramsfromTags(tags: TagApi[]) {
     const ids = tags.map((tag) => tag.id);
-    this.programService.getPrograms({tagIds: ids.join(',')}).pipe(
-      // tap(console.log)
-    )
+    this.isTagProgramsLoading = true;
+    this.programService
+      .getPrograms({ tagIds: ids.join(',') })
+      .pipe(
+        tap((programs) => {
+          ids.forEach((tagId) => {
+            this.tagPrograms.set(tagId, this.tagProgramsLoop(tagId, programs));
+          });
+        }),
+        tap(() => (this.isTagProgramsLoading = false)),
+      )
+      .subscribe();
+  }
+
+  tagProgramsLoop(tagId: string, programs: ProgramApi[]): string[] {
+    const programList: string[] = [];
+    programs.forEach((program) => {
+      if (program.tags?.some((tag) => tag.id === tagId)) {
+        programList.push(program.name);
+      }
+    });
+    return programList;
+  }
+
+  @memoize()
+  getTagPrograms(id: string) {
+    return this.tagPrograms.get(id);
+  }
+
+  changeTagsPage() {
+    this.getTags().subscribe();
   }
 }

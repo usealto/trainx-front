@@ -168,7 +168,18 @@
   </div>
 </div>
 
-<h1 class="my-4">{{ I18ns.leadHome.ongoingPrograms.title }}</h1>
+<div class="row my-4">
+  <div class="col-5">
+    <h1>{{ I18ns.leadHome.ongoingPrograms.title }}</h1>
+  </div>
+  <div class="col-7 text-end">
+    <alto-dropdown-filter
+      [data]="teamStore.teams.value"
+      [displayLabel]="'shortName'"
+      [placeholder]="I18ns.leadHome.ongoingPrograms.filters.team"
+    ></alto-dropdown-filter>
+  </div>
+</div>
 
 <div class="row mb-3">
   <!-- <div class="col-6 col-xl-4 col-xxxl-3" *ngFor="let prog of programs"> -->
@@ -207,7 +218,11 @@
             <tr *ngFor="let chal of challengesByTeam">
               <td>{{ chal.name }}</td>
               <td>
-                <alto-colored-pill-list [hasDynamicColor]="true" [data]="chal.teams"></alto-colored-pill-list>
+                <alto-colored-pill-list
+                  [hasDynamicColor]="true"
+                  [data]="chal.teams"
+                  [limit]="2"
+                ></alto-colored-pill-list>
               </td>
               <td>
                 <span
@@ -233,7 +248,13 @@
       </ng-template>
 
       <p class="text-end">
-        <a [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]">{{ I18ns.shared.showMore }}</a>
+        <a
+          [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
+          [fragment]="'byTeamAnchor'"
+          class="fw-medium"
+        >
+          {{ I18ns.shared.showMore }}
+        </a>
       </p>
     </div>
   </div>
@@ -276,6 +297,16 @@
           <p>{{ I18ns.leadHome.ongoingChallenges.noTeamChallengesSubtitle }}</p>
         </div>
       </ng-template>
+
+      <p class="text-end">
+        <a
+          [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
+          [fragment]="'byUserAnchor'"
+          class="fw-medium"
+        >
+          {{ I18ns.shared.showMore }}
+        </a>
+      </p>
     </div>
   </div>
 </div>
