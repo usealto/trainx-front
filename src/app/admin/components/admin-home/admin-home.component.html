@@ -1,3 +1,10 @@
+<h1>Bienvenue sur l'espace administrateur d'Alto</h1>
+<p>Cet espace est destiné aux employés d'Alto</p>
+<br>
+<a [routerLink]="'/admin/companies'" routerLinkActive="menu-selected" class="btn btn-primary">
+  Voir les Entreprises
+</a>
+
 <table class="table">
   <tr *ngFor="let user of users">
     <td>{{ user.id }}</td>

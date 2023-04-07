@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-// import { CompaniesRestService } from  'src/app/sdk';
-
+import { tap } from 'rxjs';
+import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
+import { CompanyApi } from 'src/app/sdk';
 
 @Component({
   selector: 'alto-admin-companies',
@@ -8,14 +9,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin-companies.component.scss']
 })
 export class AdminCompaniesComponent implements OnInit {
-  companies: any[] = [];
+  companies: CompanyApi[] = [];
 
-  // constructor(private readonly companyService: CompaniesRestService) {}
+  constructor(private readonly companiesRestService: CompaniesRestService) {}
 
   ngOnInit(): void {
-    // this.companies = this.companyService.getCompanies();
-    console.log('here');
-    
+    this.companiesRestService.getCompanies()
+    .pipe(
+      tap((companies) => this.companies = companies)
+    )
+    .subscribe();
+    console.log('here'); 
   }
-
 }
