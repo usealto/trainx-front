@@ -7,9 +7,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
 import { AdminCompaniesComponent } from './components/admin-companies/admin-companies.component';
+import { AdminCompanyComponent } from './components/admin-company/admin-company.component';
 
 @NgModule({
-  declarations: [AdminHomeComponent, AdminLayoutComponent, AdminCompaniesComponent],
+  declarations: [AdminHomeComponent, AdminLayoutComponent, AdminCompaniesComponent, AdminCompanyComponent],
   imports: [CommonModule, AdminRoutingModule, FormsModule, ReactiveFormsModule],
 })
 export class AdminModule {}
