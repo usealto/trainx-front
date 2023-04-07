@@ -1,0 +1,13 @@
+.router {
+  margin-left: 312px;
+  @media (max-width: 1300px) {
+    margin-left: 230px;
+  }
+}
+
+.company-name {
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  font-weight: 600;
+  font-size: 1.429rem;
+}
