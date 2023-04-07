@@ -15,7 +15,7 @@ export const FR = {
     },
   },
   leadHome: {
-    title: 'Bonjour {{}}',
+    title: 'Bonjour ',
     subtitle: "Retrouvez l'ensemble des statistiques de vos équipes.",
     comments: ['{{}} commentaire', '{{}} commentaires'],
     subtitleComment: [
