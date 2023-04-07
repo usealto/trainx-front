@@ -1,1 +1,35 @@
-<p>admin-companies works!</p>
+<div class="py-4 border-bottom">
+  <div>
+    <h1>Companies</h1>
+    <p class="mb-4">L'ensemble de nos clients</p>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Nom</th>
+        <th scope="col">slackDays</th>
+        <th scope="col">slackTimes</th>
+        <th scope="col">domain</th>
+        <th scope="col">isSlackActive</th>
+        <th scope="col">slackAdmin</th>
+        <th scope="col">slackQuestionsPerQuiz</th>
+        
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let company of companies">
+        <th scope="row">{{ company.name }}</th>
+        <td>{{company.slackDays}}</td>
+        <td>{{company.slackTimes}}</td>
+        <td>{{company.domain}}</td>
+        <td>{{company.isSlackActive}}</td>
+        <td>{{company.slackAdmin}}</td>
+        <td>{{company.slackQuestionsPerQuiz}}</td>
+        <td>
+          <button class="btn btn-primary">Voir</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
