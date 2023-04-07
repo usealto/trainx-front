@@ -12,6 +12,7 @@ import { ProgramCardComponent } from './components/program-card/program-card.com
 import { ProgressionBadgeComponent } from './components/progression-badge/progression-badge.component';
 import { ImgBadgeComponent } from './components/img-badge/img-badge.component';
 import { AnchorNavigatorComponent } from './components/anchor-navigator/anchor-navigator.component';
+import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-filter.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { AnchorNavigatorComponent } from './components/anchor-navigator/anchor-n
     ColoredPillListComponent,
     ImgBadgeComponent,
     AnchorNavigatorComponent,
+    DropdownFilterComponent,
   ],
   imports: [
     CommonModule,
@@ -41,6 +43,7 @@ import { AnchorNavigatorComponent } from './components/anchor-navigator/anchor-n
     ProgressionBadgeComponent,
     ColoredPillListComponent,
     AnchorNavigatorComponent,
+    DropdownFilterComponent,
     FormsModule,
     ImgBadgeComponent,
     ReactiveFormsModule,

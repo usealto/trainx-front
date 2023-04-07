@@ -6,9 +6,16 @@ import { ProgramsComponent } from './components/programs/programs.component';
 import { CreateProgramsComponent } from './components/create-programs/create-programs.component';
 import { ProgramsFormComponent } from './components/create-programs/programs-form/programs-form.component';
 import { QuestionFormComponent } from './components/questions/question-form/question-form.component';
+import { TagsFormComponent } from './components/tags/tag-form/tag-form.component';
 
 @NgModule({
-  declarations: [ProgramsComponent, CreateProgramsComponent, ProgramsFormComponent, QuestionFormComponent],
+  declarations: [
+    ProgramsComponent,
+    CreateProgramsComponent,
+    ProgramsFormComponent,
+    QuestionFormComponent,
+    TagsFormComponent,
+  ],
   imports: [CommonModule, ProgramsRoutingModule, SharedModule],
 })
 export class ProgramsModule {}

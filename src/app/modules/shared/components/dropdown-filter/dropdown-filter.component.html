@@ -1,0 +1,20 @@
+<ng-select
+  [items]="data"
+  [multiple]="true"
+  bindValue="id"
+  [placeholder]="placeholder"
+  [closeOnSelect]="false"
+  [(ngModel)]="selectedItems"
+  [style.width]="'130px'"
+>
+  <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+    <p>
+      {{ placeholder }} <span class="alto-badge">{{ items.length }}</span>
+    </p>
+  </ng-template>
+  <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+    <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+      {{ item[displayLabel] }}
+    </span>
+  </ng-template>
+</ng-select>
