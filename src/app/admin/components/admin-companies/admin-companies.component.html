@@ -27,7 +27,9 @@
         <td>{{company.slackAdmin}}</td>
         <td>{{company.slackQuestionsPerQuiz}}</td>
         <td>
-          <button class="btn btn-primary">Voir</button>
+          <a [routerLink]="['/', 'admin', 'companies',company.id]" routerLinkActive="menu-selected" class="btn btn-primary">
+            Voir
+          </a>
         </td>
       </tr>
     </tbody>
