@@ -1,30 +1,16 @@
 <h1>Entreprise : {{company.name}}</h1>
 
-<h2>Version brute :</h2>
+<br><br>
+
+<h2>Users : <span class="text-primary">{{users.length}}</span></h2>
+<a [routerLink]="['/', 'admin', 'companies',company.id,'users']" class="btn btn-primary">
+  Voir les users
+</a>
+<br>
+<br>
+<br>
+
+<h2>Data de l'entreprise, version brute :</h2>
 <pre>{{ company | json }}</pre>
 
 
-<h2>Users</h2>
-<!-- create an array of users listing their emails -->  
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">Nom</th>
-      <th scope="col">email</th>
-      <th scope="col">slack</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let user of users">
-      <th scope="row">{{ user.username }}</th>
-      <td>{{user.email}}</td>
-      <td>{{user.slackId}}</td>
-      <td>
-        <a [routerLink]="['/', 'admin', 'companies',user.id]" routerLinkActive="menu-selected" class="btn btn-primary">
-          Voir
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table>

@@ -1,0 +1,24 @@
+<h2>Users</h2>
+<!-- create an array of users listing their emails -->  
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Nom</th>
+      <th scope="col">email</th>
+      <th scope="col">slack</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <th scope="row">{{ user.username }}</th>
+      <td>{{user.email}}</td>
+      <td>{{user.slackId}}</td>
+      <td>
+        <a [routerLink]="['/', 'admin', 'users',user.id]" routerLinkActive="menu-selected" class="btn btn-primary">
+          Voir
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
