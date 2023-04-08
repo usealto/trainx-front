@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminHomeComponent } from './components/admin-home/admin-home.component';
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
 import { AdminCompanyComponent } from './components/admin-company/admin-company.component';
+import { AdminCompanyUsersComponent } from './components/admin-company-users/admin-company-users.component';
+import { AdminUserComponent } from './components/admin-user/admin-user.component';
 
 const routes: Routes = [
   {
@@ -23,6 +25,14 @@ const routes: Routes = [
       {
         path: 'companies/:id',
         component: AdminCompanyComponent,
+      },
+      {
+        path: 'companies/:id/users',
+        component: AdminCompanyUsersComponent,
+      },
+      {
+        path: 'users/:id',
+        component: AdminUserComponent,
       }
     ]
 
