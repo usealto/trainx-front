@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { CompanyApi, UserApi } from 'src/app/sdk';
+import { UserApi } from 'src/app/sdk';
 
 @Component({
   selector: 'alto-admin-user',
@@ -27,21 +27,32 @@ export class AdminUserComponent implements OnInit {
     
     this.usersRestService.getUsers({ids: this.id})
     .pipe(
-      tap((users) => {if(users[0]){ this.user = users[0] }} )
+      tap((users) => {if(users[0]){ 
+        this.user = users[0] 
+      }} )
+    )
+    .pipe(
+      tap(() => {
+        this.userForm = this.formBuilder.group({
+          slackId: [this.user.slackId],
+          username: [this.user.username]
+        });
+      })
     )
     .subscribe();
 
-    this.userForm = this.formBuilder.group({
-      name: '',
-    });
+    
 
   }
 
-  submit() {
-    // console.log(this.userForm.value);
+  async submit() {
     // update the user with the userFrom value using the userRestService
-    this.usersRestService.updateUser(this.user.id, this.userForm.value)
-    // refresh the getUsers() call if necessary ? TODO
+    this.usersRestService.patchUser(this.user.id, this.userForm.value).subscribe();
+    
+    // refresh after the API has time to implement the changes
+    // first sleep 1 second
+    await new Promise(f => setTimeout(f, 1000));
+    this.ngOnInit();
     
   }
 }
