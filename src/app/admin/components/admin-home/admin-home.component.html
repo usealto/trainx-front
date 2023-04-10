@@ -4,16 +4,3 @@
 <a [routerLink]="'/admin/companies'" routerLinkActive="menu-selected" class="btn btn-primary">
   Voir les Entreprises
 </a>
-
-<table class="table">
-  <tr *ngFor="let user of users">
-    <td>{{ user.id }}</td>
-    <td>{{ user.email }}</td>
-  </tr>
-</table>
-
-<form [formGroup]="userForm">
-  <input formControlName="name" />
-
-  <button type="submit" (click)="submit()">Submit</button>
-</form>
