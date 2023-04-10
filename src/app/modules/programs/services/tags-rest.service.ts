@@ -4,6 +4,8 @@ import {
   CreateTagDtoApi,
   CreateTagRequestParams,
   GetTagsRequestParams,
+  PatchTagDtoApi,
+  PatchTagRequestParams,
   TagApi,
   TagPaginatedResponseApi,
   TagsApiService,
@@ -44,7 +46,11 @@ export class TagsRestService {
     return this.tagApi.getTags(par).pipe();
   }
 
-  createTag(createTagDtoApi: CreateTagDtoApi) {
+  createTag(createTagDtoApi: CreateTagDtoApi): Observable<TagApi | undefined> {
     return this.tagApi.createTag({ createTagDtoApi }).pipe(map((r) => r.data));
+  }
+
+  updateTag(patchTagRequestParams: PatchTagRequestParams): Observable<TagApi | undefined> {
+    return this.tagApi.patchTag(patchTagRequestParams).pipe(map((r) => r.data));
   }
 }

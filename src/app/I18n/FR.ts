@@ -8,6 +8,7 @@ export const FR = {
     share: 'Partager',
     clipboard: 'Copier dans le presse-papier',
     showMore: 'Voir plus',
+    showAll: 'Voir tout',
     priorities: {
       high: 'High',
       medium: 'Medium',
@@ -15,7 +16,7 @@ export const FR = {
     },
   },
   leadHome: {
-    title: 'Bonjour {{}}',
+    title: 'Bonjour ',
     subtitle: "Retrouvez l'ensemble des statistiques de vos équipes.",
     comments: ['{{}} commentaire', '{{}} commentaires'],
     subtitleComment: [

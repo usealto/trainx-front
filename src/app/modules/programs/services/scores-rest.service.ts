@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { addDays, addHours, startOfDay } from 'date-fns';
-import { filter, map, Observable, tap } from 'rxjs';
+import { Observable, filter, map } from 'rxjs';
 import {
   GetProgramRunsRequestParams,
   GetScoresRequestParams,
   ProgramRunApi,
   ProgramRunsApiService,
-  ScoresApiService,
-  ScoresResponseDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
+  ScoresApiService,
+  ScoresResponseDtoApi,
 } from 'src/app/sdk';
-import { ScoreTimeframe } from '../models/scores.model';
 
 @Injectable({
   providedIn: 'root',
@@ -28,18 +27,18 @@ export class ScoresRestService {
     return addHours(startOfDay(date), gmtDataOffset);
   }
 
-  getStartDate(timeframe: ScoreTimeframe): Date {
+  getStartDate(timeframe: ScoreTimeframeEnumApi): Date {
     let date = new Date();
     const gmtDataOffset = -date.getTimezoneOffset() / 60;
 
     switch (timeframe) {
-      case 'week':
+      case ScoreTimeframeEnumApi.Week:
         date = addDays(date, -7);
         break;
-      case 'month':
+      case ScoreTimeframeEnumApi.Month:
         date = addDays(date, -30);
         break;
-      case 'year':
+      case ScoreTimeframeEnumApi.Year:
         date = addDays(date, -365);
         break;
     }
@@ -51,8 +50,8 @@ export class ScoresRestService {
     const par = {
       ...req,
       type: req?.type ?? ScoreTypeEnumApi.Guess,
-      timeframe: req?.timeframe ?? 'week',
-      dateAfter: this.getStartDate(req?.timeframe ?? 'week').toISOString(),
+      timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Week,
+      dateAfter: this.getStartDate(req?.timeframe ?? ScoreTimeframeEnumApi.Week).toISOString(),
       dateBefore: new Date().toISOString(),
     };
 
@@ -66,8 +65,8 @@ export class ScoresRestService {
     const par = {
       ...req,
       type: ScoreTypeEnumApi.Program,
-      timeframe: req?.timeframe ?? 'week',
-      dateAfter: this.getStartDate(req?.timeframe ?? 'week').toISOString(),
+      timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Week,
+      dateAfter: this.getStartDate(req?.timeframe ?? ScoreTimeframeEnumApi.Week).toISOString(),
       dateBefore: new Date().toISOString(),
     };
 
@@ -81,8 +80,8 @@ export class ScoresRestService {
     const par = {
       ...req,
       type: ScoreTypeEnumApi.Question,
-      timeframe: req?.timeframe ?? 'year',
-      dateAfter: this.getStartDate('year').toISOString(),
+      timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Year,
+      dateAfter: this.getStartDate(ScoreTimeframeEnumApi.Year).toISOString(),
       dateBefore: new Date().toISOString(),
     };
 
@@ -93,7 +92,7 @@ export class ScoresRestService {
   }
 
   getAverageCompletion(
-    timeframe: ScoreTimeframe,
+    timeframe: ScoreTimeframeEnumApi,
     req?: GetProgramRunsRequestParams,
   ): Observable<ProgramRunApi[]> {
     const par = {
@@ -108,7 +107,7 @@ export class ScoresRestService {
   }
 
   getCompletionProgression(
-    timeframe: ScoreTimeframe,
+    timeframe: ScoreTimeframeEnumApi,
     req?: GetProgramRunsRequestParams,
   ): Observable<ProgramRunApi[]> {
     let date = new Date();

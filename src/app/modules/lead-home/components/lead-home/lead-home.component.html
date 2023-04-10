@@ -1,4 +1,4 @@
-<h1 class="mt-4">{{ I18ns.leadHome.title | replaceInTranslation : name }}</h1>
+<h1 class="mt-4">{{ I18ns.leadHome.title + name | titlecase }}</h1>
 <p class="mb-4">{{ I18ns.leadHome.subtitle }}</p>
 <div class="row">
   <div class="col-6">
@@ -31,12 +31,33 @@
 
 <h1 class="mt-4">{{ I18ns.leadHome.statistics.title }}</h1>
 
-<div class="btn-group d-inline-block mb-3" role="group" aria-label="Basic example">
-  <select class="form-select" [ngModel]="statisticTimeRange" (change)="updateScore($event.target)">
-    <option value="week">{{ I18ns.leadHome.statistics.tabs.week }}</option>
-    <option value="month">{{ I18ns.leadHome.statistics.tabs.month }}</option>
-    <option value="year">{{ I18ns.leadHome.statistics.tabs.year }}</option>
-  </select>
+<div class="row my-4">
+  <div class="col-5">
+    <div class="btn-group d-inline-block" role="group" aria-label="Basic example">
+      <select
+        #timeframeSelect
+        class="form-select"
+        [ngModel]="statisticTimeRange"
+        (change)="updateScore({ timeframe: timeframeSelect.value })"
+      >
+        <option [value]="ScoreTimeframeEnumApi.Week">{{ I18ns.leadHome.statistics.tabs.week }}</option>
+        <option [value]="ScoreTimeframeEnumApi.Month">{{ I18ns.leadHome.statistics.tabs.month }}</option>
+        <option [value]="ScoreTimeframeEnumApi.Year">{{ I18ns.leadHome.statistics.tabs.year }}</option>
+      </select>
+    </div>
+  </div>
+  <div class="col-7 text-end">
+    <ng-select
+      #selectTeamStatistics
+      class="text-start"
+      [items]="teamStore.teams.value"
+      bindValue="id"
+      bindLabel="shortName"
+      [placeholder]="I18ns.leadHome.ongoingPrograms.filters.team"
+      [(ngModel)]="filterStatistics"
+    >
+    </ng-select>
+  </div>
 </div>
 
 <div class="row">
@@ -174,10 +195,15 @@
   </div>
   <div class="col-7 text-end">
     <alto-dropdown-filter
+      class="text-start"
       [data]="teamStore.teams.value"
       [displayLabel]="'shortName'"
       [placeholder]="I18ns.leadHome.ongoingPrograms.filters.team"
+      (selectChange)="filterPrograms($event)"
     ></alto-dropdown-filter>
+    <button [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]" class="btn btn-ouline-secondary">
+      {{ I18ns.shared.showAll }}
+    </button>
   </div>
 </div>
 
@@ -197,7 +223,16 @@
 ></ngb-pagination>
 
 <!-- CHALLENGES -->
-<h1 class="my-4">{{ I18ns.leadHome.ongoingChallenges.title }}</h1>
+<div class="row my-4">
+  <div class="col-5">
+    <h1 class="my-4">{{ I18ns.leadHome.ongoingChallenges.title }}</h1>
+  </div>
+  <div class="col-7 text-end">
+    <button [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]" class="btn btn-ouline-secondary">
+      {{ I18ns.shared.showAll }}
+    </button>
+  </div>
+</div>
 
 <div class="row">
   <div class="col-6">

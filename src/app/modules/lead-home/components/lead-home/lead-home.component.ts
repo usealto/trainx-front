@@ -1,20 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { combineLatest, map, switchMap, tap } from 'rxjs';
+import { combineLatest, filter, map, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { ChallengesRestService } from 'src/app/modules/challenges/services/challenges-rest.service';
-import { ScoreTimeframe } from 'src/app/modules/programs/models/scores.model';
+import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
-import { ChallengeApi, ChallengeTypeEnumApi, GetScoresRequestParams, ProgramRunApi } from 'src/app/sdk';
-import { LeadHomeStatistics } from '../statistics/lead-home-statistics.model';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ProgramsStore } from 'src/app/modules/programs/programs.store';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import {
+  ChallengeApi,
+  ChallengeTypeEnumApi,
+  GetProgramRunsRequestParams,
+  GetScoresRequestParams,
+  ProgramRunApi,
+  ScoreByTypeEnumApi,
+  ScoreTimeframeEnumApi,
+  TeamApi,
+} from 'src/app/sdk';
+import { LeadHomeStatistics } from '../statistics/lead-home-statistics.model';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
 
 @UntilDestroy()
 @Component({
@@ -25,10 +33,9 @@ import { TeamStore } from 'src/app/modules/lead-team/team.store';
 export class LeadHomeComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+  ScoreTimeframeEnumApi = ScoreTimeframeEnumApi;
 
-  // TODO -----------
-  name = 'Thomas';
-
+  name = '';
   active = 1;
   sharedData: LeadHomeStatistics[] = [
     { title: I18ns.leadHome.statistics.globalScore, toolTip: I18ns.leadHome.statistics.globalScoreToolTip },
@@ -51,7 +58,7 @@ export class LeadHomeComponent implements OnInit {
   yearData: LeadHomeStatistics[] = [];
   commentsCount = 0;
   questionsCount = 0;
-  statisticTimeRange: ScoreTimeframe = 'week';
+  statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
   globalScore = 0;
   averageCompletion = 0;
   completionProgression = 0;
@@ -64,6 +71,8 @@ export class LeadHomeComponent implements OnInit {
   challengesByTeam: ChallengeApi[] = [];
   challengesByUser: ChallengeApi[] = [];
 
+  temp: any;
+
   constructor(
     private readonly commentsRestService: CommentsRestService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
@@ -72,9 +81,11 @@ export class LeadHomeComponent implements OnInit {
     private readonly challengesRestService: ChallengesRestService,
     private readonly userService: UsersRestService,
     public readonly teamStore: TeamStore,
+    private readonly profileStore: ProfileStore,
   ) {}
 
   ngOnInit(): void {
+    this.name = this.profileStore.user.value.firstname ?? this.profileStore.user.value.username ?? '';
     this.getProgramRuns();
 
     combineLatest([
@@ -93,8 +104,8 @@ export class LeadHomeComponent implements OnInit {
             .filter((c) => c.type === ChallengeTypeEnumApi.ByUser)
             .slice(0, 5);
         }),
-        switchMap(() => this.getScore({ value: 'week' })),
-        switchMap(() => this.getAverageCompletion({ value: 'week' })),
+        switchMap(() => this.getScore({ timeframe: ScoreTimeframeEnumApi.Week } as GetScoresRequestParams)),
+        switchMap(() => this.getAverageCompletion(ScoreTimeframeEnumApi.Week)),
         untilDestroyed(this),
       )
       .subscribe();
@@ -104,12 +115,13 @@ export class LeadHomeComponent implements OnInit {
     this.getProgramRuns();
   }
 
-  getProgramRuns() {
+  getProgramRuns(teams: string[] = []) {
     this.programRunsService
       .getProgramRunsPaginated({
         isFinished: false,
         page: this.programsPage,
         itemsPerPage: this.programPageSize,
+        teamIds: teams.join(','),
       })
       .pipe(
         tap((p) => (this.programs = p.data ?? [])),
@@ -119,28 +131,40 @@ export class LeadHomeComponent implements OnInit {
       .subscribe();
   }
 
-  updateScore(e: any) {
-    combineLatest([this.getScore(e), this.getAverageCompletion(e)])
+  updateScore(e: { timeframe?: string; teamId?: string }) {
+    const paramsScore = e.teamId ? { scoredBy: ScoreByTypeEnumApi.Team, scoredById: e.teamId } : null;
+    const paramsAverage = e.teamId ? { teamIds: e.teamId } : null;
+    combineLatest([
+      this.getScore(paramsScore as GetScoresRequestParams),
+      this.getAverageCompletion(
+        e.timeframe as ScoreTimeframeEnumApi,
+        paramsAverage as GetProgramRunsRequestParams,
+      ),
+    ])
       .pipe()
       .subscribe();
   }
 
-  getScore(e: any) {
-    return this.scoresRestService.getGeneralScores({ timeframe: e?.value } as GetScoresRequestParams).pipe(
+  getScore(e: GetScoresRequestParams) {
+    return this.scoresRestService.getGeneralScores(e).pipe(
+      filter((s) => {
+        if (!s.scores.length) {
+          this.globalScore = 0;
+          return false;
+        }
+        return true;
+      }),
       tap((scores) => {
         this.globalScore =
-          (scores.scores[0].averages.reduce((prev, curr) => prev + curr, 0) /
-            scores.scores[0].averages.length) *
-          100;
-        this.globalScore = scores.scores[0].averages[0];
+          scores.scores[0].averages.reduce((prev, curr) => prev + curr, 0) / scores.scores[0].averages.length;
       }),
     );
   }
 
-  getAverageCompletion(e: any) {
+  getAverageCompletion(timeframe: ScoreTimeframeEnumApi, req?: GetProgramRunsRequestParams) {
     return combineLatest([
-      this.scoresRestService.getAverageCompletion(e.value),
-      this.scoresRestService.getCompletionProgression(e.value),
+      this.scoresRestService.getAverageCompletion(timeframe, req),
+      this.scoresRestService.getCompletionProgression(timeframe, req),
     ]).pipe(
       map(([current, last]) => [
         [current.filter((p) => p.finishedAt !== null), current],
@@ -155,6 +179,19 @@ export class LeadHomeComponent implements OnInit {
           : 0;
       }),
     );
+  }
+
+  filterPrograms(teams: TeamApi[]) {
+    this.getProgramRuns(teams.map((t) => t.id));
+  }
+
+  private _filterStatistics: any;
+  public get filterStatistics() {
+    return this._filterStatistics;
+  }
+  public set filterStatistics(value) {
+    this._filterStatistics = value;
+    this.updateScore({ timeframe: this.statisticTimeRange, teamId: value });
   }
 
   @memoize()
