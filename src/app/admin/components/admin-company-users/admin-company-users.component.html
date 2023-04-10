@@ -1,4 +1,9 @@
 <h2>Users</h2>
+<div class="row d-flex justify-content-end">
+  <a [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'create']" routerLinkActive="menu-selected" class="btn btn-primary my-2" style="max-width:150px">
+    Créer un utilisateur
+  </a>
+</div>
 <!-- create an array of users listing their emails -->  
 <table class="table">
   <thead>

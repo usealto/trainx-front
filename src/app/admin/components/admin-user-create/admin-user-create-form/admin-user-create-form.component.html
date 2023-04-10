@@ -1,0 +1,32 @@
+<div class="page-max-width px-2">
+  <div class="row py-4 border-bottom">
+    <label for="username" class="col-5 mb-2">Username</label>
+    <div class="col input-group">
+      <input type="text" class="form-control" placeholder="username" />
+    </div>
+  </div>
+  <div class="row py-4 border-bottom">
+    <label for="email" class="col-5 mb-2">email</label>
+    <div class="col-7 form-group">
+      <input type="select" class="form-control" placeholder="email"/>
+    </div>
+  </div>
+  <div class="row py-4 border-bottom">
+    <label for="company" class="col-5 mb-2">CompanyId (juste pour rappel)</label>
+    <div class="col-7 form-group">
+      <input type="select" class="form-control" placeholder="company" readonly />
+    </div>
+  </div>
+  <div class="row py-4 border-bottom">
+    <p class="col-5 mb-2">Team</p>
+    <div class="col-7 form-group">
+      <input type="select" class="form-control" placeholder="team"/>
+    </div>
+  </div>
+</div>
+
+<div class="py-4 page-max-width">
+  <button type="button" class="btn btn-primary float-end" (click)="submit()">
+    Save
+  </button>
+</div>
