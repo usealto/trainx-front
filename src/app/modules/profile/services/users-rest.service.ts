@@ -19,4 +19,8 @@ export class UsersRestService {
       tap((u) => (this.userStore.user.value = u)),
     );
   }
+
+  patchUser(id: string, patchUserDtoApi: Partial<UserApi>): Observable<UserApi> {
+    return this.userApi.patchUser({ id, patchUserDtoApi }).pipe(map((u) => u.data || ({} as UserApi)));
+  }
 }
