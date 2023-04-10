@@ -144,12 +144,12 @@
           <alto-img-badge [url]="getUser(tag.createdBy)?.pictureUrl"></alto-img-badge>
         </td>
         <td *ngIf="!isTagProgramsLoading">
-          <alto-colored-pill-list [data]="getTagPrograms(tag.id) ?? []" [limit]="5"></alto-colored-pill-list>
+          <alto-colored-pill-list [data]="getTagPrograms(tag.id)" [limit]="5"></alto-colored-pill-list>
         </td>
         <td>
           <i class="fs-5 bi bi-trash"></i>
         </td>
-        <td>
+        <td class="pointer pe-auto" (click)="openTagForm(tag)">
           <i class="fs-5 bi bi-pencil-fill"></i>
         </td>
       </tr>

@@ -2,17 +2,24 @@
   [items]="data"
   [multiple]="true"
   bindValue="id"
+  [bindLabel]="displayLabel"
   [placeholder]="placeholder"
   [closeOnSelect]="false"
   [(ngModel)]="selectedItems"
-  [style.width]="'130px'"
+  [searchable]="false"
+  (change)="selectChange.emit($event)"
+  #select
 >
+  <ng-template ng-header-tmp>
+    <input style="width: 100%; line-height: 24px" type="text" (input)="search(select, $event)" />
+  </ng-template>
+
   <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
     <p>
       {{ placeholder }} <span class="alto-badge">{{ items.length }}</span>
     </p>
   </ng-template>
-  <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+  <ng-template ng-option-tmp let-item="item" let-index="index">
     <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
       {{ item[displayLabel] }}
     </span>

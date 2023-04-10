@@ -79,12 +79,20 @@ export class ProgramsComponent implements OnInit {
   }
 
   openQuestionForm() {
-    const canvasRef = this.offcanvasService.open(QuestionFormComponent, { position: 'end', panelClass: 'overflow-auto' });
+    const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto',
+    });
     canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
   }
 
-  openTagForm() {
-    const canvasRef = this.offcanvasService.open(TagsFormComponent, { position: 'end', panelClass: 'overflow-auto' });
+  openTagForm(tag?: TagApi, programs?: string[]) {
+    const canvasRef = this.offcanvasService.open(TagsFormComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto',
+    });
+
+      canvasRef.componentInstance.tag = tag;
     canvasRef.componentInstance.createdTag.pipe(switchMap(() => this.getTags())).subscribe();
   }
 
@@ -194,7 +202,7 @@ export class ProgramsComponent implements OnInit {
         switchMap((ids) => this.getUsersfromQuestions(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
         tap(() => (this.isTagsLoading = false)),
-      )
+      );
   }
 
   getProgramsfromTags(tags: TagApi[]) {
@@ -224,8 +232,8 @@ export class ProgramsComponent implements OnInit {
   }
 
   @memoize()
-  getTagPrograms(id: string) {
-    return this.tagPrograms.get(id);
+  getTagPrograms(id: string): string[] {
+    return this.tagPrograms.get(id) ?? [];
   }
 
   changeTagsPage() {

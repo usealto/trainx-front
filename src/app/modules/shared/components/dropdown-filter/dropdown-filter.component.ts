@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
   selector: 'alto-dropdown-filter',
@@ -10,4 +11,10 @@ export class DropdownFilterComponent {
   @Input() placeholder = '';
   @Input() displayLabel = 'name';
   selectedItems = [];
+
+  @Output() selectChange = new EventEmitter<any>();
+
+  search(a: NgSelectComponent, b: any) {
+    a.filter(b.target.value);
+  }
 }
