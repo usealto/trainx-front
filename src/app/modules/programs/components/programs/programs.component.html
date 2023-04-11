@@ -131,7 +131,6 @@
         <th scope="col">{{ I18ns.programs.tags.table.author }}</th>
         <th scope="col">{{ I18ns.programs.tags.table.associatedPrograms }}</th>
         <th></th>
-        <th></th>
       </tr>
     </thead>
     <tbody *ngIf="!isTagsLoading">
@@ -145,9 +144,6 @@
         </td>
         <td *ngIf="!isTagProgramsLoading">
           <alto-colored-pill-list [data]="getTagPrograms(tag.id)" [limit]="5"></alto-colored-pill-list>
-        </td>
-        <td>
-          <i class="fs-5 bi bi-trash"></i>
         </td>
         <td class="pointer pe-auto" (click)="openTagForm(tag)">
           <i class="fs-5 bi bi-pencil-fill"></i>
