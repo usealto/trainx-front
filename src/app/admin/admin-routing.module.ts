@@ -7,6 +7,7 @@ import { AdminCompanyComponent } from './components/admin-company/admin-company.
 import { AdminCompanyUsersComponent } from './components/admin-company-users/admin-company-users.component';
 import { AdminUserComponent } from './components/admin-user/admin-user.component';
 import { AdminUserCreateComponent } from './components/admin-user-create/admin-user-create.component';
+import { AdminUsersComponent } from './components/admin-users/admin-users.component';
 
 const routes: Routes = [
   {
@@ -36,9 +37,13 @@ const routes: Routes = [
         component: AdminUserCreateComponent,
       },
       {
+        path: 'users',
+        component: AdminUsersComponent,
+      },
+      {
         path: 'users/:id',
         component: AdminUserComponent,
-      }
+      }      
     ]
 
 

@@ -13,9 +13,10 @@ import { AdminCompanyUsersComponent } from './components/admin-company-users/adm
 import { AdminUserComponent } from './components/admin-user/admin-user.component';
 import { AdminUserCreateComponent } from './components/admin-user-create/admin-user-create.component';
 import { AdminUserCreateFormComponent } from './components/admin-user-create/admin-user-create-form/admin-user-create-form.component';
+import { AdminUsersComponent } from './components/admin-users/admin-users.component';
 
 @NgModule({
-  declarations: [AdminHomeComponent, AdminLayoutComponent, AdminCompaniesComponent, AdminCompanyComponent, AdminMenuComponent, AdminCompanyUsersComponent, AdminUserComponent, AdminUserCreateComponent, AdminUserCreateFormComponent],
+  declarations: [AdminHomeComponent, AdminLayoutComponent, AdminCompaniesComponent, AdminCompanyComponent, AdminMenuComponent, AdminCompanyUsersComponent, AdminUserComponent, AdminUserCreateComponent, AdminUserCreateFormComponent, AdminUsersComponent],
   imports: [CommonModule, AdminRoutingModule, FormsModule, ReactiveFormsModule],
 })
 export class AdminModule {}
