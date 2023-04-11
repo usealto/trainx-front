@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, map, tap } from 'rxjs';
-import { GetUsersRequestParams, UserApi, UsersApiService } from 'src/app/sdk';
+import { GetUsersRequestParams, UserApi, UserPaginatedResponseApi, UsersApiService } from 'src/app/sdk';
 import { ProfileStore } from '../profile.store';
 
 @Injectable({
@@ -11,6 +11,15 @@ export class UsersRestService {
 
   getUsers(req?: GetUsersRequestParams): Observable<UserApi[]> {
     return this.userApi.getUsers({ ...req }).pipe(map((r) => r.data ?? []));
+  }
+
+  getUsersPaginated(req?: GetUsersRequestParams): Observable<UserPaginatedResponseApi> {
+    const par = {
+      ...req,
+      page: req?.page ?? 1,
+      itemsPerPage: req?.itemsPerPage ?? 10,
+    };
+    return this.userApi.getUsers(par);
   }
 
   getMe(): Observable<UserApi> {
