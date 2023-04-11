@@ -22,3 +22,12 @@
     </tr>
   </tbody>
 </table>
+
+<ngb-pagination
+    [collectionSize]="usersCount"
+    [(page)]="usersPage"
+    (pageChange)="changeUsersPage()"
+    [pageSize]="usersPageSize"
+    [maxSize]="10"
+    aria-label="Default pagination"
+  ></ngb-pagination>

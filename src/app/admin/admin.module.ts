@@ -1,3 +1,4 @@
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -17,6 +18,6 @@ import { AdminUsersComponent } from './components/admin-users/admin-users.compon
 
 @NgModule({
   declarations: [AdminHomeComponent, AdminLayoutComponent, AdminCompaniesComponent, AdminCompanyComponent, AdminMenuComponent, AdminCompanyUsersComponent, AdminUserComponent, AdminUserCreateComponent, AdminUserCreateFormComponent, AdminUsersComponent],
-  imports: [CommonModule, AdminRoutingModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, AdminRoutingModule, FormsModule, ReactiveFormsModule, NgbPaginationModule],
 })
 export class AdminModule {}
