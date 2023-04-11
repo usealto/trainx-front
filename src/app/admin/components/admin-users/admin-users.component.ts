@@ -22,21 +22,15 @@ export class AdminUsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') || '';
-    
-    this.usersRestService.getUsers()
-    .pipe(
-      tap((users) => this.users = users)
-    )
-    .subscribe();
+    this.changeUsersPage()
   }
 
-  changeUsersPage() {
-    console.log('TODO');
-    
-    // this.usersRestService.getUsers(this.usersPage, this.usersPageSize)
-    // .pipe(
-    //   tap((users) => this.users = users)
-    // )
-    // .subscribe();
+  changeUsersPage() {    
+    this.usersRestService.getUsersPaginated({page: this.usersPage, itemsPerPage: this.usersPageSize})
+    .pipe(
+      tap((q) => (this.users = q.data ?? [])),
+      tap((q) => (this.usersCount = q.meta.totalItems ?? 0))
+    )
+    .subscribe();
   }
 }
