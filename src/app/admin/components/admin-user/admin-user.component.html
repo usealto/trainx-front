@@ -1,15 +1,27 @@
-<h2>Data de cet utilistaeur, version brute :</h2>
-<pre>{{ user | json }}</pre>
+<div class="row">
 
-<h2>Edit user</h2>
-<form [formGroup]="userForm" class="page-max-width" *ngIf="userForm">
-  <div class="form-group row">
-    <label class="form-label" for="username">Username</label>
-    <input formControlName="username" />
+  <div class="col-sm-6">
+    <h2>Edit user</h2>
+    <form [formGroup]="userForm" class="page-max-width" *ngIf="userForm">
+      <div class="form-group row">
+        <label class="form-label col-5 mb-2" for="username">Username</label>
+        <div class="col input-group">
+          <input class="form-control" formControlName="username" />
+        </div>
+      </div>
+      <div class="form-group row my-2">
+        <label class="form-label col-5 mb-2" for="slackId">Slack ID <small class="text-danger text-smaller">Make sure you know what your are doing</small></label>
+        <div class="col input-group">
+          <input class="form-control" formControlName="slackId" />
+        </div>
+      </div>
+      <button class="btn btn-primary" type="submit" (click)="submit()">Submit</button>
+    </form>
   </div>
-  <div class="form-group row">
-    <label class="form-label" for="slackId">Slack ID (⚠️ make sure you know what your are doing)</label>
-    <input formControlName="slackId" />
+
+  <div class="col-sm-6">
+    <h2>Data de cet utilisateur, version brute :</h2>
+    <pre>{{ user | json }}</pre>
   </div>
-  <button class="btn btn-primary" type="submit" (click)="submit()">Submit</button>
-</form>
+
+</div>
