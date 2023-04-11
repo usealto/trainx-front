@@ -80,7 +80,8 @@ export class TagsFormComponent implements OnInit {
   createTag() {
     if (!this.tagForm.value) return;
     const { name, programs, questions, description } = this.tagForm.value;
-    if (!this.isEdit && this.tag) {
+
+    if (!this.isEdit && !this.tag) {
       this.tagService
         .createTag({
           name,
@@ -93,8 +94,8 @@ export class TagsFormComponent implements OnInit {
         .subscribe();
     } else {
       const params: PatchTagDtoApi = {
-        name: this.tag?.name,
-        description: this.tag?.name,
+        name: name,
+        description: description,
       };
       this.tagService
         .updateTag({ id: this.tag?.id, patchTagDtoApi: params } as PatchTagRequestParams)

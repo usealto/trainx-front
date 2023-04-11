@@ -3,6 +3,7 @@ import { map, Observable } from 'rxjs';
 import {
   CreateQuestionDtoApi,
   GetQuestionsRequestParams,
+  PatchQuestionRequestParams,
   QuestionApi,
   QuestionPaginatedResponseApi,
   QuestionsApiService,
@@ -36,5 +37,9 @@ export class QuestionsRestService {
 
   createQuestion(createQuestionDtoApi: CreateQuestionDtoApi) {
     return this.questionApi.createQuestion({ createQuestionDtoApi }).pipe(map((d) => d.data));
+  }
+
+  updateQuestion(patchQuestionRequestParams: PatchQuestionRequestParams) {
+    return this.questionApi.patchQuestion(patchQuestionRequestParams).pipe(map((r) => r.data));
   }
 }
