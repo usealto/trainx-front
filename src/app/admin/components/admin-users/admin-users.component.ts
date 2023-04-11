@@ -14,6 +14,9 @@ import { UserApi } from 'src/app/sdk';
 export class AdminUsersComponent implements OnInit {
   users: UserApi[] = [];
   id: string | undefined;
+  usersCount = 0;
+  usersPage = 1;
+  usersPageSize = 10;
 
   constructor(private readonly companiesRestService: CompaniesRestService, private readonly usersRestService:UsersRestService, private route: ActivatedRoute) {}
 
@@ -25,5 +28,15 @@ export class AdminUsersComponent implements OnInit {
       tap((users) => this.users = users)
     )
     .subscribe();
+  }
+
+  changeUsersPage() {
+    console.log('TODO');
+    
+    // this.usersRestService.getUsers(this.usersPage, this.usersPageSize)
+    // .pipe(
+    //   tap((users) => this.users = users)
+    // )
+    // .subscribe();
   }
 }
