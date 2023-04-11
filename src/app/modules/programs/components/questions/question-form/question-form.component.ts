@@ -4,7 +4,15 @@ import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { combineLatest, forkJoin, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { AnswerFormatTypeEnumApi, ProgramApi, QuestionApi, QuestionTypeEnumApi, TagApi } from 'src/app/sdk';
+import {
+  AnswerFormatTypeEnumApi,
+  PatchQuestionDtoApi,
+  PatchQuestionRequestParams,
+  ProgramApi,
+  QuestionApi,
+  QuestionTypeEnumApi,
+  TagApi,
+} from 'src/app/sdk';
 import { QuestionForm } from '../../../models/question.form';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
 import { QuestionsRestService } from '../../../services/questions-rest.service';
@@ -18,9 +26,11 @@ import { TagsRestService } from '../../../services/tags-rest.service';
 export class QuestionFormComponent implements OnInit {
   I18ns = I18ns;
   @Input() program: ProgramApi | undefined;
+  @Input() question?: QuestionApi;
   @Output() createdQuestion = new EventEmitter<QuestionApi>();
   private fb: IFormBuilder;
   questionForm!: IFormGroup<QuestionForm>;
+  isEdit = false;
 
   programs: ProgramApi[] = [];
   tags: TagApi[] = [];
@@ -59,11 +69,28 @@ export class QuestionFormComponent implements OnInit {
         explanation: '',
         link: '',
       });
+
+      if (this.question) {
+        this.isEdit = true;
+
+        this.questionForm.patchValue({
+          title: this.question.title,
+          tags: this.question.tags?.map((t) => t.id),
+          programs: this.question.programs?.map((p) => p.id),
+          answersAccepted: this.question.answersAccepted[0],
+          answersWrong1: this.question.answersWrong[0],
+          answersWrong2: this.question.answersWrong[1],
+          answersWrong3: this.question.answersWrong[2],
+          explanation: this.question.explanation,
+          link: this.question.link,
+        });
+      }
     }, 0);
   }
 
   createQuestion() {
     if (!this.questionForm.value) return;
+
     const {
       title,
       type,
@@ -78,22 +105,43 @@ export class QuestionFormComponent implements OnInit {
       link,
     } = this.questionForm.value;
 
-    this.questionService
-      .createQuestion({
-        title,
-        type,
+    if (!this.isEdit && !this.question) {
+      this.questionService
+        .createQuestion({
+          title,
+          type,
+          tags: tags.map((id) => ({ id } as TagApi)),
+          programs: programs.map((id) => ({ id } as ProgramApi)),
+          answerType,
+          answersAccepted: [answersAccepted],
+          answersWrong: [answersWrong1, answersWrong2, answersWrong3].filter((a) => !!a),
+          explanation,
+          link,
+        })
+        .pipe(
+          tap((question) => this.createdQuestion.emit(question)),
+          tap(() => this.activeOffcanvas.dismiss()),
+        )
+        .subscribe();
+    } else {
+      const params: PatchQuestionDtoApi = {
+        title: title,
+        type: type,
         tags: tags.map((id) => ({ id } as TagApi)),
         programs: programs.map((id) => ({ id } as ProgramApi)),
-        answerType,
+        answerType: answerType,
         answersAccepted: [answersAccepted],
         answersWrong: [answersWrong1, answersWrong2, answersWrong3].filter((a) => !!a),
         explanation,
         link,
-      })
-      .pipe(
-        tap((question) => this.createdQuestion.emit(question)),
-        tap(() => this.activeOffcanvas.dismiss()),
-      )
-      .subscribe();
+      };
+      this.questionService
+        .updateQuestion({ id: this.question?.id, patchQuestionDtoApi: params } as PatchQuestionRequestParams)
+        .pipe(
+          tap((question) => this.createdQuestion.emit(question)),
+          tap(() => this.activeOffcanvas.dismiss()),
+        )
+        .subscribe();
+    }
   }
 }
