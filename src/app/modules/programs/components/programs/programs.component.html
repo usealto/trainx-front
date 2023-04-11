@@ -68,7 +68,7 @@
           <alto-colored-pill-list [data]="question.programs" [limit]="3"></alto-colored-pill-list>
         </td>
         <td *ngIf="!question.programs || question.programs.length < 1">-</td>
-        <td>
+        <td class="pointer pe-auto" (click)="openQuestionForm(question)">
           <i class="fs-5 bi bi-pencil-fill"></i>
         </td>
       </tr>

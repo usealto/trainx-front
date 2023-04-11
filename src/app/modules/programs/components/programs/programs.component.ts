@@ -78,11 +78,12 @@ export class ProgramsComponent implements OnInit {
     this.getTags().subscribe();
   }
 
-  openQuestionForm() {
+  openQuestionForm(question?: QuestionApi) {
     const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
     });
+    canvasRef.componentInstance.question = question;
     canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
   }
 
@@ -92,7 +93,7 @@ export class ProgramsComponent implements OnInit {
       panelClass: 'overflow-auto',
     });
 
-      canvasRef.componentInstance.tag = tag;
+    canvasRef.componentInstance.tag = tag;
     canvasRef.componentInstance.createdTag.pipe(switchMap(() => this.getTags())).subscribe();
   }
 
