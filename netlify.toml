@@ -4,5 +4,3 @@
   status = 200
 [context.admin] # “admin” is the branch name
   command = "npm run build"
-[context.admin-dev] # “admin-dev” is the branch name
-  command = "npm run build:preprod"
