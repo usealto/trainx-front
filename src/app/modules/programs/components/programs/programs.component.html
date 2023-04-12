@@ -1,12 +1,20 @@
-<h1 class="mt-4">{{ I18ns.programs.title }}</h1>
+<h1 id="programsAnchor" class="mt-4">{{ I18ns.programs.title }}</h1>
 <p class="mb-4">{{ I18ns.programs.subtitle }}</p>
 <div class="pb-4 border-bottom">
-  <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.programs.title }}</button>
-  <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.questions.title }}</button>
-  <button type="button" class="btn btn-outline-secondary me-4">
-    {{ I18ns.programs.awaitQuestions.title }}
-  </button>
-  <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.tags.title }}</button>
+  <alto-anchor-navigator fragment="programsAnchor">
+    <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.programs.title }}</button>
+  </alto-anchor-navigator>
+  <alto-anchor-navigator fragment="questionsAnchor">
+    <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.questions.title }}</button>
+  </alto-anchor-navigator>
+  <alto-anchor-navigator fragment="submittedQuestionsAnchor">
+    <button type="button" class="btn btn-outline-secondary me-4">
+      {{ I18ns.programs.awaitQuestions.title }}
+    </button>
+  </alto-anchor-navigator>
+  <alto-anchor-navigator fragment="tagsAnchor">
+    <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.tags.title }}</button>
+  </alto-anchor-navigator>
 </div>
 <div class="py-4 border-bottom">
   <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
@@ -34,7 +42,7 @@
   <button type="button" class="btn btn-primary float-end" (click)="openQuestionForm()">
     {{ I18ns.programs.questions.createQuestion }}
   </button>
-  <h1>{{ I18ns.programs.questions.title }}</h1>
+  <h1 id="questionsAnchor">{{ I18ns.programs.questions.title }}</h1>
   <p class="mb-4">{{ I18ns.programs.questions.subtitle }}</p>
   <table class="table">
     <thead>
@@ -85,7 +93,7 @@
 </div>
 <div class="py-4 border-bottom">
   <div>
-    <h1>{{ I18ns.programs.awaitQuestions.title }}</h1>
+    <h1 id="submittedQuestionsAnchor">{{ I18ns.programs.awaitQuestions.title }}</h1>
     <p class="mb-4">{{ I18ns.programs.awaitQuestions.subtitle }}</p>
   </div>
   <table class="table">
@@ -121,7 +129,7 @@
   <button type="button" class="btn btn-primary float-end" (click)="openTagForm()">
     {{ I18ns.programs.tags.createTag }}
   </button>
-  <h1>{{ I18ns.programs.tags.title }}</h1>
+  <h1 id="tagsAnchor">{{ I18ns.programs.tags.title }}</h1>
   <p class="mb-4">{{ I18ns.programs.tags.subtitle }}</p>
   <table class="table">
     <thead>
