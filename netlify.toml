@@ -4,6 +4,7 @@
   status = 200
 [context.admin] # “admin” is the branch name
   environment = {
-    NODE_ENV = "production"
+    NODE_ENV = "production",
+    auth0Domain: 'https://usealto.eu.auth0.com',
   }
   command = "npm run build"
