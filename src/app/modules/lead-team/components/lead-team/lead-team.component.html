@@ -1,14 +1,18 @@
 <h1 class="mt-4">{{ I18ns.leadTeam.title }}</h1>
 <p class="mb-4">{{ I18ns.leadTeam.subtitle }}</p>
 <div class="pb-4 border-bottom">
-  <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.leadTeam.teams.title }}</button>
-  <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.leadTeam.members.title }}</button>
+  <alto-anchor-navigator fragment="teamsAnchor">
+    <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.leadTeam.teams.title }}</button>
+  </alto-anchor-navigator>
+  <alto-anchor-navigator fragment="membersAnchor">
+    <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.leadTeam.members.title }}</button>
+  </alto-anchor-navigator>
 </div>
 <div class="py-4 border-bottom">
   <button type="button" class="btn btn-primary float-end">
     {{ I18ns.leadTeam.teams.createTeam }}
   </button>
-  <h1>{{ I18ns.leadTeam.teams.title }}</h1>
+  <h1 id="teamsAnchor">{{ I18ns.leadTeam.teams.title }}</h1>
   <p class="mb-4">{{ I18ns.leadTeam.teams.subtitle }}</p>
   <table class="table">
     <thead>
@@ -50,7 +54,7 @@
   <button type="button" class="btn btn-outline-secondary float-end">
     {{ I18ns.leadTeam.members.invite }}
   </button>
-  <h1>{{ I18ns.leadTeam.members.title }}</h1>
+  <h1 id="membersAnchor">{{ I18ns.leadTeam.members.title }}</h1>
   <p class="mb-4">{{ I18ns.leadTeam.members.subtitle }}</p>
   <table class="table">
     <thead>
