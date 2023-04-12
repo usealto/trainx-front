@@ -5,7 +5,7 @@ import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { CompanyApi, TeamApi } from 'src/app/sdk';
+import { CompanyApi, TeamApi, UserApi } from 'src/app/sdk';
 
 @Component({
   selector: 'alto-admin-users-upload',
@@ -13,7 +13,7 @@ import { CompanyApi, TeamApi } from 'src/app/sdk';
   styleUrls: ['./admin-users-upload.component.scss']
 })
 export class AdminUsersUploadComponent implements OnInit {
-  csvData: string[] = [];
+  csvData: Partial<UserApi>[] = [];
   id: string | undefined;
   company!: CompanyApi;
   teams: TeamApi[] = []; 
@@ -41,8 +41,14 @@ export class AdminUsersUploadComponent implements OnInit {
     const file = event.target.files[0];
     Papa.parse(file, {
       complete: (results: { data: any[]; }) => {
-        this.csvData = results.data;
-        if (this.csvData && this.csvData[0] && this.csvData[0][0] === 'email') {
+        this.csvData = results.data.map((userRow: string[]) => {
+          return {
+            email: userRow[0],
+            teamId: this.findSelectedTeam(userRow[1]),
+            companyId: this.id
+          } as Partial<UserApi>;
+        });
+        if (this.csvData && this.csvData[0] && this.csvData[0].email === 'email') {
           this.csvData = this.csvData.slice(1);
         }
 
