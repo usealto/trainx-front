@@ -1,4 +1,4 @@
-<h2>Upload a CSV of users following the format : <i>email,team</i></h2>
+<h2>Upload a CSV of users following the format : <i>email,teamShortName</i></h2>
 <p>for {{company.name}}</p>
 
 <br><br>
@@ -13,16 +13,18 @@
   <thead>
     <tr>
       <th>email</th>
-      <th>team</th>
+      <th>team ShortName</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let row of csvData">
-      <td *ngIf="!reg.test(row[0])" class="text-danger">{{row[0]}} </td><td *ngIf="!!reg.test(row[0])">{{row[0]}} </td>
-      <td>{{row[1]}}
-        <!-- <select [(ngModel)]="">
+      <!-- <td *ngIf="!reg.test(row.email)" class="text-danger">{{row.email}} </td><td *ngIf="!!reg.test(row.email)">{{row.email}} </td> -->
+      <!-- <td><pre>{{row |json}}</pre></td> -->
+      <td><pre>{{row.email}}</pre></td>
+      <td>{{row.teamId}}
+        <select [(ngModel)]="row.teamId">
           <option *ngFor="let team of teams" [value]="team.id">{{team.shortName}}</option>
-        </select>         -->
+        </select>        
       </td>
     </tr>
   </tbody>
