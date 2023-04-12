@@ -3,4 +3,7 @@
   to = "/index.html"
   status = 200
 [context.admin] # “admin” is the branch name
+  environment = {
+    NODE_ENV = "production"
+  }
   command = "npm run build"
