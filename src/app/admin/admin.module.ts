@@ -15,9 +15,10 @@ import { AdminUserComponent } from './components/admin-user/admin-user.component
 import { AdminUserCreateComponent } from './components/admin-user-create/admin-user-create.component';
 import { AdminUserCreateFormComponent } from './components/admin-user-create/admin-user-create-form/admin-user-create-form.component';
 import { AdminUsersComponent } from './components/admin-users/admin-users.component';
+import { AdminUsersUploadComponent } from './components/admin-users-upload/admin-users-upload.component';
 
 @NgModule({
-  declarations: [AdminHomeComponent, AdminLayoutComponent, AdminCompaniesComponent, AdminCompanyComponent, AdminMenuComponent, AdminCompanyUsersComponent, AdminUserComponent, AdminUserCreateComponent, AdminUserCreateFormComponent, AdminUsersComponent],
+  declarations: [AdminHomeComponent, AdminLayoutComponent, AdminCompaniesComponent, AdminCompanyComponent, AdminMenuComponent, AdminCompanyUsersComponent, AdminUserComponent, AdminUserCreateComponent, AdminUserCreateFormComponent, AdminUsersComponent, AdminUsersUploadComponent],
   imports: [CommonModule, AdminRoutingModule, FormsModule, ReactiveFormsModule, NgbPaginationModule],
 })
 export class AdminModule {}

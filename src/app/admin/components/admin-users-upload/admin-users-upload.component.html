@@ -1,0 +1,47 @@
+<h2>Upload a CSV of users following the format : <i>email,team</i></h2>
+<p>for {{company.name}}</p>
+
+<br><br>
+
+<div class="row">
+  <div class="col-auto">
+    <input type="file" (change)="onFileSelected($event)" class="form-control" *ngIf="csvData.length === 0">
+  </div>
+</div>
+
+<table *ngIf="csvData.length > 0">
+  <thead>
+    <tr>
+      <th>email</th>
+      <th>team</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of csvData">
+      <td *ngIf="!reg.test(row[0])" class="text-danger">{{row[0]}} </td><td *ngIf="!!reg.test(row[0])">{{row[0]}} </td>
+      <td>{{row[1]}}
+        <!-- <select [(ngModel)]="">
+          <option *ngFor="let team of teams" [value]="team.id">{{team.shortName}}</option>
+        </select>         -->
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<button class="btn btn-primary" *ngIf="csvData.length > 0">Upload</button>
+<button class="btn btn-danger" *ngIf="csvData.length > 0" (click)="csvData = []">Clear</button>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>email</th>
+      <th>teamId</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of teams">
+      <pre>{{ row| json}}</pre>
+    </tr>
+  </tbody>  
+</table>
