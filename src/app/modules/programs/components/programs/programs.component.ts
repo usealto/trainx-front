@@ -15,6 +15,7 @@ import {
   ScoreTimeframeEnumApi,
   ScoresResponseDtoApi,
   TagApi,
+  TeamApi,
   UserApi,
 } from 'src/app/sdk';
 import { ProgramsRestService } from '../../services/programs-rest.service';
@@ -23,6 +24,7 @@ import { QuestionFormComponent } from '../questions/question-form/question-form.
 import { ScoresRestService } from '../../services/scores-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
+import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
 
 @UntilDestroy()
@@ -69,6 +71,7 @@ export class ProgramsComponent implements OnInit {
     private readonly scoresServices: ScoresRestService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly tagRestService: TagsRestService,
+    public readonly teamStore: TeamStore,
   ) {}
 
   ngOnInit(): void {
@@ -101,9 +104,13 @@ export class ProgramsComponent implements OnInit {
     this.getPrograms();
   }
 
-  getPrograms() {
+  getPrograms(teams: string[] = []) {
     this.programService
-      .getProgramsPaginated({ page: this.programsPage, itemsPerPage: this.programPageSize })
+      .getProgramsPaginated({
+        page: this.programsPage,
+        itemsPerPage: this.programPageSize,
+        teamIds: teams.join(','),
+      })
       .pipe(
         tap((p) => (this.programs = p.data ?? [])),
         tap((p) => (this.programsCount = p.meta.totalItems ?? [])),
@@ -230,6 +237,10 @@ export class ProgramsComponent implements OnInit {
       }
     });
     return programList;
+  }
+
+  filterPrograms(teams: TeamApi[]) {
+    this.getPrograms(teams.map((t) => t.id));
   }
 
   @memoize()
