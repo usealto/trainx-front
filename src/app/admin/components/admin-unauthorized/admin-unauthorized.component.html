@@ -4,6 +4,8 @@
 <p>Veuillez contacter romain@usealto.com</p>
 
 <br><br><br>
+<div *ngIf="user">
 <p>pour rappel, vous êtes : {{user.email}}</p>
 <p>vos roles sont :</p>
 <pre>{{user.roles | json}}</pre>
+</div>
