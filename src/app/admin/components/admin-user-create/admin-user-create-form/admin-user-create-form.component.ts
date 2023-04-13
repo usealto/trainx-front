@@ -63,8 +63,8 @@ export class AdminUserCreateFormComponent implements OnInit {
   
     axios.post(environment.apiURL+'/v1/users',{
       email: email,
-      company: companyId,
-      team: teamId,
+      companyId: companyId,
+      teamId: teamId,
     },
     {
       headers: {
