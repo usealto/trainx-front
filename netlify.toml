@@ -4,3 +4,9 @@
   status = 200
 [context.admin] # “admin” is the branch name
   command = "npm run build"
+
+# Rewrite a path
+[[redirects]]
+from = "/"
+to = "/admin/home"
+status = 200
