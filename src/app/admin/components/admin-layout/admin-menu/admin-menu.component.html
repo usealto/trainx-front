@@ -16,7 +16,7 @@
         Users
       </a>
     </div>
-    <div class="bottom-block">
+    <div class="bottom-block" *ngIf="user">
       <alto-img-badge [url]="user.pictureUrl"></alto-img-badge> {{user.email}}
     </div>
   </div>
