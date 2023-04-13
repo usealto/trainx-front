@@ -1,6 +1,6 @@
 <div class="container-gl">
 
-  <alto-admin-menu></alto-admin-menu>
+  <alto-admin-menu *ngIf="authorized"></alto-admin-menu>
     
   <div class="router">
     <router-outlet></router-outlet>
