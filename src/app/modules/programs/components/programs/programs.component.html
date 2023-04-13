@@ -17,14 +17,23 @@
   </alto-anchor-navigator>
 </div>
 <div class="py-4 border-bottom">
-  <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
-    {{ I18ns.programs.programs.createProgram }}
-  </a>
-  <h1>{{ I18ns.programs.programs.title }}</h1>
-  <p class="mb-4">{{ I18ns.programs.programs.subtitle }}</p>
-
+  <div>
+    <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
+      {{ I18ns.programs.programs.createProgram }}
+    </a>
+    <h1>{{ I18ns.programs.programs.title }}</h1>
+    <p class="mb-4">{{ I18ns.programs.programs.subtitle }}</p>
+  </div>
+  <div class="col-1 text-end mb-4">
+    <alto-dropdown-filter
+      class="text-start"
+      [data]="teamStore.teams.value"
+      [displayLabel]="'shortName'"
+      [placeholder]="I18ns.programs.programs.filters.team"
+      (selectChange)="filterPrograms($event)"
+    ></alto-dropdown-filter>
+  </div>
   <div class="row mb-3">
-    <!-- <div class="col-6 col-xl-4 col-xxxl-3" *ngFor="let prog of programs"> -->
     <div class="col-4 mb-3" *ngFor="let prog of programs">
       <alto-program-card [displayToggle]="true" [program]="prog"></alto-program-card>
     </div>
