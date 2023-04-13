@@ -1,16 +1,14 @@
 <h1 *ngIf="company">Entreprise : {{company.name}}</h1>
 
-<br><br>
-
-<h2 *ngIf="users">Users : <span class="text-primary">{{users.length}}</span></h2>
-<a [routerLink]="['/', 'admin', 'companies',company.id,'users']" class="btn btn-primary" *ngIf="company">
-  Voir les users
-</a>
 <br>
+<br>
+
+<a [routerLink]="['/', 'admin', 'companies',company.id,'users']" *ngIf="company">
+  <h2 *ngIf="users">Users : <span class="text-primary">{{users.length}}</span></h2>
+</a>
+
 <br>
 <br>
 
 <h2>Data de l'entreprise, version brute :</h2>
 <pre>{{ company | json }}</pre>
-
-
