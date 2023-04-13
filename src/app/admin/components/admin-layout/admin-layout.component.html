@@ -2,8 +2,12 @@
 
   <alto-admin-menu *ngIf="authorized"></alto-admin-menu>
     
-  <div class="router">
+  <div class="router" *ngIf="authorized">
     <router-outlet></router-outlet>
+  </div>
+
+  <div *ngIf="!authorized">
+    <alto-admin-unauthorized></alto-admin-unauthorized>
   </div>
 
 </div>
