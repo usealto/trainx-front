@@ -15,6 +15,7 @@
         <th scope="col">slackQuestionsPerQuiz</th>
         
         <th></th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -29,6 +30,11 @@
         <td>
           <a [routerLink]="['/', 'admin', 'companies',company.id]" routerLinkActive="menu-selected" class="btn btn-primary">
             Voir
+          </a>
+        </td>
+        <td>
+          <a [routerLink]="['/', 'admin', 'companies',company.id,'users']" routerLinkActive="menu-selected" class="btn btn-primary">
+            Voir Users
           </a>
         </td>
       </tr>

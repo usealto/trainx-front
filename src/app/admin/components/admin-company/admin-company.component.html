@@ -1,9 +1,9 @@
-<h1>Entreprise : {{company.name}}</h1>
+<h1 *ngIf="company">Entreprise : {{company.name}}</h1>
 
 <br><br>
 
-<h2>Users : <span class="text-primary">{{users.length}}</span></h2>
-<a [routerLink]="['/', 'admin', 'companies',company.id,'users']" class="btn btn-primary">
+<h2 *ngIf="users">Users : <span class="text-primary">{{users.length}}</span></h2>
+<a [routerLink]="['/', 'admin', 'companies',company.id,'users']" class="btn btn-primary" *ngIf="company">
   Voir les users
 </a>
 <br>
