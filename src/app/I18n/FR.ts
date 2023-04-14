@@ -120,6 +120,9 @@ export const FR = {
         author: 'Créé par',
         associatedPrograms: 'Programmes associés',
       },
+      filters: {
+        programs: 'Programmes',
+      },
     },
     forms: {
       create: 'Création de programme',

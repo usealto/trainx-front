@@ -140,6 +140,15 @@
   </button>
   <h1 id="tagsAnchor">{{ I18ns.programs.tags.title }}</h1>
   <p class="mb-4">{{ I18ns.programs.tags.subtitle }}</p>
+  <div class="col-1 text-end mb-4">
+    <alto-dropdown-filter
+      class="text-start"
+      [data]="programsStore.programs.value"
+      [displayLabel]="'name'"
+      [placeholder]="I18ns.programs.tags.filters.programs"
+      (selectChange)="filterTags($event)"
+    ></alto-dropdown-filter>
+  </div>
   <table class="table">
     <thead>
       <tr>
