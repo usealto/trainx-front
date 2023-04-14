@@ -16,6 +16,7 @@ export class AdminUserComponent implements OnInit {
   user!: UserApi;
   id: string | undefined;
   userForm: any;
+  display = false;
 
 
   constructor(private readonly companiesRestService: CompaniesRestService, private readonly usersRestService:UsersRestService, private route: ActivatedRoute, private formBuilder: FormBuilder) {}
