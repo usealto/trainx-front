@@ -1,0 +1,22 @@
+<div class="page-max-width px-2">
+  <form *ngIf="companyForm" [formGroup]="companyForm">
+    <div class="row py-4 border-bottom">
+      <label for="name" class="col-5 mb-2">name</label>
+      <div class="col-7 form-group">
+        <input type="select" class="form-control" placeholder="name" formControlName="name" />
+      </div>
+    </div>
+    <div class="row py-4 border-bottom">
+      <label for="domain" class="col-5 mb-2">domain (pour matcher les user automatiquement sur slack par ex)</label>
+      <div class="col-7 form-group">
+        <input type="select" class="form-control" placeholder="domain" formControlName="domain" />
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="py-4 page-max-width">
+  <button type="button" class="btn btn-primary float-end" (click)="submit()">
+    Save
+  </button>
+</div>
