@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { combineLatest, forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
@@ -25,6 +25,7 @@ import { ScoresRestService } from '../../services/scores-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { ProgramsStore } from '../../programs.store';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
 
 @UntilDestroy()
@@ -72,6 +73,7 @@ export class ProgramsComponent implements OnInit {
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly tagRestService: TagsRestService,
     public readonly teamStore: TeamStore,
+    public readonly programsStore: ProgramsStore,
   ) {}
 
   ngOnInit(): void {
@@ -105,15 +107,18 @@ export class ProgramsComponent implements OnInit {
   }
 
   getPrograms(teams: string[] = []) {
-    this.programService
-      .getProgramsPaginated({
+    combineLatest([
+      this.programService.getProgramsPaginated({
         page: this.programsPage,
         itemsPerPage: this.programPageSize,
         teamIds: teams.join(','),
-      })
+      }),
+      this.programService.getPrograms(),
+    ])
       .pipe(
-        tap((p) => (this.programs = p.data ?? [])),
-        tap((p) => (this.programsCount = p.meta.totalItems ?? [])),
+        tap(([paginated, full]) => (this.programs = paginated.data ?? [])),
+        tap(([paginated, full]) => (this.programsCount = paginated.meta.totalItems ?? [])),
+        tap(([paginated, full]) => (this.programsStore.programs.value = full)),
         untilDestroyed(this),
       )
       .subscribe();
@@ -195,14 +200,16 @@ export class ProgramsComponent implements OnInit {
     this.getSubmittedQuestions();
   }
 
-  getTags(): Observable<UserApi[]> {
+  getTags(programs: string[] = []): Observable<UserApi[]> {
     return this.tagRestService
       .getTagsPaginated({
         page: this.tagsPage,
         itemsPerPage: this.tagsPageSize,
+        programIds: programs.join(','),
       })
       .pipe(
         tap((t) => (this.tags = t.data ?? [])),
+        tap((t) => console.log(t)),
         tap((t) => (this.tagsCount = t.meta.totalItems ?? 0)),
         tap((t) => this.getProgramsfromTags(t.data ?? [])),
         map((tags) => tags.data?.map((t) => t.createdBy) ?? []),
@@ -243,8 +250,12 @@ export class ProgramsComponent implements OnInit {
     this.getPrograms(teams.map((t) => t.id));
   }
 
+  filterTags(programs: ProgramApi[]) {
+    return this.getTags(programs.map((p) => p.id)).subscribe();
+  }
+
   @memoize()
-  getTagPrograms(id: string): string[] {
+  getTagPrograms(id: string) {
     return this.tagPrograms.get(id) ?? [];
   }
 

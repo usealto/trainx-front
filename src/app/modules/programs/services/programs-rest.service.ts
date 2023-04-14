@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { filter, map, Observable } from 'rxjs';
+import { filter, map, Observable, tap } from 'rxjs';
 import {
   CreateProgramDtoApi,
   DeleteResponseApi,
@@ -10,12 +10,16 @@ import {
   ProgramResponseApi,
   ProgramsApiService,
 } from 'src/app/sdk';
+import { ProgramsStore } from '../programs.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProgramsRestService {
-  constructor(private readonly programApi: ProgramsApiService) {}
+  constructor(
+    private readonly programApi: ProgramsApiService,
+    private readonly programsStore: ProgramsStore,
+  ) {}
 
   getProgramsPaginated(req: GetProgramsRequestParams): Observable<ProgramPaginatedResponseApi> {
     const par = {
@@ -37,7 +41,9 @@ export class ProgramsRestService {
       page: req?.page ?? 1,
       itemsPerPage: req?.itemsPerPage ?? 400,
     };
-    return this.programApi.getPrograms(par).pipe(map((d) => d.data ?? []));
+    return this.programApi.getPrograms(par).pipe(
+      map((d) => d.data ?? []),
+    );
   }
 
   getProgram(id: string): Observable<ProgramApi> {
