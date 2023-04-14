@@ -20,8 +20,8 @@
   </div>
 
   <div class="col-sm-6">
-    <h2>Data de cet utilisateur, version brute :</h2>
-    <pre>{{ user | json }}</pre>
+    <h2>Data brute de ce user, version JSON <input type="checkbox" [(ngModel)]="display"/></h2>
+    <pre *ngIf="display">{{ user | json }}</pre>
   </div>
 
 </div>
