@@ -3,6 +3,14 @@
     <h1>Companies</h1>
     <p class="mb-4">L'ensemble de nos clients</p>
   </div>
+
+  <div class="row d-flex justify-content-end">
+    <a [routerLink]="['/', 'admin', 'companies', 'create']" routerLinkActive="menu-selected" class="btn btn-primary my-2 align-middle" style="max-width:150px">
+      Créer une company
+    </a>
+  </div>
+
+  
   <table class="table">
     <thead>
       <tr>
