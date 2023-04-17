@@ -102,6 +102,11 @@ export const FR = {
         tags: 'Tags',
         programs: 'Programmes',
       },
+      filters: {
+        programs: 'Programmes',
+        tags: 'Tags',
+        contributors: 'Contributeurs',
+      },
     },
     awaitQuestions: {
       title: 'Questions en attente',
