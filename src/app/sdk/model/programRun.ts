@@ -16,10 +16,10 @@ import { ProgramRunQuestionApi } from './programRunQuestion';
 export interface ProgramRunApi { 
     id: string;
     createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
-    finishedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
+    finishedAt: Date;
     program: ProgramApi;
     programId: string;
     programExpectation: number;

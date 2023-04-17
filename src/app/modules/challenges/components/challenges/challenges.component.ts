@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { combineLatest, map, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ChallengeApi, ChallengeTypeEnumApi } from 'src/app/sdk';
 import { ChallengesRestService } from '../../services/challenges-rest.service';
-import { combineLatest, map, tap } from 'rxjs';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @Component({
   selector: 'alto-challenges',

@@ -6,8 +6,11 @@ export const AltoRoutes = {
   programsCreate: 'e/new',
   programsEdit: 'e',
   //
-  leadTeams: 'teams',
   challenges: 'challenges',
+  challengeCreate: 'e/new',
+  challengeEdit: 'e',
+  //
+  leadTeams: 'teams',
   settings: 'settings',
   profile: 'profile',
 
@@ -15,7 +18,3 @@ export const AltoRoutes = {
   translation: 'translation',
   admin: 'admin',
 };
-
-// export const APIRoutes = {
-//   programs: 'programs',
-// };

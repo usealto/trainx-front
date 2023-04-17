@@ -51,8 +51,8 @@ export class ScoresRestService {
       ...req,
       type: req?.type ?? ScoreTypeEnumApi.Guess,
       timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Week,
-      dateAfter: this.getStartDate(req?.timeframe ?? ScoreTimeframeEnumApi.Week).toISOString(),
-      dateBefore: new Date().toISOString(),
+      dateAfter: this.getStartDate(req?.timeframe ?? ScoreTimeframeEnumApi.Week),
+      dateBefore: new Date(),
     };
 
     return this.scoresApi.getScores(par).pipe(
@@ -66,8 +66,8 @@ export class ScoresRestService {
       ...req,
       type: ScoreTypeEnumApi.Program,
       timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Week,
-      dateAfter: this.getStartDate(req?.timeframe ?? ScoreTimeframeEnumApi.Week).toISOString(),
-      dateBefore: new Date().toISOString(),
+      dateAfter: this.getStartDate(req?.timeframe ?? ScoreTimeframeEnumApi.Week),
+      dateBefore: new Date(),
     };
 
     return this.scoresApi.getScores(par).pipe(
@@ -81,8 +81,8 @@ export class ScoresRestService {
       ...req,
       type: ScoreTypeEnumApi.Question,
       timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Year,
-      dateAfter: this.getStartDate(ScoreTimeframeEnumApi.Year).toISOString(),
-      dateBefore: new Date().toISOString(),
+      dateAfter: this.getStartDate(ScoreTimeframeEnumApi.Year),
+      dateBefore: new Date(),
     };
 
     return this.scoresApi.getScores(par).pipe(
@@ -99,8 +99,8 @@ export class ScoresRestService {
       ...req,
       page: 1,
       itemPerPage: 300,
-      createdAfter: this.getStartDate(timeframe).toISOString(),
-      createdBefore: this.getYesterday().toISOString(),
+      createdAfter: this.getStartDate(timeframe),
+      createdBefore: this.getYesterday(),
     };
 
     return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));
@@ -127,8 +127,8 @@ export class ScoresRestService {
       ...req,
       page: 1,
       itemPerPage: 300,
-      createdAfter: date.toISOString(),
-      createdBefore: this.getStartDate(timeframe).toISOString(),
+      createdAfter: date,
+      createdBefore: this.getStartDate(timeframe),
     } as GetProgramRunsRequestParams;
 
     return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));

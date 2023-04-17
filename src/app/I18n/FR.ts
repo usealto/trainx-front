@@ -264,6 +264,11 @@ export const FR = {
         endDate: 'Fin',
       },
     },
+    form: {
+      create: "Création d'un challenge",
+      name: 'Nom du challenge',
+      namePlaceholder: 'Exemple : SalesForce',
+    },
   },
   menu: {
     home: 'Accueil',

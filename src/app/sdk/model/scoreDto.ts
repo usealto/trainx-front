@@ -27,7 +27,7 @@ export interface ScoreDtoApi {
     /**
      * An array of dates, where each element corresponds to a timeframe. For example, if the timeframe is \"week\", each element in this array will represent the start date of the week.
      */
-    dates: Array<string>;
+    dates: Array<Date>;
     /**
      * The label for the score, which can be a tag name for example on scores with a Type Tag.
      */

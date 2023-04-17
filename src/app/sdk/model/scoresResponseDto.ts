@@ -38,11 +38,11 @@ export interface ScoresResponseDtoApi {
     /**
      * The earliest date to include in the score.
      */
-    dateAfter?: string;
+    dateAfter?: Date;
     /**
      * The latest date to include in the score.
      */
-    dateBefore?: string;
+    dateBefore?: Date;
 }
 
 

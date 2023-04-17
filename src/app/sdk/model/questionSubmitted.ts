@@ -15,9 +15,9 @@ import { QuestionSubmittedStatusEnumApi } from './questionSubmittedStatusEnum';
 export interface QuestionSubmittedApi { 
     id: string;
     createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
     status: QuestionSubmittedStatusEnumApi;
     /**
      * The title of the question-submitted. It\'s the actual question written by the user.

@@ -20,9 +20,9 @@ import { TagApi } from './tag';
 export interface ProgramApi { 
     id: string;
     createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
     priority: PriorityEnumApi;
     isActive: boolean;
     name: string;
