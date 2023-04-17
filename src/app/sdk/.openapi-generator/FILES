@@ -29,6 +29,12 @@ model/altoBaseResponsePaginatedMetaDto.ts
 model/answerFormatTypeEnum.ts
 model/challenge.ts
 model/challengeAssignment.ts
+model/challengeAssignmentPaginatedResponse.ts
+model/challengeAssignmentPaginatedResponseAllOf.ts
+model/challengePaginatedResponse.ts
+model/challengePaginatedResponseAllOf.ts
+model/challengeResponse.ts
+model/challengeResponseAllOf.ts
 model/challengeStateEnum.ts
 model/challengeTypeEnum.ts
 model/comment.ts
