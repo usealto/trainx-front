@@ -68,6 +68,7 @@ export const FR = {
       noTeamChallenges: 'Aucun challenge par équipe disponible',
       noTeamChallengesSubtitle: 'Créez, ou importez, vos premiers challenges et assignez à des équipes',
       noIndividualChallenges: 'Aucun challenge individuel disponible',
+      noIndividualChallengesSubtitle: 'Créez, ou importez, vos premiers challenges',
       table: {
         name: 'Nom',
         teams: 'Équipes',
@@ -232,7 +233,7 @@ export const FR = {
     },
   },
   challenges: {
-    title: 'Challenge',
+    title: 'Challenges',
     subtitle: "Retrouvez l'ensemble des challenges de vos équipes.",
     team: {
       title: 'Challenges par équipe',
