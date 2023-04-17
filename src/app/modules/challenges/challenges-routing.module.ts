@@ -10,6 +10,10 @@ const routes: Routes = [
     component: ChallengesComponent,
   },
   {
+    path: AltoRoutes.challengeEdit + '/:id',
+    component: ChallengeFormComponent,
+  },
+  {
     path: AltoRoutes.challengeEdit + '/:id/:type',
     component: ChallengeFormComponent,
   },

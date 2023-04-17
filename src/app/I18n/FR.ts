@@ -266,8 +266,30 @@ export const FR = {
     },
     form: {
       create: "Création d'un challenge",
+      edit: 'Édition de challenge',
       name: 'Nom du challenge',
       namePlaceholder: 'Exemple : SalesForce',
+      type: {
+        label: 'Type',
+        byTeam: 'La meilleure équipe',
+        byTeamSubtitle: "La récompense sera remise à l'équipe ayant le plus haut score.",
+        byUser: 'Le meilleur membre',
+        byUserSubtitle: "La récompense sera remise à l'utilisateur avec le plus haut score.",
+      },
+      teamsSubtitle: 'Sélectionnez au minimum 2 équipes concernées par ce challenge.',
+      minimum: 'Seuils minimum',
+      minimumSubtitle: 'Définissez les seuils à atteindre pour pouvoir participer à ce challenge.',
+      activity: 'Activité',
+      activitySubtitle:
+        'Les participants doivent répondre en moyenne à plus que X questions par jour ouvrés pour pouvoir participer à ce challenge',
+      questions: ['{{}} question', '{{}} questions'],
+      score: 'Score',
+      scoreSubtitle:
+        'Les participants doivent obtenir un score minimum pour pouvoir participer à ce challenge.',
+      duration: 'Durée',
+      durationSubtitle: 'Choisissez une date de début et de fin pour ce challenge.',
+      reward: 'Récompense',
+      rewardSubtitle: "Choisissez une récompense pour la personne ou l'équipe remportant ce challenge.",
     },
   },
   menu: {
