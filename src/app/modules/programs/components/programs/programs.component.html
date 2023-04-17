@@ -31,6 +31,7 @@
       [displayLabel]="'shortName'"
       [placeholder]="I18ns.programs.programs.filters.team"
       (selectChange)="filterPrograms($event)"
+      [isColored]="true"
     ></alto-dropdown-filter>
   </div>
   <div class="row mb-3">
@@ -53,6 +54,29 @@
   </button>
   <h1 id="questionsAnchor">{{ I18ns.programs.questions.title }}</h1>
   <p class="mb-4">{{ I18ns.programs.questions.subtitle }}</p>
+  <div class="col-5 text-end mb-4 row">
+    <alto-dropdown-filter
+      class="text-start col-1"
+      [data]="programsStore.programs.value"
+      [displayLabel]="'name'"
+      [placeholder]="I18ns.programs.questions.filters.programs"
+      (selectChange)="filterQuestionsByPrograms($event)"
+    ></alto-dropdown-filter>
+    <alto-dropdown-filter
+    class="text-start col-1"
+    [data]="programsStore.tags.value"
+    [displayLabel]="'name'"
+    [placeholder]="I18ns.programs.questions.filters.tags"
+    (selectChange)="filterQuestionsByTags($event)"
+  ></alto-dropdown-filter>
+  <alto-dropdown-filter
+  class="text-start col-1"
+  [data]="profileStore.users.value"
+  [displayLabel]="'username'"
+  [placeholder]="I18ns.programs.questions.filters.contributors"
+  (selectChange)="filterQuestionsByContributors($event)"
+></alto-dropdown-filter>
+  </div>
   <table class="table">
     <thead>
       <tr>

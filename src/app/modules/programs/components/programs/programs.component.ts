@@ -25,6 +25,7 @@ import { ScoresRestService } from '../../services/scores-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramsStore } from '../../programs.store';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
 
@@ -73,6 +74,7 @@ export class ProgramsComponent implements OnInit {
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly tagRestService: TagsRestService,
     public readonly teamStore: TeamStore,
+    public readonly profileStore: ProfileStore,
     public readonly programsStore: ProgramsStore,
   ) {}
 
@@ -124,15 +126,24 @@ export class ProgramsComponent implements OnInit {
       .subscribe();
   }
 
-  getQuestions() {
+  getQuestions(programs: string[] = [], tags: string[] = [], contributors: string[] = []) {
     this.isQuestionsLoading = true;
 
-    this.questionsService
-      .getQuestionsPaginated({ page: this.questionsPage, itemsPerPage: this.questionsPageSize })
+    combineLatest([
+      this.questionsService.getQuestionsPaginated({
+        page: this.questionsPage,
+        itemsPerPage: this.questionsPageSize,
+        programIds: programs.join(','),
+        tagIds: tags.join(','),
+        createdBy: contributors.length > 0 ? contributors.join(',') : undefined,
+      }),
+      this.usersService.getUsers(),
+    ])
       .pipe(
-        tap((q) => (this.questions = q.data ?? [])),
-        tap((q) => (this.questionsCount = q.meta.totalItems ?? 0)),
-        switchMap((q) => forkJoin([this.getScoresfromQuestions(q), of(q)])),
+        tap(([questions, users]) => (this.profileStore.users.value = users ?? [])),
+        tap(([questions, users]) => (this.questions = questions.data ?? [])),
+        tap(([questions, users]) => (this.questionsCount = questions.meta.totalItems ?? 0)),
+        switchMap(([questions, users]) => forkJoin([this.getScoresfromQuestions(questions), of(questions)])),
         map(([scores, questions]) => questions.data?.map((q) => q.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
         switchMap((ids) => this.getUsersfromQuestions(ids)),
@@ -209,7 +220,6 @@ export class ProgramsComponent implements OnInit {
       })
       .pipe(
         tap((t) => (this.tags = t.data ?? [])),
-        tap((t) => console.log(t)),
         tap((t) => (this.tagsCount = t.meta.totalItems ?? 0)),
         tap((t) => this.getProgramsfromTags(t.data ?? [])),
         map((tags) => tags.data?.map((t) => t.createdBy) ?? []),
@@ -252,6 +262,25 @@ export class ProgramsComponent implements OnInit {
 
   filterTags(programs: ProgramApi[]) {
     return this.getTags(programs.map((p) => p.id)).subscribe();
+  }
+
+  filterQuestionsByPrograms(programs: ProgramApi[]) {
+    this.getQuestions(programs.map((p) => p.id));
+  }
+
+  filterQuestionsByTags(tags: TagApi[]) {
+    this.getQuestions(
+      [],
+      tags.map((t) => t.id),
+    );
+  }
+
+  filterQuestionsByContributors(contributors: UserApi[]) {
+    this.getQuestions(
+      [],
+      [],
+      contributors.map((c) => c.id),
+    );
   }
 
   @memoize()

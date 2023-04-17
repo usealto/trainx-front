@@ -200,6 +200,7 @@
       [displayLabel]="'shortName'"
       [placeholder]="I18ns.leadHome.ongoingPrograms.filters.team"
       (selectChange)="filterPrograms($event)"
+      [isColored]="true"
     ></alto-dropdown-filter>
     <button [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]" class="btn btn-ouline-secondary">
       {{ I18ns.shared.showAll }}
