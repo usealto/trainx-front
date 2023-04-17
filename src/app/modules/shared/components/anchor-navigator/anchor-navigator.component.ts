@@ -1,8 +1,6 @@
-import { Component, HostListener, Input } from '@angular/core';
+import { Component, HostListener, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { tap } from 'rxjs';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Component({
@@ -10,27 +8,24 @@ import { tap } from 'rxjs';
   templateUrl: './anchor-navigator.component.html',
   styleUrls: ['./anchor-navigator.component.scss'],
 })
-export class AnchorNavigatorComponent {
+export class AnchorNavigatorComponent implements OnChanges {
   @HostListener('click', ['$event.target'])
   onClick() {
     this.scrollToAnchor();
   }
 
   @Input() fragment = '';
-  // @Input() routerLink: string[] = [];
 
-  constructor(private route: ActivatedRoute) {
-    this.route.fragment
-      .pipe(
-        tap((fragment) => {
-          if (fragment && this.fragment === fragment) {
-            console.log(fragment);
-            this.scrollToAnchor();
-          }
-        }),
-        untilDestroyed(this),
-      )
-      .subscribe();
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes?.['fragment'].firstChange) {
+      if (this.route.snapshot.fragment && this.fragment === this.route.snapshot.fragment) {
+        setTimeout(() => {
+          this.scrollToAnchor();
+        }, 500);
+      }
+    }
   }
 
   scrollToAnchor() {
