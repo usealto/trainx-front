@@ -1,5 +1,5 @@
-<h1 class="mt-4">{{ I18ns.programs.title }}</h1>
-<p class="mb-4">{{ I18ns.programs.subtitle }}</p>
+<h1 class="mt-4">{{ I18ns.challenges.title }}</h1>
+<p class="mb-4">{{ I18ns.challenges.subtitle }}</p>
 <div class="pb-4 border-bottom">
   <alto-anchor-navigator fragment="byTeamAnchor">
     <button class="btn btn-outline-secondary me-4">
@@ -20,73 +20,99 @@
 
   <h1 id="byTeamAnchor">{{ I18ns.challenges.team.title }}</h1>
   <p class="mb-4">{{ I18ns.challenges.team.subtitle }}</p>
-  <div class="panel" *ngIf="true; else teamChallenges"></div>
-  <ng-template #teamChallenges>
-    <div class="dropdown">
-      <button class="btn btn-outline-secondary dropdown-toggle" type="button">Équipes</button>
-    </div>
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">{{ I18ns.challenges.team.table.name }}</th>
-          <th scope="col">{{ I18ns.challenges.team.table.teams }}</th>
-          <th scope="col">{{ I18ns.challenges.team.table.leader }}</th>
-          <th scope="col">{{ I18ns.challenges.team.table.endDate }}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">challenge 1</th>
-          <td>
-            <span class="badge rounded-pill bg-primary">EPI</span>
-          </td>
-          <td>Aucun leader</td>
-          <td>31/03</td>
-          <td>
-            <button type="button" class="btn btn-light">
-              <i class="fs-5 bi bi-pencil-fill"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </ng-template>
-</div>
-<div class="py-4 border-bottom">
-  <button type="button" class="btn btn-primary float-end">
-    {{ I18ns.challenges.individual.createChallenge }}
+
+  <div class="panel">
+    <h2>{{ I18ns.leadHome.ongoingChallenges.byTeam }}</h2>
+
+    <ng-container *ngIf="challengesByTeam.length > 0; else noChallengesTeam">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let chal of challengesByTeam">
+            <td>{{ chal.name }}</td>
+            <td>
+              <alto-colored-pill-list
+                [hasDynamicColor]="true"
+                [data]="chal.teams"
+                [limit]="3"
+              ></alto-colored-pill-list>
+            </td>
+            <td>
+              <span
+                *ngIf="chal.leadTeam"
+                class="alto-badge"
+                [style.backgroundColor]="chal.leadTeam.id | uuid2color"
+                [style.color]="'white'"
+              >
+                {{ chal.leadTeam.shortName }}
+              </span>
+            </td>
+            <td>{{ chal.endDate | date : 'shortDate' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+    <ng-template #noChallengesTeam>
+      <div class="panel text-center">
+        <i class="bi bi-controller fs-5"></i>
+        <h2>{{ I18ns.leadHome.ongoingChallenges.noTeamChallenges }}</h2>
+        <p>{{ I18ns.leadHome.ongoingChallenges.noTeamChallengesSubtitle }}</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <hr />
+
+  <button type="button" class="btn btn-primary float-end mt-4">
+    {{ I18ns.challenges.team.createChallenge }}
   </button>
 
-  <h1 id="byUserAnchor">{{ I18ns.challenges.individual.title }}</h1>
+  <h1 id="byUserAnchor" class="mt-4">{{ I18ns.challenges.individual.title }}</h1>
   <p class="mb-4">{{ I18ns.challenges.individual.subtitle }}</p>
-  <div class="dropdown">
-    <button class="btn btn-outline-secondary dropdown-toggle" type="button">Équipes</button>
+
+  <div class="panel">
+    <h2>{{ I18ns.leadHome.ongoingChallenges.individual }}</h2>
+    <ng-container *ngIf="challengesByUser.length > 0; else noChallenges">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let chal of challengesByUser">
+            <td>{{ chal.name }}</td>
+            <td>
+              <alto-colored-pill-list
+                [hasDynamicColor]="true"
+                [data]="chal.teams"
+                [limit]="3"
+              ></alto-colored-pill-list>
+            </td>
+            <td>
+              <alto-img-badge [url]="(getUser(chal.leadUser) | async)?.pictureUrl"></alto-img-badge>
+            </td>
+            <td>{{ chal.endDate | date : 'shortDate' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+    <ng-template #noChallenges>
+      <div class="panel text-center">
+        <i class="bi bi-controller fs-5"></i>
+        <h2>{{ I18ns.leadHome.ongoingChallenges.noIndividualChallenges }}</h2>
+        <p>{{ I18ns.leadHome.ongoingChallenges.noIndividualChallengesSubtitle }}</p>
+      </div>
+    </ng-template>
   </div>
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">{{ I18ns.challenges.individual.table.name }}</th>
-        <th scope="col">{{ I18ns.challenges.individual.table.teams }}</th>
-        <th scope="col">{{ I18ns.challenges.individual.table.leader }}</th>
-        <th scope="col">{{ I18ns.challenges.individual.table.endDate }}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">challenge 2</th>
-        <td>
-          <span class="badge rounded-pill bg-success">DTS</span>
-        </td>
-        <td>Aucun leader</td>
-        <td>31/03</td>
-        <td>
-          <button type="button" class="btn btn-light">
-            <i class="fs-5 bi bi-pencil-fill"></i>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 </div>
