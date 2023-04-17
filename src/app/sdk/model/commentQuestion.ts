@@ -24,9 +24,9 @@ import { QuestionTypeEnumApi } from './questionTypeEnum';
 export interface CommentQuestionApi { 
     id: string;
     createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
     type: QuestionTypeEnumApi;
     answerType: AnswerFormatTypeEnumApi;
     /**

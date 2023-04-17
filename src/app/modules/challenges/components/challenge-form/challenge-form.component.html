@@ -1,0 +1,13 @@
+<form *ngIf="challengeForm" [formGroup]="challengeForm">
+  <div class="row">
+    <div class="col-5">{{ I18ns.challenges.form.name }}</div>
+    <div class="col-7">
+      <input
+        type="text"
+        class="form-control"
+        formControlName="name"
+        placeholder="{{ I18ns.challenges.form.namePlaceholder }}"
+      />
+    </div>
+  </div>
+</form>

@@ -16,10 +16,10 @@ import { ChallengeApi } from './challenge';
 export interface ChallengeAssignmentApi { 
     id: string;
     createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
-    archivedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
+    archivedAt: Date;
     challengeId: string;
     teamId: string;
     challenge: ChallengeApi;

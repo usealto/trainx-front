@@ -18,9 +18,9 @@ import { ChallengeApi } from './challenge';
 export interface TeamApi { 
     id: string;
     createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
     /**
      * The long name of the team.
      */

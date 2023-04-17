@@ -15,9 +15,9 @@ import { RoleEnumApi } from './roleEnum';
 export interface UserApi { 
     id: string;
     createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
     roles: Array<RoleEnumApi>;
     auth0Id: string;
     email: string;

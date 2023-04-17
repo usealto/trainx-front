@@ -16,9 +16,9 @@ import { QuestionApi } from './question';
 export interface TagApi { 
     id: string;
     createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
     name: string;
     description?: string;
     /**

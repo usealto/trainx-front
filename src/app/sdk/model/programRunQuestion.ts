@@ -17,9 +17,9 @@ import { GuessApi } from './guess';
 export interface ProgramRunQuestionApi { 
     id: string;
     createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
     programRun: ProgramRunApi;
     programRunId: string;
     question: QuestionApi;

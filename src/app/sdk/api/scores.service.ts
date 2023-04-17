@@ -40,9 +40,9 @@ export interface GetScoresRequestParams {
     /** The timeframe to group scores by. */
     timeframe: ScoreTimeframeEnumApi;
     /** The date to filter scores from guesses created after the date.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    dateAfter: string;
+    dateAfter: Date;
     /** The date to filter scores from guesses created before the date.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    dateBefore: string;
+    dateBefore: Date;
     /** An optional array of IDs to filter on. */
     ids?: string;
     /** The type of score to filter by. */

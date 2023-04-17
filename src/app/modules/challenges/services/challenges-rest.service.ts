@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import {
   ChallengeApi,
   ChallengePaginatedResponseApi,
@@ -12,6 +12,13 @@ import {
 })
 export class ChallengesRestService {
   constructor(private readonly challengeService: ChallengesApiService) {}
+
+  getChallenge(id: string): Observable<ChallengeApi> {
+    return this.challengeService.getChallengeById({ id }).pipe(
+      filter((x) => !!x),
+      map((c) => c.data || ({} as ChallengeApi)),
+    );
+  }
 
   getChallenges(req?: GetChallengesRequestParams): Observable<ChallengeApi[]> {
     const par = {

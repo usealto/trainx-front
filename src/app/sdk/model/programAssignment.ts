@@ -16,10 +16,10 @@ import { ProgramApi } from './program';
 export interface ProgramAssignmentApi { 
     id: string;
     createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
-    archivedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
+    archivedAt: Date;
     programId: string;
     teamId: string;
     program: ProgramApi;

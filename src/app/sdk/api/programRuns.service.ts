@@ -59,9 +59,9 @@ export interface GetAllProgramRunQuestionsPaginatedRequestParams {
     /** The number of items per page to retrieve. */
     itemsPerPage?: number;
     /** A date used to filter the results based on the createdAt field of the resources, only including resources created after this date. the operator used for this filter is  &gt;&#x3D; (greater than or equal to)  If the createdAfter field is provided with a date without a time, it will include resources created on the same day as the provided date, starting at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    createdAfter?: string;
+    createdAfter?: Date;
     /** A date used to filter the results based on the createdAt field of the resources, only including resources created before this date. the operator used for this filter is &lt;&#x3D; (less than or equal to)  If the createdBefore field is provided with a date without a time, it will include resources created on the same day as the provided date, ending at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    createdBefore?: string;
+    createdBefore?: Date;
 }
 
 export interface GetProgramRunByIdRequestParams {
@@ -82,9 +82,9 @@ export interface GetProgramRunsRequestParams {
     programIds?: string;
     teamIds?: string;
     /** A date used to filter the results based on the finishedAt field of the resources, only including resources finished after this date. the operator used for this filter is  &gt;&#x3D; (greater than or equal to)  If the finishedAfter field is provided with a date without a time, it will include resources finished on the same day as the provided date, starting at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    finishedAfter?: string;
+    finishedAfter?: Date;
     /** A date used to filter the results based on the finishedAt field of the resources, only including resources finished before this date. the operator used for this filter is &lt;&#x3D; (less than or equal to)  If the finishedBefore field is provided with a date without a time, it will include resources finished on the same day as the provided date, ending at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    finishedBefore?: string;
+    finishedBefore?: Date;
     isFinished?: boolean;
     isValid?: boolean;
     /** The ID of the company that the user sending the request is related to.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
@@ -96,9 +96,9 @@ export interface GetProgramRunsRequestParams {
     /** The number of items per page to retrieve. */
     itemsPerPage?: number;
     /** A date used to filter the results based on the createdAt field of the resources, only including resources created after this date. the operator used for this filter is  &gt;&#x3D; (greater than or equal to)  If the createdAfter field is provided with a date without a time, it will include resources created on the same day as the provided date, starting at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    createdAfter?: string;
+    createdAfter?: Date;
     /** A date used to filter the results based on the createdAt field of the resources, only including resources created before this date. the operator used for this filter is &lt;&#x3D; (less than or equal to)  If the createdBefore field is provided with a date without a time, it will include resources created on the same day as the provided date, ending at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    createdBefore?: string;
+    createdBefore?: Date;
 }
 
 
