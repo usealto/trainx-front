@@ -4,7 +4,7 @@ import { UsersRestService } from 'src/app/modules/profile/services/users-rest.se
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ChallengeApi, ChallengeTypeEnumApi } from 'src/app/sdk';
 import { ChallengesRestService } from '../../services/challenges-rest.service';
-import { map, tap } from 'rxjs';
+import { combineLatest, map, tap } from 'rxjs';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @Component({
@@ -15,7 +15,14 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 export class ChallengesComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+  pageSize = 5;
+  //
+  byTeamPage = 1;
+  byTeamCount = 0;
   challengesByTeam: ChallengeApi[] = [];
+  //
+  byUserPage = 1;
+  byUserCount = 0;
   challengesByUser: ChallengeApi[] = [];
 
   constructor(
@@ -24,16 +31,24 @@ export class ChallengesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.challengesRestService
-      .getChallenges({ itemsPerPage: 500, sortBy: 'endDate:desc' })
+    combineLatest([
+      this.challengesRestService.getChallengesPaginated({
+        itemsPerPage: 500,
+        sortBy: 'endDate:desc',
+        type: ChallengeTypeEnumApi.ByTeam,
+      }),
+      this.challengesRestService.getChallengesPaginated({
+        itemsPerPage: 500,
+        sortBy: 'endDate:desc',
+        type: ChallengeTypeEnumApi.ByUser,
+      }),
+    ])
       .pipe(
-        tap((challenges) => {
-          this.challengesByTeam = challenges
-            .filter((c) => c.type === ChallengeTypeEnumApi.ByTeam)
-            .slice(0, 5);
-          this.challengesByUser = challenges
-            .filter((c) => c.type === ChallengeTypeEnumApi.ByUser)
-            .slice(0, 5);
+        tap(([byTeam, byUser]) => {
+          this.challengesByTeam = byTeam.data ?? [];
+          this.byTeamCount = byTeam.meta.totalItems;
+          this.challengesByUser = byUser.data ?? [];
+          this.byUserCount = byUser.meta.totalItems;
         }),
       )
       .subscribe();
