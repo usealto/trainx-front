@@ -1,3 +1,5 @@
+export * from './auth.service';
+import { AuthApiService } from './auth.service';
 export * from './challenges.service';
 import { ChallengesApiService } from './challenges.service';
 export * from './comments.service';
@@ -24,4 +26,4 @@ export * from './uploads.service';
 import { UploadsApiService } from './uploads.service';
 export * from './users.service';
 import { UsersApiService } from './users.service';
-export const APIS = [ChallengesApiService, CommentsApiService, CompaniesApiService, GuessesApiService, ProgramRunsApiService, ProgramsApiService, QuestionsApiService, QuestionsSubmittedApiService, ScoresApiService, TagsApiService, TeamsApiService, UploadsApiService, UsersApiService];
+export const APIS = [AuthApiService, ChallengesApiService, CommentsApiService, CompaniesApiService, GuessesApiService, ProgramRunsApiService, ProgramsApiService, QuestionsApiService, QuestionsSubmittedApiService, ScoresApiService, TagsApiService, TeamsApiService, UploadsApiService, UsersApiService];
