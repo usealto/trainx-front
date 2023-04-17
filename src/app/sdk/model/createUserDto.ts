@@ -12,31 +12,21 @@
 import { RoleEnumApi } from './roleEnum';
 
 
-export interface UserApi { 
-    id: string;
-    createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
-    roles: Array<RoleEnumApi>;
-    auth0Id: string;
+export interface CreateUserDtoApi { 
+    createdBy?: string;
+    companyId?: string;
+    roles?: Array<RoleEnumApi>;
     email: string;
     teamId?: string;
     pref?: object;
     bubbleId?: string;
     username?: string;
-    pictureUrl?: string;
     firstname?: string;
     lastname?: string;
     timezone?: string;
     country?: string;
+    pictureUrl?: string;
     slackId?: string;
     slackBotChannel?: string;
-    /**
-     * More information about this here : https://stackoverflow.com/questions/66687397/computed-column-with-alias-is-not-mapping-into-typeorm-entity https://pietrzakadrian.com/blog/virtual-column-solutions-for-typeorm
-     */
-    isActive: boolean;
-    longestStreak: object;
-    currentStreak: object;
 }
 

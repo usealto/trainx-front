@@ -19,7 +19,11 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { CreateUserDtoApi } from '../model/createUserDto';
+// @ts-ignore
 import { PatchUserDtoApi } from '../model/patchUserDto';
+// @ts-ignore
+import { UserCreatedResponseApi } from '../model/userCreatedResponse';
 // @ts-ignore
 import { UserPaginatedResponseApi } from '../model/userPaginatedResponse';
 // @ts-ignore
@@ -30,6 +34,14 @@ import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables'
 import { Configuration }                                     from '../configuration';
 
 
+export interface CreateUserRequestParams {
+    createUserDtoApi: CreateUserDtoApi;
+    /** The ID of the company that the user sending the request is related to.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
+    companyId?: string;
+    /** The ID of the user sending the request.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication.  Used to set the &#x60;createdBy&#x60; property on creation of entities. */
+    userId?: string;
+}
+
 export interface GetMeRequestParams {
     /** The ID of the company that the user sending the request is related to.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
     companyId?: string;
@@ -37,7 +49,7 @@ export interface GetMeRequestParams {
     userId?: string;
 }
 
-export interface GetUserRequestParams {
+export interface GetUserByIdRequestParams {
     id: string;
     /** The ID of the company that the user sending the request is related to.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
     companyId?: string;
@@ -53,7 +65,10 @@ export interface GetUsersRequestParams {
     ids?: string;
     /** An array of team IDs used to filter the results. If no team IDs are provided, all users will be returned.  The filter applied is an &lt;b&gt;OR&lt;/b&gt;.  &lt;b&gt;The query will return the users that have are assigned to the team.&lt;/b&gt; */
     teamIds?: string;
+    /** Filter by isCompanyAdmin If isCompanyAdmin is true, we only want to return users that have the company-admin role If isCompanyAdmin is false, we only want to return users that do not have the company-admin role If isCompanyAdmin is not provided, we return all users  isCompanyAdmin is computed by checking if the user has the company-admin role */
     isCompanyAdmin?: boolean;
+    /** Filter by isActive If isActive is true, we only want to return users that are active If isActive is false, we only want to return users that are not active If isActive is not provided, we return all users  isActive is computed by checking if the user has created any guesses in the past 7 days */
+    isActive?: boolean;
     /** The ID of the company that the user sending the request is related to.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
     companyId?: string;
     /** The ID of the user sending the request.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
@@ -143,6 +158,101 @@ export class UsersApiService {
     }
 
     /**
+     * Create a new user
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public createUser(requestParameters: CreateUserRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserCreatedResponseApi>;
+    public createUser(requestParameters: CreateUserRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserCreatedResponseApi>>;
+    public createUser(requestParameters: CreateUserRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserCreatedResponseApi>>;
+    public createUser(requestParameters: CreateUserRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        const createUserDtoApi = requestParameters.createUserDtoApi;
+        if (createUserDtoApi === null || createUserDtoApi === undefined) {
+            throw new Error('Required parameter createUserDtoApi was null or undefined when calling createUser.');
+        }
+        const companyId = requestParameters.companyId;
+        const userId = requestParameters.userId;
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (companyId !== undefined && companyId !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>companyId, 'companyId');
+        }
+        if (userId !== undefined && userId !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>userId, 'userId');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (x-api-key) required
+        localVarCredential = this.configuration.lookupCredential('x-api-key');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('x-api-key', localVarCredential);
+        }
+
+        // authentication (bearer) required
+        localVarCredential = this.configuration.lookupCredential('bearer');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v1/users`;
+        return this.httpClient.request<UserCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                body: createUserDtoApi,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Get a single user by ID
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -229,13 +339,13 @@ export class UsersApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getUser(requestParameters: GetUserRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserResponseApi>;
-    public getUser(requestParameters: GetUserRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserResponseApi>>;
-    public getUser(requestParameters: GetUserRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserResponseApi>>;
-    public getUser(requestParameters: GetUserRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+    public getUserById(requestParameters: GetUserByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserResponseApi>;
+    public getUserById(requestParameters: GetUserByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserResponseApi>>;
+    public getUserById(requestParameters: GetUserByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserResponseApi>>;
+    public getUserById(requestParameters: GetUserByIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getUser.');
+            throw new Error('Required parameter id was null or undefined when calling getUserById.');
         }
         const companyId = requestParameters.companyId;
         const userId = requestParameters.userId;
@@ -323,6 +433,7 @@ export class UsersApiService {
         const ids = requestParameters.ids;
         const teamIds = requestParameters.teamIds;
         const isCompanyAdmin = requestParameters.isCompanyAdmin;
+        const isActive = requestParameters.isActive;
         const companyId = requestParameters.companyId;
         const userId = requestParameters.userId;
         const page = requestParameters.page;
@@ -350,6 +461,10 @@ export class UsersApiService {
         if (isCompanyAdmin !== undefined && isCompanyAdmin !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>isCompanyAdmin, 'isCompanyAdmin');
+        }
+        if (isActive !== undefined && isActive !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>isActive, 'isActive');
         }
         if (companyId !== undefined && companyId !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,

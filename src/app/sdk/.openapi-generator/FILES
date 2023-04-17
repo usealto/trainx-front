@@ -3,6 +3,7 @@
 README.md
 api.module.ts
 api/api.ts
+api/auth.service.ts
 api/challenges.service.ts
 api/comments.service.ts
 api/companies.service.ts
@@ -55,6 +56,7 @@ model/createQuestionDto.ts
 model/createQuestionSubmittedDto.ts
 model/createTagDto.ts
 model/createTeamDto.ts
+model/createUserDto.ts
 model/deleteResponse.ts
 model/deleteResponseAllOf.ts
 model/guess.ts
@@ -119,6 +121,7 @@ model/questionTypeEnum.ts
 model/roleEnum.ts
 model/scoreByTypeEnum.ts
 model/scoreDto.ts
+model/scoreFillValuesEnum.ts
 model/scoreTimeframeEnum.ts
 model/scoreTypeEnum.ts
 model/scoresResponseDto.ts
@@ -140,6 +143,8 @@ model/teamPaginatedResponseAllOf.ts
 model/teamResponse.ts
 model/teamResponseAllOf.ts
 model/user.ts
+model/userCreatedResponse.ts
+model/userCreatedResponseAllOf.ts
 model/userPaginatedResponse.ts
 model/userPaginatedResponseAllOf.ts
 model/userResponse.ts
