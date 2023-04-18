@@ -1,7 +1,5 @@
 # AssessmentFront
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/136a2a98-3ac8-4942-b87f-2efbe726c28a/deploy-status)](https://app.netlify.com/sites/alto-assessment/deploys)
-
 [![Tests CI](https://github.com/usealto/assessment-front/actions/workflows/node.js.yml/badge.svg)](https://github.com/usealto/assessment-front/actions/workflows/node.js.yml)
 
 == With Angular 15 and VS Code, you need this version of Node ==
