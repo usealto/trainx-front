@@ -1,6 +1,6 @@
 <h1 class="mt-4">{{ I18ns.challenges.title }}</h1>
 <p class="mb-4">{{ I18ns.challenges.subtitle }}</p>
-<div class="pb-4 border-bottom">
+<div class="pb-4">
   <alto-anchor-navigator fragment="byTeamAnchor">
     <button class="btn btn-outline-secondary me-4">
       {{ I18ns.challenges.team.shortTitle }} {{ byTeamCount }}
@@ -13,7 +13,8 @@
     </button>
   </alto-anchor-navigator>
 </div>
-<div class="py-4 border-bottom">
+<hr />
+<div class="py-4">
   <button
     type="button"
     class="btn btn-primary float-end"
@@ -35,6 +36,11 @@
         (selectChange)="filterChallengesByTeam($event, ChallengeTypeEnumApi.ByTeam)"
         [isColored]="true"
       ></alto-dropdown-filter>
+
+      <alto-search
+        class="d-inline-block ms-3"
+        (search)="search($event, ChallengeTypeEnumApi.ByTeam)"
+      ></alto-search>
 
       <table class="table">
         <thead>
@@ -114,7 +120,7 @@
   <h1 id="byUserAnchor" class="mt-4">{{ I18ns.challenges.individual.title }}</h1>
   <p class="mb-4">{{ I18ns.challenges.individual.subtitle }}</p>
 
-  <div class="panel">
+  <div class="panel mb-4">
     <ng-container *ngIf="challengesByUser.length > 0; else noChallenges">
       <alto-dropdown-filter
         class="text-start"
@@ -124,6 +130,10 @@
         (selectChange)="filterChallengesByTeam($event, ChallengeTypeEnumApi.ByUser)"
         [isColored]="true"
       ></alto-dropdown-filter>
+      <alto-search
+        class="d-inline-block ms-3"
+        (search)="search($event, ChallengeTypeEnumApi.ByUser)"
+      ></alto-search>
 
       <table class="table">
         <thead>

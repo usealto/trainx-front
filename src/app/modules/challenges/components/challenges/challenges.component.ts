@@ -28,6 +28,7 @@ export class ChallengesComponent implements OnInit {
   byUserCount = 0;
   challengesByUser: ChallengeApi[] = [];
   challengesByUserDisplay: ChallengeApi[] = [];
+  filters: { teams?: TeamApi[]; status?: string; search?: string } = {};
 
   constructor(
     private readonly challengesRestService: ChallengesRestService,
@@ -60,6 +61,8 @@ export class ChallengesComponent implements OnInit {
   }
 
   filterChallengesByTeam(teams: TeamApi[], type: ChallengeTypeEnumApi) {
+    this.filters.teams = teams;
+
     if (type === ChallengeTypeEnumApi.ByTeam) {
       this.challengesByTeamDisplay = !teams.length
         ? this.challengesByTeam
@@ -68,6 +71,21 @@ export class ChallengesComponent implements OnInit {
       this.challengesByUserDisplay = !teams.length
         ? this.challengesByUser
         : this.challengesByUser.filter((ch) => this.filterByTeam(ch, teams));
+    }
+  }
+
+  search(val: string, type: ChallengeTypeEnumApi) {
+    const str = val.toLowerCase();
+    this.filters.search = str;
+
+    if (type === ChallengeTypeEnumApi.ByTeam) {
+      this.challengesByTeamDisplay = !str.length
+        ? this.challengesByTeam
+        : this.challengesByTeam.filter((ch) => ch.name.toLowerCase().includes(str));
+    } else {
+      this.challengesByUserDisplay = !str.length
+        ? this.challengesByUser
+        : this.challengesByUser.filter((ch) => ch.name.toLowerCase().includes(str));
     }
   }
 
