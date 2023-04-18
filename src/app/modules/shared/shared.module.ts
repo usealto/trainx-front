@@ -19,6 +19,7 @@ import { ImgBadgeComponent } from './components/img-badge/img-badge.component';
 import { AnchorNavigatorComponent } from './components/anchor-navigator/anchor-navigator.component';
 import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-filter.component';
 import { StatusPillComponent } from './components/status-pill/status-pill.component';
+import { SearchComponent } from './components/search/search.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { StatusPillComponent } from './components/status-pill/status-pill.compon
     AnchorNavigatorComponent,
     DropdownFilterComponent,
     StatusPillComponent,
+    SearchComponent,
   ],
   imports: [
     CommonModule,
@@ -52,6 +54,7 @@ import { StatusPillComponent } from './components/status-pill/status-pill.compon
     ColoredPillListComponent,
     AnchorNavigatorComponent,
     DropdownFilterComponent,
+    SearchComponent,
     StatusPillComponent,
     FormsModule,
     ImgBadgeComponent,

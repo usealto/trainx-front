@@ -17,7 +17,7 @@ export class ChallengesComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   ChallengeTypeEnumApi = ChallengeTypeEnumApi;
-  pageSize = 5;
+  pageSize = 7;
   //
   byTeamPage = 1;
   byTeamCount = 0;
