@@ -15,6 +15,11 @@ export const FR = {
       medium: 'Medium',
       low: 'Low',
     },
+    status: {
+      incoming: 'À venir',
+      ongoing: 'En cours',
+      ended: 'Terminé',
+    },
   },
   leadHome: {
     title: 'Bonjour ',
@@ -72,9 +77,12 @@ export const FR = {
       noIndividualChallengesSubtitle: 'Créez, ou importez, vos premiers challenges',
       table: {
         name: 'Nom',
-        teams: 'Équipes',
+        teams: 'Équipes en compétition',
         leader: 'Leader',
+        startDate: 'Date de début',
+        endDate: 'Date de fin',
         end: 'Fin',
+        status: 'Status',
       },
     },
   },

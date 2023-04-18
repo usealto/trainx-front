@@ -3,13 +3,13 @@
 <div class="pb-4 border-bottom">
   <alto-anchor-navigator fragment="byTeamAnchor">
     <button class="btn btn-outline-secondary me-4">
-      {{ I18ns.challenges.team.shortTitle }}
+      {{ I18ns.challenges.team.shortTitle }} {{ byTeamCount }}
     </button>
   </alto-anchor-navigator>
 
   <alto-anchor-navigator fragment="byUserAnchor">
     <button class="btn btn-outline-secondary me-4">
-      {{ I18ns.challenges.individual.shortTitle }}
+      {{ I18ns.challenges.individual.shortTitle }} {{ byUserCount }}
     </button>
   </alto-anchor-navigator>
 </div>
@@ -17,7 +17,7 @@
   <button
     type="button"
     class="btn btn-primary float-end"
-    [routerLink]="[AltoRoutes.challengeCreate, 'byTeam']"
+    [routerLink]="[AltoRoutes.challengeCreate, ChallengeTypeEnumApi.ByTeam]"
   >
     {{ I18ns.challenges.team.createChallenge }}
   </button>
@@ -26,33 +26,36 @@
   <p class="mb-4">{{ I18ns.challenges.team.subtitle }}</p>
 
   <div class="panel">
-    <h2>{{ I18ns.leadHome.ongoingChallenges.byTeam }}</h2>
-
     <ng-container *ngIf="challengesByTeam.length > 0; else noChallengesTeam">
+      <alto-dropdown-filter
+        class="text-start"
+        [data]="teamStore.teams.value"
+        [displayLabel]="'shortName'"
+        [placeholder]="I18ns.programs.programs.filters.team"
+        (selectChange)="filterChallengesByTeam($event, ChallengeTypeEnumApi.ByTeam)"
+        [isColored]="true"
+      ></alto-dropdown-filter>
+
       <table class="table">
         <thead>
           <tr>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
-            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
-            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.startDate }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.endDate }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.status }}</th>
             <th scope="col">&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           <tr
             *ngFor="
-              let chal of challengesByTeam | slice : (byTeamPage - 1) * pageSize : byTeamPage * pageSize
+              let chal of challengesByTeamDisplay
+                | slice : (byTeamPage - 1) * pageSize : byTeamPage * pageSize
             "
           >
             <td>{{ chal.name }}</td>
-            <td>
-              <alto-colored-pill-list
-                [hasDynamicColor]="true"
-                [data]="chal.teams"
-                [limit]="3"
-              ></alto-colored-pill-list>
-            </td>
             <td>
               <span
                 *ngIf="chal.leadTeam"
@@ -63,7 +66,18 @@
                 {{ chal.leadTeam.shortName }}
               </span>
             </td>
+            <td>
+              <alto-colored-pill-list
+                [hasDynamicColor]="true"
+                [data]="chal.teams"
+                [limit]="3"
+              ></alto-colored-pill-list>
+            </td>
+            <td>{{ chal.startDate | date : 'shortDate' }}</td>
             <td>{{ chal.endDate | date : 'shortDate' }}</td>
+            <td>
+              <alto-status-pill [endDate]="chal.endDate" [startDate]="chal.startDate"></alto-status-pill>
+            </td>
             <td>
               <i class="bi bi-pen cursor-pointer" [routerLink]="[AltoRoutes.challengeEdit, chal.id]"></i>
             </td>
@@ -72,9 +86,10 @@
       </table>
 
       <ngb-pagination
+        [ngClass]="{ invisible: challengesByTeamDisplay.length <= pageSize }"
         [(page)]="byTeamPage"
         [pageSize]="pageSize"
-        [collectionSize]="byTeamCount"
+        [collectionSize]="challengesByTeamDisplay.length"
       ></ngb-pagination>
     </ng-container>
     <ng-template #noChallengesTeam>
@@ -91,7 +106,7 @@
   <button
     type="button"
     class="btn btn-primary float-end mt-4"
-    [routerLink]="[AltoRoutes.challengeCreate, 'byUser']"
+    [routerLink]="[AltoRoutes.challengeCreate, ChallengeTypeEnumApi.ByUser]"
   >
     {{ I18ns.challenges.team.createChallenge }}
   </button>
@@ -100,25 +115,39 @@
   <p class="mb-4">{{ I18ns.challenges.individual.subtitle }}</p>
 
   <div class="panel">
-    <h2>{{ I18ns.leadHome.ongoingChallenges.individual }}</h2>
     <ng-container *ngIf="challengesByUser.length > 0; else noChallenges">
+      <alto-dropdown-filter
+        class="text-start"
+        [data]="teamStore.teams.value"
+        [displayLabel]="'shortName'"
+        [placeholder]="I18ns.programs.programs.filters.team"
+        (selectChange)="filterChallengesByTeam($event, ChallengeTypeEnumApi.ByUser)"
+        [isColored]="true"
+      ></alto-dropdown-filter>
+
       <table class="table">
         <thead>
           <tr>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
-            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
-            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.startDate }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.endDate }}</th>
+            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.status }}</th>
             <th scope="col">&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           <tr
             *ngFor="
-              let chal of challengesByUser | slice : (byUserPage - 1) * pageSize : byUserPage * pageSize
+              let chal of challengesByUserDisplay
+                | slice : (byUserPage - 1) * pageSize : byUserPage * pageSize
             "
           >
             <td>{{ chal.name }}</td>
+            <td>
+              <alto-img-badge [url]="(getUser(chal.leadUser) | async)?.pictureUrl"></alto-img-badge>
+            </td>
             <td>
               <alto-colored-pill-list
                 [hasDynamicColor]="true"
@@ -126,10 +155,11 @@
                 [limit]="3"
               ></alto-colored-pill-list>
             </td>
-            <td>
-              <alto-img-badge [url]="(getUser(chal.leadUser) | async)?.pictureUrl"></alto-img-badge>
-            </td>
+            <td>{{ chal.startDate | date : 'shortDate' }}</td>
             <td>{{ chal.endDate | date : 'shortDate' }}</td>
+            <td>
+              <alto-status-pill [endDate]="chal.endDate" [startDate]="chal.startDate"></alto-status-pill>
+            </td>
             <td>
               <i class="bi bi-pen cursor-pointer" [routerLink]="[AltoRoutes.challengeEdit, chal.id]"></i>
             </td>
@@ -138,9 +168,10 @@
       </table>
 
       <ngb-pagination
+        [ngClass]="{ invisible: challengesByUserDisplay.length <= pageSize }"
         [(page)]="byUserPage"
         [pageSize]="pageSize"
-        [collectionSize]="byUserCount"
+        [collectionSize]="challengesByUserDisplay.length"
       ></ngb-pagination>
     </ng-container>
     <ng-template #noChallenges>

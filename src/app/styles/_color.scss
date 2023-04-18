@@ -1,6 +1,7 @@
 :root {
   --bs-primary: #006ef5;
   --bs-orange: #f36f23;
+  --bs-success: #32d583;
   --alto-blue: #19222f;
   --alto-blue-second: #3b434e;
   --alto-blue-disabled: #3b434e;
@@ -10,7 +11,7 @@
   --alto-grey: #55595e;
   --alto-light-grey: #f8fafb;
   --alto-medium-grey: #f2f4f7;
-  --alto-dark-grey: #1f2123;
+  --alto-dark-grey: #98a2b3;
   --bs-body-bg: var(--alto-light-grey);
   --bs-body-color: var(--alto-grey);
 }
@@ -19,9 +20,6 @@
 }
 .alto-second-blue {
   color: var(--alto-blue-second);
-}
-.alto-dark-grey {
-  color: var(--alto-dark-grey);
 }
 .alto-grey {
   color: var(--alto-grey);

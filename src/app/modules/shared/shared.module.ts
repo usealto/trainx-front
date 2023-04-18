@@ -18,6 +18,7 @@ import { ProgressionBadgeComponent } from './components/progression-badge/progre
 import { ImgBadgeComponent } from './components/img-badge/img-badge.component';
 import { AnchorNavigatorComponent } from './components/anchor-navigator/anchor-navigator.component';
 import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-filter.component';
+import { StatusPillComponent } from './components/status-pill/status-pill.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-f
     ImgBadgeComponent,
     AnchorNavigatorComponent,
     DropdownFilterComponent,
+    StatusPillComponent,
   ],
   imports: [
     CommonModule,
@@ -50,6 +52,7 @@ import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-f
     ColoredPillListComponent,
     AnchorNavigatorComponent,
     DropdownFilterComponent,
+    StatusPillComponent,
     FormsModule,
     ImgBadgeComponent,
     ReactiveFormsModule,

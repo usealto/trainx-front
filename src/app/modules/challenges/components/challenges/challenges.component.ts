@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { combineLatest, map, tap } from 'rxjs';
+import { Observable, combineLatest, map, of, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ChallengeApi, ChallengeTypeEnumApi } from 'src/app/sdk';
+import { ChallengeApi, ChallengeTypeEnumApi, TeamApi, UserApi } from 'src/app/sdk';
 import { ChallengesRestService } from '../../services/challenges-rest.service';
+import { TeamStore } from 'src/app/modules/lead-team/team.store';
 
 @Component({
   selector: 'alto-challenges',
@@ -15,19 +16,23 @@ import { ChallengesRestService } from '../../services/challenges-rest.service';
 export class ChallengesComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+  ChallengeTypeEnumApi = ChallengeTypeEnumApi;
   pageSize = 5;
   //
   byTeamPage = 1;
   byTeamCount = 0;
   challengesByTeam: ChallengeApi[] = [];
+  challengesByTeamDisplay: ChallengeApi[] = [];
   //
   byUserPage = 1;
   byUserCount = 0;
   challengesByUser: ChallengeApi[] = [];
+  challengesByUserDisplay: ChallengeApi[] = [];
 
   constructor(
     private readonly challengesRestService: ChallengesRestService,
     private readonly userService: UsersRestService,
+    public readonly teamStore: TeamStore,
   ) {}
 
   ngOnInit(): void {
@@ -45,17 +50,36 @@ export class ChallengesComponent implements OnInit {
     ])
       .pipe(
         tap(([byTeam, byUser]) => {
-          this.challengesByTeam = byTeam.data ?? [];
+          this.challengesByTeam = this.challengesByTeamDisplay = byTeam.data ?? [];
           this.byTeamCount = byTeam.meta.totalItems;
-          this.challengesByUser = byUser.data ?? [];
+          this.challengesByUser = this.challengesByUserDisplay = byUser.data ?? [];
           this.byUserCount = byUser.meta.totalItems;
         }),
       )
       .subscribe();
   }
 
+  filterChallengesByTeam(teams: TeamApi[], type: ChallengeTypeEnumApi) {
+    if (type === ChallengeTypeEnumApi.ByTeam) {
+      this.challengesByTeamDisplay = !teams.length
+        ? this.challengesByTeam
+        : this.challengesByTeam.filter((ch) => this.filterByTeam(ch, teams));
+    } else {
+      this.challengesByUserDisplay = !teams.length
+        ? this.challengesByUser
+        : this.challengesByUser.filter((ch) => this.filterByTeam(ch, teams));
+    }
+  }
+
+  filterByTeam(ch: ChallengeApi, teams: TeamApi[]): boolean {
+    return ch.teams.some((t) => teams.some((te) => te.id === t.id));
+  }
+
   @memoize()
-  getUser(id: string) {
+  getUser(id: string): Observable<UserApi | null | undefined> {
+    if (!id) {
+      return of(null);
+    }
     return this.userService.getUsers({ ids: id }).pipe(map((u) => u.shift()));
   }
 }
