@@ -1,16 +1,18 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { addDays } from 'date-fns';
-import { filter, map, switchMap, tap } from 'rxjs';
+import { Observable, filter, map, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ChallengeApi, ChallengeTypeEnumApi, TeamApi } from 'src/app/sdk';
+import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ChallengeApi, ChallengeTypeEnumApi, CreateChallengeDtoApi, TeamApi } from 'src/app/sdk';
 import { ChallengeForm } from '../../models/challenge.form';
 import { ChallengesRestService } from '../../services/challenges-rest.service';
-import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { NgbCalendar, NgbDate, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 
 @UntilDestroy()
 @Component({
@@ -20,6 +22,7 @@ import { NgbCalendar, NgbDate, NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap
 })
 export class ChallengeFormComponent implements OnInit {
   I18ns = I18ns;
+  AltoRoutes = AltoRoutes;
   ChallengeTypeEnumApi = ChallengeTypeEnumApi;
   private fb: IFormBuilder;
 
@@ -39,6 +42,8 @@ export class ChallengeFormComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly teamService: TeamsRestService,
     private readonly challengeRestService: ChallengesRestService,
+    private readonly router: Router,
+    private readonly location: Location,
   ) {
     this.fb = fob;
   }
@@ -75,7 +80,7 @@ export class ChallengeFormComponent implements OnInit {
       )
       .subscribe();
 
-    this.challengeForm.valueChanges.pipe(tap(console.log)).subscribe();
+    // this.challengeForm.valueChanges.pipe(tap(console.log)).subscribe();
   }
 
   initForm(challenge?: ChallengeApi) {
@@ -84,7 +89,7 @@ export class ChallengeFormComponent implements OnInit {
       type: [challenge?.type ?? this.defaultType, [Validators.required]],
       teams: [challenge?.teams?.map((t) => t.id) ?? [], [Validators.required]],
       guessesPerDay: [challenge?.guessesPerDay ?? 1],
-      scoreMinPercent: [challenge?.scoreMinPercent ?? 0],
+      scoreMinPercent: [challenge?.scoreMinPercent ?? 0, [Validators.min(1)]],
       startDate: [challenge?.startDate ?? new Date()],
       endDate: [challenge?.endDate ?? addDays(new Date(), 7)],
       reward: [challenge?.reward ?? '', [Validators.required]],
@@ -96,6 +101,37 @@ export class ChallengeFormComponent implements OnInit {
       this.toDate = this.dateToNgbDate(this.challengeForm.controls.endDate.value);
   }
 
+  submit() {
+    if (this.challengeForm.value) {
+      const { type, teams, ...rest } = this.challengeForm.value;
+      const val: CreateChallengeDtoApi = {
+        ...rest,
+        teams: teams.map((id) => ({ id } as TeamApi)),
+        type: type as ChallengeTypeEnumApi,
+      };
+      let obs$: Observable<any>;
+
+      if (this.isEdit) {
+        obs$ = this.challengeRestService.updateChallenge(this.editedChallenge.id, val);
+      } else {
+        obs$ = this.challengeRestService.createChallenge(val);
+      }
+      obs$
+        .pipe(
+          tap(() => this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.challenges])),
+          untilDestroyed(this),
+        )
+        .subscribe();
+    }
+  }
+
+  cancel() {
+    this.location.back();
+  }
+
+  /**
+   ** --- DATE MANAGEMENT ---
+   */
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
@@ -137,7 +173,7 @@ export class ChallengeFormComponent implements OnInit {
   }
 
   ngbDateToDate(n: NgbDate): Date {
-    return new Date(n.year, n.month, n.day);
+    return new Date(n.year, n.month - 1, n.day);
   }
   dateToNgbDate(d: Date): NgbDate {
     return new NgbDate(d.getFullYear(), d.getMonth() + 1, d.getDate());

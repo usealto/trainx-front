@@ -14,7 +14,11 @@
   </alto-anchor-navigator>
 </div>
 <div class="py-4 border-bottom">
-  <button type="button" class="btn btn-primary float-end">
+  <button
+    type="button"
+    class="btn btn-primary float-end"
+    [routerLink]="[AltoRoutes.challengeCreate, 'byTeam']"
+  >
     {{ I18ns.challenges.team.createChallenge }}
   </button>
 
@@ -32,6 +36,7 @@
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
+            <th scope="col">&nbsp;</th>
           </tr>
         </thead>
         <tbody>
@@ -59,6 +64,9 @@
               </span>
             </td>
             <td>{{ chal.endDate | date : 'shortDate' }}</td>
+            <td>
+              <i class="bi bi-pen cursor-pointer" [routerLink]="[AltoRoutes.challengeEdit, chal.id]"></i>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -80,7 +88,11 @@
 
   <hr />
 
-  <button type="button" class="btn btn-primary float-end mt-4">
+  <button
+    type="button"
+    class="btn btn-primary float-end mt-4"
+    [routerLink]="[AltoRoutes.challengeCreate, 'byUser']"
+  >
     {{ I18ns.challenges.team.createChallenge }}
   </button>
 
@@ -97,6 +109,7 @@
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
+            <th scope="col">&nbsp;</th>
           </tr>
         </thead>
         <tbody>
@@ -117,6 +130,9 @@
               <alto-img-badge [url]="(getUser(chal.leadUser) | async)?.pictureUrl"></alto-img-badge>
             </td>
             <td>{{ chal.endDate | date : 'shortDate' }}</td>
+            <td>
+              <i class="bi bi-pen cursor-pointer" [routerLink]="[AltoRoutes.challengeEdit, chal.id]"></i>
+            </td>
           </tr>
         </tbody>
       </table>

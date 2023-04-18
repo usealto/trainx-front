@@ -145,13 +145,17 @@
         <p class="fs-7">{{ I18ns.challenges.form.rewardSubtitle }}</p>
       </div>
       <div class="col-6">
-        <input
-          type="text"
-          class="form-control"
-          formControlName="reward"
-          placeholder="{{ I18ns.challenges.form.namePlaceholder }}"
-        />
+        <input type="text" class="form-control" formControlName="reward" />
       </div>
     </div>
+  </div>
+
+  <div class="text-end mb-5">
+    <button class="btn btn-outline-secondary" (click)="cancel()">
+      {{ I18ns.shared.cancel }}
+    </button>
+    <button type="submit" class="btn btn-primary ms-3" (click)="submit()">
+      {{ isEdit ? I18ns.shared.save : I18ns.shared.create }}
+    </button>
   </div>
 </form>

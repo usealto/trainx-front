@@ -5,6 +5,7 @@ export const FR = {
     next: 'Suivant',
     cancel: 'Annuler',
     delete: 'Supprimer',
+    create: 'Créer',
     share: 'Partager',
     clipboard: 'Copier dans le presse-papier',
     showMore: 'Voir plus',
