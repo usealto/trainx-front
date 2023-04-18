@@ -79,8 +79,6 @@ export class ChallengeFormComponent implements OnInit {
         untilDestroyed(this),
       )
       .subscribe();
-
-    // this.challengeForm.valueChanges.pipe(tap(console.log)).subscribe();
   }
 
   initForm(challenge?: ChallengeApi) {
