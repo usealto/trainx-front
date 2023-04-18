@@ -33,6 +33,8 @@
       (selectChange)="filterPrograms($event)"
       [isColored]="true"
     ></alto-dropdown-filter>
+
+    <alto-search class="d-inline-block ms-3" (search)="searchPrograms($event)"></alto-search>
   </div>
   <div class="row mb-3">
     <div class="col-4 mb-3" *ngFor="let prog of programs">
@@ -63,19 +65,19 @@
       (selectChange)="filterQuestionsByPrograms($event)"
     ></alto-dropdown-filter>
     <alto-dropdown-filter
-    class="text-start col-1"
-    [data]="programsStore.tags.value"
-    [displayLabel]="'name'"
-    [placeholder]="I18ns.programs.questions.filters.tags"
-    (selectChange)="filterQuestionsByTags($event)"
-  ></alto-dropdown-filter>
-  <alto-dropdown-filter
-  class="text-start col-1"
-  [data]="profileStore.users.value"
-  [displayLabel]="'username'"
-  [placeholder]="I18ns.programs.questions.filters.contributors"
-  (selectChange)="filterQuestionsByContributors($event)"
-></alto-dropdown-filter>
+      class="text-start col-1"
+      [data]="programsStore.tags.value"
+      [displayLabel]="'name'"
+      [placeholder]="I18ns.programs.questions.filters.tags"
+      (selectChange)="filterQuestionsByTags($event)"
+    ></alto-dropdown-filter>
+    <alto-dropdown-filter
+      class="text-start col-1"
+      [data]="profileStore.users.value"
+      [displayLabel]="'username'"
+      [placeholder]="I18ns.programs.questions.filters.contributors"
+      (selectChange)="filterQuestionsByContributors($event)"
+    ></alto-dropdown-filter>
   </div>
   <table class="table">
     <thead>

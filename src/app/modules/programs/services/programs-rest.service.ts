@@ -18,7 +18,7 @@ import { ProgramsStore } from '../programs.store';
 export class ProgramsRestService {
   constructor(
     private readonly programApi: ProgramsApiService,
-    private readonly programsStore: ProgramsStore,
+    private readonly programStore: ProgramsStore,
   ) {}
 
   getProgramsPaginated(req: GetProgramsRequestParams): Observable<ProgramPaginatedResponseApi> {
@@ -36,14 +36,19 @@ export class ProgramsRestService {
   }
 
   getPrograms(req?: GetProgramsRequestParams): Observable<ProgramApi[]> {
-    const par = {
-      ...req,
-      page: req?.page ?? 1,
-      itemsPerPage: req?.itemsPerPage ?? 400,
-    };
-    return this.programApi.getPrograms(par).pipe(
-      map((d) => d.data ?? []),
-    );
+    if (this.programStore.programs.value.length) {
+      return this.programStore.programs.value$;
+    } else {
+      const par = {
+        ...req,
+        page: req?.page ?? 1,
+        itemsPerPage: req?.itemsPerPage ?? 400,
+      };
+      return this.programApi.getPrograms(par).pipe(
+        map((d) => d.data ?? []),
+        tap((pr) => (this.programStore.programs.value = pr)),
+      );
+    }
   }
 
   getProgram(id: string): Observable<ProgramApi> {

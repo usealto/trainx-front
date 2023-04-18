@@ -115,6 +115,7 @@ export class CreateProgramsComponent implements OnInit {
             return prog.tags ?? [];
           }),
           tap((tags) => (this.selectedTags = tags?.map((t) => t.id))),
+          tap(() => (this.programStore.programs.value = [])),
           untilDestroyed(this),
         )
         .subscribe();
@@ -160,6 +161,8 @@ export class CreateProgramsComponent implements OnInit {
     if (this.currentStep === 2) {
       this.selectedTags = this.programForm.value?.tags ?? [];
       this.getQuestions();
+    } else if (this.currentStep === 3) {
+      this.saveProgram();
     }
   }
 
