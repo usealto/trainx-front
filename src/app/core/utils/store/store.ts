@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export class Store<T> {
   private initValue: T;
@@ -47,7 +47,7 @@ export class Store<T> {
   }
 
   isExpired(): boolean {
-    return new Date().valueOf() - this.createdAt >= this.expire;
+    return (new Date().valueOf() - this.createdAt) / 60_000 >= this.expire;
   }
 
   reset() {
