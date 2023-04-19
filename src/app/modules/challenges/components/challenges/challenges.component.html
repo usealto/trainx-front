@@ -39,7 +39,7 @@
 
       <alto-search
         class="d-inline-block ms-3"
-        (search)="search($event, ChallengeTypeEnumApi.ByTeam)"
+        (searchChange)="search($event, ChallengeTypeEnumApi.ByTeam)"
       ></alto-search>
 
       <table class="table">
@@ -132,7 +132,7 @@
       ></alto-dropdown-filter>
       <alto-search
         class="d-inline-block ms-3"
-        (search)="search($event, ChallengeTypeEnumApi.ByUser)"
+        (searchChange)="search($event, ChallengeTypeEnumApi.ByUser)"
       ></alto-search>
 
       <table class="table">

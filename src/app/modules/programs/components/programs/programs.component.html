@@ -24,7 +24,7 @@
     <h1>{{ I18ns.programs.programs.title }}</h1>
     <p class="mb-4">{{ I18ns.programs.programs.subtitle }}</p>
   </div>
-  <div class="col-1 text-end mb-4">
+  <div class="text-end mb-4">
     <alto-dropdown-filter
       class="text-start"
       [data]="teamStore.teams.value"
@@ -34,7 +34,7 @@
       [isColored]="true"
     ></alto-dropdown-filter>
 
-    <alto-search class="d-inline-block ms-3" (search)="searchPrograms($event)"></alto-search>
+    <alto-search class="d-inline-block ms-3" (searchChange)="searchPrograms($event)"></alto-search>
   </div>
   <div class="row mb-3">
     <div class="col-4 mb-3" *ngFor="let prog of programs">
