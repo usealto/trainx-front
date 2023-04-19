@@ -50,15 +50,13 @@ export class Store<T> {
     return new Date().valueOf() - this.createdAt >= this.expire;
   }
 
-  private resetIfExpired() {
-    console.log('isExpired', this.isExpired());
+  reset() {
+    this.value = this.initValue;
+  }
 
+  private resetIfExpired() {
     if (this.isExpired()) {
-      if (Array.isArray(this.holder.value)) {
-        this.value = [] as T;
-      } else {
-        this.value = this.initValue;
-      }
+      this.reset();
     }
   }
 
