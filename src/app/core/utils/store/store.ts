@@ -23,13 +23,7 @@ export class Store<T> {
   }
 
   set value(v: T) {
-    console.log('v', v);
-
-    console.log('date', new Date().valueOf() - this.createdAt);
-
     this.updateDate();
-    console.log('isExpired', this.isExpired());
-
     this.holder.next(v);
   }
 
@@ -43,9 +37,9 @@ export class Store<T> {
   /**
    *
    * @param initValue Default Init value: '{} as T' for an object or [] for array
-   * @param expire Lifetime of this cache in minutes. Default is 15. 0 is forever.
+   * @param expire Lifetime of this cache in minutes. Default is 5. 0 is forever.
    */
-  constructor(initValue: T, expire = 15) {
+  constructor(initValue: T, expire = 5) {
     this.initValue = initValue;
     this.holder = new BehaviorSubject<T>(initValue);
     this.expire = expire;
