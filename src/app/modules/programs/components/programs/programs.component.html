@@ -189,7 +189,7 @@
   <h1 id="tagsAnchor">{{ I18ns.programs.tags.title }}</h1>
   <p class="mb-4">{{ I18ns.programs.tags.subtitle }}</p>
 
-  <div class="row">
+  <div class="row mb-4">
     <div class="col-8">
       <alto-dropdown-filter
         class="me-3"
@@ -208,7 +208,7 @@
       ></alto-dropdown-filter>
     </div>
 
-    <alto-search class="col-4" (searchChange)="getProgramsFiltered({ search: $event })"></alto-search>
+    <alto-search class="col-4" (searchChange)="filterTags({ search: $event })"></alto-search>
   </div>
   <table class="table">
     <thead>

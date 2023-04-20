@@ -5,13 +5,25 @@
 
 <div class="menu">
   <div>
-    <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadHome" routerLinkActive="menu-selected">
+    <a
+      class="module"
+      [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadHome"
+      routerLinkActive="menu-selected"
+    >
       {{ I18ns.menu.home }}
     </a>
-    <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.programs" routerLinkActive="menu-selected">
+    <a
+      class="module"
+      [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.programs"
+      routerLinkActive="menu-selected"
+    >
       {{ I18ns.menu.programs }}
     </a>
-    <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadTeams" routerLinkActive="menu-selected">
+    <a
+      class="module"
+      [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadTeams"
+      routerLinkActive="menu-selected"
+    >
       {{ I18ns.menu.team }}
     </a>
     <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.challenges" routerLinkActive="menu-selected">
@@ -19,11 +31,20 @@
     </a>
   </div>
   <div class="bottom-block">
-    <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.settings" routerLinkActive="menu-selected">
+    <a
+      class="module"
+      [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.settings"
+      routerLinkActive="menu-selected"
+    >
       {{ I18ns.menu.settings }}
     </a>
-    <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile" routerLinkActive="menu-selected">
-      {{ I18ns.menu.profile }}
+    <hr />
+    <a class="profile" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile">
+      <img class="profile-pic" src="{{ url }}" alt="Profile Picture" />
+      <div class="d-inline-block ms-3">
+        <p class="fw-bold">{{ name }}</p>
+        <p>{{ email }}</p>
+      </div>
     </a>
     <p class="build-time fs-8" title="Build Time">Version: {{ buildTime | date : 'medium' }}</p>
   </div>
