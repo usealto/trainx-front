@@ -35,14 +35,13 @@ export class ProgramsRestService {
     return this.programApi.patchProgram({ id, patchProgramDtoApi });
   }
 
-  getPrograms(req?: GetProgramsRequestParams): Observable<ProgramApi[]> {
+  getPrograms(): Observable<ProgramApi[]> {
     if (this.programStore.programs.value.length) {
       return this.programStore.programs.value$;
     } else {
       const par = {
-        ...req,
-        page: req?.page ?? 1,
-        itemsPerPage: req?.itemsPerPage ?? 400,
+        page: 1,
+        itemsPerPage: 400,
       };
       return this.programApi.getPrograms(par).pipe(
         map((d) => d.data ?? []),

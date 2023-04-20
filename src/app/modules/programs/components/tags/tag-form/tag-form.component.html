@@ -15,7 +15,7 @@
       placeholder="{{ I18ns.tags.form.tagNamePlaceholder }}"
     />
 
-    <label class="form-label mt-3">{{ I18ns.tags.form.programs + ' ' + I18ns.tags.form.optional }}</label>
+    <label class="form-label mt-3">{{ I18ns.tags.form.programs + ' ' + I18ns.shared.optional }}</label>
     <ng-select
       [items]="programs"
       [multiple]="true"
@@ -29,7 +29,7 @@
 
     </ng-select>
 
-    <label class="form-label mt-3">{{ I18ns.tags.form.questions + ' ' + I18ns.tags.form.optional }}</label>
+    <label class="form-label mt-3">{{ I18ns.tags.form.questions + ' ' + I18ns.shared.optional }}</label>
     <ng-select
       [items]="questions"
       [multiple]="true"
@@ -43,7 +43,7 @@
 
     </ng-select>
 
-    <label class="form-label mt-3">{{ I18ns.tags.form.description + ' ' + I18ns.tags.form.optional }}</label>
+    <label class="form-label mt-3">{{ I18ns.tags.form.description + ' ' + I18ns.shared.optional }}</label>
     <textarea formControlName="description" class="form-control" cols="30" rows="10"></textarea>
 
     <input

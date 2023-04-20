@@ -1,16 +1,44 @@
 import { Injectable } from '@angular/core';
 import { Observable, map, tap } from 'rxjs';
-import { GetUsersRequestParams, UserApi, UserPaginatedResponseApi, UsersApiService } from 'src/app/sdk';
+import {
+  GetUsersRequestParams,
+  GetScoresRequestParams,
+  ScoreDtoApi,
+  UserApi,
+  UserPaginatedResponseApi,
+  UsersApiService,
+  ScoresApiService,
+} from 'src/app/sdk';
 import { ProfileStore } from '../profile.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersRestService {
-  constructor(private readonly userApi: UsersApiService, private userStore: ProfileStore) {}
+  constructor(
+    private readonly scoreApi: ScoresApiService,
+    private readonly userApi: UsersApiService,
+    private userStore: ProfileStore,
+  ) {}
 
   getUsers(req?: GetUsersRequestParams): Observable<UserApi[]> {
-    return this.userApi.getUsers({ ...req }).pipe(map((r) => r.data ?? []));
+    if (this.userStore.users.value.length) {
+      return this.userStore.users.value$;
+    } else {
+      return this.userApi.getUsers({ ...req }).pipe(
+        map((r) => r.data ?? []),
+        tap((users) => (this.userStore.users.value = users)),
+      );
+    }
+  }
+
+  getUsersScores(userIds: string[]) {
+    const par = {
+      type: 'user',
+      ids: userIds.join(','),
+      timeframe: 'year'
+          } as GetScoresRequestParams;
+    this.scoreApi.getScores(par);
   }
 
   getUsersPaginated(req?: GetUsersRequestParams): Observable<UserPaginatedResponseApi> {

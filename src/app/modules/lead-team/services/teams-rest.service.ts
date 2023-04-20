@@ -1,13 +1,24 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
-import { GetTeamsRequestParams, TeamApi, TeamsApiService } from 'src/app/sdk';
+import {
+  GetTeamsRequestParams,
+  GetUsersRequestParams,
+  TeamApi,
+  UsersApiService,
+  TeamsApiService,
+  UserApi,
+} from 'src/app/sdk';
 import { TeamStore } from '../team.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TeamsRestService {
-  constructor(private readonly teamApi: TeamsApiService, private teamStore: TeamStore) {}
+  constructor(
+    private readonly teamApi: TeamsApiService,
+    private readonly usersApi: UsersApiService,
+    private teamStore: TeamStore,
+  ) {}
 
   getTeams(req?: GetTeamsRequestParams): Observable<TeamApi[]> {
     if (this.teamStore.teams.value.length) {

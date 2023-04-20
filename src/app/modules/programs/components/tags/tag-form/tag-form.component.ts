@@ -60,13 +60,15 @@ export class TagsFormComponent implements OnInit {
 
         combineLatest([
           this.questionService.getQuestions({ tagIds: this.tag.id }),
-          this.programService.getPrograms({ tagIds: this.tag.id }),
+          this.programService.getPrograms(),
         ])
           .pipe(
             tap(([questions, programs]) => {
               this.tagForm.patchValue({
                 name,
-                programs: programs?.map((p) => p.id),
+                programs: programs
+                  ?.filter((program) => program.tags?.some((t) => this.tag?.id))
+                  .map((p) => p.id),
                 questions: questions?.map((p) => p.id),
                 description,
               });

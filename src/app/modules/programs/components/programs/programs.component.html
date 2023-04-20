@@ -120,7 +120,7 @@
         </td>
         <td *ngIf="!question.programs || question.programs.length < 1">-</td>
         <td class="pointer pe-auto" (click)="openQuestionForm(question)">
-          <i class="fs-5 bi bi-pencil-fill"></i>
+          <i class="fs-5 bi bi-pencil"></i>
         </td>
       </tr>
     </tbody>
@@ -154,7 +154,7 @@
           <alto-img-badge [url]="getUser(question.createdBy)?.pictureUrl"></alto-img-badge>
         </td>
         <td>
-          <i class="fs-5 bi bi-pencil-fill"></i>
+          <i class="fs-5 bi bi-pencil"></i>
         </td>
       </tr>
     </tbody>
@@ -206,7 +206,7 @@
           <alto-colored-pill-list [data]="getTagPrograms(tag.id)" [limit]="5"></alto-colored-pill-list>
         </td>
         <td class="pointer pe-auto" (click)="openTagForm(tag)">
-          <i class="fs-5 bi bi-pencil-fill"></i>
+          <i class="fs-5 bi bi-pencil"></i>
         </td>
       </tr>
     </tbody>

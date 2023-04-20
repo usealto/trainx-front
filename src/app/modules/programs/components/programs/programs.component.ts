@@ -239,7 +239,7 @@ export class ProgramsComponent implements OnInit {
     const ids = tags.map((tag) => tag.id);
     this.isTagProgramsLoading = true;
     this.programRestService
-      .getPrograms({ tagIds: ids.join(',') })
+      .getPrograms()
       .pipe(
         tap((programs) => {
           ids.forEach((tagId) => {
