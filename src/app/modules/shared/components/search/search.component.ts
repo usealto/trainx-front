@@ -7,9 +7,21 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class SearchComponent {
   @Input() placeholder = 'Search';
+  /**
+   * To avoid server clog when a request is connected to the search
+   */
+  @Input() debounceTime = 750;
   @Output() searchChange = new EventEmitter<string>();
 
+  timeOut: any;
+
   searchReq(value: string) {
-    this.searchChange.emit(value);
+    if (!this.timeOut) {
+      this.timeOut = setTimeout(() => {
+        console.log('search');
+        this.searchChange.emit(value);
+        this.timeOut = null;
+      }, this.debounceTime);
+    }
   }
 }

@@ -28,6 +28,8 @@ import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
 import { ProgramsStore } from '../../programs.store';
+import { ProgramsService } from '../../services/programs.service';
+import { ProgramFilters } from '../../models/program.model';
 
 @UntilDestroy()
 @Component({
@@ -39,7 +41,9 @@ export class ProgramsComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   //
-  programs!: ProgramApi[];
+  programs: ProgramApi[] = [];
+  programsDisplay: ProgramApi[] = [];
+  programFilters: ProgramFilters = { teams: [], search: '' };
   programsPage = 1;
   programsCount = 0;
   programPageSize = 9;
@@ -67,7 +71,8 @@ export class ProgramsComponent implements OnInit {
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
-    private readonly programService: ProgramsRestService,
+    private readonly programRestService: ProgramsRestService,
+    private readonly programService: ProgramsService,
     private readonly questionsService: QuestionsRestService,
     private readonly usersService: UsersRestService,
     private readonly scoresServices: ScoresRestService,
@@ -79,9 +84,18 @@ export class ProgramsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.programService.getPrograms().pipe(untilDestroyed(this)).subscribe();
+    this.programRestService
+      .getPrograms()
+      .pipe(
+        tap((progs) => {
+          this.programs = progs;
+          this.programsDisplay = progs;
+          this.programsCount = progs.length;
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
 
-    this.getPrograms();
     this.getQuestions();
     this.getSubmittedQuestions();
     this.getTags().subscribe();
@@ -106,23 +120,15 @@ export class ProgramsComponent implements OnInit {
     canvasRef.componentInstance.createdTag.pipe(switchMap(() => this.getTags())).subscribe();
   }
 
-  changeProgramPage() {
-    this.getPrograms();
-  }
+  getProgramsFiltered({
+    teams = this.programFilters.teams,
+    search = this.programFilters.search,
+  }: ProgramFilters) {
+    this.programFilters.search = search;
+    this.programFilters.teams = teams;
 
-  getPrograms(teams: string[] = []) {
-    this.programService
-      .getProgramsPaginated({
-        page: this.programsPage,
-        itemsPerPage: this.programPageSize,
-        teamIds: teams.join(','),
-      })
-      .pipe(
-        tap((paginated) => (this.programs = paginated.data ?? [])),
-        tap((paginated) => (this.programsCount = paginated.meta.totalItems ?? [])),
-        untilDestroyed(this),
-      )
-      .subscribe();
+    this.programsDisplay = this.programService.filterPrograms(this.programs, this.programFilters);
+    this.programsCount = this.programsDisplay.length;
   }
 
   getQuestions(programs: string[] = [], tags: string[] = [], contributors: string[] = []) {
@@ -232,7 +238,7 @@ export class ProgramsComponent implements OnInit {
   getProgramsfromTags(tags: TagApi[]) {
     const ids = tags.map((tag) => tag.id);
     this.isTagProgramsLoading = true;
-    this.programService
+    this.programRestService
       .getPrograms({ tagIds: ids.join(',') })
       .pipe(
         tap((programs) => {
@@ -253,10 +259,6 @@ export class ProgramsComponent implements OnInit {
       }
     });
     return programList;
-  }
-
-  filterPrograms(teams: TeamApi[]) {
-    this.getPrograms(teams.map((t) => t.id));
   }
 
   filterTags(programs: ProgramApi[]) {
@@ -280,11 +282,6 @@ export class ProgramsComponent implements OnInit {
       [],
       contributors.map((c) => c.id),
     );
-  }
-
-  searchPrograms(val: string) {
-    // TODO !!
-    console.log(val);
   }
 
   @memoize()

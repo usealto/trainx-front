@@ -30,21 +30,29 @@
       [data]="teamStore.teams.value"
       [displayLabel]="'shortName'"
       [placeholder]="I18ns.programs.programs.filters.team"
-      (selectChange)="filterPrograms($event)"
+      (selectChange)="getProgramsFiltered({ teams: $event })"
       [isColored]="true"
     ></alto-dropdown-filter>
 
-    <alto-search class="d-inline-block ms-3" (searchChange)="searchPrograms($event)"></alto-search>
+    <alto-search
+      class="d-inline-block ms-3"
+      (searchChange)="getProgramsFiltered({ search: $event })"
+    ></alto-search>
   </div>
   <div class="row mb-3">
-    <div class="col-4 mb-3" *ngFor="let prog of programs">
+    <div
+      class="col-4 mb-3"
+      *ngFor="
+        let prog of programsDisplay
+          | slice : (programsPage - 1) * programPageSize : programsPage * programPageSize
+      "
+    >
       <alto-program-card [displayToggle]="true" [program]="prog"></alto-program-card>
     </div>
   </div>
   <ngb-pagination
     [collectionSize]="programsCount"
     [(page)]="programsPage"
-    (pageChange)="changeProgramPage()"
     [pageSize]="programPageSize"
     [maxSize]="10"
     aria-label="Default pagination"
