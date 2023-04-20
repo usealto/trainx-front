@@ -23,11 +23,13 @@ import { CreateUserDtoApi } from '../model/createUserDto';
 // @ts-ignore
 import { PatchUserDtoApi } from '../model/patchUserDto';
 // @ts-ignore
-import { UserCreatedResponseApi } from '../model/userCreatedResponse';
+import { QuestionPaginatedResponseApi } from '../model/questionPaginatedResponse';
 // @ts-ignore
-import { UserPaginatedResponseApi } from '../model/userPaginatedResponse';
+import { UserDtoCreatedResponseApi } from '../model/userDtoCreatedResponse';
 // @ts-ignore
-import { UserResponseApi } from '../model/userResponse';
+import { UserDtoPaginatedResponseApi } from '../model/userDtoPaginatedResponse';
+// @ts-ignore
+import { UserDtoResponseApi } from '../model/userDtoResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -47,6 +49,20 @@ export interface GetMeRequestParams {
     companyId?: string;
     /** The ID of the user sending the request.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication.  Used to set the &#x60;createdBy&#x60; property on creation of entities. */
     userId?: string;
+}
+
+export interface GetNextQuestionsForUserRequestParams {
+    id: string;
+    /** An array of  IDs used to filter the results to only include entities with the specified IDs */
+    ids?: string;
+    /** The ID of the user sending the request.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
+    userId?: string;
+    /** The page of results to retrieve. */
+    page?: number;
+    /** The number of items per page to retrieve. */
+    itemsPerPage?: number;
+    /** The ID of the company that the user sending the request is related to.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
+    companyId?: string;
 }
 
 export interface GetUserByIdRequestParams {
@@ -163,9 +179,9 @@ export class UsersApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createUser(requestParameters: CreateUserRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserCreatedResponseApi>;
-    public createUser(requestParameters: CreateUserRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserCreatedResponseApi>>;
-    public createUser(requestParameters: CreateUserRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserCreatedResponseApi>>;
+    public createUser(requestParameters: CreateUserRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserDtoCreatedResponseApi>;
+    public createUser(requestParameters: CreateUserRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserDtoCreatedResponseApi>>;
+    public createUser(requestParameters: CreateUserRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserDtoCreatedResponseApi>>;
     public createUser(requestParameters: CreateUserRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createUserDtoApi = requestParameters.createUserDtoApi;
         if (createUserDtoApi === null || createUserDtoApi === undefined) {
@@ -238,7 +254,7 @@ export class UsersApiService {
         }
 
         let localVarPath = `/v1/users`;
-        return this.httpClient.request<UserCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<UserDtoCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: createUserDtoApi,
@@ -258,9 +274,9 @@ export class UsersApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getMe(requestParameters: GetMeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserResponseApi>;
-    public getMe(requestParameters: GetMeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserResponseApi>>;
-    public getMe(requestParameters: GetMeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserResponseApi>>;
+    public getMe(requestParameters: GetMeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserDtoResponseApi>;
+    public getMe(requestParameters: GetMeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserDtoResponseApi>>;
+    public getMe(requestParameters: GetMeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserDtoResponseApi>>;
     public getMe(requestParameters: GetMeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const companyId = requestParameters.companyId;
         const userId = requestParameters.userId;
@@ -320,7 +336,108 @@ export class UsersApiService {
         }
 
         let localVarPath = `/v1/users/me`;
-        return this.httpClient.request<UserResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<UserDtoResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Get the next questions sorted by relevance for a user by the user ID
+     * This endpoint is used to get the next questions for a user.        The questions are sorted by relevance.        The relevance is calculated by combining the last time the user answered a question and the number of times the user answered a question.       the first question is the one that has the highest relevance. meaning the user has not answered it before or the last time he answered it was the longest time ago.       there is a small random factor to make sure that the questions are not always in the same order.
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getNextQuestionsForUser(requestParameters: GetNextQuestionsForUserRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<QuestionPaginatedResponseApi>;
+    public getNextQuestionsForUser(requestParameters: GetNextQuestionsForUserRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<QuestionPaginatedResponseApi>>;
+    public getNextQuestionsForUser(requestParameters: GetNextQuestionsForUserRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<QuestionPaginatedResponseApi>>;
+    public getNextQuestionsForUser(requestParameters: GetNextQuestionsForUserRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling getNextQuestionsForUser.');
+        }
+        const ids = requestParameters.ids;
+        const userId = requestParameters.userId;
+        const page = requestParameters.page;
+        const itemsPerPage = requestParameters.itemsPerPage;
+        const companyId = requestParameters.companyId;
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (ids !== undefined && ids !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>ids, 'ids');
+        }
+        if (userId !== undefined && userId !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>userId, 'userId');
+        }
+        if (page !== undefined && page !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>page, 'page');
+        }
+        if (itemsPerPage !== undefined && itemsPerPage !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>itemsPerPage, 'itemsPerPage');
+        }
+        if (companyId !== undefined && companyId !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>companyId, 'companyId');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (x-api-key) required
+        localVarCredential = this.configuration.lookupCredential('x-api-key');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('x-api-key', localVarCredential);
+        }
+
+        // authentication (bearer) required
+        localVarCredential = this.configuration.lookupCredential('bearer');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v1/users/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/next-questions`;
+        return this.httpClient.request<QuestionPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -339,9 +456,9 @@ export class UsersApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getUserById(requestParameters: GetUserByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserResponseApi>;
-    public getUserById(requestParameters: GetUserByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserResponseApi>>;
-    public getUserById(requestParameters: GetUserByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserResponseApi>>;
+    public getUserById(requestParameters: GetUserByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserDtoResponseApi>;
+    public getUserById(requestParameters: GetUserByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserDtoResponseApi>>;
+    public getUserById(requestParameters: GetUserByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserDtoResponseApi>>;
     public getUserById(requestParameters: GetUserByIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -405,7 +522,7 @@ export class UsersApiService {
         }
 
         let localVarPath = `/v1/users/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<UserResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<UserDtoResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -424,9 +541,9 @@ export class UsersApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getUsers(requestParameters: GetUsersRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserPaginatedResponseApi>;
-    public getUsers(requestParameters: GetUsersRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserPaginatedResponseApi>>;
-    public getUsers(requestParameters: GetUsersRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserPaginatedResponseApi>>;
+    public getUsers(requestParameters: GetUsersRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserDtoPaginatedResponseApi>;
+    public getUsers(requestParameters: GetUsersRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserDtoPaginatedResponseApi>>;
+    public getUsers(requestParameters: GetUsersRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserDtoPaginatedResponseApi>>;
     public getUsers(requestParameters: GetUsersRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createdBy = requestParameters.createdBy;
         const sortBy = requestParameters.sortBy;
@@ -536,7 +653,7 @@ export class UsersApiService {
         }
 
         let localVarPath = `/v1/users`;
-        return this.httpClient.request<UserPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<UserDtoPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -555,9 +672,9 @@ export class UsersApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public patchUser(requestParameters: PatchUserRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserResponseApi>;
-    public patchUser(requestParameters: PatchUserRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserResponseApi>>;
-    public patchUser(requestParameters: PatchUserRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserResponseApi>>;
+    public patchUser(requestParameters: PatchUserRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserDtoResponseApi>;
+    public patchUser(requestParameters: PatchUserRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserDtoResponseApi>>;
+    public patchUser(requestParameters: PatchUserRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserDtoResponseApi>>;
     public patchUser(requestParameters: PatchUserRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -634,7 +751,7 @@ export class UsersApiService {
         }
 
         let localVarPath = `/v1/users/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<UserResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<UserDtoResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: patchUserDtoApi,

@@ -212,10 +212,10 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public createChallenge(requestParameters: CreateChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeResponseApi>;
+    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeResponseApi>>;
+    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeResponseApi>>;
+    public createChallenge(requestParameters: CreateChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createChallengeDtoApi = requestParameters.createChallengeDtoApi;
         if (createChallengeDtoApi === null || createChallengeDtoApi === undefined) {
             throw new Error('Required parameter createChallengeDtoApi was null or undefined when calling createChallenge.');
@@ -252,6 +252,7 @@ export class ChallengesApiService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -286,7 +287,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges`;
-        return this.httpClient.request<any>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengeResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: createChallengeDtoApi,

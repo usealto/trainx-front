@@ -9,11 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { UserApi } from './user';
 
 
-export interface UserCreatedResponseApi { 
-    statusCode: number;
-    data?: UserApi;
+export interface CompanyLightDtoApi { 
+    id: string;
+    /**
+     * The name of the company
+     */
+    name: string;
 }
 

@@ -67,6 +67,10 @@ export interface CommentQuestionApi {
      * The bubble ID for the question.
      */
     tempBubbleId?: string;
+    /**
+     * The relevance of the question. This field is used for sorting questions for get next question for a user.
+     */
+    relevance?: number;
 }
 
 

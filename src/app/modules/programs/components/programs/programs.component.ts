@@ -17,7 +17,7 @@ import {
   ScoreTimeframeEnumApi,
   ScoresResponseDtoApi,
   TagApi,
-  UserApi,
+  UserDtoApi,
 } from 'src/app/sdk';
 import { ProgramFilters } from '../../models/program.model';
 import { QuestionFilters } from '../../models/question.model';
@@ -57,7 +57,7 @@ export class ProgramsComponent implements OnInit {
   questionsScore = new Map<string, number>();
   questionFilters: QuestionFilters = { programs: [], tags: [], contributors: [], search: '' };
   //
-  userCache = new Map<string, UserApi>();
+  userCache = new Map<string, UserDtoApi>();
   pillsRowDisplayLimit = 3;
   submittedQuestions!: QuestionSubmittedApi[];
   submittedQuestionsPage = 1;
@@ -177,7 +177,7 @@ export class ProgramsComponent implements OnInit {
       .subscribe();
   }
 
-  getUsersfromQuestions(ids: string[]): UserApi[] {
+  getUsersfromQuestions(ids: string[]): UserDtoApi[] {
     const filter = ids.filter((i) => !this.userCache.has(i));
     return this.profileStore.users.value.filter((u) => filter.some((i) => i === u.id));
   }
@@ -240,7 +240,7 @@ export class ProgramsComponent implements OnInit {
       contributors = this.tagFilters.contributors,
       search = this.tagFilters.search,
     }: TagFilters = this.tagFilters,
-  ): Observable<UserApi[]> {
+  ): Observable<UserDtoApi[]> {
     this.tagFilters.programs = programs;
     this.tagFilters.contributors = contributors;
     this.tagFilters.search = search;

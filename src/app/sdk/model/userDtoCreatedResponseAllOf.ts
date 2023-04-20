@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { UserApi } from './user';
+import { UserDtoApi } from './userDto';
 
 
-export interface UserPaginatedResponseAllOfApi { 
+export interface UserDtoCreatedResponseAllOfApi { 
+    data?: UserDtoApi;
     statusCode?: number;
-    data?: Array<UserApi>;
 }
 

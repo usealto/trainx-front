@@ -35,6 +35,18 @@ export interface GetAuth0UsersRequestParams {
     page?: number;
 }
 
+export interface GetRoleUsersRequestParams {
+    role: string;
+    /** Number of results per page. */
+    perPage?: number;
+    /** Page number, zero indexed. */
+    page?: number;
+    /** For checkpoint pagination, the Id from which to start selection from. */
+    from?: string;
+    /** For checkpoint pagination, the number of entries to retrieve. Default 50. */
+    take?: number;
+}
+
 
 @Injectable({
   providedIn: 'root'
@@ -178,6 +190,101 @@ export class AuthApiService {
         }
 
         let localVarPath = `/v1/auth/users`;
+        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Retrieve users associated with a role
+     * Get Users from Auth0 This route is only available for Alto Admins For more information about the get users endpoint : https://auth0.com/docs/api/management/v2#!/Users/get_users
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getRoleUsers(requestParameters: GetRoleUsersRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
+    public getRoleUsers(requestParameters: GetRoleUsersRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
+    public getRoleUsers(requestParameters: GetRoleUsersRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
+    public getRoleUsers(requestParameters: GetRoleUsersRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+        const role = requestParameters.role;
+        if (role === null || role === undefined) {
+            throw new Error('Required parameter role was null or undefined when calling getRoleUsers.');
+        }
+        const perPage = requestParameters.perPage;
+        const page = requestParameters.page;
+        const from = requestParameters.from;
+        const take = requestParameters.take;
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (perPage !== undefined && perPage !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>perPage, 'per_page');
+        }
+        if (page !== undefined && page !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>page, 'page');
+        }
+        if (from !== undefined && from !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>from, 'from');
+        }
+        if (take !== undefined && take !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>take, 'take');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (x-api-key) required
+        localVarCredential = this.configuration.lookupCredential('x-api-key');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('x-api-key', localVarCredential);
+        }
+
+        // authentication (bearer) required
+        localVarCredential = this.configuration.lookupCredential('bearer');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v1/auth/roles/${this.configuration.encodeParam({name: "role", value: role, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/users`;
         return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,

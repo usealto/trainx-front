@@ -5,7 +5,7 @@ import { UsersRestService } from 'src/app/modules/profile/services/users-rest.se
 import { combineLatest, map, tap } from 'rxjs';
 import { TeamStore } from '../../team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { TeamApi, UserApi } from 'src/app/sdk';
+import { TeamApi, UserDtoApi } from 'src/app/sdk';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { TeamFormComponent } from '../team-form/team-form.component';
 
@@ -24,7 +24,7 @@ export class LeadTeamComponent implements OnInit {
 
   usersMap = new Map<string, string>();
   usersCount = 0;
-  users: UserApi[] = [];
+  users: UserDtoApi[] = [];
   usersPage = 1;
   usersPageSize = 10;
 

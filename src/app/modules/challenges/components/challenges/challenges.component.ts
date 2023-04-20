@@ -4,7 +4,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ChallengeApi, ChallengeTypeEnumApi, TeamApi, UserApi } from 'src/app/sdk';
+import { ChallengeApi, ChallengeTypeEnumApi, TeamApi, UserDtoApi } from 'src/app/sdk';
 import { ChallengesRestService } from '../../services/challenges-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 
@@ -94,7 +94,7 @@ export class ChallengesComponent implements OnInit {
   }
 
   @memoize()
-  getUser(id: string): Observable<UserApi | null | undefined> {
+  getUser(id: string): Observable<UserDtoApi | null | undefined> {
     if (!id) {
       return of(null);
     }

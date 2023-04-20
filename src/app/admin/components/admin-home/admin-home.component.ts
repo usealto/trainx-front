@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { tap } from 'rxjs';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UserApi } from 'src/app/sdk';
+import { UserDtoApi } from 'src/app/sdk';
 
 @Component({
   selector: 'alto-admin-home',
@@ -10,7 +10,7 @@ import { UserApi } from 'src/app/sdk';
   styleUrls: ['./admin-home.component.scss'],
 })
 export class AdminHomeComponent implements OnInit {
-  users: UserApi[] = [];
+  users: UserDtoApi[] = [];
 
   userForm: any;
   constructor(private readonly userRestService: UsersRestService, private formBuilder: FormBuilder) {}

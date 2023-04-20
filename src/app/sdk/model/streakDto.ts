@@ -9,11 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { UserApi } from './user';
 
 
-export interface UserCreatedResponseAllOfApi { 
-    data?: UserApi;
-    statusCode?: number;
+export interface StreakDtoApi { 
+    /**
+     * The start date of the streak
+     */
+    startDate: Date;
+    /**
+     * The count of days in the streak
+     */
+    count: number;
 }
 

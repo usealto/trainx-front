@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable, map, tap } from 'rxjs';
 import {
-  GetUsersRequestParams,
   GetScoresRequestParams,
-  ScoreDtoApi,
-  UserApi,
-  UserPaginatedResponseApi,
-  UsersApiService,
+  GetUsersRequestParams,
+  PatchUserDtoApi,
   ScoresApiService,
+  UserDtoApi,
+  UserDtoPaginatedResponseApi,
+  UsersApiService,
 } from 'src/app/sdk';
 import { ProfileStore } from '../profile.store';
 
@@ -21,7 +21,7 @@ export class UsersRestService {
     private userStore: ProfileStore,
   ) {}
 
-  getUsers(req?: GetUsersRequestParams): Observable<UserApi[]> {
+  getUsers(req?: GetUsersRequestParams): Observable<UserDtoApi[]> {
     if (this.userStore.users.value.length) {
       return this.userStore.users.value$;
     } else {
@@ -36,12 +36,12 @@ export class UsersRestService {
     const par = {
       type: 'user',
       ids: userIds.join(','),
-      timeframe: 'year'
-          } as GetScoresRequestParams;
+      timeframe: 'year',
+    } as GetScoresRequestParams;
     this.scoreApi.getScores(par);
   }
 
-  getUsersPaginated(req?: GetUsersRequestParams): Observable<UserPaginatedResponseApi> {
+  getUsersPaginated(req?: GetUsersRequestParams): Observable<UserDtoPaginatedResponseApi> {
     const par = {
       ...req,
       page: req?.page ?? 1,
@@ -50,14 +50,14 @@ export class UsersRestService {
     return this.userApi.getUsers(par);
   }
 
-  getMe(): Observable<UserApi> {
+  getMe(): Observable<UserDtoApi> {
     return this.userApi.getMe({}).pipe(
-      map((u) => u.data || ({} as UserApi)),
+      map((u) => u.data || ({} as UserDtoApi)),
       tap((u) => (this.userStore.user.value = u)),
     );
   }
 
-  patchUser(id: string, patchUserDtoApi: Partial<UserApi>): Observable<UserApi> {
-    return this.userApi.patchUser({ id, patchUserDtoApi }).pipe(map((u) => u.data || ({} as UserApi)));
+  patchUser(id: string, patchUserDtoApi: PatchUserDtoApi): Observable<UserDtoApi> {
+    return this.userApi.patchUser({ id, patchUserDtoApi }).pipe(map((u) => u.data || ({} as UserDtoApi)));
   }
 }
