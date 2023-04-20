@@ -16,12 +16,9 @@ export class SearchComponent {
   timeOut: any;
 
   searchReq(value: string) {
-    if (!this.timeOut) {
-      this.timeOut = setTimeout(() => {
-        console.log('search');
-        this.searchChange.emit(value);
-        this.timeOut = null;
-      }, this.debounceTime);
-    }
+    clearTimeout(this.timeOut);
+    this.timeOut = setTimeout(() => {
+      this.searchChange.emit(value);
+    }, this.debounceTime);
   }
 }
