@@ -59,9 +59,10 @@ export class Store<T> {
   }
 
   private resetIfExpired() {
-    if (this.isExpired()) {
-      this.reset();
-    }
+    // TODO Improve
+    // if (this.isExpired()) {
+    //   this.reset();
+    // }
   }
 
   private updateDate() {

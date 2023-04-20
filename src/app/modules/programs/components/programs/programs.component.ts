@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { combineLatest, forkJoin, map, Observable, of, switchMap, takeUntil, tap } from 'rxjs';
+import { Observable, forkJoin, map, of, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import {
@@ -15,21 +17,20 @@ import {
   ScoreTimeframeEnumApi,
   ScoresResponseDtoApi,
   TagApi,
-  TeamApi,
   UserApi,
 } from 'src/app/sdk';
-import { ProgramsRestService } from '../../services/programs-rest.service';
-import { QuestionsRestService } from '../../services/questions-rest.service';
-import { QuestionFormComponent } from '../questions/question-form/question-form.component';
-import { ScoresRestService } from '../../services/scores-rest.service';
-import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
-import { TagsRestService } from '../../services/tags-rest.service';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
-import { ProgramsStore } from '../../programs.store';
-import { ProgramsService } from '../../services/programs.service';
 import { ProgramFilters } from '../../models/program.model';
+import { QuestionFilters } from '../../models/question.model';
+import { ProgramsStore } from '../../programs.store';
+import { ProgramsRestService } from '../../services/programs-rest.service';
+import { ProgramsService } from '../../services/programs.service';
+import { QuestionsRestService } from '../../services/questions-rest.service';
+import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
+import { ScoresRestService } from '../../services/scores-rest.service';
+import { TagsRestService } from '../../services/tags-rest.service';
+import { QuestionFormComponent } from '../questions/question-form/question-form.component';
+import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
+import { TagFilters } from '../../models/tag.model';
 
 @UntilDestroy()
 @Component({
@@ -53,14 +54,17 @@ export class ProgramsComponent implements OnInit {
   questionsCount = 0;
   questionsPageSize = 10;
   isQuestionsLoading = true;
-  userCache = new Map<string, UserApi>();
   questionsScore = new Map<string, number>();
+  questionFilters: QuestionFilters = { programs: [], tags: [], contributors: [], search: '' };
+  //
+  userCache = new Map<string, UserApi>();
   pillsRowDisplayLimit = 3;
   submittedQuestions!: QuestionSubmittedApi[];
   submittedQuestionsPage = 1;
   submittedQuestionsCount = 0;
   submittedQuestionsPageSize = 10;
   isSubmittedQuestionsLoading = true;
+  //
   tags!: TagApi[];
   tagsPage = 1;
   tagsCount = 0;
@@ -68,6 +72,8 @@ export class ProgramsComponent implements OnInit {
   isTagsLoading = true;
   tagPrograms = new Map<string, string[]>();
   isTagProgramsLoading = true;
+  tagFilters: TagFilters = { programs: [], search: '' };
+  //
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -131,27 +137,39 @@ export class ProgramsComponent implements OnInit {
     this.programsCount = this.programsDisplay.length;
   }
 
-  getQuestions(programs: string[] = [], tags: string[] = [], contributors: string[] = []) {
+  getQuestions(
+    {
+      programs = this.questionFilters.programs,
+      tags = this.questionFilters.tags,
+      contributors = this.questionFilters.contributors,
+      search = this.questionFilters.search,
+    }: QuestionFilters = this.questionFilters,
+  ) {
     this.isQuestionsLoading = true;
 
-    combineLatest([
-      this.questionsService.getQuestionsPaginated({
+    this.questionFilters.programs = programs;
+    this.questionFilters.tags = tags;
+    this.questionFilters.contributors = contributors;
+    this.questionFilters.search = search;
+
+    this.questionsService
+      .getQuestionsPaginated({
         page: this.questionsPage,
         itemsPerPage: this.questionsPageSize,
-        programIds: programs.join(','),
-        tagIds: tags.join(','),
-        createdBy: contributors.length > 0 ? contributors.join(',') : undefined,
-      }),
-      this.usersService.getUsers(),
-    ])
+        programIds: programs?.join(','),
+        tagIds: tags?.join(','),
+        createdBy: contributors?.length ? contributors?.join(',') : undefined,
+        search,
+      })
       .pipe(
-        tap(([questions, users]) => (this.profileStore.users.value = users ?? [])),
-        tap(([questions, users]) => (this.questions = questions.data ?? [])),
-        tap(([questions, users]) => (this.questionsCount = questions.meta.totalItems ?? 0)),
-        switchMap(([questions, users]) => forkJoin([this.getScoresfromQuestions(questions), of(questions)])),
+        tap((questions) => {
+          this.questions = questions.data ?? [];
+          this.questionsCount = questions.meta.totalItems;
+        }),
+        switchMap((questions) => forkJoin([this.getScoresfromQuestions(questions), of(questions)])),
         map(([scores, questions]) => questions.data?.map((q) => q.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
-        switchMap((ids) => this.getUsersfromQuestions(ids)),
+        map((ids) => this.getUsersfromQuestions(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
         tap(() => (this.isQuestionsLoading = false)),
         untilDestroyed(this),
@@ -159,9 +177,9 @@ export class ProgramsComponent implements OnInit {
       .subscribe();
   }
 
-  getUsersfromQuestions(ids: string[]): Observable<UserApi[]> {
-    const filter = ids.filter((i) => !this.userCache.has(i)).join(',');
-    return this.usersService.getUsers({ ids: filter }).pipe();
+  getUsersfromQuestions(ids: string[]): UserApi[] {
+    const filter = ids.filter((i) => !this.userCache.has(i));
+    return this.profileStore.users.value.filter((u) => filter.some((i) => i === u.id));
   }
 
   getScoresfromQuestions(questions: QuestionPaginatedResponseApi): Observable<ScoresResponseDtoApi> {
@@ -205,7 +223,7 @@ export class ProgramsComponent implements OnInit {
         tap((q) => (this.submittedQuestionsCount = q.meta.itemsPerPage ?? 0)),
         map((questions) => questions.data?.map((q) => q.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
-        switchMap((ids) => this.getUsersfromQuestions(ids)),
+        map((ids) => this.getUsersfromQuestions(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
         tap(() => (this.isSubmittedQuestionsLoading = false)),
       )
@@ -216,12 +234,23 @@ export class ProgramsComponent implements OnInit {
     this.getSubmittedQuestions();
   }
 
-  getTags(programs: string[] = []): Observable<UserApi[]> {
+  getTags(
+    {
+      programs = this.tagFilters.programs,
+      contributors = this.tagFilters.contributors,
+      search = this.tagFilters.search,
+    }: TagFilters = this.tagFilters,
+  ): Observable<UserApi[]> {
+    this.tagFilters.programs = programs;
+    this.tagFilters.contributors = contributors;
+    this.tagFilters.search = search;
+
     return this.tagRestService
       .getTagsPaginated({
         page: this.tagsPage,
         itemsPerPage: this.tagsPageSize,
-        programIds: programs.join(','),
+        programIds: programs?.join(','),
+        createdBy: contributors?.join(','),
       })
       .pipe(
         tap((t) => (this.tags = t.data ?? [])),
@@ -229,7 +258,7 @@ export class ProgramsComponent implements OnInit {
         tap((t) => this.getProgramsfromTags(t.data ?? [])),
         map((tags) => tags.data?.map((t) => t.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
-        switchMap((ids) => this.getUsersfromQuestions(ids)),
+        map((ids) => this.getUsersfromQuestions(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
         tap(() => (this.isTagsLoading = false)),
       );
@@ -261,27 +290,8 @@ export class ProgramsComponent implements OnInit {
     return programList;
   }
 
-  filterTags(programs: ProgramApi[]) {
-    return this.getTags(programs.map((p) => p.id)).subscribe();
-  }
-
-  filterQuestionsByPrograms(programs: ProgramApi[]) {
-    this.getQuestions(programs.map((p) => p.id));
-  }
-
-  filterQuestionsByTags(tags: TagApi[]) {
-    this.getQuestions(
-      [],
-      tags.map((t) => t.id),
-    );
-  }
-
-  filterQuestionsByContributors(contributors: UserApi[]) {
-    this.getQuestions(
-      [],
-      [],
-      contributors.map((c) => c.id),
-    );
+  filterTags(filters: TagFilters) {
+    return this.getTags(filters).subscribe();
   }
 
   @memoize()

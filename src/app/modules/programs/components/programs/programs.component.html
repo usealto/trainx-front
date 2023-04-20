@@ -51,6 +51,7 @@
     </div>
   </div>
   <ngb-pagination
+    [ngClass]="{ invisible: programsCount <= programPageSize }"
     [collectionSize]="programsCount"
     [(page)]="programsPage"
     [pageSize]="programPageSize"
@@ -64,29 +65,40 @@
   </button>
   <h1 id="questionsAnchor">{{ I18ns.programs.questions.title }}</h1>
   <p class="mb-4">{{ I18ns.programs.questions.subtitle }}</p>
-  <div class="col-5 text-end mb-4 row">
-    <alto-dropdown-filter
-      class="text-start col-1"
-      [data]="programsStore.programs.value"
-      [displayLabel]="'name'"
-      [placeholder]="I18ns.programs.questions.filters.programs"
-      (selectChange)="filterQuestionsByPrograms($event)"
-    ></alto-dropdown-filter>
-    <alto-dropdown-filter
-      class="text-start col-1"
-      [data]="programsStore.tags.value"
-      [displayLabel]="'name'"
-      [placeholder]="I18ns.programs.questions.filters.tags"
-      (selectChange)="filterQuestionsByTags($event)"
-    ></alto-dropdown-filter>
-    <alto-dropdown-filter
-      class="text-start col-1"
-      [data]="profileStore.users.value"
-      [displayLabel]="'username'"
-      [placeholder]="I18ns.programs.questions.filters.contributors"
-      (selectChange)="filterQuestionsByContributors($event)"
-    ></alto-dropdown-filter>
+
+  <div class="row mb-4">
+    <div class="col-6">
+      <alto-dropdown-filter
+        class="me-3"
+        [data]="programsStore.programs.value"
+        [displayLabel]="'name'"
+        [returnValue]="'id'"
+        [placeholder]="I18ns.programs.questions.filters.programs"
+        (selectChange)="getQuestions({ programs: $event })"
+      ></alto-dropdown-filter>
+      <alto-dropdown-filter
+        class="me-3"
+        [data]="programsStore.tags.value"
+        [returnValue]="'id'"
+        [displayLabel]="'name'"
+        [placeholder]="I18ns.programs.questions.filters.tags"
+        (selectChange)="getQuestions({ tags: $event })"
+      ></alto-dropdown-filter>
+      <alto-dropdown-filter
+        class="me-3"
+        [data]="profileStore.users.value"
+        [returnValue]="'id'"
+        [displayLabel]="'username'"
+        [placeholder]="I18ns.programs.questions.filters.contributors"
+        (selectChange)="getQuestions({ contributors: $event })"
+      ></alto-dropdown-filter>
+    </div>
+    <div class="col"></div>
+    <div class="col-4">
+      <alto-search (searchChange)="getQuestions({ search: $event })"></alto-search>
+    </div>
   </div>
+
   <table class="table">
     <thead>
       <tr>
@@ -126,6 +138,7 @@
     </tbody>
   </table>
   <ngb-pagination
+    [ngClass]="{ invisible: questionsCount <= questionsPageSize }"
     [collectionSize]="questionsCount"
     [(page)]="questionsPage"
     (pageChange)="changeQuestionsPage()"
@@ -160,6 +173,7 @@
     </tbody>
   </table>
   <ngb-pagination
+    [ngClass]="{ invisible: submittedQuestionsCount <= submittedQuestionsPageSize }"
     [collectionSize]="submittedQuestionsCount"
     [(page)]="submittedQuestionsPage"
     (pageChange)="changeSubmittedQuestionsPage()"
@@ -174,14 +188,27 @@
   </button>
   <h1 id="tagsAnchor">{{ I18ns.programs.tags.title }}</h1>
   <p class="mb-4">{{ I18ns.programs.tags.subtitle }}</p>
-  <div class="col-1 text-end mb-4">
-    <alto-dropdown-filter
-      class="text-start"
-      [data]="programsStore.programs.value"
-      [displayLabel]="'name'"
-      [placeholder]="I18ns.programs.tags.filters.programs"
-      (selectChange)="filterTags($event)"
-    ></alto-dropdown-filter>
+
+  <div class="row">
+    <div class="col-8">
+      <alto-dropdown-filter
+        class="me-3"
+        [data]="programsStore.programs.value"
+        [displayLabel]="'name'"
+        [returnValue]="'id'"
+        [placeholder]="I18ns.programs.tags.filters.programs"
+        (selectChange)="filterTags({ programs: $event })"
+      ></alto-dropdown-filter>
+      <alto-dropdown-filter
+        [data]="profileStore.users.value"
+        [returnValue]="'id'"
+        [displayLabel]="'username'"
+        [placeholder]="I18ns.programs.questions.filters.contributors"
+        (selectChange)="filterTags({ contributors: $event })"
+      ></alto-dropdown-filter>
+    </div>
+
+    <alto-search class="col-4" (searchChange)="getProgramsFiltered({ search: $event })"></alto-search>
   </div>
   <table class="table">
     <thead>
@@ -212,6 +239,7 @@
     </tbody>
   </table>
   <ngb-pagination
+    [ngClass]="{ invisible: tagsCount <= tagsPageSize }"
     [collectionSize]="tagsCount"
     [(page)]="tagsPage"
     (pageChange)="changeTagsPage()"

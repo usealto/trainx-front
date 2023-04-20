@@ -14,18 +14,23 @@ import { TeamsRestService } from './modules/lead-team/services/teams-rest.servic
 import { UsersRestService } from './modules/profile/services/users-rest.service';
 import { TagsRestService } from './modules/programs/services/tags-rest.service';
 import { AltoRoutes } from './modules/shared/constants/routes';
+import { ProgramsRestService } from './modules/programs/services/programs-rest.service';
 
 export const appResolver: ResolveFn<any> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-  // const local = localStorage.getItem('@@auth0spajs@@::' + environment.auth0ClientId + '::@@user@@');
-  // if (local) {
-  //   inject(ProfileStore).companyId = JSON.parse(local).decodedToken.user['https://api.usealto.com/companyId'];
-  // }
-
   return combineLatest([
     inject(TagsRestService).getTags(),
     inject(TeamsRestService).getTeams(),
     inject(UsersRestService).getMe(),
   ]).pipe(take(1));
+};
+
+export const programResolver: ResolveFn<any> = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return combineLatest([inject(UsersRestService).getUsers(), inject(ProgramsRestService).getPrograms()]).pipe(
+    take(1),
+  );
 };
 
 const routes: Routes = [
@@ -45,6 +50,9 @@ const routes: Routes = [
           },
           {
             path: AltoRoutes.programs,
+            resolve: {
+              appData: programResolver,
+            },
             loadChildren: () => import('./modules/programs/programs.module').then((m) => m.ProgramsModule),
           },
           {
