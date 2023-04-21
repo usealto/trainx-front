@@ -262,10 +262,10 @@ export const FR = {
       form: {
         title: 'Créer une équipe',
         subtitle: 'Donner un nom à votre équipe et inviter vos collaborateurs',
-        shortName: 'Nom',
+        shortName: 'Nom (version abrégé)',
         shortNamePlaceholder: "Nom de l'équipe",
         shortNameExemple: 'Exemple : SDR',
-        longName: 'Nom long',
+        longName: 'Nom (version longue)',
         longNamePlaceholder: "Nom complet de l'équipe",
         longNameExemple: 'Exemple : Sales Development Representative',
         invitationEmails: 'Invitation par mail',

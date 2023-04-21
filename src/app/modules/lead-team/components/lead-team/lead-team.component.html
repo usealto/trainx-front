@@ -72,36 +72,7 @@
   </button>
   <h1 id="membersAnchor">{{ I18ns.leadTeam.members.title }}</h1>
   <p class="mb-3">{{ I18ns.leadTeam.members.subtitle }}</p>
-  <div class="row mb-4">
-    <ng-select
-      class="text-start col-1"
-      [items]="status"
-      [(ngModel)]="selectedStatus"
-      [placeholder]="I18ns.leadTeam.members.filters.status.title"
-      (ngModelChange)="getUsersPaginated()"
-    >
-      <ng-option *ngFor="let option of status" [value]="option.value"></ng-option>
-    </ng-select>
-    <alto-dropdown-filter
-      class="text-start col-3"
-      [data]="teams"
-      [displayLabel]="'shortName'"
-      [placeholder]="I18ns.leadTeam.members.filters.teams"
-      (selectChange)="filterUsersByTeams($event)"
-    ></alto-dropdown-filter>
-    <alto-dropdown-filter
-      class="text-start col-3"
-      [data]="teams"
-      [displayLabel]="'longName'"
-      [placeholder]="I18ns.leadTeam.members.filters.score"
-    ></alto-dropdown-filter>
-    <alto-dropdown-filter
-      class="text-start col-3"
-      [data]="teams"
-      [displayLabel]="'longName'"
-      [placeholder]="I18ns.leadTeam.members.filters.activity"
-    ></alto-dropdown-filter>
-  </div>
+
   <div class="row py-4">
     <div class="col-3">
       <div class="panel">
@@ -122,6 +93,37 @@
       </div>
     </div>
   </div>
+  <div class="row mb-4">
+    <ng-select
+      class="text-start col-1"
+      [items]="status"
+      [(ngModel)]="selectedStatus"
+      [placeholder]="I18ns.leadTeam.members.filters.status.title"
+      (ngModelChange)="changeUsersPage()"
+    >
+      <ng-option *ngFor="let option of status" [value]="option.value"></ng-option>
+    </ng-select>
+    <alto-dropdown-filter
+      class="text-start col-3"
+      [data]="teams"
+      [displayLabel]="'shortName'"
+      [placeholder]="I18ns.leadTeam.members.filters.teams"
+      (selectChange)="changeUsersPage($event)"
+    ></alto-dropdown-filter>
+    <alto-dropdown-filter
+      class="text-start col-3"
+      [data]="teams"
+      [displayLabel]="'longName'"
+      [placeholder]="I18ns.leadTeam.members.filters.score"
+    ></alto-dropdown-filter>
+    <alto-dropdown-filter
+      class="text-start col-3"
+      [data]="teams"
+      [displayLabel]="'longName'"
+      [placeholder]="I18ns.leadTeam.members.filters.activity"
+    ></alto-dropdown-filter>
+    <alto-search class="col-2 ms-auto" (searchChange)="searchUsers($event)"></alto-search>
+  </div>
   <table class="table">
     <thead>
       <tr>
@@ -134,7 +136,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of users">
+      <tr *ngFor="let user of paginatedUsers">
         <td class="row">
           <div class="col-1">
             <alto-img-badge [url]="user.pictureUrl"></alto-img-badge>

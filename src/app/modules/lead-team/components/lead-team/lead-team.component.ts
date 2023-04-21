@@ -8,6 +8,8 @@ import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { TeamApi, UserDtoApi } from 'src/app/sdk';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { TeamFormComponent } from '../team-form/team-form.component';
+import { UsersService } from 'src/app/modules/profile/services/users.service';
+import { UserFilters } from 'src/app/modules/profile/models/user.model';
 
 @Component({
   selector: 'alto-lead-team',
@@ -25,8 +27,9 @@ export class LeadTeamComponent implements OnInit {
   usersMap = new Map<string, string>();
   usersCount = 0;
   users: UserDtoApi[] = [];
+  paginatedUsers: UserDtoApi[] = [];
   usersPage = 1;
-  usersPageSize = 10;
+  usersPageSize = 5;
 
   status = [
     { label: I18ns.leadTeam.members.filters.status.active, value: true },
@@ -38,6 +41,7 @@ export class LeadTeamComponent implements OnInit {
     private readonly offcanvasService: NgbOffcanvas,
     private readonly teamsRestService: TeamsRestService,
     private readonly usersRestService: UsersRestService,
+    private readonly usersService: UsersService,
     private readonly teamStore: TeamStore,
     private readonly profileStore: ProfileStore,
   ) {}
@@ -45,32 +49,20 @@ export class LeadTeamComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([this.usersRestService.getUsers(), this.teamsRestService.getTeams()])
       .pipe(
-        tap(([users, teams]) => (this.teams = teams)),
+        tap(([users, teams]) => {
+          this.teams = teams;
+          this.users = users;
+        }),
         tap(([users]) => (this.activeUsersCount = users.filter((user) => user.isActive).length)),
         tap(([users]) => (this.usersCount = users.length)),
         tap(([users]) => {
           users.forEach((user) => {
-            const toto = this.teams.find((team) => team.id === user.teamId);
-            this.usersMap.set(user.id, toto ? toto.shortName : '');
+            const member = this.teams.find((team) => team.id === user.teamId);
+            this.usersMap.set(user.id, member ? member.shortName : '');
           });
         }),
         tap(() => this.changeTeamsPage()),
-      )
-      .subscribe();
-    this.getUsersPaginated();
-  }
-
-  getUsersPaginated(teamIds: string[] = []) {
-    this.usersRestService
-      .getUsersPaginated({
-        page: this.usersPage,
-        itemsPerPage: this.usersPageSize,
-        isActive: this.selectedStatus ? this.selectedStatus.value : undefined,
-        teamIds: teamIds.join(','),
-      })
-      .pipe(
-        tap((res) => (this.usersCount = res.meta.totalItems)),
-        tap((users) => (this.users = users.data ?? [])),
+        tap(() => this.changeUsersPage()),
       )
       .subscribe();
   }
@@ -82,12 +74,22 @@ export class LeadTeamComponent implements OnInit {
     );
   }
 
-  changeUsersPage() {
-    this.getUsersPaginated();
+  changeUsersPage(selectedTeams: TeamApi[] = []) {
+    const filter = {
+      teams: selectedTeams,
+      status: this.selectedStatus ? this.selectedStatus.value : undefined,
+    };
+    const res = this.usersService.filterUsers(this.users, filter);
+
+    this.usersCount = res.length;
+    this.paginatedUsers = res.slice(
+      (this.usersPage - 1) * this.usersPageSize,
+      this.usersPage * this.usersPageSize,
+    );
   }
 
-  filterUsersByTeams(teams: TeamApi[]) {
-    this.getUsersPaginated(teams.map((team) => team.id));
+  searchUsers(s: string) {
+    return;
   }
 
   openTeamForm(team?: TeamApi) {
@@ -97,7 +99,6 @@ export class LeadTeamComponent implements OnInit {
     });
 
     canvasRef.componentInstance.team = team;
-    // canvasRef.componentInstance.createdTeam.pipe(/* Récupération des teams */)
   }
 
   getTeamUsersCount(teamId: string) {
