@@ -33,7 +33,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let team of paginatedTeams">
+      <tr *ngFor="let team of paginatedTeams" class="align-middle">
         <td>
           {{ team.longName }}
         </td>
@@ -136,16 +136,14 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of paginatedUsers">
-        <td class="row">
-          <div class="col-1">
-            <alto-img-badge [url]="user.pictureUrl"></alto-img-badge>
-          </div>
-          <div>
-            <p>
-              <strong>{{ user.username ?? 'Unknown' }}</strong>
-            </p>
-            <p>{{ user.email }}</p>
+      <tr *ngFor="let user of paginatedUsers" class="align-middle">
+        <td>
+          <alto-img-badge [url]="user.pictureUrl" [size]="40"></alto-img-badge>
+          <div class="d-inline-block ms-3">
+            <span class="fw-bold d-block">
+              {{ !user.firstname || !user.lastname ? user.username : user.firstname + ' ' + user.lastname }}
+            </span>
+            <span>{{ user.email }}</span>
           </div>
         </td>
         <td>
