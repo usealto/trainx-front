@@ -20,11 +20,12 @@ export class MenuComponent implements OnInit {
   url = '';
   name = '';
   email = '';
+
   constructor(public readonly userStore: ProfileStore) {}
 
   ngOnInit(): void {
     const { pictureUrl, firstname, lastname, username, email } = this.userStore.user.value;
-    this.url = pictureUrl?.replace('s=480', 's=40') || '';
+    this.url = pictureUrl || '';
     this.name = (!firstname || !lastname ? username : firstname + ' ' + lastname) ?? '';
     this.email = email;
   }

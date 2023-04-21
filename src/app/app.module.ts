@@ -19,6 +19,7 @@ import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { MenuComponent } from './layout/menu/menu.component';
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { ApiModule, BASE_PATH, Configuration, ConfigurationParameters } from './sdk';
+import { SharedModule } from './modules/shared/shared.module';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {};
@@ -38,6 +39,7 @@ export function apiConfigFactory(): Configuration {
     NgSelectModule,
     LoadingModule,
     TranslationModule,
+    SharedModule,
     MsgModule,
     AuthModule.forRoot({
       domain: environment.auth0Domain,

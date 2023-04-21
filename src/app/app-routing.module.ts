@@ -16,7 +16,7 @@ import { TagsRestService } from './modules/programs/services/tags-rest.service';
 import { AltoRoutes } from './modules/shared/constants/routes';
 import { ProgramsRestService } from './modules/programs/services/programs-rest.service';
 
-export const appResolver: ResolveFn<any> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+export const appResolver: ResolveFn<any> = () => {
   return combineLatest([
     inject(TagsRestService).getTags(),
     inject(TeamsRestService).getTeams(),
@@ -24,10 +24,7 @@ export const appResolver: ResolveFn<any> = (route: ActivatedRouteSnapshot, state
   ]).pipe(take(1));
 };
 
-export const programResolver: ResolveFn<any> = (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot,
-) => {
+export const programResolver: ResolveFn<any> = () => {
   return combineLatest([inject(UsersRestService).getUsers(), inject(ProgramsRestService).getPrograms()]).pipe(
     take(1),
   );
