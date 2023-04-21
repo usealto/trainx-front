@@ -376,6 +376,7 @@ export const FR = {
       downloadPicture: 'Cliquez pour télécharger ou faites glisser et déposez',
       company: 'Company',
       team: 'Equipe',
+      roles: 'Rôles',
     },
     password: {
       title: 'Mot de passe',

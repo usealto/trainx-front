@@ -1,43 +1,61 @@
 <div class="py-4 border-bottom page-max-width">
-  <button type="button" class="btn btn-primary float-end">
+  <button type="button" class="btn btn-primary float-end" (click)="save()">
     {{ I18ns.shared.save }}
   </button>
   <h1>{{ I18ns.profile.profile.title }}</h1>
   <p>{{ I18ns.profile.profile.subtitle }}</p>
 </div>
 <div class="page-max-width">
-  <div class="row py-4 border-bottom">
-    <p class="col-5 mb-2">{{ I18ns.profile.profile.name }}</p>
-    <div class="col input-group">
-      <input type="text" class="form-control me-4" placeholder="{{ I18ns.profile.profile.name }}" />
-      <input type="text" class="form-control" placeholder="{{ I18ns.profile.profile.firstName }}" />
-    </div>
-  </div>
-  <div class="row py-4 border-bottom" *ngIf="false">
-    <p class="col-5 mb-2">{{ I18ns.profile.profile.profilePicture }}</p>
-    <div class="col row">
-      <span class="col-1 me-4 badge badge-circle bg-primary rounded-pill align-middle">AB</span>
-      <div class="col input-group mb-3">
-        <input type="file" class="form-control" placeholder="{{ I18ns.profile.profile.email }}" />
+  <form [formGroup]="userForm">
+    <div class="row py-4 border-bottom">
+      <p class="col-5 mb-2">{{ I18ns.profile.profile.name }}</p>
+      <div class="col input-group">
+        <input
+          type="text"
+          formControlName="firstname"
+          class="form-control me-4"
+          placeholder="{{ I18ns.profile.profile.firstName }}"
+        />
+        <input
+          type="text"
+          formControlName="lastname"
+          class="form-control"
+          placeholder="{{ I18ns.profile.profile.name }}"
+        />
       </div>
     </div>
-  </div>
-  <div class="row py-4 border-bottom">
-    <p class="col-5 mb-2">{{ I18ns.profile.profile.email }}</p>
-    <div class="col-7 form-group">
-      <input type="select" class="form-control" placeholder="{{ I18ns.profile.profile.email }}" readonly />
+    <div class="row py-4 border-bottom" *ngIf="false">
+      <p class="col-5 mb-2">{{ I18ns.profile.profile.profilePicture }}</p>
+      <div class="col row">
+        <span class="col-1 me-4 badge badge-circle bg-primary rounded-pill align-middle">AB</span>
+        <div class="col input-group mb-3">
+          <input type="file" class="form-control" placeholder="{{ I18ns.profile.profile.email }}" />
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="row py-4 border-bottom">
-    <p class="col-5 mb-2">{{ I18ns.profile.profile.company }}</p>
-    <div class="col-7 form-group">
-      <input type="select" class="form-control" placeholder="{{ I18ns.profile.profile.team }}" readonly />
+    <div class="row py-4 border-bottom">
+      <p class="col-5 mb-2">{{ I18ns.profile.profile.email }}</p>
+      <div class="col-7 form-group">
+        <input type="email" disabled class="form-control" [value]="this.user.email" readonly />
+      </div>
     </div>
-  </div>
-  <div class="row py-4 border-bottom">
-    <p class="col-5 mb-2">{{ I18ns.profile.profile.team }}</p>
-    <div class="col-7 form-group">
-      <input type="select" class="form-control" placeholder="{{ I18ns.profile.profile.team }}" readonly />
+    <div class="row py-4 border-bottom">
+      <p class="col-5 mb-2">{{ I18ns.profile.profile.company }}</p>
+      <div class="col-7 form-group">
+        <input type="text" class="form-control" [value]="user.company.name" disabled readonly />
+      </div>
     </div>
-  </div>
+    <div class="row py-4 border-bottom">
+      <p class="col-5 mb-2">{{ I18ns.profile.profile.team }}</p>
+      <div class="col-7 form-group">
+        <input type="text" class="form-control" [value]="user.team?.longName" disabled readonly />
+      </div>
+    </div>
+    <div class="row py-4 border-bottom">
+      <p class="col-5 mb-2">{{ I18ns.profile.profile.roles }}</p>
+      <div class="col-7 form-group">
+        <input type="text" class="form-control" [value]="user.roles.join(',')" disabled readonly />
+      </div>
+    </div>
+  </form>
 </div>
