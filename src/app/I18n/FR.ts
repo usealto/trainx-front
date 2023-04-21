@@ -355,6 +355,7 @@ export const FR = {
         name: 'Nom',
         createdAt: "Date d'ajout",
         lastConnection: 'Dernière activité',
+        connexion: 'Connection',
       },
     },
     integrations: {

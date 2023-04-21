@@ -1,1 +1,6 @@
-<img *ngIf="thumb" src="{{ thumb }}" alt="Profile Picture" [style]="getStyle(size)" />
+<ng-container *ngIf="thumb; else elseTemplate">
+  <img src="{{ thumb }}" alt="Profile Picture" [style]="getStyle(size)" />
+</ng-container>
+<ng-template #elseTemplate>
+  <div class="d-inline-block" [style]="getStyle(size)"></div>
+</ng-template>
