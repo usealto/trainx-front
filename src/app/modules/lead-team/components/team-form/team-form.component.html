@@ -25,22 +25,18 @@
     />
     <p>{{ I18ns.leadTeam.teams.form.longNameExemple }}</p>
 
-    <!-- ONLY FOR TEAM CREATION -->
     <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.invitationEmails }}</label>
     <ng-select
-      [items]="programs"
+      [items]="users"
       [multiple]="true"
-      bindLabel="name"
-      [placeholder]="I18ns.leadTeam.teams.form.programsPlaceholder"
+      [placeholder]="I18ns.leadTeam.teams.form.invitationEmailsPlaceholder"
       [selectableGroup]="true"
       [closeOnSelect]="false"
-      bindValue="id"
-      formControlName="programs"
-      [addTag]="true"
+      [bindLabel]="'email'"
+      formControlName="invitationEmails"
     >
     </ng-select>
     <p>{{ I18ns.leadTeam.teams.form.invitationEmailsSubtitle }}</p>
-    <!-- ---------------------- -->
 
     <label class="mt-4 form-label"
       >{{ I18ns.leadTeam.teams.form.Programs }} {{ I18ns.shared.optional }}</label
@@ -52,7 +48,6 @@
       [placeholder]="I18ns.leadTeam.teams.form.programsPlaceholder"
       [selectableGroup]="true"
       [closeOnSelect]="false"
-      bindValue="id"
       formControlName="programs"
     >
     </ng-select>

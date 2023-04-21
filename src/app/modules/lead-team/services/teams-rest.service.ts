@@ -1,6 +1,15 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
-import { GetTeamsRequestParams, TeamApi, TeamsApiService } from 'src/app/sdk';
+import {
+  GetTeamsRequestParams,
+  GetUsersRequestParams,
+  TeamApi,
+  UsersApiService,
+  TeamsApiService,
+  UserDtoApi,
+  CreateTeamDtoApi,
+  PatchTeamRequestParams,
+} from 'src/app/sdk';
 import { TeamStore } from '../team.store';
 
 @Injectable({
@@ -25,5 +34,13 @@ export class TeamsRestService {
         tap((tags) => (this.teamStore.teams.value = tags)),
       );
     }
+  }
+
+  createTeam(createTeamDtoApi: CreateTeamDtoApi): Observable<TeamApi | undefined> {
+    return this.teamApi.createTeam({ createTeamDtoApi }).pipe(map((r) => r.data));
+  }
+
+  updateTeam(patchTeamRequestParams: PatchTeamRequestParams): Observable<TeamApi | undefined> {
+    return this.teamApi.patchTeam(patchTeamRequestParams).pipe(map((r) => r.data));
   }
 }

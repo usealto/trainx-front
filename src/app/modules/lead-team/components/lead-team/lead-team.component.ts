@@ -58,7 +58,6 @@ export class LeadTeamComponent implements OnInit {
       )
       .subscribe();
     this.getUsersPaginated();
-    this.openTeamForm();
   }
 
   getUsersPaginated(teamIds: string[] = []) {
