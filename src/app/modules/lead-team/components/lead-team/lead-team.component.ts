@@ -25,6 +25,7 @@ export class LeadTeamComponent implements OnInit {
   teamsPageSize = 5;
 
   usersMap = new Map<string, string>();
+  absoluteUsersCount = 0;
   usersCount = 0;
   users: UserDtoApi[] = [];
   paginatedUsers: UserDtoApi[] = [];
@@ -52,6 +53,8 @@ export class LeadTeamComponent implements OnInit {
         tap(([users, teams]) => {
           this.teams = teams;
           this.users = users;
+          this.absoluteUsersCount = users.length;
+          console.log(users);
         }),
         tap(([users]) => (this.activeUsersCount = users.filter((user) => user.isActive).length)),
         tap(([users]) => (this.usersCount = users.length)),
@@ -62,7 +65,7 @@ export class LeadTeamComponent implements OnInit {
           });
         }),
         tap(() => this.changeTeamsPage()),
-        tap(() => this.changeUsersPage()),
+        tap(() => this.changeUsersPage(this.users)),
       )
       .subscribe();
   }
@@ -74,21 +77,26 @@ export class LeadTeamComponent implements OnInit {
     );
   }
 
-  changeUsersPage(selectedTeams: TeamApi[] = []) {
+  filterUsers(selectedTeams: TeamApi[] = []) {
     const filter = {
       teams: selectedTeams,
       status: this.selectedStatus ? this.selectedStatus.value : undefined,
     };
-    const res = this.usersService.filterUsers(this.users, filter);
 
-    this.usersCount = res.length;
-    this.paginatedUsers = res.slice(
+    this.changeUsersPage(this.usersService.filterUsers(this.users, filter));
+  }
+
+  changeUsersPage(users: UserDtoApi[]) {
+    this.usersCount = users.length;
+    this.paginatedUsers = users.slice(
       (this.usersPage - 1) * this.usersPageSize,
       this.usersPage * this.usersPageSize,
     );
   }
 
-  searchUsers(s: string) {
+  searchUsers(users: UserDtoApi[], s: string) {
+    const search = s.toLowerCase();
+
     return;
   }
 

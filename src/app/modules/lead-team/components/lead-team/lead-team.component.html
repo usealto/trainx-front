@@ -10,7 +10,7 @@
   <alto-anchor-navigator fragment="membersAnchor">
     <button type="button" class="btn btn-outline-secondary me-4">
       {{ I18ns.leadTeam.members.shortTitle }}
-      <span class="alto-badge">{{ usersCount }}</span>
+      <span class="alto-badge">{{ absoluteUsersCount }}</span>
     </button>
   </alto-anchor-navigator>
 </div>
@@ -77,7 +77,7 @@
     <div class="col-3">
       <div class="panel">
         <p>{{ I18ns.leadTeam.members.statistics.total }}</p>
-        <h3>{{ usersCount }}</h3>
+        <h3>{{ absoluteUsersCount }}</h3>
       </div>
     </div>
     <div class="col-3">
@@ -89,7 +89,7 @@
     <div class="col-3">
       <div class="panel">
         <p>{{ I18ns.leadTeam.members.statistics.inactive }}</p>
-        <h3>{{ usersCount - activeUsersCount }}</h3>
+        <h3>{{ absoluteUsersCount - activeUsersCount }}</h3>
       </div>
     </div>
   </div>
@@ -99,7 +99,7 @@
       [items]="status"
       [(ngModel)]="selectedStatus"
       [placeholder]="I18ns.leadTeam.members.filters.status.title"
-      (ngModelChange)="changeUsersPage()"
+      (ngModelChange)="filterUsers()"
     >
       <ng-option *ngFor="let option of status" [value]="option.value"></ng-option>
     </ng-select>
@@ -108,7 +108,7 @@
       [data]="teams"
       [displayLabel]="'shortName'"
       [placeholder]="I18ns.leadTeam.members.filters.teams"
-      (selectChange)="changeUsersPage($event)"
+      (selectChange)="filterUsers($event)"
     ></alto-dropdown-filter>
     <alto-dropdown-filter
       class="text-start col-3"
@@ -122,7 +122,7 @@
       [displayLabel]="'longName'"
       [placeholder]="I18ns.leadTeam.members.filters.activity"
     ></alto-dropdown-filter>
-    <alto-search class="col-2 ms-auto" (searchChange)="searchUsers($event)"></alto-search>
+    <!-- <alto-search class="col-2 ms-auto" (searchChange)="searchUsers($event)"></alto-search> -->
   </div>
   <table class="table">
     <thead>
@@ -173,7 +173,7 @@
   <ngb-pagination
     [collectionSize]="usersCount"
     [(page)]="usersPage"
-    (pageChange)="changeUsersPage()"
+    (pageChange)="changeUsersPage(users)"
     [pageSize]="usersPageSize"
     [maxSize]="10"
   ></ngb-pagination>
