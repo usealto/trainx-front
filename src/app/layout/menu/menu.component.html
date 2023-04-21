@@ -26,7 +26,11 @@
     >
       {{ I18ns.menu.team }}
     </a>
-    <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.challenges" routerLinkActive="menu-selected">
+    <a
+      class="module"
+      [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.challenges"
+      routerLinkActive="menu-selected"
+    >
       {{ I18ns.menu.challenges }}
     </a>
   </div>
