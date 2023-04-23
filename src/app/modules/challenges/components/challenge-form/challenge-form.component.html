@@ -1,0 +1,161 @@
+<h1>{{ isEdit ? I18ns.challenges.form.edit : I18ns.challenges.form.create }}</h1>
+<form *ngIf="challengeForm" [formGroup]="challengeForm" class="page-max-width">
+  <hr />
+  <div class="row">
+    <div class="col-4 required">{{ I18ns.challenges.form.name }}</div>
+    <div class="col-6">
+      <input
+        type="text"
+        class="form-control"
+        formControlName="name"
+        placeholder="{{ I18ns.challenges.form.namePlaceholder }}"
+      />
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="row">
+    <div class="col-4">{{ I18ns.challenges.form.type.label }}</div>
+    <div class="col-6">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          formControlName="type"
+          id="type1"
+          [value]="ChallengeTypeEnumApi.ByUser"
+        />
+        <label class="form-check-label fw-bold" for="type1">{{ I18ns.challenges.form.type.byUser }}</label>
+        <p>{{ I18ns.challenges.form.type.byUserSubtitle }}</p>
+      </div>
+      <hr />
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          formControlName="type"
+          id="type2"
+          [value]="ChallengeTypeEnumApi.ByTeam"
+        />
+        <label class="form-check-label fw-bold" for="type2">{{ I18ns.challenges.form.type.byTeam }}</label>
+        <p>{{ I18ns.challenges.form.type.byTeamSubtitle }}</p>
+      </div>
+    </div>
+  </div>
+
+  <hr />
+  <div class="row">
+    <div class="col-4">
+      <label class="form-label required">{{ I18ns.programs.forms.step1.teams }}</label>
+      <p class="fs-7">{{ I18ns.challenges.form.teamsSubtitle }}</p>
+    </div>
+    <div class="col-6">
+      <ng-select
+        [items]="teams"
+        [multiple]="true"
+        bindLabel="name"
+        [placeholder]="I18ns.programs.forms.step1.teamsPlaceholder"
+        [selectableGroup]="true"
+        [closeOnSelect]="false"
+        bindValue="id"
+        formControlName="teams"
+      >
+        <ng-template ng-label-tmp let-item="item" let-clear="clear">
+          <div class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+            <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+              <i class="bi bi-x-lg"></i>
+            </span>
+            <span>{{ item.shortName }}</span>
+          </div>
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+          <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+            {{ item.longName }}
+          </span>
+        </ng-template>
+      </ng-select>
+    </div>
+
+    <hr />
+    <div class="row">
+      <div class="col-4">
+        <label class="form-label required">{{ I18ns.challenges.form.minimum }}</label>
+        <p class="fs-7">{{ I18ns.challenges.form.minimumSubtitle }}</p>
+      </div>
+      <div class="col-6">
+        <p>{{ I18ns.challenges.form.activity }}</p>
+        <p class="fs-7">{{ I18ns.challenges.form.activitySubtitle }}</p>
+        <div class="row mt-3">
+          <div class="col-8">
+            <input type="range" class="form-range" min="1" max="20" formControlName="guessesPerDay" />
+          </div>
+          <div class="col-4">
+            {{ I18ns.challenges.form.questions | plural : challengeForm.controls.guessesPerDay.value }}
+          </div>
+        </div>
+
+        <hr />
+
+        <p>{{ I18ns.challenges.form.score }}</p>
+        <p class="fs-7">{{ I18ns.challenges.form.scoreSubtitle }}</p>
+        <div class="row">
+          <div class="col-8">
+            <input type="range" class="form-range" min="1" max="100" formControlName="scoreMinPercent" />
+          </div>
+          <div class="col-4">{{ challengeForm.controls.scoreMinPercent.value }}%</div>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+    <div class="row">
+      <div class="col-4">
+        <label class="form-label required">{{ I18ns.challenges.form.duration }}</label>
+        <p class="fs-7">{{ I18ns.challenges.form.durationSubtitle }}</p>
+      </div>
+      <div class="col-6">
+        <ngb-datepicker
+          #dp
+          (dateSelect)="onDateSelection($event)"
+          [displayMonths]="2"
+          [dayTemplate]="t"
+          outsideDays="hidden"
+        >
+        </ngb-datepicker>
+
+        <ng-template #t let-date let-focused="focused">
+          <span
+            class="custom-day"
+            [class.focused]="focused"
+            [class.range]="isRange(date)"
+            [class.faded]="isHovered(date) || isInside(date)"
+            (mouseenter)="hoveredDate = date"
+            (mouseleave)="hoveredDate = null"
+          >
+            {{ date.day }}
+          </span>
+        </ng-template>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-4">
+        <label class="form-label required">{{ I18ns.challenges.form.reward }}</label>
+        <p class="fs-7">{{ I18ns.challenges.form.rewardSubtitle }}</p>
+      </div>
+      <div class="col-6">
+        <input type="text" class="form-control" formControlName="reward" />
+      </div>
+    </div>
+  </div>
+
+  <div class="text-end mb-5">
+    <button class="btn btn-outline-secondary" (click)="cancel()">
+      {{ I18ns.shared.cancel }}
+    </button>
+    <button type="submit" class="btn btn-primary ms-3" (click)="submit()">
+      {{ isEdit ? I18ns.shared.save : I18ns.shared.create }}
+    </button>
+  </div>
+</form>

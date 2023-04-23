@@ -1,7 +1,7 @@
 <div class="py-4 border-bottom">
   <h1>{{ I18ns.settings.users.title }}</h1>
   <p class="mb-4">{{ I18ns.settings.users.subtitle }}</p>
-  <div class="row justify-content-between">
+  <div class="row">
     <div class="col-4">
       <h5>{{ I18ns.settings.users.admins }}</h5>
       <p>{{ I18ns.settings.users.adminsDesc }}</p>
@@ -13,33 +13,44 @@
             <th scope="col">{{ I18ns.settings.users.table.name }}</th>
             <th scope="col">{{ I18ns.settings.users.table.createdAt }}</th>
             <th scope="col">{{ I18ns.settings.users.table.lastConnection }}</th>
+            <th scope="col" class="text-center">{{ I18ns.settings.users.table.connexion }}</th>
             <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="row">
-              <div class="col-2">
-                <span class="me-4 badge badge-circle bg-primary rounded-pill align-middle">AB</span>
-              </div>
-              <div class="col">
-                <p><strong>Hugo</strong></p>
-                <p>hugo@uselato.com</p>
+          <tr *ngFor="let user of adminDisplay" class="align-middle">
+            <td>
+              <alto-img-badge [url]="user.pictureUrl" [size]="40"></alto-img-badge>
+              <div class="d-inline-block ms-3">
+                <span class="fw-bold d-block">
+                  {{
+                    !user.firstname || !user.lastname ? user.username : user.firstname + ' ' + user.lastname
+                  }}
+                </span>
+                <span>{{ user.email }}</span>
               </div>
             </td>
-            <td>Mar 20, 2023</td>
-            <td>Mar 20, 2023</td>
+            <td title="{{ user.createdAt | date : 'short' }}">{{ user.createdAt | date : 'shortDate' }}</td>
+            <td title="{{ user.updatedAt | date : 'short' }}">{{ user.updatedAt | date : 'shortDate' }}</td>
+            <td class="text-center">
+              <img
+                *ngIf="user.slackId"
+                src="assets/img/slack-logo.svg"
+                width="18"
+                height="18"
+                alt="Slack Logo"
+              />
+            </td>
             <td>
-              <button type="button" class="btn btn-light">
-                <i class="fs-5 bi bi-pencil-fill"></i>
-              </button>
+              <i class="fs-5 bi bi-pen"></i>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
-  <div class="row justify-content-between">
+  <hr />
+  <div class="row">
     <div class="col-4">
       <h5>{{ I18ns.settings.users.users }}</h5>
       <p>{{ I18ns.settings.users.usersDesc }}</p>
@@ -51,26 +62,36 @@
             <th scope="col">{{ I18ns.settings.users.table.name }}</th>
             <th scope="col">{{ I18ns.settings.users.table.createdAt }}</th>
             <th scope="col">{{ I18ns.settings.users.table.lastConnection }}</th>
+            <th scope="col" class="text-center">{{ I18ns.settings.users.table.connexion }}</th>
             <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td class="row">
-              <div class="col-2">
-                <span class="me-4 badge badge-circle bg-primary rounded-pill align-middle">AB</span>
-              </div>
-              <div class="col">
-                <p><strong>Hugo</strong></p>
-                <p>hugo@uselato.com</p>
+          <tr *ngFor="let user of usersDisplay" class="align-middle">
+            <td>
+              <alto-img-badge [url]="user.pictureUrl" [size]="40"></alto-img-badge>
+              <div class="d-inline-block ms-3">
+                <p class="fw-bold">
+                  {{
+                    !user.firstname || !user.lastname ? user.username : user.firstname + ' ' + user.lastname
+                  }}
+                </p>
+                <p>{{ user.email }}</p>
               </div>
             </td>
-            <td>Mar 20, 2023</td>
-            <td>Mar 20, 2023</td>
+            <td title="{{ user.createdAt | date : 'short' }}">{{ user.createdAt | date : 'shortDate' }}</td>
+            <td title="{{ user.updatedAt | date : 'short' }}">{{ user.updatedAt | date : 'shortDate' }}</td>
+            <td class="text-center">
+              <img
+                *ngIf="user.slackId"
+                src="assets/img/slack-logo.svg"
+                width="18"
+                height="18"
+                alt="Slack Logo"
+              />
+            </td>
             <td>
-              <button type="button" class="btn btn-light">
-                <i class="fs-5 bi bi-pencil-fill"></i>
-              </button>
+              <i class="fs-5 bi bi-pen"></i>
             </td>
           </tr>
         </tbody>

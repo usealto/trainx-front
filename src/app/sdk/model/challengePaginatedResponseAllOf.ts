@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { UserApi } from './user';
+import { ChallengeApi } from './challenge';
 
 
-export interface UserResponseAllOfApi { 
+export interface ChallengePaginatedResponseAllOfApi { 
     statusCode?: number;
-    data?: UserApi;
+    data?: Array<ChallengeApi>;
 }
 

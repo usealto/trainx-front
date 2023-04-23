@@ -4,8 +4,10 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'plural',
 })
 export class PluralPipe implements PipeTransform {
-  transform(value: string[], arg: number | string): string {
+  transform(value: string[], arg: number | null): string {
     let output = '';
+
+    if (arg === null) return value[0];
 
     switch (value.length) {
       case 0:

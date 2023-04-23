@@ -26,8 +26,8 @@ export interface PatchChallengeDtoApi {
     name?: string;
     guessesPerDay?: number;
     scoreMinPercent?: number;
-    startDate?: string;
-    endDate?: string;
+    startDate?: Date;
+    endDate?: Date;
     reward?: string;
 }
 

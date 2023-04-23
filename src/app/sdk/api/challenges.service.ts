@@ -19,6 +19,12 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { ChallengeAssignmentPaginatedResponseApi } from '../model/challengeAssignmentPaginatedResponse';
+// @ts-ignore
+import { ChallengePaginatedResponseApi } from '../model/challengePaginatedResponse';
+// @ts-ignore
+import { ChallengeResponseApi } from '../model/challengeResponse';
+// @ts-ignore
 import { ChallengeStateEnumApi } from '../model/challengeStateEnum';
 // @ts-ignore
 import { ChallengeTypeEnumApi } from '../model/challengeTypeEnum';
@@ -69,9 +75,9 @@ export interface GetAllAssignmentsChallengeRequestParams {
     /** The number of items per page to retrieve. */
     itemsPerPage?: number;
     /** A date used to filter the results based on the createdAt field of the resources, only including resources created after this date. the operator used for this filter is  &gt;&#x3D; (greater than or equal to)  If the createdAfter field is provided with a date without a time, it will include resources created on the same day as the provided date, starting at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    createdAfter?: string;
+    createdAfter?: Date;
     /** A date used to filter the results based on the createdAt field of the resources, only including resources created before this date. the operator used for this filter is &lt;&#x3D; (less than or equal to)  If the createdBefore field is provided with a date without a time, it will include resources created on the same day as the provided date, ending at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    createdBefore?: string;
+    createdBefore?: Date;
 }
 
 export interface GetChallengeByIdRequestParams {
@@ -95,13 +101,13 @@ export interface GetChallengesRequestParams {
     status?: ChallengeStateEnumApi;
     type?: ChallengeTypeEnumApi;
     /** A date used to filter the results based on the startDate field of the resources, only including resources started after this date. the operator used for this filter is  &gt;&#x3D; (greater than or equal to)  If the startDateAfter field is provided with a date without a time, it will include resources started on the same day as the provided date, starting at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    startDateAfter?: string;
+    startDateAfter?: Date;
     /** A date used to filter the results based on the startDate field of the resources, only including resources started before this date. the operator used for this filter is &lt;&#x3D; (less than or equal to)  If the startDateBefore field is provided with a date without a time, it will include resources started on the same day as the provided date, ending at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    startDateBefore?: string;
+    startDateBefore?: Date;
     /** A date used to filter the results based on the endDate field of the resources, only including resources ended after this date. the operator used for this filter is  &gt;&#x3D; (greater than or equal to)  If the endDateAfter field is provided with a date without a time, it will include resources ended on the same day as the provided date, starting at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    endDateAfter?: string;
+    endDateAfter?: Date;
     /** A date used to filter the results based on the endDate field of the resources, only including resources ended before this date. the operator used for this filter is &lt;&#x3D; (less than or equal to)  If the endDateBefore field is provided with a date without a time, it will include resources ended on the same day as the provided date, ending at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    endDateBefore?: string;
+    endDateBefore?: Date;
     /** The ID of the company that the user sending the request is related to.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
     companyId?: string;
     /** The ID of the user sending the request.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
@@ -111,9 +117,9 @@ export interface GetChallengesRequestParams {
     /** The number of items per page to retrieve. */
     itemsPerPage?: number;
     /** A date used to filter the results based on the createdAt field of the resources, only including resources created after this date. the operator used for this filter is  &gt;&#x3D; (greater than or equal to)  If the createdAfter field is provided with a date without a time, it will include resources created on the same day as the provided date, starting at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    createdAfter?: string;
+    createdAfter?: Date;
     /** A date used to filter the results based on the createdAt field of the resources, only including resources created before this date. the operator used for this filter is &lt;&#x3D; (less than or equal to)  If the createdBefore field is provided with a date without a time, it will include resources created on the same day as the provided date, ending at midnight.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    createdBefore?: string;
+    createdBefore?: Date;
 }
 
 export interface PatchChallengeRequestParams {
@@ -206,10 +212,10 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public createChallenge(requestParameters: CreateChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeResponseApi>;
+    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeResponseApi>>;
+    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeResponseApi>>;
+    public createChallenge(requestParameters: CreateChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createChallengeDtoApi = requestParameters.createChallengeDtoApi;
         if (createChallengeDtoApi === null || createChallengeDtoApi === undefined) {
             throw new Error('Required parameter createChallengeDtoApi was null or undefined when calling createChallenge.');
@@ -246,6 +252,7 @@ export class ChallengesApiService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -280,7 +287,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges`;
-        return this.httpClient.request<any>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengeResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: createChallengeDtoApi,
@@ -301,10 +308,10 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeResponseApi>;
+    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeResponseApi>>;
+    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeResponseApi>>;
+    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling deleteChallenge.');
@@ -341,6 +348,7 @@ export class ChallengesApiService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -366,7 +374,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<any>('delete', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengeResponseApi>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -386,10 +394,10 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAllAssignmentsChallenge(requestParameters: GetAllAssignmentsChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public getAllAssignmentsChallenge(requestParameters: GetAllAssignmentsChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public getAllAssignmentsChallenge(requestParameters: GetAllAssignmentsChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public getAllAssignmentsChallenge(requestParameters: GetAllAssignmentsChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+    public getAllAssignmentsChallenge(requestParameters: GetAllAssignmentsChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeAssignmentPaginatedResponseApi>;
+    public getAllAssignmentsChallenge(requestParameters: GetAllAssignmentsChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeAssignmentPaginatedResponseApi>>;
+    public getAllAssignmentsChallenge(requestParameters: GetAllAssignmentsChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeAssignmentPaginatedResponseApi>>;
+    public getAllAssignmentsChallenge(requestParameters: GetAllAssignmentsChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createdBy = requestParameters.createdBy;
         const sortBy = requestParameters.sortBy;
         const ids = requestParameters.ids;
@@ -467,6 +475,7 @@ export class ChallengesApiService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -492,7 +501,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges/assignments`;
-        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengeAssignmentPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -512,10 +521,10 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeResponseApi>;
+    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeResponseApi>>;
+    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeResponseApi>>;
+    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getChallengeById.');
@@ -552,6 +561,7 @@ export class ChallengesApiService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -577,7 +587,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengeResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -597,10 +607,10 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getChallenges(requestParameters: GetChallengesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public getChallenges(requestParameters: GetChallengesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public getChallenges(requestParameters: GetChallengesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public getChallenges(requestParameters: GetChallengesRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+    public getChallenges(requestParameters: GetChallengesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengePaginatedResponseApi>;
+    public getChallenges(requestParameters: GetChallengesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengePaginatedResponseApi>>;
+    public getChallenges(requestParameters: GetChallengesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengePaginatedResponseApi>>;
+    public getChallenges(requestParameters: GetChallengesRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createdBy = requestParameters.createdBy;
         const sortBy = requestParameters.sortBy;
         const ids = requestParameters.ids;
@@ -713,6 +723,7 @@ export class ChallengesApiService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -738,7 +749,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges`;
-        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengePaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -758,10 +769,10 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeResponseApi>;
+    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeResponseApi>>;
+    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeResponseApi>>;
+    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling patchChallenge.');
@@ -802,6 +813,7 @@ export class ChallengesApiService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -836,7 +848,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<any>('patch', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengeResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: patchChallengeDtoApi,
@@ -857,10 +869,10 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public putChallenge(requestParameters: PutChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any>;
-    public putChallenge(requestParameters: PutChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpResponse<any>>;
-    public putChallenge(requestParameters: PutChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<HttpEvent<any>>;
-    public putChallenge(requestParameters: PutChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext}): Observable<any> {
+    public putChallenge(requestParameters: PutChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeResponseApi>;
+    public putChallenge(requestParameters: PutChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeResponseApi>>;
+    public putChallenge(requestParameters: PutChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeResponseApi>>;
+    public putChallenge(requestParameters: PutChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling putChallenge.');
@@ -901,6 +913,7 @@ export class ChallengesApiService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -935,7 +948,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<any>('put', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengeResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: putChallengeDtoApi,

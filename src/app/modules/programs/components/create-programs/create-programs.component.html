@@ -106,19 +106,7 @@
         <div class="panel">
           <div class="row mb-3">
             <p class="col-7">{{ I18ns.programs.forms.step2.title }}</p>
-            <div class="col-5">
-              <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-search"></i></span>
-                <input
-                  type="search"
-                  class="form-control"
-                  placeholder="Search"
-                  #qSearch
-                  (keyup)="searchQuestions(qSearch.value)"
-                  (search)="searchQuestions(qSearch.value)"
-                />
-              </div>
-            </div>
+            <div class="col-5"><alto-search (searchChange)="searchQuestions($event)"></alto-search></div>
           </div>
 
           <ng-select
@@ -182,7 +170,7 @@
         {{ I18ns.shared.cancel }}
       </button>
       <button class="btn btn-primary" (click)="goNext()">
-        {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
+        {{ I18ns.shared.save }}
       </button>
     </div>
   </div>

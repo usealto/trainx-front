@@ -21,6 +21,8 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { ScoreByTypeEnumApi } from '../model/scoreByTypeEnum';
 // @ts-ignore
+import { ScoreFillValuesEnumApi } from '../model/scoreFillValuesEnum';
+// @ts-ignore
 import { ScoreTimeframeEnumApi } from '../model/scoreTimeframeEnum';
 // @ts-ignore
 import { ScoreTypeEnumApi } from '../model/scoreTypeEnum';
@@ -38,14 +40,16 @@ export interface GetScoresRequestParams {
     /** The timeframe to group scores by. */
     timeframe: ScoreTimeframeEnumApi;
     /** The date to filter scores from guesses created after the date.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    dateAfter: string;
+    dateAfter: Date;
     /** The date to filter scores from guesses created before the date.  The format of the datetime should be ISO 8601 with timezone: YYYY-MM-DDTHH:mm:ss.sssZ.  Example: 2023-02-27T21:42:00.000Z. */
-    dateBefore: string;
+    dateBefore: Date;
     /** An optional array of IDs to filter on. */
     ids?: string;
     /** The type of score to filter by. */
     scoredBy?: ScoreByTypeEnumApi;
     sortBy?: string;
+    /** params to choose or not to fill the gaps in scores with a value. The value can be 0 or null or false. if not provided the dates with no scores will be filled with 0. if set to false the dates with no scores will not be included. */
+    fillValues?: ScoreFillValuesEnumApi;
     /** Unique identifier of the company. */
     companyId?: string;
     /** The ID of the entity to filter by. */
@@ -121,7 +125,7 @@ export class ScoresApiService {
 
     /**
      * Get scores by types
-     * Gets the scores for the specified query and company ID.
+     * Gets the scores for the specified query and company ID.  For the scores on programs, all the program-run will be aggregated into one score. this means that if a program has 3 runs, the score will be the average of the 3 runs. the totalcount will be the sum of the 3 runs and the validcount will be the number of valid guesses within the 3 runs.
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -149,6 +153,7 @@ export class ScoresApiService {
         const ids = requestParameters.ids;
         const scoredBy = requestParameters.scoredBy;
         const sortBy = requestParameters.sortBy;
+        const fillValues = requestParameters.fillValues;
         const companyId = requestParameters.companyId;
         const scoredById = requestParameters.scoredById;
         const countGreaterThan = requestParameters.countGreaterThan;
@@ -173,6 +178,10 @@ export class ScoresApiService {
         if (sortBy !== undefined && sortBy !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>sortBy, 'sortBy');
+        }
+        if (fillValues !== undefined && fillValues !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>fillValues, 'fillValues');
         }
         if (companyId !== undefined && companyId !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,

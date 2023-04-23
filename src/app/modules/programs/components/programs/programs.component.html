@@ -1,30 +1,59 @@
-<h1 class="mt-4">{{ I18ns.programs.title }}</h1>
+<h1 id="programsAnchor" class="mt-4">{{ I18ns.programs.title }}</h1>
 <p class="mb-4">{{ I18ns.programs.subtitle }}</p>
 <div class="pb-4 border-bottom">
-  <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.programs.title }}</button>
-  <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.questions.title }}</button>
-  <button type="button" class="btn btn-outline-secondary me-4">
-    {{ I18ns.programs.awaitQuestions.title }}
-  </button>
-  <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.tags.title }}</button>
+  <alto-anchor-navigator fragment="programsAnchor">
+    <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.programs.title }}</button>
+  </alto-anchor-navigator>
+  <alto-anchor-navigator fragment="questionsAnchor">
+    <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.questions.title }}</button>
+  </alto-anchor-navigator>
+  <alto-anchor-navigator fragment="submittedQuestionsAnchor">
+    <button type="button" class="btn btn-outline-secondary me-4">
+      {{ I18ns.programs.awaitQuestions.title }}
+    </button>
+  </alto-anchor-navigator>
+  <alto-anchor-navigator fragment="tagsAnchor">
+    <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.tags.title }}</button>
+  </alto-anchor-navigator>
 </div>
 <div class="py-4 border-bottom">
-  <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
-    {{ I18ns.programs.programs.createProgram }}
-  </a>
-  <h1>{{ I18ns.programs.programs.title }}</h1>
-  <p class="mb-4">{{ I18ns.programs.programs.subtitle }}</p>
+  <div>
+    <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
+      {{ I18ns.programs.programs.createProgram }}
+    </a>
+    <h1>{{ I18ns.programs.programs.title }}</h1>
+    <p class="mb-4">{{ I18ns.programs.programs.subtitle }}</p>
+  </div>
+  <div class="text-end mb-4">
+    <alto-dropdown-filter
+      class="text-start"
+      [data]="teamStore.teams.value"
+      [displayLabel]="'shortName'"
+      [placeholder]="I18ns.programs.programs.filters.team"
+      (selectChange)="getProgramsFiltered({ teams: $event })"
+      [isColored]="true"
+    ></alto-dropdown-filter>
 
+    <alto-search
+      class="d-inline-block ms-3"
+      (searchChange)="getProgramsFiltered({ search: $event })"
+    ></alto-search>
+  </div>
   <div class="row mb-3">
-    <!-- <div class="col-6 col-xl-4 col-xxxl-3" *ngFor="let prog of programs"> -->
-    <div class="col-4 mb-3" *ngFor="let prog of programs">
+    <div
+      class="col-4 mb-3"
+      *ngFor="
+        let prog of programsDisplay
+          | slice : (programsPage - 1) * programPageSize : programsPage * programPageSize
+      "
+    >
       <alto-program-card [displayToggle]="true" [program]="prog"></alto-program-card>
     </div>
   </div>
   <ngb-pagination
+    [ngClass]="{ invisible: programsCount <= programPageSize }"
     [collectionSize]="programsCount"
     [(page)]="programsPage"
-    (pageChange)="changeProgramPage()"
     [pageSize]="programPageSize"
     [maxSize]="10"
     aria-label="Default pagination"
@@ -34,8 +63,42 @@
   <button type="button" class="btn btn-primary float-end" (click)="openQuestionForm()">
     {{ I18ns.programs.questions.createQuestion }}
   </button>
-  <h1>{{ I18ns.programs.questions.title }}</h1>
+  <h1 id="questionsAnchor">{{ I18ns.programs.questions.title }}</h1>
   <p class="mb-4">{{ I18ns.programs.questions.subtitle }}</p>
+
+  <div class="row mb-4">
+    <div class="col-6">
+      <alto-dropdown-filter
+        class="me-3"
+        [data]="programsStore.programs.value"
+        [displayLabel]="'name'"
+        [returnValue]="'id'"
+        [placeholder]="I18ns.programs.questions.filters.programs"
+        (selectChange)="getQuestions({ programs: $event })"
+      ></alto-dropdown-filter>
+      <alto-dropdown-filter
+        class="me-3"
+        [data]="programsStore.tags.value"
+        [returnValue]="'id'"
+        [displayLabel]="'name'"
+        [placeholder]="I18ns.programs.questions.filters.tags"
+        (selectChange)="getQuestions({ tags: $event })"
+      ></alto-dropdown-filter>
+      <alto-dropdown-filter
+        class="me-3"
+        [data]="profileStore.users.value"
+        [returnValue]="'id'"
+        [displayLabel]="'username'"
+        [placeholder]="I18ns.programs.questions.filters.contributors"
+        (selectChange)="getQuestions({ contributors: $event })"
+      ></alto-dropdown-filter>
+    </div>
+    <div class="col"></div>
+    <div class="col-4">
+      <alto-search (searchChange)="getQuestions({ search: $event })"></alto-search>
+    </div>
+  </div>
+
   <table class="table">
     <thead>
       <tr>
@@ -69,12 +132,13 @@
         </td>
         <td *ngIf="!question.programs || question.programs.length < 1">-</td>
         <td class="pointer pe-auto" (click)="openQuestionForm(question)">
-          <i class="fs-5 bi bi-pencil-fill"></i>
+          <i class="fs-5 bi bi-pencil"></i>
         </td>
       </tr>
     </tbody>
   </table>
   <ngb-pagination
+    [ngClass]="{ invisible: questionsCount <= questionsPageSize }"
     [collectionSize]="questionsCount"
     [(page)]="questionsPage"
     (pageChange)="changeQuestionsPage()"
@@ -85,7 +149,7 @@
 </div>
 <div class="py-4 border-bottom">
   <div>
-    <h1>{{ I18ns.programs.awaitQuestions.title }}</h1>
+    <h1 id="submittedQuestionsAnchor">{{ I18ns.programs.awaitQuestions.title }}</h1>
     <p class="mb-4">{{ I18ns.programs.awaitQuestions.subtitle }}</p>
   </div>
   <table class="table">
@@ -103,12 +167,13 @@
           <alto-img-badge [url]="getUser(question.createdBy)?.pictureUrl"></alto-img-badge>
         </td>
         <td>
-          <i class="fs-5 bi bi-pencil-fill"></i>
+          <i class="fs-5 bi bi-pencil"></i>
         </td>
       </tr>
     </tbody>
   </table>
   <ngb-pagination
+    [ngClass]="{ invisible: submittedQuestionsCount <= submittedQuestionsPageSize }"
     [collectionSize]="submittedQuestionsCount"
     [(page)]="submittedQuestionsPage"
     (pageChange)="changeSubmittedQuestionsPage()"
@@ -121,8 +186,30 @@
   <button type="button" class="btn btn-primary float-end" (click)="openTagForm()">
     {{ I18ns.programs.tags.createTag }}
   </button>
-  <h1>{{ I18ns.programs.tags.title }}</h1>
+  <h1 id="tagsAnchor">{{ I18ns.programs.tags.title }}</h1>
   <p class="mb-4">{{ I18ns.programs.tags.subtitle }}</p>
+
+  <div class="row mb-4">
+    <div class="col-8">
+      <alto-dropdown-filter
+        class="me-3"
+        [data]="programsStore.programs.value"
+        [displayLabel]="'name'"
+        [returnValue]="'id'"
+        [placeholder]="I18ns.programs.tags.filters.programs"
+        (selectChange)="filterTags({ programs: $event })"
+      ></alto-dropdown-filter>
+      <alto-dropdown-filter
+        [data]="profileStore.users.value"
+        [returnValue]="'id'"
+        [displayLabel]="'username'"
+        [placeholder]="I18ns.programs.questions.filters.contributors"
+        (selectChange)="filterTags({ contributors: $event })"
+      ></alto-dropdown-filter>
+    </div>
+
+    <alto-search class="col-4" (searchChange)="filterTags({ search: $event })"></alto-search>
+  </div>
   <table class="table">
     <thead>
       <tr>
@@ -146,12 +233,13 @@
           <alto-colored-pill-list [data]="getTagPrograms(tag.id)" [limit]="5"></alto-colored-pill-list>
         </td>
         <td class="pointer pe-auto" (click)="openTagForm(tag)">
-          <i class="fs-5 bi bi-pencil-fill"></i>
+          <i class="fs-5 bi bi-pencil"></i>
         </td>
       </tr>
     </tbody>
   </table>
   <ngb-pagination
+    [ngClass]="{ invisible: tagsCount <= tagsPageSize }"
     [collectionSize]="tagsCount"
     [(page)]="tagsPage"
     (pageChange)="changeTagsPage()"

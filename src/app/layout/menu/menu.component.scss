@@ -20,7 +20,7 @@
   }
 }
 .menu {
-  a {
+  a.module {
     display: block;
     border-radius: 6px;
     margin: 0 1.143rem 0.286rem 1.143rem;
@@ -36,13 +36,18 @@
   }
   .bottom-block {
     position: absolute;
-    bottom: 0.5rem;
-    left: 0.5rem;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     .build-time {
       color: var(--alto-blue);
       &:hover {
         color: grey;
       }
     }
+  }
+  .profile {
+    margin: 1rem;
+    color: white;
   }
 }

@@ -91,7 +91,7 @@ export class LeadHomeComponent implements OnInit {
     combineLatest([
       this.commentsRestService.getComments(),
       this.questionsSubmittedRestService.getQuestions(),
-      this.challengesRestService.getChallenges({ itemsPerPage: 30, sortBy: 'endDate:desc' }),
+      this.challengesRestService.getChallenges({ itemsPerPage: 40, sortBy: 'endDate:desc' }),
     ])
       .pipe(
         tap(([comments, questions, challenges]) => {

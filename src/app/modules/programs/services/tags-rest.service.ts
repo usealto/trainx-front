@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 import {
   CreateTagDtoApi,
-  CreateTagRequestParams,
   GetTagsRequestParams,
-  PatchTagDtoApi,
   PatchTagRequestParams,
   TagApi,
   TagPaginatedResponseApi,

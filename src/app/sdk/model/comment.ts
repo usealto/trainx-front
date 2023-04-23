@@ -15,9 +15,9 @@ import { CommentQuestionApi } from './commentQuestion';
 export interface CommentApi { 
     id: string;
     createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
     question: CommentQuestionApi;
     /**
      * The id of the question related to this comment.

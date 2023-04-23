@@ -24,9 +24,9 @@ import { QuestionTypeEnumApi } from './questionTypeEnum';
 export interface CommentQuestionApi { 
     id: string;
     createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
     type: QuestionTypeEnumApi;
     answerType: AnswerFormatTypeEnumApi;
     /**
@@ -67,6 +67,10 @@ export interface CommentQuestionApi {
      * The bubble ID for the question.
      */
     tempBubbleId?: string;
+    /**
+     * The relevance of the question. This field is used for sorting questions for get next question for a user.
+     */
+    relevance?: number;
 }
 
 

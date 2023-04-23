@@ -9,13 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AltoBaseResponsePaginatedDtoMetaApi } from './altoBaseResponsePaginatedDtoMeta';
-import { UserApi } from './user';
+import { UserDtoApi } from './userDto';
 
 
-export interface UserPaginatedResponseApi { 
+export interface UserDtoResponseApi { 
     statusCode: number;
-    data?: Array<UserApi>;
-    meta: AltoBaseResponsePaginatedDtoMetaApi;
+    data?: UserDtoApi;
 }
 

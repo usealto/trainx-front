@@ -1,57 +1,129 @@
 <h1 class="mt-4">{{ I18ns.leadTeam.title }}</h1>
 <p class="mb-4">{{ I18ns.leadTeam.subtitle }}</p>
-<div class="pb-4 border-bottom">
-  <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.leadTeam.teams.title }}</button>
-  <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.leadTeam.members.title }}</button>
+<div class="pb-2 border-bottom">
+  <alto-anchor-navigator fragment="teamsAnchor">
+    <button type="button" class="btn btn-outline-secondary me-4">
+      {{ I18ns.leadTeam.teams.shortTitle }}
+      <span class="alto-badge">{{ teams.length }}</span>
+    </button>
+  </alto-anchor-navigator>
+  <alto-anchor-navigator fragment="membersAnchor">
+    <button type="button" class="btn btn-outline-secondary me-4">
+      {{ I18ns.leadTeam.members.shortTitle }}
+      <span class="alto-badge">{{ absoluteUsersCount }}</span>
+    </button>
+  </alto-anchor-navigator>
 </div>
+
 <div class="py-4 border-bottom">
-  <button type="button" class="btn btn-primary float-end">
-    {{ I18ns.leadTeam.teams.createTeam }}
+  <button type="button" class="btn btn-outline-secondary float-end" (click)="openTeamForm()">
+    {{ I18ns.leadTeam.createTeam }}
   </button>
-  <h1>{{ I18ns.leadTeam.teams.title }}</h1>
-  <p class="mb-4">{{ I18ns.leadTeam.teams.subtitle }}</p>
+  <h1 id="teamsAnchor">{{ I18ns.leadTeam.teams.title }}</h1>
+  <p class="mb-3">{{ I18ns.leadTeam.teams.subtitle }}</p>
   <table class="table">
     <thead>
       <tr>
         <th scope="col">{{ I18ns.leadTeam.teams.table.name }}</th>
         <th scope="col">{{ I18ns.leadTeam.teams.table.initials }}</th>
-        <th scope="col">{{ I18ns.leadTeam.teams.table.membersNumber }}</th>
+        <th scope="col">{{ I18ns.leadTeam.teams.table.usersCount }}</th>
         <th scope="col">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
-        <th scope="col">{{ I18ns.leadTeam.teams.table.createdAt }}</th>
+        <th scope="col" class="text-center">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th scope="row">Team Test</th>
+      <tr *ngFor="let team of paginatedTeams" class="align-middle">
         <td>
-          <span class="badge rounded-pill bg-primary">TT</span>
+          {{ team.longName }}
         </td>
         <td>
-          <span class="badge rounded-pill bg-light text-dark">3</span>
+          <span class="alto-badge me-1 text-white" [style.backgroundColor]="team.id | uuid2color">{{
+            team.shortName
+          }}</span>
         </td>
+        <td>{{ getTeamUsersCount(team.id) }}</td>
         <td>
           <div class="progress">
             <div class="progress-bar" role="progressbar" style="width: 50%"></div>
           </div>
           50%
         </td>
-        <td>23/03/2023</td>
+        <td class="text-center">
+          {{ team.createdAt | date : 'dd/MM/yyyy' }}
+        </td>
         <td>
-          <button type="button" class="btn btn-light">
-            <i class="fs-5 bi bi-pencil-fill"></i>
-          </button>
+          <i class="fs-5 bi bi-pencil" (click)="openTeamForm(team)"></i>
         </td>
       </tr>
     </tbody>
   </table>
+  <ngb-pagination
+    [collectionSize]="teams.length"
+    [(page)]="teamsPage"
+    (pageChange)="changeTeamsPage()"
+    [pageSize]="teamsPageSize"
+    [maxSize]="5"
+  ></ngb-pagination>
 </div>
 <div class="py-4 border-bottom">
   <button type="button" class="btn btn-outline-secondary float-end">
     {{ I18ns.leadTeam.members.invite }}
   </button>
-  <h1>{{ I18ns.leadTeam.members.title }}</h1>
-  <p class="mb-4">{{ I18ns.leadTeam.members.subtitle }}</p>
+  <h1 id="membersAnchor">{{ I18ns.leadTeam.members.title }}</h1>
+  <p class="mb-3">{{ I18ns.leadTeam.members.subtitle }}</p>
+
+  <div class="row py-4">
+    <div class="col-3">
+      <div class="panel">
+        <p>{{ I18ns.leadTeam.members.statistics.total }}</p>
+        <h3>{{ absoluteUsersCount }}</h3>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="panel">
+        <p>{{ I18ns.leadTeam.members.statistics.active }}</p>
+        <h3>{{ activeUsersCount }}</h3>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="panel">
+        <p>{{ I18ns.leadTeam.members.statistics.inactive }}</p>
+        <h3>{{ absoluteUsersCount - activeUsersCount }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-4">
+    <ng-select
+      class="text-start col-1"
+      [items]="status"
+      [(ngModel)]="selectedStatus"
+      [placeholder]="I18ns.leadTeam.members.filters.status.title"
+      (ngModelChange)="filterUsers()"
+    >
+      <ng-option *ngFor="let option of status" [value]="option.value"></ng-option>
+    </ng-select>
+    <alto-dropdown-filter
+      class="text-start col-3"
+      [data]="teams"
+      [displayLabel]="'shortName'"
+      [placeholder]="I18ns.leadTeam.members.filters.teams"
+      (selectChange)="filterUsers($event)"
+    ></alto-dropdown-filter>
+    <alto-dropdown-filter
+      class="text-start col-3"
+      [data]="teams"
+      [displayLabel]="'longName'"
+      [placeholder]="I18ns.leadTeam.members.filters.score"
+    ></alto-dropdown-filter>
+    <alto-dropdown-filter
+      class="text-start col-3"
+      [data]="teams"
+      [displayLabel]="'longName'"
+      [placeholder]="I18ns.leadTeam.members.filters.activity"
+    ></alto-dropdown-filter>
+    <!-- <alto-search class="col-2 ms-auto" (searchChange)="searchUsers($event)"></alto-search> -->
+  </div>
   <table class="table">
     <thead>
       <tr>
@@ -59,29 +131,29 @@
         <th scope="col">{{ I18ns.leadTeam.members.table.status }}</th>
         <th scope="col">{{ I18ns.leadTeam.members.table.team }}</th>
         <th scope="col">{{ I18ns.leadTeam.members.table.averageScore }}</th>
-        <th scope="col">{{ I18ns.leadTeam.members.table.questionsPerMonth }}</th>
+        <th scope="col" class="text-center">{{ I18ns.leadTeam.members.table.questionsPerMonth }}</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td class="row">
-          <div class="col-1">
-            <span class="me-4 badge badge-circle bg-primary rounded-pill align-middle">AB</span>
-          </div>
-          <div class="col">
-            <p><strong>Hugo (admin)</strong></p>
-            <p>hugo@uselato.com</p>
+      <tr *ngFor="let user of paginatedUsers" class="align-middle">
+        <td>
+          <alto-img-badge [url]="user.pictureUrl" [size]="40"></alto-img-badge>
+          <div class="d-inline-block ms-3">
+            <span class="fw-bold d-block">
+              {{ !user.firstname || !user.lastname ? user.username : user.firstname + ' ' + user.lastname }}
+            </span>
+            <span>{{ user.email }}</span>
           </div>
         </td>
         <td>
-          <span class="badge rounded-pill bg-success">
+          <span class="badge rounded-pill" [class]="user.isActive ? 'bg-success' : 'bg-danger'">
             <i class="bi bi-dot"></i>
-            Actif
+            {{ user.isActive ? I18ns.leadTeam.members.table.active : I18ns.leadTeam.members.table.inactive }}
           </span>
         </td>
         <td>
-          <span class="badge rounded-pill bg-primary">TT</span>
+          {{ usersMap.get(user.id) }}
         </td>
         <td>
           <div class="progress">
@@ -89,15 +161,18 @@
           </div>
           50%
         </td>
+        <td class="text-center">3</td>
         <td>
-          <span class="badge rounded-pill bg-light text-dark">3</span>
-        </td>
-        <td>
-          <button type="button" class="btn btn-light">
-            <i class="fs-5 bi bi-pencil-fill"></i>
-          </button>
+          <i class="fs-5 bi bi-pencil"></i>
         </td>
       </tr>
     </tbody>
   </table>
+  <ngb-pagination
+    [collectionSize]="usersCount"
+    [(page)]="usersPage"
+    (pageChange)="changeUsersPage(users)"
+    [pageSize]="usersPageSize"
+    [maxSize]="10"
+  ></ngb-pagination>
 </div>

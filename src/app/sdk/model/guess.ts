@@ -18,9 +18,9 @@ import { QuestionApi } from './question';
 export interface GuessApi { 
     id: string;
     createdBy: string;
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
     source: GuessSourceEnumApi;
     question: QuestionApi;
     questionId?: string;

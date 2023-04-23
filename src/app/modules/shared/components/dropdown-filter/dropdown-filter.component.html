@@ -1,13 +1,13 @@
 <ng-select
   [items]="data"
   [multiple]="true"
-  bindValue="id"
+  [bindValue]="returnValue"
   [bindLabel]="displayLabel"
   [placeholder]="placeholder"
   [closeOnSelect]="false"
   [(ngModel)]="selectedItems"
   [searchable]="false"
-  (change)="selectChange.emit($event)"
+  (change)="selectChange.emit(selectedItems)"
   #select
 >
   <ng-template ng-header-tmp>
@@ -20,7 +20,10 @@
     </p>
   </ng-template>
   <ng-template ng-option-tmp let-item="item" let-index="index">
-    <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+    <span *ngIf="isColored" class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+      {{ item[displayLabel] }}
+    </span>
+    <span *ngIf="!isColored" class="alto-badge">
       {{ item[displayLabel] }}
     </span>
   </ng-template>

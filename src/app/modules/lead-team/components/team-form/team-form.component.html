@@ -1,0 +1,65 @@
+<div class="text-end px-4 mt-3">
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
+</div>
+<div class="p-4">
+  <h2>{{ I18ns.leadTeam.teams.form.title }}</h2>
+  <p class="fs-7">{{ I18ns.leadTeam.teams.form.subtitle }}</p>
+</div>
+<div class="offcanvas-body px-4">
+  <form *ngIf="teamForm" [formGroup]="teamForm">
+    <label class="form-label required">{{ I18ns.leadTeam.teams.form.shortName }}</label>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="shortName"
+      placeholder="{{ I18ns.leadTeam.teams.form.shortNamePlaceholder }}"
+    />
+    <p>{{ I18ns.leadTeam.teams.form.shortNameExemple }}</p>
+
+    <label class="mt-4 form-label required">{{ I18ns.leadTeam.teams.form.longName }}</label>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="longName"
+      placeholder="{{ I18ns.leadTeam.teams.form.longNamePlaceholder }}"
+    />
+    <p>{{ I18ns.leadTeam.teams.form.longNameExemple }}</p>
+
+    <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.invitationEmails }}</label>
+    <ng-select
+      [items]="users"
+      [multiple]="true"
+      [placeholder]="I18ns.leadTeam.teams.form.invitationEmailsPlaceholder"
+      [selectableGroup]="true"
+      [closeOnSelect]="false"
+      [bindLabel]="'email'"
+      formControlName="invitationEmails"
+    >
+    </ng-select>
+    <p>{{ I18ns.leadTeam.teams.form.invitationEmailsSubtitle }}</p>
+
+    <label class="mt-4 form-label"
+      >{{ I18ns.leadTeam.teams.form.Programs }} {{ I18ns.shared.optional }}</label
+    >
+    <ng-select
+      [items]="programs"
+      [multiple]="true"
+      bindLabel="name"
+      [placeholder]="I18ns.leadTeam.teams.form.programsPlaceholder"
+      [selectableGroup]="true"
+      [closeOnSelect]="false"
+      formControlName="programs"
+    >
+    </ng-select>
+
+    <p>{{ I18ns.leadTeam.teams.form.ProgramsSubtitle }}</p>
+
+    <input
+      type="submit"
+      class="w-100 btn btn-primary my-4"
+      [disabled]="!teamForm.valid"
+      [value]="I18ns.shared.save"
+      (click)="createTeam()"
+    />
+  </form>
+</div>

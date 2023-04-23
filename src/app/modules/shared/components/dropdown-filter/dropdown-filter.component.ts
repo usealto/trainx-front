@@ -10,6 +10,8 @@ export class DropdownFilterComponent {
   @Input() data: any[] = [];
   @Input() placeholder = '';
   @Input() displayLabel = 'name';
+  @Input() returnValue = '';
+  @Input() isColored = false;
   selectedItems = [];
 
   @Output() selectChange = new EventEmitter<any>();
