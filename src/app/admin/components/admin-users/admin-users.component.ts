@@ -11,9 +11,8 @@ import { AuthUserGet } from './models/authuser.get';
 @Component({
   selector: 'alto-admin-users',
   templateUrl: './admin-users.component.html',
-  styleUrls: ['./admin-users.component.scss']
+  styleUrls: ['./admin-users.component.scss'],
 })
-
 export class AdminUsersComponent implements OnInit {
   users: UserDtoApi[] = [];
   authusers: AuthUserGet[] = [];
@@ -23,14 +22,18 @@ export class AdminUsersComponent implements OnInit {
   usersPageSize = 10;
   q = '';
 
-  constructor(private readonly companiesRestService: CompaniesRestService, private readonly usersRestService:UsersRestService, private route: ActivatedRoute) {}
+  constructor(
+    private readonly companiesRestService: CompaniesRestService,
+    private readonly usersRestService: UsersRestService,
+    private route: ActivatedRoute,
+  ) {}
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') || '';
-    this.changeUsersPage(this.q)
+    this.changeUsersPage(this.q);
   }
 
-  changeUsersPage(query:string) {    
+  changeUsersPage(query: string) {
     // this.usersRestService.getUsersPaginated({page: this.usersPage, itemsPerPage: this.usersPageSize})
     // .pipe(
     //   tap((q) => (this.users = q.data ?? [])),
@@ -38,24 +41,26 @@ export class AdminUsersComponent implements OnInit {
     // )
     // .subscribe();
 
-    let yourJWTToken = localStorage.getItem('@@auth0spajs@@::ThcIBQZrRso5QaZq67kCU5eFYTfZwTSK::https://api.usealto.com::openid profile email offline_access') || '';
-    yourJWTToken = JSON.parse(yourJWTToken).body.access_token  
-console.log('gg');
+    let yourJWTToken =
+      localStorage.getItem(
+        '@@auth0spajs@@::ThcIBQZrRso5QaZq67kCU5eFYTfZwTSK::https://api.usealto.com::openid profile email offline_access',
+      ) || '';
+    yourJWTToken = JSON.parse(yourJWTToken).body.access_token;
+    console.log('gg');
     let $this = this;
-    axios.get(environment.apiURL+'/v1/auth/users?q=*'+query+'*',
-    {
-      headers: {
-        Authorization: "Bearer " + yourJWTToken
-      }
-    })
-    .then(function (response:any) {
-      console.log('response');
-      console.log(response);
-      $this.authusers = response.data.data;
-      
-    })
-    .catch(function (error:any) {
-      console.log(error);
-    });
+    axios
+      .get(environment.apiURL + '/v1/auth/users?q=*' + query + '*', {
+        headers: {
+          Authorization: 'Bearer ' + yourJWTToken,
+        },
+      })
+      .then(function (response: any) {
+        console.log('response');
+        console.log(response);
+        $this.authusers = response.data.data;
+      })
+      .catch(function (error: any) {
+        console.log(error);
+      });
   }
 }

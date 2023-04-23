@@ -9,9 +9,8 @@ import { FormBuilder } from '@angular/forms';
 @Component({
   selector: 'alto-admin-company',
   templateUrl: './admin-company.component.html',
-  styleUrls: ['./admin-company.component.scss']
+  styleUrls: ['./admin-company.component.scss'],
 })
-
 export class AdminCompanyComponent implements OnInit {
   company!: CompanyApi;
   users: UserDtoApi[] = [];
@@ -19,38 +18,43 @@ export class AdminCompanyComponent implements OnInit {
   companyForm: any;
   display = false;
 
-  constructor(private readonly companiesRestService: CompaniesRestService, private readonly usersRestService:UsersRestService, private route: ActivatedRoute, private formBuilder: FormBuilder) {}
+  constructor(
+    private readonly companiesRestService: CompaniesRestService,
+    private readonly usersRestService: UsersRestService,
+    private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
+  ) {}
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') || '';
 
-    this.companiesRestService.getCompanyById(this.id)
-    .pipe(
-      tap((company) => this.company = company)
-    ).pipe(
-      tap((company) => { this.companyForm = this.formBuilder.group({
-        domain: [this.company.domain],
-        name: [this.company.name],
-        isSlackActive: [this.company.isSlackActive],
-      }); })
-    )
-    .subscribe();
-    
-    this.usersRestService.getUsers({companyId: this.id})
-    .pipe(
-      tap((users) => this.users = users)
-    )
-    .subscribe();
+    this.companiesRestService
+      .getCompanyById(this.id)
+      .pipe(tap((company) => (this.company = company)))
+      .pipe(
+        tap((company) => {
+          this.companyForm = this.formBuilder.group({
+            domain: [this.company.domain],
+            name: [this.company.name],
+            isSlackActive: [this.company.isSlackActive],
+          });
+        }),
+      )
+      .subscribe();
+
+    this.usersRestService
+      .getUsers({ companyId: this.id })
+      .pipe(tap((users) => (this.users = users)))
+      .subscribe();
   }
 
   async submit() {
     // update the user with the userFrom value using the userRestService
     this.companiesRestService.patchCompany(this.company.id, this.companyForm.value).subscribe();
-    
+
     // refresh after the API has time to implement the changes
     // first sleep 1 second
-    await new Promise(f => setTimeout(f, 1000));
+    await new Promise((f) => setTimeout(f, 1000));
     this.ngOnInit();
-    
   }
 }
