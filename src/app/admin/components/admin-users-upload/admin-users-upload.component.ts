@@ -5,7 +5,7 @@ import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { CompanyApi, TeamApi, UserApi } from 'src/app/sdk';
+import { CompanyApi, TeamApi, UserDtoApi } from 'src/app/sdk';
 import axios from 'axios';
 import { environment } from 'src/environments/environment';
 import { UserCreate } from './models/user.create';

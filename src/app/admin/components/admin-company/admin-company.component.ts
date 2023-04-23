@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { CompanyApi, UserApi } from 'src/app/sdk';
+import { CompanyApi, UserDtoApi } from 'src/app/sdk';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
@@ -14,7 +14,7 @@ import { FormBuilder } from '@angular/forms';
 
 export class AdminCompanyComponent implements OnInit {
   company!: CompanyApi;
-  users: UserApi[] = [];
+  users: UserDtoApi[] = [];
   id: string | undefined;
   companyForm: any;
   display = false;

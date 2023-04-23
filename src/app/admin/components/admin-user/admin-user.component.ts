@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UserApi } from 'src/app/sdk';
+import { UserDtoApi } from 'src/app/sdk';
 
 @Component({
   selector: 'alto-admin-user',
@@ -13,7 +13,7 @@ import { UserApi } from 'src/app/sdk';
 })
 
 export class AdminUserComponent implements OnInit {
-  user!: UserApi;
+  user!: UserDtoApi;
   id: string | undefined;
   userForm: any;
   display = false;

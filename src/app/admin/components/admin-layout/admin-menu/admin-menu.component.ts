@@ -1,6 +1,6 @@
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { Component, OnInit } from '@angular/core';
-import { UserApi } from 'src/app/sdk';
+import { UserDtoApi } from 'src/app/sdk';
 
 @Component({
   selector: 'alto-admin-menu',
@@ -9,7 +9,7 @@ import { UserApi } from 'src/app/sdk';
 })
 export class AdminMenuComponent implements OnInit {
   constructor(private readonly usersRestService:UsersRestService) { }
-  user!: UserApi
+  user!: UserDtoApi
 
   ngOnInit() { 
     this.usersRestService.getMe().subscribe((user)=> {

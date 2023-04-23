@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UserApi } from 'src/app/sdk';
+import { UserDtoApi } from 'src/app/sdk';
 import { environment } from 'src/environments/environment';
 import axios from 'axios';
 import { AuthUserGet } from './models/authuser.get';
@@ -15,7 +15,7 @@ import { AuthUserGet } from './models/authuser.get';
 })
 
 export class AdminUsersComponent implements OnInit {
-  users: UserApi[] = [];
+  users: UserDtoApi[] = [];
   authusers: AuthUserGet[] = [];
   id: string | undefined;
   usersCount = 0;

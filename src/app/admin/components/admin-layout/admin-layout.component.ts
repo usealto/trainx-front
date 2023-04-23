@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UserApi } from 'src/app/sdk';
+import { UserDtoApi } from 'src/app/sdk';
 @Component({
   selector: 'alto-admin-layout',
   templateUrl: './admin-layout.component.html',
@@ -9,7 +9,7 @@ import { UserApi } from 'src/app/sdk';
 })
 export class AdminLayoutComponent implements OnInit {
   constructor(private readonly usersRestService:UsersRestService, private readonly router:Router) { }
-  user!: UserApi
+  user!: UserDtoApi
   authorized = false
 
   ngOnInit() { 
