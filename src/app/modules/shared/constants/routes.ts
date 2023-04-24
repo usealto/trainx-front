@@ -1,4 +1,5 @@
 export const AltoRoutes = {
+  // LEAD
   lead: 'l',
   leadHome: 'home',
   //
@@ -13,6 +14,14 @@ export const AltoRoutes = {
   leadTeams: 'teams',
   settings: 'settings',
   profile: 'profile',
+
+  // USER
+  user: 'u',
+  userHome: 'home',
+
+  userTeams: 'teams',
+
+  training: 'training',
 
   // ADMIN
   translation: 'translation',

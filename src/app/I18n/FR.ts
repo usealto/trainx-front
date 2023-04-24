@@ -339,6 +339,8 @@ export const FR = {
     challenges: 'Challenges',
     settings: 'Paramètres',
     profile: 'Profil',
+    training: 'Training',
+    adminMode: 'Mode Administrateur',
   },
   settings: {
     title: 'Paramètres',

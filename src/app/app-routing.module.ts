@@ -1,20 +1,14 @@
-import { inject, NgModule } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  ResolveFn,
-  RouterModule,
-  RouterStateSnapshot,
-  Routes,
-} from '@angular/router';
+import { inject, NgModule, resolveForwardRef } from '@angular/core';
+import { ResolveFn, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { combineLatest, take } from 'rxjs';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TeamsRestService } from './modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from './modules/profile/services/users-rest.service';
+import { ProgramsRestService } from './modules/programs/services/programs-rest.service';
 import { TagsRestService } from './modules/programs/services/tags-rest.service';
 import { AltoRoutes } from './modules/shared/constants/routes';
-import { ProgramsRestService } from './modules/programs/services/programs-rest.service';
 
 export const appResolver: ResolveFn<any> = () => {
   return combineLatest([
@@ -38,6 +32,23 @@ const routes: Routes = [
     },
     component: AppLayoutComponent,
     children: [
+      {
+        path: AltoRoutes.user,
+        children: [
+          {
+            path: AltoRoutes.userHome,
+            loadChildren: () => import('./modules/user-home/user-home.module').then((m) => m.UserHomeModule),
+          },
+          {
+            path: AltoRoutes.userTeams,
+            loadChildren: () => import('./modules/user-team/user-team.module').then((m) => m.UserTeamModule),
+          },
+          {
+            path: AltoRoutes.training,
+            loadChildren: () => import('./modules/training/training.module').then((m) => m.TrainingModule),
+          },
+        ],
+      },
       {
         path: AltoRoutes.lead,
         children: [
