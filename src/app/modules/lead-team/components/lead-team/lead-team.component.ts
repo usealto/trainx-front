@@ -54,7 +54,6 @@ export class LeadTeamComponent implements OnInit {
           this.teams = teams;
           this.users = users;
           this.absoluteUsersCount = users.length;
-          console.log(users);
         }),
         tap(([users]) => (this.activeUsersCount = users.filter((user) => user.isActive).length)),
         tap(([users]) => (this.usersCount = users.length)),
@@ -96,8 +95,8 @@ export class LeadTeamComponent implements OnInit {
 
   searchUsers(users: UserDtoApi[], s: string) {
     const search = s.toLowerCase();
-
-    return;
+    const res = search.length ? users.filter((user) => user.username?.toLowerCase().includes(search)) : users;
+    this.changeUsersPage(res);
   }
 
   openTeamForm(team?: TeamApi) {
