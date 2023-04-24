@@ -10,12 +10,19 @@ import { UserDtoApi } from 'src/app/sdk';
 export class AdminMenuComponent implements OnInit {
   constructor(private readonly usersRestService:UsersRestService) { }
   user!: UserDtoApi
+  userImpersonated = localStorage.getItem('userImpersonated') === ''
 
   ngOnInit() { 
     this.usersRestService.getMe().subscribe((user)=> {
       this.user = user
     })
     
+  }
+
+  removeImpersonation() {
+    localStorage.setItem('userImpersonated','')
+    this.userImpersonated = false
+    window.location.reload()
   }
 
 

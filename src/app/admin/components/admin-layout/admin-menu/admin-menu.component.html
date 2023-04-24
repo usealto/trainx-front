@@ -16,8 +16,12 @@
         Users
       </a>
     </div>
-    <div class="bottom-block" *ngIf="user">
-      <alto-img-badge [url]="user.pictureUrl"></alto-img-badge> {{user.email}}
+    <div class="bottom-block mb-2" *ngIf="user">
+      <alto-img-badge [url]="user.pictureUrl"></alto-img-badge> 
+      <div class="d-inline-block ms-3">
+        <p *ngIf="userImpersonated" class="btn btn-danger" (click)="removeImpersonation()">remove impersonation</p>
+        <p>{{ user.email }}</p>
+      </div>
     </div>
   </div>
   
