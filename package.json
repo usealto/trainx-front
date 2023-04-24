@@ -6,6 +6,7 @@
     "start": "ng serve --host=127.0.0.1",
     "start:hmr": "ng serve --hmr",
     "prebuild": "node build-time.js",
+    "prebuild:preprod": "node build-time.js",
     "build:preprod": "ng build --configuration preprod",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
