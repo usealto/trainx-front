@@ -1,4 +1,11 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpHeaders,
+  HttpInterceptor,
+  HttpRequest,
+  HttpResponse,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
@@ -17,7 +24,16 @@ export class ApiInterceptor implements HttpInterceptor {
     this.loadingStore.isLoading.value = true;
     this.loadingStore.load++;
 
-    return next.handle(request).pipe(
+    const req = localStorage.getItem('impersonatedUser')
+      ? request.clone({
+          headers: request.headers.set(
+            'x-impersonate-user-email',
+            localStorage.getItem('impersonatedUser') ?? '',
+          ),
+        })
+      : request;
+
+    return next.handle(req).pipe(
       tap((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
           /** Transform ISO dates from the API in Date Objects */
