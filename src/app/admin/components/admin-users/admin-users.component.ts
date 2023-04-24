@@ -63,4 +63,9 @@ export class AdminUsersComponent implements OnInit {
         console.log(error);
       });
   }
+
+  setImpersonation(email: string) {
+    localStorage.setItem('impersonatedUser', email);
+  }
+    
 }

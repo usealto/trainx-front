@@ -37,7 +37,7 @@
       <td>{{user.created_at}}</td>
       <td>{{user.last_login}}</td>
       <td>
-        <a *ngIf="user.user_metadata && user.user_metadata.altoId" [routerLink]="['/', 'admin', 'users',user.user_metadata.altoId]" routerLinkActive="menu-selected" class="btn btn-primary">
+        <a *ngIf="user.user_metadata && user.user_metadata.altoId" [routerLink]="['/', 'admin', 'users',user.user_metadata.altoId]" routerLinkActive="menu-selected" class="btn btn-primary" (click)="setImpersonation(user.email)">
           Voir
         </a>
       </td>
