@@ -66,6 +66,7 @@ export class AdminUsersComponent implements OnInit {
 
   setImpersonation(email: string) {
     localStorage.setItem('impersonatedUser', email);
+    window.location.reload();
   }
     
 }

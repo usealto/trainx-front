@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UserDtoApi } from 'src/app/sdk';
 
@@ -9,7 +10,7 @@ import { UserDtoApi } from 'src/app/sdk';
 })
 export class AdminUnauthorizedComponent implements OnInit {
 
-  constructor(private readonly usersRestService:UsersRestService) { }
+  constructor(private readonly usersRestService:UsersRestService, private readonly router:Router) { }
   user!: UserDtoApi
 
   ngOnInit() { 
@@ -19,4 +20,12 @@ export class AdminUnauthorizedComponent implements OnInit {
     
   }
 
+  disconnect() {
+    localStorage.setItem('impersonatedUser', '')
+    window.location.reload()
+  }
+
+  goHome() {
+    this.router.navigate(['/admin', 'home'])
+  }
 }
