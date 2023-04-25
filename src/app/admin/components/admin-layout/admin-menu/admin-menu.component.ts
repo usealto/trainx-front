@@ -25,5 +25,10 @@ export class AdminMenuComponent implements OnInit {
     this.impersonatedUser = false
   }
 
+  removeImpersonationAndreload() {
+    this.removeImpersonation()
+    window.location.reload()
+  }
+
 
 }
