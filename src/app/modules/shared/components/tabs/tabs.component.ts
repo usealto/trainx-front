@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @Component({
   selector: 'alto-tabs',
@@ -14,5 +15,10 @@ export class TabsComponent {
 
   switchTab(index: number) {
     this.tabChanged.emit(index);
+  }
+
+  @memoize()
+  getId(i: number): number {
+    return Math.round(Math.random() * 1000);
   }
 }

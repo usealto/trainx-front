@@ -239,6 +239,7 @@ export class LeadHomeComponent implements OnInit {
   }
 
   switchEvolutionChart(e: number) {
+    // TODO !!!!
     console.log(e);
   }
 
