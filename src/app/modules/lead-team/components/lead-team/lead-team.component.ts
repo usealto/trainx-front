@@ -10,6 +10,7 @@ import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'alto-lead-team',
@@ -119,5 +120,9 @@ export class LeadTeamComponent implements OnInit {
 
   getTeamUsersCount(teamId: string) {
     return this.profileStore.users.value.filter((user) => user.teamId === teamId).length;
+  }
+
+  airtableRedirect() {
+    window.open(environment.airtableURL + this.profileStore.user.value.email, '_blank');
   }
 }
