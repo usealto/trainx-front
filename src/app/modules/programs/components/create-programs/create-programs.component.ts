@@ -6,7 +6,7 @@ import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { filter, map, Observable, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ProgramApi, QuestionApi, TagApi, TeamApi } from 'src/app/sdk';
+import { ProgramDtoApi, QuestionApi, TagApi, TeamApi } from 'src/app/sdk';
 import { ProgramForm } from '../../models/programs.form';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
@@ -28,8 +28,8 @@ export class CreateProgramsComponent implements OnInit {
 
   programForm!: IFormGroup<ProgramForm>;
   currentStep = 1;
-  createdProgram: ProgramApi | undefined;
-  editedProgram!: ProgramApi;
+  createdProgram: ProgramDtoApi | undefined;
+  editedProgram!: ProgramDtoApi;
   isEdit = false;
 
   questions!: QuestionApi[];
@@ -75,7 +75,7 @@ export class CreateProgramsComponent implements OnInit {
       .subscribe();
   }
 
-  initForm(program?: ProgramApi) {
+  initForm(program?: ProgramDtoApi) {
     this.programForm = this.fb.group<ProgramForm>({
       name: [program?.name ?? '', [Validators.required]],
       priority: [program?.priority ?? null, [Validators.required]],
@@ -110,7 +110,7 @@ export class CreateProgramsComponent implements OnInit {
         .pipe(
           filter((x) => !!x),
           map((d) => d.data),
-          map((prog: ProgramApi) => {
+          map((prog: ProgramDtoApi) => {
             this.isEdit ? (this.editedProgram = prog) : (this.createdProgram = prog);
             return prog.tags ?? [];
           }),

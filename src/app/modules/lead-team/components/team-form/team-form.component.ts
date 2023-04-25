@@ -4,7 +4,7 @@ import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import {
-  ProgramApi,
+  ProgramDtoApi,
   TeamApi,
   UserDtoApi,
   CreateTeamDtoApi,
@@ -29,7 +29,7 @@ export class TeamFormComponent implements OnInit {
   private fb: IFormBuilder;
   teamForm!: IFormGroup<TeamForm>;
   isEdit = false;
-  programs: ProgramApi[] = [];
+  programs: ProgramDtoApi[] = [];
   users: UserDtoApi[] = [];
   userFilters = { teams: [] as TeamApi[] };
 
@@ -124,7 +124,7 @@ export class TeamFormComponent implements OnInit {
     }
   }
 
-  updateTeamInfos(team: TeamApi, programs: ProgramApi[], members: UserDtoApi[]) {
+  updateTeamInfos(team: TeamApi, programs: ProgramDtoApi[], members: UserDtoApi[]) {
     programs.forEach((program) => {
       this.programService.updateProgram(program.id, { teams: [team] }).subscribe();
     });

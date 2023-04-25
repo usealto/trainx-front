@@ -8,7 +8,7 @@ import {
   AnswerFormatTypeEnumApi,
   PatchQuestionDtoApi,
   PatchQuestionRequestParams,
-  ProgramApi,
+  ProgramDtoApi,
   QuestionApi,
   QuestionTypeEnumApi,
   TagApi,
@@ -25,14 +25,14 @@ import { TagsRestService } from '../../../services/tags-rest.service';
 })
 export class QuestionFormComponent implements OnInit {
   I18ns = I18ns;
-  @Input() program: ProgramApi | undefined;
+  @Input() program: ProgramDtoApi | undefined;
   @Input() question?: QuestionApi;
   @Output() createdQuestion = new EventEmitter<QuestionApi>();
   private fb: IFormBuilder;
   questionForm!: IFormGroup<QuestionForm>;
   isEdit = false;
 
-  programs: ProgramApi[] = [];
+  programs: ProgramDtoApi[] = [];
   tags: TagApi[] = [];
 
   constructor(
@@ -111,7 +111,7 @@ export class QuestionFormComponent implements OnInit {
           title,
           type,
           tags: tags.map((id) => ({ id } as TagApi)),
-          programs: programs.map((id) => ({ id } as ProgramApi)),
+          programs: programs.map((id) => ({ id } as ProgramDtoApi)),
           answerType,
           answersAccepted: [answersAccepted],
           answersWrong: [answersWrong1, answersWrong2, answersWrong3].filter((a) => !!a),
@@ -128,7 +128,7 @@ export class QuestionFormComponent implements OnInit {
         title: title,
         type: type,
         tags: tags.map((id) => ({ id } as TagApi)),
-        programs: programs.map((id) => ({ id } as ProgramApi)),
+        programs: programs.map((id) => ({ id } as ProgramDtoApi)),
         answerType: answerType,
         answersAccepted: [answersAccepted],
         answersWrong: [answersWrong1, answersWrong2, answersWrong3].filter((a) => !!a),

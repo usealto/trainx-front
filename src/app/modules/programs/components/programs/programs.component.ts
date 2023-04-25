@@ -10,7 +10,7 @@ import { UsersRestService } from 'src/app/modules/profile/services/users-rest.se
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import {
   GetScoresRequestParams,
-  ProgramApi,
+  ProgramDtoApi,
   QuestionApi,
   QuestionPaginatedResponseApi,
   QuestionSubmittedApi,
@@ -42,8 +42,8 @@ export class ProgramsComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   //
-  programs: ProgramApi[] = [];
-  programsDisplay: ProgramApi[] = [];
+  programs: ProgramDtoApi[] = [];
+  programsDisplay: ProgramDtoApi[] = [];
   programFilters: ProgramFilters = { teams: [], search: '' };
   programsPage = 1;
   programsCount = 0;
@@ -280,7 +280,7 @@ export class ProgramsComponent implements OnInit {
       .subscribe();
   }
 
-  tagProgramsLoop(tagId: string, programs: ProgramApi[]): string[] {
+  tagProgramsLoop(tagId: string, programs: ProgramDtoApi[]): string[] {
     const programList: string[] = [];
     programs.forEach((program) => {
       if (program.tags?.some((tag) => tag.id === tagId)) {

@@ -3,7 +3,7 @@ import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
-import { GetScoresRequestParams, ProgramApi, ProgramRunApi, ScoreTimeframeEnumApi } from 'src/app/sdk';
+import { GetScoresRequestParams, ProgramDtoApi, ProgramRunApi, ScoreTimeframeEnumApi } from 'src/app/sdk';
 import { AltoRoutes } from '../../constants/routes';
 
 @Component({
@@ -13,7 +13,7 @@ import { AltoRoutes } from '../../constants/routes';
 })
 export class ProgramCardComponent implements OnChanges {
   @Input() displayToggle = false;
-  @Input() program!: ProgramApi;
+  @Input() program!: ProgramDtoApi;
   @Input() programRun!: ProgramRunApi;
 
   programScore = 0;

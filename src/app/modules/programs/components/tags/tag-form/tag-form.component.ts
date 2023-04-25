@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
-import { PatchTagDtoApi, PatchTagRequestParams, ProgramApi, QuestionApi, TagApi } from 'src/app/sdk';
+import { PatchTagDtoApi, PatchTagRequestParams, ProgramDtoApi, QuestionApi, TagApi } from 'src/app/sdk';
 import { combineLatest, tap } from 'rxjs';
 import { QuestionsRestService } from '../../../services/questions-rest.service';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
@@ -23,7 +23,7 @@ export class TagsFormComponent implements OnInit {
   tagForm!: IFormGroup<TagForm>;
   isEdit = false;
 
-  programs: ProgramApi[] = [];
+  programs: ProgramDtoApi[] = [];
   questions: QuestionApi[] = [];
 
   constructor(
