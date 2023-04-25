@@ -20,6 +20,7 @@ import { AnchorNavigatorComponent } from './components/anchor-navigator/anchor-n
 import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-filter.component';
 import { StatusPillComponent } from './components/status-pill/status-pill.component';
 import { SearchComponent } from './components/search/search.component';
+import { TabsComponent } from './components/tabs/tabs.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { SearchComponent } from './components/search/search.component';
     DropdownFilterComponent,
     StatusPillComponent,
     SearchComponent,
+    TabsComponent,
   ],
   imports: [
     CommonModule,
@@ -54,6 +56,7 @@ import { SearchComponent } from './components/search/search.component';
     ColoredPillListComponent,
     AnchorNavigatorComponent,
     DropdownFilterComponent,
+    TabsComponent,
     SearchComponent,
     StatusPillComponent,
     FormsModule,

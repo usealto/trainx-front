@@ -1,0 +1,30 @@
+<div class="btn-group d-inline-block" role="group">
+  <ng-container *ngFor="let item of labels; let i = index">
+    <input
+      type="radio"
+      class="btn-check"
+      name="rd1"
+      (click)="switchTab(i + 1)"
+      [id]="'btnradio' + i"
+      autocomplete="off"
+      [checked]="i === 0"
+    />
+    <label class="alto-tab-btn" [for]="'btnradio' + i">
+      {{ item }}
+    </label>
+  </ng-container>
+
+  <!-- <input
+    type="radio"
+    class="btn-check"
+    name="rd1"
+    [value]="2"
+    [ngModel]="dataModel"
+    (ngModelChange)="switchTab()"
+    id="btnradio2"
+    autocomplete="off"
+  />
+  <label class="alto-tab-btn" for="btnradio2">
+    {{ I18ns.leadHome.globalEvolution.tabs.tag }}
+  </label> -->
+</div>

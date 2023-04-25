@@ -62,7 +62,6 @@ export class LeadHomeComponent implements OnInit {
   commentsCount = 0;
   questionsCount = 0;
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
-  // evolutionTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
   evolutionChart?: Chart;
   globalScore = 0;
   averageCompletion = 0;
@@ -134,12 +133,30 @@ export class LeadHomeComponent implements OnInit {
               label: s.label,
               data: s.averages.map((u) => Math.round(u * 10000) / 100),
               fill: false,
-              tension: 0.1,
+              tension: 0.2,
             })),
           };
           this.evolutionChart = new Chart('programScoreEvol', {
             type: 'line',
             data: data,
+            options: {
+              scales: {
+                x: {
+                  display: true,
+                  title: {
+                    display: true,
+                    text: I18ns.leadHome.graph.period,
+                  },
+                },
+                y: {
+                  display: true,
+                  title: {
+                    display: true,
+                    text: I18ns.leadHome.graph.score,
+                  },
+                },
+              },
+            },
           });
         }),
         tap(console.log),
@@ -219,6 +236,10 @@ export class LeadHomeComponent implements OnInit {
 
   filterPrograms(teams: TeamDtoApi[]) {
     this.getProgramRuns(teams.map((t) => t.id));
+  }
+
+  switchEvolutionChart(e: number) {
+    console.log(e);
   }
 
   private _filterStatistics: any;

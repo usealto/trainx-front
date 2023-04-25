@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { addDays, addHours, startOfDay } from 'date-fns';
-import { Observable, filter, map, tap } from 'rxjs';
+import { Observable, filter, map } from 'rxjs';
 import {
   GetProgramRunsRequestParams,
   GetScoresRequestParams,
   ProgramRunApi,
   ProgramRunsApiService,
-  ScoreByTypeEnumApi,
-  ScoreFillValuesEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   ScoresApiService,
@@ -24,57 +22,6 @@ export class ScoresRestService {
     private readonly programsApi: ProgramRunsApiService,
   ) {}
 
-  getYesterday() {
-    const date = new Date();
-    const gmtDataOffset = -date.getTimezoneOffset() / 60;
-    return addHours(startOfDay(date), gmtDataOffset);
-  }
-
-  getStartDate(duration: ScoreDuration): Date {
-    let date = new Date();
-    const gmtDataOffset = -date.getTimezoneOffset() / 60;
-
-    switch (duration) {
-      case ScoreDuration.Week:
-        date = addDays(date, -7);
-        break;
-      case ScoreDuration.Month:
-        date = addDays(date, -30);
-        break;
-      case ScoreDuration.Year:
-        date = addDays(date, -365);
-        break;
-    }
-    date = addHours(date, gmtDataOffset);
-    return date;
-  }
-
-  getDefaultDuration(timeframe: ScoreTimeframeEnumApi): ScoreDuration {
-    switch (timeframe) {
-      case ScoreTimeframeEnumApi.Day:
-        return ScoreDuration.Week;
-      case ScoreTimeframeEnumApi.Week:
-        return ScoreDuration.Month;
-      case ScoreTimeframeEnumApi.Month:
-        return ScoreDuration.Year;
-      default:
-        return ScoreDuration.Year;
-    }
-  }
-
-  getDefaultTimeFrame(duration: ScoreDuration): ScoreTimeframeEnumApi {
-    switch (duration) {
-      case ScoreDuration.Week:
-        return ScoreTimeframeEnumApi.Day;
-      case ScoreDuration.Month:
-        return ScoreTimeframeEnumApi.Week;
-      case ScoreDuration.Year:
-        return ScoreTimeframeEnumApi.Month;
-      default:
-        return ScoreTimeframeEnumApi.Week;
-    }
-  }
-
   getScores(
     duration: ScoreDuration,
     type: ScoreTypeEnumApi,
@@ -88,7 +35,6 @@ export class ScoresRestService {
     };
 
     return this.scoresApi.getScores(par).pipe(
-      tap(console.log),
       map((r) => r.data || ({} as ScoresResponseDtoApi)),
       filter((x) => !!x),
     );
@@ -180,5 +126,56 @@ export class ScoresRestService {
     par.createdBefore = this.getStartDate(this.getDefaultDuration(timeframe));
 
     return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));
+  }
+
+  getYesterday() {
+    const date = new Date();
+    const gmtDataOffset = -date.getTimezoneOffset() / 60;
+    return addHours(startOfDay(date), gmtDataOffset);
+  }
+
+  getStartDate(duration: ScoreDuration): Date {
+    let date = new Date();
+    const gmtDataOffset = -date.getTimezoneOffset() / 60;
+
+    switch (duration) {
+      case ScoreDuration.Week:
+        date = addDays(date, -7);
+        break;
+      case ScoreDuration.Month:
+        date = addDays(date, -30);
+        break;
+      case ScoreDuration.Year:
+        date = addDays(date, -365);
+        break;
+    }
+    date = addHours(date, gmtDataOffset);
+    return date;
+  }
+
+  getDefaultDuration(timeframe: ScoreTimeframeEnumApi): ScoreDuration {
+    switch (timeframe) {
+      case ScoreTimeframeEnumApi.Day:
+        return ScoreDuration.Week;
+      case ScoreTimeframeEnumApi.Week:
+        return ScoreDuration.Month;
+      case ScoreTimeframeEnumApi.Month:
+        return ScoreDuration.Year;
+      default:
+        return ScoreDuration.Year;
+    }
+  }
+
+  getDefaultTimeFrame(duration: ScoreDuration): ScoreTimeframeEnumApi {
+    switch (duration) {
+      case ScoreDuration.Week:
+        return ScoreTimeframeEnumApi.Day;
+      case ScoreDuration.Month:
+        return ScoreTimeframeEnumApi.Week;
+      case ScoreDuration.Year:
+        return ScoreTimeframeEnumApi.Month;
+      default:
+        return ScoreTimeframeEnumApi.Week;
+    }
   }
 }

@@ -143,13 +143,11 @@
 <div class="row">
   <div class="col-6">
     <div class="panel h-100">
-      <div class="btn-group d-inline-block mb-3" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-outline-primary">
-          {{ I18ns.leadHome.globalEvolution.tabs.program }}
-        </button>
-        <button type="button" class="btn btn-outline-primary">
-          {{ I18ns.leadHome.globalEvolution.tabs.tag }}
-        </button>
+      <div class="btn-group d-inline-block mb-3" role="group">
+        <alto-tabs
+          (tabChanged)="switchEvolutionChart($event)"
+          [labels]="[I18ns.leadHome.globalEvolution.tabs.program, I18ns.leadHome.globalEvolution.tabs.tag]"
+        ></alto-tabs>
       </div>
       <canvas id="programScoreEvol"></canvas>
     </div>

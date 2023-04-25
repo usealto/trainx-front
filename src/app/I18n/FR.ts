@@ -39,11 +39,6 @@ export const FR = {
     subtitleQuestion: ['Vous avez {{}} question en attente.', 'Vous avez {{}} questions en attente.'],
     statistics: {
       title: 'Statistiques',
-      // tabs: {
-      //   week: 'Semaine',
-      //   month: 'Mois',
-      //   year: 'Année',
-      // },
       globalScore: 'Score global',
       globalScoreToolTip: 'Score moyen de toutes les questions répondues sur la période donnée',
       averageCompletion: 'Complétion moyenne',
@@ -53,11 +48,15 @@ export const FR = {
       inactiveMembers: 'Membres inactifs',
       inactiveMembersToolTip: "Nombre de membres n'ayant pas interagi avec Alto sur une période donnée",
     },
+    graph: {
+      period: 'Période',
+      score: 'Score (%)',
+    },
     globalEvolution: {
       title: 'Évolution globale',
       tabs: {
-        program: 'Programme',
-        tag: 'Tag',
+        program: 'Programmes',
+        tag: 'Tags',
         team: 'Équipe',
         member: 'Membre',
       },
