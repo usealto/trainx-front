@@ -95,7 +95,9 @@ export const FR = {
       subtitle: "Retrouvez l'ensemble des trainings de vos équipes.",
       createProgram: 'Créer',
       involvement: 'Participation',
+      involvementToolTip: 'Nombre de membres ayant commencé le programme sur le nombre de membres assignés',
       progress: 'Avancement',
+      progressToolTip: 'Nombre de questions répondues par tout les membres sur le nombre total de questions',
       score: 'Score',
       filters: {
         team: 'Équipe',

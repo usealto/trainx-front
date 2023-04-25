@@ -15,10 +15,20 @@
   <p class="my-2 description-box fs-7">{{ program.description | slice : 0 : 150 }}</p>
   <p>
     {{ I18ns.programs.programs.involvement }}
+    <i
+    class="fs-5 bi bi-question-circle"
+    placement="top"
+    ngbTooltip="{{ I18ns.programs.programs.involvementToolTip }}"
+  ></i>
     <span class="float-end badge rounded-pill" [class]="100 | pillColor">100%</span>
   </p>
   <p>
     {{ I18ns.programs.programs.progress }}
+    <i
+    class="fs-5 bi bi-question-circle"
+    placement="top"
+    ngbTooltip="{{ I18ns.programs.programs.progressToolTip }}"
+  ></i>
     <span class="float-end badge rounded-pill" [class]="0 | pillColor">N/A</span>
   </p>
   <p>
