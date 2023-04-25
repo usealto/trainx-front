@@ -20,11 +20,13 @@ import {
   ProgramRunApi,
   ScoreByTypeEnumApi,
   ScoreTimeframeEnumApi,
+  ScoreTypeEnumApi,
   TeamDtoApi,
   UserDtoApi,
 } from 'src/app/sdk';
 import { LeadHomeStatistics } from '../statistics/lead-home-statistics.model';
-
+import Chart from 'chart.js/auto';
+import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
 @UntilDestroy()
 @Component({
   selector: 'alto-lead-home',
@@ -34,7 +36,7 @@ import { LeadHomeStatistics } from '../statistics/lead-home-statistics.model';
 export class LeadHomeComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
-  ScoreTimeframeEnumApi = ScoreTimeframeEnumApi;
+  ScoreDuration = ScoreDuration;
 
   name = '';
   active = 1;
@@ -60,6 +62,8 @@ export class LeadHomeComponent implements OnInit {
   commentsCount = 0;
   questionsCount = 0;
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
+  // evolutionTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
+  evolutionChart?: Chart;
   globalScore = 0;
   averageCompletion = 0;
   completionProgression = 0;
@@ -108,6 +112,37 @@ export class LeadHomeComponent implements OnInit {
         switchMap(() => this.getScore({ timeframe: ScoreTimeframeEnumApi.Week } as GetScoresRequestParams)),
         switchMap(() => this.getAverageCompletion(ScoreTimeframeEnumApi.Week)),
         untilDestroyed(this),
+      )
+      .subscribe();
+
+    this.createCharts(ScoreDuration.Month);
+  }
+
+  createCharts(duration: ScoreDuration | string) {
+    if (this.evolutionChart) {
+      this.evolutionChart.destroy();
+    }
+    this.scoresRestService
+      .getScores(duration as ScoreDuration, ScoreTypeEnumApi.Program)
+      .pipe(
+        filter(({ scores }) => !!scores.length),
+        tap(({ scores }) => {
+          const labels = scores[0].dates.map((d) => d.toLocaleDateString());
+          const data = {
+            labels: labels,
+            datasets: scores.map((s) => ({
+              label: s.label,
+              data: s.averages.map((u) => Math.round(u * 10000) / 100),
+              fill: false,
+              tension: 0.1,
+            })),
+          };
+          this.evolutionChart = new Chart('programScoreEvol', {
+            type: 'line',
+            data: data,
+          });
+        }),
+        tap(console.log),
       )
       .subscribe();
   }

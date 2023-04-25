@@ -21,6 +21,11 @@ export const FR = {
       ongoing: 'En cours',
       ended: 'Terminé',
     },
+    dateFilter: {
+      week: 'Semaine',
+      month: 'Mois',
+      year: 'Année',
+    },
   },
   leadHome: {
     title: 'Bonjour ',
@@ -34,11 +39,11 @@ export const FR = {
     subtitleQuestion: ['Vous avez {{}} question en attente.', 'Vous avez {{}} questions en attente.'],
     statistics: {
       title: 'Statistiques',
-      tabs: {
-        week: 'Semaine',
-        month: 'Mois',
-        year: 'Année',
-      },
+      // tabs: {
+      //   week: 'Semaine',
+      //   month: 'Mois',
+      //   year: 'Année',
+      // },
       globalScore: 'Score global',
       globalScoreToolTip: 'Score moyen de toutes les questions répondues sur la période donnée',
       averageCompletion: 'Complétion moyenne',

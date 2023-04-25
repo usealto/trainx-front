@@ -35,14 +35,14 @@
   <div class="col-5">
     <div class="btn-group d-inline-block" role="group" aria-label="Basic example">
       <select
-        #timeframeSelect
+        #statisticsTimeframeSelect
         class="form-select"
         [ngModel]="statisticTimeRange"
-        (change)="updateScore({ timeframe: timeframeSelect.value })"
+        (change)="updateScore({ timeframe: statisticsTimeframeSelect.value })"
       >
-        <option [value]="ScoreTimeframeEnumApi.Week">{{ I18ns.leadHome.statistics.tabs.week }}</option>
-        <option [value]="ScoreTimeframeEnumApi.Month">{{ I18ns.leadHome.statistics.tabs.month }}</option>
-        <option [value]="ScoreTimeframeEnumApi.Year">{{ I18ns.leadHome.statistics.tabs.year }}</option>
+        <option [value]="ScoreDuration.Week">{{ I18ns.shared.dateFilter.week }}</option>
+        <option [value]="ScoreDuration.Month">{{ I18ns.shared.dateFilter.month }}</option>
+        <option [value]="ScoreDuration.Year">{{ I18ns.shared.dateFilter.year }}</option>
       </select>
     </div>
   </div>
@@ -124,12 +124,20 @@
   </div>
 </div>
 
+<!-- GLOBAL EVOLUTION -->
+
 <h1 class="mt-4">{{ I18ns.leadHome.globalEvolution.title }}</h1>
 
-<div class="btn-group d-inline-block mb-3" role="group" aria-label="Basic example">
-  <button type="button" class="btn btn-outline-primary">{{ I18ns.leadHome.statistics.tabs.week }}</button>
-  <button type="button" class="btn btn-outline-primary">{{ I18ns.leadHome.statistics.tabs.month }}</button>
-  <button type="button" class="btn btn-outline-primary">{{ I18ns.leadHome.statistics.tabs.year }}</button>
+<div class="btn-group d-inline-block" role="group" aria-label="Basic example">
+  <select
+    #evolutionTimeframeSelect
+    class="form-select mb-3"
+    (change)="createCharts(evolutionTimeframeSelect.value)"
+  >
+    <option [value]="ScoreDuration.Week">{{ I18ns.shared.dateFilter.week }}</option>
+    <option selected [value]="ScoreDuration.Month">{{ I18ns.shared.dateFilter.month }}</option>
+    <option [value]="ScoreDuration.Year">{{ I18ns.shared.dateFilter.year }}</option>
+  </select>
 </div>
 
 <div class="row">
@@ -143,6 +151,7 @@
           {{ I18ns.leadHome.globalEvolution.tabs.tag }}
         </button>
       </div>
+      <canvas id="programScoreEvol"></canvas>
     </div>
   </div>
   <div class="col-6">
