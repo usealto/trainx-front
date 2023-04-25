@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { combineLatest, filter, map, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { ChallengesRestService } from 'src/app/modules/challenges/services/challenges-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
@@ -12,17 +13,17 @@ import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services
 import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import {
-  ChallengeApi,
-  ChallengeTypeEnumApi,
+  ChallengeDtoApi,
+  ChallengeDtoApiTypeEnumApi,
   GetProgramRunsRequestParams,
   GetScoresRequestParams,
   ProgramRunApi,
   ScoreByTypeEnumApi,
   ScoreTimeframeEnumApi,
-  TeamApi,
+  TeamDtoApi,
+  UserDtoApi,
 } from 'src/app/sdk';
 import { LeadHomeStatistics } from '../statistics/lead-home-statistics.model';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
 
 @UntilDestroy()
 @Component({
@@ -68,8 +69,8 @@ export class LeadHomeComponent implements OnInit {
   programsCount = 0;
   programPageSize = 3;
   //
-  challengesByTeam: ChallengeApi[] = [];
-  challengesByUser: ChallengeApi[] = [];
+  challengesByTeam: ChallengeDtoApi[] = [];
+  challengesByUser: ChallengeDtoApi[] = [];
 
   temp: any;
 
@@ -98,10 +99,10 @@ export class LeadHomeComponent implements OnInit {
           this.commentsCount = comments.length;
           this.questionsCount = questions.length;
           this.challengesByTeam = challenges
-            .filter((c) => c.type === ChallengeTypeEnumApi.ByTeam)
+            .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByTeam)
             .slice(0, 5);
           this.challengesByUser = challenges
-            .filter((c) => c.type === ChallengeTypeEnumApi.ByUser)
+            .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByUser)
             .slice(0, 5);
         }),
         switchMap(() => this.getScore({ timeframe: ScoreTimeframeEnumApi.Week } as GetScoresRequestParams)),
@@ -181,7 +182,7 @@ export class LeadHomeComponent implements OnInit {
     );
   }
 
-  filterPrograms(teams: TeamApi[]) {
+  filterPrograms(teams: TeamDtoApi[]) {
     this.getProgramRuns(teams.map((t) => t.id));
   }
 
@@ -195,7 +196,10 @@ export class LeadHomeComponent implements OnInit {
   }
 
   @memoize()
-  getUser(id: string) {
+  getUser(id: string): Observable<UserDtoApi | undefined> {
+    if (!id) {
+      return of(undefined);
+    }
     return this.userService.getUsers({ ids: id }).pipe(map((u) => u.shift()));
   }
 }

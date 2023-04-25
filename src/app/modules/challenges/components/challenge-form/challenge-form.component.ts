@@ -10,7 +10,13 @@ import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ChallengeApi, ChallengeTypeEnumApi, CreateChallengeDtoApi, TeamApi } from 'src/app/sdk';
+import {
+  ChallengeDtoApi,
+  ChallengeTypeEnumApi,
+  CreateChallengeDtoApi,
+  TeamApi,
+  TeamDtoApi,
+} from 'src/app/sdk';
 import { ChallengeForm } from '../../models/challenge.form';
 import { ChallengesRestService } from '../../services/challenges-rest.service';
 
@@ -30,8 +36,8 @@ export class ChallengeFormComponent implements OnInit {
   defaultType = ChallengeTypeEnumApi.ByUser;
 
   challengeForm!: IFormGroup<ChallengeForm>;
-  editedChallenge!: ChallengeApi;
-  teams: TeamApi[] = [];
+  editedChallenge!: ChallengeDtoApi;
+  teams: TeamDtoApi[] = [];
   // Dates
   hoveredDate!: NgbDate | null;
   fromDate!: NgbDate;
@@ -81,7 +87,7 @@ export class ChallengeFormComponent implements OnInit {
       .subscribe();
   }
 
-  initForm(challenge?: ChallengeApi) {
+  initForm(challenge?: ChallengeDtoApi) {
     this.challengeForm = this.fb.group<ChallengeForm>({
       name: [challenge?.name ?? '', [Validators.required]],
       type: [challenge?.type ?? this.defaultType, [Validators.required]],

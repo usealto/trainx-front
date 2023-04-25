@@ -1,17 +1,19 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { combineLatest, forkJoin, tap } from 'rxjs';
+import { combineLatest, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import {
   AnswerFormatTypeEnumApi,
   PatchQuestionDtoApi,
   PatchQuestionRequestParams,
+  ProgramApi,
   ProgramDtoApi,
-  QuestionApi,
+  QuestionDtoApi,
   QuestionTypeEnumApi,
   TagApi,
+  TagDtoApi,
 } from 'src/app/sdk';
 import { QuestionForm } from '../../../models/question.form';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
@@ -26,14 +28,14 @@ import { TagsRestService } from '../../../services/tags-rest.service';
 export class QuestionFormComponent implements OnInit {
   I18ns = I18ns;
   @Input() program: ProgramDtoApi | undefined;
-  @Input() question?: QuestionApi;
-  @Output() createdQuestion = new EventEmitter<QuestionApi>();
+  @Input() question?: QuestionDtoApi;
+  @Output() createdQuestion = new EventEmitter<QuestionDtoApi>();
   private fb: IFormBuilder;
   questionForm!: IFormGroup<QuestionForm>;
   isEdit = false;
 
   programs: ProgramDtoApi[] = [];
-  tags: TagApi[] = [];
+  tags: TagDtoApi[] = [];
 
   constructor(
     private readonly programService: ProgramsRestService,
@@ -111,7 +113,7 @@ export class QuestionFormComponent implements OnInit {
           title,
           type,
           tags: tags.map((id) => ({ id } as TagApi)),
-          programs: programs.map((id) => ({ id } as ProgramDtoApi)),
+          programs: programs.map((id) => ({ id } as ProgramApi)),
           answerType,
           answersAccepted: [answersAccepted],
           answersWrong: [answersWrong1, answersWrong2, answersWrong3].filter((a) => !!a),
@@ -128,7 +130,7 @@ export class QuestionFormComponent implements OnInit {
         title: title,
         type: type,
         tags: tags.map((id) => ({ id } as TagApi)),
-        programs: programs.map((id) => ({ id } as ProgramDtoApi)),
+        programs: programs.map((id) => ({ id } as ProgramApi)),
         answerType: answerType,
         answersAccepted: [answersAccepted],
         answersWrong: [answersWrong1, answersWrong2, answersWrong3].filter((a) => !!a),

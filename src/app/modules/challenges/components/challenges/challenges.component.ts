@@ -4,7 +4,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ChallengeApi, ChallengeTypeEnumApi, TeamApi, UserDtoApi } from 'src/app/sdk';
+import { ChallengeDtoApi, ChallengeTypeEnumApi, TeamDtoApi, UserDtoApi } from 'src/app/sdk';
 import { ChallengesRestService } from '../../services/challenges-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 
@@ -21,14 +21,14 @@ export class ChallengesComponent implements OnInit {
   //
   byTeamPage = 1;
   byTeamCount = 0;
-  challengesByTeam: ChallengeApi[] = [];
-  challengesByTeamDisplay: ChallengeApi[] = [];
+  challengesByTeam: ChallengeDtoApi[] = [];
+  challengesByTeamDisplay: ChallengeDtoApi[] = [];
   //
   byUserPage = 1;
   byUserCount = 0;
-  challengesByUser: ChallengeApi[] = [];
-  challengesByUserDisplay: ChallengeApi[] = [];
-  filters: { teams?: TeamApi[]; status?: string; search?: string } = {};
+  challengesByUser: ChallengeDtoApi[] = [];
+  challengesByUserDisplay: ChallengeDtoApi[] = [];
+  filters: { teams?: TeamDtoApi[]; status?: string; search?: string } = {};
 
   constructor(
     private readonly challengesRestService: ChallengesRestService,
@@ -60,7 +60,7 @@ export class ChallengesComponent implements OnInit {
       .subscribe();
   }
 
-  filterChallengesByTeam(teams: TeamApi[], type: ChallengeTypeEnumApi) {
+  filterChallengesByTeam(teams: TeamDtoApi[], type: ChallengeTypeEnumApi) {
     this.filters.teams = teams;
 
     if (type === ChallengeTypeEnumApi.ByTeam) {
@@ -89,7 +89,10 @@ export class ChallengesComponent implements OnInit {
     }
   }
 
-  filterByTeam(ch: ChallengeApi, teams: TeamApi[]): boolean {
+  filterByTeam(ch: ChallengeDtoApi, teams: TeamDtoApi[]): boolean {
+    if (!ch.teams) {
+      return false;
+    }
     return ch.teams.some((t) => teams.some((te) => te.id === t.id));
   }
 

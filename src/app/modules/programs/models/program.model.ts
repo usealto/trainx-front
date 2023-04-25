@@ -1,6 +1,6 @@
-import { TeamApi } from 'src/app/sdk';
+import { TeamDtoApi } from 'src/app/sdk';
 
 export interface ProgramFilters {
-  teams?: TeamApi[];
+  teams?: TeamDtoApi[];
   search?: string;
 }

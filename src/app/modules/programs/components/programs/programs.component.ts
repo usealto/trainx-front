@@ -11,16 +11,17 @@ import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import {
   GetScoresRequestParams,
   ProgramDtoApi,
-  QuestionApi,
-  QuestionPaginatedResponseApi,
-  QuestionSubmittedApi,
+  QuestionDtoApi,
+  QuestionDtoPaginatedResponseApi,
+  QuestionSubmittedDtoApi,
   ScoreTimeframeEnumApi,
   ScoresResponseDtoApi,
-  TagApi,
+  TagDtoApi,
   UserDtoApi,
 } from 'src/app/sdk';
 import { ProgramFilters } from '../../models/program.model';
 import { QuestionFilters } from '../../models/question.model';
+import { TagFilters } from '../../models/tag.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { ProgramsService } from '../../services/programs.service';
@@ -30,7 +31,6 @@ import { ScoresRestService } from '../../services/scores-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
-import { TagFilters } from '../../models/tag.model';
 
 @UntilDestroy()
 @Component({
@@ -49,7 +49,7 @@ export class ProgramsComponent implements OnInit {
   programsCount = 0;
   programPageSize = 9;
   //
-  questions!: QuestionApi[];
+  questions!: QuestionDtoApi[];
   questionsPage = 1;
   questionsCount = 0;
   questionsPageSize = 10;
@@ -59,13 +59,13 @@ export class ProgramsComponent implements OnInit {
   //
   userCache = new Map<string, UserDtoApi>();
   pillsRowDisplayLimit = 3;
-  submittedQuestions!: QuestionSubmittedApi[];
+  submittedQuestions!: QuestionSubmittedDtoApi[];
   submittedQuestionsPage = 1;
   submittedQuestionsCount = 0;
   submittedQuestionsPageSize = 10;
   isSubmittedQuestionsLoading = true;
   //
-  tags!: TagApi[];
+  tags!: TagDtoApi[];
   tagsPage = 1;
   tagsCount = 0;
   tagsPageSize = 10;
@@ -107,7 +107,7 @@ export class ProgramsComponent implements OnInit {
     this.getTags().subscribe();
   }
 
-  openQuestionForm(question?: QuestionApi) {
+  openQuestionForm(question?: QuestionDtoApi) {
     const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
@@ -116,7 +116,7 @@ export class ProgramsComponent implements OnInit {
     canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
   }
 
-  openTagForm(tag?: TagApi) {
+  openTagForm(tag?: TagDtoApi) {
     const canvasRef = this.offcanvasService.open(TagsFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
@@ -182,7 +182,7 @@ export class ProgramsComponent implements OnInit {
     return this.profileStore.users.value.filter((u) => filter.some((i) => i === u.id));
   }
 
-  getScoresfromQuestions(questions: QuestionPaginatedResponseApi): Observable<ScoresResponseDtoApi> {
+  getScoresfromQuestions(questions: QuestionDtoPaginatedResponseApi): Observable<ScoresResponseDtoApi> {
     const ids = questions.data?.map((q) => q.id);
     return this.scoresServices
       .getQuestionScore({
@@ -264,7 +264,7 @@ export class ProgramsComponent implements OnInit {
       );
   }
 
-  getProgramsfromTags(tags: TagApi[]) {
+  getProgramsfromTags(tags: TagDtoApi[]) {
     const ids = tags.map((tag) => tag.id);
     this.isTagProgramsLoading = true;
     this.programRestService

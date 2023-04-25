@@ -4,8 +4,8 @@ import {
   CreateQuestionDtoApi,
   GetQuestionsRequestParams,
   PatchQuestionRequestParams,
-  QuestionApi,
-  QuestionPaginatedResponseApi,
+  QuestionDtoApi,
+  QuestionDtoPaginatedResponseApi,
   QuestionsApiService,
 } from 'src/app/sdk';
 
@@ -15,7 +15,7 @@ import {
 export class QuestionsRestService {
   constructor(private readonly questionApi: QuestionsApiService) {}
 
-  getQuestions(req?: GetQuestionsRequestParams): Observable<QuestionApi[]> {
+  getQuestions(req?: GetQuestionsRequestParams): Observable<QuestionDtoApi[]> {
     const par = {
       ...req,
       page: req?.page ?? 1,
@@ -25,7 +25,7 @@ export class QuestionsRestService {
     return this.questionApi.getQuestions(par).pipe(map((r) => r.data ?? []));
   }
 
-  getQuestionsPaginated(req?: GetQuestionsRequestParams): Observable<QuestionPaginatedResponseApi> {
+  getQuestionsPaginated(req?: GetQuestionsRequestParams): Observable<QuestionDtoPaginatedResponseApi> {
     const par = {
       ...req,
       page: req?.page ?? 1,

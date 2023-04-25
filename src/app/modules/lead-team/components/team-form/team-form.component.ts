@@ -5,11 +5,12 @@ import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import {
   ProgramDtoApi,
-  TeamApi,
+  TeamDtoApi,
   UserDtoApi,
   CreateTeamDtoApi,
   PatchTeamDtoApi,
   PatchProgramDtoApi,
+  TeamApi,
 } from 'src/app/sdk';
 import { TeamForm } from '../../model/team.form';
 import { combineLatest, tap } from 'rxjs';
@@ -24,14 +25,14 @@ import { TeamsRestService } from '../../services/teams-rest.service';
 })
 export class TeamFormComponent implements OnInit {
   I18ns = I18ns;
-  @Input() team?: TeamApi;
-  @Output() createdTag = new EventEmitter<TeamApi>();
+  @Input() team?: TeamDtoApi;
+  @Output() createdTag = new EventEmitter<TeamDtoApi>();
   private fb: IFormBuilder;
   teamForm!: IFormGroup<TeamForm>;
   isEdit = false;
   programs: ProgramDtoApi[] = [];
   users: UserDtoApi[] = [];
-  userFilters = { teams: [] as TeamApi[] };
+  userFilters = { teams: [] as TeamDtoApi[] };
 
   constructor(
     public activeOffcanvas: NgbActiveOffcanvas,
@@ -107,26 +108,28 @@ export class TeamFormComponent implements OnInit {
         shortName: shortName,
         longName: longName,
       };
-      this.teamsRestService
-        .updateTeam({ id: this.team!.id, patchTeamDtoApi: params })
-        .pipe(
-          tap((team) => {
-            if (team) {
-              this.updateTeamInfos(team, programs, invitationEmails);
-            }
-          }),
-          tap((team) => {
-            this.createdTag.emit(team);
-            this.activeOffcanvas.close();
-          }),
-        )
-        .subscribe();
+      if (this.team?.id) {
+        this.teamsRestService
+          .updateTeam({ id: this.team.id, patchTeamDtoApi: params })
+          .pipe(
+            tap((team) => {
+              if (team) {
+                this.updateTeamInfos(team, programs, invitationEmails);
+              }
+            }),
+            tap((team) => {
+              this.createdTag.emit(team);
+              this.activeOffcanvas.close();
+            }),
+          )
+          .subscribe();
+      }
     }
   }
 
-  updateTeamInfos(team: TeamApi, programs: ProgramDtoApi[], members: UserDtoApi[]) {
+  updateTeamInfos(team: TeamDtoApi, programs: ProgramDtoApi[], members: UserDtoApi[]) {
     programs.forEach((program) => {
-      this.programService.updateProgram(program.id, { teams: [team] }).subscribe();
+      this.programService.updateProgram(program.id, { teams: [{ id: team.id } as TeamApi] }).subscribe();
     });
     members.forEach((member) => {
       this.userRestService.patchUser(member.id, { teamId: team.id }).subscribe();

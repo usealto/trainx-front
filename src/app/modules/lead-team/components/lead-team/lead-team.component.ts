@@ -5,7 +5,7 @@ import { UsersRestService } from 'src/app/modules/profile/services/users-rest.se
 import { combineLatest, map, tap } from 'rxjs';
 import { TeamStore } from '../../team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { TeamApi, UserDtoApi } from 'src/app/sdk';
+import { TeamDtoApi, UserDtoApi } from 'src/app/sdk';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
@@ -19,8 +19,8 @@ import { UserFilters } from 'src/app/modules/profile/models/user.model';
 export class LeadTeamComponent implements OnInit {
   I18ns = I18ns;
   activeUsersCount = 0;
-  teams: TeamApi[] = [];
-  paginatedTeams!: TeamApi[];
+  teams: TeamDtoApi[] = [];
+  paginatedTeams!: TeamDtoApi[];
   teamsPage = 1;
   teamsPageSize = 5;
 
@@ -76,7 +76,7 @@ export class LeadTeamComponent implements OnInit {
     );
   }
 
-  filterUsers(selectedTeams: TeamApi[] = []) {
+  filterUsers(selectedTeams: TeamDtoApi[] = []) {
     const filter = {
       teams: selectedTeams,
       status: this.selectedStatus ? this.selectedStatus.value : undefined,
@@ -99,7 +99,7 @@ export class LeadTeamComponent implements OnInit {
     this.changeUsersPage(res);
   }
 
-  openTeamForm(team?: TeamApi) {
+  openTeamForm(team?: TeamDtoApi) {
     const canvasRef = this.offcanvasService.open(TeamFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',

@@ -1,6 +1,6 @@
-import { TeamApi } from 'src/app/sdk';
+import { TeamDtoApi } from 'src/app/sdk';
 
 export interface UserFilters {
-  teams: TeamApi[];
+  teams: TeamDtoApi[];
   status?: boolean;
 }

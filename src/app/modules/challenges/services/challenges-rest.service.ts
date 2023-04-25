@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { filter, map, Observable } from 'rxjs';
 import {
-  ChallengeApi,
-  ChallengePaginatedResponseApi,
-  ChallengeResponseApi,
+  ChallengeDtoApi,
+  ChallengeDtoPaginatedResponseApi,
+  ChallengeDtoResponseApi,
   ChallengesApiService,
   CreateChallengeDtoApi,
   GetChallengesRequestParams,
@@ -16,14 +16,14 @@ import {
 export class ChallengesRestService {
   constructor(private readonly challengeApi: ChallengesApiService) {}
 
-  getChallenge(id: string): Observable<ChallengeApi> {
+  getChallenge(id: string): Observable<ChallengeDtoApi> {
     return this.challengeApi.getChallengeById({ id }).pipe(
       filter((x) => !!x),
-      map((c) => c.data || ({} as ChallengeApi)),
+      map((c) => c.data || ({} as ChallengeDtoApi)),
     );
   }
 
-  getChallenges(req?: GetChallengesRequestParams): Observable<ChallengeApi[]> {
+  getChallenges(req?: GetChallengesRequestParams): Observable<ChallengeDtoApi[]> {
     const par = {
       ...req,
       page: req?.page ?? 1,
@@ -32,7 +32,7 @@ export class ChallengesRestService {
     return this.challengeApi.getChallenges(par).pipe(map((d) => d.data ?? []));
   }
 
-  getChallengesPaginated(req?: GetChallengesRequestParams): Observable<ChallengePaginatedResponseApi> {
+  getChallengesPaginated(req?: GetChallengesRequestParams): Observable<ChallengeDtoPaginatedResponseApi> {
     const par = {
       ...req,
       page: req?.page ?? 1,
@@ -45,7 +45,10 @@ export class ChallengesRestService {
     return this.challengeApi.createChallenge({ createChallengeDtoApi });
   }
 
-  updateChallenge(id: string, patchChallengeDtoApi: PatchChallengeDtoApi): Observable<ChallengeResponseApi> {
+  updateChallenge(
+    id: string,
+    patchChallengeDtoApi: PatchChallengeDtoApi,
+  ): Observable<ChallengeDtoResponseApi> {
     return this.challengeApi.patchChallenge({ id, patchChallengeDtoApi });
   }
 }

@@ -3,7 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { combineLatest, tap } from 'rxjs';
 import { IFormGroup } from 'src/app/core/form-types';
 import { getTranslation, I18ns } from 'src/app/core/utils/i18n/I18n';
-import { PriorityEnumApi, TagApi, TeamApi } from 'src/app/sdk';
+import { PriorityEnumApi, TagDtoApi, TeamDtoApi } from 'src/app/sdk';
 import { TeamsRestService } from '../../../../lead-team/services/teams-rest.service';
 import { ProgramForm } from '../../../models/programs.form';
 import { TagsRestService } from '../../../services/tags-rest.service';
@@ -19,8 +19,8 @@ export class ProgramsFormComponent implements OnInit {
   @Input() isEdit = false;
 
   I18ns = I18ns;
-  tags: TagApi[] = [];
-  teams: TeamApi[] = [];
+  tags: TagDtoApi[] = [];
+  teams: TeamDtoApi[] = [];
   priorities = Object.values(PriorityEnumApi).map((p) => ({
     id: p,
     value: getTranslation(I18ns.shared.priorities, p.toLowerCase()),

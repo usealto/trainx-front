@@ -75,7 +75,7 @@
             <td>
               <alto-colored-pill-list
                 [hasDynamicColor]="true"
-                [data]="chal.teams"
+                [data]="chal.teams || []"
                 [limit]="3"
               ></alto-colored-pill-list>
             </td>
@@ -156,12 +156,12 @@
           >
             <td>{{ chal.name }}</td>
             <td>
-              <alto-img-badge [url]="(getUser(chal.leadUser) | async)?.pictureUrl"></alto-img-badge>
+              <alto-img-badge [url]="(getUser(chal.leadUser?.id ?? '') | async)?.pictureUrl"></alto-img-badge>
             </td>
             <td>
               <alto-colored-pill-list
                 [hasDynamicColor]="true"
-                [data]="chal.teams"
+                [data]="chal.teams ?? []"
                 [limit]="3"
               ></alto-colored-pill-list>
             </td>

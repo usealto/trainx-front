@@ -4,8 +4,8 @@ import {
   CreateTagDtoApi,
   GetTagsRequestParams,
   PatchTagRequestParams,
-  TagApi,
-  TagPaginatedResponseApi,
+  TagDtoApi,
+  TagDtoPaginatedResponseApi,
   TagsApiService,
 } from 'src/app/sdk';
 import { ProgramsStore } from '../programs.store';
@@ -16,7 +16,7 @@ import { ProgramsStore } from '../programs.store';
 export class TagsRestService {
   constructor(private readonly tagApi: TagsApiService, private readonly programStore: ProgramsStore) {}
 
-  getTags(req?: GetTagsRequestParams): Observable<TagApi[]> {
+  getTags(req?: GetTagsRequestParams): Observable<TagDtoApi[]> {
     if (this.programStore.tags.value.length) {
       return this.programStore.tags.value$;
     } else {
@@ -34,7 +34,7 @@ export class TagsRestService {
     }
   }
 
-  getTagsPaginated(req?: GetTagsRequestParams): Observable<TagPaginatedResponseApi> {
+  getTagsPaginated(req?: GetTagsRequestParams): Observable<TagDtoPaginatedResponseApi> {
     const par = {
       ...req,
       page: req?.page ?? 1,
@@ -44,11 +44,11 @@ export class TagsRestService {
     return this.tagApi.getTags(par).pipe();
   }
 
-  createTag(createTagDtoApi: CreateTagDtoApi): Observable<TagApi | undefined> {
+  createTag(createTagDtoApi: CreateTagDtoApi): Observable<TagDtoApi | undefined> {
     return this.tagApi.createTag({ createTagDtoApi }).pipe(map((r) => r.data));
   }
 
-  updateTag(patchTagRequestParams: PatchTagRequestParams): Observable<TagApi | undefined> {
+  updateTag(patchTagRequestParams: PatchTagRequestParams): Observable<TagDtoApi | undefined> {
     return this.tagApi.patchTag(patchTagRequestParams).pipe(map((r) => r.data));
   }
 }
