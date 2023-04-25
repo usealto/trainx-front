@@ -247,6 +247,19 @@ export const FR = {
         active: 'Actif',
         inactive: 'Inactif',
       },
+      forms: {
+        edition: {
+          title: 'Modifier un membre',
+          subtitle: 'Modifiez le role de vos collaborateurs et assignez leur une équipe.',
+          teams: 'Équipes',
+          teamsPlaceholder: 'Rechercher dans vos équipes',
+          type: "Type d'utilisateur",
+          standardType: 'Standard',
+          adminType: 'Administrateur',
+          typeSubtitle:
+            'Les utilisateurs de type "Administrateur" peuvent créer des programmes, des challenges et ons accés à plus de statistiques détaillées sur les résultats de leurs équipes.',
+        },
+      },
     },
     teams: {
       title: 'Vos équipes',

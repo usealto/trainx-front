@@ -9,7 +9,7 @@ import { TeamDtoApi, UserDtoApi } from 'src/app/sdk';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
-import { UserFilters } from 'src/app/modules/profile/models/user.model';
+import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
 
 @Component({
   selector: 'alto-lead-team',
@@ -106,6 +106,15 @@ export class LeadTeamComponent implements OnInit {
     });
 
     canvasRef.componentInstance.team = team;
+  }
+
+  openUserEditionForm(user: UserDtoApi) {
+    const canvasRef = this.offcanvasService.open(UserEditFormComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto',
+    });
+
+    canvasRef.componentInstance.user = user;
   }
 
   getTeamUsersCount(teamId: string) {
