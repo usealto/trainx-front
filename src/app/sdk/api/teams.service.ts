@@ -27,11 +27,11 @@ import { PatchTeamDtoApi } from '../model/patchTeamDto';
 // @ts-ignore
 import { PutTeamDtoApi } from '../model/putTeamDto';
 // @ts-ignore
-import { TeamCreatedResponseApi } from '../model/teamCreatedResponse';
+import { TeamDtoCreatedResponseApi } from '../model/teamDtoCreatedResponse';
 // @ts-ignore
-import { TeamPaginatedResponseApi } from '../model/teamPaginatedResponse';
+import { TeamDtoPaginatedResponseApi } from '../model/teamDtoPaginatedResponse';
 // @ts-ignore
-import { TeamResponseApi } from '../model/teamResponse';
+import { TeamDtoResponseApi } from '../model/teamDtoResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -172,9 +172,9 @@ export class TeamsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createTeam(requestParameters: CreateTeamRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TeamCreatedResponseApi>;
-    public createTeam(requestParameters: CreateTeamRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TeamCreatedResponseApi>>;
-    public createTeam(requestParameters: CreateTeamRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TeamCreatedResponseApi>>;
+    public createTeam(requestParameters: CreateTeamRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TeamDtoCreatedResponseApi>;
+    public createTeam(requestParameters: CreateTeamRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TeamDtoCreatedResponseApi>>;
+    public createTeam(requestParameters: CreateTeamRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TeamDtoCreatedResponseApi>>;
     public createTeam(requestParameters: CreateTeamRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createTeamDtoApi = requestParameters.createTeamDtoApi;
         if (createTeamDtoApi === null || createTeamDtoApi === undefined) {
@@ -247,7 +247,7 @@ export class TeamsApiService {
         }
 
         let localVarPath = `/v1/teams`;
-        return this.httpClient.request<TeamCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<TeamDtoCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: createTeamDtoApi,
@@ -354,9 +354,9 @@ export class TeamsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTeamById(requestParameters: GetTeamByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TeamResponseApi>;
-    public getTeamById(requestParameters: GetTeamByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TeamResponseApi>>;
-    public getTeamById(requestParameters: GetTeamByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TeamResponseApi>>;
+    public getTeamById(requestParameters: GetTeamByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TeamDtoResponseApi>;
+    public getTeamById(requestParameters: GetTeamByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TeamDtoResponseApi>>;
+    public getTeamById(requestParameters: GetTeamByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TeamDtoResponseApi>>;
     public getTeamById(requestParameters: GetTeamByIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -420,7 +420,7 @@ export class TeamsApiService {
         }
 
         let localVarPath = `/v1/teams/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<TeamResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<TeamDtoResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -440,9 +440,9 @@ export class TeamsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTeams(requestParameters: GetTeamsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TeamPaginatedResponseApi>;
-    public getTeams(requestParameters: GetTeamsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TeamPaginatedResponseApi>>;
-    public getTeams(requestParameters: GetTeamsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TeamPaginatedResponseApi>>;
+    public getTeams(requestParameters: GetTeamsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TeamDtoPaginatedResponseApi>;
+    public getTeams(requestParameters: GetTeamsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TeamDtoPaginatedResponseApi>>;
+    public getTeams(requestParameters: GetTeamsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TeamDtoPaginatedResponseApi>>;
     public getTeams(requestParameters: GetTeamsRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createdBy = requestParameters.createdBy;
         const sortBy = requestParameters.sortBy;
@@ -537,7 +537,7 @@ export class TeamsApiService {
         }
 
         let localVarPath = `/v1/teams`;
-        return this.httpClient.request<TeamPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<TeamDtoPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -557,9 +557,9 @@ export class TeamsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public patchTeam(requestParameters: PatchTeamRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TeamResponseApi>;
-    public patchTeam(requestParameters: PatchTeamRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TeamResponseApi>>;
-    public patchTeam(requestParameters: PatchTeamRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TeamResponseApi>>;
+    public patchTeam(requestParameters: PatchTeamRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TeamDtoResponseApi>;
+    public patchTeam(requestParameters: PatchTeamRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TeamDtoResponseApi>>;
+    public patchTeam(requestParameters: PatchTeamRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TeamDtoResponseApi>>;
     public patchTeam(requestParameters: PatchTeamRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -636,7 +636,7 @@ export class TeamsApiService {
         }
 
         let localVarPath = `/v1/teams/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<TeamResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<TeamDtoResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: patchTeamDtoApi,
@@ -657,9 +657,9 @@ export class TeamsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public putTeam(requestParameters: PutTeamRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TeamResponseApi>;
-    public putTeam(requestParameters: PutTeamRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TeamResponseApi>>;
-    public putTeam(requestParameters: PutTeamRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TeamResponseApi>>;
+    public putTeam(requestParameters: PutTeamRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TeamDtoResponseApi>;
+    public putTeam(requestParameters: PutTeamRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TeamDtoResponseApi>>;
+    public putTeam(requestParameters: PutTeamRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TeamDtoResponseApi>>;
     public putTeam(requestParameters: PutTeamRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -736,7 +736,7 @@ export class TeamsApiService {
         }
 
         let localVarPath = `/v1/teams/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<TeamResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<TeamDtoResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: putTeamDtoApi,

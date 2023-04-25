@@ -21,7 +21,7 @@ export interface PatchChallengeDtoApi {
      * Specifies the teams associated with the challenge. Optional.
      */
     teams?: Array<TeamApi>;
-    leadUser?: string;
+    leadUserId?: string;
     leadTeam?: TeamApi;
     name?: string;
     guessesPerDay?: number;

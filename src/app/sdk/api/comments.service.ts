@@ -19,11 +19,11 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { CommentCreatedResponseApi } from '../model/commentCreatedResponse';
+import { CommentDtoCreatedResponseApi } from '../model/commentDtoCreatedResponse';
 // @ts-ignore
-import { CommentPaginatedResponseApi } from '../model/commentPaginatedResponse';
+import { CommentDtoPaginatedResponseApi } from '../model/commentDtoPaginatedResponse';
 // @ts-ignore
-import { CommentResponseApi } from '../model/commentResponse';
+import { CommentDtoResponseApi } from '../model/commentDtoResponse';
 // @ts-ignore
 import { CreateCommentDtoApi } from '../model/createCommentDto';
 // @ts-ignore
@@ -174,9 +174,9 @@ export class CommentsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createComment(requestParameters: CreateCommentRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CommentCreatedResponseApi>;
-    public createComment(requestParameters: CreateCommentRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CommentCreatedResponseApi>>;
-    public createComment(requestParameters: CreateCommentRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CommentCreatedResponseApi>>;
+    public createComment(requestParameters: CreateCommentRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CommentDtoCreatedResponseApi>;
+    public createComment(requestParameters: CreateCommentRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CommentDtoCreatedResponseApi>>;
+    public createComment(requestParameters: CreateCommentRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CommentDtoCreatedResponseApi>>;
     public createComment(requestParameters: CreateCommentRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createCommentDtoApi = requestParameters.createCommentDtoApi;
         if (createCommentDtoApi === null || createCommentDtoApi === undefined) {
@@ -249,7 +249,7 @@ export class CommentsApiService {
         }
 
         let localVarPath = `/v1/comments`;
-        return this.httpClient.request<CommentCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<CommentDtoCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: createCommentDtoApi,
@@ -356,9 +356,9 @@ export class CommentsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getCommentById(requestParameters: GetCommentByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CommentResponseApi>;
-    public getCommentById(requestParameters: GetCommentByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CommentResponseApi>>;
-    public getCommentById(requestParameters: GetCommentByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CommentResponseApi>>;
+    public getCommentById(requestParameters: GetCommentByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CommentDtoResponseApi>;
+    public getCommentById(requestParameters: GetCommentByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CommentDtoResponseApi>>;
+    public getCommentById(requestParameters: GetCommentByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CommentDtoResponseApi>>;
     public getCommentById(requestParameters: GetCommentByIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -422,7 +422,7 @@ export class CommentsApiService {
         }
 
         let localVarPath = `/v1/comments/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<CommentResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<CommentDtoResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -442,9 +442,9 @@ export class CommentsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getComments(requestParameters: GetCommentsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CommentPaginatedResponseApi>;
-    public getComments(requestParameters: GetCommentsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CommentPaginatedResponseApi>>;
-    public getComments(requestParameters: GetCommentsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CommentPaginatedResponseApi>>;
+    public getComments(requestParameters: GetCommentsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CommentDtoPaginatedResponseApi>;
+    public getComments(requestParameters: GetCommentsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CommentDtoPaginatedResponseApi>>;
+    public getComments(requestParameters: GetCommentsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CommentDtoPaginatedResponseApi>>;
     public getComments(requestParameters: GetCommentsRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createdBy = requestParameters.createdBy;
         const sortBy = requestParameters.sortBy;
@@ -549,7 +549,7 @@ export class CommentsApiService {
         }
 
         let localVarPath = `/v1/comments`;
-        return this.httpClient.request<CommentPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<CommentDtoPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -569,9 +569,9 @@ export class CommentsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public patchComment(requestParameters: PatchCommentRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CommentResponseApi>;
-    public patchComment(requestParameters: PatchCommentRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CommentResponseApi>>;
-    public patchComment(requestParameters: PatchCommentRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CommentResponseApi>>;
+    public patchComment(requestParameters: PatchCommentRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CommentDtoResponseApi>;
+    public patchComment(requestParameters: PatchCommentRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CommentDtoResponseApi>>;
+    public patchComment(requestParameters: PatchCommentRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CommentDtoResponseApi>>;
     public patchComment(requestParameters: PatchCommentRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -648,7 +648,7 @@ export class CommentsApiService {
         }
 
         let localVarPath = `/v1/comments/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<CommentResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<CommentDtoResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: patchCommentDtoApi,
@@ -669,9 +669,9 @@ export class CommentsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public putComment(requestParameters: PutCommentRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CommentResponseApi>;
-    public putComment(requestParameters: PutCommentRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CommentResponseApi>>;
-    public putComment(requestParameters: PutCommentRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CommentResponseApi>>;
+    public putComment(requestParameters: PutCommentRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CommentDtoResponseApi>;
+    public putComment(requestParameters: PutCommentRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CommentDtoResponseApi>>;
+    public putComment(requestParameters: PutCommentRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CommentDtoResponseApi>>;
     public putComment(requestParameters: PutCommentRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -748,7 +748,7 @@ export class CommentsApiService {
         }
 
         let localVarPath = `/v1/comments/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<CommentResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<CommentDtoResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: putCommentDtoApi,

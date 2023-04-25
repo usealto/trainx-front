@@ -13,6 +13,7 @@ import { ChallengeStateEnumApi } from './challengeStateEnum';
 import { ChallengeAssignmentApi } from './challengeAssignment';
 import { TeamApi } from './team';
 import { ChallengeTypeEnumApi } from './challengeTypeEnum';
+import { UserApi } from './user';
 
 
 export interface ChallengeApi { 
@@ -29,8 +30,10 @@ export interface ChallengeApi {
     scoreMinPercent: number;
     startDate: Date;
     endDate: Date;
-    leadUser: string;
-    leadTeam: TeamApi;
+    leadUserId?: string;
+    leadUser?: UserApi;
+    leadTeamId?: string;
+    leadTeam?: TeamApi;
     teams: Array<TeamApi>;
     assignments: Array<ChallengeAssignmentApi>;
     /**

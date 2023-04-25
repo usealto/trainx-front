@@ -27,11 +27,11 @@ import { PatchQuestionSubmittedDtoApi } from '../model/patchQuestionSubmittedDto
 // @ts-ignore
 import { PutQuestionSubmittedDtoApi } from '../model/putQuestionSubmittedDto';
 // @ts-ignore
-import { QuestionSubmittedCreatedResponseApi } from '../model/questionSubmittedCreatedResponse';
+import { QuestionSubmittedDtoCreatedResponseApi } from '../model/questionSubmittedDtoCreatedResponse';
 // @ts-ignore
-import { QuestionSubmittedPaginatedResponseApi } from '../model/questionSubmittedPaginatedResponse';
+import { QuestionSubmittedDtoPaginatedResponseApi } from '../model/questionSubmittedDtoPaginatedResponse';
 // @ts-ignore
-import { QuestionSubmittedResponseApi } from '../model/questionSubmittedResponse';
+import { QuestionSubmittedDtoResponseApi } from '../model/questionSubmittedDtoResponse';
 // @ts-ignore
 import { QuestionSubmittedStatusEnumApi } from '../model/questionSubmittedStatusEnum';
 
@@ -176,9 +176,9 @@ export class QuestionsSubmittedApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createQuestionSubmitted(requestParameters: CreateQuestionSubmittedRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<QuestionSubmittedCreatedResponseApi>;
-    public createQuestionSubmitted(requestParameters: CreateQuestionSubmittedRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<QuestionSubmittedCreatedResponseApi>>;
-    public createQuestionSubmitted(requestParameters: CreateQuestionSubmittedRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<QuestionSubmittedCreatedResponseApi>>;
+    public createQuestionSubmitted(requestParameters: CreateQuestionSubmittedRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<QuestionSubmittedDtoCreatedResponseApi>;
+    public createQuestionSubmitted(requestParameters: CreateQuestionSubmittedRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<QuestionSubmittedDtoCreatedResponseApi>>;
+    public createQuestionSubmitted(requestParameters: CreateQuestionSubmittedRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<QuestionSubmittedDtoCreatedResponseApi>>;
     public createQuestionSubmitted(requestParameters: CreateQuestionSubmittedRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createQuestionSubmittedDtoApi = requestParameters.createQuestionSubmittedDtoApi;
         if (createQuestionSubmittedDtoApi === null || createQuestionSubmittedDtoApi === undefined) {
@@ -251,7 +251,7 @@ export class QuestionsSubmittedApiService {
         }
 
         let localVarPath = `/v1/questions-submitted`;
-        return this.httpClient.request<QuestionSubmittedCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<QuestionSubmittedDtoCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: createQuestionSubmittedDtoApi,
@@ -358,9 +358,9 @@ export class QuestionsSubmittedApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getQuestionSubmittedById(requestParameters: GetQuestionSubmittedByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<QuestionSubmittedResponseApi>;
-    public getQuestionSubmittedById(requestParameters: GetQuestionSubmittedByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<QuestionSubmittedResponseApi>>;
-    public getQuestionSubmittedById(requestParameters: GetQuestionSubmittedByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<QuestionSubmittedResponseApi>>;
+    public getQuestionSubmittedById(requestParameters: GetQuestionSubmittedByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<QuestionSubmittedDtoResponseApi>;
+    public getQuestionSubmittedById(requestParameters: GetQuestionSubmittedByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<QuestionSubmittedDtoResponseApi>>;
+    public getQuestionSubmittedById(requestParameters: GetQuestionSubmittedByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<QuestionSubmittedDtoResponseApi>>;
     public getQuestionSubmittedById(requestParameters: GetQuestionSubmittedByIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -424,7 +424,7 @@ export class QuestionsSubmittedApiService {
         }
 
         let localVarPath = `/v1/questions-submitted/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<QuestionSubmittedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<QuestionSubmittedDtoResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -444,9 +444,9 @@ export class QuestionsSubmittedApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getQuestionsSubmitted(requestParameters: GetQuestionsSubmittedRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<QuestionSubmittedPaginatedResponseApi>;
-    public getQuestionsSubmitted(requestParameters: GetQuestionsSubmittedRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<QuestionSubmittedPaginatedResponseApi>>;
-    public getQuestionsSubmitted(requestParameters: GetQuestionsSubmittedRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<QuestionSubmittedPaginatedResponseApi>>;
+    public getQuestionsSubmitted(requestParameters: GetQuestionsSubmittedRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<QuestionSubmittedDtoPaginatedResponseApi>;
+    public getQuestionsSubmitted(requestParameters: GetQuestionsSubmittedRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<QuestionSubmittedDtoPaginatedResponseApi>>;
+    public getQuestionsSubmitted(requestParameters: GetQuestionsSubmittedRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<QuestionSubmittedDtoPaginatedResponseApi>>;
     public getQuestionsSubmitted(requestParameters: GetQuestionsSubmittedRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createdBy = requestParameters.createdBy;
         const sortBy = requestParameters.sortBy;
@@ -546,7 +546,7 @@ export class QuestionsSubmittedApiService {
         }
 
         let localVarPath = `/v1/questions-submitted`;
-        return this.httpClient.request<QuestionSubmittedPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<QuestionSubmittedDtoPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -566,9 +566,9 @@ export class QuestionsSubmittedApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public patchQuestionSubmitted(requestParameters: PatchQuestionSubmittedRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<QuestionSubmittedResponseApi>;
-    public patchQuestionSubmitted(requestParameters: PatchQuestionSubmittedRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<QuestionSubmittedResponseApi>>;
-    public patchQuestionSubmitted(requestParameters: PatchQuestionSubmittedRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<QuestionSubmittedResponseApi>>;
+    public patchQuestionSubmitted(requestParameters: PatchQuestionSubmittedRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<QuestionSubmittedDtoResponseApi>;
+    public patchQuestionSubmitted(requestParameters: PatchQuestionSubmittedRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<QuestionSubmittedDtoResponseApi>>;
+    public patchQuestionSubmitted(requestParameters: PatchQuestionSubmittedRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<QuestionSubmittedDtoResponseApi>>;
     public patchQuestionSubmitted(requestParameters: PatchQuestionSubmittedRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -645,7 +645,7 @@ export class QuestionsSubmittedApiService {
         }
 
         let localVarPath = `/v1/questions-submitted/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<QuestionSubmittedResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<QuestionSubmittedDtoResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: patchQuestionSubmittedDtoApi,
@@ -666,9 +666,9 @@ export class QuestionsSubmittedApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public putQuestionSubmitted(requestParameters: PutQuestionSubmittedRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<QuestionSubmittedResponseApi>;
-    public putQuestionSubmitted(requestParameters: PutQuestionSubmittedRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<QuestionSubmittedResponseApi>>;
-    public putQuestionSubmitted(requestParameters: PutQuestionSubmittedRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<QuestionSubmittedResponseApi>>;
+    public putQuestionSubmitted(requestParameters: PutQuestionSubmittedRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<QuestionSubmittedDtoResponseApi>;
+    public putQuestionSubmitted(requestParameters: PutQuestionSubmittedRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<QuestionSubmittedDtoResponseApi>>;
+    public putQuestionSubmitted(requestParameters: PutQuestionSubmittedRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<QuestionSubmittedDtoResponseApi>>;
     public putQuestionSubmitted(requestParameters: PutQuestionSubmittedRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -745,7 +745,7 @@ export class QuestionsSubmittedApiService {
         }
 
         let localVarPath = `/v1/questions-submitted/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<QuestionSubmittedResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<QuestionSubmittedDtoResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: putQuestionSubmittedDtoApi,

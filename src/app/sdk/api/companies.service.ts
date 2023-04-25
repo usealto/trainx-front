@@ -19,11 +19,11 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { CompanyCreatedResponseApi } from '../model/companyCreatedResponse';
+import { CompanyDtoCreatedResponseApi } from '../model/companyDtoCreatedResponse';
 // @ts-ignore
-import { CompanyPaginatedResponseApi } from '../model/companyPaginatedResponse';
+import { CompanyDtoPaginatedResponseApi } from '../model/companyDtoPaginatedResponse';
 // @ts-ignore
-import { CompanyResponseApi } from '../model/companyResponse';
+import { CompanyDtoResponseApi } from '../model/companyDtoResponse';
 // @ts-ignore
 import { CreateCompanyDtoApi } from '../model/createCompanyDto';
 // @ts-ignore
@@ -171,9 +171,9 @@ export class CompaniesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createCompany(requestParameters: CreateCompanyRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CompanyCreatedResponseApi>;
-    public createCompany(requestParameters: CreateCompanyRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CompanyCreatedResponseApi>>;
-    public createCompany(requestParameters: CreateCompanyRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CompanyCreatedResponseApi>>;
+    public createCompany(requestParameters: CreateCompanyRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CompanyDtoCreatedResponseApi>;
+    public createCompany(requestParameters: CreateCompanyRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CompanyDtoCreatedResponseApi>>;
+    public createCompany(requestParameters: CreateCompanyRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CompanyDtoCreatedResponseApi>>;
     public createCompany(requestParameters: CreateCompanyRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createCompanyDtoApi = requestParameters.createCompanyDtoApi;
         if (createCompanyDtoApi === null || createCompanyDtoApi === undefined) {
@@ -246,7 +246,7 @@ export class CompaniesApiService {
         }
 
         let localVarPath = `/v1/companies`;
-        return this.httpClient.request<CompanyCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<CompanyDtoCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: createCompanyDtoApi,
@@ -353,9 +353,9 @@ export class CompaniesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getCompanies(requestParameters: GetCompaniesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CompanyPaginatedResponseApi>;
-    public getCompanies(requestParameters: GetCompaniesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CompanyPaginatedResponseApi>>;
-    public getCompanies(requestParameters: GetCompaniesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CompanyPaginatedResponseApi>>;
+    public getCompanies(requestParameters: GetCompaniesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CompanyDtoPaginatedResponseApi>;
+    public getCompanies(requestParameters: GetCompaniesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CompanyDtoPaginatedResponseApi>>;
+    public getCompanies(requestParameters: GetCompaniesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CompanyDtoPaginatedResponseApi>>;
     public getCompanies(requestParameters: GetCompaniesRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createdBy = requestParameters.createdBy;
         const sortBy = requestParameters.sortBy;
@@ -450,7 +450,7 @@ export class CompaniesApiService {
         }
 
         let localVarPath = `/v1/companies`;
-        return this.httpClient.request<CompanyPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<CompanyDtoPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -470,9 +470,9 @@ export class CompaniesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getCompanyById(requestParameters: GetCompanyByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CompanyResponseApi>;
-    public getCompanyById(requestParameters: GetCompanyByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CompanyResponseApi>>;
-    public getCompanyById(requestParameters: GetCompanyByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CompanyResponseApi>>;
+    public getCompanyById(requestParameters: GetCompanyByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CompanyDtoResponseApi>;
+    public getCompanyById(requestParameters: GetCompanyByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CompanyDtoResponseApi>>;
+    public getCompanyById(requestParameters: GetCompanyByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CompanyDtoResponseApi>>;
     public getCompanyById(requestParameters: GetCompanyByIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -536,7 +536,7 @@ export class CompaniesApiService {
         }
 
         let localVarPath = `/v1/companies/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<CompanyResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<CompanyDtoResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -556,9 +556,9 @@ export class CompaniesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public patchCompany(requestParameters: PatchCompanyRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CompanyResponseApi>;
-    public patchCompany(requestParameters: PatchCompanyRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CompanyResponseApi>>;
-    public patchCompany(requestParameters: PatchCompanyRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CompanyResponseApi>>;
+    public patchCompany(requestParameters: PatchCompanyRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CompanyDtoResponseApi>;
+    public patchCompany(requestParameters: PatchCompanyRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CompanyDtoResponseApi>>;
+    public patchCompany(requestParameters: PatchCompanyRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CompanyDtoResponseApi>>;
     public patchCompany(requestParameters: PatchCompanyRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -635,7 +635,7 @@ export class CompaniesApiService {
         }
 
         let localVarPath = `/v1/companies/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<CompanyResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<CompanyDtoResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: patchCompanyDtoApi,
@@ -656,9 +656,9 @@ export class CompaniesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public putCompany(requestParameters: PutCompanyRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CompanyResponseApi>;
-    public putCompany(requestParameters: PutCompanyRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CompanyResponseApi>>;
-    public putCompany(requestParameters: PutCompanyRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CompanyResponseApi>>;
+    public putCompany(requestParameters: PutCompanyRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<CompanyDtoResponseApi>;
+    public putCompany(requestParameters: PutCompanyRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<CompanyDtoResponseApi>>;
+    public putCompany(requestParameters: PutCompanyRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<CompanyDtoResponseApi>>;
     public putCompany(requestParameters: PutCompanyRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -735,7 +735,7 @@ export class CompaniesApiService {
         }
 
         let localVarPath = `/v1/companies/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<CompanyResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<CompanyDtoResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: putCompanyDtoApi,
