@@ -1,13 +1,11 @@
 import { TeamApi, UsersApiService } from 'src/app/sdk';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import axios from 'axios';
 import { UserForm } from './models/user.form';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { UntypedFormBuilder } from '@angular/forms';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { tap } from 'rxjs';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'alto-admin-user-create-form',
@@ -60,27 +58,16 @@ export class AdminUserCreateFormComponent implements OnInit {
     
    console.log(yourJWTToken);
    
-  
-    axios.post(environment.apiURL+'/v1/users',{
-      email: email,
-      companyId: companyId,
-      teamId: teamId,
-    },
-    {
-      headers: {
-        Authorization: "Bearer " + yourJWTToken
-      }
-    })
-    .then(function (response:any) {
-      console.log(response);
-      $this.router.navigate(['/admin/companies/', $this.id, 'users']);
-    })
-    .catch(function (error:any) {
-      console.log(error);
-    });
-
-
-    
+  this.usersApiService.createUser({
+    createUserDtoApi : {email: email,
+    companyId: companyId,
+    teamId: teamId}
+  })
+  .subscribe((q) => {
+    console.log(q);
+    $this.router.navigate(['/admin/companies/', $this.id, 'users']);
+  });
+   
     
     
   }

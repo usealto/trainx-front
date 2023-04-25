@@ -4,10 +4,7 @@ import * as Papa from 'papaparse';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { CompanyApi, TeamApi, UserDtoApi } from 'src/app/sdk';
-import axios from 'axios';
-import { environment } from 'src/environments/environment';
+import { CompanyApi, TeamApi, UserDtoApi, UsersApiService } from 'src/app/sdk';
 import { UserCreate } from './models/user.create';
 
 @Component({
@@ -25,7 +22,7 @@ export class AdminUsersUploadComponent implements OnInit {
 
   constructor(
     private readonly companiesRestService: CompaniesRestService,
-    private readonly usersRestService: UsersRestService,
+    private readonly usersApiService: UsersApiService,
     private readonly teamsRestService: TeamsRestService,
     private route: ActivatedRoute,
   ) {}
@@ -81,28 +78,20 @@ export class AdminUsersUploadComponent implements OnInit {
     this.csvData.forEach((user) => {
       console.log(user);
       // const $this = this;
-
-      axios
-        .post(
-          environment.apiURL + '/v1/users',
-          {
-            email: user.email,
-            companyId: this.id,
-            teamId: user.teamId,
-          },
-          {
-            headers: {
-              Authorization: 'Bearer ' + yourJWTToken,
-            },
-          },
-        )
-        .then(function (response: any) {
-          console.log(response);
+      this.usersApiService.createUser({
+        createUserDtoApi: {
+          email: user.email,
+          companyId: this.id,
+          teamId: user.teamId
+        }
+      })
+      .subscribe((res) => {
+        console.log(res);
+        if(res.statusCode === 201){
           user.isUploaded = true;
-        })
-        .catch(function (error: any) {
-          console.log(error);
-        });
+        }
+      });
+      
     });
   }
 

@@ -1,11 +1,9 @@
+import { AuthApiService } from './../../../sdk/api/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UserDtoApi } from 'src/app/sdk';
-import { environment } from 'src/environments/environment';
-import axios from 'axios';
 import { AuthUserGet } from './models/authuser.get';
 
 @Component({
@@ -25,6 +23,7 @@ export class AdminUsersComponent implements OnInit {
   constructor(
     private readonly companiesRestService: CompaniesRestService,
     private readonly usersRestService: UsersRestService,
+    private readonly authApiService: AuthApiService,
     private route: ActivatedRoute,
   ) {}
 
@@ -40,33 +39,18 @@ export class AdminUsersComponent implements OnInit {
     //   tap((q) => (this.usersCount = q.meta.totalItems ?? 0))
     // )
     // .subscribe();
-
-    let yourJWTToken =
-      localStorage.getItem(
-        '@@auth0spajs@@::ThcIBQZrRso5QaZq67kCU5eFYTfZwTSK::https://api.usealto.com::openid profile email offline_access',
-      ) || '';
-    yourJWTToken = JSON.parse(yourJWTToken).body.access_token;
-    console.log('gg');
-    let $this = this;
-    axios
-      .get(environment.apiURL + '/v1/auth/users?q=*' + query + '*', {
-        headers: {
-          Authorization: 'Bearer ' + yourJWTToken,
-        },
-      })
-      .then(function (response: any) {
-        console.log('response');
-        console.log(response);
-        $this.authusers = response.data.data;
-      })
-      .catch(function (error: any) {
-        console.log(error);
-      });
+    const queryFormated =  '*' + query + '*'
+    if (query.length > 0 && query.length < 3) {
+      return
+    }
+    this.authApiService.getAuth0Users({q:queryFormated}).subscribe((q) => {
+      this.authusers = q.data;
+    });
   }
 
   setImpersonation(email: string) {
     localStorage.setItem('impersonatedUser', email);
-    window.location.reload();
+    // window.location.reload();
   }
     
 }
