@@ -6,13 +6,13 @@
 
   <div class="menu">
     <div>
-      <a [routerLink]="'home'" routerLinkActive="menu-selected" class="module">
+      <a [routerLink]="'home'" routerLinkActive="menu-selected" class="module" (click)="removeImpersonation()">
         Home
       </a>
-      <a [routerLink]="'companies'" routerLinkActive="menu-selected" class="module">
+      <a [routerLink]="'companies'" routerLinkActive="menu-selected" class="module" (click)="removeImpersonation()">
         Companies
       </a>
-      <a [routerLink]="'users'" routerLinkActive="menu-selected" class="module">
+      <a [routerLink]="'users'" routerLinkActive="menu-selected" class="module" (click)="removeImpersonation()">
         Users
       </a>
     </div>

@@ -23,7 +23,6 @@ export class AdminMenuComponent implements OnInit {
   removeImpersonation() {
     localStorage.setItem('impersonatedUser','')
     this.impersonatedUser = false
-    window.location.reload()
   }
 
 
