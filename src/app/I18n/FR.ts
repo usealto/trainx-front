@@ -242,7 +242,6 @@ export const FR = {
         activity: 'Activité',
         teams: 'Équipe',
         score: 'Score',
-        status: { title: 'Status', active: 'Actif', inactive: 'Inactif' },
       },
       statistics: {
         total: 'Total',
@@ -251,7 +250,6 @@ export const FR = {
       },
       table: {
         name: 'Nom',
-        status: 'Status',
         team: 'Équipe',
         averageScore: 'Score moyen',
         questionsPerMonth: 'Questions sur 30j',

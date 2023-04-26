@@ -94,15 +94,6 @@
     </div>
   </div>
   <div class="row mb-4">
-    <ng-select
-      class="text-start col-1"
-      [items]="status"
-      [(ngModel)]="selectedStatus"
-      [placeholder]="I18ns.leadTeam.members.filters.status.title"
-      (ngModelChange)="filterUsers()"
-    >
-      <ng-option *ngFor="let option of status" [value]="option.value"></ng-option>
-    </ng-select>
     <alto-dropdown-filter
       class="text-start col-3"
       [data]="teams"
@@ -128,7 +119,6 @@
     <thead>
       <tr>
         <th scope="col">{{ I18ns.leadTeam.members.table.name }}</th>
-        <th scope="col">{{ I18ns.leadTeam.members.table.status }}</th>
         <th scope="col">{{ I18ns.leadTeam.members.table.team }}</th>
         <th scope="col">{{ I18ns.leadTeam.members.table.averageScore }}</th>
         <th scope="col" class="text-center">{{ I18ns.leadTeam.members.table.questionsPerMonth }}</th>
@@ -145,12 +135,6 @@
             </span>
             <span>{{ user.email }}</span>
           </div>
-        </td>
-        <td>
-          <span class="badge rounded-pill" [class]="user.isActive ? 'bg-success' : 'bg-danger'">
-            <i class="bi bi-dot"></i>
-            {{ user.isActive ? I18ns.leadTeam.members.table.active : I18ns.leadTeam.members.table.inactive }}
-          </span>
         </td>
         <td>
           {{ usersMap.get(user.id) }}
