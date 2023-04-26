@@ -13,7 +13,11 @@ export class ProgramsService {
       output = output.filter((p) => p.teams.some((t) => teams.some((te) => te.id === t.id)));
     }
     if (search) {
-      output = output.filter((p) => p.name.includes(search) || p.description?.includes(search));
+      output = output.filter(
+        (p) =>
+          p.name.toLowerCase().includes(search.toLowerCase()) ||
+          p.description?.toLowerCase().includes(search.toLowerCase()),
+      );
     }
     return output;
   }
