@@ -8,20 +8,16 @@ import { UserDtoApi } from 'src/app/sdk';
   styleUrls: ['./admin-layout.component.scss', '../../../layout/app-layout/app-layout.component.scss'],
 })
 export class AdminLayoutComponent implements OnInit {
-  constructor(private readonly usersRestService: UsersRestService, private readonly router: Router) {}
+  constructor(
+    private readonly usersRestService: UsersRestService, 
+    private readonly router: Router) {}
   user!: UserDtoApi;
   authorized = false;
 
   ngOnInit() {
     this.usersRestService.getMe().subscribe((user) => {
       this.user = user;
-      console.log('this.user :');
-      console.log(this.user);
-      console.log('boolean:');
-      console.log(/alto-admin/.test(this.user.roles.toString()));
-
       if (/alto-admin/.test(this.user.roles.toString())) {
-        console.log('here');
         this.authorized = true;
       } else {
         this.router.navigate(['admin', 'unauthorized']);

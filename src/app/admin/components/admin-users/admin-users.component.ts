@@ -5,6 +5,7 @@ import { CompaniesRestService } from 'src/app/modules/companies/service/companie
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UserDtoApi } from 'src/app/sdk';
 import { AuthUserGet } from './models/authuser.get';
+import { DataService } from '../../admin-data.service';
 
 @Component({
   selector: 'alto-admin-users',
@@ -25,6 +26,7 @@ export class AdminUsersComponent implements OnInit {
     private readonly usersRestService: UsersRestService,
     private readonly authApiService: AuthApiService,
     private route: ActivatedRoute,
+    private dataService: DataService,
   ) {}
 
   ngOnInit(): void {
@@ -50,7 +52,7 @@ export class AdminUsersComponent implements OnInit {
 
   setImpersonation(email: string) {
     localStorage.setItem('impersonatedUser', email);
-    // window.location.reload();
+    this.dataService.sendData('impersonatedUserUpdated');
   }
     
 }
