@@ -18,10 +18,6 @@ export class MenuComponent implements OnInit {
   I18ns = I18ns;
   buildTime = buildTime;
 
-  url = '';
-  name = '';
-  email = '';
-
   isAdmin = false;
   displayAdmin = false;
 
@@ -32,7 +28,7 @@ export class MenuComponent implements OnInit {
 
   ngOnInit(): void {
     const segments = window.location.pathname.split('/');
-    const { pictureUrl, firstname, lastname, username, email, roles } = this.userStore.user.value;
+    const { roles } = this.userStore.user.value;
     if (
       roles.some((r) => r === UserDtoApiRolesEnumApi.AltoAdmin || r === UserDtoApiRolesEnumApi.CompanyAdmin)
     ) {
@@ -45,10 +41,6 @@ export class MenuComponent implements OnInit {
     } else {
       this.displayAdmin = !!segments.length && segments[1] === AltoRoutes.lead;
     }
-
-    this.url = pictureUrl || '';
-    this.name = (!firstname || !lastname ? username : firstname + ' ' + lastname) ?? '';
-    this.email = email;
   }
 
   switchToAdmin(goAdmin: boolean) {

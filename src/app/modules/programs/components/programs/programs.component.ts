@@ -118,6 +118,16 @@ export class ProgramsComponent implements OnInit {
     canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
   }
 
+  openSubmittedQuestionForm(question?: QuestionSubmittedDtoApi) {
+    const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto',
+    });
+    canvasRef.componentInstance.question = question;
+    canvasRef.componentInstance.isSubmitted = true;
+    canvasRef.componentInstance.dismissedQuestion.pipe(tap(() => this.getSubmittedQuestions())).subscribe();
+  }
+
   openTagForm(tag?: TagDtoApi) {
     const canvasRef = this.offcanvasService.open(TagsFormComponent, {
       position: 'end',

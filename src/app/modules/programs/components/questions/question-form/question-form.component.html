@@ -1,12 +1,34 @@
 <div class="text-end px-4 mt-3">
   <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
 </div>
-<div class="p-4">
-  <h2>{{ I18ns.questions.form.title }}</h2>
-  <p class="fs-7">{{ I18ns.questions.form.subtitle }}</p>
+<div class="px-4 my-2">
+  <h2>
+    {{
+      isSubmitted
+        ? I18ns.questions.form.title.submitted
+        : isEdit
+        ? I18ns.questions.form.title.edit
+        : I18ns.questions.form.title.create
+    }}
+  </h2>
+  <p class="fs-7">
+    {{
+      isSubmitted
+        ? question?.createdByUser?.username + I18ns.questions.form.subtitle.submitted
+        : I18ns.questions.form.subtitle.question
+    }}
+  </p>
 </div>
 <hr />
 <div class="offcanvas-body px-4">
+  <div *ngIf="isSubmitted" class="mb-4 row">
+    <alto-profile-card class="col-7" [user]="question?.createdByUser"> </alto-profile-card>
+    <div class="col-5 text-end">
+      <a type="button" class="btn btn-outline-secondary" [href]="'mailto:' + question?.createdByUser?.email">
+        <i class="bi bi-reply-all-fill"></i> {{ I18ns.shared.reply }}
+      </a>
+    </div>
+  </div>
   <form *ngIf="questionForm" [formGroup]="questionForm">
     <label class="form-label required">{{ I18ns.questions.form.name }}</label>
     <input
@@ -114,12 +136,42 @@
       placeholder="{{ I18ns.questions.form.linkPlaceholder }}"
     />
 
-    <input
-      type="submit"
-      [disabled]="!questionForm.valid"
-      class="w-100 btn btn-primary my-4"
-      [value]="I18ns.shared.save"
-      (click)="createQuestion()"
-    />
+    <ng-container *ngIf="isSubmitted; else elseTemplate">
+      <div class="my-4">
+        <button
+          type="button"
+          class="btn btn-outline-secondary me-3"
+          aria-label="Close"
+          (click)="activeOffcanvas.dismiss()"
+        >
+          {{ I18ns.shared.cancel }}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-danger me-3"
+          (click)="changeStatus(QuestionSubmittedStatusEnum.Declined)"
+        >
+          {{ I18ns.shared.refuse }}
+        </button>
+
+        <input
+          type="submit"
+          [disabled]="!questionForm.valid"
+          class="btn btn-primary"
+          [value]="I18ns.shared.save"
+          (click)="createQuestion()"
+        />
+      </div>
+    </ng-container>
+    <ng-template #elseTemplate>
+      <input
+        type="submit"
+        [disabled]="!questionForm.valid"
+        class="w-100 btn btn-primary my-4"
+        [value]="I18ns.shared.save"
+        (click)="createQuestion()"
+      />
+    </ng-template>
   </form>
 </div>

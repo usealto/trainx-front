@@ -84,12 +84,9 @@
 
     <hr />
     <a class="profile" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile">
-      <alto-img-badge [url]="url" [size]="40"></alto-img-badge>
-      <div class="d-inline-block ms-3">
-        <p class="fw-bold">{{ name }}</p>
-        <p>{{ email }}</p>
-      </div>
+      <alto-profile-card [user]="userStore.user.value$ | async"> </alto-profile-card>
     </a>
+
     <p class="build-time fs-8" title="Build Time">Version: {{ buildTime | date : 'medium' }}</p>
   </div>
 </div>

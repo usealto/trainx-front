@@ -167,7 +167,7 @@
           <alto-img-badge [url]="getUser(question.createdBy)?.pictureUrl"></alto-img-badge>
         </td>
         <td>
-          <i class="fs-5 bi bi-pencil"></i>
+          <i class="fs-5 bi bi-pen cursor-pointer" (click)="openSubmittedQuestionForm(question)"></i>
         </td>
       </tr>
     </tbody>

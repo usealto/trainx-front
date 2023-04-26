@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import {
   GetQuestionsSubmittedRequestParams,
+  PatchQuestionSubmittedRequestParams,
   QuestionsSubmittedApiService,
   QuestionSubmittedDtoApi,
   QuestionSubmittedDtoPaginatedResponseApi,
@@ -35,5 +36,9 @@ export class QuestionsSubmittedRestService {
     } as GetQuestionsSubmittedRequestParams;
 
     return this.questionSubmittedApi.getQuestionsSubmitted(par).pipe();
+  }
+
+  update(req: PatchQuestionSubmittedRequestParams) {
+    return this.questionSubmittedApi.patchQuestionSubmitted(req);
   }
 }

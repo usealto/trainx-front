@@ -21,6 +21,7 @@ import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-f
 import { StatusPillComponent } from './components/status-pill/status-pill.component';
 import { SearchComponent } from './components/search/search.component';
 import { TabsComponent } from './components/tabs/tabs.component';
+import { ProfileCardComponent } from './components/profile-card/profile-card.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { TabsComponent } from './components/tabs/tabs.component';
     StatusPillComponent,
     SearchComponent,
     TabsComponent,
+    ProfileCardComponent,
   ],
   imports: [
     CommonModule,
@@ -56,6 +58,7 @@ import { TabsComponent } from './components/tabs/tabs.component';
     ColoredPillListComponent,
     AnchorNavigatorComponent,
     DropdownFilterComponent,
+    ProfileCardComponent,
     TabsComponent,
     SearchComponent,
     StatusPillComponent,

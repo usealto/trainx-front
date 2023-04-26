@@ -6,12 +6,14 @@ export const FR = {
     cancel: 'Annuler',
     delete: 'Supprimer',
     create: 'Créer',
+    refuse: 'Refuser',
     share: 'Partager',
     clipboard: 'Copier dans le presse-papier',
     showMore: 'Voir plus',
     showAll: 'Voir tout',
     optional: '(facultatif)',
     noData: 'Aucune donnée à afficher',
+    reply: 'Répondre',
     priorities: {
       high: 'High',
       medium: 'Medium',
@@ -195,8 +197,16 @@ export const FR = {
   },
   questions: {
     form: {
-      title: 'Créer une question',
-      subtitle: 'Indiquer la question, les réponses possibles et les informations complémentaires.',
+      title: {
+        create: 'Créer une question',
+        edit: 'Éditer une question',
+        submitted: 'Question suggérée',
+      },
+      subtitle: {
+        question: 'Indiquer la question, les réponses possibles et les informations complémentaires.',
+        submitted:
+          " a suggéré une question. Vous pouvez choisir de la rejeter, la valider en l'état ou d'apporter des modifications et informations complémentaires.",
+      },
       name: 'Question',
       namePlaceholder: 'Intitulé de la question',
       goodAnswer: 'Bonne(s) réponse(s)',
