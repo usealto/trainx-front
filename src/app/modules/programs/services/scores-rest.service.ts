@@ -6,6 +6,7 @@ import {
   GetScoresRequestParams,
   ProgramRunApi,
   ProgramRunsApiService,
+  ScoreFillValuesEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   ScoresApiService,
@@ -27,11 +28,12 @@ export class ScoresRestService {
     type: ScoreTypeEnumApi,
     timeframe?: ScoreTimeframeEnumApi,
   ): Observable<ScoresResponseDtoApi> {
-    const par = {
+    const par: GetScoresRequestParams = {
       type: type ?? ScoreTypeEnumApi.Guess,
       timeframe: timeframe ?? this.getDefaultTimeFrame(duration),
       dateAfter: this.getStartDate(duration),
       dateBefore: new Date(),
+      fillValues: ScoreFillValuesEnumApi.Null,
     };
 
     return this.scoresApi.getScores(par).pipe(

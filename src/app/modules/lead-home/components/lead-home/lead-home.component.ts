@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import Chart, { ChartData, ChartDataset, ChartTypeRegistry } from 'chart.js/auto';
 import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -7,6 +8,7 @@ import { ChallengesRestService } from 'src/app/modules/challenges/services/chall
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
+import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
@@ -25,8 +27,7 @@ import {
   UserDtoApi,
 } from 'src/app/sdk';
 import { LeadHomeStatistics } from '../statistics/lead-home-statistics.model';
-import Chart from 'chart.js/auto';
-import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
+import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 @UntilDestroy()
 @Component({
   selector: 'alto-lead-home',
@@ -127,39 +128,23 @@ export class LeadHomeComponent implements OnInit {
         filter(({ scores }) => !!scores.length),
         tap(({ scores }) => {
           const labels = scores[0].dates.map((d) => d.toLocaleDateString());
-          const data = {
+          const data: ChartData = {
             labels: labels,
             datasets: scores.map((s) => ({
               label: s.label,
-              data: s.averages.map((u) => Math.round(u * 10000) / 100),
+              data: s.averages.map((u) => (u ? Math.round(u * 10000) / 100 : u)),
               fill: false,
               tension: 0.2,
+              spanGaps: true,
             })),
           };
+
           this.evolutionChart = new Chart('programScoreEvol', {
             type: 'line',
             data: data,
-            options: {
-              scales: {
-                x: {
-                  display: true,
-                  title: {
-                    display: true,
-                    text: I18ns.leadHome.graph.period,
-                  },
-                },
-                y: {
-                  display: true,
-                  title: {
-                    display: true,
-                    text: I18ns.leadHome.graph.score,
-                  },
-                },
-              },
-            },
+            options: chartDefaultOptions,
           });
         }),
-        tap(console.log),
       )
       .subscribe();
   }
