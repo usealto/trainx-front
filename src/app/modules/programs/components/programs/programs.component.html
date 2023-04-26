@@ -221,7 +221,7 @@
       </tr>
     </thead>
     <tbody *ngIf="!isTagsLoading">
-      <tr *ngFor="let tag of tags">
+      <tr *ngFor="let tag of paginatedTags">
         <th scope="row">{{ tag.name }}</th>
         <td>
           <span class="badge rounded-pill" [class]="70 | pillColor">42%</span>
@@ -242,7 +242,7 @@
     [ngClass]="{ invisible: tagsCount <= tagsPageSize }"
     [collectionSize]="tagsCount"
     [(page)]="tagsPage"
-    (pageChange)="changeTagsPage()"
+    (pageChange)="filterTags()"
     [pageSize]="tagsPageSize"
     [maxSize]="10"
     aria-label="Default pagination"
