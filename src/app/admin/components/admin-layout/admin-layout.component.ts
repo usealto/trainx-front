@@ -17,10 +17,16 @@ export class AdminLayoutComponent implements OnInit {
   ngOnInit() {
     this.usersRestService.getMe().subscribe((user) => {
       this.user = user;
+      // if the user has the appropriate role, it's ok
       if (/alto-admin/.test(this.user.roles.toString())) {
         this.authorized = true;
       } else {
-        this.router.navigate(['admin', 'unauthorized']);
+        // otherwise, if the user is impersonnated, it's ok too
+        if(localStorage.getItem('impersonatedUser') !== '' && localStorage.getItem('impersonatedUser')) {
+          this.authorized = true;
+        }else {
+          this.router.navigate(['admin', 'unauthorized']);
+        }
       }
     });
   }
