@@ -212,9 +212,12 @@ export const FR = {
   },
   tags: {
     form: {
-      title: 'Créer un tag',
+      title: {
+        create: 'Créer un tag',
+        edit: 'Éditer un tag',
+      },
       subtitle:
-        'Indiquer le nom de votre nouveau tag ainsi que les programmes et questions auxquels vous souhaitez l’associer.',
+        "Indiquer le nom de votre nouveau tag ainsi que les programmes et questions auxquels vous souhaitez l'associer.",
       tagName: 'Nom du tage',
       tagNamePlaceholder: 'Exemple: RGPD',
       programs: 'Programmes',

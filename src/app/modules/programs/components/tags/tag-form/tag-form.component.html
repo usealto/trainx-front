@@ -2,7 +2,7 @@
   <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
 </div>
 <div class="p-4">
-  <h2>{{ I18ns.tags.form.title }}</h2>
+  <h2>{{ isEdit ? I18ns.tags.form.title.edit : I18ns.tags.form.title.create }}</h2>
   <p class="fs-7">{{ I18ns.tags.form.subtitle }}</p>
 </div>
 <div class="offcanvas-body px-4">
@@ -15,21 +15,20 @@
       placeholder="{{ I18ns.tags.form.tagNamePlaceholder }}"
     />
 
-    <label class="form-label mt-3">{{ I18ns.tags.form.programs + ' ' + I18ns.shared.optional }}</label>
-    <ng-select
-      [items]="programs"
-      [multiple]="true"
-      bindLabel="name"
-      [placeholder]="I18ns.questions.form.programsPlaceholder"
-      [selectableGroup]="true"
-      [closeOnSelect]="false"
-      bindValue="id"
-      formControlName="programs"
-    >
+    <!-- <label class="form-label mt-3">{{ I18ns.tags.form.programs + ' ' + I18ns.shared.optional }}</label>
+      <ng-select
+        [items]="programs"
+        [multiple]="true"
+        bindLabel="name"
+        [placeholder]="I18ns.questions.form.programsPlaceholder"
+        [selectableGroup]="true"
+        [closeOnSelect]="false"
+        bindValue="id"
+        formControlName="programs"
+      >
+      </ng-select> -->
 
-    </ng-select>
-
-    <label class="form-label mt-3">{{ I18ns.tags.form.questions + ' ' + I18ns.shared.optional }}</label>
+    <!-- <label class="form-label mt-3">{{ I18ns.tags.form.questions + ' ' + I18ns.shared.optional }}</label>
     <ng-select
       [items]="questions"
       [multiple]="true"
@@ -40,18 +39,17 @@
       bindValue="id"
       formControlName="questions"
     >
-
-    </ng-select>
+    </ng-select> -->
 
     <label class="form-label mt-3">{{ I18ns.tags.form.description + ' ' + I18ns.shared.optional }}</label>
     <textarea formControlName="description" class="form-control" cols="30" rows="10"></textarea>
 
     <input
-    type="submit"
-    [disabled]="!tagForm.valid"
-    class="w-100 btn btn-primary my-4"
-    [value]="I18ns.shared.save"
-    (click)="createTag()"
-  />
+      type="submit"
+      [disabled]="!tagForm.valid"
+      class="w-100 btn btn-primary my-4"
+      [value]="I18ns.shared.save"
+      (click)="createTag()"
+    />
   </form>
 </div>
