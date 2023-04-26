@@ -11,10 +11,11 @@ export class TabsComponent {
   I18ns = I18ns;
 
   @Input() labels: string[] = [];
-  @Output() tabChanged = new EventEmitter<number>();
+  @Input() data: { label: string; value: any }[] = [];
+  @Output() tabChanged = new EventEmitter<any>();
 
-  switchTab(index: number) {
-    this.tabChanged.emit(index);
+  switchTab(val: any) {
+    this.tabChanged.emit(val);
   }
 
   @memoize()

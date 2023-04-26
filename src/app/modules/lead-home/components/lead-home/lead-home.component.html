@@ -1,4 +1,4 @@
-<h1 class="mt-4">{{ I18ns.leadHome.title + name | titlecase }}</h1>
+<h1 class="mt-4">{{ I18ns.leadHome.title + userName | titlecase }}</h1>
 <p class="mb-4">{{ I18ns.leadHome.subtitle }}</p>
 <div class="row">
   <div class="col-6">
@@ -33,7 +33,7 @@
 
 <div class="row my-4">
   <div class="col-5">
-    <div class="btn-group d-inline-block" role="group" aria-label="Basic example">
+    <div class="d-inline-block">
       <select
         #statisticsTimeframeSelect
         class="form-select"
@@ -48,7 +48,6 @@
   </div>
   <div class="col-7 text-end">
     <ng-select
-      #selectTeamStatistics
       class="text-start"
       [items]="teamStore.teams.value"
       bindValue="id"
@@ -128,16 +127,29 @@
 
 <h1 class="mt-4">{{ I18ns.leadHome.globalEvolution.title }}</h1>
 
-<div class="btn-group d-inline-block" role="group" aria-label="Basic example">
-  <select
-    #evolutionTimeframeSelect
-    class="form-select mb-3"
-    (change)="createCharts(evolutionTimeframeSelect.value)"
-  >
-    <option [value]="ScoreDuration.Week">{{ I18ns.shared.dateFilter.week }}</option>
-    <option selected [value]="ScoreDuration.Month">{{ I18ns.shared.dateFilter.month }}</option>
-    <option [value]="ScoreDuration.Year">{{ I18ns.shared.dateFilter.year }}</option>
-  </select>
+<div class="text-end">
+  <div class="d-inline-block me-3">
+    <select
+      #evolutionTimeframeSelect
+      class="form-select mb-3"
+      (change)="createCharts({ duration: evolutionTimeframeSelect.value })"
+    >
+      <option [value]="ScoreDuration.Week">{{ I18ns.shared.dateFilter.week }}</option>
+      <option selected [value]="ScoreDuration.Month">{{ I18ns.shared.dateFilter.month }}</option>
+      <option [value]="ScoreDuration.Year">{{ I18ns.shared.dateFilter.year }}</option>
+    </select>
+  </div>
+
+  <alto-dropdown-filter
+    class="text-start"
+    [data]="teamStore.teams.value"
+    [displayLabel]="'shortName'"
+    [returnValue]="'id'"
+    [placeholder]="I18ns.programs.programs.filters.team"
+    (selectChange)="createCharts({ team: $event })"
+    [isColored]="true"
+    [multiple]="false"
+  ></alto-dropdown-filter>
 </div>
 
 <div class="row">
@@ -145,12 +157,26 @@
     <div class="panel h-100">
       <div class="btn-group d-inline-block mb-3" role="group">
         <alto-tabs
-          (tabChanged)="switchEvolutionChart($event)"
-          [labels]="[I18ns.leadHome.globalEvolution.tabs.program, I18ns.leadHome.globalEvolution.tabs.tag]"
+          (tabChanged)="createCharts({ type: $event })"
+          [data]="[
+            {
+              label: I18ns.leadHome.globalEvolution.tabs.program,
+              value: ScoreTypeEnum.Program
+            },
+            {
+              label: I18ns.leadHome.globalEvolution.tabs.tag,
+              value: ScoreTypeEnum.Tag
+            }
+          ]"
         ></alto-tabs>
       </div>
-      <div class="chart-container">
+
+      <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
+      <div [hidden]="!scoreCount" class="chart-container">
         <canvas id="programScoreEvol"></canvas>
+      </div>
+      <div [hidden]="scoreCount > 0" class="text-center pt-5">
+        {{ I18ns.shared.noData }}
       </div>
     </div>
   </div>

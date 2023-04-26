@@ -6,6 +6,7 @@ import {
   GetScoresRequestParams,
   ProgramRunApi,
   ProgramRunsApiService,
+  ScoreByTypeEnumApi,
   ScoreFillValuesEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
@@ -13,6 +14,7 @@ import {
   ScoresResponseDtoApi,
 } from 'src/app/sdk';
 import { ScoreDuration } from '../models/score.model';
+import { ChartFilters } from '../../shared/models/chart.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,18 +25,19 @@ export class ScoresRestService {
     private readonly programsApi: ProgramRunsApiService,
   ) {}
 
-  getScores(
-    duration: ScoreDuration,
-    type: ScoreTypeEnumApi,
-    timeframe?: ScoreTimeframeEnumApi,
-  ): Observable<ScoresResponseDtoApi> {
+  getScores({ duration, type, team, timeframe }: ChartFilters): Observable<ScoresResponseDtoApi> {
     const par: GetScoresRequestParams = {
       type: type ?? ScoreTypeEnumApi.Guess,
-      timeframe: timeframe ?? this.getDefaultTimeFrame(duration),
-      dateAfter: this.getStartDate(duration),
+      timeframe: timeframe ?? this.getDefaultTimeFrame(duration as ScoreDuration),
+      dateAfter: this.getStartDate(duration as ScoreDuration),
       dateBefore: new Date(),
       fillValues: ScoreFillValuesEnumApi.Null,
     };
+
+    if (team) {
+      par.scoredBy = ScoreByTypeEnumApi.Team;
+      par.scoredById = team;
+    }
 
     return this.scoresApi.getScores(par).pipe(
       map((r) => r.data || ({} as ScoresResponseDtoApi)),

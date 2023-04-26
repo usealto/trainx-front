@@ -1,10 +1,10 @@
 <ng-select
   [items]="data"
-  [multiple]="true"
+  [multiple]="multiple"
   [bindValue]="returnValue"
   [bindLabel]="displayLabel"
   [placeholder]="placeholder"
-  [closeOnSelect]="false"
+  [closeOnSelect]="!multiple"
   [(ngModel)]="selectedItems"
   [searchable]="false"
   (change)="selectChange.emit(selectedItems)"

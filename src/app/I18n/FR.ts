@@ -11,6 +11,7 @@ export const FR = {
     showMore: 'Voir plus',
     showAll: 'Voir tout',
     optional: '(facultatif)',
+    noData: 'Aucune donnée à afficher',
     priorities: {
       high: 'High',
       medium: 'Medium',
@@ -54,6 +55,7 @@ export const FR = {
     },
     globalEvolution: {
       title: 'Évolution globale',
+      score: 'Score moyen',
       tabs: {
         program: 'Programmes',
         tag: 'Tags',

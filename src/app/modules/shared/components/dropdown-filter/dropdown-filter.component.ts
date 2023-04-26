@@ -12,6 +12,7 @@ export class DropdownFilterComponent {
   @Input() displayLabel = 'name';
   @Input() returnValue = '';
   @Input() isColored = false;
+  @Input() multiple = true;
   selectedItems = [];
 
   @Output() selectChange = new EventEmitter<any>();

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import Chart, { ChartData, ChartDataset, ChartTypeRegistry } from 'chart.js/auto';
+import Chart, { ChartData } from 'chart.js/auto';
 import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -13,7 +13,9 @@ import { CommentsRestService } from 'src/app/modules/programs/services/comments-
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
+import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import {
   ChallengeDtoApi,
   ChallengeDtoApiTypeEnumApi,
@@ -26,8 +28,6 @@ import {
   TeamDtoApi,
   UserDtoApi,
 } from 'src/app/sdk';
-import { LeadHomeStatistics } from '../statistics/lead-home-statistics.model';
-import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 @UntilDestroy()
 @Component({
   selector: 'alto-lead-home',
@@ -38,28 +38,13 @@ export class LeadHomeComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   ScoreDuration = ScoreDuration;
+  ScoreTypeEnum = ScoreTypeEnumApi;
 
-  name = '';
-  active = 1;
-  sharedData: LeadHomeStatistics[] = [
-    { title: I18ns.leadHome.statistics.globalScore, toolTip: I18ns.leadHome.statistics.globalScoreToolTip },
-    {
-      title: I18ns.leadHome.statistics.averageCompletion,
-      toolTip: I18ns.leadHome.statistics.averageCompletionToolTip,
-    },
-    {
-      title: I18ns.leadHome.statistics.activeMembers,
-      toolTip: I18ns.leadHome.statistics.activeMembersToolTip,
-    },
-    {
-      title: I18ns.leadHome.statistics.inactiveMembers,
-      toolTip: I18ns.leadHome.statistics.inactiveMembersToolTip,
-    },
-  ];
+  userName = '';
 
-  weekData: LeadHomeStatistics[] = [];
-  monthData: LeadHomeStatistics[] = [];
-  yearData: LeadHomeStatistics[] = [];
+  chartFilters: ChartFilters = { duration: ScoreDuration.Month, type: ScoreTypeEnumApi.Program, team: '' };
+  scoreCount = 0;
+
   commentsCount = 0;
   questionsCount = 0;
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
@@ -90,7 +75,7 @@ export class LeadHomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.name = this.profileStore.user.value.firstname ?? this.profileStore.user.value.username ?? '';
+    this.userName = this.profileStore.user.value.firstname ?? this.profileStore.user.value.username ?? '';
     this.getProgramRuns();
 
     combineLatest([
@@ -115,17 +100,26 @@ export class LeadHomeComponent implements OnInit {
       )
       .subscribe();
 
-    this.createCharts(ScoreDuration.Month);
+    this.createCharts(this.chartFilters);
   }
 
-  createCharts(duration: ScoreDuration | string) {
+  createCharts({
+    duration = this.chartFilters.duration,
+    type = this.chartFilters.type ?? ScoreTypeEnumApi.Program,
+    team = this.chartFilters.team,
+  }: ChartFilters) {
+    this.chartFilters.duration = duration;
+    this.chartFilters.type = type;
+    this.chartFilters.team = team;
+
     if (this.evolutionChart) {
       this.evolutionChart.destroy();
     }
     this.scoresRestService
-      .getScores(duration as ScoreDuration, ScoreTypeEnumApi.Program)
+      .getScores(this.chartFilters)
       .pipe(
-        filter(({ scores }) => !!scores.length),
+        tap(({ scores }) => (this.scoreCount = scores.length)),
+        filter(() => !!this.scoreCount),
         tap(({ scores }) => {
           const labels = scores[0].dates.map((d) => d.toLocaleDateString());
           const data: ChartData = {
@@ -221,11 +215,6 @@ export class LeadHomeComponent implements OnInit {
 
   filterPrograms(teams: TeamDtoApi[]) {
     this.getProgramRuns(teams.map((t) => t.id));
-  }
-
-  switchEvolutionChart(e: number) {
-    // TODO !!!!
-    console.log(e);
   }
 
   private _filterStatistics: any;

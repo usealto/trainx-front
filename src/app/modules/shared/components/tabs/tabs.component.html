@@ -1,16 +1,16 @@
 <div class="btn-group d-inline-block" role="group">
-  <ng-container *ngFor="let item of labels; let i = index">
+  <ng-container *ngFor="let item of data; let i = index">
     <input
       type="radio"
       class="btn-check"
       name="rd1"
-      (click)="switchTab(i + 1)"
+      (click)="switchTab(item.value)"
       [id]="'btnradio' + getId(i)"
       autocomplete="off"
       [checked]="i === 0"
     />
     <label class="alto-tab-btn" [for]="'btnradio' + getId(i)">
-      {{ item }}
+      {{ item.label }}
     </label>
   </ng-container>
 </div>
