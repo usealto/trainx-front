@@ -36,12 +36,14 @@
         </span>
       </ng-template>
     </ng-select>
-    <label class="form-label mt-4">{{ I18ns.leadTeam.members.forms.edition.type }}</label>
-    <select class="form-select" formControlName="type" id="type">
+    <label *ngIf="profile.id !== user.id" class="form-label mt-4">{{
+      I18ns.leadTeam.members.forms.edition.type
+    }}</label>
+    <select *ngIf="profile.id !== user.id" class="form-select" formControlName="type" id="type">
       <option value="company-user">{{ I18ns.leadTeam.members.forms.edition.standardType }}</option>
       <option value="company-admin">{{ I18ns.leadTeam.members.forms.edition.adminType }}</option>
     </select>
-    <p>{{ I18ns.leadTeam.members.forms.edition.typeSubtitle }}</p>
+    <p *ngIf="profile.id !== user.id">{{ I18ns.leadTeam.members.forms.edition.typeSubtitle }}</p>
     <button
       type="button"
       class="btn btn-outline-secondary my-4 me-3"

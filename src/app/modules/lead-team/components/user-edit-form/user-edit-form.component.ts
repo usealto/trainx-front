@@ -15,6 +15,7 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { TeamsRestService } from '../../services/teams-rest.service';
 import { tap } from 'rxjs';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
 
 @Component({
   selector: 'alto-user-edit-form',
@@ -28,12 +29,14 @@ export class UserEditFormComponent implements OnInit {
   private fb: IFormBuilder;
   userForm!: IFormGroup<UserForm>;
   teams: TeamDtoApi[] = [];
+  profile: UserDtoApi = this.profileStore.user.value;
 
   constructor(
     public activeOffcanvas: NgbActiveOffcanvas,
     readonly fob: UntypedFormBuilder,
     private readonly teamsRestService: TeamsRestService,
     private readonly userService: UsersRestService,
+    private readonly profileStore: ProfileStore,
   ) {
     this.fb = fob;
   }
