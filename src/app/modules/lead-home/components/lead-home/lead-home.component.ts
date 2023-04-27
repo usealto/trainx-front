@@ -13,6 +13,7 @@ import { CommentsRestService } from 'src/app/modules/programs/services/comments-
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/programs/services/scores.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
@@ -25,6 +26,7 @@ import {
   ScoreByTypeEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
+  ScoresResponseDtoApi,
   TeamDtoApi,
   UserDtoApi,
 } from 'src/app/sdk';
@@ -61,12 +63,19 @@ export class LeadHomeComponent implements OnInit {
   challengesByTeam: ChallengeDtoApi[] = [];
   challengesByUser: ChallengeDtoApi[] = [];
 
-  temp: any;
+  topFlopData: {
+    programs: any[];
+    teams: any[];
+  } = { programs: [], teams: [] };
+  topFlopProgramTab: ScoreTypeEnumApi = ScoreTypeEnumApi.Program;
+  topFlopTeamTab: ScoreTypeEnumApi = ScoreTypeEnumApi.Team;
 
   constructor(
     private readonly commentsRestService: CommentsRestService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly scoresRestService: ScoresRestService,
+    private readonly scoreService: ScoresService,
+
     private readonly programRunsService: ProgramRunsRestService,
     private readonly challengesRestService: ChallengesRestService,
     private readonly userService: UsersRestService,
@@ -112,6 +121,9 @@ export class LeadHomeComponent implements OnInit {
     this.chartFilters.type = type;
     this.chartFilters.team = team;
 
+    this.topFlop(this.topFlopProgramTab);
+    this.topFlop(this.topFlopTeamTab);
+
     if (this.evolutionChart) {
       this.evolutionChart.destroy();
     }
@@ -139,6 +151,34 @@ export class LeadHomeComponent implements OnInit {
             options: chartDefaultOptions,
           });
         }),
+      )
+      .subscribe();
+  }
+
+  topFlop(val: ScoreTypeEnumApi) {
+    this.scoresRestService
+      .getScores({
+        ...this.chartFilters,
+        timeframe: this.scoreService.durationToTimeFrame(this.chartFilters.duration as ScoreDuration),
+        type: val,
+        sortBy: 'lastAverage:desc',
+      })
+      .pipe(
+        tap((sc: ScoresResponseDtoApi) => {
+          const output = sc.scores.map((s) => ({
+            label: s.label,
+            avg: s.averages.at(-1),
+          }));
+          if (val === ScoreTypeEnumApi.Program || val === ScoreTypeEnumApi.Tag) {
+            this.topFlopProgramTab = val;
+            this.topFlopData.programs = output;
+          }
+          if (val === ScoreTypeEnumApi.Team || val === ScoreTypeEnumApi.User) {
+            this.topFlopTeamTab = val;
+            this.topFlopData.teams = output;
+          }
+        }),
+        untilDestroyed(this),
       )
       .subscribe();
   }
@@ -173,7 +213,7 @@ export class LeadHomeComponent implements OnInit {
         paramsAverage as GetProgramRunsRequestParams,
       ),
     ])
-      .pipe()
+      .pipe(untilDestroyed(this))
       .subscribe();
   }
 

@@ -14,6 +14,8 @@ export class TabsComponent {
   @Input() data: { label: string; value: any }[] = [];
   @Output() tabChanged = new EventEmitter<any>();
 
+  ID = Math.round(Math.random() * 1000);
+
   switchTab(val: any) {
     this.tabChanged.emit(val);
   }

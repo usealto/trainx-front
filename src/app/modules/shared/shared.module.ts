@@ -22,6 +22,7 @@ import { StatusPillComponent } from './components/status-pill/status-pill.compon
 import { SearchComponent } from './components/search/search.component';
 import { TabsComponent } from './components/tabs/tabs.component';
 import { ProfileCardComponent } from './components/profile-card/profile-card.component';
+import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { ProfileCardComponent } from './components/profile-card/profile-card.com
     LoadingModule,
     RouterModule,
     NgbDatepickerModule,
+    NgVar,
   ],
   exports: [
     TranslationModule,
@@ -62,6 +64,7 @@ import { ProfileCardComponent } from './components/profile-card/profile-card.com
     TabsComponent,
     SearchComponent,
     StatusPillComponent,
+    NgVar,
     FormsModule,
     ImgBadgeComponent,
     ReactiveFormsModule,

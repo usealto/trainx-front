@@ -157,23 +157,18 @@
 </div>
 
 <div class="row">
+  <!-- CHARTS -->
   <div class="col-6">
     <div class="panel h-100">
-      <div class="btn-group d-inline-block mb-3" role="group">
-        <alto-tabs
-          (tabChanged)="createCharts({ type: $event })"
-          [data]="[
-            {
-              label: I18ns.leadHome.globalEvolution.tabs.program,
-              value: ScoreTypeEnum.Program
-            },
-            {
-              label: I18ns.leadHome.globalEvolution.tabs.tag,
-              value: ScoreTypeEnum.Tag
-            }
-          ]"
-        ></alto-tabs>
-      </div>
+      <alto-tabs
+        class="mb-3"
+        *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
+        (tabChanged)="createCharts({ type: $event })"
+        [data]="[
+          { label: trads.program, value: ScoreTypeEnum.Program },
+          { label: trads.tag, value: ScoreTypeEnum.Tag }
+        ]"
+      ></alto-tabs>
 
       <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
       <div [hidden]="!scoreCount" class="chart-container">
@@ -184,45 +179,92 @@
       </div>
     </div>
   </div>
+  <!-- TOP / FLOP -->
   <div class="col-6">
+    <!-- PROGRAMS & TAGS -->
     <div class="panel mb-3">
-      <div class="btn-group d-inline-block mb-3" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-outline-primary">
-          {{ I18ns.leadHome.globalEvolution.tabs.program }}
-        </button>
-        <button type="button" class="btn btn-outline-primary">
-          {{ I18ns.leadHome.globalEvolution.tabs.tag }}
-        </button>
-      </div>
+      <alto-tabs
+        class="mb-3"
+        *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
+        (tabChanged)="topFlop($event)"
+        [data]="[
+          { label: trads.program, value: ScoreTypeEnum.Program },
+          { label: trads.tag, value: ScoreTypeEnum.Tag }
+        ]"
+      ></alto-tabs>
       <div class="row">
-        <div class="col-6">
-          <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
-          <div class="panel height-100">&nbsp;</div>
-        </div>
-        <div class="col-6">
-          <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
-          <div class="panel height-100">&nbsp;</div>
-        </div>
+        <ng-container *ngIf="topFlopData?.programs?.length; else tfProgramTemplate">
+          <div class="col-6 border-end">
+            <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
+            <div class="height-100">
+              <p *ngFor="let item of topFlopData?.programs | slice : -3" class="mb-1">
+                {{ item.label }}
+                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
+                  item.avg | percent
+                }}</span>
+              </p>
+            </div>
+          </div>
+          <div class="col-6">
+            <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
+            <div class="height-100">
+              <p *ngFor="let item of topFlopData?.programs | slice : 0 : 3" class="mb-1">
+                {{ item.label }}
+                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
+                  item.avg | percent
+                }}</span>
+              </p>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #tfProgramTemplate>
+          <div class="text-center py-3">
+            {{ I18ns.shared.noData }}
+          </div>
+        </ng-template>
       </div>
     </div>
-    <div class="panel">
-      <div class="btn-group d-inline-block mb-3" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-outline-primary">
-          {{ I18ns.leadHome.globalEvolution.tabs.team }}
-        </button>
-        <button type="button" class="btn btn-outline-primary">
-          {{ I18ns.leadHome.globalEvolution.tabs.member }}
-        </button>
-      </div>
+    <!-- TEAMS & USERS -->
+    <div class="panel mb-3">
+      <alto-tabs
+        class="mb-3"
+        *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
+        (tabChanged)="topFlop($event)"
+        [data]="[
+          { label: trads.team, value: ScoreTypeEnum.Team },
+          { label: trads.member, value: ScoreTypeEnum.User }
+        ]"
+      ></alto-tabs>
       <div class="row">
-        <div class="col-6">
-          <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
-          <div class="panel height-100">&nbsp;</div>
-        </div>
-        <div class="col-6">
-          <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
-          <div class="panel height-100">&nbsp;</div>
-        </div>
+        <ng-container *ngIf="topFlopData?.teams?.length; else tfProgramTemplate2">
+          <div class="col-6 border-end">
+            <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
+            <div class="height-100">
+              <p *ngFor="let item of topFlopData?.teams | slice : -3" class="mb-1">
+                {{ item.label }}
+                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
+                  item.avg | percent
+                }}</span>
+              </p>
+            </div>
+          </div>
+          <div class="col-6">
+            <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
+            <div class="height-100">
+              <p *ngFor="let item of topFlopData?.teams | slice : 0 : 3" class="mb-1">
+                {{ item.label }}
+                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
+                  item.avg | percent
+                }}</span>
+              </p>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #tfProgramTemplate2>
+          <div class="text-center py-3">
+            {{ I18ns.shared.noData }}
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>

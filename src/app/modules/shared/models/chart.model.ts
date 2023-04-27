@@ -6,4 +6,6 @@ export interface ChartFilters {
   duration?: ScoreDuration | string;
   type?: ScoreTypeEnumApi;
   timeframe?: ScoreTimeframeEnumApi;
+  // limit?: number;
+  sortBy?: string;
 }
