@@ -50,7 +50,7 @@ export class ProgramsComponent implements OnInit {
   programsCount = 0;
   programPageSize = 9;
   //
-  questions!: QuestionDtoApi[];
+  questions: QuestionDtoApi[] = [];
   questionsPage = 1;
   questionsCount = 0;
   questionsPageSize = 10;
@@ -60,7 +60,7 @@ export class ProgramsComponent implements OnInit {
   //
   userCache = new Map<string, UserDtoApi>();
   pillsRowDisplayLimit = 3;
-  submittedQuestions!: QuestionSubmittedDtoApi[];
+  submittedQuestions: QuestionSubmittedDtoApi[] = [];
   submittedQuestionsPage = 1;
   submittedQuestionsCount = 0;
   submittedQuestionsPageSize = 10;
