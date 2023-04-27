@@ -13,6 +13,7 @@ export const FR = {
     showAll: 'Voir tout',
     optional: '(facultatif)',
     noData: 'Aucune donnée à afficher',
+    noDataSubtitle: 'Aucun résultat ne correspond à votre recherche',
     reply: 'Répondre',
     priorities: {
       high: 'High',
