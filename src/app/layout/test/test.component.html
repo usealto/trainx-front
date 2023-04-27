@@ -1,0 +1,106 @@
+<div class="row">
+  <div class="col-6">
+    <alto-anchor-navigator>
+      <button type="button" class="btn btn-outline-secondary me-4">
+        {{ I18ns.leadTeam.teams.shortTitle }}
+        <span class="alto-badge">12</span>
+      </button>
+    </alto-anchor-navigator>
+    <br />
+    <br />
+    <alto-colored-pill-list
+      [hasDynamicColor]="true"
+      [data]="[
+        { name: 'test', id: 'AFE8238' },
+        { name: 'alpha', id: 'FF1238' },
+        { name: 'beta', id: '9DAA38' },
+        { name: 'gamma', id: 'AEE123qsd' }
+      ]"
+      [limit]="3"
+    ></alto-colored-pill-list>
+    <br />
+    <br />
+    <alto-colored-pill-list [data]="['test', 'alpha', 'beta', 'gamma']" [limit]="3"></alto-colored-pill-list>
+    <br />
+    <br />
+
+    <alto-dropdown-filter
+      class="text-start"
+      [data]="teamStore.teams.value"
+      [displayLabel]="'shortName'"
+      [returnValue]="'id'"
+      [placeholder]="I18ns.programs.programs.filters.team"
+      [isColored]="true"
+      [multiple]="true"
+    ></alto-dropdown-filter>
+    <br />
+    <br />
+    <alto-dropdown-filter
+      class="text-start"
+      [data]="teamStore.teams.value"
+      [displayLabel]="'shortName'"
+      [returnValue]="'id'"
+      [placeholder]="I18ns.programs.programs.filters.team"
+      [isColored]="false"
+      [multiple]="false"
+    ></alto-dropdown-filter>
+    <br />
+    <br />
+
+    <alto-img-badge
+      [size]="64"
+      url="https://st2.depositphotos.com/5471768/10029/v/450/depositphotos_100296568-stock-illustration-super-hero-red-mask-for.jpg"
+    ></alto-img-badge>
+    <br />
+    <br />
+
+    <alto-profile-card [user]="userStore.user.value"></alto-profile-card>
+    <br />
+    <br />
+
+    <alto-program-card [displayToggle]="true" [program]="programStore.programs.value[0]"></alto-program-card>
+    <br />
+    <alto-progression-badge class="me-2"></alto-progression-badge>
+    <alto-progression-badge class="me-2" [score]="0.05"></alto-progression-badge>
+    <alto-progression-badge class="me-2" [score]="-0.5"></alto-progression-badge>
+    <alto-progression-badge class="me-2" [score]="-0.88"></alto-progression-badge>
+    <br />
+    <br />
+    <alto-search></alto-search>
+    <br />
+    <br />
+
+    <alto-tabs
+      class="mb-3"
+      [data]="[
+        { label: 'First', value: '1' },
+        { label: 'Second', value: '2' }
+      ]"
+    ></alto-tabs>
+  </div>
+  <div class="col-6">
+    <button class="btn btn-outline-secondary">
+      {{ I18ns.shared.cancel }}
+    </button>
+    <button class="btn btn-primary ms-3">
+      {{ I18ns.shared.save }}
+    </button>
+    <br />
+    <br />
+    <ngb-pagination [maxSize]="5" [page]="1" [pageSize]="5" [collectionSize]="50"></ngb-pagination>
+
+    <div class="d-inline-block">
+      <select class="form-select">
+        <option>{{ I18ns.shared.dateFilter.week }}</option>
+        <option>{{ I18ns.shared.dateFilter.month }}</option>
+        <option>{{ I18ns.shared.dateFilter.year }}</option>
+      </select>
+    </div>
+
+    <input type="range" min="1" max="100" class="form-range" />
+
+    <input type="radio" id="type2" name="rad1" class="form-check-input" checked />
+    <br />
+    <input type="radio" id="type3" name="rad1" class="form-check-input" />
+  </div>
+</div>
