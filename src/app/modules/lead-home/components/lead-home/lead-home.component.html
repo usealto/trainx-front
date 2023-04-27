@@ -15,7 +15,11 @@
     </div>
   </div>
   <div class="col-6">
-    <div class="panel">
+    <div
+      class="panel cursor-pointer"
+      [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
+      fragment="submittedQuestionsAnchor"
+    >
       <div class="float-start mx-3"><i class="fs-3 bi bi-question-circle"></i></div>
       <div class="d-inline-block align-bottom">
         <p class="fw-bold">
