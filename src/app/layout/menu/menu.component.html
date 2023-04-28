@@ -83,6 +83,9 @@
     </div>
 
     <hr />
+    <button class="float-end btn btn-link" (click)="logOut()">
+      <i class="m-3 text-white fs-4 bi bi-box-arrow-in-right"></i>
+    </button>
     <a class="profile" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile">
       <alto-profile-card [user]="userStore.user.value$ | async"> </alto-profile-card>
     </a>
