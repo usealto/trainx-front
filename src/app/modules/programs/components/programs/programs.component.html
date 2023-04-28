@@ -121,9 +121,9 @@
       </thead>
       <tbody *ngIf="!isQuestionsLoading">
         <tr *ngFor="let question of questions">
-          <th scope="row" class="col-3">
+          <td class="col-3">
             {{ question.title }}
-          </th>
+          </td>
           <td>
             <span class="badge rounded-pill" [class]="72 | pillColor">{{
               getQuestionScore(question.id) | percent

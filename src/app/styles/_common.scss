@@ -1,8 +1,4 @@
 // --- FORMS ---
-.required-star {
-  color: var(--bs-danger);
-}
-
 .ng-submitted .ng-invalid,
 .ngb-timepicker.ng-touched.ng-invalid .ngb-tp-input,
 .ng-touched.ng-invalid,
@@ -30,11 +26,13 @@
 
 .alto-badge {
   height: 1.58rem;
+  min-width: 1.58rem;
   display: inline-block;
   font-size: 0.85rem;
   line-height: 1.6rem;
   border-radius: 25px;
   padding: 0 0.5rem;
+  text-align: center;
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
   font-weight: 500;

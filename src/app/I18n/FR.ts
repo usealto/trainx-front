@@ -15,6 +15,7 @@ export const FR = {
     noData: 'Aucune donnée à afficher',
     noDataSubtitle: 'Aucun résultat ne correspond à votre recherche',
     reply: 'Répondre',
+    search: 'Rechercher',
     priorities: {
       high: 'High',
       medium: 'Medium',

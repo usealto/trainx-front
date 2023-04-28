@@ -15,3 +15,110 @@
 .offcanvas {
   --bs-offcanvas-width: 520px;
 }
+
+.search-group {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  max-width: 23rem;
+
+  .input-group-text {
+    display: flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--alto-grey);
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 28px 0 0 28px;
+    border: 1px solid #ced4da;
+    border-right-width: 0;
+    background-color: transparent;
+  }
+  & > .form-control {
+    border: 0;
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    border-radius: 0 28px 28px 0;
+    border: 1px solid #ced4da;
+    border-left-width: 0;
+  }
+}
+
+.form-select {
+  border-radius: 28px;
+  font-weight: 600;
+  padding-inline-start: 1rem;
+  option {
+    font-weight: 600;
+    padding: 0.5rem;
+  }
+}
+
+.ng-select {
+  .ng-arrow-wrapper {
+    width: 30px;
+    height: 26px;
+    transition: transform 0.3s;
+    cursor: pointer;
+    .ng-arrow {
+      border-style: solid;
+      border-width: 0.1rem 0.1rem 0 0;
+      height: 8px !important;
+      width: 8px !important;
+      top: -2px;
+      transform: rotate(135deg);
+      color: #00000040;
+      border-color: grey;
+    }
+  }
+  &.ng-select-opened > .ng-select-container .ng-arrow-wrapper {
+    .ng-arrow {
+      border-color: grey;
+      border-width: 0 0 0.1rem 0.1rem;
+      margin: 1rem 0 0 0;
+    }
+  }
+  &.ng-select-opened.ng-select-bottom > .ng-select-container {
+    border-radius: 28px;
+  }
+  .ng-select-container {
+    border-radius: 28px;
+    font-weight: 600;
+    color: var(--alto-text-color);
+    padding-inline-start: 0.5rem;
+    .ng-value-container .ng-placeholder {
+      color: var(--alto-text-color);
+    }
+  }
+  .ng-dropdown-panel {
+    &.ng-select-bottom {
+      margin: 0.25rem 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .ng-dropdown-panel-items {
+      margin: 0.25rem 0;
+      .ng-option {
+        background-color: transparent;
+        font-weight: 600;
+        color: var(--alto-text-color);
+        i {
+          opacity: 0;
+        }
+        &.ng-option-marked {
+          background-color: #f9fafb;
+        }
+        &.ng-option-selected i {
+          float: right;
+          opacity: 1;
+        }
+      }
+    }
+  }
+}

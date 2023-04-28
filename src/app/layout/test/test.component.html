@@ -1,7 +1,7 @@
-<div class="row">
+<div class="row" *ngIf="isDev">
   <div class="col-6">
     <alto-anchor-navigator>
-      <button type="button" class="btn btn-outline-secondary me-4">
+      <button type="button" class="btn btn-outline-secondary me-4 ps-3">
         {{ I18ns.leadTeam.teams.shortTitle }}
         <span class="alto-badge">12</span>
       </button>
@@ -46,6 +46,19 @@
     ></alto-dropdown-filter>
     <br />
     <br />
+    <div class="d-inline-block" style="width: 12rem">
+      <ng-select [searchable]="false" [items]="['Week', 'Month', 'Year']" placeholder="Période">
+        <ng-template ng-label-tmp let-item="item">
+          {{ item }}
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item" let-index="index">
+          <span>{{ item }}</span>
+          <i class="bi bi-check-circle-fill"></i>
+        </ng-template>
+      </ng-select>
+    </div>
+    <br />
+    <br />
 
     <alto-img-badge
       [size]="64"
@@ -78,6 +91,7 @@
       ]"
     ></alto-tabs>
   </div>
+  <!--  COL 2 -->
   <div class="col-6">
     <button class="btn btn-outline-secondary">
       {{ I18ns.shared.cancel }}
@@ -85,22 +99,40 @@
     <button class="btn btn-primary ms-3">
       {{ I18ns.shared.save }}
     </button>
+    <button class="btn btn-secondary ms-3">
+      <i class="bi bi-pen"></i>
+    </button>
     <br />
     <br />
     <ngb-pagination [maxSize]="5" [page]="1" [pageSize]="5" [collectionSize]="50"></ngb-pagination>
-
-    <div class="d-inline-block">
-      <select class="form-select">
-        <option>{{ I18ns.shared.dateFilter.week }}</option>
-        <option>{{ I18ns.shared.dateFilter.month }}</option>
-        <option>{{ I18ns.shared.dateFilter.year }}</option>
-      </select>
-    </div>
 
     <input type="range" min="1" max="100" class="form-range" />
 
     <input type="radio" id="type2" name="rad1" class="form-check-input" checked />
     <br />
     <input type="radio" id="type3" name="rad1" class="form-check-input" />
+    <br />
+    <br />
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Date</th>
+          <th scope="col"></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let prog of programStore.programs.value | slice : 0 : 8">
+          <td>
+            {{ prog.name }}
+          </td>
+          <td>{{ prog.createdAt | date : 'shortDate' }}</td>
+          <td class="cursor-pointer">
+            <i class="fs-5 bi bi-pencil"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
