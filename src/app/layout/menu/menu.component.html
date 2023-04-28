@@ -43,6 +43,7 @@
       {{ I18ns.menu.settings }}
     </a>
     <hr />
+    <a *ngIf="impersonatedUser" class="btn btn-danger" (click)="removeImpersonation()" [routerLink]="'/admin/home'">remove impersonation</a>
     <a class="profile" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile">
       <alto-img-badge [url]="url" [size]="40"></alto-img-badge>
       <div class="d-inline-block ms-3">

@@ -51,7 +51,7 @@
         </button>
       </td>
       <td>
-        <a *ngIf="user.user_metadata && user.user_metadata.altoId" [routerLink]="['/', 'admin', 'users',user.user_metadata.altoId]" class="btn btn-info" (click)="setImpersonation(user.email)">
+        <a *ngIf="user.user_metadata && user.user_metadata.altoId" [routerLink]="['/']" class="btn btn-info" (click)="setLocalStorage(user.email)">
           vew app impersonnated
         </a>
       </td>

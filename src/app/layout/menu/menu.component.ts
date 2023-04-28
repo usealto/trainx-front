@@ -16,6 +16,8 @@ export class MenuComponent implements OnInit {
   AltoRoutes = AltoRoutes;
   I18ns = I18ns;
   buildTime = buildTime;
+  impersonatedUser = localStorage.getItem('impersonatedUser') !== '' 
+  && localStorage.getItem('impersonatedUser')
 
   url = '';
   name = '';
@@ -28,5 +30,9 @@ export class MenuComponent implements OnInit {
     this.url = pictureUrl || '';
     this.name = (!firstname || !lastname ? username : firstname + ' ' + lastname) ?? '';
     this.email = email;
+  }
+
+  removeImpersonation() {
+    localStorage.setItem('impersonatedUser','')
   }
 }

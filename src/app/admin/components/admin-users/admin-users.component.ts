@@ -61,5 +61,9 @@ export class AdminUsersComponent implements OnInit {
     localStorage.setItem('impersonatedUser', email);
     this.dataService.sendData('impersonatedUserUpdated');
   }
+
+  setLocalStorage(email: string) {
+    localStorage.setItem('impersonatedUser', email);
+  }
     
 }
