@@ -10,9 +10,29 @@
 }
 .btn {
   --bs-btn-border-radius: 24px;
+  height: 2.572rem;
 }
 .offcanvas {
   --bs-offcanvas-width: 520px;
+}
+
+.btn-outline-secondary {
+  --bs-btn-bg: white;
+  --bs-btn-color: var(--alto-text-color2);
+  --bs-btn-border-color: #ccc;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #6c757d;
+  --bs-btn-hover-border-color: #6c757d;
+  --bs-btn-focus-shadow-rgb: 108, 117, 125;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #6c757d;
+  --bs-btn-active-border-color: #6c757d;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #6c757d;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #6c757d;
+  --bs-gradient: none;
+  font-weight: 600;
 }
 
 .search-group {
@@ -58,7 +78,9 @@
     padding: 0.5rem;
   }
 }
-
+.ng-select .ng-select-container {
+  color: #344054;
+}
 .ng-select {
   .ng-arrow-wrapper {
     width: 30px;
@@ -89,10 +111,10 @@
   .ng-select-container {
     border-radius: 28px;
     font-weight: 600;
-    color: var(--alto-text-color);
+    color: var(--alto-blue-second);
     padding-inline-start: 0.5rem;
     .ng-value-container .ng-placeholder {
-      color: var(--alto-text-color);
+      color: var(--alto-blue-second);
     }
   }
   .ng-dropdown-panel {
@@ -106,7 +128,7 @@
       .ng-option {
         background-color: transparent;
         font-weight: 600;
-        color: var(--alto-text-color);
+        color: var(--alto-blue-second);
         i {
           opacity: 0;
         }

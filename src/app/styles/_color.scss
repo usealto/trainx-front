@@ -9,7 +9,6 @@
   --alto-blue-disabled: #3b434e;
   --alto-purple: #a757fa;
 
-  // --alto-text-color: #19222f;
   --alto-text-color: #101828;
   --alto-text-color2: #344054;
 
@@ -18,7 +17,7 @@
 
   --alto-grey: #667085;
   --alto-light-grey: #f8fafb;
-  --alto-medium-grey: #f2f4f7;
+  --alto-medium-grey: #eaecf0;
   --alto-dark-grey: #98a2b3;
 
   --bs-body-bg: #fcfcfd;
@@ -32,4 +31,7 @@
 }
 .alto-grey {
   color: var(--alto-grey);
+}
+.alto-grey-bg {
+  background-color: var(--alto-medium-grey);
 }

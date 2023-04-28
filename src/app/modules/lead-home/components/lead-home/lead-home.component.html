@@ -1,14 +1,14 @@
 <h1 class="mt-4">{{ I18ns.leadHome.title + userName | titlecase }}</h1>
-<p class="mb-4">{{ I18ns.leadHome.subtitle }}</p>
+<p class="mb-4 alto-grey">{{ I18ns.leadHome.subtitle }}</p>
 <div class="row">
   <div class="col-6">
     <div class="panel">
-      <div class="float-start mx-3"><i class="fs-3 bi bi-chat-text"></i></div>
+      <div class="float-start mx-3 alto-badge-big"><i class="fs-4 bi bi-chat-text"></i></div>
       <div class="d-inline-block align-bottom">
-        <p class="fw-bold">
+        <p class="fw-bold mb-1">
           {{ I18ns.leadHome.comments | plural : commentsCount }}
         </p>
-        <p class="fs-7">
+        <p class="fs-7 alto-grey">
           {{ I18ns.leadHome.subtitleComment | plural : commentsCount }}
         </p>
       </div>
@@ -20,12 +20,12 @@
       [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
       fragment="submittedQuestionsAnchor"
     >
-      <div class="float-start mx-3"><i class="fs-3 bi bi-question-circle"></i></div>
+      <div class="float-start mx-3 alto-badge-big"><i class="fs-4 bi bi-question-circle"></i></div>
       <div class="d-inline-block align-bottom">
-        <p class="fw-bold">
+        <p class="fw-bold mb-1">
           {{ I18ns.leadHome.question | plural : questionsCount }}
         </p>
-        <p class="fs-7">
+        <p class="fs-7 alto-grey">
           {{ I18ns.leadHome.subtitleQuestion | plural : questionsCount }}
         </p>
       </div>
@@ -33,33 +33,25 @@
   </div>
 </div>
 
-<h1 class="mt-4">{{ I18ns.leadHome.statistics.title }}</h1>
-
-<div class="row my-4">
+<div class="row mt-5 mb-4">
   <div class="col-5">
-    <div class="d-inline-block">
-      <select
-        #statisticsTimeframeSelect
-        class="form-select"
-        [ngModel]="statisticTimeRange"
-        (change)="updateScore({ timeframe: statisticsTimeframeSelect.value })"
-      >
-        <option [value]="ScoreDuration.Week">{{ I18ns.shared.dateFilter.week }}</option>
-        <option [value]="ScoreDuration.Month">{{ I18ns.shared.dateFilter.month }}</option>
-        <option [value]="ScoreDuration.Year">{{ I18ns.shared.dateFilter.year }}</option>
-      </select>
-    </div>
+    <h1>{{ I18ns.leadHome.statistics.title }}</h1>
   </div>
   <div class="col-7 text-end">
-    <ng-select
+    <alto-period-filter
+      class="text-start me-3"
+      (selectChange)="updateScore({ timeframe: $event })"
+    ></alto-period-filter>
+    <alto-dropdown-filter
       class="text-start"
-      [items]="teamStore.teams.value"
-      bindValue="id"
-      bindLabel="shortName"
-      [placeholder]="I18ns.leadHome.ongoingPrograms.filters.team"
-      [(ngModel)]="filterStatistics"
-    >
-    </ng-select>
+      [data]="teamStore.teams.value"
+      [displayLabel]="'shortName'"
+      [returnValue]="'id'"
+      [placeholder]="I18ns.programs.programs.filters.team"
+      [isColored]="true"
+      [multiple]="false"
+      (selectChange)="updateScore({ timeframe: statisticTimeRange, teamId: $event })"
+    ></alto-dropdown-filter>
   </div>
 </div>
 
@@ -69,7 +61,7 @@
       <p>
         {{ I18ns.leadHome.statistics.globalScore }}
         <i
-          class="fs-5 bi bi-question-circle"
+          class="fs-5 bi bi-question-circle float-end"
           placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.globalScoreToolTip }}"
         ></i>
@@ -82,12 +74,12 @@
       <p>
         {{ I18ns.leadHome.statistics.averageCompletion }}
         <i
-          class="fs-5 bi bi-question-circle"
+          class="fs-5 bi bi-question-circle float-end"
           placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.averageCompletionToolTip }}"
         ></i>
       </p>
-      <div class="row">
+      <div class="row g-0">
         <p class="col">{{ averageCompletion | percent }}</p>
         <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge>
       </div>
@@ -98,12 +90,12 @@
       <p>
         {{ I18ns.leadHome.statistics.activeMembers }}
         <i
-          class="fs-5 bi bi-question-circle"
+          class="fs-5 bi bi-question-circle float-end"
           placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.activeMembersToolTip }}"
         ></i>
       </p>
-      <div class="row">
+      <div class="row g-0">
         <p class="col">N/A</p>
         <!-- <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge> -->
       </div>
@@ -114,12 +106,12 @@
       <p>
         {{ I18ns.leadHome.statistics.inactiveMembers }}
         <i
-          class="fs-5 bi bi-question-circle"
+          class="fs-5 bi bi-question-circle float-end"
           placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.inactiveMembersToolTip }}"
         ></i>
       </p>
-      <div class="row">
+      <div class="row g-0">
         <p class="col">N/A</p>
         <!-- <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge> -->
       </div>
@@ -129,31 +121,25 @@
 
 <!-- GLOBAL EVOLUTION -->
 
-<h1 class="mt-4">{{ I18ns.leadHome.globalEvolution.title }}</h1>
+<div class="row mt-5 mb-4">
+  <h1 class="col-5">{{ I18ns.leadHome.globalEvolution.title }}</h1>
+  <div class="col-7 text-end">
+    <alto-period-filter
+      class="text-start me-3"
+      (selectChange)="createCharts({ duration: $event })"
+    ></alto-period-filter>
 
-<div class="text-end">
-  <div class="d-inline-block me-3">
-    <select
-      #evolutionTimeframeSelect
-      class="form-select mb-3"
-      (change)="createCharts({ duration: evolutionTimeframeSelect.value })"
-    >
-      <option [value]="ScoreDuration.Week">{{ I18ns.shared.dateFilter.week }}</option>
-      <option selected [value]="ScoreDuration.Month">{{ I18ns.shared.dateFilter.month }}</option>
-      <option [value]="ScoreDuration.Year">{{ I18ns.shared.dateFilter.year }}</option>
-    </select>
+    <alto-dropdown-filter
+      class="text-start"
+      [data]="teamStore.teams.value"
+      [displayLabel]="'shortName'"
+      [returnValue]="'id'"
+      [placeholder]="I18ns.programs.programs.filters.team"
+      (selectChange)="createCharts({ team: $event })"
+      [isColored]="true"
+      [multiple]="false"
+    ></alto-dropdown-filter>
   </div>
-
-  <alto-dropdown-filter
-    class="text-start"
-    [data]="teamStore.teams.value"
-    [displayLabel]="'shortName'"
-    [returnValue]="'id'"
-    [placeholder]="I18ns.programs.programs.filters.team"
-    (selectChange)="createCharts({ team: $event })"
-    [isColored]="true"
-    [multiple]="false"
-  ></alto-dropdown-filter>
 </div>
 
 <div class="row">
@@ -270,29 +256,32 @@
   </div>
 </div>
 
-<div class="row my-4">
+<!-- ONGOING PROGRAMS -->
+<div class="row mt-5 mb-4">
   <div class="col-5">
     <h1>{{ I18ns.leadHome.ongoingPrograms.title }}</h1>
   </div>
   <div class="col-7 text-end">
     <alto-dropdown-filter
-      class="text-start"
+      class="text-start me-3"
       [data]="teamStore.teams.value"
       [displayLabel]="'shortName'"
       [placeholder]="I18ns.leadHome.ongoingPrograms.filters.team"
       (selectChange)="filterPrograms($event)"
       [isColored]="true"
     ></alto-dropdown-filter>
-    <button [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]" class="btn btn-ouline-secondary">
-      {{ I18ns.shared.showAll }}
+    <button
+      [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
+      class="btn btn-outline-secondary align-bottom"
+    >
+      {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
     </button>
   </div>
 </div>
 
 <div class="row mb-3">
-  <!-- <div class="col-6 col-xl-4 col-xxxl-3" *ngFor="let prog of programs"> -->
   <div class="col-4 mb-3" *ngFor="let prog of programs">
-    <alto-program-card [displayToggle]="true" [programRun]="prog"></alto-program-card>
+    <alto-program-card [displayToggle]="false" [programRun]="prog"></alto-program-card>
   </div>
 </div>
 <ngb-pagination
@@ -305,13 +294,13 @@
 ></ngb-pagination>
 
 <!-- CHALLENGES -->
-<div class="row my-4">
+<div class="row mt-5 mb-4">
   <div class="col-5">
-    <h1 class="my-4">{{ I18ns.leadHome.ongoingChallenges.title }}</h1>
+    <h1>{{ I18ns.leadHome.ongoingChallenges.title }}</h1>
   </div>
   <div class="col-7 text-end">
-    <button [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]" class="btn btn-ouline-secondary">
-      {{ I18ns.shared.showAll }}
+    <button [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]" class="btn btn-outline-secondary">
+      {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
     </button>
   </div>
 </div>

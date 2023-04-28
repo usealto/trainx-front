@@ -23,6 +23,7 @@ import { SearchComponent } from './components/search/search.component';
 import { TabsComponent } from './components/tabs/tabs.component';
 import { ProfileCardComponent } from './components/profile-card/profile-card.component';
 import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
+import { PeriodFilterComponent } from './components/period-filter/period-filter.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
     SearchComponent,
     TabsComponent,
     ProfileCardComponent,
+    PeriodFilterComponent,
   ],
   imports: [
     CommonModule,
@@ -64,6 +66,7 @@ import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
     TabsComponent,
     SearchComponent,
     StatusPillComponent,
+    PeriodFilterComponent,
     NgVar,
     FormsModule,
     ImgBadgeComponent,

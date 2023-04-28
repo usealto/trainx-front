@@ -257,15 +257,6 @@ export class LeadHomeComponent implements OnInit {
     this.getProgramRuns(teams.map((t) => t.id));
   }
 
-  private _filterStatistics: any;
-  public get filterStatistics() {
-    return this._filterStatistics;
-  }
-  public set filterStatistics(value) {
-    this._filterStatistics = value;
-    this.updateScore({ timeframe: this.statisticTimeRange, teamId: value });
-  }
-
   @memoize()
   getUser(id: string): Observable<UserDtoApi | undefined> {
     if (!id) {
