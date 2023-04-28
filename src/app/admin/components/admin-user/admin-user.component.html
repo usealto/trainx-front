@@ -78,7 +78,7 @@
             formControlName="roles"
           >
             <ng-template ng-label-tmp let-item="item" let-clear="clear">
-              <div class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
+              <div class="badge rounded-pill p-2" [style.backgroundColor]="'blue'">
                 <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
                   <i class="bi bi-x-lg"></i>
                 </span>
@@ -86,7 +86,7 @@
               </div>
             </ng-template>
             <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-              <span class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
+              <span class="badge rounded-pill p-2" [style.backgroundColor]="'blue'">
                 {{ item }}
               </span>
             </ng-template>
