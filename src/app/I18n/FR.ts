@@ -22,6 +22,7 @@ export const FR = {
       low: 'Low',
     },
     status: {
+      title: 'Status',
       incoming: 'À venir',
       ongoing: 'En cours',
       ended: 'Terminé',
@@ -325,6 +326,7 @@ export const FR = {
         leader: 'Leader',
         endDate: 'Fin',
       },
+      statusFilter: 'Status',
     },
     individual: {
       title: 'Challenges individuels',
