@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import Chart, { ChartData, ChartDataset, ChartTypeRegistry } from 'chart.js/auto';
+import Chart, { ChartData } from 'chart.js/auto';
 import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -13,7 +13,10 @@ import { CommentsRestService } from 'src/app/modules/programs/services/comments-
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/programs/services/scores.service';
+import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import {
   ChallengeDtoApi,
   ChallengeDtoApiTypeEnumApi,
@@ -23,11 +26,10 @@ import {
   ScoreByTypeEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
+  ScoresResponseDtoApi,
   TeamDtoApi,
   UserDtoApi,
 } from 'src/app/sdk';
-import { LeadHomeStatistics } from '../statistics/lead-home-statistics.model';
-import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 @UntilDestroy()
 @Component({
   selector: 'alto-lead-home',
@@ -38,28 +40,13 @@ export class LeadHomeComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   ScoreDuration = ScoreDuration;
+  ScoreTypeEnum = ScoreTypeEnumApi;
 
-  name = '';
-  active = 1;
-  sharedData: LeadHomeStatistics[] = [
-    { title: I18ns.leadHome.statistics.globalScore, toolTip: I18ns.leadHome.statistics.globalScoreToolTip },
-    {
-      title: I18ns.leadHome.statistics.averageCompletion,
-      toolTip: I18ns.leadHome.statistics.averageCompletionToolTip,
-    },
-    {
-      title: I18ns.leadHome.statistics.activeMembers,
-      toolTip: I18ns.leadHome.statistics.activeMembersToolTip,
-    },
-    {
-      title: I18ns.leadHome.statistics.inactiveMembers,
-      toolTip: I18ns.leadHome.statistics.inactiveMembersToolTip,
-    },
-  ];
+  userName = '';
 
-  weekData: LeadHomeStatistics[] = [];
-  monthData: LeadHomeStatistics[] = [];
-  yearData: LeadHomeStatistics[] = [];
+  chartFilters: ChartFilters = { duration: ScoreDuration.Month, type: ScoreTypeEnumApi.Program, team: '' };
+  scoreCount = 0;
+
   commentsCount = 0;
   questionsCount = 0;
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
@@ -76,12 +63,19 @@ export class LeadHomeComponent implements OnInit {
   challengesByTeam: ChallengeDtoApi[] = [];
   challengesByUser: ChallengeDtoApi[] = [];
 
-  temp: any;
+  topFlopData: {
+    programs: any[];
+    teams: any[];
+  } = { programs: [], teams: [] };
+  topFlopProgramTab: ScoreTypeEnumApi = ScoreTypeEnumApi.Program;
+  topFlopTeamTab: ScoreTypeEnumApi = ScoreTypeEnumApi.Team;
 
   constructor(
     private readonly commentsRestService: CommentsRestService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly scoresRestService: ScoresRestService,
+    private readonly scoreService: ScoresService,
+
     private readonly programRunsService: ProgramRunsRestService,
     private readonly challengesRestService: ChallengesRestService,
     private readonly userService: UsersRestService,
@@ -90,7 +84,7 @@ export class LeadHomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.name = this.profileStore.user.value.firstname ?? this.profileStore.user.value.username ?? '';
+    this.userName = this.profileStore.user.value.firstname ?? this.profileStore.user.value.username ?? '';
     this.getProgramRuns();
 
     combineLatest([
@@ -115,17 +109,29 @@ export class LeadHomeComponent implements OnInit {
       )
       .subscribe();
 
-    this.createCharts(ScoreDuration.Month);
+    this.createCharts(this.chartFilters);
   }
 
-  createCharts(duration: ScoreDuration | string) {
+  createCharts({
+    duration = this.chartFilters.duration,
+    type = this.chartFilters.type ?? ScoreTypeEnumApi.Program,
+    team = this.chartFilters.team,
+  }: ChartFilters) {
+    this.chartFilters.duration = duration;
+    this.chartFilters.type = type;
+    this.chartFilters.team = team;
+
+    this.topFlop(this.topFlopProgramTab);
+    this.topFlop(this.topFlopTeamTab);
+
     if (this.evolutionChart) {
       this.evolutionChart.destroy();
     }
     this.scoresRestService
-      .getScores(duration as ScoreDuration, ScoreTypeEnumApi.Program)
+      .getScores(this.chartFilters)
       .pipe(
-        filter(({ scores }) => !!scores.length),
+        tap(({ scores }) => (this.scoreCount = scores.length)),
+        filter(() => !!this.scoreCount),
         tap(({ scores }) => {
           const labels = scores[0].dates.map((d) => d.toLocaleDateString());
           const data: ChartData = {
@@ -145,6 +151,34 @@ export class LeadHomeComponent implements OnInit {
             options: chartDefaultOptions,
           });
         }),
+      )
+      .subscribe();
+  }
+
+  topFlop(val: ScoreTypeEnumApi) {
+    this.scoresRestService
+      .getScores({
+        ...this.chartFilters,
+        timeframe: this.scoreService.durationToTimeFrame(this.chartFilters.duration as ScoreDuration),
+        type: val,
+        sortBy: 'lastAverage:desc',
+      })
+      .pipe(
+        tap((sc: ScoresResponseDtoApi) => {
+          const output = sc.scores.map((s) => ({
+            label: s.label,
+            avg: s.averages.at(-1),
+          }));
+          if (val === ScoreTypeEnumApi.Program || val === ScoreTypeEnumApi.Tag) {
+            this.topFlopProgramTab = val;
+            this.topFlopData.programs = output;
+          }
+          if (val === ScoreTypeEnumApi.Team || val === ScoreTypeEnumApi.User) {
+            this.topFlopTeamTab = val;
+            this.topFlopData.teams = output;
+          }
+        }),
+        untilDestroyed(this),
       )
       .subscribe();
   }
@@ -179,7 +213,7 @@ export class LeadHomeComponent implements OnInit {
         paramsAverage as GetProgramRunsRequestParams,
       ),
     ])
-      .pipe()
+      .pipe(untilDestroyed(this))
       .subscribe();
   }
 
@@ -221,20 +255,6 @@ export class LeadHomeComponent implements OnInit {
 
   filterPrograms(teams: TeamDtoApi[]) {
     this.getProgramRuns(teams.map((t) => t.id));
-  }
-
-  switchEvolutionChart(e: number) {
-    // TODO !!!!
-    console.log(e);
-  }
-
-  private _filterStatistics: any;
-  public get filterStatistics() {
-    return this._filterStatistics;
-  }
-  public set filterStatistics(value) {
-    this._filterStatistics = value;
-    this.updateScore({ timeframe: this.statisticTimeRange, teamId: value });
   }
 
   @memoize()

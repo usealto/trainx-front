@@ -20,6 +20,7 @@ import { MenuComponent } from './layout/menu/menu.component';
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { ApiModule, BASE_PATH, Configuration, ConfigurationParameters } from './sdk';
 import { SharedModule } from './modules/shared/shared.module';
+import { TestComponent } from './layout/test/test.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {};
@@ -27,7 +28,7 @@ export function apiConfigFactory(): Configuration {
 }
 
 @NgModule({
-  declarations: [AppComponent, AppLayoutComponent, MenuComponent, NotFoundComponent],
+  declarations: [AppComponent, AppLayoutComponent, MenuComponent, NotFoundComponent, TestComponent],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
     BrowserModule,

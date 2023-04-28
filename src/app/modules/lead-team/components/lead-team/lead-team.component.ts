@@ -33,12 +33,6 @@ export class LeadTeamComponent implements OnInit {
   usersPage = 1;
   usersPageSize = 5;
 
-  status = [
-    { label: I18ns.leadTeam.members.filters.status.active, value: true },
-    { label: I18ns.leadTeam.members.filters.status.inactive, value: false },
-  ];
-  selectedStatus?: { label: string; value: boolean };
-
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
     private readonly teamsRestService: TeamsRestService,
@@ -80,7 +74,6 @@ export class LeadTeamComponent implements OnInit {
   filterUsers(selectedTeams: TeamDtoApi[] = []) {
     const filter = {
       teams: selectedTeams,
-      status: this.selectedStatus ? this.selectedStatus.value : undefined,
     };
 
     this.changeUsersPage(this.usersService.filterUsers(this.users, filter));

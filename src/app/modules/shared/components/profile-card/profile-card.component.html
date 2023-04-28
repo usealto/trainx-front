@@ -1,0 +1,8 @@
+<!-- <a class="profile" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile"> -->
+<div *ngIf="user" class="profile">
+  <alto-img-badge [url]="url" [size]="40"></alto-img-badge>
+  <div class="d-inline-block ms-3">
+    <p class="fw-bold">{{ name }}</p>
+    <p>{{ email }}</p>
+  </div>
+</div>

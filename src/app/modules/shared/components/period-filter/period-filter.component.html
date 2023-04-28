@@ -1,0 +1,15 @@
+<ng-select
+  [searchable]="false"
+  [items]="data"
+  [placeholder]="I18ns.shared.period"
+  [(ngModel)]="selectedItem"
+  (change)="selectChange.emit(selectedItem?.value)"
+>
+  <ng-template ng-label-tmp let-item="item">
+    {{ item.label }}
+  </ng-template>
+  <ng-template ng-option-tmp let-item="item" let-index="index">
+    <span>{{ item.label }}</span>
+    <i class="bi bi-check-circle-fill"></i>
+  </ng-template>
+</ng-select>

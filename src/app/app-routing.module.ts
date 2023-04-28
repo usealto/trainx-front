@@ -9,6 +9,7 @@ import { UsersRestService } from './modules/profile/services/users-rest.service'
 import { ProgramsRestService } from './modules/programs/services/programs-rest.service';
 import { TagsRestService } from './modules/programs/services/tags-rest.service';
 import { AltoRoutes } from './modules/shared/constants/routes';
+import { TestComponent } from './layout/test/test.component';
 
 export const appResolver: ResolveFn<any> = () => {
   return combineLatest([
@@ -32,6 +33,10 @@ const routes: Routes = [
     },
     component: AppLayoutComponent,
     children: [
+      {
+        path: 'test',
+        component: TestComponent,
+      },
       {
         path: AltoRoutes.user,
         children: [
@@ -96,6 +101,7 @@ const routes: Routes = [
     path: AltoRoutes.translation,
     loadChildren: () => import('./core/utils/i18n/translation.module').then((m) => m.TranslationModule),
   },
+
   {
     path: '404',
     component: NotFoundComponent,
@@ -109,7 +115,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      anchorScrolling: 'enabled',
+      anchorScrolling: 'disabled',
       scrollPositionRestoration: 'top',
     }),
   ],

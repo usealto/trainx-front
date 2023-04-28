@@ -1,16 +1,14 @@
-<div class="btn-group d-inline-block" role="group">
-  <ng-container *ngFor="let item of labels; let i = index">
-    <input
-      type="radio"
-      class="btn-check"
-      name="rd1"
-      (click)="switchTab(i + 1)"
-      [id]="'btnradio' + getId(i)"
-      autocomplete="off"
-      [checked]="i === 0"
-    />
-    <label class="alto-tab-btn" [for]="'btnradio' + getId(i)">
-      {{ item }}
-    </label>
-  </ng-container>
-</div>
+<ng-container *ngFor="let item of data; let i = index">
+  <input
+    type="radio"
+    class="btn-check"
+    [name]="ID"
+    (click)="switchTab(item.value)"
+    [id]="'btnradio' + getId(i + ID)"
+    autocomplete="off"
+    [checked]="i === 0"
+  />
+  <label class="alto-tab-btn" [for]="'btnradio' + getId(i + ID)">
+    {{ item.label }}
+  </label>
+</ng-container>

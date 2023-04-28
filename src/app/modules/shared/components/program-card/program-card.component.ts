@@ -35,7 +35,7 @@ export class ProgramCardComponent implements OnChanges {
           tap(() => this.getScores()),
         )
         .subscribe();
-    } else if (changes['program']?.firstChange) {
+    } else if (changes['program']?.firstChange && changes['program']?.currentValue) {
       this.getScores();
     }
   }

@@ -6,17 +6,24 @@ export const FR = {
     cancel: 'Annuler',
     delete: 'Supprimer',
     create: 'Créer',
+    refuse: 'Refuser',
     share: 'Partager',
     clipboard: 'Copier dans le presse-papier',
     showMore: 'Voir plus',
-    showAll: 'Voir tout',
+    showAll: 'Tout voir',
     optional: '(facultatif)',
+    noData: 'Aucune donnée à afficher',
+    noDataSubtitle: 'Aucun résultat ne correspond à votre recherche',
+    reply: 'Répondre',
+    search: 'Rechercher',
+    period: 'Période',
     priorities: {
       high: 'High',
       medium: 'Medium',
       low: 'Low',
     },
     status: {
+      title: 'Status',
       incoming: 'À venir',
       ongoing: 'En cours',
       ended: 'Terminé',
@@ -54,6 +61,7 @@ export const FR = {
     },
     globalEvolution: {
       title: 'Évolution globale',
+      score: 'Score moyen',
       tabs: {
         program: 'Programmes',
         tag: 'Tags',
@@ -193,8 +201,16 @@ export const FR = {
   },
   questions: {
     form: {
-      title: 'Créer une question',
-      subtitle: 'Indiquer la question, les réponses possibles et les informations complémentaires.',
+      title: {
+        create: 'Créer une question',
+        edit: 'Éditer une question',
+        submitted: 'Question suggérée',
+      },
+      subtitle: {
+        question: 'Indiquer la question, les réponses possibles et les informations complémentaires.',
+        submitted:
+          " a suggéré une question. Vous pouvez choisir de la rejeter, la valider en l'état ou d'apporter des modifications et informations complémentaires.",
+      },
       name: 'Question',
       namePlaceholder: 'Intitulé de la question',
       goodAnswer: 'Bonne(s) réponse(s)',
@@ -240,7 +256,6 @@ export const FR = {
         activity: 'Activité',
         teams: 'Équipe',
         score: 'Score',
-        status: { title: 'Status', active: 'Actif', inactive: 'Inactif' },
       },
       statistics: {
         total: 'Total',
@@ -249,7 +264,6 @@ export const FR = {
       },
       table: {
         name: 'Nom',
-        status: 'Status',
         team: 'Équipe',
         averageScore: 'Score moyen',
         questionsPerMonth: 'Questions sur 30j',
@@ -313,6 +327,7 @@ export const FR = {
         leader: 'Leader',
         endDate: 'Fin',
       },
+      statusFilter: 'Status',
     },
     individual: {
       title: 'Challenges individuels',

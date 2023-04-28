@@ -20,15 +20,7 @@
         <tbody>
           <tr *ngFor="let user of adminDisplay" class="align-middle">
             <td>
-              <alto-img-badge [url]="user.pictureUrl" [size]="40"></alto-img-badge>
-              <div class="d-inline-block ms-3">
-                <span class="fw-bold d-block">
-                  {{
-                    !user.firstname || !user.lastname ? user.username : user.firstname + ' ' + user.lastname
-                  }}
-                </span>
-                <span>{{ user.email }}</span>
-              </div>
+              <alto-profile-card [user]="user"></alto-profile-card>
             </td>
             <td title="{{ user.createdAt | date : 'short' }}">{{ user.createdAt | date : 'shortDate' }}</td>
             <td title="{{ user.updatedAt | date : 'short' }}">{{ user.updatedAt | date : 'shortDate' }}</td>
@@ -69,15 +61,7 @@
         <tbody>
           <tr *ngFor="let user of usersDisplay" class="align-middle">
             <td>
-              <alto-img-badge [url]="user.pictureUrl" [size]="40"></alto-img-badge>
-              <div class="d-inline-block ms-3">
-                <p class="fw-bold">
-                  {{
-                    !user.firstname || !user.lastname ? user.username : user.firstname + ' ' + user.lastname
-                  }}
-                </p>
-                <p>{{ user.email }}</p>
-              </div>
+              <alto-profile-card [user]="user"></alto-profile-card>
             </td>
             <td title="{{ user.createdAt | date : 'short' }}">{{ user.createdAt | date : 'shortDate' }}</td>
             <td title="{{ user.updatedAt | date : 'short' }}">{{ user.updatedAt | date : 'shortDate' }}</td>

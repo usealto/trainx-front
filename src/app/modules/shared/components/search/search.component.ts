@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
 
 @Component({
   selector: 'alto-search',
@@ -6,7 +7,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./search.component.scss'],
 })
 export class SearchComponent {
-  @Input() placeholder = 'Search';
+  @Input() placeholder = I18ns.shared.search;
   /**
    * To avoid server clog when a request is connected to the search
    */
