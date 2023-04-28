@@ -15,6 +15,7 @@ import { DataService } from '../../admin-data.service';
 export class AdminUsersComponent implements OnInit {
   users: UserDtoApi[] = [];
   authusers: AuthUserGet[] = [];
+  companyAdmins: AuthUserGet[] = [];
   id: string | undefined;
   usersCount = 0;
   usersPage = 1;
@@ -32,15 +33,10 @@ export class AdminUsersComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') || '';
     this.changeUsersPage(this.q);
+    this.fetchCompanyAdmins();
   }
 
   changeUsersPage(query: string) {
-    // this.usersRestService.getUsersPaginated({page: this.usersPage, itemsPerPage: this.usersPageSize})
-    // .pipe(
-    //   tap((q) => (this.users = q.data ?? [])),
-    //   tap((q) => (this.usersCount = q.meta.totalItems ?? 0))
-    // )
-    // .subscribe();
     const queryFormated =  '*' + query + '*'
     if (query.length > 0 && query.length < 3) {
       return
@@ -48,6 +44,17 @@ export class AdminUsersComponent implements OnInit {
     this.authApiService.getAuth0Users({q:queryFormated}).subscribe((q) => {
       this.authusers = q.data;
     });
+  }
+
+  fetchCompanyAdmins() {
+    this.authApiService.getRoleUsers({role:'company-admin'})
+    .subscribe((q) => {
+      this.companyAdmins = q.data;
+    });
+  }
+
+  hasRoleCompanyAdmin(email: string) {
+    return this.companyAdmins.find((user) => user.email === email);
   }
 
   setImpersonation(email: string) {

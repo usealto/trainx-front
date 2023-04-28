@@ -3,40 +3,52 @@
 <br>
 <br>
 
-<a [routerLink]="['/', 'admin', 'companies',company.id,'users']" *ngIf="company">
-  <h2 *ngIf="users">Users : <span class="text-primary">{{users.length}}</span></h2>
-</a>
 
-<br>
-<br>
-
-
-<div class="col-sm-6">
-  <h2>Edit company</h2>
-  <form [formGroup]="companyForm" class="page-max-width" *ngIf="companyForm">
-    <div class="form-group row">
-      <label class="form-label col-5 mb-2" for="name">Name</label>
-      <div class="col input-group">
-        <input class="form-control" formControlName="name" />
-      </div>
-    </div>
-    <div class="form-group row my-2">
-      <label class="form-label col-5 mb-2" for="domain">domain</label>
-      <div class="col input-group">
-        <input class="form-control" formControlName="domain" />
-      </div>
-    </div>
-    <div class="form-group row my-2">
-      <label class="form-label col-5 mb-2" for="isSlackActive">is slack active</label>
-      <div class="col input-group">
-        <input class="" formControlName="isSlackActive" type="checkbox" [(ngModel)]="company.isSlackActive"/>
-      </div>
-    </div>
-    <button class="btn btn-primary" type="submit" (click)="submit()">Submit</button>
-  </form>
+<div *ngIf="!isImpersonnatedAsCompanyAdminOfthisCompany()">
+  <p>
+    It seems you are not impersonnated as a company admin. Please do this before coming back here
+  </p>
+  <a [routerLink]="'/admin/users'" routerLinkActive="menu-selected" class="btn btn-primary mx-2">
+    Voir les Users
+  </a>
 </div>
 
+<div *ngIf="isImpersonnatedAsCompanyAdminOfthisCompany()">
+  <a [routerLink]="['/', 'admin', 'companies',company.id,'users']" *ngIf="company" class="btn btn-primary">
+    <p *ngIf="users">Users : <span>{{users.length}}</span></p>
+  </a>
 
-<br>
-<p>Data brute de l'entreprise, version JSON <input type="checkbox" [(ngModel)]="display"/></p>
-<pre *ngIf="display">{{ company | json }}</pre>
+  <br>
+  <br>
+
+
+  <div class="col-sm-6">
+    <h2>Edit company</h2>
+    <form [formGroup]="companyForm" class="page-max-width" *ngIf="companyForm">
+      <div class="form-group row">
+        <label class="form-label col-5 mb-2" for="name">Name</label>
+        <div class="col input-group">
+          <input class="form-control" formControlName="name" />
+        </div>
+      </div>
+      <div class="form-group row my-2">
+        <label class="form-label col-5 mb-2" for="domain">domain</label>
+        <div class="col input-group">
+          <input class="form-control" formControlName="domain" />
+        </div>
+      </div>
+      <div class="form-group row my-2">
+        <label class="form-label col-5 mb-2" for="isSlackActive">is slack active</label>
+        <div class="col input-group">
+          <input class="" formControlName="isSlackActive" type="checkbox" [(ngModel)]="company.isSlackActive"/>
+        </div>
+      </div>
+      <button class="btn btn-primary" type="submit" (click)="submit()">Update</button>
+    </form>
+  </div>
+
+
+  <br>
+  <p>Data brute de l'entreprise, version JSON <input type="checkbox" [(ngModel)]="display"/></p>
+  <pre *ngIf="display">{{ company | json }}</pre>
+</div>

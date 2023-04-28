@@ -1,6 +1,8 @@
 <h2>Users</h2>
 <p>This user list comes directly from Auth0</p>
 
+<p>ℹ️ No buttons means it cannot be found in Alto-API : ask dev for help</p>
+<p>ℹ️ Only "company admins" can be impersonnated</p>
 <div class="row mb-3">
   <div class="col-5">
     <div class="input-group">
@@ -27,6 +29,8 @@
       <th scope="col">created date</th>
       <th scope="col">last login</th>      
       <th></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -37,8 +41,18 @@
       <td>{{user.created_at}}</td>
       <td>{{user.last_login}}</td>
       <td>
-        <a *ngIf="user.user_metadata && user.user_metadata.altoId" [routerLink]="['/', 'admin', 'users',user.user_metadata.altoId]" routerLinkActive="menu-selected" class="btn btn-primary" (click)="setImpersonation(user.email)">
+        <a *ngIf="user.user_metadata && user.user_metadata.altoId" [routerLink]="['/', 'admin', 'users',user.user_metadata.altoId]" routerLinkActive="menu-selected" class="btn btn-primary">
           Voir
+        </a>
+      </td>
+      <td>
+        <button *ngIf="user.user_metadata && user.user_metadata.altoId && hasRoleCompanyAdmin(user.email)" class="btn btn-danger" (click)="setImpersonation(user.email)">
+          Impersonnate
+        </button>
+      </td>
+      <td>
+        <a *ngIf="user.user_metadata && user.user_metadata.altoId" [routerLink]="['/', 'admin', 'users',user.user_metadata.altoId]" class="btn btn-info" (click)="setImpersonation(user.email)">
+          vew app impersonnated
         </a>
       </td>
     </tr>

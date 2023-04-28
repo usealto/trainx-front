@@ -44,6 +44,7 @@ export class AdminMenuComponent implements OnInit {
   refreshUserImpersonated() {
     this.refreshMe()
     this.impersonatedUser = localStorage.getItem('impersonatedUser') !== '' && localStorage.getItem('impersonatedUser')
+    window.location.reload()
   }
 
 

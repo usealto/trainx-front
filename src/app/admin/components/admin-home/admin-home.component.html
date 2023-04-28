@@ -1,6 +1,15 @@
 <h1>Bienvenue sur l'espace administrateur d'Alto</h1>
 <p>Cet espace est destiné aux employés d'Alto</p>
 <br>
-<a [routerLink]="'/admin/companies'" routerLinkActive="menu-selected" class="btn btn-primary">
+<p>Il est important de comprendre que cet admin évoluera en fonction des retours que vous ferez. De plus, il est open-source, ce qui signifie que n'importe qui peut contribuer à son developpement sur <a href="https://github.com/usealto/assessment-front/tree/admin">Github</a></p>
+<hr>
+<h3>Fonctionnement / Impersonnation</h3>
+<p>Pour simplifier le <b>temps de dev/maintenance et pour garder les même identifiants</b>, il a été choisi de ne pas contruire de backend dédié. L'iconvenient de ceci est qu'on se base sur le même système d'authentification que notre app Alto. Ainsi, les données sont cloisonnées par entreprise pour des raisons de sécurité forte. En tant qu'admin alto, il faut donc <b>d'abord "impersoner" quelqu'un d'une entreprise</b> avant de pouvoir consulter et éditer cette entreprise</p>
+<br>
+<hr>
+<a [routerLink]="'/admin/companies'" routerLinkActive="menu-selected" class="btn btn-primary mx-2">
   Voir les Entreprises
+</a>
+<a [routerLink]="'/admin/users'" routerLinkActive="menu-selected" class="btn btn-primary mx-2">
+  Voir les Users
 </a>

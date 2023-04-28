@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { CompanyApi, UserDtoApi } from 'src/app/sdk';
+import { CompanyApi, UserDtoApi, UserDtoApiRolesEnumApi } from 'src/app/sdk';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
@@ -57,4 +57,18 @@ export class AdminCompanyComponent implements OnInit {
     await new Promise((f) => setTimeout(f, 1000));
     this.ngOnInit();
   }
+
+  isImpersonnatedAsCompanyAdminOfthisCompany() {
+    const impersonatedUserEmail = localStorage.getItem('impersonatedUser');
+    if(impersonatedUserEmail) {
+      const impersonatedUser = this.users.find((user) => user.email === impersonatedUserEmail)
+      if(impersonatedUser && impersonatedUser.companyId === this.id && impersonatedUser.roles.includes('company-admin' as UserDtoApiRolesEnumApi)) {
+        return true;
+      }else{
+        return false;
+      }
+    }else {
+      return false;
+    }
+  } 
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { User } from '@auth0/auth0-angular';
-import { catchError, tap, throwError } from 'rxjs';
+import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompanyApi, UserDtoApi } from 'src/app/sdk';
