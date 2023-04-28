@@ -37,10 +37,7 @@
         [isColored]="true"
       ></alto-dropdown-filter>
 
-      <alto-search
-        class="d-inline-block ms-3"
-        (searchChange)="search($event, ChallengeTypeEnumApi.ByTeam)"
-      ></alto-search>
+      <alto-search class="ms-3" (searchChange)="search($event, ChallengeTypeEnumApi.ByTeam)"></alto-search>
 
       <table class="table">
         <thead>
@@ -130,10 +127,7 @@
         (selectChange)="filterChallengesByTeam($event, ChallengeTypeEnumApi.ByUser)"
         [isColored]="true"
       ></alto-dropdown-filter>
-      <alto-search
-        class="d-inline-block ms-3"
-        (searchChange)="search($event, ChallengeTypeEnumApi.ByUser)"
-      ></alto-search>
+      <alto-search class="ms-3" (searchChange)="search($event, ChallengeTypeEnumApi.ByUser)"></alto-search>
 
       <table class="table">
         <thead>
