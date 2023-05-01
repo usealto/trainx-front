@@ -44,20 +44,23 @@ export class AdminUserComponent implements OnInit {
           if (users[0]) {
             this.user = users[0];
             this.fetchAuth0Data(this.user.email);
-          }
-        }),
-      )
-      .pipe(
-        tap(() => {
+
           this.userForm = this.formBuilder.group({
             slackId: [this.user.slackId],
             username: [this.user.username],
             teamId: [this.user.teamId],
             roles: [this.user.roles],
           });
+          }else{
+            throw new Error("User not found");            
+          }
         }),
       )
-      .subscribe();
+      .subscribe({
+        error: (err) => {
+          console.log('err in subscibe',err)
+        }
+      })
 
       this.teamsApiService.getTeams({})
       .subscribe((teams) => {
@@ -85,7 +88,11 @@ export class AdminUserComponent implements OnInit {
   fetchAuth0Data(email:string) {
     this.authApiService.getAuth0Users({q:email})
     .subscribe((q) => {      
-      this.userAuth0 = q.data;
+      if (q.data && q.data.length > 0) {
+        this.userAuth0 = q.data[0]
+      }else{
+        throw new Error("user not found in auth0");
+      }
     });
   }
 }

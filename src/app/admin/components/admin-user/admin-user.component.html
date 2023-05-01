@@ -1,6 +1,5 @@
 <div class="row">
 
-
   <div class="col-sm-6" *ngIf="user">
     <h2>User data</h2>
     
@@ -81,8 +80,12 @@
     <h2>Data brute de ce user Auth0, version JSON <input type="checkbox" [(ngModel)]="displayAuth0"/></h2>
     <pre *ngIf="displayAuth0">{{ userAuth0 | json }}</pre>
   </div>
+  <div class="col-sm-6" *ngIf="!user">
+    <h2 class="my-3">Restricted access</h2>
+    <p>You don't have access to this user. Please impersonnate an admin of this user's company</p>
+  </div>
 
-  <div class="col-sm-6">
+  <div class="col-sm-6" *ngIf="user">
     <h2>Edit user</h2>
     <form [formGroup]="userForm" class="page-max-width" *ngIf="userForm">
 
