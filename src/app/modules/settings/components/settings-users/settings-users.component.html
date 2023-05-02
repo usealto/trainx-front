@@ -75,11 +75,18 @@
               />
             </td>
             <td>
-              <i class="fs-5 bi bi-pen"></i>
+              <i class="fs-5 bi bi-pen" (click)="openUserEditionForm(user)"></i>
             </td>
           </tr>
         </tbody>
       </table>
+      <ngb-pagination
+        [ngClass]="{ invisible: usersCount <= usersPageSize }"
+        [collectionSize]="usersCount"
+        [(page)]="usersPage"
+        (pageChange)="changeUsersPage($event)"
+        [pageSize]="usersPageSize"
+      ></ngb-pagination>
     </div>
   </div>
 </div>
