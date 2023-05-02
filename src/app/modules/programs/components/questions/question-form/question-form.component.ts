@@ -1,23 +1,30 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { combineLatest, forkJoin, tap } from 'rxjs';
+import { combineLatest, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import {
   AnswerFormatTypeEnumApi,
   PatchQuestionDtoApi,
   PatchQuestionRequestParams,
+  PatchQuestionSubmittedDtoApiStatusEnumApi,
   ProgramApi,
-  QuestionApi,
+  ProgramDtoApi,
+  QuestionDtoApi,
   QuestionTypeEnumApi,
   TagApi,
+  TagDtoApi,
 } from 'src/app/sdk';
 import { QuestionForm } from '../../../models/question.form';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
 import { QuestionsRestService } from '../../../services/questions-rest.service';
 import { TagsRestService } from '../../../services/tags-rest.service';
+import { QuestionsSubmittedRestService } from '../../../services/questions-submitted-rest.service';
 
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+
+@UntilDestroy()
 @Component({
   selector: 'alto-question-form',
   templateUrl: './question-form.component.html',
@@ -25,20 +32,24 @@ import { TagsRestService } from '../../../services/tags-rest.service';
 })
 export class QuestionFormComponent implements OnInit {
   I18ns = I18ns;
-  @Input() program: ProgramApi | undefined;
-  @Input() question?: QuestionApi;
-  @Output() createdQuestion = new EventEmitter<QuestionApi>();
+  QuestionSubmittedStatusEnum = PatchQuestionSubmittedDtoApiStatusEnumApi;
+  @Input() program: ProgramDtoApi | undefined;
+  @Input() question?: QuestionDtoApi;
+  @Input() isSubmitted = false;
+  @Output() createdQuestion = new EventEmitter<QuestionDtoApi>();
+  @Output() dismissedQuestion = new EventEmitter<any>();
   private fb: IFormBuilder;
   questionForm!: IFormGroup<QuestionForm>;
   isEdit = false;
 
-  programs: ProgramApi[] = [];
-  tags: TagApi[] = [];
+  programs: ProgramDtoApi[] = [];
+  tags: TagDtoApi[] = [];
 
   constructor(
     private readonly programService: ProgramsRestService,
     private readonly tagService: TagsRestService,
     private readonly questionService: QuestionsRestService,
+    private readonly questionSubmittedRestService: QuestionsSubmittedRestService,
     readonly fob: UntypedFormBuilder,
     public activeOffcanvas: NgbActiveOffcanvas,
   ) {
@@ -53,6 +64,7 @@ export class QuestionFormComponent implements OnInit {
             this.tags = tags ?? [];
             this.programs = programs ?? [];
           }),
+          untilDestroyed(this),
         )
         .subscribe();
 
@@ -73,17 +85,23 @@ export class QuestionFormComponent implements OnInit {
       if (this.question) {
         this.isEdit = true;
 
-        this.questionForm.patchValue({
-          title: this.question.title,
-          tags: this.question.tags?.map((t) => t.id),
-          programs: this.question.programs?.map((p) => p.id),
-          answersAccepted: this.question.answersAccepted[0],
-          answersWrong1: this.question.answersWrong[0],
-          answersWrong2: this.question.answersWrong[1],
-          answersWrong3: this.question.answersWrong[2],
-          explanation: this.question.explanation,
-          link: this.question.link,
-        });
+        if (this.isSubmitted) {
+          this.questionForm.patchValue({
+            title: this.question.title,
+          });
+        } else {
+          this.questionForm.patchValue({
+            title: this.question.title,
+            tags: this.question.tags?.map((t) => t.id),
+            programs: this.question.programs?.map((p) => p.id),
+            answersAccepted: this.question.answersAccepted[0],
+            answersWrong1: this.question.answersWrong[0],
+            answersWrong2: this.question.answersWrong[1],
+            answersWrong3: this.question.answersWrong[2],
+            explanation: this.question.explanation,
+            link: this.question.link,
+          });
+        }
       }
     }, 0);
   }
@@ -121,6 +139,7 @@ export class QuestionFormComponent implements OnInit {
         .pipe(
           tap((question) => this.createdQuestion.emit(question)),
           tap(() => this.activeOffcanvas.dismiss()),
+          untilDestroyed(this),
         )
         .subscribe();
     } else {
@@ -139,7 +158,29 @@ export class QuestionFormComponent implements OnInit {
         .updateQuestion({ id: this.question?.id, patchQuestionDtoApi: params } as PatchQuestionRequestParams)
         .pipe(
           tap((question) => this.createdQuestion.emit(question)),
+          tap(() => {
+            if (this.isSubmitted) {
+              this.changeStatus(PatchQuestionSubmittedDtoApiStatusEnumApi.Accepted);
+            }
+          }),
           tap(() => this.activeOffcanvas.dismiss()),
+          untilDestroyed(this),
+        )
+        .subscribe();
+    }
+  }
+
+  changeStatus(status: PatchQuestionSubmittedDtoApiStatusEnumApi) {
+    if (this.question) {
+      this.questionSubmittedRestService
+        .update({
+          id: this.question.id,
+          patchQuestionSubmittedDtoApi: { status },
+        })
+        .pipe(
+          tap(() => this.dismissedQuestion.emit()),
+          tap(() => this.activeOffcanvas.dismiss()),
+          untilDestroyed(this),
         )
         .subscribe();
     }

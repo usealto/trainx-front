@@ -43,9 +43,5 @@ export interface CreateCompanyDtoApi {
      * The pathfix identifier of the slack administrator
      */
     slackAdmin: string;
-    /**
-     * The bubble ID  ! This field is temporary and will be deleted once all the migration are finished
-     */
-    tempBubbleId: string;
 }
 

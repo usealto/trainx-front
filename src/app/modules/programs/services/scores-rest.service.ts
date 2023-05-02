@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
-import { addDays, addHours, startOfDay } from 'date-fns';
+import { addDays } from 'date-fns';
 import { Observable, filter, map } from 'rxjs';
 import {
   GetProgramRunsRequestParams,
   GetScoresRequestParams,
   ProgramRunApi,
   ProgramRunsApiService,
+  ScoreByTypeEnumApi,
+  ScoreFillValuesEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   ScoresApiService,
   ScoresResponseDtoApi,
 } from 'src/app/sdk';
+import { ChartFilters } from '../../shared/models/chart.model';
+import { ScoreDuration } from '../models/score.model';
+import { ScoresService } from './scores.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,32 +23,29 @@ import {
 export class ScoresRestService {
   constructor(
     private readonly scoresApi: ScoresApiService,
+    private readonly service: ScoresService,
     private readonly programsApi: ProgramRunsApiService,
   ) {}
 
-  getYesterday() {
-    const date = new Date();
-    const gmtDataOffset = -date.getTimezoneOffset() / 60;
-    return addHours(startOfDay(date), gmtDataOffset);
-  }
+  getScores({ duration, type, team, timeframe, sortBy }: ChartFilters): Observable<ScoresResponseDtoApi> {
+    const par: GetScoresRequestParams = {
+      type: type ?? ScoreTypeEnumApi.Guess,
+      timeframe: timeframe ?? this.service.getDefaultTimeFrame(duration as ScoreDuration),
+      dateAfter: this.service.getStartDate(duration as ScoreDuration),
+      dateBefore: new Date(),
+      fillValues: ScoreFillValuesEnumApi.Null,
+      sortBy,
+    };
 
-  getStartDate(timeframe: ScoreTimeframeEnumApi): Date {
-    let date = new Date();
-    const gmtDataOffset = -date.getTimezoneOffset() / 60;
-
-    switch (timeframe) {
-      case ScoreTimeframeEnumApi.Week:
-        date = addDays(date, -7);
-        break;
-      case ScoreTimeframeEnumApi.Month:
-        date = addDays(date, -30);
-        break;
-      case ScoreTimeframeEnumApi.Year:
-        date = addDays(date, -365);
-        break;
+    if (team) {
+      par.scoredBy = ScoreByTypeEnumApi.Team;
+      par.scoredById = team;
     }
-    date = addHours(date, gmtDataOffset);
-    return date;
+
+    return this.scoresApi.getScores(par).pipe(
+      map((r) => r.data || ({} as ScoresResponseDtoApi)),
+      filter((x) => !!x),
+    );
   }
 
   getGeneralScores(req: GetScoresRequestParams): Observable<ScoresResponseDtoApi> {
@@ -51,9 +53,9 @@ export class ScoresRestService {
       ...req,
       type: req?.type ?? ScoreTypeEnumApi.Guess,
       timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Week,
-      dateAfter: this.getStartDate(req?.timeframe ?? ScoreTimeframeEnumApi.Week),
       dateBefore: new Date(),
     };
+    par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
 
     return this.scoresApi.getScores(par).pipe(
       map((r) => r.data || ({} as ScoresResponseDtoApi)),
@@ -66,9 +68,9 @@ export class ScoresRestService {
       ...req,
       type: ScoreTypeEnumApi.Program,
       timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Week,
-      dateAfter: this.getStartDate(req?.timeframe ?? ScoreTimeframeEnumApi.Week),
       dateBefore: new Date(),
     };
+    par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
 
     return this.scoresApi.getScores(par).pipe(
       map((r) => r.data || ({} as ScoresResponseDtoApi)),
@@ -81,9 +83,9 @@ export class ScoresRestService {
       ...req,
       type: ScoreTypeEnumApi.Question,
       timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Year,
-      dateAfter: this.getStartDate(ScoreTimeframeEnumApi.Year),
       dateBefore: new Date(),
     };
+    par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
 
     return this.scoresApi.getScores(par).pipe(
       map((r) => r.data || ({} as ScoresResponseDtoApi)),
@@ -99,9 +101,9 @@ export class ScoresRestService {
       ...req,
       page: 1,
       itemPerPage: 300,
-      createdAfter: this.getStartDate(timeframe),
-      createdBefore: this.getYesterday(),
+      createdBefore: this.service.getYesterday(),
     };
+    par.createdAfter = this.service.getStartDate(this.service.getDefaultDuration(timeframe));
 
     return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));
   }
@@ -128,8 +130,8 @@ export class ScoresRestService {
       page: 1,
       itemPerPage: 300,
       createdAfter: date,
-      createdBefore: this.getStartDate(timeframe),
     } as GetProgramRunsRequestParams;
+    par.createdBefore = this.service.getStartDate(this.service.getDefaultDuration(timeframe));
 
     return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));
   }

@@ -21,11 +21,11 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { CreateGuessDtoApi } from '../model/createGuessDto';
 // @ts-ignore
-import { GuessCreatedResponseApi } from '../model/guessCreatedResponse';
+import { GuessDtoCreatedResponseApi } from '../model/guessDtoCreatedResponse';
 // @ts-ignore
-import { GuessPaginatedResponseApi } from '../model/guessPaginatedResponse';
+import { GuessDtoPaginatedResponseApi } from '../model/guessDtoPaginatedResponse';
 // @ts-ignore
-import { GuessResponseApi } from '../model/guessResponse';
+import { GuessDtoResponseApi } from '../model/guessDtoResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -148,9 +148,9 @@ export class GuessesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createGuess(requestParameters: CreateGuessRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<GuessCreatedResponseApi>;
-    public createGuess(requestParameters: CreateGuessRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<GuessCreatedResponseApi>>;
-    public createGuess(requestParameters: CreateGuessRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<GuessCreatedResponseApi>>;
+    public createGuess(requestParameters: CreateGuessRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<GuessDtoCreatedResponseApi>;
+    public createGuess(requestParameters: CreateGuessRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<GuessDtoCreatedResponseApi>>;
+    public createGuess(requestParameters: CreateGuessRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<GuessDtoCreatedResponseApi>>;
     public createGuess(requestParameters: CreateGuessRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createGuessDtoApi = requestParameters.createGuessDtoApi;
         if (createGuessDtoApi === null || createGuessDtoApi === undefined) {
@@ -223,7 +223,7 @@ export class GuessesApiService {
         }
 
         let localVarPath = `/v1/guesses`;
-        return this.httpClient.request<GuessCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<GuessDtoCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: createGuessDtoApi,
@@ -244,9 +244,9 @@ export class GuessesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getGuessById(requestParameters: GetGuessByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<GuessResponseApi>;
-    public getGuessById(requestParameters: GetGuessByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<GuessResponseApi>>;
-    public getGuessById(requestParameters: GetGuessByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<GuessResponseApi>>;
+    public getGuessById(requestParameters: GetGuessByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<GuessDtoResponseApi>;
+    public getGuessById(requestParameters: GetGuessByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<GuessDtoResponseApi>>;
+    public getGuessById(requestParameters: GetGuessByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<GuessDtoResponseApi>>;
     public getGuessById(requestParameters: GetGuessByIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -310,7 +310,7 @@ export class GuessesApiService {
         }
 
         let localVarPath = `/v1/guesses/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<GuessResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<GuessDtoResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -330,9 +330,9 @@ export class GuessesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getGuesses(requestParameters: GetGuessesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<GuessPaginatedResponseApi>;
-    public getGuesses(requestParameters: GetGuessesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<GuessPaginatedResponseApi>>;
-    public getGuesses(requestParameters: GetGuessesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<GuessPaginatedResponseApi>>;
+    public getGuesses(requestParameters: GetGuessesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<GuessDtoPaginatedResponseApi>;
+    public getGuesses(requestParameters: GetGuessesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<GuessDtoPaginatedResponseApi>>;
+    public getGuesses(requestParameters: GetGuessesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<GuessDtoPaginatedResponseApi>>;
     public getGuesses(requestParameters: GetGuessesRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createdBy = requestParameters.createdBy;
         const sortBy = requestParameters.sortBy;
@@ -457,7 +457,7 @@ export class GuessesApiService {
         }
 
         let localVarPath = `/v1/guesses`;
-        return this.httpClient.request<GuessPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<GuessDtoPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,

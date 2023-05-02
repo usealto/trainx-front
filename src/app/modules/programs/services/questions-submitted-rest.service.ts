@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import {
   GetQuestionsSubmittedRequestParams,
+  PatchQuestionSubmittedRequestParams,
   QuestionsSubmittedApiService,
-  QuestionSubmittedApi,
-  QuestionSubmittedPaginatedResponseApi,
+  QuestionSubmittedDtoApi,
+  QuestionSubmittedDtoPaginatedResponseApi,
 } from 'src/app/sdk';
 
 @Injectable({
@@ -13,7 +14,7 @@ import {
 export class QuestionsSubmittedRestService {
   constructor(private readonly questionSubmittedApi: QuestionsSubmittedApiService) {}
 
-  getQuestions(req?: GetQuestionsSubmittedRequestParams): Observable<QuestionSubmittedApi[]> {
+  getQuestions(req?: GetQuestionsSubmittedRequestParams): Observable<QuestionSubmittedDtoApi[]> {
     const par = {
       ...req,
       page: req?.page ?? 1,
@@ -26,7 +27,7 @@ export class QuestionsSubmittedRestService {
 
   getQuestionsPaginated(
     req?: GetQuestionsSubmittedRequestParams,
-  ): Observable<QuestionSubmittedPaginatedResponseApi> {
+  ): Observable<QuestionSubmittedDtoPaginatedResponseApi> {
     const par = {
       ...req,
       page: req?.page ?? 1,
@@ -35,5 +36,9 @@ export class QuestionsSubmittedRestService {
     } as GetQuestionsSubmittedRequestParams;
 
     return this.questionSubmittedApi.getQuestionsSubmitted(par).pipe();
+  }
+
+  update(req: PatchQuestionSubmittedRequestParams) {
+    return this.questionSubmittedApi.patchQuestionSubmitted(req);
   }
 }

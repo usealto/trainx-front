@@ -27,11 +27,11 @@ import { PatchTagDtoApi } from '../model/patchTagDto';
 // @ts-ignore
 import { PutTagDtoApi } from '../model/putTagDto';
 // @ts-ignore
-import { TagCreatedResponseApi } from '../model/tagCreatedResponse';
+import { TagDtoCreatedResponseApi } from '../model/tagDtoCreatedResponse';
 // @ts-ignore
-import { TagPaginatedResponseApi } from '../model/tagPaginatedResponse';
+import { TagDtoPaginatedResponseApi } from '../model/tagDtoPaginatedResponse';
 // @ts-ignore
-import { TagResponseApi } from '../model/tagResponse';
+import { TagDtoResponseApi } from '../model/tagDtoResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -173,9 +173,9 @@ export class TagsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createTag(requestParameters: CreateTagRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TagCreatedResponseApi>;
-    public createTag(requestParameters: CreateTagRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TagCreatedResponseApi>>;
-    public createTag(requestParameters: CreateTagRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TagCreatedResponseApi>>;
+    public createTag(requestParameters: CreateTagRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TagDtoCreatedResponseApi>;
+    public createTag(requestParameters: CreateTagRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TagDtoCreatedResponseApi>>;
+    public createTag(requestParameters: CreateTagRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TagDtoCreatedResponseApi>>;
     public createTag(requestParameters: CreateTagRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createTagDtoApi = requestParameters.createTagDtoApi;
         if (createTagDtoApi === null || createTagDtoApi === undefined) {
@@ -248,7 +248,7 @@ export class TagsApiService {
         }
 
         let localVarPath = `/v1/tags`;
-        return this.httpClient.request<TagCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<TagDtoCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: createTagDtoApi,
@@ -353,9 +353,9 @@ export class TagsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTagById(requestParameters: GetTagByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TagResponseApi>;
-    public getTagById(requestParameters: GetTagByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TagResponseApi>>;
-    public getTagById(requestParameters: GetTagByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TagResponseApi>>;
+    public getTagById(requestParameters: GetTagByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TagDtoResponseApi>;
+    public getTagById(requestParameters: GetTagByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TagDtoResponseApi>>;
+    public getTagById(requestParameters: GetTagByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TagDtoResponseApi>>;
     public getTagById(requestParameters: GetTagByIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -419,7 +419,7 @@ export class TagsApiService {
         }
 
         let localVarPath = `/v1/tags/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<TagResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<TagDtoResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -438,9 +438,9 @@ export class TagsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTags(requestParameters: GetTagsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TagPaginatedResponseApi>;
-    public getTags(requestParameters: GetTagsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TagPaginatedResponseApi>>;
-    public getTags(requestParameters: GetTagsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TagPaginatedResponseApi>>;
+    public getTags(requestParameters: GetTagsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TagDtoPaginatedResponseApi>;
+    public getTags(requestParameters: GetTagsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TagDtoPaginatedResponseApi>>;
+    public getTags(requestParameters: GetTagsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TagDtoPaginatedResponseApi>>;
     public getTags(requestParameters: GetTagsRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createdBy = requestParameters.createdBy;
         const sortBy = requestParameters.sortBy;
@@ -540,7 +540,7 @@ export class TagsApiService {
         }
 
         let localVarPath = `/v1/tags`;
-        return this.httpClient.request<TagPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<TagDtoPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -559,9 +559,9 @@ export class TagsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public patchTag(requestParameters: PatchTagRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TagResponseApi>;
-    public patchTag(requestParameters: PatchTagRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TagResponseApi>>;
-    public patchTag(requestParameters: PatchTagRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TagResponseApi>>;
+    public patchTag(requestParameters: PatchTagRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TagDtoResponseApi>;
+    public patchTag(requestParameters: PatchTagRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TagDtoResponseApi>>;
+    public patchTag(requestParameters: PatchTagRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TagDtoResponseApi>>;
     public patchTag(requestParameters: PatchTagRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -638,7 +638,7 @@ export class TagsApiService {
         }
 
         let localVarPath = `/v1/tags/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<TagResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<TagDtoResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: patchTagDtoApi,
@@ -658,9 +658,9 @@ export class TagsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public putTag(requestParameters: PutTagRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TagResponseApi>;
-    public putTag(requestParameters: PutTagRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TagResponseApi>>;
-    public putTag(requestParameters: PutTagRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TagResponseApi>>;
+    public putTag(requestParameters: PutTagRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TagDtoResponseApi>;
+    public putTag(requestParameters: PutTagRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TagDtoResponseApi>>;
+    public putTag(requestParameters: PutTagRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TagDtoResponseApi>>;
     public putTag(requestParameters: PutTagRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -737,7 +737,7 @@ export class TagsApiService {
         }
 
         let localVarPath = `/v1/tags/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<TagResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<TagDtoResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: putTagDtoApi,

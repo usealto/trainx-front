@@ -1,0 +1,14 @@
+<ng-container *ngFor="let item of data; let i = index">
+  <input
+    type="radio"
+    class="btn-check"
+    [name]="ID"
+    (click)="switchTab(item.value)"
+    [id]="'btnradio' + getId(i + ID)"
+    autocomplete="off"
+    [checked]="i === 0"
+  />
+  <label class="alto-tab-btn" [for]="'btnradio' + getId(i + ID)">
+    {{ item.label }}
+  </label>
+</ng-container>

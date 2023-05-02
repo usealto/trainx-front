@@ -3,18 +3,18 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { filter, map, Observable, of, switchMap, tap } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Observable, filter, map, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ProgramApi, QuestionApi, TagApi, TeamApi } from 'src/app/sdk';
+import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { PriorityEnumApi, ProgramDtoApi, QuestionDtoApi, TagApi, TeamApi } from 'src/app/sdk';
 import { ProgramForm } from '../../models/programs.form';
-import { ProgramsRestService } from '../../services/programs-rest.service';
-import { QuestionFormComponent } from '../questions/question-form/question-form.component';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionDisplay } from '../../models/question.model';
 import { ProgramsStore } from '../../programs.store';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { ProgramsRestService } from '../../services/programs-rest.service';
+import { QuestionsRestService } from '../../services/questions-rest.service';
+import { QuestionFormComponent } from '../questions/question-form/question-form.component';
 
 @UntilDestroy()
 @Component({
@@ -28,11 +28,11 @@ export class CreateProgramsComponent implements OnInit {
 
   programForm!: IFormGroup<ProgramForm>;
   currentStep = 1;
-  createdProgram: ProgramApi | undefined;
-  editedProgram!: ProgramApi;
+  createdProgram: ProgramDtoApi | undefined;
+  editedProgram!: ProgramDtoApi;
   isEdit = false;
 
-  questions!: QuestionApi[];
+  questions!: QuestionDtoApi[];
   questionsDisplay: QuestionDisplay[] = [];
   questionList: { id: string; delete: boolean }[] = [];
   questionPage = 1;
@@ -75,7 +75,7 @@ export class CreateProgramsComponent implements OnInit {
       .subscribe();
   }
 
-  initForm(program?: ProgramApi) {
+  initForm(program?: ProgramDtoApi) {
     this.programForm = this.fb.group<ProgramForm>({
       name: [program?.name ?? '', [Validators.required]],
       priority: [program?.priority ?? null, [Validators.required]],
@@ -88,10 +88,11 @@ export class CreateProgramsComponent implements OnInit {
 
   saveProgram() {
     if (this.programForm.value) {
-      const { tags, teams, ...rest } = this.programForm.value;
+      const { tags, teams, priority, ...rest } = this.programForm.value;
 
       const progValues = {
         ...rest,
+        priority: priority as string as PriorityEnumApi,
         tags: tags.map((id) => ({ id } as TagApi)),
         teams: teams.map((id) => ({ id } as TeamApi)),
       };
@@ -110,7 +111,7 @@ export class CreateProgramsComponent implements OnInit {
         .pipe(
           filter((x) => !!x),
           map((d) => d.data),
-          map((prog: ProgramApi) => {
+          map((prog: ProgramDtoApi) => {
             this.isEdit ? (this.editedProgram = prog) : (this.createdProgram = prog);
             return prog.tags ?? [];
           }),
@@ -207,7 +208,7 @@ export class CreateProgramsComponent implements OnInit {
     navigator.clipboard.writeText(window.location.href);
   }
 
-  mapQuestionsToDisplay(questions: QuestionApi[]): QuestionDisplay[] {
+  mapQuestionsToDisplay(questions: QuestionDtoApi[]): QuestionDisplay[] {
     return questions.map((q) => ({
       id: q.id,
       title: q.title,

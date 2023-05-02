@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 import {
-  GetTeamsRequestParams,
-  GetUsersRequestParams,
-  TeamApi,
-  UsersApiService,
-  TeamsApiService,
-  UserDtoApi,
   CreateTeamDtoApi,
+  GetTeamsRequestParams,
   PatchTeamRequestParams,
+  TeamDtoApi,
+  TeamsApiService,
 } from 'src/app/sdk';
 import { TeamStore } from '../team.store';
 
@@ -18,7 +15,7 @@ import { TeamStore } from '../team.store';
 export class TeamsRestService {
   constructor(private readonly teamApi: TeamsApiService, private teamStore: TeamStore) {}
 
-  getTeams(req?: GetTeamsRequestParams): Observable<TeamApi[]> {
+  getTeams(req?: GetTeamsRequestParams): Observable<TeamDtoApi[]> {
     if (this.teamStore.teams.value.length) {
       return this.teamStore.teams.value$;
     } else {
@@ -36,11 +33,11 @@ export class TeamsRestService {
     }
   }
 
-  createTeam(createTeamDtoApi: CreateTeamDtoApi): Observable<TeamApi | undefined> {
+  createTeam(createTeamDtoApi: CreateTeamDtoApi): Observable<TeamDtoApi | undefined> {
     return this.teamApi.createTeam({ createTeamDtoApi }).pipe(map((r) => r.data));
   }
 
-  updateTeam(patchTeamRequestParams: PatchTeamRequestParams): Observable<TeamApi | undefined> {
+  updateTeam(patchTeamRequestParams: PatchTeamRequestParams): Observable<TeamDtoApi | undefined> {
     return this.teamApi.patchTeam(patchTeamRequestParams).pipe(map((r) => r.data));
   }
 }

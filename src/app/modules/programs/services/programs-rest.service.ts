@@ -5,9 +5,9 @@ import {
   DeleteResponseApi,
   GetProgramsRequestParams,
   PatchProgramDtoApi,
-  ProgramApi,
-  ProgramPaginatedResponseApi,
-  ProgramResponseApi,
+  ProgramDtoApi,
+  ProgramDtoPaginatedResponseApi,
+  ProgramDtoResponseApi,
   ProgramsApiService,
 } from 'src/app/sdk';
 import { ProgramsStore } from '../programs.store';
@@ -21,7 +21,7 @@ export class ProgramsRestService {
     private readonly programStore: ProgramsStore,
   ) {}
 
-  getProgramsPaginated(req: GetProgramsRequestParams): Observable<ProgramPaginatedResponseApi> {
+  getProgramsPaginated(req: GetProgramsRequestParams): Observable<ProgramDtoPaginatedResponseApi> {
     const par = {
       ...req,
       page: req?.page ?? 1,
@@ -31,11 +31,11 @@ export class ProgramsRestService {
     return this.programApi.getPrograms(par);
   }
 
-  updateProgram(id: string, patchProgramDtoApi: PatchProgramDtoApi): Observable<ProgramResponseApi> {
+  updateProgram(id: string, patchProgramDtoApi: PatchProgramDtoApi): Observable<ProgramDtoResponseApi> {
     return this.programApi.patchProgram({ id, patchProgramDtoApi });
   }
 
-  getPrograms(): Observable<ProgramApi[]> {
+  getPrograms(): Observable<ProgramDtoApi[]> {
     if (this.programStore.programs.value.length) {
       return this.programStore.programs.value$;
     } else {
@@ -50,10 +50,10 @@ export class ProgramsRestService {
     }
   }
 
-  getProgram(id: string): Observable<ProgramApi> {
+  getProgram(id: string): Observable<ProgramDtoApi> {
     return this.programApi.getProgramById({ id }).pipe(
       filter((p) => !!p.data),
-      map((d) => d.data || ({} as ProgramApi)),
+      map((d) => d.data || ({} as ProgramDtoApi)),
     );
   }
 
@@ -69,7 +69,7 @@ export class ProgramsRestService {
     programId: string,
     questionId: string,
     toDelete: boolean,
-  ): Observable<ProgramResponseApi> {
+  ): Observable<ProgramDtoResponseApi> {
     if (toDelete) {
       return this.programApi.removeQuestionsFromProgram({
         id: programId,

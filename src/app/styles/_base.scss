@@ -4,9 +4,8 @@
 body,
 html {
   --bs-body-font-size: 14px;
-  background-color: var(--alto-light-grey);
   font-family: 'Inter';
-  color: var(--alto-grey);
+  color: var(--alto-text-color);
 }
 
 @media screen and (max-width: 1400px) {
@@ -47,17 +46,17 @@ p {
   font-family: 'Inter';
 }
 h1 {
-  font-family: 'Epilogue';
-  font-size: 1.8rem;
-  font-weight: bold;
+  font-family: 'Inter';
+  font-size: 1.714rem;
+  font-weight: 500;
   @media screen and (max-width: 700px) {
     font-size: 1.5rem;
   }
 }
 h2 {
-  font-family: 'Epilogue';
-  font-size: 1.13rem;
-  font-weight: bold;
+  font-family: 'Inter';
+  font-size: 1.28rem;
+  font-weight: 500;
 }
 hr {
   border-top: 1px solid var(--alto-grey);

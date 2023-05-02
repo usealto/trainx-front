@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { ChallengeDtoApiStatusEnumApi } from 'src/app/sdk';
 
 @Component({
   selector: 'alto-status-pill',
@@ -8,9 +9,7 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
   styleUrls: ['./status-pill.component.scss'],
 })
 export class StatusPillComponent implements OnChanges {
-  @Input() startDate!: Date;
-  @Input() endDate!: Date;
-
+  @Input() status!: ChallengeDtoApiStatusEnumApi;
   loaded = false;
   class = '';
 
@@ -20,14 +19,13 @@ export class StatusPillComponent implements OnChanges {
   }
 
   getColor() {
-    if (this.startDate > new Date()) {
-      return 'incoming';
-    } else if (this.startDate < new Date() && this.endDate > new Date()) {
+    if (this.status === ChallengeDtoApiStatusEnumApi.InProgress) {
       return 'ongoing';
-    } else if (this.endDate < new Date()) {
+    } else if (this.status === ChallengeDtoApiStatusEnumApi.Ended) {
       return 'ended';
+    } else {
+      return 'incoming';
     }
-    return '';
   }
 
   @memoize()

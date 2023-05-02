@@ -29,7 +29,7 @@ export interface PutChallengeDtoApi {
     startDate: Date;
     endDate: Date;
     reward?: string;
-    leadUser?: string;
+    leadUserId?: string;
     leadTeam?: TeamApi;
 }
 

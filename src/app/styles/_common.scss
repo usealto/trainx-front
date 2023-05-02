@@ -1,8 +1,4 @@
 // --- FORMS ---
-.required-star {
-  color: var(--bs-danger);
-}
-
 .ng-submitted .ng-invalid,
 .ngb-timepicker.ng-touched.ng-invalid .ngb-tp-input,
 .ng-touched.ng-invalid,
@@ -22,19 +18,24 @@
   color: red;
 }
 
-// *::placeholder {
-//   opacity: 0.5;
-//   font-size: 0.9rem;
-//   font-style: italic;
-// }
-
 .alto-badge {
+  @extend .alto-badge-no-size;
   height: 1.58rem;
+  min-width: 1.58rem;
+  line-height: 1.6rem;
+}
+.alto-badge-big {
+  @extend .alto-badge-no-size;
+  height: 2.857rem;
+  min-width: 2.857rem;
+  line-height: 2.8rem;
+}
+.alto-badge-no-size {
   display: inline-block;
   font-size: 0.85rem;
-  line-height: 1.6rem;
   border-radius: 25px;
   padding: 0 0.5rem;
+  text-align: center;
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
   font-weight: 500;
@@ -46,7 +47,7 @@
 
 .panel {
   background-color: white;
-  border-radius: 5px;
+  border-radius: 1.143rem;
   border: 1px solid #eaecf0;
   padding: 1rem;
 }

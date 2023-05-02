@@ -4,7 +4,31 @@
 </div>
 
 <div class="menu">
-  <div>
+  <div [hidden]="displayAdmin">
+    <a
+      class="module"
+      [routerLink]="AltoRoutes.user + '/' + AltoRoutes.userHome"
+      routerLinkActive="menu-selected"
+    >
+      {{ I18ns.menu.home }}
+    </a>
+    <a
+      class="module"
+      [routerLink]="AltoRoutes.user + '/' + AltoRoutes.training"
+      routerLinkActive="menu-selected"
+    >
+      {{ I18ns.menu.training }}
+    </a>
+    <a
+      class="module"
+      [routerLink]="AltoRoutes.user + '/' + AltoRoutes.userTeams"
+      routerLinkActive="menu-selected"
+    >
+      {{ I18ns.menu.team }}
+    </a>
+  </div>
+
+  <div [hidden]="!displayAdmin">
     <a
       class="module"
       [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadHome"
@@ -34,6 +58,7 @@
       {{ I18ns.menu.challenges }}
     </a>
   </div>
+
   <div class="bottom-block">
     <a
       class="module"
@@ -42,15 +67,37 @@
     >
       {{ I18ns.menu.settings }}
     </a>
+
+    <div *ngIf="isAdmin" class="form-check form-switch ms-4">
+      <input
+        class="form-check-input cursor-pointer"
+        type="checkbox"
+        id="flexSwitchCheckDefault"
+        #adminSwitch
+        [checked]="displayAdmin"
+        (change)="switchToAdmin(adminSwitch.checked)"
+      />
+      <label class="form-check-label cursor-pointer" for="flexSwitchCheckDefault">
+        {{ I18ns.menu.adminMode }}
+      </label>
+    </div>
+
     <hr />
-    <a *ngIf="impersonatedUser" class="btn btn-danger" (click)="removeImpersonation()" [routerLink]="'/admin/home'">remove impersonation</a>
-    <a class="profile" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile">
-      <alto-img-badge [url]="url" [size]="40"></alto-img-badge>
-      <div class="d-inline-block ms-3">
-        <p class="fw-bold">{{ name }}</p>
-        <p>{{ email }}</p>
-      </div>
+    <a
+      *ngIf="impersonatedUser"
+      class="btn btn-danger"
+      (click)="removeImpersonation()"
+      [routerLink]="'/admin/home'"
+    >
+      remove impersonation
     </a>
+    <button class="float-end btn btn-link" (click)="logOut()">
+      <i class="m-3 text-white fs-4 bi bi-box-arrow-in-right"></i>
+    </button>
+    <a class="profile" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile">
+      <alto-profile-card [user]="userStore.user.value$ | async"> </alto-profile-card>
+    </a>
+
     <p class="build-time fs-8" title="Build Time">Version: {{ buildTime | date : 'medium' }}</p>
   </div>
 </div>

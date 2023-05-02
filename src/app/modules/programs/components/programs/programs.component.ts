@@ -10,17 +10,18 @@ import { UsersRestService } from 'src/app/modules/profile/services/users-rest.se
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import {
   GetScoresRequestParams,
-  ProgramApi,
-  QuestionApi,
-  QuestionPaginatedResponseApi,
-  QuestionSubmittedApi,
+  ProgramDtoApi,
+  QuestionDtoApi,
+  QuestionDtoPaginatedResponseApi,
+  QuestionSubmittedDtoApi,
   ScoreTimeframeEnumApi,
   ScoresResponseDtoApi,
-  TagApi,
+  TagDtoApi,
   UserDtoApi,
 } from 'src/app/sdk';
 import { ProgramFilters } from '../../models/program.model';
 import { QuestionFilters } from '../../models/question.model';
+import { TagFilters } from '../../models/tag.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { ProgramsService } from '../../services/programs.service';
@@ -30,7 +31,7 @@ import { ScoresRestService } from '../../services/scores-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
-import { TagFilters } from '../../models/tag.model';
+import { TagsServiceService } from '../../services/tags-service.service';
 
 @UntilDestroy()
 @Component({
@@ -42,14 +43,14 @@ export class ProgramsComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   //
-  programs: ProgramApi[] = [];
-  programsDisplay: ProgramApi[] = [];
+  programs: ProgramDtoApi[] = [];
+  programsDisplay: ProgramDtoApi[] = [];
   programFilters: ProgramFilters = { teams: [], search: '' };
   programsPage = 1;
   programsCount = 0;
   programPageSize = 9;
   //
-  questions!: QuestionApi[];
+  questions: QuestionDtoApi[] = [];
   questionsPage = 1;
   questionsCount = 0;
   questionsPageSize = 10;
@@ -59,20 +60,21 @@ export class ProgramsComponent implements OnInit {
   //
   userCache = new Map<string, UserDtoApi>();
   pillsRowDisplayLimit = 3;
-  submittedQuestions!: QuestionSubmittedApi[];
+  submittedQuestions: QuestionSubmittedDtoApi[] = [];
   submittedQuestionsPage = 1;
   submittedQuestionsCount = 0;
   submittedQuestionsPageSize = 10;
   isSubmittedQuestionsLoading = true;
   //
-  tags!: TagApi[];
+  tags!: TagDtoApi[];
+  paginatedTags!: TagDtoApi[];
   tagsPage = 1;
   tagsCount = 0;
   tagsPageSize = 10;
   isTagsLoading = true;
   tagPrograms = new Map<string, string[]>();
   isTagProgramsLoading = true;
-  tagFilters: TagFilters = { programs: [], search: '' };
+  tagFilters: TagFilters = { programs: [], contributors: [], search: '' };
   //
 
   constructor(
@@ -80,10 +82,10 @@ export class ProgramsComponent implements OnInit {
     private readonly programRestService: ProgramsRestService,
     private readonly programService: ProgramsService,
     private readonly questionsService: QuestionsRestService,
-    private readonly usersService: UsersRestService,
     private readonly scoresServices: ScoresRestService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly tagRestService: TagsRestService,
+    private readonly tagsService: TagsServiceService,
     public readonly teamStore: TeamStore,
     public readonly profileStore: ProfileStore,
     public readonly programsStore: ProgramsStore,
@@ -104,10 +106,10 @@ export class ProgramsComponent implements OnInit {
 
     this.getQuestions();
     this.getSubmittedQuestions();
-    this.getTags().subscribe();
+    this.getTags();
   }
 
-  openQuestionForm(question?: QuestionApi) {
+  openQuestionForm(question?: QuestionDtoApi) {
     const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
@@ -116,14 +118,24 @@ export class ProgramsComponent implements OnInit {
     canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
   }
 
-  openTagForm(tag?: TagApi) {
+  openSubmittedQuestionForm(question?: QuestionSubmittedDtoApi) {
+    const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto',
+    });
+    canvasRef.componentInstance.question = question;
+    canvasRef.componentInstance.isSubmitted = true;
+    canvasRef.componentInstance.dismissedQuestion.pipe(tap(() => this.getSubmittedQuestions())).subscribe();
+  }
+
+  openTagForm(tag?: TagDtoApi) {
     const canvasRef = this.offcanvasService.open(TagsFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
     });
 
     canvasRef.componentInstance.tag = tag;
-    canvasRef.componentInstance.createdTag.pipe(switchMap(() => this.getTags())).subscribe();
+    canvasRef.componentInstance.createdTag.pipe(tap(() => this.getTags()));
   }
 
   getProgramsFiltered({
@@ -182,7 +194,7 @@ export class ProgramsComponent implements OnInit {
     return this.profileStore.users.value.filter((u) => filter.some((i) => i === u.id));
   }
 
-  getScoresfromQuestions(questions: QuestionPaginatedResponseApi): Observable<ScoresResponseDtoApi> {
+  getScoresfromQuestions(questions: QuestionDtoPaginatedResponseApi): Observable<ScoresResponseDtoApi> {
     const ids = questions.data?.map((q) => q.id);
     return this.scoresServices
       .getQuestionScore({
@@ -234,37 +246,47 @@ export class ProgramsComponent implements OnInit {
     this.getSubmittedQuestions();
   }
 
-  getTags(
+  getTags() {
+    this.tagRestService
+      .getTags()
+      .pipe(
+        tap((tags) => (this.tags = tags)),
+        tap((tags) => (this.tagsCount = tags.length)),
+        tap((tags) => this.getProgramsfromTags(tags)),
+        tap((tags) => this.changeTagsPage(tags)),
+        map((tags) => tags.map((t) => t.createdBy) ?? []),
+        map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
+        map((ids) => this.getUsersfromQuestions(ids)),
+        tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
+        tap(() => (this.isTagsLoading = false)),
+      )
+      .subscribe();
+  }
+
+  changeTagsPage(tags: TagDtoApi[]) {
+    this.tagsCount = tags.length;
+    this.paginatedTags = tags.slice(
+      (this.tagsPage - 1) * this.tagsPageSize,
+      this.tagsPage * this.tagsPageSize,
+    );
+  }
+
+  filterTags(
     {
       programs = this.tagFilters.programs,
       contributors = this.tagFilters.contributors,
       search = this.tagFilters.search,
     }: TagFilters = this.tagFilters,
-  ): Observable<UserDtoApi[]> {
+  ) {
     this.tagFilters.programs = programs;
     this.tagFilters.contributors = contributors;
     this.tagFilters.search = search;
 
-    return this.tagRestService
-      .getTagsPaginated({
-        page: this.tagsPage,
-        itemsPerPage: this.tagsPageSize,
-        programIds: programs?.join(','),
-        createdBy: contributors?.join(','),
-      })
-      .pipe(
-        tap((t) => (this.tags = t.data ?? [])),
-        tap((t) => (this.tagsCount = t.meta.totalItems ?? 0)),
-        tap((t) => this.getProgramsfromTags(t.data ?? [])),
-        map((tags) => tags.data?.map((t) => t.createdBy) ?? []),
-        map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
-        map((ids) => this.getUsersfromQuestions(ids)),
-        tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
-        tap(() => (this.isTagsLoading = false)),
-      );
+    const res = this.tagsService.filterTags(this.tags, { programs, contributors, search });
+    this.changeTagsPage(res);
   }
 
-  getProgramsfromTags(tags: TagApi[]) {
+  getProgramsfromTags(tags: TagDtoApi[]) {
     const ids = tags.map((tag) => tag.id);
     this.isTagProgramsLoading = true;
     this.programRestService
@@ -280,7 +302,7 @@ export class ProgramsComponent implements OnInit {
       .subscribe();
   }
 
-  tagProgramsLoop(tagId: string, programs: ProgramApi[]): string[] {
+  tagProgramsLoop(tagId: string, programs: ProgramDtoApi[]): string[] {
     const programList: string[] = [];
     programs.forEach((program) => {
       if (program.tags?.some((tag) => tag.id === tagId)) {
@@ -290,16 +312,8 @@ export class ProgramsComponent implements OnInit {
     return programList;
   }
 
-  filterTags(filters: TagFilters) {
-    return this.getTags(filters).subscribe();
-  }
-
   @memoize()
   getTagPrograms(id: string) {
     return this.tagPrograms.get(id) ?? [];
-  }
-
-  changeTagsPage() {
-    this.getTags().subscribe();
   }
 }

@@ -21,9 +21,9 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { ChallengeAssignmentPaginatedResponseApi } from '../model/challengeAssignmentPaginatedResponse';
 // @ts-ignore
-import { ChallengePaginatedResponseApi } from '../model/challengePaginatedResponse';
+import { ChallengeDtoPaginatedResponseApi } from '../model/challengeDtoPaginatedResponse';
 // @ts-ignore
-import { ChallengeResponseApi } from '../model/challengeResponse';
+import { ChallengeDtoResponseApi } from '../model/challengeDtoResponse';
 // @ts-ignore
 import { ChallengeStateEnumApi } from '../model/challengeStateEnum';
 // @ts-ignore
@@ -212,9 +212,9 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeResponseApi>;
-    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeResponseApi>>;
-    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeResponseApi>>;
+    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeDtoResponseApi>;
+    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeDtoResponseApi>>;
+    public createChallenge(requestParameters: CreateChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeDtoResponseApi>>;
     public createChallenge(requestParameters: CreateChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createChallengeDtoApi = requestParameters.createChallengeDtoApi;
         if (createChallengeDtoApi === null || createChallengeDtoApi === undefined) {
@@ -287,7 +287,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges`;
-        return this.httpClient.request<ChallengeResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengeDtoResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: createChallengeDtoApi,
@@ -308,9 +308,9 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeResponseApi>;
-    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeResponseApi>>;
-    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeResponseApi>>;
+    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeDtoResponseApi>;
+    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeDtoResponseApi>>;
+    public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeDtoResponseApi>>;
     public deleteChallenge(requestParameters: DeleteChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -374,7 +374,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<ChallengeResponseApi>('delete', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengeDtoResponseApi>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -521,9 +521,9 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeResponseApi>;
-    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeResponseApi>>;
-    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeResponseApi>>;
+    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeDtoResponseApi>;
+    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeDtoResponseApi>>;
+    public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeDtoResponseApi>>;
     public getChallengeById(requestParameters: GetChallengeByIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -587,7 +587,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<ChallengeResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengeDtoResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -607,9 +607,9 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getChallenges(requestParameters: GetChallengesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengePaginatedResponseApi>;
-    public getChallenges(requestParameters: GetChallengesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengePaginatedResponseApi>>;
-    public getChallenges(requestParameters: GetChallengesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengePaginatedResponseApi>>;
+    public getChallenges(requestParameters: GetChallengesRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeDtoPaginatedResponseApi>;
+    public getChallenges(requestParameters: GetChallengesRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeDtoPaginatedResponseApi>>;
+    public getChallenges(requestParameters: GetChallengesRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeDtoPaginatedResponseApi>>;
     public getChallenges(requestParameters: GetChallengesRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createdBy = requestParameters.createdBy;
         const sortBy = requestParameters.sortBy;
@@ -749,7 +749,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges`;
-        return this.httpClient.request<ChallengePaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengeDtoPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -769,9 +769,9 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeResponseApi>;
-    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeResponseApi>>;
-    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeResponseApi>>;
+    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeDtoResponseApi>;
+    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeDtoResponseApi>>;
+    public patchChallenge(requestParameters: PatchChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeDtoResponseApi>>;
     public patchChallenge(requestParameters: PatchChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -848,7 +848,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<ChallengeResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengeDtoResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: patchChallengeDtoApi,
@@ -869,9 +869,9 @@ export class ChallengesApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public putChallenge(requestParameters: PutChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeResponseApi>;
-    public putChallenge(requestParameters: PutChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeResponseApi>>;
-    public putChallenge(requestParameters: PutChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeResponseApi>>;
+    public putChallenge(requestParameters: PutChallengeRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ChallengeDtoResponseApi>;
+    public putChallenge(requestParameters: PutChallengeRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ChallengeDtoResponseApi>>;
+    public putChallenge(requestParameters: PutChallengeRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ChallengeDtoResponseApi>>;
     public putChallenge(requestParameters: PutChallengeRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -948,7 +948,7 @@ export class ChallengesApiService {
         }
 
         let localVarPath = `/v1/challenges/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<ChallengeResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ChallengeDtoResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: putChallengeDtoApi,

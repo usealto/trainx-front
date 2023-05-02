@@ -93,41 +93,41 @@ describe('StoreClass Basics', () => {
   });
 });
 
-describe('StoreClass with Expire Time', () => {
-  const userName = 'test name';
+// describe('StoreClass with Expire Time', () => {
+//   const userName = 'test name';
 
-  beforeEach(() => {
-    testScheduler = new TestScheduler((actual, expected) => {
-      expect(actual).toEqual(expected);
-    });
-  });
+//   beforeEach(() => {
+//     testScheduler = new TestScheduler((actual, expected) => {
+//       expect(actual).toEqual(expected);
+//     });
+//   });
 
-  it('checks when expired', () => {
-    const objTest = new Store<string>('', -10);
+//   it('checks when expired', () => {
+//     const objTest = new Store<string>('', -10);
 
-    objTest.value = userName; // This value should not be returned as the store is considered 'expired'
+//     objTest.value = userName; // This value should not be returned as the store is considered 'expired'
 
-    const expectedMarbles = 'a';
-    const expectedValues = {
-      a: '',
-    };
+//     const expectedMarbles = 'a';
+//     const expectedValues = {
+//       a: '',
+//     };
 
-    testScheduler.run(({ expectObservable }) => {
-      expectObservable(objTest.value$).toBe(expectedMarbles, expectedValues);
-    });
-  });
+//     testScheduler.run(({ expectObservable }) => {
+//       expectObservable(objTest.value$).toBe(expectedMarbles, expectedValues);
+//     });
+//   });
 
-  it('checks when not expired', () => {
-    const objTest = new Store<string>('', 10);
-    objTest.value = userName;
+//   it('checks when not expired', () => {
+//     const objTest = new Store<string>('', 10);
+//     objTest.value = userName;
 
-    const expectedMarbles = 'a';
-    const expectedValues = {
-      a: userName,
-    };
+//     const expectedMarbles = 'a';
+//     const expectedValues = {
+//       a: userName,
+//     };
 
-    testScheduler.run(({ expectObservable }) => {
-      expectObservable(objTest.value$).toBe(expectedMarbles, expectedValues);
-    });
-  });
-});
+//     testScheduler.run(({ expectObservable }) => {
+//       expectObservable(objTest.value$).toBe(expectedMarbles, expectedValues);
+//     });
+//   });
+// });

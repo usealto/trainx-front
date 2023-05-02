@@ -5,11 +5,12 @@ import { UsersRestService } from 'src/app/modules/profile/services/users-rest.se
 import { combineLatest, map, tap } from 'rxjs';
 import { TeamStore } from '../../team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { TeamApi, UserDtoApi } from 'src/app/sdk';
+import { TeamDtoApi, UserDtoApi } from 'src/app/sdk';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
-import { UserFilters } from 'src/app/modules/profile/models/user.model';
+import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'alto-lead-team',
@@ -19,8 +20,8 @@ import { UserFilters } from 'src/app/modules/profile/models/user.model';
 export class LeadTeamComponent implements OnInit {
   I18ns = I18ns;
   activeUsersCount = 0;
-  teams: TeamApi[] = [];
-  paginatedTeams!: TeamApi[];
+  teams: TeamDtoApi[] = [];
+  paginatedTeams!: TeamDtoApi[];
   teamsPage = 1;
   teamsPageSize = 5;
 
@@ -31,12 +32,6 @@ export class LeadTeamComponent implements OnInit {
   paginatedUsers: UserDtoApi[] = [];
   usersPage = 1;
   usersPageSize = 5;
-
-  status = [
-    { label: I18ns.leadTeam.members.filters.status.active, value: true },
-    { label: I18ns.leadTeam.members.filters.status.inactive, value: false },
-  ];
-  selectedStatus?: { label: string; value: boolean };
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -54,7 +49,6 @@ export class LeadTeamComponent implements OnInit {
           this.teams = teams;
           this.users = users;
           this.absoluteUsersCount = users.length;
-          console.log(users);
         }),
         tap(([users]) => (this.activeUsersCount = users.filter((user) => user.isActive).length)),
         tap(([users]) => (this.usersCount = users.length)),
@@ -77,10 +71,9 @@ export class LeadTeamComponent implements OnInit {
     );
   }
 
-  filterUsers(selectedTeams: TeamApi[] = []) {
+  filterUsers(selectedTeams: TeamDtoApi[] = []) {
     const filter = {
       teams: selectedTeams,
-      status: this.selectedStatus ? this.selectedStatus.value : undefined,
     };
 
     this.changeUsersPage(this.usersService.filterUsers(this.users, filter));
@@ -96,11 +89,11 @@ export class LeadTeamComponent implements OnInit {
 
   searchUsers(users: UserDtoApi[], s: string) {
     const search = s.toLowerCase();
-
-    return;
+    const res = search.length ? users.filter((user) => user.username?.toLowerCase().includes(search)) : users;
+    this.changeUsersPage(res);
   }
 
-  openTeamForm(team?: TeamApi) {
+  openTeamForm(team?: TeamDtoApi) {
     const canvasRef = this.offcanvasService.open(TeamFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
@@ -109,7 +102,20 @@ export class LeadTeamComponent implements OnInit {
     canvasRef.componentInstance.team = team;
   }
 
+  openUserEditionForm(user: UserDtoApi) {
+    const canvasRef = this.offcanvasService.open(UserEditFormComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto',
+    });
+
+    canvasRef.componentInstance.user = user;
+  }
+
   getTeamUsersCount(teamId: string) {
     return this.profileStore.users.value.filter((user) => user.teamId === teamId).length;
+  }
+
+  airtableRedirect() {
+    window.open(environment.airtableURL + this.profileStore.user.value.email, '_blank');
   }
 }

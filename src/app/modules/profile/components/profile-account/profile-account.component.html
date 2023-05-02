@@ -54,7 +54,7 @@
     <div class="row py-4 border-bottom">
       <p class="col-5 mb-2">{{ I18ns.profile.profile.roles }}</p>
       <div class="col-7 form-group">
-        <input type="text" class="form-control" [value]="user.roles.join(',')" disabled readonly />
+        <input type="text" class="form-control" [value]="user.roles.join(' | ')" disabled readonly />
       </div>
     </div>
   </form>

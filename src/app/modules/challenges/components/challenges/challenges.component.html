@@ -37,10 +37,17 @@
         [isColored]="true"
       ></alto-dropdown-filter>
 
-      <alto-search
+      <ng-select
         class="d-inline-block ms-3"
-        (searchChange)="search($event, ChallengeTypeEnumApi.ByTeam)"
-      ></alto-search>
+        [searchable]="false"
+        [items]="status"
+        [(ngModel)]="byTeamSelectedStatus"
+        [placeholder]="I18ns.challenges.team.statusFilter"
+        (ngModelChange)="filterByStatus(ChallengeTypeEnumApi.ByTeam)"
+      >
+        <ng-option *ngFor="let option of status" [value]="option.value"></ng-option>
+      </ng-select>
+      <alto-search class="ms-3" (searchChange)="search($event, ChallengeTypeEnumApi.ByTeam)"></alto-search>
 
       <table class="table">
         <thead>
@@ -75,14 +82,18 @@
             <td>
               <alto-colored-pill-list
                 [hasDynamicColor]="true"
-                [data]="chal.teams"
+                [data]="chal.teams || []"
                 [limit]="3"
               ></alto-colored-pill-list>
             </td>
             <td>{{ chal.startDate | date : 'shortDate' }}</td>
             <td>{{ chal.endDate | date : 'shortDate' }}</td>
             <td>
-              <alto-status-pill [endDate]="chal.endDate" [startDate]="chal.startDate"></alto-status-pill>
+              <alto-status-pill
+                *ngIf="chal.status; else byTeamNoStatus"
+                [status]="chal.status"
+              ></alto-status-pill>
+              <ng-template #byTeamNoStatus>N/A</ng-template>
             </td>
             <td>
               <i class="bi bi-pen cursor-pointer" [routerLink]="[AltoRoutes.challengeEdit, chal.id]"></i>
@@ -130,10 +141,17 @@
         (selectChange)="filterChallengesByTeam($event, ChallengeTypeEnumApi.ByUser)"
         [isColored]="true"
       ></alto-dropdown-filter>
-      <alto-search
+      <ng-select
         class="d-inline-block ms-3"
-        (searchChange)="search($event, ChallengeTypeEnumApi.ByUser)"
-      ></alto-search>
+        [searchable]="false"
+        [items]="status"
+        [(ngModel)]="byUserSelectedStatus"
+        [placeholder]="I18ns.challenges.team.statusFilter"
+        (ngModelChange)="filterByStatus(ChallengeTypeEnumApi.ByUser)"
+      >
+        <ng-option *ngFor="let option of status" [value]="option.value"></ng-option>
+      </ng-select>
+      <alto-search class="ms-3" (searchChange)="search($event, ChallengeTypeEnumApi.ByUser)"></alto-search>
 
       <table class="table">
         <thead>
@@ -156,19 +174,23 @@
           >
             <td>{{ chal.name }}</td>
             <td>
-              <alto-img-badge [url]="(getUser(chal.leadUser) | async)?.pictureUrl"></alto-img-badge>
+              <alto-img-badge [url]="(getUser(chal.leadUser?.id ?? '') | async)?.pictureUrl"></alto-img-badge>
             </td>
             <td>
               <alto-colored-pill-list
                 [hasDynamicColor]="true"
-                [data]="chal.teams"
+                [data]="chal.teams ?? []"
                 [limit]="3"
               ></alto-colored-pill-list>
             </td>
             <td>{{ chal.startDate | date : 'shortDate' }}</td>
             <td>{{ chal.endDate | date : 'shortDate' }}</td>
             <td>
-              <alto-status-pill [endDate]="chal.endDate" [startDate]="chal.startDate"></alto-status-pill>
+              <alto-status-pill
+                *ngIf="chal.status; else byUserNoStatus"
+                [status]="chal.status"
+              ></alto-status-pill>
+              <ng-template #byUserNoStatus>N/A</ng-template>
             </td>
             <td>
               <i class="bi bi-pen cursor-pointer" [routerLink]="[AltoRoutes.challengeEdit, chal.id]"></i>

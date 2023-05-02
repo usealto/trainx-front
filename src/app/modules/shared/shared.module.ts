@@ -20,6 +20,10 @@ import { AnchorNavigatorComponent } from './components/anchor-navigator/anchor-n
 import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-filter.component';
 import { StatusPillComponent } from './components/status-pill/status-pill.component';
 import { SearchComponent } from './components/search/search.component';
+import { TabsComponent } from './components/tabs/tabs.component';
+import { ProfileCardComponent } from './components/profile-card/profile-card.component';
+import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
+import { PeriodFilterComponent } from './components/period-filter/period-filter.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +35,9 @@ import { SearchComponent } from './components/search/search.component';
     DropdownFilterComponent,
     StatusPillComponent,
     SearchComponent,
+    TabsComponent,
+    ProfileCardComponent,
+    PeriodFilterComponent,
   ],
   imports: [
     CommonModule,
@@ -45,6 +52,7 @@ import { SearchComponent } from './components/search/search.component';
     LoadingModule,
     RouterModule,
     NgbDatepickerModule,
+    NgVar,
   ],
   exports: [
     TranslationModule,
@@ -54,8 +62,12 @@ import { SearchComponent } from './components/search/search.component';
     ColoredPillListComponent,
     AnchorNavigatorComponent,
     DropdownFilterComponent,
+    ProfileCardComponent,
+    TabsComponent,
     SearchComponent,
     StatusPillComponent,
+    PeriodFilterComponent,
+    NgVar,
     FormsModule,
     ImgBadgeComponent,
     ReactiveFormsModule,

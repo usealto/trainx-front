@@ -27,11 +27,13 @@ import { DeleteResponseApi } from '../model/deleteResponse';
 // @ts-ignore
 import { PatchProgramDtoApi } from '../model/patchProgramDto';
 // @ts-ignore
-import { ProgramCreatedResponseApi } from '../model/programCreatedResponse';
+import { ProgramAssignmentPaginatedResponseApi } from '../model/programAssignmentPaginatedResponse';
 // @ts-ignore
-import { ProgramPaginatedResponseApi } from '../model/programPaginatedResponse';
+import { ProgramDtoCreatedResponseApi } from '../model/programDtoCreatedResponse';
 // @ts-ignore
-import { ProgramResponseApi } from '../model/programResponse';
+import { ProgramDtoPaginatedResponseApi } from '../model/programDtoPaginatedResponse';
+// @ts-ignore
+import { ProgramDtoResponseApi } from '../model/programDtoResponse';
 // @ts-ignore
 import { PutProgramDtoApi } from '../model/putProgramDto';
 
@@ -223,9 +225,9 @@ export class ProgramsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public addQuestionsToProgram(requestParameters: AddQuestionsToProgramRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramResponseApi>;
-    public addQuestionsToProgram(requestParameters: AddQuestionsToProgramRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramResponseApi>>;
-    public addQuestionsToProgram(requestParameters: AddQuestionsToProgramRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramResponseApi>>;
+    public addQuestionsToProgram(requestParameters: AddQuestionsToProgramRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramDtoResponseApi>;
+    public addQuestionsToProgram(requestParameters: AddQuestionsToProgramRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramDtoResponseApi>>;
+    public addQuestionsToProgram(requestParameters: AddQuestionsToProgramRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramDtoResponseApi>>;
     public addQuestionsToProgram(requestParameters: AddQuestionsToProgramRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -302,7 +304,7 @@ export class ProgramsApiService {
         }
 
         let localVarPath = `/v1/programs/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/questions`;
-        return this.httpClient.request<ProgramResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ProgramDtoResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: altoBaseIdsDtoApi,
@@ -323,9 +325,9 @@ export class ProgramsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createProgram(requestParameters: CreateProgramRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramCreatedResponseApi>;
-    public createProgram(requestParameters: CreateProgramRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramCreatedResponseApi>>;
-    public createProgram(requestParameters: CreateProgramRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramCreatedResponseApi>>;
+    public createProgram(requestParameters: CreateProgramRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramDtoCreatedResponseApi>;
+    public createProgram(requestParameters: CreateProgramRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramDtoCreatedResponseApi>>;
+    public createProgram(requestParameters: CreateProgramRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramDtoCreatedResponseApi>>;
     public createProgram(requestParameters: CreateProgramRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createProgramDtoApi = requestParameters.createProgramDtoApi;
         if (createProgramDtoApi === null || createProgramDtoApi === undefined) {
@@ -398,7 +400,7 @@ export class ProgramsApiService {
         }
 
         let localVarPath = `/v1/programs`;
-        return this.httpClient.request<ProgramCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ProgramDtoCreatedResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: createProgramDtoApi,
@@ -505,9 +507,9 @@ export class ProgramsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAllAssignmentsProgram(requestParameters: GetAllAssignmentsProgramRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramPaginatedResponseApi>;
-    public getAllAssignmentsProgram(requestParameters: GetAllAssignmentsProgramRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramPaginatedResponseApi>>;
-    public getAllAssignmentsProgram(requestParameters: GetAllAssignmentsProgramRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramPaginatedResponseApi>>;
+    public getAllAssignmentsProgram(requestParameters: GetAllAssignmentsProgramRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramAssignmentPaginatedResponseApi>;
+    public getAllAssignmentsProgram(requestParameters: GetAllAssignmentsProgramRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramAssignmentPaginatedResponseApi>>;
+    public getAllAssignmentsProgram(requestParameters: GetAllAssignmentsProgramRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramAssignmentPaginatedResponseApi>>;
     public getAllAssignmentsProgram(requestParameters: GetAllAssignmentsProgramRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createdBy = requestParameters.createdBy;
         const sortBy = requestParameters.sortBy;
@@ -612,7 +614,7 @@ export class ProgramsApiService {
         }
 
         let localVarPath = `/v1/programs/assignments`;
-        return this.httpClient.request<ProgramPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ProgramAssignmentPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -632,9 +634,9 @@ export class ProgramsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getProgramById(requestParameters: GetProgramByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramResponseApi>;
-    public getProgramById(requestParameters: GetProgramByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramResponseApi>>;
-    public getProgramById(requestParameters: GetProgramByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramResponseApi>>;
+    public getProgramById(requestParameters: GetProgramByIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramDtoResponseApi>;
+    public getProgramById(requestParameters: GetProgramByIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramDtoResponseApi>>;
+    public getProgramById(requestParameters: GetProgramByIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramDtoResponseApi>>;
     public getProgramById(requestParameters: GetProgramByIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -698,7 +700,7 @@ export class ProgramsApiService {
         }
 
         let localVarPath = `/v1/programs/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<ProgramResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ProgramDtoResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -718,9 +720,9 @@ export class ProgramsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getPrograms(requestParameters: GetProgramsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramPaginatedResponseApi>;
-    public getPrograms(requestParameters: GetProgramsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramPaginatedResponseApi>>;
-    public getPrograms(requestParameters: GetProgramsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramPaginatedResponseApi>>;
+    public getPrograms(requestParameters: GetProgramsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramDtoPaginatedResponseApi>;
+    public getPrograms(requestParameters: GetProgramsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramDtoPaginatedResponseApi>>;
+    public getPrograms(requestParameters: GetProgramsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramDtoPaginatedResponseApi>>;
     public getPrograms(requestParameters: GetProgramsRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const createdBy = requestParameters.createdBy;
         const sortBy = requestParameters.sortBy;
@@ -835,7 +837,7 @@ export class ProgramsApiService {
         }
 
         let localVarPath = `/v1/programs`;
-        return this.httpClient.request<ProgramPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ProgramDtoPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -855,9 +857,9 @@ export class ProgramsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public patchProgram(requestParameters: PatchProgramRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramResponseApi>;
-    public patchProgram(requestParameters: PatchProgramRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramResponseApi>>;
-    public patchProgram(requestParameters: PatchProgramRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramResponseApi>>;
+    public patchProgram(requestParameters: PatchProgramRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramDtoResponseApi>;
+    public patchProgram(requestParameters: PatchProgramRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramDtoResponseApi>>;
+    public patchProgram(requestParameters: PatchProgramRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramDtoResponseApi>>;
     public patchProgram(requestParameters: PatchProgramRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -934,7 +936,7 @@ export class ProgramsApiService {
         }
 
         let localVarPath = `/v1/programs/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<ProgramResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ProgramDtoResponseApi>('patch', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: patchProgramDtoApi,
@@ -955,9 +957,9 @@ export class ProgramsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public putProgram(requestParameters: PutProgramRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramResponseApi>;
-    public putProgram(requestParameters: PutProgramRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramResponseApi>>;
-    public putProgram(requestParameters: PutProgramRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramResponseApi>>;
+    public putProgram(requestParameters: PutProgramRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramDtoResponseApi>;
+    public putProgram(requestParameters: PutProgramRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramDtoResponseApi>>;
+    public putProgram(requestParameters: PutProgramRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramDtoResponseApi>>;
     public putProgram(requestParameters: PutProgramRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -1034,7 +1036,7 @@ export class ProgramsApiService {
         }
 
         let localVarPath = `/v1/programs/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}`;
-        return this.httpClient.request<ProgramResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ProgramDtoResponseApi>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: putProgramDtoApi,
@@ -1055,9 +1057,9 @@ export class ProgramsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public removeQuestionsFromProgram(requestParameters: RemoveQuestionsFromProgramRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramResponseApi>;
-    public removeQuestionsFromProgram(requestParameters: RemoveQuestionsFromProgramRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramResponseApi>>;
-    public removeQuestionsFromProgram(requestParameters: RemoveQuestionsFromProgramRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramResponseApi>>;
+    public removeQuestionsFromProgram(requestParameters: RemoveQuestionsFromProgramRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<ProgramDtoResponseApi>;
+    public removeQuestionsFromProgram(requestParameters: RemoveQuestionsFromProgramRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<ProgramDtoResponseApi>>;
+    public removeQuestionsFromProgram(requestParameters: RemoveQuestionsFromProgramRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<ProgramDtoResponseApi>>;
     public removeQuestionsFromProgram(requestParameters: RemoveQuestionsFromProgramRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const id = requestParameters.id;
         if (id === null || id === undefined) {
@@ -1134,7 +1136,7 @@ export class ProgramsApiService {
         }
 
         let localVarPath = `/v1/programs/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/questions`;
-        return this.httpClient.request<ProgramResponseApi>('delete', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ProgramDtoResponseApi>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: altoBaseIdsDtoApi,

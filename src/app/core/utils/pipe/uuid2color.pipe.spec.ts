@@ -9,6 +9,7 @@ describe('Uuid2colorPipe', () => {
   it('checks when string length is below 6', () => {
     expect(pipe.transform('test')).toBe(pipe.defaultColor);
     expect(pipe.transform('')).toBe(pipe.defaultColor);
+    expect(pipe.transform(null)).toBe(pipe.defaultColor);
   });
 
   it('checks with uuid', () => {

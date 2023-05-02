@@ -1,4 +1,5 @@
-import { Component, HostListener, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ViewportScroller } from '@angular/common';
+import { AfterViewInit, Component, HostListener, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
@@ -8,7 +9,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
   templateUrl: './anchor-navigator.component.html',
   styleUrls: ['./anchor-navigator.component.scss'],
 })
-export class AnchorNavigatorComponent implements OnChanges {
+export class AnchorNavigatorComponent implements AfterViewInit {
   @HostListener('click', ['$event.target'])
   onClick() {
     this.scrollToAnchor();
@@ -16,21 +17,20 @@ export class AnchorNavigatorComponent implements OnChanges {
 
   @Input() fragment = '';
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private viewportScroller: ViewportScroller) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes?.['fragment'].firstChange) {
-      if (this.route.snapshot.fragment && this.fragment === this.route.snapshot.fragment) {
-        setTimeout(() => {
-          this.scrollToAnchor();
-        }, 500);
-      }
+  ngAfterViewInit(): void {
+    if (this.route.snapshot.fragment && this.fragment === this.route.snapshot.fragment) {
+      console.log('help');
+      setTimeout(() => {
+        this.scrollToAnchor();
+      }, 500);
     }
   }
 
   scrollToAnchor() {
     if (this.fragment) {
-      document.querySelector('#' + this.fragment)?.scrollIntoView();
+      this.viewportScroller.scrollToAnchor(this.fragment);
     }
   }
 }

@@ -1,13 +1,12 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ProgramsRestService } from '../../../services/programs-rest.service';
-import { PatchTagDtoApi, PatchTagRequestParams, ProgramApi, QuestionApi, TagApi } from 'src/app/sdk';
-import { combineLatest, tap } from 'rxjs';
-import { QuestionsRestService } from '../../../services/questions-rest.service';
-import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
-import { TagForm } from '../../../models/tag.form';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { filter, tap } from 'rxjs';
+import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { PatchTagDtoApi, PatchTagRequestParams, ProgramDtoApi, QuestionDtoApi, TagDtoApi } from 'src/app/sdk';
+import { TagForm } from '../../../models/tag.form';
+import { ProgramsRestService } from '../../../services/programs-rest.service';
 import { TagsRestService } from '../../../services/tags-rest.service';
 
 @Component({
@@ -17,19 +16,18 @@ import { TagsRestService } from '../../../services/tags-rest.service';
 })
 export class TagsFormComponent implements OnInit {
   I18ns = I18ns;
-  @Input() tag?: TagApi;
-  @Output() createdTag = new EventEmitter<TagApi>();
+  @Input() tag?: TagDtoApi;
+  @Output() createdTag = new EventEmitter<TagDtoApi>();
   private fb: IFormBuilder;
   tagForm!: IFormGroup<TagForm>;
   isEdit = false;
 
-  programs: ProgramApi[] = [];
-  questions: QuestionApi[] = [];
+  programs: ProgramDtoApi[] = [];
+  questions: QuestionDtoApi[] = [];
 
   constructor(
     public activeOffcanvas: NgbActiveOffcanvas,
     private readonly programService: ProgramsRestService,
-    private readonly questionService: QuestionsRestService,
     private readonly tagService: TagsRestService,
     readonly fob: UntypedFormBuilder,
   ) {
@@ -38,15 +36,6 @@ export class TagsFormComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      combineLatest([this.programService.getPrograms(), this.questionService.getQuestions()])
-        .pipe(
-          tap(([programs, questions]) => {
-            this.programs = programs ?? [];
-            this.questions = questions ?? [];
-          }),
-        )
-        .subscribe();
-
       this.tagForm = this.fb.group<TagForm>({
         name: ['', [Validators.required]],
         programs: [],
@@ -54,28 +43,30 @@ export class TagsFormComponent implements OnInit {
         description: '',
       });
 
-      if (this.tag) {
-        this.isEdit = true;
-        const { name, description } = this.tag;
+      this.programService
+        .getPrograms()
+        .pipe(
+          tap((programs) => {
+            this.programs = programs ?? [];
+          }),
+          filter(() => !!this.tag),
+          tap((programs) => {
+            this.isEdit = true;
+            if (this.tag) {
+              const { name, description } = this.tag;
 
-        combineLatest([
-          this.questionService.getQuestions({ tagIds: this.tag.id }),
-          this.programService.getPrograms(),
-        ])
-          .pipe(
-            tap(([questions, programs]) => {
+              this.programs = programs ?? [];
               this.tagForm.patchValue({
                 name,
-                programs: programs
-                  ?.filter((program) => program.tags?.some((t) => this.tag?.id))
-                  .map((p) => p.id),
-                questions: questions?.map((p) => p.id),
+                // programs: programs?.filter((program) => program.tags?.some((t) => this.tag?.id))
+                //   .map((p) => p.id),
+                // questions: questions?.map((p) => p.id),
                 description,
               });
-            }),
-          )
-          .subscribe();
-      }
+            }
+          }),
+        )
+        .subscribe();
     }, 0);
   }
 

@@ -6,20 +6,32 @@ export const FR = {
     cancel: 'Annuler',
     delete: 'Supprimer',
     create: 'Créer',
+    refuse: 'Refuser',
     share: 'Partager',
     clipboard: 'Copier dans le presse-papier',
     showMore: 'Voir plus',
-    showAll: 'Voir tout',
+    showAll: 'Tout voir',
     optional: '(facultatif)',
+    noData: 'Aucune donnée à afficher',
+    noDataSubtitle: 'Aucun résultat ne correspond à votre recherche',
+    reply: 'Répondre',
+    search: 'Rechercher',
+    period: 'Période',
     priorities: {
       high: 'High',
       medium: 'Medium',
       low: 'Low',
     },
     status: {
+      title: 'Status',
       incoming: 'À venir',
       ongoing: 'En cours',
       ended: 'Terminé',
+    },
+    dateFilter: {
+      week: 'Semaine',
+      month: 'Mois',
+      year: 'Année',
     },
   },
   leadHome: {
@@ -34,11 +46,6 @@ export const FR = {
     subtitleQuestion: ['Vous avez {{}} question en attente.', 'Vous avez {{}} questions en attente.'],
     statistics: {
       title: 'Statistiques',
-      tabs: {
-        week: 'Semaine',
-        month: 'Mois',
-        year: 'Année',
-      },
       globalScore: 'Score global',
       globalScoreToolTip: 'Score moyen de toutes les questions répondues sur la période donnée',
       averageCompletion: 'Complétion moyenne',
@@ -48,11 +55,16 @@ export const FR = {
       inactiveMembers: 'Membres inactifs',
       inactiveMembersToolTip: "Nombre de membres n'ayant pas interagi avec Alto sur une période donnée",
     },
+    graph: {
+      period: 'Période',
+      score: 'Score (%)',
+    },
     globalEvolution: {
       title: 'Évolution globale',
+      score: 'Score moyen',
       tabs: {
-        program: 'Programme',
-        tag: 'Tag',
+        program: 'Programmes',
+        tag: 'Tags',
         team: 'Équipe',
         member: 'Membre',
       },
@@ -95,7 +107,9 @@ export const FR = {
       subtitle: "Retrouvez l'ensemble des trainings de vos équipes.",
       createProgram: 'Créer',
       involvement: 'Participation',
+      involvementToolTip: 'Nombre de membres ayant commencé le programme sur le nombre de membres assignés',
       progress: 'Avancement',
+      progressToolTip: 'Nombre de questions répondues par tout les membres sur le nombre total de questions',
       score: 'Score',
       filters: {
         team: 'Équipe',
@@ -187,8 +201,16 @@ export const FR = {
   },
   questions: {
     form: {
-      title: 'Créer une question',
-      subtitle: 'Indiquer la question, les réponses possibles et les informations complémentaires.',
+      title: {
+        create: 'Créer une question',
+        edit: 'Éditer une question',
+        submitted: 'Question suggérée',
+      },
+      subtitle: {
+        question: 'Indiquer la question, les réponses possibles et les informations complémentaires.',
+        submitted:
+          " a suggéré une question. Vous pouvez choisir de la rejeter, la valider en l'état ou d'apporter des modifications et informations complémentaires.",
+      },
       name: 'Question',
       namePlaceholder: 'Intitulé de la question',
       goodAnswer: 'Bonne(s) réponse(s)',
@@ -206,9 +228,12 @@ export const FR = {
   },
   tags: {
     form: {
-      title: 'Créer un tag',
+      title: {
+        create: 'Créer un tag',
+        edit: 'Éditer un tag',
+      },
       subtitle:
-        'Indiquer le nom de votre nouveau tag ainsi que les programmes et questions auxquels vous souhaitez l’associer.',
+        "Indiquer le nom de votre nouveau tag ainsi que les programmes et questions auxquels vous souhaitez l'associer.",
       tagName: 'Nom du tage',
       tagNamePlaceholder: 'Exemple: RGPD',
       programs: 'Programmes',
@@ -231,7 +256,6 @@ export const FR = {
         activity: 'Activité',
         teams: 'Équipe',
         score: 'Score',
-        status: { title: 'Status', active: 'Actif', inactive: 'Inactif' },
       },
       statistics: {
         total: 'Total',
@@ -240,12 +264,24 @@ export const FR = {
       },
       table: {
         name: 'Nom',
-        status: 'Status',
         team: 'Équipe',
         averageScore: 'Score moyen',
         questionsPerMonth: 'Questions sur 30j',
         active: 'Actif',
         inactive: 'Inactif',
+      },
+      forms: {
+        edition: {
+          title: 'Modifier un membre',
+          subtitle: 'Modifiez le role de vos collaborateurs et assignez leur une équipe.',
+          teams: 'Équipes',
+          teamsPlaceholder: 'Rechercher dans vos équipes',
+          type: "Type d'utilisateur",
+          standardType: 'Standard',
+          adminType: 'Administrateur',
+          typeSubtitle:
+            'Les utilisateurs de type "Administrateur" peuvent créer des programmes, des challenges et ons accés à plus de statistiques détaillées sur les résultats de leurs équipes.',
+        },
       },
     },
     teams: {
@@ -291,6 +327,7 @@ export const FR = {
         leader: 'Leader',
         endDate: 'Fin',
       },
+      statusFilter: 'Status',
     },
     individual: {
       title: 'Challenges individuels',
@@ -339,6 +376,8 @@ export const FR = {
     challenges: 'Challenges',
     settings: 'Paramètres',
     profile: 'Profil',
+    training: 'Training',
+    adminMode: 'Mode Administrateur',
   },
   settings: {
     title: 'Paramètres',

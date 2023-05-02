@@ -74,7 +74,8 @@ export class ApiErrorInterceptor implements HttpInterceptor {
               };
               // La 401 peut être causée par un token corrompu que angular ne peut pas détecter.
               // Du coup on efface
-              this.storageService.destroyAll();
+              // TODO Improve
+              // this.storageService.destroyAll();
               break;
             case 403: // right problem
               apiError = {
@@ -86,7 +87,8 @@ export class ApiErrorInterceptor implements HttpInterceptor {
                 handled: true,
                 code: e.status,
               };
-              this.storageService.destroyAll();
+              // TODO Improve
+              // this.storageService.destroyAll();
               break;
             case 404: // not found
               apiError = {
@@ -99,6 +101,7 @@ export class ApiErrorInterceptor implements HttpInterceptor {
                 code: e.status,
               };
               break;
+            case 429:
             case 500: // internal error
               apiError = {
                 message: e.statusText,
