@@ -37,7 +37,7 @@ export class AdminUserComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id') || '';
 
     this.usersRestService
-      .getUsers({ ids: this.id })
+      .getUsersFiltered({ ids: this.id })
       .pipe(
         tap((users) => {
           if (users[0]) {

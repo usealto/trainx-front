@@ -30,7 +30,7 @@ export class AdminCompanyUsersComponent implements OnInit {
       .subscribe();
 
     this.usersRestService
-      .getUsers({ companyId: this.id })
+      .getUsersFiltered({ companyId: this.id })
       .pipe(tap((users) => (this.users = users)))
       .subscribe();
   }

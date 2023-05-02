@@ -262,6 +262,6 @@ export class LeadHomeComponent implements OnInit {
     if (!id) {
       return of(undefined);
     }
-    return this.userService.getUsers({ ids: id }).pipe(map((u) => u.shift()));
+    return this.userService.getUsersFiltered({ ids: id }).pipe(map((u) => u.shift()));
   }
 }
