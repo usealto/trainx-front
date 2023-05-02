@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies": ["memoizee"],
+            "allowedCommonJsDependencies": ["memoizee", "papaparse"],
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -125,9 +125,7 @@
     }
   },
   "cli": {
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ],
+    "schematicCollections": ["@angular-eslint/schematics"],
     "analytics": false
   }
 }
