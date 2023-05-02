@@ -63,6 +63,7 @@ hr {
 }
 
 // --- UTILITIES
+
 .link {
   cursor: pointer;
   &:hover {
@@ -92,12 +93,10 @@ hr {
 .w-48 {
   width: 48%;
 }
-.w-90 {
-  width: 90%;
-}
-.w-30 {
-  width: 30%;
-}
-.w-20 {
-  width: 20%;
+
+// Creates a width class for each multiple of 5
+@for $wdth from 1 through 20 {
+  .w-#{$wdth*5} {
+    width: #{$wdth * 5} + '%';
+  }
 }

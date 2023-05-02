@@ -34,6 +34,9 @@
   --bs-gradient: none;
   font-weight: 600;
 }
+.form-check-input:checked {
+  border: 0;
+}
 
 .search-group {
   position: relative;
@@ -105,7 +108,8 @@
       margin: 1rem 0 0 0;
     }
   }
-  &.ng-select-opened.ng-select-bottom > .ng-select-container {
+  &.ng-select-opened.ng-select-bottom > .ng-select-container,
+  &.ng-select-opened.ng-select-top > .ng-select-container {
     border-radius: 28px;
   }
   .ng-select-container {
@@ -118,7 +122,8 @@
     }
   }
   .ng-dropdown-panel {
-    &.ng-select-bottom {
+    &.ng-select-bottom,
+    &.ng-select-top {
       margin: 0.25rem 0;
       border-radius: 8px;
       border: 1px solid #ccc;

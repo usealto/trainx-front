@@ -118,11 +118,11 @@ export const FR = {
     questions: {
       title: 'Questions',
       subtitle: "Retrouvez l'ensemble des questions présentes dans vos programmes.",
-      createQuestion: 'Créer',
+      createQuestion: 'Ajouter',
       table: {
         question: 'Question',
         score: 'Score',
-        author: 'Créé par',
+        author: 'Ajoutée par',
         tags: 'Tags',
         programs: 'Programmes',
       },

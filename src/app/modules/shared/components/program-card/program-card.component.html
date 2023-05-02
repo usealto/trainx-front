@@ -11,36 +11,49 @@
       />
     </div>
   </div>
-  <alto-colored-pill-list [hasDynamicColor]="true" [data]="program.teams"></alto-colored-pill-list>
   <p class="my-2 description-box fs-7">{{ program.description | slice : 0 : 150 }}</p>
-  <p>
-    {{ I18ns.programs.programs.involvement }}
-    <i
-    class="fs-5 bi bi-question-circle"
-    placement="top"
-    ngbTooltip="{{ I18ns.programs.programs.involvementToolTip }}"
-  ></i>
-    <span class="float-end badge rounded-pill" [class]="100 | pillColor">100%</span>
-  </p>
-  <p>
-    {{ I18ns.programs.programs.progress }}
-    <i
-    class="fs-5 bi bi-question-circle"
-    placement="top"
-    ngbTooltip="{{ I18ns.programs.programs.progressToolTip }}"
-  ></i>
-    <span class="float-end badge rounded-pill" [class]="0 | pillColor">N/A</span>
-  </p>
-  <p>
-    {{ I18ns.programs.programs.score }}
-    <span class="float-end badge rounded-pill" [class]="programScore * 100 | pillColor">{{
-      programScore | percent
-    }}</span>
-  </p>
-  <hr />
-  <a
-    class="d-block text-end"
-    [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, program.id]"
-    >{{ I18ns.shared.edit }}</a
-  >
+  <div class="card-bottom">
+    <alto-colored-pill-list
+      [limit]="5"
+      [hasDynamicColor]="true"
+      [data]="program.teams"
+    ></alto-colored-pill-list>
+    <hr />
+    <p class="score">
+      <span>
+        {{ I18ns.programs.programs.involvement }}
+      </span>
+      <i
+        class="bi bi-question-circle"
+        placement="top"
+        ngbTooltip="{{ I18ns.programs.programs.involvementToolTip }}"
+      ></i>
+      <span class="float-end badge rounded-pill" [class]="100 | pillColor">100%</span>
+    </p>
+    <p class="score">
+      <span>
+        {{ I18ns.programs.programs.progress }}
+      </span>
+      <i
+        class="bi bi-question-circle"
+        placement="top"
+        ngbTooltip="{{ I18ns.programs.programs.progressToolTip }}"
+      ></i>
+      <span class="float-end badge rounded-pill" [class]="0 | pillColor">N/A</span>
+    </p>
+    <p class="score">
+      <span>
+        {{ I18ns.programs.programs.score }}
+      </span>
+      <span class="float-end badge rounded-pill" [class]="programScore * 100 | pillColor">
+        {{ programScore | percent }}
+      </span>
+    </p>
+    <hr />
+    <a
+      class="d-block text-end fw-medium"
+      [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, program.id]"
+      >{{ I18ns.shared.edit }}</a
+    >
+  </div>
 </div>
