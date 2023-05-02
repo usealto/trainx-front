@@ -463,6 +463,10 @@ export const FR = {
       title: 'Server Error',
       message: 'The server encountered an error. Please contact the technical service.',
     },
+    OverLoad: {
+      title: 'Too many requests',
+      message: 'The server encountered an error. Please contact the technical service.',
+    },
     ClientError: {
       title: 'Client Error',
       message: '',
