@@ -1,13 +1,12 @@
-import { UserForm } from './../../../modules/profile/models/user.form';
-import { TeamsApiService } from './../../../sdk/api/teams.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UserDtoApi, TeamPaginatedResponseApi, TeamApi, UserDtoApiRolesEnumApi, AuthApiService } from 'src/app/sdk';
+import { AuthApiService, TeamDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from 'src/app/sdk';
 import { AuthUserGet } from '../admin-users/models/authuser.get';
+import { TeamsApiService } from './../../../sdk/api/teams.service';
 
 @Component({
   selector: 'alto-admin-user',
@@ -21,7 +20,7 @@ export class AdminUserComponent implements OnInit {
   userForm: any;
   display = false;
   displayAuth0 = false;
-  teams: TeamApi[] = [];
+  teams: TeamDtoApi[] = [];
   rolesPossibleValues = Object.values(UserDtoApiRolesEnumApi);
   isDisabled = false;
 
@@ -30,7 +29,7 @@ export class AdminUserComponent implements OnInit {
     private readonly usersRestService: UsersRestService,
     private route: ActivatedRoute,
     private readonly authApiService: AuthApiService,
-    private readonly teamsApiService:TeamsApiService,
+    private readonly teamsApiService: TeamsApiService,
     private formBuilder: FormBuilder,
   ) {}
 
@@ -45,29 +44,26 @@ export class AdminUserComponent implements OnInit {
             this.user = users[0];
             this.fetchAuth0Data(this.user.email);
 
-          this.userForm = this.formBuilder.group({
-            slackId: [this.user.slackId],
-            username: [this.user.username],
-            teamId: [this.user.teamId],
-            roles: [this.user.roles],
-          });
-          }else{
-            throw new Error("User not found");            
+            this.userForm = this.formBuilder.group({
+              slackId: [this.user.slackId],
+              username: [this.user.username],
+              teamId: [this.user.teamId],
+              roles: [this.user.roles],
+            });
+          } else {
+            throw new Error('User not found');
           }
         }),
       )
       .subscribe({
         error: (err) => {
-          console.log('err in subscibe',err)
-        }
-      })
-
-      this.teamsApiService.getTeams({})
-      .subscribe((teams) => {
-        this.teams = teams.data || [];
+          console.log('err in subscibe', err);
+        },
       });
 
-      
+    this.teamsApiService.getTeams({}).subscribe((teams) => {
+      this.teams = teams.data || [];
+    });
   }
 
   async submit() {
@@ -82,16 +78,14 @@ export class AdminUserComponent implements OnInit {
     this.ngOnInit();
     this.isDisabled = true;
     console.log('here2');
-    
   }
 
-  fetchAuth0Data(email:string) {
-    this.authApiService.getAuth0Users({q:email})
-    .subscribe((q) => {      
+  fetchAuth0Data(email: string) {
+    this.authApiService.getAuth0Users({ q: email }).subscribe((q) => {
       if (q.data && q.data.length > 0) {
-        this.userAuth0 = q.data[0]
-      }else{
-        throw new Error("user not found in auth0");
+        this.userAuth0 = q.data[0];
+      } else {
+        throw new Error('user not found in auth0');
       }
     });
   }

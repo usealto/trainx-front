@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '@auth0/auth0-angular';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { LocalStorageService } from 'src/app/core/utils/local-storage/local-storage.service';
 import { SessionStorageService } from 'src/app/core/utils/local-storage/session-storage.service';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { UserDtoApiRolesEnumApi } from 'src/app/sdk';
-import { AuthService } from '@auth0/auth0-angular';
 import { buildTime } from 'src/build-time';
 
 @UntilDestroy()
@@ -20,8 +19,8 @@ export class MenuComponent implements OnInit {
   AltoRoutes = AltoRoutes;
   I18ns = I18ns;
   buildTime = buildTime;
-  impersonatedUser = localStorage.getItem('impersonatedUser') !== '' 
-  && localStorage.getItem('impersonatedUser')
+  impersonatedUser =
+    localStorage.getItem('impersonatedUser') !== '' && localStorage.getItem('impersonatedUser');
 
   isAdmin = false;
   displayAdmin = false;
@@ -33,7 +32,6 @@ export class MenuComponent implements OnInit {
     public readonly userStore: ProfileStore,
     private readonly router: Router,
     private readonly sessionStorage: SessionStorageService,
-    private readonly localStorage: LocalStorageService,
     public auth: AuthService,
   ) {}
 
@@ -65,6 +63,6 @@ export class MenuComponent implements OnInit {
   }
 
   removeImpersonation() {
-    localStorage.setItem('impersonatedUser','')
+    localStorage.setItem('impersonatedUser', '');
   }
 }

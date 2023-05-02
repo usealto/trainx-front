@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { CompanyApi, UserDtoApi, UserDtoApiRolesEnumApi } from 'src/app/sdk';
+import { CompanyDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from 'src/app/sdk';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
@@ -12,7 +12,7 @@ import { FormBuilder } from '@angular/forms';
   styleUrls: ['./admin-company.component.scss'],
 })
 export class AdminCompanyComponent implements OnInit {
-  company!: CompanyApi;
+  company!: CompanyDtoApi;
   users: UserDtoApi[] = [];
   id: string | undefined;
   companyForm: any;
@@ -60,15 +60,19 @@ export class AdminCompanyComponent implements OnInit {
 
   isImpersonnatedAsCompanyAdminOfthisCompany() {
     const impersonatedUserEmail = localStorage.getItem('impersonatedUser');
-    if(impersonatedUserEmail) {
-      const impersonatedUser = this.users.find((user) => user.email === impersonatedUserEmail)
-      if(impersonatedUser && impersonatedUser.companyId === this.id && impersonatedUser.roles.includes('company-admin' as UserDtoApiRolesEnumApi)) {
+    if (impersonatedUserEmail) {
+      const impersonatedUser = this.users.find((user) => user.email === impersonatedUserEmail);
+      if (
+        impersonatedUser &&
+        impersonatedUser.companyId === this.id &&
+        impersonatedUser.roles.includes('company-admin' as UserDtoApiRolesEnumApi)
+      ) {
         return true;
-      }else{
+      } else {
         return false;
       }
-    }else {
+    } else {
       return false;
     }
-  } 
+  }
 }

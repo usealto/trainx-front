@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { CompanyApi, UserDtoApi } from 'src/app/sdk';
+import { CompanyDtoApi, UserDtoApi } from 'src/app/sdk';
 
 @Component({
   selector: 'alto-admin-company-users',
@@ -11,7 +11,7 @@ import { CompanyApi, UserDtoApi } from 'src/app/sdk';
   styleUrls: ['./admin-company-users.component.scss'],
 })
 export class AdminCompanyUsersComponent implements OnInit {
-  company!: CompanyApi;
+  company!: CompanyDtoApi;
   users: UserDtoApi[] = [];
   id: string | undefined;
 

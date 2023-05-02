@@ -4,7 +4,7 @@ import * as Papa from 'papaparse';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { CompanyApi, TeamApi, UserDtoApi, UsersApiService } from 'src/app/sdk';
+import { CompanyDtoApi, TeamDtoApi, UsersApiService } from 'src/app/sdk';
 import { UserCreate } from './models/user.create';
 
 @Component({
@@ -15,8 +15,8 @@ import { UserCreate } from './models/user.create';
 export class AdminUsersUploadComponent implements OnInit {
   csvData: UserCreate[] = [];
   id!: string;
-  company!: CompanyApi;
-  teams: TeamApi[] = [];
+  company!: CompanyDtoApi;
+  teams: TeamDtoApi[] = [];
   reg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   usersFailed: string[] = [];
 
@@ -78,20 +78,20 @@ export class AdminUsersUploadComponent implements OnInit {
     this.csvData.forEach((user) => {
       console.log(user);
       // const $this = this;
-      this.usersApiService.createUser({
-        createUserDtoApi: {
-          email: user.email,
-          companyId: this.id,
-          teamId: user.teamId
-        }
-      })
-      .subscribe((res) => {
-        console.log(res);
-        if(res.statusCode === 201){
-          user.isUploaded = true;
-        }
-      });
-      
+      this.usersApiService
+        .createUser({
+          createUserDtoApi: {
+            email: user.email,
+            companyId: this.id,
+            teamId: user.teamId,
+          },
+        })
+        .subscribe((res) => {
+          console.log(res);
+          if (res.statusCode === 201) {
+            user.isUploaded = true;
+          }
+        });
     });
   }
 
