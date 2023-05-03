@@ -33,6 +33,11 @@ export const FR = {
       month: 'Mois',
       year: 'Année',
     },
+    rollingDateFilter: {
+      year: '12 mois',
+      trimester: '3 mois',
+      month: '1 mois',
+    },
   },
   leadHome: {
     title: 'Bonjour ',
@@ -197,6 +202,30 @@ export const FR = {
         summary: 'Récapitulatif',
         summarySubtitle: 'Les informations que vous avez rempli à propos de ce programme.',
       },
+    },
+  },
+  statistics: {
+    title: 'Statistiques',
+    subtitle: "Retrouvez l'ensemble des statistiques de vos équipes.",
+    globalEngagement: {
+      title: 'Engagement global',
+      subtitle: "Retrouvez l'engagement global de vos équipes.",
+      activity: {
+        activity: 'Activité',
+        activitySubtitle: "Suivez l'évolution du nombre de questions auxquelles répondent vos équipes.",
+        teamFilter: 'Équipe',
+      },
+      contributon: {
+        contribution: 'Contribution',
+        contributionSubtitle: 'Retrouver les équipes ayant suggéré ou commenté des questions.',
+      },
+    },
+    globalPerformance: {
+      title: 'Performance global',
+      subtitle: 'Retrouvez les performances global de vos équipes.',
+    },
+    perTeams: {
+      title: 'Par équipe',
     },
   },
   questions: {
