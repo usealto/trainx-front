@@ -44,12 +44,12 @@
       {{ I18ns.menu.programs }}
     </a>
     <a
-    class="module"
-    [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.statistics"
-    routerLinkActive="menu-selected"
-  >
-    {{ I18ns.menu.statistics }}
-  </a>
+      class="module"
+      [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.statistics"
+      routerLinkActive="menu-selected"
+    >
+      {{ I18ns.menu.statistics }}
+    </a>
     <a
       class="module"
       [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadTeams"
@@ -94,7 +94,7 @@
       <i class="m-3 text-white fs-4 bi bi-box-arrow-in-right"></i>
     </button>
     <a class="profile" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile">
-      <alto-profile-card [user]="userStore.user.value$ | async"> </alto-profile-card>
+      <alto-profile-card [isWhite]="true" [user]="userStore.user.value$ | async"> </alto-profile-card>
     </a>
 
     <p class="build-time fs-8" title="Build Time">Version: {{ buildTime | date : 'medium' }}</p>

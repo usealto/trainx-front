@@ -85,6 +85,8 @@
   color: #344054;
 }
 .ng-select {
+  display: inline-block !important;
+  min-width: 12rem;
   .ng-arrow-wrapper {
     width: 30px;
     height: 26px;

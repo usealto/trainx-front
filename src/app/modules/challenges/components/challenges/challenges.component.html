@@ -20,44 +20,49 @@
     class="btn btn-primary float-end"
     [routerLink]="[AltoRoutes.challengeCreate, ChallengeTypeEnumApi.ByTeam]"
   >
-    {{ I18ns.challenges.team.createChallenge }}
+    <i class="bi bi-plus-lg"></i> {{ I18ns.challenges.team.createChallenge }}
   </button>
 
   <h1 id="byTeamAnchor">{{ I18ns.challenges.team.title }}</h1>
   <p class="mb-4">{{ I18ns.challenges.team.subtitle }}</p>
 
-  <div class="panel">
-    <ng-container *ngIf="challengesByTeam.length > 0; else noChallengesTeam">
-      <alto-dropdown-filter
-        class="text-start"
-        [data]="teamStore.teams.value"
-        [displayLabel]="'shortName'"
-        [placeholder]="I18ns.programs.programs.filters.team"
-        (selectChange)="filterChallengesByTeam($event, ChallengeTypeEnumApi.ByTeam)"
-        [isColored]="true"
-      ></alto-dropdown-filter>
+  <ng-container *ngIf="challengesByTeam.length > 0; else noChallengesTeam">
+    <div class="row mb-3">
+      <div class="col-8">
+        <alto-dropdown-filter
+          [data]="teamStore.teams.value"
+          [displayLabel]="'shortName'"
+          [placeholder]="I18ns.programs.programs.filters.team"
+          (selectChange)="filterChallengesByTeam($event, ChallengeTypeEnumApi.ByTeam)"
+          [isColored]="true"
+        ></alto-dropdown-filter>
 
-      <ng-select
-        class="d-inline-block ms-3"
-        [searchable]="false"
-        [items]="status"
-        [(ngModel)]="byTeamSelectedStatus"
-        [placeholder]="I18ns.challenges.team.statusFilter"
-        (ngModelChange)="filterByStatus(ChallengeTypeEnumApi.ByTeam)"
-      >
-        <ng-option *ngFor="let option of status" [value]="option.value"></ng-option>
-      </ng-select>
-      <alto-search class="ms-3" (searchChange)="search($event, ChallengeTypeEnumApi.ByTeam)"></alto-search>
+        <ng-select
+          class="ms-3"
+          [searchable]="false"
+          [items]="status"
+          [(ngModel)]="byTeamSelectedStatus"
+          [placeholder]="I18ns.challenges.team.statusFilter"
+          (ngModelChange)="filterByStatus(ChallengeTypeEnumApi.ByTeam)"
+        >
+          <ng-option *ngFor="let option of status" [value]="option.value"></ng-option>
+        </ng-select>
+      </div>
+      <div class="col-4 text-end">
+        <alto-search class="ms-3" (searchChange)="search($event, ChallengeTypeEnumApi.ByTeam)"></alto-search>
+      </div>
+    </div>
 
+    <div class="table-panel">
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
+            <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
-            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
+            <th scope="col" class="w-25 text-center">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.startDate }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.endDate }}</th>
-            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.status }}</th>
+            <th scope="col" class="text-center">{{ I18ns.leadHome.ongoingChallenges.table.status }}</th>
             <th scope="col">&nbsp;</th>
           </tr>
         </thead>
@@ -68,7 +73,7 @@
                 | slice : (byTeamPage - 1) * pageSize : byTeamPage * pageSize
             "
           >
-            <td>{{ chal.name }}</td>
+            <td class="fw-medium">{{ chal.name }}</td>
             <td>
               <span
                 *ngIf="chal.leadTeam"
@@ -79,7 +84,7 @@
                 {{ chal.leadTeam.shortName }}
               </span>
             </td>
-            <td>
+            <td class="text-center">
               <alto-colored-pill-list
                 [hasDynamicColor]="true"
                 [data]="chal.teams || []"
@@ -88,14 +93,14 @@
             </td>
             <td>{{ chal.startDate | date : 'shortDate' }}</td>
             <td>{{ chal.endDate | date : 'shortDate' }}</td>
-            <td>
+            <td class="text-center">
               <alto-status-pill
                 *ngIf="chal.status; else byTeamNoStatus"
                 [status]="chal.status"
               ></alto-status-pill>
               <ng-template #byTeamNoStatus>N/A</ng-template>
             </td>
-            <td>
+            <td class="px-3">
               <i class="bi bi-pen cursor-pointer" [routerLink]="[AltoRoutes.challengeEdit, chal.id]"></i>
             </td>
           </tr>
@@ -108,15 +113,15 @@
         [pageSize]="pageSize"
         [collectionSize]="challengesByTeamDisplay.length"
       ></ngb-pagination>
-    </ng-container>
-    <ng-template #noChallengesTeam>
-      <div class="panel text-center">
-        <i class="bi bi-controller fs-5"></i>
-        <h2>{{ I18ns.leadHome.ongoingChallenges.noTeamChallenges }}</h2>
-        <p>{{ I18ns.leadHome.ongoingChallenges.noTeamChallengesSubtitle }}</p>
-      </div>
-    </ng-template>
-  </div>
+    </div>
+  </ng-container>
+  <ng-template #noChallengesTeam>
+    <div class="panel text-center">
+      <i class="bi bi-controller fs-5"></i>
+      <h2>{{ I18ns.leadHome.ongoingChallenges.noTeamChallenges }}</h2>
+      <p>{{ I18ns.leadHome.ongoingChallenges.noTeamChallengesSubtitle }}</p>
+    </div>
+  </ng-template>
 
   <hr />
 
@@ -131,37 +136,42 @@
   <h1 id="byUserAnchor" class="mt-4">{{ I18ns.challenges.individual.title }}</h1>
   <p class="mb-4">{{ I18ns.challenges.individual.subtitle }}</p>
 
-  <div class="panel mb-4">
-    <ng-container *ngIf="challengesByUser.length > 0; else noChallenges">
-      <alto-dropdown-filter
-        class="text-start"
-        [data]="teamStore.teams.value"
-        [displayLabel]="'shortName'"
-        [placeholder]="I18ns.programs.programs.filters.team"
-        (selectChange)="filterChallengesByTeam($event, ChallengeTypeEnumApi.ByUser)"
-        [isColored]="true"
-      ></alto-dropdown-filter>
-      <ng-select
-        class="d-inline-block ms-3"
-        [searchable]="false"
-        [items]="status"
-        [(ngModel)]="byUserSelectedStatus"
-        [placeholder]="I18ns.challenges.team.statusFilter"
-        (ngModelChange)="filterByStatus(ChallengeTypeEnumApi.ByUser)"
-      >
-        <ng-option *ngFor="let option of status" [value]="option.value"></ng-option>
-      </ng-select>
-      <alto-search class="ms-3" (searchChange)="search($event, ChallengeTypeEnumApi.ByUser)"></alto-search>
-
+  <ng-container *ngIf="challengesByUser.length > 0; else noChallenges">
+    <div class="row mb-3">
+      <div class="col-8">
+        <alto-dropdown-filter
+          class="text-start"
+          [data]="teamStore.teams.value"
+          [displayLabel]="'shortName'"
+          [placeholder]="I18ns.programs.programs.filters.team"
+          (selectChange)="filterChallengesByTeam($event, ChallengeTypeEnumApi.ByUser)"
+          [isColored]="true"
+        ></alto-dropdown-filter>
+        <ng-select
+          class="d-inline-block ms-3"
+          [searchable]="false"
+          [items]="status"
+          [(ngModel)]="byUserSelectedStatus"
+          [placeholder]="I18ns.challenges.team.statusFilter"
+          (ngModelChange)="filterByStatus(ChallengeTypeEnumApi.ByUser)"
+        >
+          <ng-option *ngFor="let option of status" [value]="option.value"></ng-option>
+        </ng-select>
+      </div>
+      <div class="col-4 text-end">
+        <alto-search class="ms-3" (searchChange)="search($event, ChallengeTypeEnumApi.ByUser)"></alto-search>
+      </div>
+    </div>
+    <div class="table-panel">
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
+            <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
-            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
+            <th scope="col" class="w-25 text-center">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.startDate }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.endDate }}</th>
-            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.status }}</th>
+            <th scope="col" class="text-center">{{ I18ns.leadHome.ongoingChallenges.table.status }}</th>
             <th scope="col">&nbsp;</th>
           </tr>
         </thead>
@@ -172,11 +182,11 @@
                 | slice : (byUserPage - 1) * pageSize : byUserPage * pageSize
             "
           >
-            <td>{{ chal.name }}</td>
+            <td class="fw-medium">{{ chal.name }}</td>
             <td>
               <alto-img-badge [url]="(getUser(chal.leadUser?.id ?? '') | async)?.pictureUrl"></alto-img-badge>
             </td>
-            <td>
+            <td class="text-center">
               <alto-colored-pill-list
                 [hasDynamicColor]="true"
                 [data]="chal.teams ?? []"
@@ -185,14 +195,14 @@
             </td>
             <td>{{ chal.startDate | date : 'shortDate' }}</td>
             <td>{{ chal.endDate | date : 'shortDate' }}</td>
-            <td>
+            <td class="text-center">
               <alto-status-pill
                 *ngIf="chal.status; else byUserNoStatus"
                 [status]="chal.status"
               ></alto-status-pill>
               <ng-template #byUserNoStatus>N/A</ng-template>
             </td>
-            <td>
+            <td class="px-3">
               <i class="bi bi-pen cursor-pointer" [routerLink]="[AltoRoutes.challengeEdit, chal.id]"></i>
             </td>
           </tr>
@@ -205,13 +215,13 @@
         [pageSize]="pageSize"
         [collectionSize]="challengesByUserDisplay.length"
       ></ngb-pagination>
-    </ng-container>
-    <ng-template #noChallenges>
-      <div class="panel text-center">
-        <i class="bi bi-controller fs-5"></i>
-        <h2>{{ I18ns.leadHome.ongoingChallenges.noIndividualChallenges }}</h2>
-        <p>{{ I18ns.leadHome.ongoingChallenges.noIndividualChallengesSubtitle }}</p>
-      </div>
-    </ng-template>
-  </div>
+    </div>
+  </ng-container>
+  <ng-template #noChallenges>
+    <div class="panel text-center">
+      <i class="bi bi-controller fs-5"></i>
+      <h2>{{ I18ns.leadHome.ongoingChallenges.noIndividualChallenges }}</h2>
+      <p>{{ I18ns.leadHome.ongoingChallenges.noIndividualChallengesSubtitle }}</p>
+    </div>
+  </ng-template>
 </div>

@@ -280,7 +280,7 @@ export const FR = {
           standardType: 'Standard',
           adminType: 'Administrateur',
           typeSubtitle:
-            'Les utilisateurs de type "Administrateur" peuvent créer des programmes, des challenges et ons accés à plus de statistiques détaillées sur les résultats de leurs équipes.',
+            'Les utilisateurs de type "Administrateur" peuvent créer des programmes, des challenges et ont accés à plus de statistiques détaillées sur les résultats de leurs équipes.',
         },
       },
     },

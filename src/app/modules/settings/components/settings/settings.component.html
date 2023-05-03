@@ -1,17 +1,15 @@
-<h1 class="mt-4">{{ I18ns.settings.title }}</h1>
-<ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
-  <li [ngbNavItem]="1">
-    <a ngbNavLink>{{ I18ns.settings.users.title }}</a>
-    <ng-template ngbNavContent>
-      <alto-settings-users></alto-settings-users>
-    </ng-template>
-  </li>
-  <li [ngbNavItem]="2">
-    <a ngbNavLink>{{ I18ns.settings.integrations.title }}</a>
-    <ng-template ngbNavContent>
-      <alto-settings-integrations></alto-settings-integrations>
-    </ng-template>
-  </li>
-</ul>
+<h1 class="mb-4">{{ I18ns.settings.title }}</h1>
 
-<div [ngbNavOutlet]="nav" class="mt-4"></div>
+<alto-tabs
+  class="mb-3 d-block border-bottom fw-bold"
+  *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
+  (tabChanged)="tabChange($event)"
+  [data]="[
+    { label: I18ns.settings.users.title, value: 1 },
+    { label: I18ns.settings.integrations.title, value: 2 }
+  ]"
+></alto-tabs>
+<span [ngSwitch]="activeTab">
+  <alto-settings-users *ngSwitchCase="1"></alto-settings-users>
+  <alto-settings-integrations *ngSwitchCase="2"></alto-settings-integrations>
+</span>

@@ -129,7 +129,7 @@
             <th scope="col">{{ I18ns.programs.questions.table.score }}</th>
             <th scope="col">{{ I18ns.programs.questions.table.tags }}</th>
             <th scope="col">{{ I18ns.programs.questions.table.programs }}</th>
-            <th scope="col">{{ I18ns.programs.questions.table.author }}</th>
+            <th scope="col" class="text-center">{{ I18ns.programs.questions.table.author }}</th>
             <th></th>
           </tr>
         </thead>
@@ -155,10 +155,11 @@
               <td *ngIf="question.programs && question.programs.length > 0">
                 <alto-colored-pill-list [data]="question.programs" [limit]="2"></alto-colored-pill-list>
               </td>
+              <td *ngIf="!question.programs || question.programs.length < 1">-</td>
+
               <td class="text-center">
                 <alto-img-badge [url]="getUser(question.createdBy)?.pictureUrl"></alto-img-badge>
               </td>
-              <td *ngIf="!question.programs || question.programs.length < 1">-</td>
               <td class="cursor-pointer px-3" (click)="openQuestionForm(question)">
                 <i class="fs-5 bi bi-pen"></i>
               </td>
