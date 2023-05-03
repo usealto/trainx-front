@@ -372,6 +372,7 @@ export const FR = {
   menu: {
     home: 'Accueil',
     programs: 'Programmes',
+    statistics: 'Statistiques',
     team: 'Équipe',
     challenges: 'Challenges',
     settings: 'Paramètres',

@@ -44,6 +44,13 @@
       {{ I18ns.menu.programs }}
     </a>
     <a
+    class="module"
+    [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.statistics"
+    routerLinkActive="menu-selected"
+  >
+    {{ I18ns.menu.statistics }}
+  </a>
+    <a
       class="module"
       [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadTeams"
       routerLinkActive="menu-selected"
