@@ -4,7 +4,7 @@
 <br>
 
 
-<div *ngIf="!isImpersonnatedAsCompanyAdminOfthisCompany()">
+<div *ngIf="!isImpersonnatedAsCompanyAdminOfthisCompany">
   <p>
     It seems you are not impersonnated as a company admin. Please do this before coming back here
   </p>
@@ -13,7 +13,7 @@
   </a>
 </div>
 
-<div *ngIf="isImpersonnatedAsCompanyAdminOfthisCompany()">
+<div *ngIf="isImpersonnatedAsCompanyAdminOfthisCompany">
   <a [routerLink]="['/', 'admin', 'companies',company.id,'users']" *ngIf="company" class="btn btn-primary">
     <p *ngIf="users">Users : <span>{{users.length}}</span></p>
   </a>

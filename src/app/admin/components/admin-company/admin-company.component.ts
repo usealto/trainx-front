@@ -17,6 +17,7 @@ export class AdminCompanyComponent implements OnInit {
   id: string | undefined;
   companyForm: any;
   display = false;
+  isImpersonnatedAsCompanyAdminOfthisCompany = false;
 
   constructor(
     private readonly companiesRestService: CompaniesRestService,
@@ -32,7 +33,7 @@ export class AdminCompanyComponent implements OnInit {
       .getCompanyById(this.id)
       .pipe(tap((company) => (this.company = company)))
       .pipe(
-        tap((company) => {
+        tap(() => {
           this.companyForm = this.formBuilder.group({
             domain: [this.company.domain],
             name: [this.company.name],
@@ -44,7 +45,10 @@ export class AdminCompanyComponent implements OnInit {
 
     this.usersRestService
       .getUsersFiltered({ companyId: this.id })
-      .pipe(tap((users) => (this.users = users)))
+      .pipe(
+        tap((users) => (this.users = users)),
+        tap(() => this.isImpersonnatedAsCompanyAdminOfthisCompanyUpdate() )
+        )
       .subscribe();
   }
 
@@ -58,7 +62,7 @@ export class AdminCompanyComponent implements OnInit {
     this.ngOnInit();
   }
 
-  isImpersonnatedAsCompanyAdminOfthisCompany() {
+  isImpersonnatedAsCompanyAdminOfthisCompanyUpdate() {
     const impersonatedUserEmail = localStorage.getItem('impersonatedUser');
     if (impersonatedUserEmail) {
       const impersonatedUser = this.users.find((user) => user.email === impersonatedUserEmail);
@@ -73,6 +77,7 @@ export class AdminCompanyComponent implements OnInit {
       }
     } else {
       return false;
+      
     }
   }
 }
