@@ -1,5 +1,7 @@
 <div class="logo">
-  <img height="34" src="assets/img/logo-white.png" alt="Alto Logo" />
+  <a [routerLink]="['/', displayAdmin ? AltoRoutes.lead : AltoRoutes.user, AltoRoutes.leadHome]">
+    <img height="34" src="assets/img/logo-white.png" alt="Alto Logo" />
+  </a>
 </div>
 
 <div class="menu">
