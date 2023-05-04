@@ -24,14 +24,15 @@ export class ApiInterceptor implements HttpInterceptor {
     this.loadingStore.isLoading.value = true;
     this.loadingStore.load++;
 
-    const req = localStorage.getItem('impersonatedUser')
-      ? request.clone({
-          headers: request.headers.set(
-            'x-impersonate-user-email',
-            localStorage.getItem('impersonatedUser') ?? '',
-          ),
-        })
-      : request;
+    const req =
+      localStorage.getItem('impersonatedUser') && !request.url.includes('/auth/')
+        ? request.clone({
+            headers: request.headers.set(
+              'x-impersonate-user-email',
+              localStorage.getItem('impersonatedUser') ?? '',
+            ),
+          })
+        : request;
 
     return next.handle(req).pipe(
       tap((event: HttpEvent<any>) => {
