@@ -71,13 +71,13 @@ export class AdminCompanyComponent implements OnInit {
         impersonatedUser.companyId === this.id &&
         impersonatedUser.roles.includes('company-admin' as UserDtoApiRolesEnumApi)
       ) {
+        this.isImpersonnatedAsCompanyAdminOfthisCompany = true;
         return true;
       } else {
         return false;
       }
     } else {
       return false;
-      
     }
   }
 }
