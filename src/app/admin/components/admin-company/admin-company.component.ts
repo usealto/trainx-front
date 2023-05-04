@@ -64,8 +64,11 @@ export class AdminCompanyComponent implements OnInit {
 
   isImpersonnatedAsCompanyAdminOfthisCompanyUpdate() {
     const impersonatedUserEmail = localStorage.getItem('impersonatedUser');
+    console.log(`temp test for ${impersonatedUserEmail} : users =`,this.users);
+
     if (impersonatedUserEmail) {
       const impersonatedUser = this.users.find((user) => user.email === impersonatedUserEmail);
+      console.log('impersonatedUser',impersonatedUser);
       if (
         impersonatedUser &&
         impersonatedUser.companyId === this.id &&
