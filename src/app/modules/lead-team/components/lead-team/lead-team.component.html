@@ -106,19 +106,14 @@
   </div>
 
   <div class="row mb-4">
-    <div class="col-8">
-      <alto-dropdown-filter
-        class="me-3"
-        [data]="teams"
-        [isColored]="true"
-        [displayLabel]="'shortName'"
-        [placeholder]="I18ns.leadTeam.members.filters.teams"
-        (selectChange)="filterUsers($event)"
-      ></alto-dropdown-filter>
-    </div>
-    <div class="col-4 text-end">
-      <alto-search (searchChange)="searchUsers(users, $event)"></alto-search>
-    </div>
+    <alto-dropdown-filter
+      class="text-start col-3"
+      [data]="teams"
+      [displayLabel]="'shortName'"
+      [placeholder]="I18ns.leadTeam.members.filters.teams"
+      (selectChange)="filterUsers($event)"
+    ></alto-dropdown-filter>
+    <alto-search class="col-2 ms-auto" (searchChange)="searchUsers(users, $event)"></alto-search>
   </div>
 
   <ng-container *ngIf="paginatedUsers.length > 0; else noUsers">

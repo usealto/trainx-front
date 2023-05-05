@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDays } from 'date-fns';
+import { addDays, addMonths } from 'date-fns';
 import { Observable, filter, map } from 'rxjs';
 import {
   GetProgramRunsRequestParams,
@@ -87,6 +87,21 @@ export class ScoresRestService {
     };
     par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
 
+    return this.scoresApi.getScores(par).pipe(
+      map((r) => r.data || ({} as ScoresResponseDtoApi)),
+      filter((x) => !!x),
+    );
+  }
+
+  getTeamsScore(req: GetScoresRequestParams): Observable<ScoresResponseDtoApi> {
+    const par = {
+      ...req,
+      type: ScoreTypeEnumApi.Team,
+      timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Year,
+      dateBefore: new Date(),
+    };
+    // par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
+    par.dateAfter = addMonths(new Date(), -2);
     return this.scoresApi.getScores(par).pipe(
       map((r) => r.data || ({} as ScoresResponseDtoApi)),
       filter((x) => !!x),
