@@ -108,45 +108,34 @@ export class ScoresRestService {
     );
   }
 
-  getAverageCompletion(filt: ScoreFilters): Observable<ProgramRunApi[]> {
+  getCompletion(filt: ScoreFilters, isProgression: boolean): Observable<ProgramRunApi[]> {
     const par = {
       page: 1,
       itemPerPage: 300,
-      createdBefore: this.service.getYesterday(),
     } as GetProgramRunsRequestParams;
 
     if (filt.team) {
       par.teamIds = filt.team;
     }
 
-    par.createdAfter = this.service.getStartDate(filt.duration as ScoreDuration);
-
-    return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));
-  }
-
-  getCompletionProgression(filt: ScoreFilters): Observable<ProgramRunApi[]> {
-    let date = new Date();
-    switch (filt.duration) {
-      case 'week':
-        date = addDays(date, -14);
-        break;
-      case 'month':
-        date = addDays(date, -60);
-        break;
-      case 'year':
-        date = addDays(date, -730);
-        break;
-    }
-
-    const par = {
-      page: 1,
-      itemPerPage: 300,
-      createdAfter: date,
-    } as GetProgramRunsRequestParams;
-    par.createdBefore = this.service.getStartDate((filt.duration as ScoreDuration) ?? ScoreDuration.Month);
-
-    if (filt.team) {
-      par.teamIds = filt.team;
+    if (isProgression) {
+      let date = new Date();
+      switch (filt.duration) {
+        case 'week':
+          date = addDays(date, -14);
+          break;
+        case 'month':
+          date = addDays(date, -60);
+          break;
+        case 'year':
+          date = addDays(date, -730);
+          break;
+      }
+      par.createdAfter = date;
+      par.createdBefore = this.service.getStartDate(filt.duration as ScoreDuration);
+    } else {
+      par.createdAfter = this.service.getStartDate(filt.duration as ScoreDuration);
+      par.createdBefore = this.service.getYesterday();
     }
 
     return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));

@@ -228,40 +228,10 @@ export class LeadHomeComponent implements OnInit {
       .subscribe();
   }
 
-  // updateScore(e: { timeframe?: string; teamId?: string }) {
-  //   const paramsScore = e.teamId ? { scoredBy: ScoreByTypeEnumApi.Team, scoredById: e.teamId } : null;
-  //   const paramsAverage = e.teamId ? { teamIds: e.teamId } : null;
-  //   combineLatest([
-  //     this.getScore(paramsScore as GetScoresRequestParams),
-  //     this.getAverageCompletion(
-  //       e.timeframe as ScoreTimeframeEnumApi,
-  //       paramsAverage as GetProgramRunsRequestParams,
-  //     ),
-  //   ])
-  //     .pipe(untilDestroyed(this))
-  //     .subscribe();
-  // }
-
-  // getScore(e: GetScoresRequestParams) {
-  //   return this.scoresRestService.getGeneralScores(e).pipe(
-  //     filter((s) => {
-  //       if (!s.scores.length) {
-  //         this.globalScore = 0;
-  //         return false;
-  //       }
-  //       return true;
-  //     }),
-  //     tap((scores) => {
-  //       this.globalScore =
-  //         scores.scores[0].averages.reduce((prev, curr) => prev + curr, 0) / scores.scores[0].averages.length;
-  //     }),
-  //   );
-  // }
-
   getAverageCompletion(filt: ScoreFilters) {
     return combineLatest([
-      this.scoresRestService.getAverageCompletion(filt),
-      this.scoresRestService.getCompletionProgression(filt),
+      this.scoresRestService.getCompletion(filt, false),
+      this.scoresRestService.getCompletion(filt, true),
     ]).pipe(
       map(([current, last]) => [
         [current.filter((p) => p.finishedAt !== null).length, current.length],
