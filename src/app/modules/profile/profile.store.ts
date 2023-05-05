@@ -8,5 +8,5 @@ export class ProfileStore {
   users: Store<UserDtoApi[]> = new Store<UserDtoApi[]>([]);
 
   // The connected user
-  user: Store<UserDtoApi> = new Store<UserDtoApi>({} as UserDtoApi);
+  user: Store<UserDtoApi> = new Store<UserDtoApi>();
 }
