@@ -8,6 +8,7 @@
     "prebuild": "node build-time.js",
     "prebuild:preprod": "node build-time.js",
     "build:preprod": "ng build --configuration preprod",
+    "build:sandbox": "ng build --configuration sandbox",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

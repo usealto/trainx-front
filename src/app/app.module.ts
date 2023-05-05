@@ -48,7 +48,7 @@ export function apiConfigFactory(): Configuration {
       useRefreshTokens: true,
       cacheLocation: 'localstorage',
       authorizationParams: {
-        audience: 'https://api.usealto.com',
+        audience: environment.audience,
         scope: 'openid profile email offline_access',
         redirect_uri: window.location.origin,
       },
