@@ -18,7 +18,6 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   }
 
   updateTimePicker(event: any): void {
-    console.log(event.target.id);
     this.timePicker = event.target.id;
   }
 }

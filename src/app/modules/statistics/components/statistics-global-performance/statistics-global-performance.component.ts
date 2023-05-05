@@ -45,19 +45,13 @@ export class StatisticsGlobalPerformanceComponent implements OnInit {
       } as ChartFilters)
       .pipe(
         tap((res) => {
-          const temp = res.scores
+          this.scoredTeams = res.scores
             .map((score) => {
               const filledScore = score.averages.filter((average) => average !== null);
               const average = filledScore.reduce((acc, val) => acc + val, 0) / filledScore.length;
               return { label: score.label, score: average };
             })
             .sort((a, b) => b.score - a.score);
-          temp.push(
-            { label: 'test2', score: 0 },
-            { label: 'test', score: -0.02 },
-            { label: 'test3', score: -0.74 },
-          );
-          this.scoredTeams = temp;
         }),
       )
       .subscribe();
