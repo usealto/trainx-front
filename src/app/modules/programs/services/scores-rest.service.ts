@@ -93,21 +93,6 @@ export class ScoresRestService {
     );
   }
 
-  getTeamsScore(req: GetScoresRequestParams): Observable<ScoresResponseDtoApi> {
-    const par = {
-      ...req,
-      type: ScoreTypeEnumApi.Team,
-      timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Year,
-      dateBefore: new Date(),
-    };
-    // par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
-    par.dateAfter = addMonths(new Date(), -2);
-    return this.scoresApi.getScores(par).pipe(
-      map((r) => r.data || ({} as ScoresResponseDtoApi)),
-      filter((x) => !!x),
-    );
-  }
-
   getCompletion(filt: ScoreFilters, isProgression: boolean): Observable<ProgramRunApi[]> {
     const par = {
       page: 1,
