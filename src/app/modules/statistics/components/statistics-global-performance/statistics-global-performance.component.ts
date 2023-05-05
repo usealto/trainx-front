@@ -63,8 +63,6 @@ export class StatisticsGlobalPerformanceComponent implements OnInit {
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
-    console.log(scores);
-    console.log(this.aggregateDate(scores[0].dates, duration));
     const labels = scores[0].dates.map((d) => d.toLocaleDateString());
     const data: ChartData = {
       labels: labels,
