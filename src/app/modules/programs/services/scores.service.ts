@@ -31,7 +31,7 @@ export class ScoresService {
         date = addDays(date, -365);
         break;
     }
-    date = addHours(date, gmtDataOffset);
+    date = addHours(date, gmtDataOffset + 1);
     return date;
   }
 

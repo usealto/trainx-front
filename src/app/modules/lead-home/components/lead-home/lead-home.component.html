@@ -35,12 +35,12 @@
 
 <div class="row mt-5 mb-4">
   <div class="col-5">
-    <h1>{{ I18ns.leadHome.statistics.title }}</h1>
+    <h2>{{ I18ns.leadHome.statistics.title }}</h2>
   </div>
   <div class="col-7 text-end">
     <alto-period-filter
       class="text-start me-3"
-      (selectChange)="updateScore({ timeframe: $event })"
+      (selectChange)="getGlobalScore({ duration: $event })"
     ></alto-period-filter>
     <alto-dropdown-filter
       class="text-start"
@@ -50,7 +50,7 @@
       [placeholder]="I18ns.programs.programs.filters.team"
       [isColored]="true"
       [multiple]="false"
-      (selectChange)="updateScore({ timeframe: statisticTimeRange, teamId: $event })"
+      (selectChange)="getGlobalScore({ team: $event })"
     ></alto-dropdown-filter>
   </div>
 </div>
@@ -66,7 +66,7 @@
           ngbTooltip="{{ I18ns.leadHome.statistics.globalScoreToolTip }}"
         ></i>
       </p>
-      <p>{{ globalScore | percent }}</p>
+      <h1>{{ globalScore | percent }}</h1>
     </div>
   </div>
   <div class="col-3">
@@ -79,9 +79,12 @@
           ngbTooltip="{{ I18ns.leadHome.statistics.averageCompletionToolTip }}"
         ></i>
       </p>
-      <div class="row g-0">
-        <p class="col">{{ averageCompletion | percent }}</p>
-        <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge>
+      <div class="w-100 row g-0">
+        <h1 class="col">{{ averageCompletion | percent }}</h1>
+        <alto-progression-badge
+          class="col text-end mt-2"
+          [score]="completionProgression"
+        ></alto-progression-badge>
       </div>
     </div>
   </div>
@@ -96,7 +99,7 @@
         ></i>
       </p>
       <div class="row g-0">
-        <p class="col">N/A</p>
+        <h1 class="col">N/A</h1>
         <!-- <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge> -->
       </div>
     </div>
@@ -112,7 +115,7 @@
         ></i>
       </p>
       <div class="row g-0">
-        <p class="col">N/A</p>
+        <h1 class="col">N/A</h1>
         <!-- <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge> -->
       </div>
     </div>
@@ -122,7 +125,7 @@
 <!-- GLOBAL EVOLUTION -->
 
 <div class="row mt-5 mb-4">
-  <h1 class="col-5">{{ I18ns.leadHome.globalEvolution.title }}</h1>
+  <h2 class="col-5">{{ I18ns.leadHome.globalEvolution.title }}</h2>
   <div class="col-7 text-end">
     <alto-period-filter
       class="text-start me-3"
@@ -259,7 +262,7 @@
 <!-- ONGOING PROGRAMS -->
 <div class="row mt-5 mb-4">
   <div class="col-5">
-    <h1>{{ I18ns.leadHome.ongoingPrograms.title }}</h1>
+    <h2>{{ I18ns.leadHome.ongoingPrograms.title }}</h2>
   </div>
   <div class="col-7 text-end">
     <alto-dropdown-filter
@@ -296,7 +299,7 @@
 <!-- CHALLENGES -->
 <div class="row mt-5 mb-4">
   <div class="col-5">
-    <h1>{{ I18ns.leadHome.ongoingChallenges.title }}</h1>
+    <h2>{{ I18ns.leadHome.ongoingChallenges.title }}</h2>
   </div>
   <div class="col-7 text-end">
     <button [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]" class="btn btn-outline-secondary">

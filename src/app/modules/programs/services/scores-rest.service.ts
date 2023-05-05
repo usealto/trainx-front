@@ -14,7 +14,7 @@ import {
   ScoresResponseDtoApi,
 } from 'src/app/sdk';
 import { ChartFilters } from '../../shared/models/chart.model';
-import { ScoreDuration } from '../models/score.model';
+import { ScoreDuration, ScoreFilters } from '../models/score.model';
 import { ScoresService } from './scores.service';
 
 @Injectable({
@@ -30,7 +30,7 @@ export class ScoresRestService {
   getScores({ duration, type, team, timeframe, sortBy }: ChartFilters): Observable<ScoresResponseDtoApi> {
     const par: GetScoresRequestParams = {
       type: type ?? ScoreTypeEnumApi.Guess,
-      timeframe: timeframe ?? this.service.getDefaultTimeFrame(duration as ScoreDuration),
+      timeframe: timeframe ?? ScoreTimeframeEnumApi.Day,
       dateAfter: this.service.getStartDate(duration as ScoreDuration),
       dateBefore: new Date(),
       fillValues: ScoreFillValuesEnumApi.Null,
@@ -108,27 +108,25 @@ export class ScoresRestService {
     );
   }
 
-  getAverageCompletion(
-    timeframe: ScoreTimeframeEnumApi,
-    req?: GetProgramRunsRequestParams,
-  ): Observable<ProgramRunApi[]> {
+  getAverageCompletion(filt: ScoreFilters): Observable<ProgramRunApi[]> {
     const par = {
-      ...req,
       page: 1,
       itemPerPage: 300,
       createdBefore: this.service.getYesterday(),
-    };
-    par.createdAfter = this.service.getStartDate(this.service.getDefaultDuration(timeframe));
+    } as GetProgramRunsRequestParams;
+
+    if (filt.team) {
+      par.teamIds = filt.team;
+    }
+
+    par.createdAfter = this.service.getStartDate(filt.duration as ScoreDuration);
 
     return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));
   }
 
-  getCompletionProgression(
-    timeframe: ScoreTimeframeEnumApi,
-    req?: GetProgramRunsRequestParams,
-  ): Observable<ProgramRunApi[]> {
+  getCompletionProgression(filt: ScoreFilters): Observable<ProgramRunApi[]> {
     let date = new Date();
-    switch (timeframe) {
+    switch (filt.duration) {
       case 'week':
         date = addDays(date, -14);
         break;
@@ -141,12 +139,15 @@ export class ScoresRestService {
     }
 
     const par = {
-      ...req,
       page: 1,
       itemPerPage: 300,
       createdAfter: date,
     } as GetProgramRunsRequestParams;
-    par.createdBefore = this.service.getStartDate(this.service.getDefaultDuration(timeframe));
+    par.createdBefore = this.service.getStartDate((filt.duration as ScoreDuration) ?? ScoreDuration.Month);
+
+    if (filt.team) {
+      par.teamIds = filt.team;
+    }
 
     return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));
   }
