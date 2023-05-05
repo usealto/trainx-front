@@ -9,4 +9,8 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 export class SettingsComponent {
   I18ns = I18ns;
   activeTab = 1;
+
+  tabChange(val: number) {
+    this.activeTab = val;
+  }
 }

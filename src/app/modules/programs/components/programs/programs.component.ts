@@ -178,8 +178,8 @@ export class ProgramsComponent implements OnInit {
           this.questions = questions.data ?? [];
           this.questionsCount = questions.meta.totalItems;
         }),
-        switchMap((questions) => forkJoin([this.getScoresfromQuestions(questions), of(questions)])),
-        map(([scores, questions]) => questions.data?.map((q) => q.createdBy) ?? []),
+        switchMap((questions) => this.getScoresfromQuestions(questions)),
+        map(() => this.questions?.map((q) => q.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
         map((ids) => this.getUsersfromQuestions(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),

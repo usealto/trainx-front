@@ -49,45 +49,68 @@
   background-color: white;
   border-radius: 1.143rem;
   border: 1px solid #eaecf0;
-  padding: 1rem;
+  padding: 1.4rem 1.7rem;
 }
-
-// TODO
-.icon-btn {
-  width: 1.8rem;
-  height: 1.8rem;
-  font-size: 0.9rem;
-  padding: 0.2rem;
-}
-
-.icon-btn-small {
-  width: 1.8rem;
-  height: 1.8rem;
-  font-size: 0.9rem;
-  padding: 0.2rem;
-}
-// --- TABLES
-.table {
-  --bs-table-hover-bg: #ccebff;
-  tr {
-    background-color: white;
+.table-panel {
+  background-color: white;
+  border-radius: 1.143rem;
+  border: 1px solid #eaecf0;
+  h2 {
+    padding: 1.4rem 1.7rem;
+    margin: 0;
+  }
+  .table {
+    th {
+      font-weight: 500;
+    }
+    tbody tr {
+      height: 5.144rem;
+    }
+    tr {
+      & * {
+        vertical-align: middle;
+      }
+      th:first-child,
+      td:first-child {
+        padding-left: 1.7rem;
+      }
+    }
   }
 }
 
-table {
-  .line-edge {
-    position: absolute;
-    width: 4px;
-    min-height: 40px;
-    height: 100%;
-    border-radius: 4px 0 0 4px;
+.search-group {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  max-width: 23rem;
+  height: 2.572rem;
+  .input-group-text {
+    display: flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--alto-grey);
+    text-align: center;
+    white-space: nowrap;
+    border-radius: 28px 0 0 28px;
+    border: 1px solid #ced4da;
+    border-right-width: 0;
+    background-color: transparent;
   }
-  .clickable-row:hover {
-    cursor: pointer;
-    background-color: #cde7ff;
+  & > .form-control {
+    border: 0;
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    border-radius: 0 28px 28px 0;
+    border: 1px solid #ced4da;
+    border-left-width: 0;
   }
 }
-
 // Used in modals
 .close-button {
   padding: 0;

@@ -1,28 +1,40 @@
 <h1 id="programsAnchor" class="mt-4">{{ I18ns.programs.title }}</h1>
-<p class="mb-4">{{ I18ns.programs.subtitle }}</p>
+<p class="mb-4 alto-grey">{{ I18ns.programs.subtitle }}</p>
 <div class="pb-4 border-bottom">
   <alto-anchor-navigator fragment="programsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.programs.title }}</button>
+    <button type="button" class="btn btn-outline-secondary me-4 fw-medium">
+      {{ I18ns.programs.programs.title }}
+      <span class="alto-badge">{{ programsDisplay.length }}</span>
+    </button>
   </alto-anchor-navigator>
   <alto-anchor-navigator fragment="questionsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.questions.title }}</button>
+    <button type="button" class="btn btn-outline-secondary me-4 fw-medium">
+      {{ I18ns.programs.questions.title }}
+      <span class="alto-badge">{{ questionsCount }}</span>
+    </button>
   </alto-anchor-navigator>
   <alto-anchor-navigator fragment="submittedQuestionsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-4">
+    <button type="button" class="btn btn-outline-secondary me-4 fw-medium">
       {{ I18ns.programs.awaitQuestions.title }}
+      <span class="alto-badge">{{ submittedQuestions.length }}</span>
     </button>
   </alto-anchor-navigator>
   <alto-anchor-navigator fragment="tagsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-4">{{ I18ns.programs.tags.title }}</button>
+    <button type="button" class="btn btn-outline-secondary me-4 fw-medium">
+      {{ I18ns.programs.tags.title }}
+      <span class="alto-badge">{{ tagsCount }}</span>
+    </button>
   </alto-anchor-navigator>
 </div>
+
+<!-- PROGRAMS -->
 <div class="py-4 border-bottom">
   <div>
     <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
-      {{ I18ns.programs.programs.createProgram }}
+      <i class="bi bi-plus-lg"></i> {{ I18ns.programs.programs.createProgram }}
     </a>
     <h1>{{ I18ns.programs.programs.title }}</h1>
-    <p class="mb-4">{{ I18ns.programs.programs.subtitle }}</p>
+    <p class="mb-4 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
   </div>
   <div class="text-end mb-4">
     <alto-dropdown-filter
@@ -67,15 +79,17 @@
     </div>
   </ng-template>
 </div>
-<div class="py-4 border-bottom">
+
+<!-- QUESTIONS -->
+<div class="py-4 border-bottom questions">
   <button type="button" class="btn btn-primary float-end" (click)="openQuestionForm()">
-    {{ I18ns.programs.questions.createQuestion }}
+    <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.createQuestion }}
   </button>
   <h1 id="questionsAnchor">{{ I18ns.programs.questions.title }}</h1>
-  <p class="mb-4">{{ I18ns.programs.questions.subtitle }}</p>
+  <p class="mb-4 alto-grey">{{ I18ns.programs.questions.subtitle }}</p>
 
   <div class="row mb-4">
-    <div class="col-6">
+    <div class="col-8">
       <alto-dropdown-filter
         class="me-3"
         [data]="programsStore.programs.value"
@@ -101,60 +115,69 @@
         (selectChange)="getQuestions({ contributors: $event })"
       ></alto-dropdown-filter>
     </div>
-    <div class="col"></div>
-    <div class="col-4">
+    <div class="col-4 text-end">
       <alto-search (searchChange)="getQuestions({ search: $event })"></alto-search>
     </div>
   </div>
 
-  <ng-container *ngIf="questions.length > 0; else noQuestions">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">{{ I18ns.programs.questions.table.question }}</th>
-          <th scope="col">{{ I18ns.programs.questions.table.score }}</th>
-          <th scope="col">{{ I18ns.programs.questions.table.author }}</th>
-          <th scope="col">{{ I18ns.programs.questions.table.tags }}</th>
-          <th scope="col">{{ I18ns.programs.questions.table.programs }}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody *ngIf="!isQuestionsLoading">
-        <tr *ngFor="let question of questions">
-          <td class="col-3">
-            {{ question.title }}
-          </td>
-          <td>
-            <span class="badge rounded-pill" [class]="72 | pillColor">{{
-              getQuestionScore(question.id) | percent
-            }}</span>
-          </td>
-          <td class="col-2">
-            <alto-img-badge [url]="getUser(question.createdBy)?.pictureUrl"></alto-img-badge>
-          </td>
-          <td *ngIf="question.tags && question.tags.length > 0">
-            <alto-colored-pill-list [data]="question.tags" [limit]="3"></alto-colored-pill-list>
-          </td>
-          <td *ngIf="!question.tags || question.tags.length < 1">-</td>
-          <td *ngIf="question.programs && question.programs.length > 0">
-            <alto-colored-pill-list [data]="question.programs" [limit]="3"></alto-colored-pill-list>
-          </td>
-          <td *ngIf="!question.programs || question.programs.length < 1">-</td>
-          <td class="pointer pe-auto" (click)="openQuestionForm(question)">
-            <i class="fs-5 bi bi-pencil"></i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <ngb-pagination
-      [ngClass]="{ invisible: questionsCount <= questionsPageSize }"
-      [collectionSize]="questionsCount"
-      [(page)]="questionsPage"
-      (pageChange)="changeQuestionsPage()"
-      [pageSize]="questionsPageSize"
-      [maxSize]="10"
-      aria-label="Default pagination"
-    ></ngb-pagination>
+  <ng-container *ngIf="questionsCount > 0; else noQuestions">
+    <div class="table-panel">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">{{ I18ns.programs.questions.table.question }}</th>
+            <th scope="col">{{ I18ns.programs.questions.table.score }}</th>
+            <th scope="col">{{ I18ns.programs.questions.table.tags }}</th>
+            <th scope="col">{{ I18ns.programs.questions.table.programs }}</th>
+            <th scope="col" class="text-center">{{ I18ns.programs.questions.table.author }}</th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody [style.height]="72 * questions.length + 'px'">
+          <ng-container *ngIf="!isQuestionsLoading">
+            <tr *ngFor="let question of questions">
+              <td class="w-40">
+                {{ question.title }}
+              </td>
+              <td class="w-5">
+                <span
+                  class="badge rounded-pill"
+                  [class]="getQuestionScore(question.id) ?? 0 * 100 | pillColor"
+                >
+                  {{ getQuestionScore(question.id) | percent }}
+                </span>
+              </td>
+              <td *ngIf="question.tags && question.tags.length > 0">
+                <alto-colored-pill-list [data]="question.tags" [limit]="3"></alto-colored-pill-list>
+              </td>
+              <td *ngIf="!question.tags || question.tags.length < 1">-</td>
+              <td *ngIf="question.programs && question.programs.length > 0">
+                <alto-colored-pill-list [data]="question.programs" [limit]="2"></alto-colored-pill-list>
+              </td>
+              <td *ngIf="!question.programs || question.programs.length < 1">-</td>
+
+              <td class="text-center">
+                <alto-img-badge [url]="getUser(question.createdBy)?.pictureUrl"></alto-img-badge>
+              </td>
+              <td class="cursor-pointer px-3" (click)="openQuestionForm(question)">
+                <i class="fs-5 bi bi-pen"></i>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+
+      <ngb-pagination
+        [ngClass]="{ invisible: questionsCount <= questionsPageSize }"
+        [collectionSize]="questionsCount"
+        [(page)]="questionsPage"
+        (pageChange)="changeQuestionsPage()"
+        [pageSize]="questionsPageSize"
+        [maxSize]="10"
+        aria-label="Default pagination"
+      ></ngb-pagination>
+    </div>
   </ng-container>
   <ng-template #noQuestions>
     <div class="panel text-center">
@@ -163,41 +186,45 @@
     </div>
   </ng-template>
 </div>
+
+<!-- SUBMITTED QUESTIONS -->
 <div class="py-4 border-bottom">
   <div>
     <h1 id="submittedQuestionsAnchor">{{ I18ns.programs.awaitQuestions.title }}</h1>
-    <p class="mb-4">{{ I18ns.programs.awaitQuestions.subtitle }}</p>
+    <p class="mb-4 alto-grey">{{ I18ns.programs.awaitQuestions.subtitle }}</p>
   </div>
   <ng-container *ngIf="submittedQuestions.length > 0; else noSubmittedQuestions">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">{{ I18ns.programs.awaitQuestions.table.question }}</th>
-          <th scope="col">{{ I18ns.programs.awaitQuestions.table.author }}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody *ngIf="!isSubmittedQuestionsLoading">
-        <tr *ngFor="let question of submittedQuestions">
-          <th scope="row">{{ question.title }}</th>
-          <td>
-            <alto-img-badge [url]="getUser(question.createdBy)?.pictureUrl"></alto-img-badge>
-          </td>
-          <td>
-            <i class="fs-5 bi bi-pen cursor-pointer" (click)="openSubmittedQuestionForm(question)"></i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <ngb-pagination
-      [ngClass]="{ invisible: submittedQuestionsCount <= submittedQuestionsPageSize }"
-      [collectionSize]="submittedQuestionsCount"
-      [(page)]="submittedQuestionsPage"
-      (pageChange)="changeSubmittedQuestionsPage()"
-      [pageSize]="submittedQuestionsPageSize"
-      [maxSize]="10"
-      aria-label="Default pagination"
-    ></ngb-pagination>
+    <div class="table-panel">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">{{ I18ns.programs.awaitQuestions.table.question }}</th>
+            <th scope="col">{{ I18ns.programs.awaitQuestions.table.author }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody *ngIf="!isSubmittedQuestionsLoading">
+          <tr *ngFor="let question of submittedQuestions">
+            <th scope="row">{{ question.title }}</th>
+            <td>
+              <alto-img-badge [url]="getUser(question.createdBy)?.pictureUrl"></alto-img-badge>
+            </td>
+            <td>
+              <i class="fs-5 bi bi-pen cursor-pointer" (click)="openSubmittedQuestionForm(question)"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ngb-pagination
+        [ngClass]="{ invisible: submittedQuestionsCount <= submittedQuestionsPageSize }"
+        [collectionSize]="submittedQuestionsCount"
+        [(page)]="submittedQuestionsPage"
+        (pageChange)="changeSubmittedQuestionsPage()"
+        [pageSize]="submittedQuestionsPageSize"
+        [maxSize]="10"
+        aria-label="Default pagination"
+      ></ngb-pagination>
+    </div>
   </ng-container>
   <ng-template #noSubmittedQuestions>
     <div class="panel text-center">
@@ -205,12 +232,14 @@
     </div>
   </ng-template>
 </div>
+
+<!-- TAGS -->
 <div class="py-4 border-bottom">
   <button type="button" class="btn btn-primary float-end" (click)="openTagForm()">
-    {{ I18ns.programs.tags.createTag }}
+    <i class="bi bi-plus-lg"></i> {{ I18ns.programs.tags.createTag }}
   </button>
   <h1 id="tagsAnchor">{{ I18ns.programs.tags.title }}</h1>
-  <p class="mb-4">{{ I18ns.programs.tags.subtitle }}</p>
+  <p class="mb-4 alto-grey">{{ I18ns.programs.tags.subtitle }}</p>
 
   <div class="row mb-4">
     <div class="col-8">
@@ -230,47 +259,50 @@
         (selectChange)="filterTags({ contributors: $event })"
       ></alto-dropdown-filter>
     </div>
-
-    <alto-search class="col-4" (searchChange)="filterTags({ search: $event })"></alto-search>
+    <div class="col-4 text-end">
+      <alto-search (searchChange)="filterTags({ search: $event })"></alto-search>
+    </div>
   </div>
   <ng-container *ngIf="paginatedTags.length > 0; else noTags">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">{{ I18ns.programs.tags.table.name }}</th>
-          <th scope="col">{{ I18ns.programs.tags.table.score }}</th>
-          <th scope="col">{{ I18ns.programs.tags.table.author }}</th>
-          <th scope="col">{{ I18ns.programs.tags.table.associatedPrograms }}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody *ngIf="!isTagsLoading">
-        <tr *ngFor="let tag of paginatedTags">
-          <th scope="row">{{ tag.name }}</th>
-          <td>
-            <span class="badge rounded-pill" [class]="70 | pillColor">42%</span>
-          </td>
-          <td>
-            <alto-img-badge [url]="getUser(tag.createdBy)?.pictureUrl"></alto-img-badge>
-          </td>
-          <td *ngIf="!isTagProgramsLoading">
-            <alto-colored-pill-list [data]="getTagPrograms(tag.id)" [limit]="5"></alto-colored-pill-list>
-          </td>
-          <td class="pointer pe-auto" (click)="openTagForm(tag)">
-            <i class="fs-5 bi bi-pen cursor-pointer"></i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <ngb-pagination
-      [ngClass]="{ invisible: tagsCount <= tagsPageSize }"
-      [collectionSize]="tagsCount"
-      [(page)]="tagsPage"
-      (pageChange)="filterTags()"
-      [pageSize]="tagsPageSize"
-      [maxSize]="10"
-      aria-label="Default pagination"
-    ></ngb-pagination>
+    <div class="table-panel">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">{{ I18ns.programs.tags.table.name }}</th>
+            <th scope="col">{{ I18ns.programs.tags.table.score }}</th>
+            <th scope="col">{{ I18ns.programs.tags.table.author }}</th>
+            <th scope="col">{{ I18ns.programs.tags.table.associatedPrograms }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody *ngIf="!isTagsLoading">
+          <tr *ngFor="let tag of paginatedTags">
+            <td class="w-15">{{ tag.name }}</td>
+            <td>
+              <span class="badge rounded-pill" [class]="70 | pillColor">42%</span>
+            </td>
+            <td class="text-center">
+              <alto-img-badge [url]="getUser(tag.createdBy)?.pictureUrl"></alto-img-badge>
+            </td>
+            <td *ngIf="!isTagProgramsLoading">
+              <alto-colored-pill-list [data]="getTagPrograms(tag.id)" [limit]="4"></alto-colored-pill-list>
+            </td>
+            <td class="cursor-pointer px-3" (click)="openTagForm(tag)">
+              <i class="fs-5 bi bi-pen cursor-pointer"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ngb-pagination
+        [ngClass]="{ invisible: tagsCount <= tagsPageSize }"
+        [collectionSize]="tagsCount"
+        [(page)]="tagsPage"
+        (pageChange)="filterTags()"
+        [pageSize]="tagsPageSize"
+        [maxSize]="10"
+        aria-label="Default pagination"
+      ></ngb-pagination>
+    </div>
   </ng-container>
   <ng-template #noTags>
     <div class="panel text-center">

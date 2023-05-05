@@ -7,7 +7,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 import { ApiErrorInterceptor } from './core/interceptors/api-error.interceptor';
 import { ApiInterceptor } from './core/interceptors/api.interceptor';
 import { AppErrorHandler } from './core/interceptors/app-error.handler';
@@ -21,6 +20,7 @@ import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { ApiModule, BASE_PATH, Configuration, ConfigurationParameters } from './sdk';
 import { SharedModule } from './modules/shared/shared.module';
 import { TestComponent } from './layout/test/test.component';
+import { AppComponent } from './layout/app/app.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {};
@@ -48,7 +48,7 @@ export function apiConfigFactory(): Configuration {
       useRefreshTokens: true,
       cacheLocation: 'localstorage',
       authorizationParams: {
-        audience: 'https://api.usealto.com',
+        audience: environment.audience,
         scope: 'openid profile email offline_access',
         redirect_uri: window.location.origin,
       },

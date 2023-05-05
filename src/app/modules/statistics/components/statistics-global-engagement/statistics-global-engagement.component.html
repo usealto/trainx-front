@@ -1,0 +1,57 @@
+<div class="btn-group mb-4" role="group">
+  <input
+    type="radio"
+    class="btn-check"
+    name="timePicker"
+    id="year"
+    autocomplete="off"
+    (change)="updateTimePicker($event)"
+    checked
+  />
+  <label class="btn btn-outline-secondary" for="year">{{ I18ns.shared.rollingDateFilter.year }}</label>
+
+  <input
+    type="radio"
+    class="btn-check"
+    name="timePicker"
+    id="trimester"
+    autocomplete="off"
+    (change)="updateTimePicker($event)"
+  />
+  <label class="btn btn-outline-secondary" for="trimester">{{
+    I18ns.shared.rollingDateFilter.trimester
+  }}</label>
+
+  <input
+    type="radio"
+    class="btn-check"
+    name="timePicker"
+    id="month"
+    autocomplete="off"
+    (change)="updateTimePicker($event)"
+  />
+  <label class="btn btn-outline-secondary" for="month">{{ I18ns.shared.rollingDateFilter.month }}</label>
+</div>
+<div class="row">
+  <div class="col panel mx-2">
+    <alto-dropdown-filter
+      class="float-end"
+      [data]="teamStore.teams.value"
+      [displayLabel]="'shortName'"
+      [returnValue]="'id'"
+      [placeholder]="I18ns.statistics.globalEngagement.activity.teamFilter"
+      [isColored]="true"
+      [multiple]="false"
+    ></alto-dropdown-filter>
+    <h2>{{ I18ns.statistics.globalEngagement.activity.activity }}</h2>
+    <p>{{ I18ns.statistics.globalEngagement.activity.activitySubtitle }}</p>
+  </div>
+  <div class="col-4 panel mx-2">
+    <h2>{{ I18ns.statistics.globalEngagement.contributon.contribution }}</h2>
+    <p>{{ I18ns.statistics.globalEngagement.contributon.contributionSubtitle }}</p>
+    <alto-tabs
+    class="mb-3"
+
+    ></alto-tabs>
+  </div>
+</div>

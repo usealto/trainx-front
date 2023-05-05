@@ -23,6 +23,9 @@
   --bs-body-bg: #fcfcfd;
   --bs-body-color: var(--alto-grey);
 }
+.alto-text {
+  color: var(--alto-text-color);
+}
 .alto-blue {
   color: var(--alto-blue);
 }
@@ -34,4 +37,7 @@
 }
 .alto-grey-bg {
   background-color: var(--alto-medium-grey);
+}
+.alto-blue-bg {
+  background-color: var(--alto-blue);
 }

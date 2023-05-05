@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-4">
       <label class="form-label required">{{ I18ns.programs.forms.step1.name }}</label>
-      <p class="fs-7">{{ I18ns.programs.forms.step1.nameSubtitle }}</p>
+      <p class="">{{ I18ns.programs.forms.step1.nameSubtitle }}</p>
     </div>
     <div class="col-6">
       <input
@@ -17,7 +17,7 @@
   <div class="row">
     <div class="col-4">
       <label class="form-label">{{ I18ns.programs.forms.step1.description }}</label>
-      <p class="fs-7">{{ I18ns.programs.forms.step1.descriptionSubtitle }}</p>
+      <p>{{ I18ns.programs.forms.step1.descriptionSubtitle }}</p>
     </div>
     <div class="col-6">
       <textarea
@@ -32,7 +32,7 @@
   <div *ngIf="!isEdit" class="row">
     <div class="col-4">
       <label class="form-label required">{{ I18ns.programs.forms.step1.tags }}</label>
-      <p class="fs-7">{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
+      <p>{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
     </div>
     <div class="col-6">
       <ng-select
@@ -47,7 +47,7 @@
         formControlName="tags"
       >
         <ng-template ng-label-tmp let-item="item" let-clear="clear">
-          <div class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+          <div class="badge rounded-pill p-2 alto-blue-bg">
             <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
               <i class="bi bi-x-lg"></i>
             </span>
@@ -55,7 +55,7 @@
           </div>
         </ng-template>
         <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-          <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+          <span class="badge rounded-pill p-2 alto-blue-bg">
             {{ item.name }}
           </span>
         </ng-template>
@@ -66,7 +66,7 @@
   <div class="row">
     <div class="col-4">
       <label class="form-label">{{ I18ns.programs.forms.step1.teams }}</label>
-      <p class="fs-7">{{ I18ns.programs.forms.step1.teamsSubtitle }}</p>
+      <p>{{ I18ns.programs.forms.step1.teamsSubtitle }}</p>
     </div>
     <div class="col-6">
       <ng-select
@@ -99,7 +99,7 @@
   <div class="row">
     <div class="col-4">
       <label class="form-label required">{{ I18ns.programs.forms.step1.priority }}</label>
-      <p class="fs-7">{{ I18ns.programs.forms.step1.prioritySubtitle }}</p>
+      <p>{{ I18ns.programs.forms.step1.prioritySubtitle }}</p>
     </div>
     <div class="col-6">
       <ng-select
@@ -118,7 +118,7 @@
   <div class="row">
     <div class="col-4">
       <label class="form-label required">{{ I18ns.programs.forms.step1.expectation }}</label>
-      <p class="fs-7">{{ I18ns.programs.forms.step1.expectationSubtitle }}</p>
+      <p>{{ I18ns.programs.forms.step1.expectationSubtitle }}</p>
     </div>
     <div class="col-6">
       <input type="range" class="form-range" min="1" max="100" formControlName="expectation" />

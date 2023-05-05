@@ -1,5 +1,5 @@
 <h1 class="mt-4">{{ I18ns.leadTeam.title }}</h1>
-<p class="mb-4">{{ I18ns.leadTeam.subtitle }}</p>
+<p class="mb-4 alto-grey">{{ I18ns.leadTeam.subtitle }}</p>
 <div class="pb-2 border-bottom">
   <alto-anchor-navigator fragment="teamsAnchor">
     <button type="button" class="btn btn-outline-secondary me-4">
@@ -16,56 +16,58 @@
 </div>
 
 <div class="py-4 border-bottom">
-  <button type="button" class="btn btn-outline-secondary float-end" (click)="openTeamForm()">
-    {{ I18ns.leadTeam.createTeam }}
+  <button type="button" class="btn btn-primary float-end" (click)="openTeamForm()">
+    <i class="bi bi-plus-lg"></i> {{ I18ns.leadTeam.createTeam }}
   </button>
   <h1 id="teamsAnchor">{{ I18ns.leadTeam.teams.title }}</h1>
-  <p class="mb-3">{{ I18ns.leadTeam.teams.subtitle }}</p>
+  <p class="mb-3 alto-grey">{{ I18ns.leadTeam.teams.subtitle }}</p>
   <ng-container *ngIf="paginatedTeams.length > 0; else noTeams">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">{{ I18ns.leadTeam.teams.table.name }}</th>
-          <th scope="col">{{ I18ns.leadTeam.teams.table.initials }}</th>
-          <th scope="col">{{ I18ns.leadTeam.teams.table.usersCount }}</th>
-          <th scope="col">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
-          <th scope="col" class="text-center">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let team of paginatedTeams" class="align-middle">
-          <td>
-            {{ team.longName }}
-          </td>
-          <td>
-            <span class="alto-badge me-1 text-white" [style.backgroundColor]="team.id | uuid2color">{{
-              team.shortName
-            }}</span>
-          </td>
-          <td>{{ getTeamUsersCount(team.id) }}</td>
-          <td>
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: 50%"></div>
-            </div>
-            50%
-          </td>
-          <td class="text-center">
-            {{ team.createdAt | date : 'dd/MM/yyyy' }}
-          </td>
-          <td>
-            <i class="fs-5 bi bi-pencil" (click)="openTeamForm(team)"></i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <ngb-pagination
-      [collectionSize]="teams.length"
-      [(page)]="teamsPage"
-      (pageChange)="changeTeamsPage()"
-      [pageSize]="teamsPageSize"
-      [maxSize]="5"
-    ></ngb-pagination>
+    <div class="table-panel">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col" class="w-40">{{ I18ns.leadTeam.teams.table.name }}</th>
+            <th scope="col" class="w-10 text-center">{{ I18ns.leadTeam.teams.table.initials }}</th>
+            <th scope="col">{{ I18ns.leadTeam.teams.table.usersCount }}</th>
+            <th scope="col">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
+            <th scope="col" class="text-center">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let team of paginatedTeams" class="align-middle">
+            <td class="fw-medium">
+              {{ team.longName }}
+            </td>
+            <td class="text-center">
+              <span class="alto-badge text-white" [style.backgroundColor]="team.id | uuid2color">{{
+                team.shortName
+              }}</span>
+            </td>
+            <td>{{ getTeamUsersCount(team.id) }}</td>
+            <td>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 50%"></div>
+              </div>
+              50%
+            </td>
+            <td class="text-center">
+              {{ team.createdAt | date : 'shortDate' }}
+            </td>
+            <td>
+              <i class="fs-5 bi bi-pencil" (click)="openTeamForm(team)"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ngb-pagination
+        [collectionSize]="teams.length"
+        [(page)]="teamsPage"
+        (pageChange)="changeTeamsPage()"
+        [pageSize]="teamsPageSize"
+        [maxSize]="5"
+      ></ngb-pagination>
+    </div>
   </ng-container>
   <ng-template #noTeams>
     <div class="panel text-center">
@@ -76,31 +78,33 @@
 </div>
 <div class="py-4 border-bottom">
   <button type="button" class="btn btn-outline-secondary float-end" (click)="airtableRedirect()">
-    {{ I18ns.leadTeam.members.invite }}
+    <i class="bi bi-person-plus me-2 fs-5"></i>
+    <span class="align-text-bottom">{{ I18ns.leadTeam.members.invite }}</span>
   </button>
   <h1 id="membersAnchor">{{ I18ns.leadTeam.members.title }}</h1>
-  <p class="mb-3">{{ I18ns.leadTeam.members.subtitle }}</p>
+  <p class="mb-3 alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
 
   <div class="row py-4">
     <div class="col-3">
       <div class="panel">
-        <p>{{ I18ns.leadTeam.members.statistics.total }}</p>
-        <h3>{{ absoluteUsersCount }}</h3>
+        <p class="alto-grey">{{ I18ns.leadTeam.members.statistics.total }}</p>
+        <h2>{{ absoluteUsersCount }}</h2>
       </div>
     </div>
     <div class="col-3">
       <div class="panel">
-        <p>{{ I18ns.leadTeam.members.statistics.active }}</p>
-        <h3>{{ activeUsersCount }}</h3>
+        <p class="alto-grey">{{ I18ns.leadTeam.members.statistics.active }}</p>
+        <h2>{{ activeUsersCount }}</h2>
       </div>
     </div>
     <div class="col-3">
       <div class="panel">
-        <p>{{ I18ns.leadTeam.members.statistics.inactive }}</p>
-        <h3>{{ absoluteUsersCount - activeUsersCount }}</h3>
+        <p class="alto-grey">{{ I18ns.leadTeam.members.statistics.inactive }}</p>
+        <h2>{{ absoluteUsersCount - activeUsersCount }}</h2>
       </div>
     </div>
   </div>
+
   <div class="row mb-4">
     <alto-dropdown-filter
       class="text-start col-3"
@@ -109,59 +113,52 @@
       [placeholder]="I18ns.leadTeam.members.filters.teams"
       (selectChange)="filterUsers($event)"
     ></alto-dropdown-filter>
-    <alto-dropdown-filter
-      class="text-start col-3"
-      [data]="teams"
-      [displayLabel]="'longName'"
-      [placeholder]="I18ns.leadTeam.members.filters.score"
-    ></alto-dropdown-filter>
-    <alto-dropdown-filter
-      class="text-start col-3"
-      [data]="teams"
-      [displayLabel]="'longName'"
-      [placeholder]="I18ns.leadTeam.members.filters.activity"
-    ></alto-dropdown-filter>
     <alto-search class="col-2 ms-auto" (searchChange)="searchUsers(users, $event)"></alto-search>
   </div>
+
   <ng-container *ngIf="paginatedUsers.length > 0; else noUsers">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">{{ I18ns.leadTeam.members.table.name }}</th>
-          <th scope="col">{{ I18ns.leadTeam.members.table.team }}</th>
-          <th scope="col">{{ I18ns.leadTeam.members.table.averageScore }}</th>
-          <th scope="col" class="text-center">{{ I18ns.leadTeam.members.table.questionsPerMonth }}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of paginatedUsers" class="align-middle">
-          <td>
-            <alto-profile-card [user]="user"></alto-profile-card>
-          </td>
-          <td>
-            {{ usersMap.get(user.id) }}
-          </td>
-          <td>
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: 50%"></div>
-            </div>
-            50%
-          </td>
-          <td class="text-center">3</td>
-          <td>
-            <i class="fs-5 bi bi-pencil" (click)="openUserEditionForm(user)"></i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <ngb-pagination
-      [collectionSize]="usersCount"
-      [(page)]="usersPage"
-      (pageChange)="changeUsersPage(users)"
-      [pageSize]="usersPageSize"
-      [maxSize]="10"
-    ></ngb-pagination>
+    <div class="table-panel">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col" class="w-35">{{ I18ns.leadTeam.members.table.name }}</th>
+            <th scope="col">{{ I18ns.leadTeam.members.table.team }}</th>
+            <th scope="col">{{ I18ns.leadTeam.members.table.averageScore }}</th>
+            <th scope="col" class="text-center">{{ I18ns.leadTeam.members.table.questionsPerMonth }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of paginatedUsers" class="align-middle">
+            <td>
+              <alto-profile-card [user]="user"></alto-profile-card>
+            </td>
+            <td>
+              <span class="alto-badge text-white" [style.backgroundColor]="user.teamId | uuid2color">
+                {{ usersMap.get(user.id) }}
+              </span>
+            </td>
+            <td>
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 50%"></div>
+              </div>
+              50%
+            </td>
+            <td class="text-center">3</td>
+            <td>
+              <i class="fs-5 bi bi-pencil" (click)="openUserEditionForm(user)"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ngb-pagination
+        [collectionSize]="usersCount"
+        [(page)]="usersPage"
+        (pageChange)="changeUsersPage(users)"
+        [pageSize]="usersPageSize"
+        [maxSize]="10"
+      ></ngb-pagination>
+    </div>
   </ng-container>
   <ng-template #noUsers>
     <div class="panel text-center">

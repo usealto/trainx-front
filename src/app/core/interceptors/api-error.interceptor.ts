@@ -102,6 +102,15 @@ export class ApiErrorInterceptor implements HttpInterceptor {
               };
               break;
             case 429:
+              apiError = {
+                message: e.statusText,
+                title: this.translationsMessages.OverLoad.title,
+                level: 'error',
+                err,
+                handled: true,
+                code: e.status,
+              };
+              break;
             case 500: // internal error
               apiError = {
                 message: e.statusText,

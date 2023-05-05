@@ -3,12 +3,12 @@
     {{ I18ns.shared.save }}
   </button>
   <h1>{{ I18ns.profile.profile.title }}</h1>
-  <p>{{ I18ns.profile.profile.subtitle }}</p>
+  <p class="alto-grey">{{ I18ns.profile.profile.subtitle }}</p>
 </div>
 <div class="page-max-width">
   <form [formGroup]="userForm">
     <div class="row py-4 border-bottom">
-      <p class="col-5 mb-2">{{ I18ns.profile.profile.name }}</p>
+      <h3 class="col-5 mb-2">{{ I18ns.profile.profile.name }}</h3>
       <div class="col input-group">
         <input
           type="text"
@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="row py-4 border-bottom" *ngIf="false">
-      <p class="col-5 mb-2">{{ I18ns.profile.profile.profilePicture }}</p>
+      <h3 class="col-5 mb-2">{{ I18ns.profile.profile.profilePicture }}</h3>
       <div class="col row">
         <span class="col-1 me-4 badge badge-circle bg-primary rounded-pill align-middle">AB</span>
         <div class="col input-group mb-3">
@@ -34,25 +34,25 @@
       </div>
     </div>
     <div class="row py-4 border-bottom">
-      <p class="col-5 mb-2">{{ I18ns.profile.profile.email }}</p>
+      <h3 class="col-5 mb-2">{{ I18ns.profile.profile.email }}</h3>
       <div class="col-7 form-group">
         <input type="email" disabled class="form-control" [value]="this.user.email" readonly />
       </div>
     </div>
     <div class="row py-4 border-bottom">
-      <p class="col-5 mb-2">{{ I18ns.profile.profile.company }}</p>
+      <h3 class="col-5 mb-2">{{ I18ns.profile.profile.company }}</h3>
       <div class="col-7 form-group">
         <input type="text" class="form-control" [value]="user.company.name" disabled readonly />
       </div>
     </div>
     <div class="row py-4 border-bottom">
-      <p class="col-5 mb-2">{{ I18ns.profile.profile.team }}</p>
+      <h3 class="col-5 mb-2">{{ I18ns.profile.profile.team }}</h3>
       <div class="col-7 form-group">
         <input type="text" class="form-control" [value]="user.team?.longName" disabled readonly />
       </div>
     </div>
     <div class="row py-4 border-bottom">
-      <p class="col-5 mb-2">{{ I18ns.profile.profile.roles }}</p>
+      <h3 class="col-5 mb-2">{{ I18ns.profile.profile.roles }}</h3>
       <div class="col-7 form-group">
         <input type="text" class="form-control" [value]="user.roles.join(' | ')" disabled readonly />
       </div>

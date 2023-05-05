@@ -14,7 +14,8 @@
 </div>
 <div class="offcanvas-body px-4 h-100">
   <form *ngIf="userForm" [formGroup]="userForm">
-    <label class="form-label">{{ I18ns.leadTeam.members.forms.edition.teams }}</label>
+    <h3>{{ I18ns.leadTeam.members.forms.edition.teams }}</h3>
+
     <ng-select
       [items]="teams"
       [multiple]="false"
@@ -25,7 +26,7 @@
       bindValue="id"
       formControlName="team"
     >
-      <ng-template ng-label-tmp let-item="item" let-clear="clear">
+      <ng-template ng-label-tmp let-item="item">
         <div class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
           <span>{{ item.shortName }}</span>
         </div>
@@ -36,14 +37,18 @@
         </span>
       </ng-template>
     </ng-select>
-    <label *ngIf="profile.id !== user.id" class="form-label mt-4">{{
-      I18ns.leadTeam.members.forms.edition.type
-    }}</label>
+
+    <h3 class="mt-4 mb-2" *ngIf="profile.id !== user.id">{{ I18ns.leadTeam.members.forms.edition.type }}</h3>
+
     <select *ngIf="profile.id !== user.id" class="form-select" formControlName="type" id="type">
       <option value="company-user">{{ I18ns.leadTeam.members.forms.edition.standardType }}</option>
       <option value="company-admin">{{ I18ns.leadTeam.members.forms.edition.adminType }}</option>
     </select>
-    <p *ngIf="profile.id !== user.id">{{ I18ns.leadTeam.members.forms.edition.typeSubtitle }}</p>
+
+    <p class="my-4" *ngIf="profile.id !== user.id">{{ I18ns.leadTeam.members.forms.edition.typeSubtitle }}</p>
+
+    <hr />
+
     <button
       type="button"
       class="btn btn-outline-secondary my-4 me-3"
@@ -54,7 +59,7 @@
     </button>
     <input
       type="submit"
-      class="btn btn-primary my-4"
+      class="btn btn-primary"
       [disabled]="!userForm.valid"
       [value]="I18ns.shared.save"
       (click)="editUser()"

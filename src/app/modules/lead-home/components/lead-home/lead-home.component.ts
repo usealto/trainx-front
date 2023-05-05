@@ -8,7 +8,7 @@ import { ChallengesRestService } from 'src/app/modules/challenges/services/chall
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
+import { ScoreDuration, ScoreFilters } from 'src/app/modules/programs/models/score.model';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
@@ -21,15 +21,14 @@ import {
   ChallengeDtoApi,
   ChallengeDtoApiTypeEnumApi,
   GetProgramRunsRequestParams,
-  GetScoresRequestParams,
   ProgramRunApi,
-  ScoreByTypeEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   ScoresResponseDtoApi,
   TeamDtoApi,
   UserDtoApi,
 } from 'src/app/sdk';
+
 @UntilDestroy()
 @Component({
   selector: 'alto-lead-home',
@@ -44,6 +43,7 @@ export class LeadHomeComponent implements OnInit {
 
   userName = '';
 
+  globalFilters: ScoreFilters = { duration: ScoreDuration.Month, type: ScoreTypeEnumApi.Guess, team: '' };
   chartFilters: ChartFilters = { duration: ScoreDuration.Month, type: ScoreTypeEnumApi.Program, team: '' };
   scoreCount = 0;
 
@@ -75,7 +75,6 @@ export class LeadHomeComponent implements OnInit {
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
-
     private readonly programRunsService: ProgramRunsRestService,
     private readonly challengesRestService: ChallengesRestService,
     private readonly userService: UsersRestService,
@@ -103,8 +102,8 @@ export class LeadHomeComponent implements OnInit {
             .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByUser)
             .slice(0, 5);
         }),
-        switchMap(() => this.getScore({ timeframe: ScoreTimeframeEnumApi.Week } as GetScoresRequestParams)),
-        switchMap(() => this.getAverageCompletion(ScoreTimeframeEnumApi.Week)),
+        tap(() => this.getGlobalScore(this.globalFilters)),
+        // switchMap(() => this.getAverageCompletion(this.globalFilters.duration as ScoreDuration)),
         untilDestroyed(this),
       )
       .subscribe();
@@ -203,51 +202,47 @@ export class LeadHomeComponent implements OnInit {
       .subscribe();
   }
 
-  updateScore(e: { timeframe?: string; teamId?: string }) {
-    const paramsScore = e.teamId ? { scoredBy: ScoreByTypeEnumApi.Team, scoredById: e.teamId } : null;
-    const paramsAverage = e.teamId ? { teamIds: e.teamId } : null;
-    combineLatest([
-      this.getScore(paramsScore as GetScoresRequestParams),
-      this.getAverageCompletion(
-        e.timeframe as ScoreTimeframeEnumApi,
-        paramsAverage as GetProgramRunsRequestParams,
-      ),
-    ])
-      .pipe(untilDestroyed(this))
+  getGlobalScore({
+    duration = this.globalFilters.duration,
+    type = this.globalFilters.type ?? ScoreTypeEnumApi.Guess,
+    team = this.globalFilters.team,
+  }: ScoreFilters) {
+    this.globalFilters.duration = duration;
+    this.globalFilters.type = type;
+    this.globalFilters.team = team;
+    this.globalFilters.timeframe = ScoreTimeframeEnumApi.Day;
+
+    return this.scoresRestService
+      .getScores(this.globalFilters)
+      .pipe(
+        tap(({ scores }) => {
+          if (!scores.length) {
+            this.globalScore = 0;
+          } else {
+            const data = scores[0].averages.filter((x) => !!x);
+            this.globalScore = data.reduce((prev, curr) => prev + curr, 0) / data.length;
+          }
+        }),
+        switchMap(() => this.getAverageCompletion(this.globalFilters)),
+      )
       .subscribe();
   }
 
-  getScore(e: GetScoresRequestParams) {
-    return this.scoresRestService.getGeneralScores(e).pipe(
-      filter((s) => {
-        if (!s.scores.length) {
-          this.globalScore = 0;
-          return false;
-        }
-        return true;
-      }),
-      tap((scores) => {
-        this.globalScore =
-          scores.scores[0].averages.reduce((prev, curr) => prev + curr, 0) / scores.scores[0].averages.length;
-      }),
-    );
-  }
-
-  getAverageCompletion(timeframe: ScoreTimeframeEnumApi, req?: GetProgramRunsRequestParams) {
+  getAverageCompletion(filt: ScoreFilters) {
     return combineLatest([
-      this.scoresRestService.getAverageCompletion(timeframe, req),
-      this.scoresRestService.getCompletionProgression(timeframe, req),
+      this.scoresRestService.getCompletion(filt, false),
+      this.scoresRestService.getCompletion(filt, true),
     ]).pipe(
       map(([current, last]) => [
-        [current.filter((p) => p.finishedAt !== null), current],
-        [last.filter((p) => p.finishedAt !== null), last],
+        [current.filter((p) => p.finishedAt !== null).length, current.length],
+        [last.filter((p) => p.finishedAt !== null).length, last.length],
       ]),
       tap(([currentAvg, previousAvg]) => {
-        const avgCompletion = currentAvg[0].length / currentAvg[1].length;
+        const avgCompletion = currentAvg[1] === 0 ? 0 : currentAvg[0] / currentAvg[1];
         this.averageCompletion = avgCompletion;
-        const previousAvgCompletion = previousAvg[0].length / previousAvg[1].length;
+        const previousAvgCompletion = previousAvg[1] === 0 ? 0 : previousAvg[0] / previousAvg[1];
         this.completionProgression = avgCompletion
-          ? (isNaN(previousAvgCompletion) ? 0 : previousAvgCompletion - avgCompletion) / avgCompletion
+          ? previousAvgCompletion - avgCompletion / avgCompletion
           : 0;
       }),
     );

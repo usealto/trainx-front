@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addHours, startOfDay, addDays } from 'date-fns';
+import { addHours, startOfDay, addDays, add } from 'date-fns';
 import { ScoreTimeframeEnumApi } from 'src/app/sdk';
 import { ScoreDuration } from '../models/score.model';
 
@@ -24,11 +24,14 @@ export class ScoresService {
       case ScoreDuration.Month:
         date = addDays(date, -30);
         break;
+      case ScoreDuration.Trimester:
+        date = addDays(date, -90);
+        break;
       case ScoreDuration.Year:
         date = addDays(date, -365);
         break;
     }
-    date = addHours(date, gmtDataOffset);
+    date = addHours(date, gmtDataOffset + 1);
     return date;
   }
 

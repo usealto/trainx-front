@@ -10,7 +10,7 @@ export class Uuid2colorPipe implements PipeTransform {
    * @param uuid
    * @returns HEX color
    */
-  transform(value: string | null): string {
+  transform(value: string | null | undefined): string {
     if (!value || value.length < 6) return this.defaultColor;
     return '#' + value.slice(0, 6);
   }
