@@ -1,5 +1,5 @@
 <span
-  class="alto-badge me-1"
+  class="alto-badge me-1 mb-1"
   [style.backgroundColor]="!hasDynamicColor || (d.id | uuid2color)"
   [style.color]="!hasDynamicColor || 'white'"
   *ngFor="let d of data | slice : 0 : limit || 50"

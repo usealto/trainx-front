@@ -10,6 +10,7 @@ export class ProfileCardComponent implements OnInit {
   AltoRoutes = AltoRoutes;
 
   @Input() user: any = null;
+  @Input() isWhite = false;
 
   url = '';
   name = '';

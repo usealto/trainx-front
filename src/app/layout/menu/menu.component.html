@@ -1,6 +1,7 @@
 <div class="logo">
-  <img src="assets/img/logo.svg" alt="Alto Logo" />
-  <span class="company-name">Alto</span>
+  <a [routerLink]="['/', displayAdmin ? AltoRoutes.lead : AltoRoutes.user, AltoRoutes.leadHome]">
+    <img height="34" src="assets/img/logo-white.png" alt="Alto Logo" />
+  </a>
 </div>
 
 <div class="menu">
@@ -42,6 +43,13 @@
       routerLinkActive="menu-selected"
     >
       {{ I18ns.menu.programs }}
+    </a>
+    <a
+      class="module"
+      [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.statistics"
+      routerLinkActive="menu-selected"
+    >
+      {{ I18ns.menu.statistics }}
     </a>
     <a
       class="module"
@@ -87,7 +95,7 @@
       <i class="m-3 text-white fs-4 bi bi-box-arrow-in-right"></i>
     </button>
     <a class="profile" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile">
-      <alto-profile-card [user]="userStore.user.value$ | async"> </alto-profile-card>
+      <alto-profile-card [isWhite]="true" [user]="userStore.user.value$ | async"> </alto-profile-card>
     </a>
 
     <p class="build-time fs-8" title="Build Time">Version: {{ buildTime | date : 'medium' }}</p>

@@ -304,17 +304,17 @@
     </button>
   </div>
 </div>
-
 <div class="row">
   <div class="col-6">
-    <div class="panel">
+    <div class="table-panel">
       <h2>{{ I18ns.leadHome.ongoingChallenges.byTeam }}</h2>
+      <hr class="m-0" />
 
       <ng-container *ngIf="challengesByTeam.length > 0; else noChallenges">
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
+              <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
               <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
               <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
               <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
@@ -357,7 +357,7 @@
         <a
           [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
           [fragment]="'byTeamAnchor'"
-          class="fw-medium"
+          class="fw-medium mb-3 me-3 d-block"
         >
           {{ I18ns.shared.showMore }}
         </a>
@@ -366,13 +366,15 @@
   </div>
 
   <div class="col-6">
-    <div class="panel">
+    <div class="table-panel">
       <h2>{{ I18ns.leadHome.ongoingChallenges.individual }}</h2>
+      <hr class="m-0" />
+
       <ng-container *ngIf="challengesByUser.length > 0; else noChallenges">
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
+              <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
               <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
               <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
               <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
@@ -410,7 +412,7 @@
         <a
           [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
           [fragment]="'byUserAnchor'"
-          class="fw-medium"
+          class="fw-medium mb-3 me-3 d-block"
         >
           {{ I18ns.shared.showMore }}
         </a>

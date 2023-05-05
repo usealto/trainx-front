@@ -1,3 +1,40 @@
+.panel {
+  height: 22.143rem;
+  position: relative;
+}
+.form-check-input {
+  height: 1.3rem;
+  width: 2.3rem;
+}
+.card-bottom {
+  bottom: 1.4rem;
+  position: absolute;
+  width: calc(100% - var(--alto-panel-padding-x) * 2);
+}
+hr {
+  border-color: var(--bs-gray-500);
+}
+h2 {
+  max-height: 2.6rem;
+  margin-bottom: 0.3rem;
+}
 .description-box {
-  height: 4rem;
+  height: 2.6rem;
+}
+alto-colored-pill-list {
+  display: block;
+  min-height: 1.8rem;
+}
+.score {
+  padding-bottom: 0.25rem;
+  span {
+    font-weight: 500;
+  }
+  i {
+    font-size: 0.85rem;
+    color: var(--bs-gray-400);
+  }
+  .badge {
+    padding-top: 0.45rem;
+  }
 }

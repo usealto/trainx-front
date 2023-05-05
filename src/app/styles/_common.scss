@@ -49,42 +49,32 @@
   background-color: white;
   border-radius: 1.143rem;
   border: 1px solid #eaecf0;
-  padding: 1rem;
+  padding: 1.4rem 1.7rem;
 }
-
-// TODO
-.icon-btn {
-  width: 1.8rem;
-  height: 1.8rem;
-  font-size: 0.9rem;
-  padding: 0.2rem;
-}
-
-.icon-btn-small {
-  width: 1.8rem;
-  height: 1.8rem;
-  font-size: 0.9rem;
-  padding: 0.2rem;
-}
-// --- TABLES
-.table {
-  --bs-table-hover-bg: #ccebff;
-  tr {
-    background-color: white;
+.table-panel {
+  background-color: white;
+  border-radius: 1.143rem;
+  border: 1px solid #eaecf0;
+  h2 {
+    padding: 1.4rem 1.7rem;
+    margin: 0;
   }
-}
-
-table {
-  .line-edge {
-    position: absolute;
-    width: 4px;
-    min-height: 40px;
-    height: 100%;
-    border-radius: 4px 0 0 4px;
-  }
-  .clickable-row:hover {
-    cursor: pointer;
-    background-color: #cde7ff;
+  .table {
+    th {
+      font-weight: 500;
+    }
+    tbody tr {
+      height: 5.144rem;
+    }
+    tr {
+      & * {
+        vertical-align: middle;
+      }
+      th:first-child,
+      td:first-child {
+        padding-left: 1.7rem;
+      }
+    }
   }
 }
 

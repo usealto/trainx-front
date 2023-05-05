@@ -1,16 +1,15 @@
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { Component, OnInit } from '@angular/core';
-import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { combineLatest, map, tap } from 'rxjs';
-import { TeamStore } from '../../team.store';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { TeamDtoApi, UserDtoApi } from 'src/app/sdk';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { TeamFormComponent } from '../team-form/team-form.component';
+import { combineLatest, tap } from 'rxjs';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
-import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
+import { TeamDtoApi, UserDtoApi } from 'src/app/sdk';
 import { environment } from 'src/environments/environment';
+import { TeamFormComponent } from '../team-form/team-form.component';
+import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
 
 @Component({
   selector: 'alto-lead-team',
@@ -21,7 +20,7 @@ export class LeadTeamComponent implements OnInit {
   I18ns = I18ns;
   activeUsersCount = 0;
   teams: TeamDtoApi[] = [];
-  paginatedTeams!: TeamDtoApi[];
+  paginatedTeams: TeamDtoApi[] = [];
   teamsPage = 1;
   teamsPageSize = 5;
 
@@ -38,7 +37,6 @@ export class LeadTeamComponent implements OnInit {
     private readonly teamsRestService: TeamsRestService,
     private readonly usersRestService: UsersRestService,
     private readonly usersService: UsersService,
-    private readonly teamStore: TeamStore,
     private readonly profileStore: ProfileStore,
   ) {}
 
