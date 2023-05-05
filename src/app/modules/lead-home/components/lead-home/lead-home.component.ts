@@ -158,16 +158,20 @@ export class LeadHomeComponent implements OnInit {
     this.scoresRestService
       .getScores({
         ...this.chartFilters,
-        timeframe: this.scoreService.durationToTimeFrame(this.chartFilters.duration as ScoreDuration),
+        timeframe: ScoreTimeframeEnumApi.Day,
         type: val,
         sortBy: 'lastAverage:desc',
       })
       .pipe(
-        tap((sc: ScoresResponseDtoApi) => {
-          const output = sc.scores.map((s) => ({
-            label: s.label,
-            avg: s.averages.at(-1),
-          }));
+        tap(({ scores }) => {
+          const output = scores
+            .map((s) => ({
+              label: s.label,
+              avg: this.scoreService.reduceWithoutNull(s.averages),
+            }))
+            .filter((x) => !!x.avg)
+            .sort((a, b) => (a.avg > b.avg ? 1 : -1));
+
           if (val === ScoreTypeEnumApi.Program || val === ScoreTypeEnumApi.Tag) {
             this.topFlopProgramTab = val;
             this.topFlopData.programs = output;
@@ -216,12 +220,7 @@ export class LeadHomeComponent implements OnInit {
       .getScores(this.globalFilters)
       .pipe(
         tap(({ scores }) => {
-          if (!scores.length) {
-            this.globalScore = 0;
-          } else {
-            const data = scores[0].averages.filter((x) => !!x);
-            this.globalScore = data.reduce((prev, curr) => prev + curr, 0) / data.length;
-          }
+          this.globalScore = !scores.length ? 0 : this.scoreService.reduceWithoutNull(scores[0].averages);
         }),
         switchMap(() => this.getAverageCompletion(this.globalFilters)),
       )

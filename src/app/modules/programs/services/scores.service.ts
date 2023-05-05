@@ -7,6 +7,11 @@ import { ScoreDuration } from '../models/score.model';
   providedIn: 'root',
 })
 export class ScoresService {
+  reduceWithoutNull(data: number[]) {
+    const output = data.filter((x) => !!x);
+    return output.reduce((prev, curr) => prev + curr, 0) / output.length;
+  }
+
   getYesterday() {
     const date = new Date();
     const gmtDataOffset = -date.getTimezoneOffset() / 60;
@@ -61,6 +66,10 @@ export class ScoresService {
     }
   }
 
+  /**
+   * ! DEPRECATED
+   * @deprecated The method should not be used
+   */
   durationToTimeFrame(duration: ScoreDuration): ScoreTimeframeEnumApi {
     switch (duration) {
       case ScoreDuration.Day:
