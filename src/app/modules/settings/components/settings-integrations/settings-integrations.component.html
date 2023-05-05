@@ -1,8 +1,8 @@
-<div class="py-4 border-bottom">
-  <h1>{{ I18ns.settings.integrations.title }}</h1>
+<div class="py-4">
+  <h2>{{ I18ns.settings.integrations.title }}</h2>
   <p class="mb-4">{{ I18ns.settings.integrations.subtitle }}</p>
 </div>
-<div class="row py-2 border-bottom">
+<div class="row py-2 border-bottom border-top">
   <div class="col-7">
     <svg
       class="mx-3"
@@ -31,16 +31,22 @@
         />
       </g>
     </svg>
-    <div class="d-inline-block align-middle">
+    <div class="mt-1 d-inline-block align-middle">
       <h3>Slack</h3>
-      <p>Envoyez des notifications aux canaux et créez des projets à partir de messages.</p>
+      <p class="alto-grey">Envoyez des notifications aux canaux et créez des projets à partir de messages.</p>
     </div>
   </div>
   <div class="col-5 text-end">
     <div class="py-3">
-      <a class="me-2">{{ I18ns.settings.integrations.learnMore }}</a>
+      <!-- <a class="me-2">{{ I18ns.settings.integrations.learnMore }}</a> -->
       <div class="form-check form-switch d-inline-block align-middle">
-        <input type="checkbox" class="form-check-input" />
+        <input
+          #slackCheck
+          (click)="slackActivate(slackCheck.checked)"
+          type="checkbox"
+          class="form-check-input"
+          [checked]="company?.isSlackActive"
+        />
       </div>
     </div>
   </div>

@@ -1,15 +1,15 @@
-import { inject, NgModule, resolveForwardRef } from '@angular/core';
+import { inject, NgModule } from '@angular/core';
 import { ResolveFn, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { combineLatest, take } from 'rxjs';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { NotFoundComponent } from './layout/not-found/not-found.component';
+import { TestComponent } from './layout/test/test.component';
 import { TeamsRestService } from './modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from './modules/profile/services/users-rest.service';
 import { ProgramsRestService } from './modules/programs/services/programs-rest.service';
 import { TagsRestService } from './modules/programs/services/tags-rest.service';
 import { AltoRoutes } from './modules/shared/constants/routes';
-import { TestComponent } from './layout/test/test.component';
 
 export const appResolver: ResolveFn<any> = () => {
   return combineLatest([
@@ -87,7 +87,8 @@ const routes: Routes = [
           },
           {
             path: AltoRoutes.statistics,
-            loadChildren: () => import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
+            loadChildren: () =>
+              import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
           },
         ],
       },
