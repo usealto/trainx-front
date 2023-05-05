@@ -44,7 +44,7 @@ export class AdminCompanyComponent implements OnInit {
       .subscribe();
 
     this.usersRestService
-      .getUsersFiltered({ companyId: this.id })
+      .getUsersFiltered({ itemsPerPage:1000 })
       .pipe(
         tap((users) => (this.users = users)),
         tap(() => this.isImpersonnatedAsCompanyAdminOfthisCompanyUpdate() )
