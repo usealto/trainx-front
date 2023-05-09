@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Chart, ChartData } from 'chart.js';
+import Chart, { ChartData } from 'chart.js/auto';
 import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
@@ -8,16 +8,15 @@ import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
 import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
-import {
-  GetScoresRequestParams,
-  ScoreDtoApi,
-  ScoreFillValuesEnumApi,
-  ScoreTimeframeEnumApi,
-  ScoreTypeEnumApi,
-  TeamDtoApi,
-} from 'src/app/sdk';
-import * as moment from 'moment';
+import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi, TeamDtoApi } from 'src/app/sdk';
+import { startOfDay, startOfMonth, startOfWeek, format, toDate, parseISO } from 'date-fns';
+import { ScoresService } from 'src/app/modules/programs/services/scores.service';
+import { StatisticsService } from '../../services/statistics.service';
 
+interface Point {
+  x: Date;
+  y: number;
+}
 @Component({
   selector: 'alto-statistics-global-performance',
   templateUrl: './statistics-global-performance.component.html',
@@ -27,12 +26,14 @@ export class StatisticsGlobalPerformanceComponent implements OnInit {
   I18ns = I18ns;
   teams: TeamDtoApi[] = [];
   scoredTeams: { label: string; score: number }[] = [];
-  ScoreEvolutionChart?: Chart;
+  scoreEvolutionChart?: Chart;
 
   constructor(
     public readonly teamStore: TeamStore,
     private readonly teamsRestService: TeamsRestService,
     private readonly scoresRestService: ScoresRestService,
+    private readonly scoresServices: ScoresService,
+    private readonly statisticsServices: StatisticsService,
   ) {}
 
   ngOnInit(): void {
@@ -52,8 +53,7 @@ export class StatisticsGlobalPerformanceComponent implements OnInit {
         tap((res) => {
           this.scoredTeams = res.scores
             .map((score) => {
-              const filledScore = score.averages.filter((average) => average !== null);
-              const average = filledScore.reduce((acc, val) => acc + val, 0) / filledScore.length;
+              const average = this.scoresServices.reduceWithoutNull(score.averages);
               return { label: score.label, score: average };
             })
             .sort((a, b) => b.score - a.score);
@@ -63,43 +63,59 @@ export class StatisticsGlobalPerformanceComponent implements OnInit {
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
-    const labels = scores[0].dates.map((d) => d.toLocaleDateString());
+    const aggregateData = this.aggregateData(scores[0], duration);
+    const labels = this.statisticsServices.formatLabel(
+      aggregateData.map((d) => d.x),
+      duration,
+    );
     const data: ChartData = {
       labels: labels,
-      datasets: scores.map((s) => ({
-        label: s.label,
-        data: s.averages.map((u) => (u ? Math.round(u * 10000) / 100 : u)),
-        fill: false,
-        tension: 0.2,
-        spanGaps: true,
-      })),
+      datasets: scores.map((s) => {
+        const d = this.aggregateData(s, duration);
+        return {
+          label: s.label,
+          data: d.map((d) => (d.y ? Math.round(d.y * 10000) / 100 : d.y)),
+          fill: false,
+          tension: 0.2,
+          spanGaps: true,
+        };
+      }),
     };
+    if (this.scoreEvolutionChart) {
+      this.scoreEvolutionChart.destroy();
+    }
 
-    this.ScoreEvolutionChart = new Chart('teamScoreEvolution', {
+    this.scoreEvolutionChart = new Chart('teamScoreEvolution', {
       type: 'line',
       data: data,
       options: chartDefaultOptions,
     });
   }
 
-  aggregateDate(dates: Date[], duration: ScoreDuration) {
-    const aggregateData = [];
-    const groupedData: { [key: string]: Date[] } = {};
+  aggregateData(score: ScoreDtoApi, duration: ScoreDuration) {
+    const data: Point[] = [];
+    const groupedData: { [key: string]: number[] } = {};
 
-    dates.forEach((date) => {
-      const dateKey = moment(date)
-        .startOf(duration === ScoreDuration.Month ? 'day' : 'month')
-        .format();
+    score.dates.forEach((date, index) => {
+      const dateKey = format(
+        duration === ScoreDuration.Year
+          ? startOfMonth(date)
+          : duration === ScoreDuration.Trimester
+          ? startOfWeek(date)
+          : startOfDay(date),
+        "yyyy-MM-dd'T'HH:mm:ss'Z'",
+      );
       if (!groupedData[dateKey]) {
         groupedData[dateKey] = [];
       }
-      groupedData[dateKey].push(date);
-
-      for (const dateKey in groupedData) {
-        // const sum = groupedData[dateKey].reduce((a, b) => a + b, 0);
-        console.log(groupedData[dateKey]);
-      }
+      groupedData[dateKey].push(score.averages[index]);
     });
+
+    for (const dateKey in groupedData) {
+      const avg = this.scoresServices.reduceWithoutNull(groupedData[dateKey]);
+      data.push({ x: parseISO(dateKey), y: avg });
+    }
+    return data.sort((a, b) => a.x.getTime() - b.x.getTime());
   }
 
   updateTimePicker(event: any): void {
