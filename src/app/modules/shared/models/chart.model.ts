@@ -8,4 +8,5 @@ export interface ChartFilters {
   timeframe?: ScoreTimeframeEnumApi;
   // limit?: number;
   sortBy?: string;
+  ids?: string[];
 }

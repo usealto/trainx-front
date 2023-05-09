@@ -27,7 +27,14 @@ export class ScoresRestService {
     private readonly programsApi: ProgramRunsApiService,
   ) {}
 
-  getScores({ duration, type, team, timeframe, sortBy }: ChartFilters): Observable<ScoresResponseDtoApi> {
+  getScores({
+    duration,
+    type,
+    team,
+    timeframe,
+    sortBy,
+    ids,
+  }: ChartFilters): Observable<ScoresResponseDtoApi> {
     const par: GetScoresRequestParams = {
       type: type ?? ScoreTypeEnumApi.Guess,
       timeframe: timeframe ?? ScoreTimeframeEnumApi.Day,
@@ -40,6 +47,9 @@ export class ScoresRestService {
     if (team) {
       par.scoredBy = ScoreByTypeEnumApi.Team;
       par.scoredById = team;
+    }
+    if (ids) {
+      par.ids = ids.join(',');
     }
 
     return this.scoresApi.getScores(par).pipe(
@@ -67,7 +77,7 @@ export class ScoresRestService {
     const par = {
       ...req,
       type: ScoreTypeEnumApi.Program,
-      timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Week,
+      timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Day,
       dateBefore: new Date(),
     };
     par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));

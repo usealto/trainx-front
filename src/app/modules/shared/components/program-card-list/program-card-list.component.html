@@ -1,0 +1,73 @@
+<span [ngSwitch]="place">
+  <div class="row mb-3" *ngSwitchCase="'home'">
+    <div class="col-5"></div>
+    <div class="col-7 text-end">
+      <alto-dropdown-filter
+        class="text-start me-3"
+        [data]="teamStore.teams.value"
+        [displayLabel]="'shortName'"
+        [placeholder]="I18ns.programs.programs.filters.team"
+        (selectChange)="filterPrograms({ teams: $event })"
+        [isColored]="true"
+      ></alto-dropdown-filter>
+      <button
+        [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
+        class="btn btn-outline-secondary align-bottom"
+      >
+        {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+  <div class="row mb-3" *ngSwitchCase="'program'">
+    <div class="col-7">
+      <alto-dropdown-filter
+        [data]="teamStore.teams.value"
+        [displayLabel]="'shortName'"
+        [placeholder]="I18ns.programs.programs.filters.team"
+        (selectChange)="filterPrograms({ teams: $event })"
+        [isColored]="true"
+      ></alto-dropdown-filter>
+    </div>
+    <div class="col-5 text-end">
+      <alto-search
+        class="d-inline-block ms-3"
+        (searchChange)="filterPrograms({ search: $event })"
+      ></alto-search>
+    </div>
+  </div>
+  <div *ngSwitchDefault></div>
+</span>
+
+<ng-container *ngIf="programsDisplay.length > 0; else noPrograms">
+  <div class="row mb-3">
+    <div
+      [ngClass]="getCardWidth(width)"
+      class="mb-3"
+      *ngFor="let prog of programsDisplay | slice : (page - 1) * pageSize : page * pageSize"
+    >
+      <alto-program-card
+        [displayToggle]="displayToggle"
+        [displayEdit]="displayEdit"
+        [score]="programsScores.get(prog.id)"
+        [progress]="programsProgress.get(prog.id)"
+        [program]="prog"
+      ></alto-program-card>
+    </div>
+  </div>
+</ng-container>
+<ng-template #noPrograms>
+  <div class="panel text-center">
+    <h2>{{ I18ns.shared.noData }}</h2>
+    <p>{{ I18ns.shared.noDataSubtitle }}</p>
+  </div>
+</ng-template>
+
+<ngb-pagination
+  [ngClass]="{ invisible: count <= pageSize }"
+  [collectionSize]="count"
+  (pageChange)="loadScores()"
+  [(page)]="page"
+  [pageSize]="pageSize"
+  [maxSize]="10"
+  aria-label="Default pagination"
+></ngb-pagination>

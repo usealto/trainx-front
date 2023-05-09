@@ -10,7 +10,6 @@ import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ScoreDuration, ScoreFilters } from 'src/app/modules/programs/models/score.model';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
-import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/programs/services/scores.service';
@@ -20,12 +19,8 @@ import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import {
   ChallengeDtoApi,
   ChallengeDtoApiTypeEnumApi,
-  GetProgramRunsRequestParams,
-  ProgramRunApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
-  ScoresResponseDtoApi,
-  TeamDtoApi,
   UserDtoApi,
 } from 'src/app/sdk';
 
@@ -55,10 +50,7 @@ export class LeadHomeComponent implements OnInit {
   averageCompletion = 0;
   completionProgression = 0;
   //
-  programs!: ProgramRunApi[];
-  programsPage = 1;
-  programsCount = 0;
-  programPageSize = 3;
+
   //
   challengesByTeam: ChallengeDtoApi[] = [];
   challengesByUser: ChallengeDtoApi[] = [];
@@ -75,7 +67,6 @@ export class LeadHomeComponent implements OnInit {
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
-    private readonly programRunsService: ProgramRunsRestService,
     private readonly challengesRestService: ChallengesRestService,
     private readonly userService: UsersRestService,
     public readonly teamStore: TeamStore,
@@ -84,7 +75,6 @@ export class LeadHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.userName = this.profileStore.user.value.firstname ?? this.profileStore.user.value.username ?? '';
-    this.getProgramRuns();
 
     combineLatest([
       this.commentsRestService.getComments(),
@@ -150,6 +140,7 @@ export class LeadHomeComponent implements OnInit {
             options: chartDefaultOptions,
           });
         }),
+        untilDestroyed(this),
       )
       .subscribe();
   }
@@ -186,26 +177,6 @@ export class LeadHomeComponent implements OnInit {
       .subscribe();
   }
 
-  changeProgramPage() {
-    this.getProgramRuns();
-  }
-
-  getProgramRuns(teams: string[] = []) {
-    this.programRunsService
-      .getProgramRunsPaginated({
-        isFinished: false,
-        page: this.programsPage,
-        itemsPerPage: this.programPageSize,
-        teamIds: teams.join(','),
-      })
-      .pipe(
-        tap((p) => (this.programs = p.data ?? [])),
-        tap((p) => (this.programsCount = p.meta.totalItems ?? [])),
-        untilDestroyed(this),
-      )
-      .subscribe();
-  }
-
   getGlobalScore({
     duration = this.globalFilters.duration,
     type = this.globalFilters.type ?? ScoreTypeEnumApi.Guess,
@@ -223,6 +194,7 @@ export class LeadHomeComponent implements OnInit {
           this.globalScore = !scores.length ? 0 : this.scoreService.reduceWithoutNull(scores[0].averages);
         }),
         switchMap(() => this.getAverageCompletion(this.globalFilters)),
+        untilDestroyed(this),
       )
       .subscribe();
   }
@@ -245,10 +217,6 @@ export class LeadHomeComponent implements OnInit {
           : 0;
       }),
     );
-  }
-
-  filterPrograms(teams: TeamDtoApi[]) {
-    this.getProgramRuns(teams.map((t) => t.id));
   }
 
   @memoize()

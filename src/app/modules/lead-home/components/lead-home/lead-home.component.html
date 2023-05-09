@@ -264,37 +264,17 @@
   <div class="col-5">
     <h2>{{ I18ns.leadHome.ongoingPrograms.title }}</h2>
   </div>
-  <div class="col-7 text-end">
-    <alto-dropdown-filter
-      class="text-start me-3"
-      [data]="teamStore.teams.value"
-      [displayLabel]="'shortName'"
-      [placeholder]="I18ns.leadHome.ongoingPrograms.filters.team"
-      (selectChange)="filterPrograms($event)"
-      [isColored]="true"
-    ></alto-dropdown-filter>
-    <button
-      [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
-      class="btn btn-outline-secondary align-bottom"
-    >
-      {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
-    </button>
-  </div>
 </div>
 
-<div class="row mb-3">
-  <div class="col-4 mb-3" *ngFor="let prog of programs">
-    <alto-program-card [displayToggle]="false" [programRun]="prog"></alto-program-card>
-  </div>
-</div>
-<ngb-pagination
-  [collectionSize]="programsCount"
-  [(page)]="programsPage"
-  (pageChange)="changeProgramPage()"
-  [pageSize]="programPageSize"
-  [maxSize]="10"
-  aria-label="Default pagination"
-></ngb-pagination>
+<alto-program-card-list [place]="'home'"></alto-program-card-list>
+<!-- <div class="col-4 mb-3" *ngFor="let prog of programs; let i = index">
+    <alto-program-card
+      [displayToggle]="false"
+      [score]="programsScores.get(prog.id)"
+      [progress]="programsProgress.get(prog.id)"
+      [program]="prog"
+    ></alto-program-card>
+  </div> -->
 
 <!-- CHALLENGES -->
 <div class="row mt-5 mb-4">

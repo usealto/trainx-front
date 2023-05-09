@@ -1,6 +1,12 @@
 .panel {
-  height: 22.143rem;
+  height: 18rem;
   position: relative;
+}
+
+.title {
+  font-size: 1.429rem;
+  line-height: 2rem;
+  font-weight: 500;
 }
 
 .card-bottom {
@@ -23,15 +29,15 @@ alto-colored-pill-list {
   min-height: 1.8rem;
 }
 .score {
-  padding-bottom: 0.25rem;
+  padding-bottom: 0.5rem;
   span {
     font-weight: 500;
+  }
+  .badge {
+    font-size: 0.857rem;
   }
   i {
     font-size: 0.85rem;
     color: var(--bs-gray-400);
-  }
-  .badge {
-    padding-top: 0.45rem;
   }
 }

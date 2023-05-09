@@ -2,8 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
-import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
-import { GetScoresRequestParams, ProgramDtoApi, ProgramRunApi, ScoreTimeframeEnumApi } from 'src/app/sdk';
+import { ProgramDtoApi, ProgramRunApi } from 'src/app/sdk';
 import { AltoRoutes } from '../../constants/routes';
 
 @Component({
@@ -13,17 +12,17 @@ import { AltoRoutes } from '../../constants/routes';
 })
 export class ProgramCardComponent implements OnChanges {
   @Input() displayToggle = false;
+  @Input() displayEdit = false;
   @Input() program!: ProgramDtoApi;
   @Input() programRun!: ProgramRunApi;
+  @Input() score: number | undefined;
+  @Input() progress: number | undefined;
+  @Input() participation: number | undefined;
 
-  programScore = 0;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
 
-  constructor(
-    private readonly scoresRestService: ScoresRestService,
-    private readonly programRestService: ProgramsRestService,
-  ) {}
+  constructor(private readonly programRestService: ProgramsRestService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['programRun']?.firstChange) {
@@ -32,11 +31,12 @@ export class ProgramCardComponent implements OnChanges {
         .getProgram(this.programRun.programId)
         .pipe(
           tap((prog) => (this.program = prog)),
-          tap(() => this.getScores()),
+          // tap(console.log),
+          // tap(() => this.getScores()),
         )
         .subscribe();
     } else if (changes['program']?.firstChange && changes['program']?.currentValue) {
-      this.getScores();
+      // this.getScores();
     }
   }
 
@@ -44,19 +44,5 @@ export class ProgramCardComponent implements OnChanges {
     this.programRestService.activate(id, checked).pipe().subscribe();
   }
 
-  getScores() {
-    this.scoresRestService
-      .getProgramScore({
-        timeframe: ScoreTimeframeEnumApi.Year,
-        ids: this.program.id,
-      } as GetScoresRequestParams)
-      .pipe(
-        tap((scores) => {
-          if (scores.scores[0]) {
-            this.programScore = scores.scores[0].averages.reduce((prev, curr) => prev + curr, 0);
-          }
-        }),
-      )
-      .subscribe();
-  }
+  // getScores() {}
 }
