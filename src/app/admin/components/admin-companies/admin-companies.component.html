@@ -1,4 +1,4 @@
-<div class="py-4">
+<div>
   <div>
     <h1>Companies</h1>
     <p class="mb-4">L'ensemble de nos clients</p>
@@ -16,13 +16,61 @@
     </a>
   </div>
 
-  <table class="table" *ngIf="companies.length > 0; else elseBlock">
-    <thead>
+  <div class="table-container table-panel">
+    <table class="table" *ngIf="companies.length > 0; else elseBlock">
+      <thead>
+        <tr>
+          <th scope="col">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+            </div>
+          </th>
+          <th scope="col">Corporate name</th>
+          <th scope="col">Domain</th>
+          <th scope="col">Biling</th>
+          <th scope="col">Teams</th>
+          <th scope="col">User admin</th>
+          <th scope="col">Sending days</th>
+          <th scope="col">Nb of questions</th>
+          <th scope="col">Admin Slack</th>
+          <th scope="col" class="action-btn-list"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let company of companies">
+          <td>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+            </div>
+          </td>
+          <th scope="row">{{ company.name }}</th>
+          <td>{{ company.domain }}</td>
+          <td>Lorem ipsum</td>
+          <td>
+            <div>
+              <span class="badge rounded-pill text-bg-primary">CSM</span>
+              <span class="badge rounded-pill text-bg-primary">SDR</span>
+              <span class="badge rounded-pill text-bg-primary">BDR</span>
+            </div>
+          </td>
+          <td>{{ company.isSlackActive }}</td>
+          <td>{{ company.slackDays }}</td>
+          <td>{{ company.slackQuestionsPerQuiz }}</td>
+          <td>{{ company.slackAdmin }}</td>
+          <td class="action-btn-list">
+            <div class="d-flex">
+              <button type="button" class="btn btn-link"><i class="alto-second-grey bi bi-trash"></i></button>
+              <button type="button" class="btn btn-link"><i class="alto-second-grey bi bi-pencil"></i></button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <!-- <thead>
       <tr>
         <th scope="col">Nom</th>
+        <th scope="col">domain</th>
         <th scope="col">slackDays</th>
         <th scope="col">slackTimes</th>
-        <th scope="col">domain</th>
         <th scope="col">isSlackActive</th>
         <th scope="col">slackAdmin</th>
         <th scope="col">slackQuestionsPerQuiz</th>
@@ -34,9 +82,9 @@
     <tbody>
       <tr *ngFor="let company of companies">
         <th scope="row">{{ company.name }}</th>
+        <td>{{ company.domain }}</td>
         <td>{{ company.slackDays }}</td>
         <td>{{ company.slackTimes }}</td>
-        <td>{{ company.domain }}</td>
         <td>{{ company.isSlackActive }}</td>
         <td>{{ company.slackAdmin }}</td>
         <td>{{ company.slackQuestionsPerQuiz }}</td>
@@ -50,8 +98,9 @@
           </a>
         </td>
       </tr>
-    </tbody>
-  </table>
+    </tbody> -->
+    </table>
+  </div>
   <ng-template #elseBlock>
     <div class="card bg-white align-items-center py-5">
       <div class="icon-people-container mb-3">

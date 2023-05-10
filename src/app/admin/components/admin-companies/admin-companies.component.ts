@@ -23,6 +23,7 @@ export class AdminCompaniesComponent implements OnInit {
     this.companiesRestService
       .getCompanies()
       .pipe(tap((companies) => (this.companies = companies)))
-      .subscribe();
+      .subscribe((val) => console.log(val));
   }
+  
 }

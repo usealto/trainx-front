@@ -11,4 +11,24 @@
     width: 48px;
     height: 48px;
   }
+
+  .table-container {
+    overflow-x: scroll;
+    th,
+    td {
+      white-space: nowrap;
+    }
+    .action-btn-list {
+      box-shadow: inset 30px 0px 8px -30px rgba(0,0,0,0.4);
+      position: sticky;
+      background-color: white;
+      z-index: 2;
+      height: 100%;
+      right: 0;
+      top: 0;
+    }
+    tr {
+      position: relative;
+    }
+  }
 }
