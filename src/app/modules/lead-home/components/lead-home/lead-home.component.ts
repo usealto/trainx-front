@@ -24,6 +24,13 @@ import {
   UserDtoApi,
 } from 'src/app/sdk';
 
+type TopFlop = { top: any[]; flop: any[] };
+
+type TopFlopDisplay = {
+  label: string;
+  avg: number;
+};
+
 @UntilDestroy()
 @Component({
   selector: 'alto-lead-home',
@@ -56,9 +63,9 @@ export class LeadHomeComponent implements OnInit {
   challengesByUser: ChallengeDtoApi[] = [];
 
   topFlopData: {
-    programs: any[];
-    teams: any[];
-  } = { programs: [], teams: [] };
+    programs: TopFlop;
+    teams: TopFlop;
+  } = { programs: { top: [], flop: [] }, teams: { top: [], flop: [] } };
   topFlopProgramTab: ScoreTypeEnumApi = ScoreTypeEnumApi.Program;
   topFlopTeamTab: ScoreTypeEnumApi = ScoreTypeEnumApi.Team;
 
@@ -155,26 +162,38 @@ export class LeadHomeComponent implements OnInit {
       })
       .pipe(
         tap(({ scores }) => {
-          const output = scores
+          const output: TopFlopDisplay[] = scores
             .map((s) => ({
               label: s.label,
               avg: this.scoreService.reduceWithoutNull(s.averages),
             }))
-            .filter((x) => !!x.avg)
-            .sort((a, b) => (a.avg > b.avg ? 1 : -1));
-
+            .filter((x) => !!x.avg);
           if (val === ScoreTypeEnumApi.Program || val === ScoreTypeEnumApi.Tag) {
             this.topFlopProgramTab = val;
-            this.topFlopData.programs = output;
+            this.topFlopData.programs = {
+              top: this.getTop(output),
+              flop: this.getFlop(output),
+            };
           }
           if (val === ScoreTypeEnumApi.Team || val === ScoreTypeEnumApi.User) {
             this.topFlopTeamTab = val;
-            this.topFlopData.teams = output;
+            this.topFlopData.teams = {
+              top: this.getTop(output),
+              flop: this.getFlop(output),
+            };
           }
         }),
         untilDestroyed(this),
       )
       .subscribe();
+  }
+
+  getTop(data: TopFlopDisplay[]) {
+    return data.filter(({ avg }) => !!avg && avg >= 0.5).sort((a, b) => (a.avg < b.avg ? 1 : -1));
+  }
+
+  getFlop(data: TopFlopDisplay[]) {
+    return data.filter(({ avg }) => !!avg && avg < 0.5).sort((a, b) => (a.avg > b.avg ? 1 : -1));
   }
 
   getGlobalScore({

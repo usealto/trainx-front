@@ -182,26 +182,31 @@
         ]"
       ></alto-tabs>
       <div class="row">
-        <ng-container *ngIf="topFlopData?.programs?.length; else tfProgramTemplate">
+        <ng-container
+          *ngIf="
+            topFlopData?.programs?.top?.length || topFlopData?.programs?.flop?.length;
+            else tfProgramTemplate
+          "
+        >
           <div class="col-6 border-end">
-            <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
+            <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.programs | slice : -3" class="mb-1">
+              <p *ngFor="let item of topFlopData?.programs?.top | slice : 0 : 3" class="mb-1">
                 <span class="fs-7">{{ item.label | slice : 0 : 32 }}</span>
-                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
-                  item.avg | percent
-                }}</span>
+                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">
+                  {{ item.avg | percent }}
+                </span>
               </p>
             </div>
           </div>
           <div class="col-6">
-            <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
+            <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.programs | slice : 0 : 3" class="mb-1">
+              <p *ngFor="let item of topFlopData?.programs?.flop | slice : 0 : 3" class="mb-1">
                 <span class="fs-7">{{ item.label | slice : 0 : 32 }}</span>
-                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
-                  item.avg | percent
-                }}</span>
+                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">
+                  {{ item.avg | percent }}
+                </span>
               </p>
             </div>
           </div>
@@ -225,26 +230,28 @@
         ]"
       ></alto-tabs>
       <div class="row">
-        <ng-container *ngIf="topFlopData?.teams?.length; else tfProgramTemplate2">
+        <ng-container
+          *ngIf="topFlopData?.teams?.top?.length || topFlopData?.teams?.flop?.length; else tfProgramTemplate2"
+        >
           <div class="col-6 border-end">
-            <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
+            <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.teams | slice : -3" class="mb-1">
+              <p *ngFor="let item of topFlopData?.teams?.top | slice : 0 : 3" class="mb-1">
                 <span class="fs-7">{{ item.label | slice : 0 : 32 }}</span>
-                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
-                  item.avg | percent
-                }}</span>
+                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">
+                  {{ item.avg | percent }}
+                </span>
               </p>
             </div>
           </div>
           <div class="col-6">
-            <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
+            <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.teams | slice : 0 : 3" class="mb-1">
+              <p *ngFor="let item of topFlopData?.teams?.flop" class="mb-1">
                 <span class="fs-7">{{ item.label | slice : 0 : 32 }}</span>
-                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
-                  item.avg | percent
-                }}</span>
+                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">
+                  {{ item.avg | percent }}
+                </span>
               </p>
             </div>
           </div>
