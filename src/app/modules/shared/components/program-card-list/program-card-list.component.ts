@@ -13,6 +13,8 @@ import { ScoresService } from 'src/app/modules/programs/services/scores.service'
 import { ProgramDtoApi, ScoreTypeEnumApi } from 'src/app/sdk';
 import { AltoRoutes } from '../../constants/routes';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
 
 @UntilDestroy()
 @Component({
@@ -54,6 +56,8 @@ export class ProgramCardListComponent implements OnInit {
     public readonly teamStore: TeamStore,
     private readonly scoresRestService: ScoresRestService,
     private readonly programRestService: ProgramsRestService,
+    // private readonly usersRestService: UsersRestService,
+    private userStore: ProfileStore,
   ) {}
 
   ngOnInit(): void {
@@ -68,9 +72,10 @@ export class ProgramCardListComponent implements OnInit {
     this.setPageSize(window.innerWidth);
   }
 
-  loadScores() {
-    const index = this.page * this.pageSize;
-    of(this.programs.slice(index, index + this.pageSize))
+  loadScores(index?: number) {
+    const pa = index || this.page;
+
+    of(this.programsDisplay.slice((pa - 1) * this.pageSize, pa * this.pageSize))
       .pipe(
         switchMap((p) =>
           combineLatest([
@@ -90,6 +95,7 @@ export class ProgramCardListComponent implements OnInit {
         ),
         tap(([{ scores }, { data }, programs]) => {
           // * INVOLVEMENT
+
           const prNumbers = new Map<string, number>();
 
           data?.forEach((pr) => {
@@ -97,16 +103,21 @@ export class ProgramCardListComponent implements OnInit {
           });
           const programTeams = new Map<string, string[]>();
 
-          // const total =
-          programs?.forEach(
-            (p) => {
-              if (prNumbers.has(p.id)) {
-                programTeams.set(p.id, [...(programTeams.get(p.id) ?? []), ...p.teams.map((t) => t.id)]);
-              }
-            },
+          programs?.forEach((p) => {
+            if (prNumbers.has(p.id)) {
+              programTeams.set(p.id, [...(programTeams.get(p.id) ?? []), ...p.teams.map((t) => t.id)]);
+            }
+          });
 
-            // p.teams.map((t) => t.id)
-          );
+          programTeams.forEach((val: string[], key: string) => {
+            if (prNumbers.has(key) && !this.programsInvolvement.has(key)) {
+              this.programsInvolvement.set(
+                key,
+                (prNumbers.get(key) || 0) /
+                  (this.userStore.users.value.filter((u) => u.teamId && val.includes(u.teamId)).length || 1),
+              );
+            }
+          });
 
           // * SCORES
           scores.forEach((x) => {

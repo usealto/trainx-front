@@ -50,6 +50,7 @@
         [displayEdit]="displayEdit"
         [score]="programsScores.get(prog.id)"
         [progress]="programsProgress.get(prog.id)"
+        [participation]="programsInvolvement.get(prog.id)"
         [program]="prog"
       ></alto-program-card>
     </div>
@@ -65,7 +66,7 @@
 <ngb-pagination
   [ngClass]="{ invisible: count <= pageSize }"
   [collectionSize]="count"
-  (pageChange)="loadScores()"
+  (pageChange)="loadScores($event)"
   [(page)]="page"
   [pageSize]="pageSize"
   [maxSize]="10"
