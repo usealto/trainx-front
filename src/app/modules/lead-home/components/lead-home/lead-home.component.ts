@@ -57,8 +57,6 @@ export class LeadHomeComponent implements OnInit {
   averageCompletion = 0;
   completionProgression = 0;
   //
-
-  //
   challengesByTeam: ChallengeDtoApi[] = [];
   challengesByUser: ChallengeDtoApi[] = [];
 
@@ -100,7 +98,6 @@ export class LeadHomeComponent implements OnInit {
             .slice(0, 5);
         }),
         tap(() => this.getGlobalScore(this.globalFilters)),
-        // switchMap(() => this.getAverageCompletion(this.globalFilters.duration as ScoreDuration)),
         untilDestroyed(this),
       )
       .subscribe();

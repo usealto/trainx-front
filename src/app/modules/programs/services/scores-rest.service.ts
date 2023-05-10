@@ -122,6 +122,9 @@ export class ScoresRestService {
         case 'month':
           date = addDays(date, -60);
           break;
+        case 'trimester':
+          date = addDays(date, -180);
+          break;
         case 'year':
           date = addDays(date, -730);
           break;

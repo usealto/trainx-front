@@ -31,6 +31,7 @@ export const FR = {
     dateFilter: {
       week: 'Semaine',
       month: 'Mois',
+      trimester: '3 Mois',
       year: 'Année',
     },
     rollingDateFilter: {
