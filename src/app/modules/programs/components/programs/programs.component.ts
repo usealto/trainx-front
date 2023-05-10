@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Observable, forkJoin, map, of, switchMap, tap } from 'rxjs';
+import { Observable, map, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import {
   GetScoresRequestParams,
@@ -29,9 +28,9 @@ import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
 import { ScoresRestService } from '../../services/scores-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
+import { TagsServiceService } from '../../services/tags-service.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
-import { TagsServiceService } from '../../services/tags-service.service';
 
 @UntilDestroy()
 @Component({
@@ -43,12 +42,12 @@ export class ProgramsComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   //
-  programs: ProgramDtoApi[] = [];
-  programsDisplay: ProgramDtoApi[] = [];
-  programFilters: ProgramFilters = { teams: [], search: '' };
-  programsPage = 1;
-  programsCount = 0;
-  programPageSize = 9;
+  // programs: ProgramDtoApi[] = [];
+  // programsDisplay: ProgramDtoApi[] = [];
+  // programFilters: ProgramFilters = { teams: [], search: '' };
+  // programsPage = 1;
+  // programsCount = 0;
+  // programPageSize = 9;
   //
   questions: QuestionDtoApi[] = [];
   questionsPage = 1;
@@ -80,7 +79,6 @@ export class ProgramsComponent implements OnInit {
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
     private readonly programRestService: ProgramsRestService,
-    private readonly programService: ProgramsService,
     private readonly questionsService: QuestionsRestService,
     private readonly scoresServices: ScoresRestService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
@@ -92,18 +90,6 @@ export class ProgramsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.programRestService
-      .getPrograms()
-      .pipe(
-        tap((progs) => {
-          this.programs = progs;
-          this.programsDisplay = progs;
-          this.programsCount = progs.length;
-        }),
-        untilDestroyed(this),
-      )
-      .subscribe();
-
     this.getQuestions();
     this.getSubmittedQuestions();
     this.getTags();
@@ -136,17 +122,6 @@ export class ProgramsComponent implements OnInit {
 
     canvasRef.componentInstance.tag = tag;
     canvasRef.componentInstance.createdTag.pipe(tap(() => this.getTags()));
-  }
-
-  getProgramsFiltered({
-    teams = this.programFilters.teams,
-    search = this.programFilters.search,
-  }: ProgramFilters) {
-    this.programFilters.search = search;
-    this.programFilters.teams = teams;
-
-    this.programsDisplay = this.programService.filterPrograms(this.programs, this.programFilters);
-    this.programsCount = this.programsDisplay.length;
   }
 
   getQuestions(

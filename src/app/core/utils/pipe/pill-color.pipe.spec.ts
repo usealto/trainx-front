@@ -7,12 +7,12 @@ describe('PillColorPipe', () => {
     expect(pipe).toBeTruthy();
   });
 
-  it('checks when num is over 65 == bg-success', () => {
-    expect(pipe.transform(30)).not.toBe('bg-success');
-    expect(pipe.transform(66)).toBe('bg-success');
-    expect(pipe.transform(80)).toBe('bg-success');
-    expect(pipe.transform(100)).toBe('bg-success');
-    expect(pipe.transform(200)).toBe('bg-success');
+  it('checks when num is over 65 == pill-green', () => {
+    expect(pipe.transform(30)).not.toBe('pill-green');
+    expect(pipe.transform(66)).toBe('pill-green');
+    expect(pipe.transform(80)).toBe('pill-green');
+    expect(pipe.transform(100)).toBe('pill-green');
+    expect(pipe.transform(200)).toBe('pill-green');
   });
 
   it('checks when num is over 30 == bg-warning', () => {
@@ -22,17 +22,17 @@ describe('PillColorPipe', () => {
     expect(pipe.transform(90)).not.toBe('g-warning');
   });
 
-  it('checks when num is below 31 == bg-danger', () => {
-    expect(pipe.transform(30)).toBe('bg-danger');
-    expect(pipe.transform(-10)).toBe('bg-danger');
-    expect(pipe.transform(0)).toBe('bg-danger');
-    expect(pipe.transform(90)).not.toBe('bg-danger');
+  it('checks when num is below 31 == pill-red', () => {
+    expect(pipe.transform(30)).toBe('pill-red');
+    expect(pipe.transform(-10)).toBe('pill-red');
+    expect(pipe.transform(0)).toBe('pill-red');
+    expect(pipe.transform(90)).not.toBe('pill-red');
   });
 
-  it('checks when num is string then bg-secondary', () => {
-    expect(pipe.transform('30')).toBe('bg-secondary');
-    expect(pipe.transform('NAN')).toBe('bg-secondary');
-    expect(pipe.transform('test')).toBe('bg-secondary');
-    expect(pipe.transform(90)).not.toBe('bg-secondary');
+  it('checks when num is string then pill-neutral', () => {
+    expect(pipe.transform('30')).toBe('pill-neutral');
+    expect(pipe.transform('NAN')).toBe('pill-neutral');
+    expect(pipe.transform('test')).toBe('pill-neutral');
+    expect(pipe.transform(90)).not.toBe('pill-neutral');
   });
 });

@@ -1,1 +1,93 @@
-<p>statistics-global-performance works!</p>
+<div class="mb-4">
+  <div class="btn-group mb-4 float-end" role="group">
+    <input
+      type="radio"
+      class="btn-check"
+      name="timePicker"
+      id="year"
+      autocomplete="off"
+      (change)="updateTimePicker($event)"
+      checked
+    />
+    <label class="btn btn-outline-secondary" for="year">{{ I18ns.shared.rollingDateFilter.year }}</label>
+
+    <input
+      type="radio"
+      class="btn-check"
+      name="timePicker"
+      id="trimester"
+      autocomplete="off"
+      (change)="updateTimePicker($event)"
+    />
+    <label class="btn btn-outline-secondary" for="trimester">{{
+      I18ns.shared.rollingDateFilter.trimester
+    }}</label>
+
+    <input
+      type="radio"
+      class="btn-check"
+      name="timePicker"
+      id="month"
+      autocomplete="off"
+      (change)="updateTimePicker($event)"
+    />
+    <label class="btn btn-outline-secondary" for="month">{{ I18ns.shared.rollingDateFilter.month }}</label>
+  </div>
+  <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.title }}</h2>
+  <p>{{ I18ns.statistics.globalPerformance.perTeamPerformance.subtitle }}</p>
+</div>
+<div class="row border-bottom pb-4">
+  <div class="col panel mx-2">
+    <i
+      class="fs-5 bi bi-question-circle float-end"
+      placement="top"
+      ngbTooltip="{{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.tooltip }}"
+    ></i>
+    <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}</h2>
+    <p>{{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.subtitle }}</p>
+    <div class="chart-container">
+      <canvas id="teamScoreEvolution"></canvas>
+    </div>
+  </div>
+
+  <div *ngIf="scoredTeams.length <= 10; else leaderboardFull" class="col-4 panel mx-2">
+    <i
+      class="fs-5 bi bi-question-circle float-end"
+      placement="top"
+      ngbTooltip="{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.tooltip }}"
+    ></i>
+    <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}</h2>
+    <ol class="list-group list-group-flush list-group-numbered">
+      <li class="list-group-item" *ngFor="let team of scoredTeams">
+        <alto-progression-badge class="float-end" [score]="team.score"></alto-progression-badge>
+        {{ team.label }}
+      </li>
+    </ol>
+  </div>
+  <ng-template #leaderboardFull>
+    <div class="col-4 panel mx-2">
+      <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h2>
+      <ol class="list-group list-group-flush list-group-numbered">
+        <li class="list-group-item" *ngFor="let team of scoredTeams.slice(0, 5)">
+          <alto-progression-badge class="float-end" [score]="team.score"></alto-progression-badge>
+          {{ team.label }}
+        </li>
+      </ol>
+      <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.flop }}</h2>
+      <ol class="list-group list-group-flush list-group-numbered">
+        <li
+          class="list-group-item"
+          *ngFor="let team of scoredTeams.slice(scoredTeams.length - 5, scoredTeams.length)"
+        >
+          <alto-progression-badge class="float-end" [score]="team.score"></alto-progression-badge>
+          {{ team.label }}
+        </li>
+      </ol>
+    </div>
+  </ng-template>
+</div>
+<div class="border-bottom py-4">
+  <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.title }}</h2>
+  <p>{{ I18ns.statistics.globalPerformance.perThemePerformance.subtitle }}</p>
+
+</div>

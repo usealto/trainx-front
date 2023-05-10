@@ -35,12 +35,12 @@
 
 <div class="row mt-5 mb-4">
   <div class="col-5">
-    <h1>{{ I18ns.leadHome.statistics.title }}</h1>
+    <h2>{{ I18ns.leadHome.statistics.title }}</h2>
   </div>
   <div class="col-7 text-end">
     <alto-period-filter
       class="text-start me-3"
-      (selectChange)="updateScore({ timeframe: $event })"
+      (selectChange)="getGlobalScore({ duration: $event })"
     ></alto-period-filter>
     <alto-dropdown-filter
       class="text-start"
@@ -50,7 +50,7 @@
       [placeholder]="I18ns.programs.programs.filters.team"
       [isColored]="true"
       [multiple]="false"
-      (selectChange)="updateScore({ timeframe: statisticTimeRange, teamId: $event })"
+      (selectChange)="getGlobalScore({ team: $event })"
     ></alto-dropdown-filter>
   </div>
 </div>
@@ -66,7 +66,7 @@
           ngbTooltip="{{ I18ns.leadHome.statistics.globalScoreToolTip }}"
         ></i>
       </p>
-      <p>{{ globalScore | percent }}</p>
+      <h1>{{ globalScore | percent }}</h1>
     </div>
   </div>
   <div class="col-3">
@@ -79,9 +79,12 @@
           ngbTooltip="{{ I18ns.leadHome.statistics.averageCompletionToolTip }}"
         ></i>
       </p>
-      <div class="row g-0">
-        <p class="col">{{ averageCompletion | percent }}</p>
-        <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge>
+      <div class="w-100 row g-0">
+        <h1 class="col">{{ averageCompletion | percent }}</h1>
+        <alto-progression-badge
+          class="col text-end mt-2"
+          [score]="completionProgression"
+        ></alto-progression-badge>
       </div>
     </div>
   </div>
@@ -96,7 +99,7 @@
         ></i>
       </p>
       <div class="row g-0">
-        <p class="col">N/A</p>
+        <h1 class="col">N/A</h1>
         <!-- <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge> -->
       </div>
     </div>
@@ -112,7 +115,7 @@
         ></i>
       </p>
       <div class="row g-0">
-        <p class="col">N/A</p>
+        <h1 class="col">N/A</h1>
         <!-- <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge> -->
       </div>
     </div>
@@ -122,7 +125,7 @@
 <!-- GLOBAL EVOLUTION -->
 
 <div class="row mt-5 mb-4">
-  <h1 class="col-5">{{ I18ns.leadHome.globalEvolution.title }}</h1>
+  <h2 class="col-5">{{ I18ns.leadHome.globalEvolution.title }}</h2>
   <div class="col-7 text-end">
     <alto-period-filter
       class="text-start me-3"
@@ -184,7 +187,7 @@
             <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.programs | slice : -3" class="mb-1">
-                {{ item.label }}
+                <span class="fs-7">{{ item.label | slice : 0 : 32 }}</span>
                 <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
                   item.avg | percent
                 }}</span>
@@ -195,7 +198,7 @@
             <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.programs | slice : 0 : 3" class="mb-1">
-                {{ item.label }}
+                <span class="fs-7">{{ item.label | slice : 0 : 32 }}</span>
                 <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
                   item.avg | percent
                 }}</span>
@@ -227,7 +230,7 @@
             <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.teams | slice : -3" class="mb-1">
-                {{ item.label }}
+                <span class="fs-7">{{ item.label | slice : 0 : 32 }}</span>
                 <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
                   item.avg | percent
                 }}</span>
@@ -238,7 +241,7 @@
             <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.teams | slice : 0 : 3" class="mb-1">
-                {{ item.label }}
+                <span class="fs-7">{{ item.label | slice : 0 : 32 }}</span>
                 <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
                   item.avg | percent
                 }}</span>
@@ -259,44 +262,24 @@
 <!-- ONGOING PROGRAMS -->
 <div class="row mt-5 mb-4">
   <div class="col-5">
-    <h1>{{ I18ns.leadHome.ongoingPrograms.title }}</h1>
-  </div>
-  <div class="col-7 text-end">
-    <alto-dropdown-filter
-      class="text-start me-3"
-      [data]="teamStore.teams.value"
-      [displayLabel]="'shortName'"
-      [placeholder]="I18ns.leadHome.ongoingPrograms.filters.team"
-      (selectChange)="filterPrograms($event)"
-      [isColored]="true"
-    ></alto-dropdown-filter>
-    <button
-      [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
-      class="btn btn-outline-secondary align-bottom"
-    >
-      {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
-    </button>
+    <h2>{{ I18ns.leadHome.ongoingPrograms.title }}</h2>
   </div>
 </div>
 
-<div class="row mb-3">
-  <div class="col-4 mb-3" *ngFor="let prog of programs">
-    <alto-program-card [displayToggle]="false" [programRun]="prog"></alto-program-card>
-  </div>
-</div>
-<ngb-pagination
-  [collectionSize]="programsCount"
-  [(page)]="programsPage"
-  (pageChange)="changeProgramPage()"
-  [pageSize]="programPageSize"
-  [maxSize]="10"
-  aria-label="Default pagination"
-></ngb-pagination>
+<alto-program-card-list [place]="'home'"></alto-program-card-list>
+<!-- <div class="col-4 mb-3" *ngFor="let prog of programs; let i = index">
+    <alto-program-card
+      [displayToggle]="false"
+      [score]="programsScores.get(prog.id)"
+      [progress]="programsProgress.get(prog.id)"
+      [program]="prog"
+    ></alto-program-card>
+  </div> -->
 
 <!-- CHALLENGES -->
 <div class="row mt-5 mb-4">
   <div class="col-5">
-    <h1>{{ I18ns.leadHome.ongoingChallenges.title }}</h1>
+    <h2>{{ I18ns.leadHome.ongoingChallenges.title }}</h2>
   </div>
   <div class="col-7 text-end">
     <button [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]" class="btn btn-outline-secondary">

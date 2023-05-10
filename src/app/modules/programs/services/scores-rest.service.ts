@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDays } from 'date-fns';
+import { addDays, addMonths } from 'date-fns';
 import { Observable, filter, map } from 'rxjs';
 import {
   GetProgramRunsRequestParams,
@@ -14,7 +14,7 @@ import {
   ScoresResponseDtoApi,
 } from 'src/app/sdk';
 import { ChartFilters } from '../../shared/models/chart.model';
-import { ScoreDuration } from '../models/score.model';
+import { ScoreDuration, ScoreFilters } from '../models/score.model';
 import { ScoresService } from './scores.service';
 
 @Injectable({
@@ -27,10 +27,17 @@ export class ScoresRestService {
     private readonly programsApi: ProgramRunsApiService,
   ) {}
 
-  getScores({ duration, type, team, timeframe, sortBy }: ChartFilters): Observable<ScoresResponseDtoApi> {
+  getScores({
+    duration,
+    type,
+    team,
+    timeframe,
+    sortBy,
+    ids,
+  }: ChartFilters): Observable<ScoresResponseDtoApi> {
     const par: GetScoresRequestParams = {
       type: type ?? ScoreTypeEnumApi.Guess,
-      timeframe: timeframe ?? this.service.getDefaultTimeFrame(duration as ScoreDuration),
+      timeframe: timeframe ?? ScoreTimeframeEnumApi.Day,
       dateAfter: this.service.getStartDate(duration as ScoreDuration),
       dateBefore: new Date(),
       fillValues: ScoreFillValuesEnumApi.Null,
@@ -40,6 +47,9 @@ export class ScoresRestService {
     if (team) {
       par.scoredBy = ScoreByTypeEnumApi.Team;
       par.scoredById = team;
+    }
+    if (ids) {
+      par.ids = ids.join(',');
     }
 
     return this.scoresApi.getScores(par).pipe(
@@ -67,7 +77,7 @@ export class ScoresRestService {
     const par = {
       ...req,
       type: ScoreTypeEnumApi.Program,
-      timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Week,
+      timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Day,
       dateBefore: new Date(),
     };
     par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
@@ -93,45 +103,35 @@ export class ScoresRestService {
     );
   }
 
-  getAverageCompletion(
-    timeframe: ScoreTimeframeEnumApi,
-    req?: GetProgramRunsRequestParams,
-  ): Observable<ProgramRunApi[]> {
+  getCompletion(filt: ScoreFilters, isProgression: boolean): Observable<ProgramRunApi[]> {
     const par = {
-      ...req,
       page: 1,
       itemPerPage: 300,
-      createdBefore: this.service.getYesterday(),
-    };
-    par.createdAfter = this.service.getStartDate(this.service.getDefaultDuration(timeframe));
+    } as GetProgramRunsRequestParams;
 
-    return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));
-  }
-
-  getCompletionProgression(
-    timeframe: ScoreTimeframeEnumApi,
-    req?: GetProgramRunsRequestParams,
-  ): Observable<ProgramRunApi[]> {
-    let date = new Date();
-    switch (timeframe) {
-      case 'week':
-        date = addDays(date, -14);
-        break;
-      case 'month':
-        date = addDays(date, -60);
-        break;
-      case 'year':
-        date = addDays(date, -730);
-        break;
+    if (filt.team) {
+      par.teamIds = filt.team;
     }
 
-    const par = {
-      ...req,
-      page: 1,
-      itemPerPage: 300,
-      createdAfter: date,
-    } as GetProgramRunsRequestParams;
-    par.createdBefore = this.service.getStartDate(this.service.getDefaultDuration(timeframe));
+    if (isProgression) {
+      let date = new Date();
+      switch (filt.duration) {
+        case 'week':
+          date = addDays(date, -14);
+          break;
+        case 'month':
+          date = addDays(date, -60);
+          break;
+        case 'year':
+          date = addDays(date, -730);
+          break;
+      }
+      par.createdAfter = date;
+      par.createdBefore = this.service.getStartDate(filt.duration as ScoreDuration);
+    } else {
+      par.createdAfter = this.service.getStartDate(filt.duration as ScoreDuration);
+      par.createdBefore = this.service.getYesterday();
+    }
 
     return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));
   }

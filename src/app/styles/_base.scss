@@ -98,6 +98,9 @@ hr {
   color: var(--bs-orange);
 }
 
+.w-33 {
+  width: 33%;
+}
 // Creates a width class for each multiple of 5
 @for $wdth from 1 through 20 {
   .w-#{$wdth*5} {

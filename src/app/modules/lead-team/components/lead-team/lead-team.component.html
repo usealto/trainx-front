@@ -104,34 +104,8 @@
       </div>
     </div>
   </div>
+
   <div class="row mb-4">
-<<<<<<< Updated upstream
-    <div class="col-8">
-      <alto-dropdown-filter
-        class="me-3"
-        [data]="teams"
-        [isColored]="true"
-        [displayLabel]="'shortName'"
-        [placeholder]="I18ns.leadTeam.members.filters.teams"
-        (selectChange)="filterUsers($event)"
-      ></alto-dropdown-filter>
-      <!-- <alto-dropdown-filter
-        class="me-3"
-        [data]="teams"
-        [displayLabel]="'longName'"
-        [placeholder]="I18ns.leadTeam.members.filters.score"
-      ></alto-dropdown-filter>
-      <alto-dropdown-filter
-        class="me-3"
-        [data]="teams"
-        [displayLabel]="'longName'"
-        [placeholder]="I18ns.leadTeam.members.filters.activity"
-      ></alto-dropdown-filter> -->
-    </div>
-    <div class="col-4 text-end">
-      <alto-search (searchChange)="searchUsers(users, $event)"></alto-search>
-    </div>
-=======
     <alto-dropdown-filter
       class="text-start col-3"
       [data]="teams"
@@ -140,8 +114,8 @@
       (selectChange)="filterUsers($event)"
     ></alto-dropdown-filter>
     <alto-search class="col-2 ms-auto" (searchChange)="searchUsers(users, $event)"></alto-search>
->>>>>>> Stashed changes
   </div>
+
   <ng-container *ngIf="paginatedUsers.length > 0; else noUsers">
     <div class="table-panel">
       <table class="table">

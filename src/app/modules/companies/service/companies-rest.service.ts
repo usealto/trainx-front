@@ -1,7 +1,7 @@
 import { DeleteResponseApi } from './../../../sdk/model/deleteResponse';
 import { PatchCompanyDtoApi } from './../../../sdk/model/patchCompanyDto';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import {
   CompaniesApiService,
   GetCompaniesRequestParams,
@@ -9,12 +9,18 @@ import {
   CreateCompanyDtoApi,
   CompanyDtoResponseApi,
 } from 'src/app/sdk';
+import { ProfileStore } from '../../profile/profile.store';
+import { CompaniesStore } from '../companies.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CompaniesRestService {
-  constructor(private readonly companyApi: CompaniesApiService) {}
+  constructor(
+    private readonly companyApi: CompaniesApiService,
+    private readonly userStore: ProfileStore,
+    private readonly companiesStore: CompaniesStore,
+  ) {}
 
   getCompanies(req?: GetCompaniesRequestParams): Observable<CompanyDtoApi[]> {
     return this.companyApi.getCompanies({ ...req }).pipe(map((companies) => companies.data ?? []));
@@ -24,6 +30,17 @@ export class CompaniesRestService {
     return this.companyApi
       .getCompanyById({ id })
       .pipe(map((company) => company.data ?? ({} as CompanyDtoApi)));
+  }
+
+  getMyCompany(): Observable<CompanyDtoApi> {
+    if (this.companiesStore.myCompany.value) {
+      return this.companiesStore.myCompany.value$;
+    } else {
+      return this.companyApi.getCompanyById({ id: this.userStore.user.value.companyId }).pipe(
+        map((company) => company.data ?? ({} as CompanyDtoApi)),
+        tap((comp) => (this.companiesStore.myCompany.value = comp)),
+      );
+    }
   }
 
   patchCompany(id: string, patchCompanyDtoApi: PatchCompanyDtoApi): Observable<CompanyDtoResponseApi> {

@@ -221,8 +221,26 @@ export const FR = {
       },
     },
     globalPerformance: {
-      title: 'Performance global',
-      subtitle: 'Retrouvez les performances global de vos équipes.',
+      navbarTitle: 'Performance globale',
+      perTeamPerformance: {
+        title: 'Performance par équipes',
+        subtitle: 'Retrouvez les performances global de vos équipes.',
+        scoreEvolution: {
+          title: 'Évolution du score',
+          subtitle: "Suivez l'évolution du score de vos équipes.",
+          tooltip: 'Score moyen',
+        },
+        leaderboard: {
+          title: 'Leaderboard',
+          tooltip: 'Score moyen',
+          top: 'Top',
+          flop: 'Flop',
+        },
+      },
+      perThemePerformance: {
+        title: 'Performance par thèmatiques',
+        subtitle: 'Retrouvez les performances global de vos équipes.',
+      },
     },
     perTeams: {
       title: 'Par équipe',

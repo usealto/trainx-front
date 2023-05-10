@@ -4,7 +4,7 @@
   <alto-anchor-navigator fragment="programsAnchor">
     <button type="button" class="btn btn-outline-secondary me-4 fw-medium">
       {{ I18ns.programs.programs.title }}
-      <span class="alto-badge">{{ programsDisplay.length }}</span>
+      <!-- <span class="alto-badge">{{ programsDisplay.length }}</span> -->
     </button>
   </alto-anchor-navigator>
   <alto-anchor-navigator fragment="questionsAnchor">
@@ -36,48 +36,8 @@
     <h1>{{ I18ns.programs.programs.title }}</h1>
     <p class="mb-4 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
   </div>
-  <div class="text-end mb-4">
-    <alto-dropdown-filter
-      class="text-start"
-      [data]="teamStore.teams.value"
-      [displayLabel]="'shortName'"
-      [placeholder]="I18ns.programs.programs.filters.team"
-      (selectChange)="getProgramsFiltered({ teams: $event })"
-      [isColored]="true"
-    ></alto-dropdown-filter>
 
-    <alto-search
-      class="d-inline-block ms-3"
-      (searchChange)="getProgramsFiltered({ search: $event })"
-    ></alto-search>
-  </div>
-  <ng-container *ngIf="programsDisplay.length > 0; else noPrograms">
-    <div class="row mb-3">
-      <div
-        class="col-4 mb-3"
-        *ngFor="
-          let prog of programsDisplay
-            | slice : (programsPage - 1) * programPageSize : programsPage * programPageSize
-        "
-      >
-        <alto-program-card [displayToggle]="true" [program]="prog"></alto-program-card>
-      </div>
-    </div>
-    <ngb-pagination
-      [ngClass]="{ invisible: programsCount <= programPageSize }"
-      [collectionSize]="programsCount"
-      [(page)]="programsPage"
-      [pageSize]="programPageSize"
-      [maxSize]="10"
-      aria-label="Default pagination"
-    ></ngb-pagination>
-  </ng-container>
-  <ng-template #noPrograms>
-    <div class="panel text-center">
-      <h2>{{ I18ns.shared.noData }}</h2>
-      <p>{{ I18ns.shared.noDataSubtitle }}</p>
-    </div>
-  </ng-template>
+  <alto-program-card-list [place]="'program'"></alto-program-card-list>
 </div>
 
 <!-- QUESTIONS -->
