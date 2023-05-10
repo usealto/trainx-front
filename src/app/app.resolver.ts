@@ -15,8 +15,7 @@ export const appResolver: ResolveFn<any> = () => {
 };
 
 export const programResolver: ResolveFn<any> = () => {
-  return combineLatest([
-    inject(UsersRestService).getAllUsers(),
-    inject(ProgramsRestService).getPrograms(),
-  ]).pipe(take(1));
+  return combineLatest([inject(UsersRestService).getUsers(), inject(ProgramsRestService).getPrograms()]).pipe(
+    take(1),
+  );
 };

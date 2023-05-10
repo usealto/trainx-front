@@ -39,7 +39,7 @@ export class TeamFormComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      combineLatest([this.programService.getPrograms(), this.userRestService.getAllUsers()])
+      combineLatest([this.programService.getPrograms(), this.userRestService.getUsers()])
         .pipe(
           tap(([programs, users]) => (this.programs = programs)),
           tap(([programs, users]) => (this.users = users)),
