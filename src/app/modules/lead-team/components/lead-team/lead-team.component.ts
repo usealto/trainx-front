@@ -41,7 +41,7 @@ export class LeadTeamComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    combineLatest([this.usersRestService.getUsers(), this.teamsRestService.getTeams()])
+    combineLatest([this.usersRestService.getAllUsers(), this.teamsRestService.getTeams()])
       .pipe(
         tap(([users, teams]) => {
           this.teams = teams;

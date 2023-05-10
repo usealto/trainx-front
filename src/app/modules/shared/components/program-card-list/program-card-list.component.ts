@@ -36,6 +36,7 @@ export class ProgramCardListComponent implements OnInit {
 
   programsScores = new Map<string, number>();
   programsProgress = new Map<string, number>();
+  programsInvolvement = new Map<string, number>();
   page = 1;
   count = 0;
   pageSize = 3;
@@ -84,13 +85,35 @@ export class ProgramCardListComponent implements OnInit {
                 .filter((x) => !this.programsProgress.has(x))
                 .join(','),
             }),
+            of(p),
           ]),
         ),
-        tap(([{ scores }, { data }]) => {
+        tap(([{ scores }, { data }, programs]) => {
+          // * INVOLVEMENT
+          const prNumbers = new Map<string, number>();
+
+          data?.forEach((pr) => {
+            prNumbers.set(pr.programId, (prNumbers.get(pr.programId) || 0) + 1);
+          });
+          const programTeams = new Map<string, string[]>();
+
+          // const total =
+          programs?.forEach(
+            (p) => {
+              if (prNumbers.has(p.id)) {
+                programTeams.set(p.id, [...(programTeams.get(p.id) ?? []), ...p.teams.map((t) => t.id)]);
+              }
+            },
+
+            // p.teams.map((t) => t.id)
+          );
+
+          // * SCORES
           scores.forEach((x) => {
             this.programsScores.set(x.id, this.scoreService.reduceWithoutNull(x.averages));
           });
           // Temp map to retrieve progId as key and answered VS total questions
+          // * PROGRESS
           const tmp = new Map<string, number[][]>();
           data?.forEach((pr) => {
             tmp.set(pr.programId, [...(tmp.get(pr.programId) ?? []), [pr.guessesCount, pr.questionsCount]]);

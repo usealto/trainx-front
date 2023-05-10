@@ -21,11 +21,15 @@ export class UsersRestService {
     private userStore: ProfileStore,
   ) {}
 
-  getUsers(req?: GetUsersRequestParams): Observable<UserDtoApi[]> {
+  getUsers(req: GetUsersRequestParams): Observable<UserDtoApi[]> {
+    return this.userApi.getUsers({ ...req }).pipe(map((r) => r.data ?? []));
+  }
+
+  getAllUsers(): Observable<UserDtoApi[]> {
     if (this.userStore.users.value.length) {
       return this.userStore.users.value$;
     } else {
-      return this.userApi.getUsers({ ...req }).pipe(
+      return this.userApi.getUsers({}).pipe(
         map((r) => r.data ?? []),
         tap((users) => (this.userStore.users.value = users)),
       );
