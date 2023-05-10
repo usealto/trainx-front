@@ -56,6 +56,8 @@ export class LeadHomeComponent implements OnInit {
   globalScore = 0;
   averageCompletion = 0;
   completionProgression = 0;
+  activeMembers = 0;
+  inactiveMembers = 0;
   //
   challengesByTeam: ChallengeDtoApi[] = [];
   challengesByUser: ChallengeDtoApi[] = [];

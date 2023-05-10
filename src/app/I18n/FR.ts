@@ -56,9 +56,9 @@ export const FR = {
       globalScoreToolTip: 'Score moyen de toutes les questions répondues sur la période donnée',
       averageCompletion: 'Complétion moyenne',
       averageCompletionToolTip: 'Nombre de programs réussis sur nombre de programmes assignés',
-      activeMembers: 'Membres actifs',
+      activeMembers: 'Membres réguliers',
       activeMembersToolTip: 'Nombre de membres ayant interagi avec Alto sur une période donnée',
-      inactiveMembers: 'Membres inactifs',
+      inactiveMembers: 'Membres irréguliers',
       inactiveMembersToolTip: "Nombre de membres n'ayant pas interagi avec Alto sur une période donnée",
     },
     graph: {
