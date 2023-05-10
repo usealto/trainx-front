@@ -24,6 +24,5 @@ export class AdminCompaniesComponent implements OnInit {
       .getCompanies()
       .pipe(tap((companies) => (this.companies = companies)))
       .subscribe();
-    console.log('here');
   }
 }
