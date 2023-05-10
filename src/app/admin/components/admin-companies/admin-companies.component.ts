@@ -12,6 +12,10 @@ import { DataService } from '../../admin-data.service';
 })
 export class AdminCompaniesComponent implements OnInit {
   companies: CompanyDtoApi[] = [];
+  displayedCompanies: CompanyDtoApi[] = [];
+  page = 1;
+  pageSize = 4;
+  pageCount = 0;
 
   constructor(
     private readonly companiesRestService: CompaniesRestService,
@@ -23,7 +27,21 @@ export class AdminCompaniesComponent implements OnInit {
     this.companiesRestService
       .getCompanies()
       .pipe(tap((companies) => (this.companies = companies)))
-      .subscribe((val) => console.log(val));
+      .subscribe(() => {
+        this.pageCount = Math.ceil(this.companies.length / this.pageSize);
+        this.refreshCountries();
+      });
   }
-  
+
+  onPaginator(page: number) {
+    this.page = page;
+    this.refreshCountries();
+  }
+
+  refreshCountries() {
+    this.displayedCompanies = this.companies.slice(
+      (this.page - 1) * this.pageSize,
+      (this.page - 1) * this.pageSize + this.pageSize,
+    );
+  }
 }
