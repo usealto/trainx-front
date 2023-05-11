@@ -249,16 +249,11 @@ export const FR = {
         },
         scoreEvolutionChart: {
           title: 'Évolution du score',
-          subtitle: "Suivez l'évolution du score de tags ou programmes.",
         },
         performanceChart: {
           title: {
             tags: 'Performance par tag',
             programs: 'Performance par programme',
-          },
-          subtitle: {
-            tags: 'Retrouvez les performances de vos tags.',
-            programs: 'Retrouvez les performances de vos programmes.',
           },
         },
         control: {
@@ -455,7 +450,7 @@ export const FR = {
     settings: 'Paramètres',
     profile: 'Profil',
     training: 'Training',
-    adminMode: 'Mode administrateur',
+    adminMode: 'Mode Administrateur',
   },
   settings: {
     title: 'Paramètres',
