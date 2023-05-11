@@ -1,7 +1,22 @@
 <div class="mb-4">
-  <alto-time-picker class="mb-4 float-end" (durationSelected)="updateTimePicker($event)"></alto-time-picker>
+  <alto-time-picker
+    class="mb-4 float-end"
+    [duration]="duration"
+    (durationSelected)="updateTimePicker($event)"
+  ></alto-time-picker>
   <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.title }}</h2>
   <p>{{ I18ns.statistics.globalPerformance.perTeamPerformance.subtitle }}</p>
 </div>
 <alto-performance-by-teams [duration]="duration"></alto-performance-by-teams>
+
+<div class="my-4">
+  <alto-time-picker
+    class="mb-4 float-end"
+    [duration]="duration"
+    (durationSelected)="updateTimePicker($event)"
+    name="timePicker2"
+  ></alto-time-picker>
+  <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.title }}</h2>
+  <p>{{ I18ns.statistics.globalPerformance.perThemePerformance.subtitle }}</p>
+</div>
 <alto-performance-by-themes [duration]="duration"></alto-performance-by-themes>

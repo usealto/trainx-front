@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
 
@@ -9,7 +9,8 @@ import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
 })
 export class TimePickerComponent {
   I18ns = I18ns;
-  duration: ScoreDuration = ScoreDuration.Year;
+  @Input() duration: ScoreDuration = ScoreDuration.Year;
+  @Input() name = 'timePicker';
   @Output() durationSelected = new EventEmitter<string>();
 
   updateTimePicker(event: any) {
