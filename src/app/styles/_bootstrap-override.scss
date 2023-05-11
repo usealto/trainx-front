@@ -8,6 +8,9 @@
   padding: 0;
   margin-left: 0;
 }
+.row {
+  --bs-gutter-x: 1.143rem;
+}
 .btn {
   --bs-btn-border-radius: 24px;
   height: 2.572rem;
@@ -41,8 +44,8 @@
   .form-check-input {
     vertical-align: middle;
     cursor: pointer;
-    height: 1.3rem;
-    width: 2.3rem;
+    height: 1.429rem;
+    width: 2.571rem;
   }
   label {
     vertical-align: text-top;

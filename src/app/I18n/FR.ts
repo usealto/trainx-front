@@ -454,7 +454,7 @@ export const FR = {
     settings: 'Paramètres',
     profile: 'Profil',
     training: 'Training',
-    adminMode: 'Mode Administrateur',
+    adminMode: 'Mode administrateur',
   },
   settings: {
     title: 'Paramètres',

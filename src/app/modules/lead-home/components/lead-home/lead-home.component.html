@@ -1,14 +1,14 @@
-<h1 class="mt-4">{{ I18ns.leadHome.title + userName | titlecase }}</h1>
-<p class="mb-4 alto-grey">{{ I18ns.leadHome.subtitle }}</p>
+<h1>{{ I18ns.leadHome.title + userName | titlecase }}</h1>
+<p class="mb-4 alto-grey fs-6b">{{ I18ns.leadHome.subtitle }}</p>
 <div class="row">
   <div class="col-6">
     <div class="panel">
       <div class="float-start mx-3 alto-badge-big"><i class="fs-4 bi bi-chat-text"></i></div>
       <div class="d-inline-block align-bottom">
-        <p class="fw-bold mb-1">
+        <p class="fw-bold fs-6b mb-1">
           {{ I18ns.leadHome.comments | plural : commentsCount }}
         </p>
-        <p class="fs-7 alto-grey">
+        <p class="alto-grey">
           {{ I18ns.leadHome.subtitleComment | plural : commentsCount }}
         </p>
       </div>
@@ -22,10 +22,10 @@
     >
       <div class="float-start mx-3 alto-badge-big"><i class="fs-4 bi bi-question-circle"></i></div>
       <div class="d-inline-block align-bottom">
-        <p class="fw-bold mb-1">
+        <p class="fw-bold fs-6b mb-1">
           {{ I18ns.leadHome.question | plural : questionsCount }}
         </p>
-        <p class="fs-7 alto-grey">
+        <p class="alto-grey">
           {{ I18ns.leadHome.subtitleQuestion | plural : questionsCount }}
         </p>
       </div>
@@ -58,10 +58,12 @@
 <div class="row">
   <div class="col-3">
     <div class="panel">
-      <p>
-        {{ I18ns.leadHome.statistics.globalScore }}
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.leadHome.statistics.globalScore }}
+        </span>
         <i
-          class="fs-5 bi bi-question-circle float-end"
+          class="fs-6 alto-grey bi bi-question-circle float-end"
           placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.globalScoreToolTip }}"
         ></i>
@@ -71,10 +73,12 @@
   </div>
   <div class="col-3">
     <div class="panel">
-      <p>
-        {{ I18ns.leadHome.statistics.averageCompletion }}
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.leadHome.statistics.averageCompletion }}
+        </span>
         <i
-          class="fs-5 bi bi-question-circle float-end"
+          class="fs-6 alto-grey bi bi-question-circle float-end"
           placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.averageCompletionToolTip }}"
         ></i>
@@ -90,10 +94,12 @@
   </div>
   <div class="col-3">
     <div class="panel">
-      <p>
-        {{ I18ns.leadHome.statistics.activeMembers }}
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.leadHome.statistics.activeMembers }}
+        </span>
         <i
-          class="fs-5 bi bi-question-circle float-end"
+          class="fs-6 alto-grey bi bi-question-circle float-end"
           placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.activeMembersToolTip }}"
         ></i>
@@ -106,10 +112,12 @@
   </div>
   <div class="col-3">
     <div class="panel">
-      <p>
-        {{ I18ns.leadHome.statistics.inactiveMembers }}
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.leadHome.statistics.inactiveMembers }}
+        </span>
         <i
-          class="fs-5 bi bi-question-circle float-end"
+          class="fs-6 alto-grey bi bi-question-circle float-end"
           placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.inactiveMembersToolTip }}"
         ></i>
@@ -171,9 +179,9 @@
   <!-- TOP / FLOP -->
   <div class="col-6">
     <!-- PROGRAMS & TAGS -->
-    <div class="panel mb-3">
+    <div class="panel mb-4">
       <alto-tabs
-        class="mb-3"
+        class="mb-4"
         *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
         (tabChanged)="topFlop($event)"
         [data]="[
@@ -189,10 +197,10 @@
           "
         >
           <div class="col-6 border-end">
-            <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
+            <h1>{{ I18ns.leadHome.globalEvolution.top }}</h1>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.programs?.top | slice : 0 : 3" class="mb-1">
-                <span class="fs-7">{{ item.label | slice : 0 : 32 }}</span>
+              <p *ngFor="let item of topFlopData?.programs?.top | slice : 0 : 3" class="mb-3">
+                <span>{{ item.label | slice : 0 : 32 }}</span>
                 <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
@@ -200,10 +208,10 @@
             </div>
           </div>
           <div class="col-6">
-            <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
+            <h1>{{ I18ns.leadHome.globalEvolution.flop }}</h1>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.programs?.flop | slice : 0 : 3" class="mb-1">
-                <span class="fs-7">{{ item.label | slice : 0 : 32 }}</span>
+              <p *ngFor="let item of topFlopData?.programs?.flop | slice : 0 : 3" class="mb-3">
+                <span>{{ item.label | slice : 0 : 32 }}</span>
                 <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
@@ -219,9 +227,9 @@
       </div>
     </div>
     <!-- TEAMS & USERS -->
-    <div class="panel mb-3">
+    <div class="panel">
       <alto-tabs
-        class="mb-3"
+        class="mb-4"
         *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
         (tabChanged)="topFlop($event)"
         [data]="[
@@ -234,10 +242,10 @@
           *ngIf="topFlopData?.teams?.top?.length || topFlopData?.teams?.flop?.length; else tfProgramTemplate2"
         >
           <div class="col-6 border-end">
-            <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
+            <h1>{{ I18ns.leadHome.globalEvolution.top }}</h1>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.teams?.top | slice : 0 : 3" class="mb-1">
-                <span class="fs-7">{{ item.label | slice : 0 : 32 }}</span>
+              <p *ngFor="let item of topFlopData?.teams?.top | slice : 0 : 3" class="mb-3">
+                <span>{{ item.label | slice : 0 : 32 }}</span>
                 <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
@@ -245,10 +253,10 @@
             </div>
           </div>
           <div class="col-6">
-            <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
+            <h1>{{ I18ns.leadHome.globalEvolution.flop }}</h1>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.teams?.flop" class="mb-1">
-                <span class="fs-7">{{ item.label | slice : 0 : 32 }}</span>
+              <p *ngFor="let item of topFlopData?.teams?.flop" class="mb-3">
+                <span>{{ item.label | slice : 0 : 32 }}</span>
                 <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
@@ -274,14 +282,6 @@
 </div>
 
 <alto-program-card-list [place]="'home'"></alto-program-card-list>
-<!-- <div class="col-4 mb-3" *ngFor="let prog of programs; let i = index">
-    <alto-program-card
-      [displayToggle]="false"
-      [score]="programsScores.get(prog.id)"
-      [progress]="programsProgress.get(prog.id)"
-      [program]="prog"
-    ></alto-program-card>
-  </div> -->
 
 <!-- CHALLENGES -->
 <div class="row mt-5 mb-4">

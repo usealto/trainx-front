@@ -1,11 +1,14 @@
 :host {
   display: block;
-  padding: 2rem;
+  padding: var(--alto-page-padding);
 }
 .height-100 {
   min-height: 100px;
 }
+.alto-badge-big {
+  margin: 0.3em 0;
+}
 
 .chart-container {
-  height: 400px;
+  height: 344px;
 }

@@ -28,7 +28,7 @@
   @extend .alto-badge-no-size;
   height: 2.857rem;
   min-width: 2.857rem;
-  line-height: 2.8rem;
+  line-height: 2.86rem;
 }
 .alto-badge-no-size {
   display: inline-block;
@@ -48,13 +48,13 @@
 .panel {
   background-color: white;
   border-radius: 1.143rem;
-  border: 1px solid #eaecf0;
+  border: 1px solid var(--alto-border);
   padding: 1.4rem 1.7rem;
 }
 .table-panel {
   background-color: white;
   border-radius: 1.143rem;
-  border: 1px solid #eaecf0;
+  border: 1px solid var(--alto-border);
   h2 {
     padding: 1.4rem 1.7rem;
     margin: 0;

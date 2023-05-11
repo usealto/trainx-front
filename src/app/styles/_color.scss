@@ -3,6 +3,7 @@
   --bs-orange: #f36f23;
   --bs-success: #12b76a;
   --bs-danger: #f04438;
+  --bs-warning: #fdb022;
 
   --alto-blue: #19222f;
   --alto-blue-second: #3b434e;
@@ -22,6 +23,8 @@
 
   --bs-body-bg: #fcfcfd;
   --bs-body-color: var(--alto-grey);
+
+  --alto-border: #d0d5dd;
 }
 .alto-text {
   color: var(--alto-text-color);
