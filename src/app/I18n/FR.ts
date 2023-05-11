@@ -263,7 +263,8 @@ export const FR = {
         },
         control: {
           title: 'Maitrise',
-          subtitle: 'Retrouvez les thèmes sur lesquels vos équipes sont les plus performantes.',
+          top: 'Top',
+          flop: 'Flop',
         },
         nav: {
           tags: 'Tags',

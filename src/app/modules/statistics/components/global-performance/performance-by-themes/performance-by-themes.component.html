@@ -7,20 +7,16 @@
     (selectChange)="filterTeams($event)"
   ></alto-dropdown-filter>
   <alto-dropdown-filter
-    *ngIf="activeTab === 1 && tags.length >= 7"
+    *ngIf="items.length >= 7"
     class="float-end mx-2"
-    [data]="tags"
-    [displayLabel]="'name'"
-    [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.tags"
-    (selectChange)="filterTags($event)"
-  ></alto-dropdown-filter>
-  <alto-dropdown-filter
-    *ngIf="activeTab === 2 && programs.length >= 7"
-    class="float-end mx-2"
-    [data]="programs"
-    [displayLabel]="'name'"
-    [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.programs"
-    (selectChange)="filterPrograms($event)"
+    [data]="items"
+    [displayLabel]="'label'"
+    [placeholder]="
+      activeTab === 1
+        ? I18ns.statistics.globalPerformance.perThemePerformance.filters.tags
+        : I18ns.statistics.globalPerformance.perThemePerformance.filters.programs
+    "
+    (selectChange)="filterTagsAndPrograms($event)"
   ></alto-dropdown-filter>
   <ul ngbNav #nav="ngbNav" [activeId]="activeTab" class="nav-tabs mt-4" (navChange)="changeTabs()">
     <li [ngbNavItem]="1">
@@ -33,7 +29,6 @@
   <div class="row mt-4">
     <div class="col-7 panel mx-2">
       <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}</h2>
-      <p>{{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.subtitle }}</p>
       <div class="chart-container">
         <canvas id="themeScoreEvolution"></canvas>
       </div>
@@ -47,20 +42,29 @@
               : I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.title.programs
           }}
         </h2>
-        <p>
-          {{
-            activeTab === 1
-              ? I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.subtitle.tags
-              : I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.subtitle.programs
-          }}
-        </p>
         <div class="chart-container">
           <canvas id="themePerformance"></canvas>
         </div>
       </div>
       <div class="row panel">
         <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
-        <p>{{ I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle }}</p>
+        <h2 class="mt-2">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h2>
+        <ol class="list-group list-group-flush list-group-numbered">
+          <li class="list-group-item" *ngFor="let team of scoredItems.slice(0, 5)">
+            <alto-progression-badge class="float-end" [score]="team.score"></alto-progression-badge>
+            {{ team.label }}
+          </li>
+        </ol>
+        <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.flop }}</h2>
+        <ol class="list-group list-group-flush list-group-numbered">
+          <li
+            class="list-group-item"
+            *ngFor="let team of scoredItems.slice(scoredItems.length - 5, scoredItems.length)"
+          >
+            <alto-progression-badge class="float-end" [score]="team.score"></alto-progression-badge>
+            {{ team.label }}
+          </li>
+        </ol>
       </div>
     </div>
   </div>

@@ -19,6 +19,7 @@ import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { StatisticsService, Point } from '../../../services/statistics.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
+import { ScoresService } from 'src/app/modules/programs/services/scores.service';
 
 @Component({
   selector: 'alto-performance-by-themes',
@@ -28,44 +29,57 @@ import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 export class PerformanceByThemesComponent implements OnChanges {
   I18ns = I18ns;
   activeTab = 1;
+  teams: TeamDtoApi[] = [];
   @Input() duration: ScoreDuration = ScoreDuration.Year;
-  teams = this.teamStore.teams.value;
-  programs = this.programsStore.programs.value;
-  tags = this.programsStore.tags.value;
+  items: ScoreDtoApi[] = [];
+  scoredItems: { label: string; score: number }[] = [];
+  selectedItems: ScoreDtoApi[] = [];
   scoreEvolutionChart?: Chart;
   performanceChart?: Chart;
 
   constructor(
-    private readonly teamsRestService: TeamsRestService,
-    private readonly programsRestService: ProgramsRestService,
+    private readonly teamRestService: TeamsRestService,
     private readonly scoresRestService: ScoresRestService,
-    private readonly teamStore: TeamStore,
-    private readonly programsStore: ProgramsStore,
     private readonly statisticsServices: StatisticsService,
+    private readonly scoresServices: ScoresService,
   ) {}
 
   ngOnChanges(): void {
-    this.teamsRestService.getTeams().subscribe();
-    this.programsRestService
-      .getPrograms()
-      .pipe(tap((programs) => (this.programs = programs)))
+    this.teamRestService
+      .getTeams()
+      .pipe(tap((res) => (this.teams = res)))
       .subscribe();
-    this.getScores(this.duration);
+    this.getScores();
   }
 
-  getScores(duration: ScoreDuration) {
+  getScores() {
     this.scoresRestService
       .getScores({
         timeframe: ScoreTimeframeEnumApi.Day,
-        duration: duration ?? ScoreDuration.Year,
+        duration: this.duration ?? ScoreDuration.Year,
         type: this.activeTab === 1 ? ScoreTypeEnumApi.Tag : ScoreTypeEnumApi.Program,
       } as ChartFilters)
       .pipe(
         tap((res) => {
-          this.createScoreEvolutionChart(res.scores, duration);
+          this.items = res.scores;
+          let filteredItems: ScoreDtoApi[] = res.scores;
+          if (this.selectedItems.length) {
+            filteredItems = res.scores.filter((s) => this.selectedItems.some((si) => si.id === s.id));
+          }
+          this.getScoredItems(this.items);
+          this.createScoreEvolutionChart(filteredItems, this.duration);
         }),
       )
       .subscribe();
+  }
+
+  getScoredItems(scores: ScoreDtoApi[]) {
+    this.scoredItems = scores
+      .map((score) => {
+        const average = this.scoresServices.reduceWithoutNull(score.averages);
+        return { label: score.label, score: average };
+      })
+      .sort((a, b) => b.score - a.score);
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
@@ -130,25 +144,34 @@ export class PerformanceByThemesComponent implements OnChanges {
       datasets: dataSet,
     };
 
+    const options = {
+      ...chartDefaultOptions,
+    };
+    if (dataSet.length > 10) {
+      options.plugins = {
+        legend: {
+          display: false,
+        },
+      };
+    }
     this.scoreEvolutionChart = new Chart('themeScoreEvolution', {
       type: 'line',
       data: data,
-      options: chartDefaultOptions,
+      options: options,
     });
   }
 
   changeTabs() {
     this.activeTab = this.activeTab === 1 ? 2 : 1;
-    this.getScores(this.duration);
+    this.getScores();
   }
 
   filterTeams(teams: TeamDtoApi[]) {
     return;
   }
-  filterTags(tags: TagDtoApi[]) {
-    return;
-  }
-  filterPrograms(teams: ProgramDtoApi[]) {
-    return;
+
+  filterTagsAndPrograms(items: ScoreDtoApi[]) {
+    this.selectedItems = items;
+    this.getScores();
   }
 }
