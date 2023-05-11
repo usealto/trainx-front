@@ -35,7 +35,7 @@
 
 <div class="row mt-5 mb-4">
   <div class="col-5">
-    <h2>{{ I18ns.leadHome.statistics.title }}</h2>
+    <h2 class="title">{{ I18ns.leadHome.statistics.title }}</h2>
   </div>
   <div class="col-7 text-end">
     <alto-period-filter
@@ -83,10 +83,10 @@
           ngbTooltip="{{ I18ns.leadHome.statistics.averageCompletionToolTip }}"
         ></i>
       </p>
-      <div class="w-100 row g-0">
-        <h1 class="col">{{ averageCompletion | percent }}</h1>
+      <div>
+        <h1 class="d-inline-block">{{ averageCompletion | percent }}</h1>
         <alto-progression-badge
-          class="col text-end mt-2"
+          class="float-end mt-2"
           [score]="completionProgression"
         ></alto-progression-badge>
       </div>
@@ -133,7 +133,9 @@
 <!-- GLOBAL EVOLUTION -->
 
 <div class="row mt-5 mb-4">
-  <h2 class="col-5">{{ I18ns.leadHome.globalEvolution.title }}</h2>
+  <div class="col-5">
+    <h2 class="title">{{ I18ns.leadHome.globalEvolution.title }}</h2>
+  </div>
   <div class="col-7 text-end">
     <alto-period-filter
       class="text-start me-3"
@@ -201,7 +203,7 @@
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.programs?.top | slice : 0 : 3" class="mb-3">
                 <span>{{ item.label | slice : 0 : 32 }}</span>
-                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">
+                <span class="float-end alto-badge" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
@@ -212,7 +214,7 @@
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.programs?.flop | slice : 0 : 3" class="mb-3">
                 <span>{{ item.label | slice : 0 : 32 }}</span>
-                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">
+                <span class="float-end alto-badge" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
@@ -246,7 +248,7 @@
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.teams?.top | slice : 0 : 3" class="mb-3">
                 <span>{{ item.label | slice : 0 : 32 }}</span>
-                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">
+                <span class="float-end alto-badge" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
@@ -257,7 +259,7 @@
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.teams?.flop" class="mb-3">
                 <span>{{ item.label | slice : 0 : 32 }}</span>
-                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">
+                <span class="float-end alto-badge" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
@@ -275,10 +277,8 @@
 </div>
 
 <!-- ONGOING PROGRAMS -->
-<div class="row mt-5 mb-4">
-  <div class="col-5">
-    <h2>{{ I18ns.leadHome.ongoingPrograms.title }}</h2>
-  </div>
+<div class="mt-5 ongoing-programs">
+  <h2 class="title">{{ I18ns.leadHome.ongoingPrograms.title }}</h2>
 </div>
 
 <alto-program-card-list [place]="'home'"></alto-program-card-list>
@@ -286,7 +286,7 @@
 <!-- CHALLENGES -->
 <div class="row mt-5 mb-4">
   <div class="col-5">
-    <h2>{{ I18ns.leadHome.ongoingChallenges.title }}</h2>
+    <h2 class="title">{{ I18ns.leadHome.ongoingChallenges.title }}</h2>
   </div>
   <div class="col-7 text-end">
     <button [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]" class="btn btn-outline-secondary">

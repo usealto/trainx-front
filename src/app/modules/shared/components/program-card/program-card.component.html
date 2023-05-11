@@ -28,11 +28,9 @@
         placement="top"
         ngbTooltip="{{ I18ns.programs.programs.involvementToolTip }}"
       ></i>
-      <span
-        class="float-end badge rounded-pill"
-        [class]="(participation ? participation * 100 : '') | pillColor"
-        >{{ participation ? (participation | percent) : 'N/A' }}</span
-      >
+      <span class="float-end alto-badge" [class]="(participation ? participation * 100 : '') | pillColor">{{
+        participation ? (participation | percent) : 'N/A'
+      }}</span>
     </p>
     <p class="score">
       <span>
@@ -43,7 +41,7 @@
         placement="top"
         ngbTooltip="{{ I18ns.programs.programs.progressToolTip }}"
       ></i>
-      <span class="float-end badge rounded-pill" [class]="(progress ? progress * 100 : '') | pillColor">
+      <span class="float-end alto-badge" [class]="(progress ? progress * 100 : '') | pillColor">
         {{ progress ? (progress | percent) : 'N/A' }}
       </span>
     </p>
@@ -51,7 +49,7 @@
       <span>
         {{ I18ns.programs.programs.score }}
       </span>
-      <span class="float-end badge rounded-pill" [class]="(score ? score * 100 : '') | pillColor">
+      <span class="float-end alto-badge" [class]="(score ? score * 100 : '') | pillColor">
         {{ score ? (score | percent) : 'N/A' }}
       </span>
     </p>

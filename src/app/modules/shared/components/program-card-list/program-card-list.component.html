@@ -1,5 +1,5 @@
 <span [ngSwitch]="place">
-  <div class="row mb-3" *ngSwitchCase="'home'">
+  <div class="row mb-4" *ngSwitchCase="'home'">
     <div class="col-5"></div>
     <div class="col-7 text-end">
       <alto-dropdown-filter
@@ -18,7 +18,7 @@
       </button>
     </div>
   </div>
-  <div class="row mb-3" *ngSwitchCase="'program'">
+  <div class="row mb-4" *ngSwitchCase="'program'">
     <div class="col-7">
       <alto-dropdown-filter
         [data]="teamStore.teams.value"
@@ -39,10 +39,10 @@
 </span>
 
 <ng-container *ngIf="programsDisplay.length > 0; else noPrograms">
-  <div class="row mb-3">
+  <div class="row mb-4">
     <div
       [ngClass]="getCardWidth(width)"
-      class="mb-3"
+      class="mb-4"
       *ngFor="let prog of programsDisplay | slice : (page - 1) * pageSize : page * pageSize"
     >
       <alto-program-card

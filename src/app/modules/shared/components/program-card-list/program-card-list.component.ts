@@ -2,7 +2,9 @@ import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { combineLatest, of, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramFilters } from 'src/app/modules/programs/models/program.model';
 import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
@@ -12,9 +14,6 @@ import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest
 import { ScoresService } from 'src/app/modules/programs/services/scores.service';
 import { ProgramDtoApi, ScoreTypeEnumApi } from 'src/app/sdk';
 import { AltoRoutes } from '../../constants/routes';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
 
 @UntilDestroy()
 @Component({
@@ -167,7 +166,7 @@ export class ProgramCardListComponent implements OnInit {
 
   setPageSize(width: number) {
     this.width = width;
-    const cardsByLine = width < 1600 ? 3 : width < 1900 ? 4 : 5;
+    const cardsByLine = width < 1700 ? 3 : width < 2000 ? 4 : 5;
     if (this.place === 'home') {
       this.pageSize = cardsByLine;
     } else if (this.place === 'program') {
@@ -177,6 +176,6 @@ export class ProgramCardListComponent implements OnInit {
 
   @memoize()
   getCardWidth(width: number) {
-    return width < 1600 ? 'w-33' : width < 1900 ? 'w-25' : 'w-20';
+    return width < 1700 ? 'col-4' : width < 2000 ? 'col-3' : 'w-20';
   }
 }
