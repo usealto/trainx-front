@@ -25,6 +25,7 @@ import { ProfileCardComponent } from './components/profile-card/profile-card.com
 import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
 import { PeriodFilterComponent } from './components/period-filter/period-filter.component';
 import { ProgramCardListComponent } from './components/program-card-list/program-card-list.component';
+import { TimePickerComponent } from './components/time-picker/time-picker.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { ProgramCardListComponent } from './components/program-card-list/program
     ProfileCardComponent,
     PeriodFilterComponent,
     ProgramCardListComponent,
+    TimePickerComponent,
   ],
   imports: [
     CommonModule,
@@ -80,6 +82,7 @@ import { ProgramCardListComponent } from './components/program-card-list/program
     NgbTooltipModule,
     LoadingModule,
     NgbDatepickerModule,
+    TimePickerComponent,
   ],
 })
 export class SharedModule {}

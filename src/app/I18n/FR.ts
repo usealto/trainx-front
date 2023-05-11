@@ -226,6 +226,7 @@ export const FR = {
       perTeamPerformance: {
         title: 'Performance par équipes',
         subtitle: 'Retrouvez les performances global de vos équipes.',
+        teamFilter: 'Équipes',
         scoreEvolution: {
           title: 'Évolution du score',
           subtitle: "Suivez l'évolution du score de vos équipes.",
@@ -241,6 +242,33 @@ export const FR = {
       perThemePerformance: {
         title: 'Performance par thèmatiques',
         subtitle: 'Retrouvez les performances global de vos équipes.',
+        filters: {
+          teams: 'Équipes',
+          tags: 'Tags',
+          programs: 'Programmes',
+        },
+        scoreEvolutionChart: {
+          title: 'Évolution du score',
+          subtitle: "Suivez l'évolution du score de tags ou programmes.",
+        },
+        performanceChart: {
+          title: {
+            tags: 'Performance par tag',
+            programs: 'Performance par programme',
+          },
+          subtitle: {
+            tags: 'Retrouvez les performances de vos tags.',
+            programs: 'Retrouvez les performances de vos programmes.',
+          },
+        },
+        control: {
+          title: 'Maitrise',
+          subtitle: 'Retrouvez les thèmes sur lesquels vos équipes sont les plus performantes.',
+        },
+        nav: {
+          tags: 'Tags',
+          programs: 'Programmes',
+        },
       },
     },
     perTeams: {

@@ -1,0 +1,69 @@
+<div class="border-bottom py-4">
+  <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.title }}</h2>
+  <p>{{ I18ns.statistics.globalPerformance.perThemePerformance.subtitle }}</p>
+  <alto-dropdown-filter
+    class="float-end"
+    [data]="teams"
+    [displayLabel]="'shortName'"
+    [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.teams"
+    (selectChange)="filterTeams($event)"
+  ></alto-dropdown-filter>
+  <alto-dropdown-filter
+    *ngIf="activeTab === 1 && tags.length >= 7"
+    class="float-end mx-2"
+    [data]="tags"
+    [displayLabel]="'name'"
+    [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.tags"
+    (selectChange)="filterTags($event)"
+  ></alto-dropdown-filter>
+  <alto-dropdown-filter
+    *ngIf="activeTab === 2 && programs.length >= 7"
+    class="float-end mx-2"
+    [data]="programs"
+    [displayLabel]="'name'"
+    [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.programs"
+    (selectChange)="filterPrograms($event)"
+  ></alto-dropdown-filter>
+  <ul ngbNav #nav="ngbNav" [activeId]="activeTab" class="nav-tabs mt-4" (navChange)="changeTabs()">
+    <li [ngbNavItem]="1">
+      <a ngbNavLink>{{ I18ns.statistics.globalPerformance.perThemePerformance.nav.tags }}</a>
+    </li>
+    <li [ngbNavItem]="2">
+      <a ngbNavLink>{{ I18ns.statistics.globalPerformance.perThemePerformance.nav.programs }}</a>
+    </li>
+  </ul>
+  <div class="row mt-4">
+    <div class="col-7 panel mx-2">
+      <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}</h2>
+      <p>{{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.subtitle }}</p>
+      <div class="chart-container">
+        <canvas id="themeScoreEvolution"></canvas>
+      </div>
+    </div>
+    <div class="col-4 mx-2">
+      <div class="row panel mb-4">
+        <h2>
+          {{
+            activeTab === 1
+              ? I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.title.tags
+              : I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.title.programs
+          }}
+        </h2>
+        <p>
+          {{
+            activeTab === 1
+              ? I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.subtitle.tags
+              : I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.subtitle.programs
+          }}
+        </p>
+        <div class="chart-container">
+          <canvas id="themePerformance"></canvas>
+        </div>
+      </div>
+      <div class="row panel">
+        <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
+        <p>{{ I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle }}</p>
+      </div>
+    </div>
+  </div>
+</div>
