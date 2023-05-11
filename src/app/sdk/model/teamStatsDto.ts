@@ -9,12 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { StatsDtoApi } from './statsDto';
 
 
-export interface PutTagDtoApi { 
-    createdBy?: string;
-    companyId?: string;
-    name?: string;
-    description?: string;
+export interface TeamStatsDtoApi { 
+    programs?: Array<StatsDtoApi>;
+    tags?: Array<StatsDtoApi>;
+    id: string;
+    label: string;
+    totalGuessesCount: number;
+    validGuessesCount: number;
+    score?: number;
 }
 

@@ -7,12 +7,14 @@ api/auth.service.ts
 api/challenges.service.ts
 api/comments.service.ts
 api/companies.service.ts
+api/default.service.ts
 api/guesses.service.ts
 api/programRuns.service.ts
 api/programs.service.ts
 api/questions.service.ts
 api/questionsSubmitted.service.ts
 api/scores.service.ts
+api/stats.service.ts
 api/tags.service.ts
 api/teams.service.ts
 api/uploads.service.ts
@@ -27,6 +29,7 @@ model/altoBaseResponsePaginatedDto.ts
 model/altoBaseResponsePaginatedDtoMeta.ts
 model/altoBaseResponsePaginatedMetaDto.ts
 model/answerFormatTypeEnum.ts
+model/auth0ResetPasswordParamsDto.ts
 model/challenge.ts
 model/challengeAssignment.ts
 model/challengeAssignmentPaginatedResponse.ts
@@ -87,6 +90,7 @@ model/patchCompanyDto.ts
 model/patchProgramDto.ts
 model/patchQuestionDto.ts
 model/patchQuestionSubmittedDto.ts
+model/patchResourceServerDto.ts
 model/patchTagDto.ts
 model/patchTeamDto.ts
 model/patchUserDto.ts
@@ -128,9 +132,13 @@ model/questionDtoPaginatedResponse.ts
 model/questionDtoPaginatedResponseAllOf.ts
 model/questionDtoResponse.ts
 model/questionDtoResponseAllOf.ts
+model/questionIdDto.ts
 model/questionLightDto.ts
 model/questionPaginatedResponse.ts
 model/questionPaginatedResponseAllOf.ts
+model/questionStatsDto.ts
+model/questionStatsDtoResponse.ts
+model/questionStatsDtoResponseAllOf.ts
 model/questionSubmittedDto.ts
 model/questionSubmittedDtoCreatedResponse.ts
 model/questionSubmittedDtoCreatedResponseAllOf.ts
@@ -141,6 +149,7 @@ model/questionSubmittedDtoResponseAllOf.ts
 model/questionSubmittedStatusEnum.ts
 model/questionTypeEnum.ts
 model/roleEnum.ts
+model/scopeDto.ts
 model/scoreByTypeEnum.ts
 model/scoreDto.ts
 model/scoreFillValuesEnum.ts
@@ -150,6 +159,7 @@ model/scoresResponseDto.ts
 model/scoresResponseDtoResponse.ts
 model/scoresResponseDtoResponseAllOf.ts
 model/slackTimeEnum.ts
+model/statsDto.ts
 model/streakDto.ts
 model/tag.ts
 model/tagDto.ts
@@ -169,6 +179,9 @@ model/teamDtoPaginatedResponseAllOf.ts
 model/teamDtoResponse.ts
 model/teamDtoResponseAllOf.ts
 model/teamLightDto.ts
+model/teamStatsDto.ts
+model/teamStatsDtoResponse.ts
+model/teamStatsDtoResponseAllOf.ts
 model/user.ts
 model/userDto.ts
 model/userDtoCreatedResponse.ts

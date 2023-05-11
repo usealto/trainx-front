@@ -11,10 +11,8 @@
  */
 
 
-export interface PutTagDtoApi { 
-    createdBy?: string;
-    companyId?: string;
-    name?: string;
+export interface ScopeDtoApi { 
+    value: string;
     description?: string;
 }
 

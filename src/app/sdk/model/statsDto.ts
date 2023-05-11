@@ -11,10 +11,11 @@
  */
 
 
-export interface PutTagDtoApi { 
-    createdBy?: string;
-    companyId?: string;
-    name?: string;
-    description?: string;
+export interface StatsDtoApi { 
+    id: string;
+    label: string;
+    totalGuessesCount: number;
+    validGuessesCount: number;
+    score?: number;
 }
 

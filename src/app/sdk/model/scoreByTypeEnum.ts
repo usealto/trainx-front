@@ -15,6 +15,7 @@ export enum ScoreByTypeEnumApi {
     Tag = 'tag',
     Program = 'program',
     Team = 'team',
-    Question = 'question'
+    Question = 'question',
+    User = 'user'
 }
 

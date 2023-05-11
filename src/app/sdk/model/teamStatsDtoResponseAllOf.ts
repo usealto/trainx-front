@@ -9,12 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { TeamStatsDtoApi } from './teamStatsDto';
 
 
-export interface PutTagDtoApi { 
-    createdBy?: string;
-    companyId?: string;
-    name?: string;
-    description?: string;
+export interface TeamStatsDtoResponseAllOfApi { 
+    statusCode?: number;
+    data?: TeamStatsDtoApi;
 }
 

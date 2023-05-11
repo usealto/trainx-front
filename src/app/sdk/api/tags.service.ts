@@ -19,6 +19,8 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { AltoBaseIdsDtoApi } from '../model/altoBaseIdsDto';
+// @ts-ignore
 import { CreateTagDtoApi } from '../model/createTagDto';
 // @ts-ignore
 import { DeleteResponseApi } from '../model/deleteResponse';
@@ -37,6 +39,15 @@ import { TagDtoResponseApi } from '../model/tagDtoResponse';
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
+
+export interface AddQuestionsToTagRequestParams {
+    id: string;
+    altoBaseIdsDtoApi: AltoBaseIdsDtoApi;
+    /** The ID of the company that the user sending the request is related to.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
+    companyId?: string;
+    /** The ID of the user sending the request.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication.  Used to set the &#x60;createdBy&#x60; property on creation of entities. */
+    userId?: string;
+}
 
 export interface CreateTagRequestParams {
     createTagDtoApi: CreateTagDtoApi;
@@ -96,6 +107,15 @@ export interface PatchTagRequestParams {
 export interface PutTagRequestParams {
     id: string;
     putTagDtoApi: PutTagDtoApi;
+    /** The ID of the company that the user sending the request is related to.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
+    companyId?: string;
+    /** The ID of the user sending the request.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication.  Used to set the &#x60;createdBy&#x60; property on creation of entities. */
+    userId?: string;
+}
+
+export interface RemoveQuestionsFromTagRequestParams {
+    id: string;
+    altoBaseIdsDtoApi: AltoBaseIdsDtoApi;
     /** The ID of the company that the user sending the request is related to.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
     companyId?: string;
     /** The ID of the user sending the request.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication.  Used to set the &#x60;createdBy&#x60; property on creation of entities. */
@@ -165,6 +185,106 @@ export class TagsApiService {
             throw Error("key may not be null if value is not object or array");
         }
         return httpParams;
+    }
+
+    /**
+     * Adds questions to a tag with the given ID
+     * Adds questions to a tag with the given ID.
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public addQuestionsToTag(requestParameters: AddQuestionsToTagRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TagDtoResponseApi>;
+    public addQuestionsToTag(requestParameters: AddQuestionsToTagRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TagDtoResponseApi>>;
+    public addQuestionsToTag(requestParameters: AddQuestionsToTagRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TagDtoResponseApi>>;
+    public addQuestionsToTag(requestParameters: AddQuestionsToTagRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling addQuestionsToTag.');
+        }
+        const altoBaseIdsDtoApi = requestParameters.altoBaseIdsDtoApi;
+        if (altoBaseIdsDtoApi === null || altoBaseIdsDtoApi === undefined) {
+            throw new Error('Required parameter altoBaseIdsDtoApi was null or undefined when calling addQuestionsToTag.');
+        }
+        const companyId = requestParameters.companyId;
+        const userId = requestParameters.userId;
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (companyId !== undefined && companyId !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>companyId, 'companyId');
+        }
+        if (userId !== undefined && userId !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>userId, 'userId');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (x-api-key) required
+        localVarCredential = this.configuration.lookupCredential('x-api-key');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('x-api-key', localVarCredential);
+        }
+
+        // authentication (bearer) required
+        localVarCredential = this.configuration.lookupCredential('bearer');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v1/tags/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/questions`;
+        return this.httpClient.request<TagDtoResponseApi>('post', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                body: altoBaseIdsDtoApi,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
     }
 
     /**
@@ -741,6 +861,106 @@ export class TagsApiService {
             {
                 context: localVarHttpContext,
                 body: putTagDtoApi,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Removes questions from a tag with the given ID
+     * Removes questions from a tag with the given ID.
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public removeQuestionsFromTag(requestParameters: RemoveQuestionsFromTagRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TagDtoResponseApi>;
+    public removeQuestionsFromTag(requestParameters: RemoveQuestionsFromTagRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TagDtoResponseApi>>;
+    public removeQuestionsFromTag(requestParameters: RemoveQuestionsFromTagRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TagDtoResponseApi>>;
+    public removeQuestionsFromTag(requestParameters: RemoveQuestionsFromTagRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+        const id = requestParameters.id;
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling removeQuestionsFromTag.');
+        }
+        const altoBaseIdsDtoApi = requestParameters.altoBaseIdsDtoApi;
+        if (altoBaseIdsDtoApi === null || altoBaseIdsDtoApi === undefined) {
+            throw new Error('Required parameter altoBaseIdsDtoApi was null or undefined when calling removeQuestionsFromTag.');
+        }
+        const companyId = requestParameters.companyId;
+        const userId = requestParameters.userId;
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (companyId !== undefined && companyId !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>companyId, 'companyId');
+        }
+        if (userId !== undefined && userId !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>userId, 'userId');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarCredential: string | undefined;
+        // authentication (x-api-key) required
+        localVarCredential = this.configuration.lookupCredential('x-api-key');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('x-api-key', localVarCredential);
+        }
+
+        // authentication (bearer) required
+        localVarCredential = this.configuration.lookupCredential('bearer');
+        if (localVarCredential) {
+            localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+        }
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/v1/tags/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: undefined})}/questions`;
+        return this.httpClient.request<TagDtoResponseApi>('delete', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                body: altoBaseIdsDtoApi,
                 params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,

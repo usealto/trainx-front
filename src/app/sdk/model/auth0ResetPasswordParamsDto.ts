@@ -11,10 +11,9 @@
  */
 
 
-export interface PutTagDtoApi { 
-    createdBy?: string;
-    companyId?: string;
-    name?: string;
-    description?: string;
+export interface Auth0ResetPasswordParamsDtoApi { 
+    email: string;
+    connection?: string;
+    client_id?: string;
 }
 
