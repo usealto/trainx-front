@@ -19,9 +19,36 @@ import { AdminUsersUploadComponent } from './components/admin-users-upload/admin
 import { SharedModule } from '../modules/shared/shared.module';
 import { AdminUnauthorizedComponent } from './components/admin-unauthorized/admin-unauthorized.component';
 import { AdminCompaniesCreateComponent } from './components/admin-companies-create/admin-companies-create.component';
+import { AdminHeaderComponent } from './components/admin-shared/admin-header/admin-header.component';
+import { AdminTabsComponent } from './components/admin-shared/admin-tabs/admin-tabs.component';
+import { AdminTabComponent } from './components/admin-shared/admin-tabs/admin-tab.component';
 
 @NgModule({
-  declarations: [AdminHomeComponent, AdminLayoutComponent, AdminCompaniesComponent, AdminCompanyComponent, AdminMenuComponent, AdminCompanyUsersComponent, AdminUserComponent, AdminUserCreateComponent, AdminUserCreateFormComponent, AdminUsersComponent, AdminUsersUploadComponent, AdminUnauthorizedComponent, AdminCompaniesCreateComponent],
-  imports: [CommonModule, AdminRoutingModule, FormsModule, ReactiveFormsModule, NgbPaginationModule, SharedModule],
+  declarations: [
+    AdminHomeComponent,
+    AdminLayoutComponent,
+    AdminCompaniesComponent,
+    AdminCompanyComponent,
+    AdminMenuComponent,
+    AdminCompanyUsersComponent,
+    AdminUserComponent,
+    AdminUserCreateComponent,
+    AdminUserCreateFormComponent,
+    AdminUsersComponent,
+    AdminUsersUploadComponent,
+    AdminUnauthorizedComponent,
+    AdminCompaniesCreateComponent,
+    AdminHeaderComponent,
+    AdminTabsComponent,
+    AdminTabComponent
+  ],
+  imports: [
+    CommonModule,
+    AdminRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgbPaginationModule,
+    SharedModule,
+  ],
 })
 export class AdminModule {}

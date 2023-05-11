@@ -1,5 +1,33 @@
-<div class="page-max-width px-2">
-  <form *ngIf="companyForm" [formGroup]="companyForm">
+<div class="">
+  <alto-admin-header title="Companies" subtitle="L'ensemble de nos clients"></alto-admin-header>
+  <div class="tabs">
+    <alto-admin-tabs>
+      <alto-admin-tab [tabTitle]="'Tab 1'">
+        <form *ngIf="companyForm" [formGroup]="companyForm">
+          <div class="row py-4 border-bottom">
+            <label for="name" class="col-5 mb-2">name</label>
+            <div class="col-7 form-group">
+              <input type="select" class="form-control" placeholder="name" formControlName="name" />
+            </div>
+          </div>
+          <div class="row py-4 border-bottom">
+            <label for="domain" class="col-5 mb-2"
+              >domain (pour matcher les user automatiquement sur slack par ex)</label
+            >
+            <div class="col-7 form-group">
+              <input type="select" class="form-control" placeholder="domain" formControlName="domain" />
+            </div>
+          </div>
+        </form>
+      </alto-admin-tab>
+      <alto-admin-tab [tabTitle]="'Tab 2'"> Tab 2 content </alto-admin-tab>
+    </alto-admin-tabs>
+    <div class="py-4">
+      <button type="button" class="btn btn-primary float-end" (click)="submit()">Save</button>
+    </div>
+  </div>
+
+  <!-- <form *ngIf="companyForm" [formGroup]="companyForm">
     <div class="row py-4 border-bottom">
       <label for="name" class="col-5 mb-2">name</label>
       <div class="col-7 form-group">
@@ -7,7 +35,9 @@
       </div>
     </div>
     <div class="row py-4 border-bottom">
-      <label for="domain" class="col-5 mb-2">domain (pour matcher les user automatiquement sur slack par ex)</label>
+      <label for="domain" class="col-5 mb-2"
+        >domain (pour matcher les user automatiquement sur slack par ex)</label
+      >
       <div class="col-7 form-group">
         <input type="select" class="form-control" placeholder="domain" formControlName="domain" />
       </div>
@@ -15,8 +45,7 @@
   </form>
 </div>
 
-<div class="py-4 page-max-width">
-  <button type="button" class="btn btn-primary float-end" (click)="submit()">
-    Save
-  </button>
+<div class="py-4">
+  <button type="button" class="btn btn-primary float-end" (click)="submit()">Save</button>
+</div> -->
 </div>

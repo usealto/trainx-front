@@ -1,8 +1,9 @@
 <div>
-  <div>
-    <h1>Companies</h1>
-    <p class="mb-4">L'ensemble de nos clients</p>
-  </div>
+  <alto-admin-header
+    title="Companies"
+    subtitle="L'ensemble de nos clients"
+    [divider]="true"
+  ></alto-admin-header>
 
   <div class="d-flex justify-content-between align-items-center alto-grey fs-5 pb-4">
     <span>{{ companies.length }} company account</span>
@@ -17,7 +18,7 @@
   </div>
   <div *ngIf="companies.length > 0; else elseBlock">
     <div class="d-flex justify-content-end gap-2 pb-4">
-      <input type="text" placeholder="Search" />
+      <alto-search></alto-search>
       <button type="button" class="btn btn-outline-secondary">Filters</button>
     </div>
     <div class="table-container table-panel">
@@ -26,7 +27,13 @@
           <tr>
             <th scope="col">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  (change)="selectAll($event)"
+                  [ngModel]="selectedIds.length === companies.length"
+                  id="flexCheckDefault"
+                />
               </div>
             </th>
             <th scope="col">Corporate name</th>
@@ -44,7 +51,13 @@
           <tr *ngFor="let company of displayedCompanies">
             <td>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  (change)="selectCompany(company.id)"
+                  [ngModel]="selectedIds.includes(company.id)"
+                  id="flexCheckDefault"
+                />
               </div>
             </td>
             <th scope="row">
@@ -56,9 +69,15 @@
             <td>Lorem ipsum</td>
             <td>
               <div class="d-flex gap-1">
-                <span class="badge rounded-pill text-bg-primary">CSM</span>
-                <span class="badge rounded-pill text-bg-primary">SDR</span>
-                <span class="badge rounded-pill text-bg-primary">BDR</span>
+                <alto-colored-pill-list
+                  [hasDynamicColor]="true"
+                  [data]="[
+                    { name: 'CSM', id: 'AFE8238' },
+                    { name: 'SDR', id: 'FF1238' },
+                    { name: 'BDR', id: '9DAA38' }
+                  ]"
+                  [limit]="3"
+                ></alto-colored-pill-list>
               </div>
             </td>
             <td>{{ company.isSlackActive }}</td>
@@ -67,7 +86,7 @@
             <td>{{ company.slackAdmin }}</td>
             <td class="action-btn-list-container">
               <div class="shaddow"></div>
-              <div class="d-flex action-btn-list align-items-center">
+              <div class="d-flex action-btn-list align-items-center gap-2">
                 <button type="button" class="btn btn-link">
                   <i class="alto-second-grey bi bi-trash"></i>
                 </button>
@@ -91,7 +110,14 @@
         >
           Previous
         </button>
-        <button type="button" [disabled]="page === pageCount" (click)="onPaginator(page + 1)" class="btn btn-outline-secondary">Next</button>
+        <button
+          type="button"
+          [disabled]="page === pageCount"
+          (click)="onPaginator(page + 1)"
+          class="btn btn-outline-secondary"
+        >
+          Next
+        </button>
       </div>
     </div>
   </div>
