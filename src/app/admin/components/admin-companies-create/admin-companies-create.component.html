@@ -2,7 +2,7 @@
   <alto-admin-header title="Companies" subtitle="L'ensemble de nos clients"></alto-admin-header>
   <div class="tabs">
     <alto-admin-tabs>
-      <alto-admin-tab [tabTitle]="'Tab 1'">
+      <alto-admin-tab [tabTitle]="'Informations'" icon="bi-file-text">
         <form *ngIf="companyForm" [formGroup]="companyForm">
           <div class="row py-4 border-bottom">
             <label for="name" class="col-5 mb-2">name</label>
@@ -20,7 +20,7 @@
           </div>
         </form>
       </alto-admin-tab>
-      <alto-admin-tab [tabTitle]="'Tab 2'"> Tab 2 content </alto-admin-tab>
+      <alto-admin-tab [tabTitle]="'Program settings'" icon="bi-gear"> Tab 2 content </alto-admin-tab>
     </alto-admin-tabs>
     <div class="py-4">
       <button type="button" class="btn btn-primary float-end" (click)="submit()">Save</button>

@@ -18,4 +18,5 @@ import { Component, Input } from '@angular/core';
 export class AdminTabComponent {
   @Input() tabTitle = '';
   @Input() active = false;
+  @Input() icon: string | undefined = undefined;
 }

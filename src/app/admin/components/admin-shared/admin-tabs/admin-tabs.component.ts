@@ -6,33 +6,27 @@ import { AdminTabComponent } from './admin-tab.component';
   template: `
     <div class="nav nav-tabs">
       <div
-        class="flex-grow-1 admin-tab"
         *ngFor="let tab of tabs"
         (click)="selectTab(tab)"
+        class="admin-tab flex-grow-1"
         [class.active]="tab.active"
       >
-        {{ tab.tabTitle }}
+        <div class="indicator"></div>
+        <div class="pb-3 d-flex align-items-center">
+          <div *ngIf="tab.icon" class="float-start mx-3 alto-badge-big">
+            <i [class]="tab.icon" class="fs-4 bi"></i>
+          </div>
+          <span>{{ tab.tabTitle }}</span>
+          <i class="ms-2 fs-5 bi float-end bi-question-circle" placement="top" ngbTooltip="test"></i>
+        </div>
       </div>
     </div>
     <ng-content></ng-content>
   `,
-  styles: [
-    `
-      .tab-close {
-        color: gray;
-        text-align: right;
-        cursor: pointer;
-      }
-      .admin-tab.active {
-        border-bottom: 2px #175cd3 solid;
-        color: #175cd3;
-      }
-    `,
-  ],
+  styleUrls: ['./admin-tabs.component.scss'],
 })
 export class AdminTabsComponent {
   @ContentChildren(AdminTabComponent) tabs: QueryList<AdminTabComponent> | undefined;
-
   // contentChildren are set
   ngAfterContentInit() {
     // get all active tabs
