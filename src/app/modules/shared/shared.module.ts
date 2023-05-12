@@ -24,6 +24,7 @@ import { TabsComponent } from './components/tabs/tabs.component';
 import { ProfileCardComponent } from './components/profile-card/profile-card.component';
 import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
 import { PeriodFilterComponent } from './components/period-filter/period-filter.component';
+import { DropzoneComponent } from './components/dropzone/dropzone.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { PeriodFilterComponent } from './components/period-filter/period-filter.
     TabsComponent,
     ProfileCardComponent,
     PeriodFilterComponent,
+    DropzoneComponent,
   ],
   imports: [
     CommonModule,
@@ -77,6 +79,7 @@ import { PeriodFilterComponent } from './components/period-filter/period-filter.
     NgbTooltipModule,
     LoadingModule,
     NgbDatepickerModule,
+    DropzoneComponent
   ],
 })
 export class SharedModule {}

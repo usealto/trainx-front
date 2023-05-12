@@ -1,0 +1,51 @@
+$dz-bg: #fff;
+$dz-border: #717386;
+
+:host {
+	display: flex;
+	position: relative;
+	align-items: center;
+	height: 140px;
+	background: #FFFFFF;
+	cursor: pointer;
+	border: 1px solid #D0D5DD;
+	border-radius: 5px;
+	font-size: 16px;
+
+	&.dz-hovered {
+		background-color: #aaabb8;
+	}
+
+	&.dz-disabled {
+		opacity: 0.5;
+		cursor: no-drop;
+		pointer-events: none;
+	}
+
+	&.expandable {
+		overflow: hidden;
+		height: unset;
+		min-height: 180px;
+		flex-wrap: wrap;
+	}
+
+	&.unclickable {
+		cursor: default;
+	}
+
+	& input {
+		width: 0.1px;
+		height: 0.1px;
+		opacity: 0;
+		overflow: hidden;
+		position: absolute;
+		z-index: -1;
+
+		&:focus + ::ng-deep ngx-dropzone-label {
+			/* Fallback for older browsers */
+			outline: 1px dotted #000;
+
+			outline: -webkit-focus-ring-color auto 5px;
+		}
+	}
+}

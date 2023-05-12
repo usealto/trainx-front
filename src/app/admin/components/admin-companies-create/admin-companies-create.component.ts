@@ -30,6 +30,10 @@ export class AdminCompaniesCreateComponent implements OnInit {
     });
   }
 
+  onSelectLogo(event: any) {
+    console.log(event);
+  }
+
   async submit() {
     if (!this.companyForm.value) return;
 

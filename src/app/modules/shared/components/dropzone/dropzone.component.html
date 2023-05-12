@@ -1,0 +1,17 @@
+<input
+  #fileInput
+  type="file"
+  [id]="id"
+  [multiple]="multiple"
+  [accept]="accept"
+  [disabled]="disabled"
+  (change)="_onFilesSelected($event)"
+/>
+<div class="d-flex position-absolute flex-column w-100 h-100 align-items-center p-3">
+  <div>
+    <div class="float-start mx-3 alto-badge-big">
+      <i class="bi bi-cloud-arrow-up"></i>
+    </div>
+  </div>
+  <span> Click to upload or drag and drop</span>
+</div>
