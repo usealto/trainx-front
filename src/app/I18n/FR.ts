@@ -364,6 +364,7 @@ export const FR = {
         name: 'Nom',
         initials: 'Initiales',
         usersCount: 'Nombre de membres',
+        users: ['Aucun', '{{}} user', '{{}} users'],
         averageScore: 'Score moyen',
         creationDate: 'Date de création',
       },

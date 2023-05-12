@@ -1,4 +1,4 @@
-<h1 id="programsAnchor">{{ I18ns.programs.title }}</h1>
+<h1>{{ I18ns.programs.title }}</h1>
 <p class="mt-2 mb-4 alto-grey fs-6b">{{ I18ns.programs.subtitle }}</p>
 <div class="pb-5 border-bottom">
   <alto-anchor-navigator fragment="programsAnchor">
@@ -30,7 +30,7 @@
     <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
       <i class="bi bi-plus-lg"></i> {{ I18ns.programs.programs.createProgram }}
     </a>
-    <h2 class="mt-5">{{ I18ns.programs.programs.title }}</h2>
+    <h2 id="programsAnchor" class="mt-5">{{ I18ns.programs.programs.title }}</h2>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
   </div>
 
@@ -232,22 +232,24 @@
           <tr>
             <th scope="col">{{ I18ns.programs.tags.table.name }}</th>
             <th scope="col">{{ I18ns.programs.tags.table.score }}</th>
-            <th scope="col">{{ I18ns.programs.tags.table.author }}</th>
             <th scope="col">{{ I18ns.programs.tags.table.associatedPrograms }}</th>
+            <th class="text-center" scope="col">{{ I18ns.programs.tags.table.author }}</th>
             <th></th>
           </tr>
         </thead>
         <tbody *ngIf="!isTagsLoading">
           <tr *ngFor="let tag of paginatedTags">
             <td class="w-15">{{ tag.name }}</td>
-            <td>
-              <span class="alto-badge" [class]="70 | pillColor">42%</span>
-            </td>
-            <td class="text-center">
-              <alto-img-badge [url]="getUser(tag.createdBy)?.pictureUrl"></alto-img-badge>
+            <td class="w-5">
+              <span class="alto-badge" [class]="(getTagScore(tag.id) || 0) * 100 | pillColor">
+                {{ getTagScore(tag.id) | percent }}
+              </span>
             </td>
             <td *ngIf="!isTagProgramsLoading">
               <alto-colored-pill-list [data]="getTagPrograms(tag.id)" [limit]="4"></alto-colored-pill-list>
+            </td>
+            <td class="w-10 text-center">
+              <alto-img-badge [url]="getUser(tag.createdBy)?.pictureUrl"></alto-img-badge>
             </td>
             <td class="cursor-pointer px-3" (click)="openTagForm(tag)">
               <i class="fs-5 bi bi-pen cursor-pointer"></i>

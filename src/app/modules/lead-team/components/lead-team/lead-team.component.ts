@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { combineLatest, tap } from 'rxjs';
+import { combineLatest, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
@@ -22,7 +22,7 @@ export class LeadTeamComponent implements OnInit {
   teams: TeamDtoApi[] = [];
   paginatedTeams: TeamDtoApi[] = [];
   teamsPage = 1;
-  teamsPageSize = 5;
+  teamsPageSize = 7;
 
   usersMap = new Map<string, string>();
   absoluteUsersCount = 0;
@@ -30,7 +30,9 @@ export class LeadTeamComponent implements OnInit {
   users: UserDtoApi[] = [];
   paginatedUsers: UserDtoApi[] = [];
   usersPage = 1;
-  usersPageSize = 5;
+  usersPageSize = 10;
+
+  teamsScores = new Map<string, number>();
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -58,6 +60,9 @@ export class LeadTeamComponent implements OnInit {
         }),
         tap(() => this.changeTeamsPage()),
         tap(() => this.changeUsersPage(this.users)),
+        // switchMap(() => {
+        // TODO Scores Teams
+        // }),
       )
       .subscribe();
   }
