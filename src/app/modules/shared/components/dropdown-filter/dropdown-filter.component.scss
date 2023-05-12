@@ -5,4 +5,8 @@
 .alto-badge {
   background-color: var(--alto-blue);
   color: white;
+  &.badge-option {
+    font-size: 1.143rem;
+    height: 1.714rem;
+  }
 }

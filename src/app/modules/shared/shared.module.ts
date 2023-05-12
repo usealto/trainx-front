@@ -26,6 +26,7 @@ import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
 import { PeriodFilterComponent } from './components/period-filter/period-filter.component';
 import { ProgramCardListComponent } from './components/program-card-list/program-card-list.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
+import { TeamColorPipe } from './helpers/team-color.pipe';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { TimePickerComponent } from './components/time-picker/time-picker.compon
     PeriodFilterComponent,
     ProgramCardListComponent,
     TimePickerComponent,
+    TeamColorPipe,
   ],
   imports: [
     CommonModule,
@@ -72,6 +74,7 @@ import { TimePickerComponent } from './components/time-picker/time-picker.compon
     StatusPillComponent,
     PeriodFilterComponent,
     ProgramCardListComponent,
+    TeamColorPipe,
     NgVar,
     FormsModule,
     ImgBadgeComponent,
