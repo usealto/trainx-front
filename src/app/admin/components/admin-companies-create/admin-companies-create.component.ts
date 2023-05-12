@@ -2,9 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CompanyForm } from './models/company.create';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
-import { UntypedFormBuilder } from '@angular/forms';
-import { SlackTimeEnumApi, WeekDayEnumApi } from 'src/app/sdk';
+import { FormArray, FormGroup, UntypedFormBuilder } from '@angular/forms';
+import { SlackTimeEnumApi, TeamDtoApi, WeekDayEnumApi } from 'src/app/sdk';
 import { Router } from '@angular/router';
+import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
+import { tap } from 'rxjs';
+import { DropzoneChangeEvent } from 'src/app/modules/shared/components/dropzone/dropzone.component';
 
 @Component({
   selector: 'alto-admin-companies-create',
@@ -14,9 +17,11 @@ import { Router } from '@angular/router';
 export class AdminCompaniesCreateComponent implements OnInit {
   companyForm!: IFormGroup<CompanyForm>;
   private fb: IFormBuilder;
+  teams: TeamDtoApi[] = [];
 
   constructor(
     private readonly companiesRestService: CompaniesRestService,
+    private readonly teamService: TeamsRestService,
     private readonly router: Router,
     readonly fob: UntypedFormBuilder,
   ) {
@@ -24,14 +29,46 @@ export class AdminCompaniesCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.teamService
+      .getTeams()
+      .pipe(tap((teams) => (this.teams = teams)))
+      .subscribe();
     this.companyForm = this.fb.group<CompanyForm>({
       name: ['', []],
       domain: ['', []],
+      teams: ['', []],
+      newTeams: this.fb.array([]),
     });
+  }
+
+  get newTeams() {
+    return this.companyForm.controls['newTeams'] as FormArray;
+  }
+
+  // Getter needed to loop in template without typescript error
+  public get newTeamsFormArrayControls() {
+    return (this.companyForm.controls['newTeams'] as FormArray).controls as FormGroup[];
+  }
+
+  addTeam() {
+    const teamForm = this.fb.group({
+      longName: ['', []],
+      shortName: ['', []],
+    });
+    this.newTeams.push(teamForm);
+  }
+
+  deleteTeam(index: number) {
+    this.newTeams.removeAt(index);
   }
 
   onSelectLogo(event: any) {
     console.log(event);
+  }
+
+  onSelectUser(event: DropzoneChangeEvent) {
+    console.log(event);
+    console.log(this.companyForm);
   }
 
   async submit() {

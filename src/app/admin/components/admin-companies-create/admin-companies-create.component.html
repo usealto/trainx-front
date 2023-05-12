@@ -7,14 +7,9 @@
           <!-- Name -->
           <div class="py-4 border-bottom">
             <div class="w-80 row">
-              <label for="name" class="col-5 mb-2">Corporate name *</label>
+              <label for="name" class="col-5 mb-2 required">Corporate name</label>
               <div class="col-7 form-group">
-                <input
-                  type="select"
-                  class="form-control"
-                  placeholder="Example: Apple"
-                  formControlName="name"
-                />
+                <input type="text" class="form-control" placeholder="Example: Apple" formControlName="name" />
               </div>
             </div>
           </div>
@@ -32,11 +27,102 @@
               </div>
             </div>
           </div>
+          <!-- Logo -->
           <div class="row py-4 border-bottom">
             <div class="w-80 row">
               <label for="domain" class="col-5 mb-2">Logo</label>
               <div class="col-7 form-group">
                 <alto-dropzone [multiple]="false" (change)="onSelectLogo($event)"></alto-dropzone>
+              </div>
+            </div>
+          </div>
+          <!-- Billing -->
+          <div class="row py-4 border-bottom">
+            <div class="w-80 row">
+              <label for="domain" class="col-5 mb-2">Billing</label>
+              <div class="col-7 form-group">
+                <input
+                  type="select"
+                  class="form-control"
+                  placeholder="Lorem ipsum"
+                  formControlName="domain"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Teams -->
+          <div class="row py-4 border-bottom">
+            <div class="w-80 row">
+              <label for="domain" class="col-5 mb-2">Teams</label>
+              <div class="col-7 form-group">
+                <ng-select
+                  class="w-100"
+                  [items]="teams"
+                  [multiple]="true"
+                  bindLabel="name"
+                  placeholder="teams"
+                  [selectableGroup]="true"
+                  [closeOnSelect]="false"
+                  bindValue="id"
+                  formControlName="teams"
+                >
+                  <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                    <div class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+                      <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+                        <i class="bi bi-x-lg"></i>
+                      </span>
+                      <span>{{ item.shortName }}</span>
+                    </div>
+                  </ng-template>
+                  <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                    <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+                      {{ item.longName }}
+                    </span>
+                  </ng-template>
+                </ng-select>
+                <div formArrayName="newTeams">
+                  <ng-container *ngFor="let newTeam of newTeamsFormArrayControls; let i = index">
+                    <div class="row align-items-end position-relative" [formGroup]="newTeam">
+                      <div class="col">
+                        <label class="form-label">Long name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Example: Sales Development Representative"
+                          formControlName="longName"
+                        />
+                      </div>
+                      <div class="col">
+                        <label class="form-label">Short name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Example: SDR"
+                          formControlName="shortName"
+                        />
+                      </div>
+                      <div class="position-absolute team-delete-btn">
+                        <button type="button" class="btn btn-outline-danger" (click)="deleteTeam(i)">
+                          <i class="bi bi-x-lg"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <div>
+                    <button type="button" class="btn" (click)="addTeam()">
+                      <i class="bi bi-plus-lg"></i>Add a team
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Users -->
+          <div class="row py-4 border-bottom">
+            <div class="w-80 row">
+              <label for="domain" class="col-5 mb-2">Users</label>
+              <div class="col-7 form-group">
+                <alto-dropzone [multiple]="false" (change)="onSelectUser($event)"></alto-dropzone>
               </div>
             </div>
           </div>
