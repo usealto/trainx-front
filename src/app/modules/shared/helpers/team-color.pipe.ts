@@ -30,6 +30,8 @@ export class TeamColorPipe implements PipeTransform {
   extractNumber(str: string): number {
     if (str.length < 8) {
       console.error('String length must be at least 8');
+      console.log(str);
+
       return 0;
     }
     let output = 0;
