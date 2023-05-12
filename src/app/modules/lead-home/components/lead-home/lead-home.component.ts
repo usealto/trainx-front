@@ -164,7 +164,7 @@ export class LeadHomeComponent implements OnInit {
           const output: TopFlopDisplay[] = scores
             .map((s) => ({
               label: s.label,
-              avg: this.scoreService.reduceWithoutNull(s.averages),
+              avg: this.scoreService.reduceWithoutNull(s.averages) ?? 0,
             }))
             .filter((x) => !!x.avg);
           if (val === ScoreTypeEnumApi.Program || val === ScoreTypeEnumApi.Tag) {
@@ -209,7 +209,9 @@ export class LeadHomeComponent implements OnInit {
       .getScores(this.globalFilters)
       .pipe(
         tap(({ scores }) => {
-          this.globalScore = !scores.length ? 0 : this.scoreService.reduceWithoutNull(scores[0].averages);
+          this.globalScore = !scores.length
+            ? 0
+            : this.scoreService.reduceWithoutNull(scores[0].averages) ?? 0;
         }),
         switchMap(() => this.getAverageCompletion(this.globalFilters)),
         untilDestroyed(this),

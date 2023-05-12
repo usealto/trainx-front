@@ -22,16 +22,12 @@ export class TeamColorPipe implements PipeTransform {
 
   transform(id: string, ...args: unknown[]): unknown {
     const num = this.extractNumber(id);
-    console.log(num);
-
     return `background-color: ${this.colorCodes[num].bg}; color: ${this.colorCodes[num].color}`;
   }
 
   extractNumber(str: string): number {
     if (str.length < 8) {
       console.error('String length must be at least 8');
-      console.log(str);
-
       return 0;
     }
     let output = 0;

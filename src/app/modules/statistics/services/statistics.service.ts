@@ -5,7 +5,7 @@ import { ScoreDtoApi } from 'src/app/sdk';
 import { ScoresService } from '../../programs/services/scores.service';
 export interface Point {
   x: Date;
-  y: number;
+  y: number | null;
 }
 @Injectable({
   providedIn: 'root',

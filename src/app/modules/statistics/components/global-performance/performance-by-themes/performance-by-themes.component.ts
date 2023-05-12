@@ -32,7 +32,7 @@ export class PerformanceByThemesComponent implements OnChanges {
   teams: TeamDtoApi[] = [];
   @Input() duration: ScoreDuration = ScoreDuration.Year;
   items: ScoreDtoApi[] = [];
-  scoredItems: { label: string; score: number }[] = [];
+  scoredItems: { label: string; score: number | null }[] = [];
   selectedItems: ScoreDtoApi[] = [];
   scoreEvolutionChart?: Chart;
   performanceChart?: Chart;
@@ -79,7 +79,7 @@ export class PerformanceByThemesComponent implements OnChanges {
         const average = this.scoresServices.reduceWithoutNull(score.averages);
         return { label: score.label, score: average };
       })
-      .sort((a, b) => b.score - a.score);
+      .sort((a, b) => (a.score && b.score ? b.score - a.score : 0));
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
@@ -95,18 +95,18 @@ export class PerformanceByThemesComponent implements OnChanges {
 
     // Global
     const total = scores.map((s) => this.statisticsServices.aggregateDataForScores(s, duration));
-    const res: { x: Date; y: number; z: number }[] = [];
+    const res: { x: Date; y: number | null; z: number }[] = [];
 
     total.forEach((teamData) => {
       teamData.forEach((point) => {
         const element = res.filter((pt) => pt.x.getTime() === point.x.getTime());
         if (element.length === 1) {
-          if (isNaN(element[0].y)) {
-            element[0].y = isNaN(point.y) ? 0 : point.y;
+          if (!element[0].y) {
+            element[0].y = point.y;
           } else {
-            element[0].y = isNaN(point.y) ? element[0].y : element[0].y + point.y;
+            element[0].y = element[0].y + (point.y || 0);
           }
-          element[0].z += isNaN(point.y) ? 0 : 1;
+          element[0].z += point.y ? 1 : 0;
         } else {
           res.push({ ...point, z: 0 });
         }
@@ -114,7 +114,9 @@ export class PerformanceByThemesComponent implements OnChanges {
     });
 
     res.forEach((pt) => {
-      pt.y = pt.y / pt.z;
+      if (pt.y && pt.z > 0) {
+        pt.y = pt.y / pt.z;
+      }
     });
 
     const dataSet = scores

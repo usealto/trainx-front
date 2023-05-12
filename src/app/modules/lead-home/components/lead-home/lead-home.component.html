@@ -3,8 +3,8 @@
 <div class="row">
   <div class="col-6">
     <div class="panel">
-      <div class="float-start mx-3 alto-badge-big"><i class="fs-4 bi bi-chat-text"></i></div>
-      <div class="d-inline-block align-bottom">
+      <div class="d-inline-block alto-badge-big"><i class="fs-4 bi bi-chat-text"></i></div>
+      <div class="d-inline-block align-bottom ms-4">
         <p class="fw-bold fs-6b mb-1">
           {{ I18ns.leadHome.comments | plural : commentsCount }}
         </p>
@@ -20,8 +20,8 @@
       [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
       fragment="submittedQuestionsAnchor"
     >
-      <div class="float-start mx-3 alto-badge-big"><i class="fs-4 bi bi-question-circle"></i></div>
-      <div class="d-inline-block align-bottom">
+      <div class="d-inline-block alto-badge-big"><i class="fs-4 bi bi-question-circle"></i></div>
+      <div class="d-inline-block align-bottom ms-4">
         <p class="fw-bold fs-6b mb-1">
           {{ I18ns.leadHome.question | plural : questionsCount }}
         </p>
@@ -312,7 +312,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let chal of challengesByTeam">
-              <td>{{ chal.name }}</td>
+              <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
               <td>
                 <alto-colored-pill-list
                   [hasDynamicColor]="true"
@@ -372,7 +372,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let chal of challengesByUser">
-              <td>{{ chal.name }}</td>
+              <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
               <td>
                 <alto-colored-pill-list
                   [hasDynamicColor]="true"

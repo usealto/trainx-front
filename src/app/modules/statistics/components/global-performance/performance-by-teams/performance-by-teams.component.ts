@@ -1,16 +1,15 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
-import { ScoresService } from 'src/app/modules/programs/services/scores.service';
-import { StatisticsService } from '../../../services/statistics.service';
-import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi, TeamDtoApi } from 'src/app/sdk';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
-import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import Chart, { ChartData } from 'chart.js/auto';
 import { tap } from 'rxjs';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
+import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/programs/services/scores.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
-import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
+import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
+import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from 'src/app/sdk';
+import { StatisticsService } from '../../../services/statistics.service';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -21,7 +20,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
   I18ns = I18ns;
   teams: ScoreDtoApi[] = [];
   selectedTeams: ScoreDtoApi[] = [];
-  scoredTeams: { label: string; score: number }[] = [];
+  scoredTeams: { label: string; score: number | null }[] = [];
   scoreEvolutionChart?: Chart;
   @Input() duration: ScoreDuration = ScoreDuration.Year;
   @Output() selecedDuration = this.duration;
@@ -66,7 +65,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
           const average = this.scoresServices.reduceWithoutNull(score.averages);
           return { label: score.label, score: average };
         })
-        .sort((a, b) => b.score - a.score));
+        .sort((a, b) => (a.score && b.score ? b.score - a.score : 0)));
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {

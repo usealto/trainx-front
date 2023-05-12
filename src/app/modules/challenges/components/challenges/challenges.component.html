@@ -3,15 +3,13 @@
 <div class="pb-4">
   <alto-anchor-navigator fragment="byTeamAnchor">
     <button class="btn btn-outline-secondary me-3">
-      {{ I18ns.challenges.team.shortTitle }}
-      <span class="alto-badge">{{ byTeamCount }}</span>
+      {{ I18ns.challenges.team.shortTitle }}<span class="alto-badge ms-3">{{ byTeamCount }}</span>
     </button>
   </alto-anchor-navigator>
 
   <alto-anchor-navigator fragment="byUserAnchor">
     <button class="btn btn-outline-secondary me-3">
-      {{ I18ns.challenges.individual.shortTitle }}
-      <span class="alto-badge">{{ byUserCount }}</span>
+      {{ I18ns.challenges.individual.shortTitle }}<span class="alto-badge ms-3">{{ byUserCount }}</span>
     </button>
   </alto-anchor-navigator>
 </div>
@@ -75,7 +73,7 @@
                 | slice : (byTeamPage - 1) * pageSize : byTeamPage * pageSize
             "
           >
-            <td class="fw-medium">{{ chal.name }}</td>
+            <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
             <td>
               <span
                 *ngIf="chal.leadTeam"
@@ -184,7 +182,7 @@
                 | slice : (byUserPage - 1) * pageSize : byUserPage * pageSize
             "
           >
-            <td class="fw-medium">{{ chal.name }}</td>
+            <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
             <td>
               <alto-img-badge [url]="(getUser(chal.leadUser?.id ?? '') | async)?.pictureUrl"></alto-img-badge>
             </td>

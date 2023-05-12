@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { combineLatest, of, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -25,6 +25,7 @@ export class ProgramCardListComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
 
+  @Output() programTotal = new EventEmitter<number>();
   @Input() place: 'home' | 'program' = 'home';
 
   @HostListener('window:resize', ['$event'])
@@ -120,7 +121,7 @@ export class ProgramCardListComponent implements OnInit {
 
           // * SCORES
           scores.forEach((x) => {
-            this.programsScores.set(x.id, this.scoreService.reduceWithoutNull(x.averages));
+            this.programsScores.set(x.id, this.scoreService.reduceWithoutNull(x.averages) ?? 0);
           });
           // Temp map to retrieve progId as key and answered VS total questions
           // * PROGRESS
@@ -155,7 +156,10 @@ export class ProgramCardListComponent implements OnInit {
         sortBy: 'updatedAt:desc',
       })
       .pipe(
-        tap((p) => (this.programs = p.data ?? [])),
+        tap((p) => {
+          this.programs = p.data ?? [];
+          this.programTotal.emit(p.meta.totalItems);
+        }),
         tap((p) => (this.programsDisplay = p.data ?? [])),
         tap((p) => (this.count = p.meta.totalItems ?? [])),
         tap(() => this.loadScores()),
