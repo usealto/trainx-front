@@ -3,32 +3,34 @@ import { CompanyForm } from './models/company.create';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { FormArray, FormGroup, UntypedFormBuilder } from '@angular/forms';
-import { SlackTimeEnumApi, TeamDtoApi, WeekDayEnumApi } from 'src/app/sdk';
-import { Router } from '@angular/router';
+import { CompanyDtoApi, SlackTimeEnumApi, TeamDtoApi, WeekDayEnumApi } from 'src/app/sdk';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { tap } from 'rxjs';
-import { DropzoneChangeEvent } from 'src/app/modules/shared/components/dropzone/dropzone.component';
-
 @Component({
   selector: 'alto-admin-companies-create',
   templateUrl: './admin-companies-create.component.html',
   styleUrls: ['./admin-companies-create.component.scss'],
 })
 export class AdminCompaniesCreateComponent implements OnInit {
+  company!: CompanyDtoApi;
   companyForm!: IFormGroup<CompanyForm>;
-  private fb: IFormBuilder;
   teams: TeamDtoApi[] = [];
+  id: string | undefined;
+  private fb: IFormBuilder;
 
   constructor(
     private readonly companiesRestService: CompaniesRestService,
     private readonly teamService: TeamsRestService,
     private readonly router: Router,
+    private route: ActivatedRoute,
     readonly fob: UntypedFormBuilder,
   ) {
     this.fb = fob;
   }
 
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') || undefined;
     this.teamService
       .getTeams()
       .pipe(tap((teams) => (this.teams = teams)))
@@ -39,6 +41,22 @@ export class AdminCompaniesCreateComponent implements OnInit {
       teams: ['', []],
       newTeams: this.fb.array([]),
     });
+    if (this.id) {
+      this.companiesRestService
+        .getCompanyById(this.id)
+        .pipe(tap((company) => (this.company = company)))
+        .pipe(
+          tap(() => {
+            this.companyForm = this.fb.group<CompanyForm>({
+              domain: [this.company.domain || ''],
+              name: [this.company.name],
+              teams: [''],
+              newTeams: this.fb.array([]),
+            });
+          }),
+        )
+        .subscribe();
+    }
   }
 
   get newTeams() {
@@ -64,11 +82,6 @@ export class AdminCompaniesCreateComponent implements OnInit {
 
   onSelectLogo(event: any) {
     console.log(event);
-  }
-
-  onSelectUser(event: DropzoneChangeEvent) {
-    console.log(event);
-    console.log(this.companyForm);
   }
 
   async submit() {

@@ -25,6 +25,7 @@ import { ProfileCardComponent } from './components/profile-card/profile-card.com
 import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
 import { PeriodFilterComponent } from './components/period-filter/period-filter.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
+import { CustomPaginationComponent } from './components/custom-pagination/custom-pagination.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { DropzoneComponent } from './components/dropzone/dropzone.component';
     ProfileCardComponent,
     PeriodFilterComponent,
     DropzoneComponent,
+    CustomPaginationComponent,
   ],
   imports: [
     CommonModule,
@@ -79,7 +81,8 @@ import { DropzoneComponent } from './components/dropzone/dropzone.component';
     NgbTooltipModule,
     LoadingModule,
     NgbDatepickerModule,
-    DropzoneComponent
+    DropzoneComponent,
+    CustomPaginationComponent,
   ],
 })
 export class SharedModule {}

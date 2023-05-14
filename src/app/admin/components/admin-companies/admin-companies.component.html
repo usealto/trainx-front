@@ -90,9 +90,14 @@
                 <button type="button" class="btn btn-link">
                   <i class="alto-second-grey bi bi-trash"></i>
                 </button>
-                <button type="button" class="btn btn-link">
+                <a
+                  [routerLink]="['/', 'admin', 'companies', company.id]"
+                  routerLinkActive="menu-selected"
+                  role="button"
+                  class="btn btn-link"
+                >
                   <i class="alto-second-grey bi bi-pencil"></i>
-                </button>
+                </a>
               </div>
             </td>
           </tr>

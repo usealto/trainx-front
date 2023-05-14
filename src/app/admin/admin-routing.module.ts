@@ -33,7 +33,7 @@ const routes: Routes = [
       },
       {
         path: 'companies/:id',
-        component: AdminCompanyComponent,
+        component: AdminCompaniesCreateComponent,
       },
       {
         path: 'companies/:id/users',

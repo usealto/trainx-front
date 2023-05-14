@@ -22,6 +22,10 @@ import { AdminCompaniesCreateComponent } from './components/admin-companies-crea
 import { AdminHeaderComponent } from './components/admin-shared/admin-header/admin-header.component';
 import { AdminTabsComponent } from './components/admin-shared/admin-tabs/admin-tabs.component';
 import { AdminTabComponent } from './components/admin-shared/admin-tabs/admin-tab.component';
+import { AdminUsersUploadFormComponent } from './components/admin-companies-create/admin-users-upload-form/admin-users-upload-form.component';
+import { EditUserUploadFormComponent } from './components/admin-companies-create/edit-user-upload-form/edit-user-upload-form.component';
+import { ApiInterceptor } from '../core/interceptors/api.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -40,7 +44,9 @@ import { AdminTabComponent } from './components/admin-shared/admin-tabs/admin-ta
     AdminCompaniesCreateComponent,
     AdminHeaderComponent,
     AdminTabsComponent,
-    AdminTabComponent
+    AdminTabComponent,
+    AdminUsersUploadFormComponent,
+    EditUserUploadFormComponent,
   ],
   imports: [
     CommonModule,

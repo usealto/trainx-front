@@ -3,6 +3,22 @@
   <div class="tabs">
     <alto-admin-tabs>
       <alto-admin-tab [tabTitle]="'Informations'" icon="bi-file-text">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h2>Informations</h2>
+            <p class="fs-7">Fill in the general information about this company.</p>
+          </div>
+          <div>
+            <button type="button" class="btn btn-outline-secondary d-inline-flex align-items-center me-2">
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary d-inline-flex align-items-center">
+              Next
+              <i class="bi bi-arrow-right ps-2"></i>
+            </button>
+          </div>
+        </div>
+        <hr />
         <form *ngIf="companyForm" [formGroup]="companyForm">
           <!-- Name -->
           <div class="py-4 border-bottom">
@@ -27,15 +43,15 @@
               </div>
             </div>
           </div>
-          <!-- Logo -->
-          <div class="row py-4 border-bottom">
+          <!-- Logo Finally removed from the final form for a generated logo, here if needed -->
+          <!-- <div class="row py-4 border-bottom">
             <div class="w-80 row">
               <label for="domain" class="col-5 mb-2">Logo</label>
               <div class="col-7 form-group">
                 <alto-dropzone [multiple]="false" (change)="onSelectLogo($event)"></alto-dropzone>
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- Billing -->
           <div class="row py-4 border-bottom">
             <div class="w-80 row">
@@ -122,38 +138,98 @@
             <div class="w-80 row">
               <label for="domain" class="col-5 mb-2">Users</label>
               <div class="col-7 form-group">
-                <alto-dropzone [multiple]="false" (change)="onSelectUser($event)"></alto-dropzone>
+                <alto-admin-users-upload-form></alto-admin-users-upload-form>
               </div>
             </div>
           </div>
         </form>
       </alto-admin-tab>
-      <alto-admin-tab [tabTitle]="'Program settings'" icon="bi-gear"> Tab 2 content </alto-admin-tab>
+
+      <!-- SETTINGS TAB -->
+      <alto-admin-tab [tabTitle]="'Program settings'" icon="bi-gear">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h2>Settings</h2>
+            <p class="fs-7">Configure the programs of this company.</p>
+          </div>
+          <div>
+            <button type="button" class="btn btn-outline-secondary d-inline-flex align-items-center me-2">
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary d-inline-flex align-items-center">
+              Next
+              <i class="bi bi-arrow-right ps-2"></i>
+            </button>
+          </div>
+        </div>
+        <hr />
+        <form *ngIf="companyForm" [formGroup]="companyForm">
+          <!-- Slack account -->
+          <div class="py-4 border-bottom">
+            <div class="w-80 row">
+              <label for="name" class="col-5 mb-2">Slack account</label>
+              <div class="col-7 form-group">
+                <div class="form-check form-switch">
+                  <input class="form-check-input me-2" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Active Slack</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- User admin -->
+          <div class="py-4 border-bottom">
+            <div class="w-80 row">
+              <div class="col-5 mb-2">
+                <label for="name" >User admin</label>
+                <p class="fs-7">The admin user of the Slack account.</p>
+              </div>
+              <div class="col-7 form-group">
+                <input type="text" class="form-control" placeholder="Example: Apple" formControlName="name" />
+              </div>
+            </div>
+          </div>
+          <!-- Sending days -->
+          <div class="py-4 border-bottom">
+            <div class="w-80 row">
+              <div class="col-5 mb-2">
+                <label for="name">Sending days</label>
+                <p class="fs-7">The days on which programs will be sent.</p>
+              </div>
+              <div class="col-7 form-group">
+                <input type="text" class="form-control" placeholder="Example: Apple" formControlName="name" />
+              </div>
+            </div>
+          </div>
+          <!-- Number of questions -->
+          <div class="py-4 border-bottom">
+            <div class="w-80 row">
+              <div class="col-5 mb-2">
+                <label for="name">Number of questions</label>
+                <p class="fs-7">the number of questions contained in the programs.</p>
+              </div>
+              <div class="col-7 form-group">
+                <input type="text" class="form-control" placeholder="Example: Apple" formControlName="name" />
+              </div>
+            </div>
+          </div>
+        </form>
+      </alto-admin-tab>
     </alto-admin-tabs>
-    <div class="py-4">
-      <button type="button" class="btn btn-primary float-end" (click)="submit()">Save</button>
+    <div class="d-flex justify-content-between">
+      <div class="py-4">
+        <button type="button" class="btn btn-outline float-end" (click)="submit()">
+          <i class="bi bi-save"></i> Save
+        </button>
+      </div>
+      <div>
+        <button type="button" class="btn btn-outline-secondary d-inline-flex align-items-center me-2">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary d-inline-flex align-items-center">
+          Next
+          <i class="bi bi-arrow-right ps-2"></i>
+        </button>
+      </div>
     </div>
   </div>
-
-  <!-- <form *ngIf="companyForm" [formGroup]="companyForm">
-    <div class="row py-4 border-bottom">
-      <label for="name" class="col-5 mb-2">name</label>
-      <div class="col-7 form-group">
-        <input type="select" class="form-control" placeholder="name" formControlName="name" />
-      </div>
-    </div>
-    <div class="row py-4 border-bottom">
-      <label for="domain" class="col-5 mb-2"
-        >domain (pour matcher les user automatiquement sur slack par ex)</label
-      >
-      <div class="col-7 form-group">
-        <input type="select" class="form-control" placeholder="domain" formControlName="domain" />
-      </div>
-    </div>
-  </form>
-</div>
-
-<div class="py-4">
-  <button type="button" class="btn btn-primary float-end" (click)="submit()">Save</button>
-</div> -->
 </div>
