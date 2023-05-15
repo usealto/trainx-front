@@ -128,13 +128,12 @@ export class PerformanceByThemesComponent implements OnChanges {
     if (this.performanceChart) {
       this.performanceChart.destroy();
     }
-    setTimeout(() => {
-      this.performanceChart = new Chart('themePerformance', {
-        type: 'radar',
-        data: data,
-        options: chartDefaultOptions,
-      });
-    }, 1000);
+
+    this.performanceChart = new Chart('themePerformance', {
+      type: 'radar',
+      data: data,
+      options: { ...chartDefaultOptions, scales: undefined },
+    });
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
@@ -211,6 +210,11 @@ export class PerformanceByThemesComponent implements OnChanges {
         },
       };
     }
+
+    if (this.scoreEvolutionChart) {
+      this.scoreEvolutionChart.destroy();
+    }
+
     this.scoreEvolutionChart = new Chart('themeScoreEvolution', {
       type: 'line',
       data: data,
