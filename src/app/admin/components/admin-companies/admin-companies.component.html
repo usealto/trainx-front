@@ -137,9 +137,14 @@
       <span class="fs-4 fw-bolder pb-1">No company account available</span>
       <span class="pb-4 alto-second-grey">Create your first company account and add teams to it.</span>
       <div>
-        <button type="button" class="btn btn-primary">
+        <a
+          type="button"
+          class="btn btn-primary"
+          [routerLink]="['/', 'admin', 'companies', 'create']"
+          routerLinkActive="menu-selected"
+        >
           <i class="bi bi-plus-lg pe-2"></i>Create a company account
-        </button>
+        </a>
       </div>
     </div>
   </ng-template>

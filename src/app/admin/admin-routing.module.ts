@@ -40,6 +40,10 @@ const routes: Routes = [
         component: AdminCompanyUsersComponent,
       },
       {
+        path: 'companies/:companyId/users/:userId',
+        component: AdminUserCreateComponent,
+      },
+      {
         path: 'companies/:id/users/create',
         component: AdminUserCreateComponent,
       },

@@ -7,10 +7,7 @@
     <button type="button" class="btn btn-outline-secondary d-inline-flex align-items-center me-2">
       Cancel
     </button>
-    <button type="button" class="btn btn-primary d-inline-flex align-items-center">
-      Next
-      <i class="bi bi-arrow-right ps-2"></i>
-    </button>
+    <button type="button" class="btn btn-primary d-inline-flex align-items-center">Confirm</button>
   </div>
 </div>
 <hr />
@@ -91,14 +88,37 @@
     </div>
   </div>
 
-  <!-- Role -->
+  <!-- Roles -->
   <div class="py-4 border-bottom">
     <div class="w-80 row">
       <div class="col-5 mb-2">
-        <label for="name">Role</label>
+        <label for="name">Roles</label>
       </div>
       <div class="col-7 form-group">
-        <input type="text" class="form-control" placeholder="Select a role" formControlName="role" />
+        <ng-select
+          class="w-100"
+          required
+          [items]="rolesPossibleValues"
+          [multiple]="true"
+          placeholder="Select a role"
+          [selectableGroup]="true"
+          [closeOnSelect]="false"
+          formControlName="roles"
+        >
+          <ng-template ng-label-tmp let-item="item" let-clear="clear">
+            <div class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
+              <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+                <i class="bi bi-x-lg"></i>
+              </span>
+              <span>{{ item }}</span>
+            </div>
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+            <span class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
+              {{ item }}
+            </span>
+          </ng-template>
+        </ng-select>
       </div>
     </div>
   </div>
@@ -125,9 +145,8 @@
     <button type="button" class="btn btn-outline-secondary d-inline-flex align-items-center me-2">
       Cancel
     </button>
-    <button type="button" class="btn btn-primary d-inline-flex align-items-center">
-      Next
-      <i class="bi bi-arrow-right ps-2"></i>
+    <button type="button" class="btn btn-primary d-inline-flex align-items-center" (click)="submit()">
+      Confirm
     </button>
   </div>
 </div>

@@ -23,7 +23,7 @@
   </a>
 </div>
 
-<div class="d-flex justify-content-between align-items-center alto-grey fs-5 pb-4">
+<div *ngIf="company" class="d-flex justify-content-between align-items-center alto-grey fs-5 pb-4">
   <span>{{ users.length }} company account</span>
   <a
     [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'create']"
@@ -78,9 +78,15 @@
             </div>
           </td>
           <th scope="row">
-            <a [routerLink]="['/', 'admin', 'users', user.id]" routerLinkActive="menu-selected">
-              {{ user.firstname }} {{ user.lastname }}
-            </a>
+            <div class="d-flex align-items-center">
+              <alto-img-badge *ngIf="user.pictureUrl" [url]="user.pictureUrl" ></alto-img-badge>
+              <div *ngIf="!user.pictureUrl" class="float-start mx-3 alto-badge-big">
+                <i class="fs-4 bi bi-person"></i>
+              </div>
+              <a [routerLink]="['/', 'admin', 'users', user.id]" routerLinkActive="menu-selected">
+                {{ user.firstname }} {{ user.lastname }}
+              </a>
+            </div>
           </th>
           <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
@@ -98,7 +104,7 @@
               *ngFor="let role of user.roles"
               class="alto-badge text-white me-1 mb-1"
               [style.backgroundColor]="role | uuid2color"
-              >{{ user.roles }}</span
+              >{{ role }}</span
             >
           </td>
           <td>{{ user.isActive }}</td>
@@ -150,12 +156,16 @@
     <div class="icon-people-container mb-3">
       <i class="bi bi-people fs-4 fw-bolder"></i>
     </div>
-    <span class="fs-4 fw-bolder pb-1">No company account available</span>
+    <span class="fs-4 fw-bolder pb-1">No user account available</span>
     <span class="pb-4 alto-second-grey">Create your first company account and add teams to it.</span>
-    <div>
-      <button type="button" class="btn btn-primary">
-        <i class="bi bi-plus-lg pe-2"></i>Create a company account
-      </button>
+    <div *ngIf="company">
+      <a
+        [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'create']"
+        routerLinkActive="menu-selected"
+        class="btn btn-primary"
+      >
+        <i class="bi bi-plus-lg pe-2"></i>Create a user account
+      </a>
     </div>
   </div>
 </ng-template>

@@ -68,12 +68,12 @@ export class AdminUsersUploadComponent implements OnInit {
   upload() {
     console.log('here');
 
-    let yourJWTToken =
-      localStorage.getItem(
-        '@@auth0spajs@@::ThcIBQZrRso5QaZq67kCU5eFYTfZwTSK::https://api.usealto.com::openid profile email offline_access',
-      ) || '';
-    yourJWTToken = JSON.parse(yourJWTToken).body.access_token;
-    console.log(yourJWTToken);
+    // let yourJWTToken =
+    //   localStorage.getItem(
+    //     '@@auth0spajs@@::ThcIBQZrRso5QaZq67kCU5eFYTfZwTSK::https://api.usealto.com::openid profile email offline_access',
+    //   ) || '';
+    // yourJWTToken = JSON.parse(yourJWTToken).body.access_token;
+    // console.log(yourJWTToken);
 
     this.csvData.forEach((user) => {
       console.log(user);

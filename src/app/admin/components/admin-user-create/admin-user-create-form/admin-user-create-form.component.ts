@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { TeamDtoApi, UsersApiService } from 'src/app/sdk';
+import { TeamDtoApi, UserDtoApiRolesEnumApi, UsersApiService } from 'src/app/sdk';
 import { UserForm } from './models/user.form';
 
 @Component({
@@ -14,10 +14,12 @@ import { UserForm } from './models/user.form';
   encapsulation: ViewEncapsulation.None,
 })
 export class AdminUserCreateFormComponent implements OnInit {
-  id!: string;
+  companyId!: string;
   teams: TeamDtoApi[] = [];
   userForm!: IFormGroup<UserForm>;
   private fb: IFormBuilder;
+  rolesPossibleValues = Object.values(UserDtoApiRolesEnumApi);
+  userId!: string;
 
   constructor(
     private router: Router,
@@ -30,20 +32,23 @@ export class AdminUserCreateFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id') || '';
+    this.companyId = this.route.snapshot.paramMap.get('companyId') || '';
+    this.userId = this.route.snapshot.paramMap.get('userId') || '';
+
+    console.log(this.companyId, this.userId);
 
     this.userForm = this.fb.group<UserForm>({
       firstname: ['', [Validators.required]],
       lastname: ['', [Validators.required]],
       username: ['', []],
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
       teamId: [null, []],
       roles: [[], []],
       slackId: ['', []],
     });
 
     this.teamsRestService
-      .getTeams({ companyId: this.id })
+      .getTeams({ companyId: this.companyId })
       .pipe(tap((teams) => (this.teams = teams)))
       .subscribe();
   }
@@ -57,21 +62,22 @@ export class AdminUserCreateFormComponent implements OnInit {
 
     const { firstname, lastname, username, email, teamId, roles, slackId } = this.userForm.value;
 
-    let yourJWTToken =
-      localStorage.getItem(
-        '@@auth0spajs@@::ThcIBQZrRso5QaZq67kCU5eFYTfZwTSK::https://api.usealto.com::openid profile email offline_access',
-      ) || '';
-    yourJWTToken = JSON.parse(yourJWTToken).body.access_token;
-
-    console.log(yourJWTToken);
-
     this.usersApiService
       .createUser({
-        createUserDtoApi: { email: email, companyId: this.id, teamId: teamId },
+        createUserDtoApi: {
+          email: email,
+          companyId: this.companyId,
+          teamId: teamId,
+          firstname: firstname,
+          lastname: lastname,
+          username: username,
+          roles: roles,
+          slackId: slackId,
+        },
       })
       .subscribe((q) => {
         console.log(q);
-        $this.router.navigate(['/admin/companies/', $this.id, 'users']);
+        $this.router.navigate(['/admin/companies/', $this.companyId, 'users']);
       });
   }
 }

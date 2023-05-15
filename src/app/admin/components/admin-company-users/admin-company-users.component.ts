@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap, tap } from 'rxjs';
+import { forkJoin, switchMap, tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompanyDtoApi, UserDtoApi } from 'src/app/sdk';
@@ -28,37 +28,22 @@ export class AdminCompanyUsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') || '';
+    console.log(this.id);
 
-    this.companiesRestService
-      .getCompanyById(this.id)
+    forkJoin({
+      company: this.companiesRestService.getCompanyById(this.id),
+      users: this.usersRestService.getUsersFiltered({ companyId: this.id }),
+    })
       .pipe(
-        switchMap((company) => {
+        tap(({ company, users }) => {
           this.company = company;
-          return this.usersRestService.getUsersFiltered({ companyId: company.id });
-        }),
-        tap((users) => {
           this.users = users;
+          console.log(this.users);
           this.pageCount = Math.ceil(this.users.length / this.pageSize);
           this.refreshUsers();
-          console.log(this.users);
         }),
       )
       .subscribe();
-
-    // this.companiesRestService
-    //   .getCompanyById(this.id)
-    //   .pipe(tap((company) => (this.company = company)))
-    //   .subscribe();
-
-    // this.usersRestService
-    //   .getUsersFiltered({ companyId: this.id })
-    //   .pipe(
-    //     tap((users) => {
-    //       this.users = users;
-    //       console.log(this.users);
-    //     }),
-    //   )
-    //   .subscribe();
   }
   selectAll(event: any) {
     this.selectedIds = event.target.checked ? this.users.map((item) => item.id) : [];
