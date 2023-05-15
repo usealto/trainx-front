@@ -19,6 +19,14 @@
   --bs-offcanvas-width: 520px;
 }
 
+.progress {
+  --bs-progress-height: 0.571rem;
+  --bs-progress-bg: #f2f4f7;
+  width: calc(100% - 3.5rem);
+  display: inline-flex;
+  margin-right: 0.571rem;
+}
+
 .btn-outline-secondary {
   --bs-btn-bg: white;
   --bs-btn-color: var(--alto-text-color2);

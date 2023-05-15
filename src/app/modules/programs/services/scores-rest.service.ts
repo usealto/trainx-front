@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDays, addMonths } from 'date-fns';
+import { addDays } from 'date-fns';
 import { Observable, filter, map } from 'rxjs';
 import {
   GetProgramRunsRequestParams,
@@ -14,7 +14,6 @@ import {
   ScoresApiService,
   ScoresResponseDtoApi,
   StatsApiService,
-  StatsDtoApi,
   TeamStatsDtoApi,
 } from 'src/app/sdk';
 import { ChartFilters } from '../../shared/models/chart.model';
@@ -101,21 +100,6 @@ export class ScoresRestService {
       filter((x) => !!x),
     );
   }
-
-  // getQuestionScore(req: GetScoresRequestParams): Observable<ScoresResponseDtoApi> {
-  //   const par = {
-  //     ...req,
-  //     type: ScoreTypeEnumApi.Question,
-  //     timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Year,
-  //     dateBefore: new Date(),
-  //   };
-  //   par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
-
-  //   return this.scoresApi.getScores(par).pipe(
-  //     map((r) => r.data || ({} as ScoresResponseDtoApi)),
-  //     filter((x) => !!x),
-  //   );
-  // }
 
   getCompletion(filt: ScoreFilters, isProgression: boolean): Observable<ProgramRunApi[]> {
     const par = {

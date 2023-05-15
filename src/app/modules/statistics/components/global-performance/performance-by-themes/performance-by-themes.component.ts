@@ -128,7 +128,6 @@ export class PerformanceByThemesComponent implements OnChanges {
     if (this.performanceChart) {
       this.performanceChart.destroy();
     }
-
     this.performanceChart = new Chart('themePerformance', {
       type: 'radar',
       data: data,

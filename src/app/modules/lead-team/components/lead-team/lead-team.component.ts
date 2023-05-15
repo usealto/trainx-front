@@ -10,6 +10,8 @@ import { TeamDtoApi, UserDtoApi } from 'src/app/sdk';
 import { environment } from 'src/environments/environment';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
+import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
+import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
 
 @Component({
   selector: 'alto-lead-team',
@@ -40,6 +42,7 @@ export class LeadTeamComponent implements OnInit {
     private readonly usersRestService: UsersRestService,
     private readonly usersService: UsersService,
     private readonly profileStore: ProfileStore,
+    private readonly scoreRestService: ScoresRestService,
   ) {}
 
   ngOnInit(): void {
@@ -60,9 +63,13 @@ export class LeadTeamComponent implements OnInit {
         }),
         tap(() => this.changeTeamsPage()),
         tap(() => this.changeUsersPage(this.users)),
-        // switchMap(() => {
-        // TODO Scores Teams
-        // }),
+        switchMap(() => this.scoreRestService.getTeamsStats(ScoreDuration.Trimester)),
+        tap((scores) => {
+          scores.forEach((s) => {
+            this.teamsScores.set(s.id, s.score || 0);
+          });
+        }),
+        tap(console.log),
       )
       .subscribe();
   }

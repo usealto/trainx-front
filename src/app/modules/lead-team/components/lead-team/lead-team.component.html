@@ -28,10 +28,10 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col" class="w-40">{{ I18ns.leadTeam.teams.table.name }}</th>
+            <th scope="col" class="w-30">{{ I18ns.leadTeam.teams.table.name }}</th>
             <th scope="col" class="w-10 text-center">{{ I18ns.leadTeam.teams.table.initials }}</th>
             <th scope="col" class="w-20 text-center">{{ I18ns.leadTeam.teams.table.usersCount }}</th>
-            <th scope="col">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
+            <th scope="col" class="w-25">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
             <th scope="col" class="text-center">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
             <th></th>
           </tr>
@@ -49,9 +49,15 @@
             </td>
             <td>
               <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 50%"></div>
+                <div
+                  class="progress-bar d-inline-block"
+                  role="progressbar"
+                  [style]="teamsScores.get(team.id) && 'width:' + teamsScores.get(team.id) + '%'"
+                ></div>
               </div>
-              50%
+              <ng-container *ngIf="teamsScores.get(team.id)">
+                {{ teamsScores.get(team.id) + '%' }}
+              </ng-container>
             </td>
             <td class="text-center">
               {{ team.createdAt | date : 'shortDate' }}
