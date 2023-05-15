@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CompanyForm } from './models/company.create';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
@@ -7,16 +7,21 @@ import { CompanyDtoApi, SlackTimeEnumApi, TeamDtoApi, WeekDayEnumApi } from 'src
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { tap } from 'rxjs';
+import { AdminTabsComponent } from '../admin-shared/admin-tabs/admin-tabs.component';
 @Component({
   selector: 'alto-admin-companies-create',
   templateUrl: './admin-companies-create.component.html',
   styleUrls: ['./admin-companies-create.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AdminCompaniesCreateComponent implements OnInit {
+  @ViewChild(AdminTabsComponent) tabs!: AdminTabsComponent;
+  edit = false;
   company!: CompanyDtoApi;
   companyForm!: IFormGroup<CompanyForm>;
   teams: TeamDtoApi[] = [];
   id: string | undefined;
+  tabNumber = 0;
   private fb: IFormBuilder;
 
   constructor(
@@ -42,6 +47,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
       newTeams: this.fb.array([]),
     });
     if (this.id) {
+      this.edit = true;
       this.companiesRestService
         .getCompanyById(this.id)
         .pipe(tap((company) => (this.company = company)))
@@ -82,6 +88,12 @@ export class AdminCompaniesCreateComponent implements OnInit {
 
   onSelectLogo(event: any) {
     console.log(event);
+  }
+
+  nextTab() {
+    if (this.tabs) {
+      this.tabs.selectNextTab();
+    }
   }
 
   async submit() {

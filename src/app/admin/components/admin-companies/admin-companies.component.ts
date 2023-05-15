@@ -30,6 +30,7 @@ export class AdminCompaniesComponent implements OnInit {
       .getCompanies()
       .pipe(tap((companies) => (this.companies = companies)))
       .subscribe(() => {
+        console.log(this.companies);
         this.pageCount = Math.ceil(this.companies.length / this.pageSize);
         this.refreshCompanies();
       });

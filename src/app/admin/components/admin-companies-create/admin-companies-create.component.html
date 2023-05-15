@@ -1,7 +1,7 @@
 <div class="">
   <alto-admin-header title="Companies" subtitle="L'ensemble de nos clients"></alto-admin-header>
   <div class="tabs">
-    <alto-admin-tabs>
+    <alto-admin-tabs (activeNumberChanges)="tabNumber = $event">
       <alto-admin-tab [tabTitle]="'Informations'" icon="bi-file-text">
         <div class="d-flex justify-content-between">
           <div>
@@ -12,7 +12,11 @@
             <button type="button" class="btn btn-outline-secondary d-inline-flex align-items-center me-2">
               Cancel
             </button>
-            <button type="button" class="btn btn-primary d-inline-flex align-items-center">
+            <button
+              type="button"
+              class="btn btn-primary d-inline-flex align-items-center"
+              (click)="nextTab()"
+            >
               Next
               <i class="bi bi-arrow-right ps-2"></i>
             </button>
@@ -98,7 +102,7 @@
                 </ng-select>
                 <div formArrayName="newTeams">
                   <ng-container *ngFor="let newTeam of newTeamsFormArrayControls; let i = index">
-                    <div class="row align-items-end position-relative" [formGroup]="newTeam">
+                    <div class="row align-items-end position-relative py-2" [formGroup]="newTeam">
                       <div class="col">
                         <label class="form-label">Long name</label>
                         <input
@@ -170,7 +174,12 @@
               <label for="name" class="col-5 mb-2">Slack account</label>
               <div class="col-7 form-group">
                 <div class="form-check form-switch">
-                  <input class="form-check-input me-2" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+                  <input
+                    class="form-check-input me-2"
+                    type="checkbox"
+                    role="switch"
+                    id="flexSwitchCheckDefault"
+                  />
                   <label class="form-check-label" for="flexSwitchCheckDefault">Active Slack</label>
                 </div>
               </div>
@@ -180,7 +189,7 @@
           <div class="py-4 border-bottom">
             <div class="w-80 row">
               <div class="col-5 mb-2">
-                <label for="name" >User admin</label>
+                <label for="name">User admin</label>
                 <p class="fs-7">The admin user of the Slack account.</p>
               </div>
               <div class="col-7 form-group">
@@ -225,7 +234,7 @@
         <button type="button" class="btn btn-outline-secondary d-inline-flex align-items-center me-2">
           Cancel
         </button>
-        <button type="button" class="btn btn-primary d-inline-flex align-items-center">
+        <button type="button" class="btn btn-primary d-inline-flex align-items-center" (click)="nextTab()">
           Next
           <i class="bi bi-arrow-right ps-2"></i>
         </button>

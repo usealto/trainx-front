@@ -79,11 +79,14 @@
           </td>
           <th scope="row">
             <div class="d-flex align-items-center">
-              <alto-img-badge *ngIf="user.pictureUrl" [url]="user.pictureUrl" ></alto-img-badge>
+              <alto-img-badge *ngIf="user.pictureUrl" [url]="user.pictureUrl"></alto-img-badge>
               <div *ngIf="!user.pictureUrl" class="float-start mx-3 alto-badge-big">
                 <i class="fs-4 bi bi-person"></i>
               </div>
-              <a [routerLink]="['/', 'admin', 'users', user.id]" routerLinkActive="menu-selected">
+              <a
+                [routerLink]="['/', 'admin', 'companies', company.id, 'users', user.id]"
+                routerLinkActive="menu-selected"
+              >
                 {{ user.firstname }} {{ user.lastname }}
               </a>
             </div>

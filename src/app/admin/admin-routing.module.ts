@@ -40,11 +40,11 @@ const routes: Routes = [
         component: AdminCompanyUsersComponent,
       },
       {
-        path: 'companies/:companyId/users/:userId',
+        path: 'companies/:companyId/users/create',
         component: AdminUserCreateComponent,
       },
       {
-        path: 'companies/:id/users/create',
+        path: 'companies/:companyId/users/:userId',
         component: AdminUserCreateComponent,
       },
       {
@@ -62,10 +62,8 @@ const routes: Routes = [
       {
         path: 'unauthorized',
         component: AdminUnauthorizedComponent,
-      }
-    ]
-
-
+      },
+    ],
   },
 ];
 

@@ -1,4 +1,4 @@
-import { Component, ContentChildren, Input, QueryList } from '@angular/core';
+import { Component, ContentChildren, EventEmitter, Input, Output, QueryList } from '@angular/core';
 import { AdminTabComponent } from './admin-tab.component';
 
 @Component({
@@ -27,6 +27,8 @@ import { AdminTabComponent } from './admin-tab.component';
 })
 export class AdminTabsComponent {
   @ContentChildren(AdminTabComponent) tabs: QueryList<AdminTabComponent> | undefined;
+  @Output() activeNumberChanges = new EventEmitter<number>();
+  activeTab = 0;
   // contentChildren are set
   ngAfterContentInit() {
     // get all active tabs
@@ -40,11 +42,25 @@ export class AdminTabsComponent {
     }
   }
 
+  public selectNextTab() {
+    if (this.tabs) {
+      const indexActiveTab = this.tabs.toArray().findIndex((tab) => tab.active);
+      if (indexActiveTab + 1 < this.tabs.length) {
+        this.selectTab(this.tabs.toArray()[indexActiveTab + 1]);
+      }
+    }
+  }
+
   selectTab(tab: AdminTabComponent) {
     // deactivate all tabs
-    this.tabs?.toArray().forEach((tab) => (tab.active = false));
+    if (this.tabs) {
+      this.tabs.toArray().forEach((tab) => (tab.active = false));
 
-    // activate the tab the user has clicked on.
-    tab.active = true;
+      // activate the tab the user has clicked on.
+      tab.active = true;
+      this.activeTab = this.tabs.toArray().findIndex((tab) => tab.active);
+      this.activeNumberChanges.emit(this.activeTab);
+      console.log(this.activeTab);
+    }
   }
 }
