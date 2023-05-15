@@ -4,6 +4,7 @@ import { Observable, filter, map } from 'rxjs';
 import {
   GetProgramRunsRequestParams,
   GetScoresRequestParams,
+  GetTeamsStatsRequestParams,
   ProgramRunApi,
   ProgramRunsApiService,
   ScoreByTypeEnumApi,
@@ -12,6 +13,9 @@ import {
   ScoreTypeEnumApi,
   ScoresApiService,
   ScoresResponseDtoApi,
+  StatsApiService,
+  StatsDtoApi,
+  TeamStatsDtoApi,
 } from 'src/app/sdk';
 import { ChartFilters } from '../../shared/models/chart.model';
 import { ScoreDuration, ScoreFilters } from '../models/score.model';
@@ -25,7 +29,17 @@ export class ScoresRestService {
     private readonly scoresApi: ScoresApiService,
     private readonly service: ScoresService,
     private readonly programsApi: ProgramRunsApiService,
+    private readonly statsApi: StatsApiService,
   ) {}
+
+  getTeamsStats(duration: ScoreDuration): Observable<TeamStatsDtoApi[]> {
+    return this.statsApi
+      .getTeamsStats({
+        from: this.service.getStartDate(duration),
+        to: new Date(),
+      } as GetTeamsStatsRequestParams)
+      .pipe(map((r) => r.data || []));
+  }
 
   getScores({
     duration,

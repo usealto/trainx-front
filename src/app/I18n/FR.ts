@@ -230,11 +230,9 @@ export const FR = {
         scoreEvolution: {
           title: 'Évolution du score',
           subtitle: "Suivez l'évolution du score de vos équipes.",
-          tooltip: 'Score moyen',
         },
         leaderboard: {
           title: 'Leaderboard',
-          tooltip: 'Score moyen',
           top: 'Top',
           flop: 'Flop',
         },

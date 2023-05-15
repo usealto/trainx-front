@@ -13,6 +13,7 @@ import {
   ScoreTypeEnumApi,
   TagDtoApi,
   TeamDtoApi,
+  TeamStatsDtoApi,
 } from 'src/app/sdk';
 import Chart, { ChartData } from 'chart.js/auto';
 import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
@@ -50,6 +51,7 @@ export class PerformanceByThemesComponent implements OnChanges {
       .pipe(tap((res) => (this.teams = res)))
       .subscribe();
     this.getScores();
+    this.getPerformanceStats();
   }
 
   getScores() {
@@ -80,6 +82,59 @@ export class PerformanceByThemesComponent implements OnChanges {
         return { label: score.label, score: average };
       })
       .sort((a, b) => (a.score && b.score ? b.score - a.score : 0));
+  }
+
+  getPerformanceStats() {
+    this.scoresRestService
+      .getTeamsStats(this.duration)
+      .pipe(
+        tap((res) => {
+          this.createPerformanceChart(res);
+        }),
+      )
+      .subscribe();
+  }
+
+  getThemesLabel(stats: TeamStatsDtoApi[]): string[] {
+    const labels: string[] = [];
+    const type = this.activeTab === 1 ? 'tags' : 'programs';
+
+    stats.forEach((s) => {
+      s[type]?.forEach((t) => {
+        if (!labels.includes(t.label)) {
+          labels.push(t.label);
+        }
+      });
+    });
+
+    return labels;
+  }
+
+  createPerformanceChart(stats: TeamStatsDtoApi[]) {
+    const type = this.activeTab === 1 ? 'tags' : 'programs';
+    const labels = this.getThemesLabel(stats);
+
+    const dataset = stats.map((s) => {
+      const res = { label: s.label, data: [] as number[], fill: true };
+      s[type]?.forEach((item) => res.data.push(item.score || NaN));
+      return res;
+    });
+
+    const data: ChartData = {
+      labels: labels,
+      datasets: dataset,
+    };
+
+    if (this.performanceChart) {
+      this.performanceChart.destroy();
+    }
+    setTimeout(() => {
+      this.performanceChart = new Chart('themePerformance', {
+        type: 'radar',
+        data: data,
+        options: chartDefaultOptions,
+      });
+    }, 1000);
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
@@ -166,6 +221,7 @@ export class PerformanceByThemesComponent implements OnChanges {
   changeTabs() {
     this.activeTab = this.activeTab === 1 ? 2 : 1;
     this.getScores();
+    this.getPerformanceStats();
   }
 
   filterTeams(teams: TeamDtoApi[]) {
