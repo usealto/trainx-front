@@ -61,7 +61,10 @@
               </div>
             </td>
             <th scope="row">
-              <a [routerLink]="['/', 'admin', 'companies', company.id]" routerLinkActive="menu-selected">
+              <a
+                [routerLink]="['/', 'admin', 'companies', company.id, 'users']"
+                routerLinkActive="menu-selected"
+              >
                 {{ company.name }}
               </a>
             </th>
@@ -86,7 +89,7 @@
             <td>{{ company.slackAdmin }}</td>
             <td class="action-btn-list-container">
               <div class="shaddow"></div>
-              <div class="d-flex action-btn-list align-items-center gap-2">
+              <div class="d-flex action-btn-list align-items-center gap-2 px-3">
                 <button type="button" class="btn btn-link">
                   <i class="alto-second-grey bi bi-trash"></i>
                 </button>

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
@@ -11,6 +11,7 @@ import { UserForm } from './models/user.form';
   selector: 'alto-admin-user-create-form',
   templateUrl: './admin-user-create-form.component.html',
   styleUrls: ['./admin-user-create-form.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AdminUserCreateFormComponent implements OnInit {
   id!: string;
@@ -32,9 +33,13 @@ export class AdminUserCreateFormComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id') || '';
 
     this.userForm = this.fb.group<UserForm>({
-      email: ['', []],
-      companyId: [this.id, []],
-      teamId: ['', []],
+      firstname: ['', [Validators.required]],
+      lastname: ['', [Validators.required]],
+      username: ['', []],
+      email: ['', [Validators.required]],
+      teamId: [null, []],
+      roles: [[], []],
+      slackId: ['', []],
     });
 
     this.teamsRestService
@@ -50,7 +55,7 @@ export class AdminUserCreateFormComponent implements OnInit {
 
     if (!this.userForm.value) return;
 
-    const { email, companyId, teamId } = this.userForm.value;
+    const { firstname, lastname, username, email, teamId, roles, slackId } = this.userForm.value;
 
     let yourJWTToken =
       localStorage.getItem(
@@ -62,7 +67,7 @@ export class AdminUserCreateFormComponent implements OnInit {
 
     this.usersApiService
       .createUser({
-        createUserDtoApi: { email: email, companyId: companyId, teamId: teamId },
+        createUserDtoApi: { email: email, companyId: this.id, teamId: teamId },
       })
       .subscribe((q) => {
         console.log(q);

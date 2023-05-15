@@ -1,14 +1,166 @@
-<h2>Users</h2>
+<alto-admin-header
+  title="Users"
+  subtitle="Find all of our clients here."
+  [divider]="true"
+></alto-admin-header>
+<h2></h2>
 <div class="row d-flex justify-content-end" *ngIf="company">
-  <a [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'create']" routerLinkActive="menu-selected" class="btn btn-primary my-2 align-middle" style="max-width:150px">
+  <a
+    [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'create']"
+    routerLinkActive="menu-selected"
+    class="btn btn-primary my-2 align-middle"
+    style="max-width: 150px"
+  >
     Créer un utilisateur
   </a>
-  <a [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'upload']" routerLinkActive="menu-selected" class="btn btn-primary my-2" style="max-width:150px">
+  <a
+    [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'upload']"
+    routerLinkActive="menu-selected"
+    class="btn btn-primary my-2"
+    style="max-width: 150px"
+  >
     Upload CSV d'utilisateur
   </a>
 </div>
 
-<table class="table" *ngIf="users">
+<div class="d-flex justify-content-between align-items-center alto-grey fs-5 pb-4">
+  <span>{{ users.length }} company account</span>
+  <a
+    [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'create']"
+    routerLinkActive="menu-selected"
+    class="btn btn-primary my-2 align-middle"
+  >
+    <i class="bi bi-plus-lg pe-2"></i>
+    Créer un utilisateur
+  </a>
+</div>
+<div *ngIf="users.length > 0; else elseBlock">
+  <div class="d-flex justify-content-end gap-2 pb-4">
+    <alto-search></alto-search>
+    <button type="button" class="btn btn-outline-secondary">Filters</button>
+  </div>
+  <div class="table-container table-panel">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                (change)="selectAll($event)"
+                [ngModel]="selectedIds.length === users.length"
+                id="flexCheckDefault"
+              />
+            </div>
+          </th>
+          <th scope="col">Name</th>
+          <th scope="col">Username</th>
+          <th scope="col">Email</th>
+          <th scope="col">Team</th>
+          <th scope="col">Role</th>
+          <th scope="col">Status</th>
+          <th scope="col">ID Slack</th>
+          <th scope="col" class="action-btn-list"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of displayedUsers">
+          <td>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                (change)="selectCompany(user.id)"
+                [ngModel]="selectedIds.includes(user.id)"
+                id="flexCheckDefault"
+              />
+            </div>
+          </td>
+          <th scope="row">
+            <a [routerLink]="['/', 'admin', 'users', user.id]" routerLinkActive="menu-selected">
+              {{ user.firstname }} {{ user.lastname }}
+            </a>
+          </th>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <div class="d-flex gap-1">
+              <alto-colored-pill-list
+                [hasDynamicColor]="true"
+                [data]="user.team ? [user.team] : []"
+                [limit]="3"
+              ></alto-colored-pill-list>
+            </div>
+          </td>
+          <td>
+            <span
+              *ngFor="let role of user.roles"
+              class="alto-badge text-white me-1 mb-1"
+              [style.backgroundColor]="role | uuid2color"
+              >{{ user.roles }}</span
+            >
+          </td>
+          <td>{{ user.isActive }}</td>
+          <td>{{ user.slackId }}</td>
+          <td class="action-btn-list-container">
+            <div class="shaddow"></div>
+            <div class="d-flex action-btn-list align-items-center gap-2 px-3">
+              <button type="button" class="btn btn-link">
+                <i class="alto-second-grey bi bi-trash"></i>
+              </button>
+              <a
+                [routerLink]="['/', 'admin', 'companies', user.id]"
+                routerLinkActive="menu-selected"
+                role="button"
+                class="btn btn-link"
+              >
+                <i class="alto-second-grey bi bi-pencil"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex align-items-center justify-content-between">
+    <span>Page {{ page }} of {{ pageCount }}</span>
+    <div class="d-flex gap-2">
+      <button
+        type="button"
+        [disabled]="page === 1"
+        (click)="onPaginator(page - 1)"
+        class="btn btn-outline-secondary"
+      >
+        Previous
+      </button>
+      <button
+        type="button"
+        [disabled]="page === pageCount"
+        (click)="onPaginator(page + 1)"
+        class="btn btn-outline-secondary"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</div>
+<ng-template #elseBlock>
+  <div class="card bg-white align-items-center py-5">
+    <div class="icon-people-container mb-3">
+      <i class="bi bi-people fs-4 fw-bolder"></i>
+    </div>
+    <span class="fs-4 fw-bolder pb-1">No company account available</span>
+    <span class="pb-4 alto-second-grey">Create your first company account and add teams to it.</span>
+    <div>
+      <button type="button" class="btn btn-primary">
+        <i class="bi bi-plus-lg pe-2"></i>Create a company account
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<!-- <table class="table" *ngIf="users">
   <thead>
     <tr>
       <th scope="col">Nom</th>
@@ -29,4 +181,4 @@
       </td>
     </tr>
   </tbody>
-</table>
+</table> -->
