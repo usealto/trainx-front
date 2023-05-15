@@ -25,15 +25,15 @@ describe('PillColorPipe', () => {
 
   it('checks when num is below 31 == pill-red', () => {
     expect(pipe.transform(30)).toBe('pill-red' + extraClass);
-    expect(pipe.transform(-10)).toBe('pill-red' + extraClass);
-    expect(pipe.transform(0)).toBe('pill-red' + extraClass);
     expect(pipe.transform(90)).not.toBe('pill-red' + extraClass);
   });
 
   it('checks when num is string then pill-neutral', () => {
     expect(pipe.transform('30')).toBe('pill-neutral' + extraClass);
+    expect(pipe.transform(0)).toBe('pill-neutral' + extraClass);
     expect(pipe.transform('NAN')).toBe('pill-neutral' + extraClass);
     expect(pipe.transform('test')).toBe('pill-neutral' + extraClass);
     expect(pipe.transform(90)).not.toBe('pill-neutral' + extraClass);
+    expect(pipe.transform(-10)).toBe('pill-neutral' + extraClass);
   });
 });
