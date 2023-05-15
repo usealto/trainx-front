@@ -19,9 +19,9 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { QuestionStatsDtoResponseApi } from '../model/questionStatsDtoResponse';
+import { QuestionStatsDtoPaginatedResponseApi } from '../model/questionStatsDtoPaginatedResponse';
 // @ts-ignore
-import { TeamStatsDtoResponseApi } from '../model/teamStatsDtoResponse';
+import { TeamStatsDtoPaginatedResponseApi } from '../model/teamStatsDtoPaginatedResponse';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -113,9 +113,9 @@ export class StatsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getQuestionsStats(requestParameters: GetQuestionsStatsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<QuestionStatsDtoResponseApi>;
-    public getQuestionsStats(requestParameters: GetQuestionsStatsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<QuestionStatsDtoResponseApi>>;
-    public getQuestionsStats(requestParameters: GetQuestionsStatsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<QuestionStatsDtoResponseApi>>;
+    public getQuestionsStats(requestParameters: GetQuestionsStatsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<QuestionStatsDtoPaginatedResponseApi>;
+    public getQuestionsStats(requestParameters: GetQuestionsStatsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<QuestionStatsDtoPaginatedResponseApi>>;
+    public getQuestionsStats(requestParameters: GetQuestionsStatsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<QuestionStatsDtoPaginatedResponseApi>>;
     public getQuestionsStats(requestParameters: GetQuestionsStatsRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const from = requestParameters.from;
         const to = requestParameters.to;
@@ -175,7 +175,7 @@ export class StatsApiService {
         }
 
         let localVarPath = `/v1/stats/questions`;
-        return this.httpClient.request<QuestionStatsDtoResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<QuestionStatsDtoPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,
@@ -194,9 +194,9 @@ export class StatsApiService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getTeamsStats(requestParameters: GetTeamsStatsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TeamStatsDtoResponseApi>;
-    public getTeamsStats(requestParameters: GetTeamsStatsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TeamStatsDtoResponseApi>>;
-    public getTeamsStats(requestParameters: GetTeamsStatsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TeamStatsDtoResponseApi>>;
+    public getTeamsStats(requestParameters: GetTeamsStatsRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<TeamStatsDtoPaginatedResponseApi>;
+    public getTeamsStats(requestParameters: GetTeamsStatsRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<TeamStatsDtoPaginatedResponseApi>>;
+    public getTeamsStats(requestParameters: GetTeamsStatsRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<TeamStatsDtoPaginatedResponseApi>>;
     public getTeamsStats(requestParameters: GetTeamsStatsRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
         const from = requestParameters.from;
         const to = requestParameters.to;
@@ -256,7 +256,7 @@ export class StatsApiService {
         }
 
         let localVarPath = `/v1/stats/teams`;
-        return this.httpClient.request<TeamStatsDtoResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<TeamStatsDtoPaginatedResponseApi>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,

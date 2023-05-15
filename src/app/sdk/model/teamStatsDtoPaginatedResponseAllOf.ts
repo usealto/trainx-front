@@ -12,8 +12,8 @@
 import { TeamStatsDtoApi } from './teamStatsDto';
 
 
-export interface TeamStatsDtoResponseApi { 
-    statusCode: number;
-    data?: TeamStatsDtoApi;
+export interface TeamStatsDtoPaginatedResponseAllOfApi { 
+    statusCode?: number;
+    data?: Array<TeamStatsDtoApi>;
 }
 

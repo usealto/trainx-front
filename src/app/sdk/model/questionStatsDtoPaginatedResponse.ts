@@ -9,11 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { AltoBaseResponsePaginatedDtoMetaApi } from './altoBaseResponsePaginatedDtoMeta';
 import { QuestionStatsDtoApi } from './questionStatsDto';
 
 
-export interface QuestionStatsDtoResponseApi { 
+export interface QuestionStatsDtoPaginatedResponseApi { 
     statusCode: number;
-    data?: QuestionStatsDtoApi;
+    data?: Array<QuestionStatsDtoApi>;
+    meta: AltoBaseResponsePaginatedDtoMetaApi;
 }
 

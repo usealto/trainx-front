@@ -19,6 +19,7 @@ export interface QuestionStatsDtoApi {
     totalGuessesCount: number;
     validGuessesCount: number;
     score?: number;
+    usersCount: number;
     programs?: Array<StatsDtoApi>;
     tags?: Array<TagLightDtoApi>;
     teams?: Array<StatsDtoApi>;

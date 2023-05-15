@@ -12,8 +12,8 @@
 import { QuestionStatsDtoApi } from './questionStatsDto';
 
 
-export interface QuestionStatsDtoResponseAllOfApi { 
+export interface QuestionStatsDtoPaginatedResponseAllOfApi { 
     statusCode?: number;
-    data?: QuestionStatsDtoApi;
+    data?: Array<QuestionStatsDtoApi>;
 }
 

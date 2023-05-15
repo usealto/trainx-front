@@ -10,10 +10,12 @@
  * Do not edit the class manually.
  */
 import { TeamStatsDtoApi } from './teamStatsDto';
+import { AltoBaseResponsePaginatedDtoMetaApi } from './altoBaseResponsePaginatedDtoMeta';
 
 
-export interface TeamStatsDtoResponseAllOfApi { 
-    statusCode?: number;
-    data?: TeamStatsDtoApi;
+export interface TeamStatsDtoPaginatedResponseApi { 
+    statusCode: number;
+    data?: Array<TeamStatsDtoApi>;
+    meta: AltoBaseResponsePaginatedDtoMetaApi;
 }
 

@@ -137,8 +137,8 @@ model/questionLightDto.ts
 model/questionPaginatedResponse.ts
 model/questionPaginatedResponseAllOf.ts
 model/questionStatsDto.ts
-model/questionStatsDtoResponse.ts
-model/questionStatsDtoResponseAllOf.ts
+model/questionStatsDtoPaginatedResponse.ts
+model/questionStatsDtoPaginatedResponseAllOf.ts
 model/questionSubmittedDto.ts
 model/questionSubmittedDtoCreatedResponse.ts
 model/questionSubmittedDtoCreatedResponseAllOf.ts
@@ -180,8 +180,8 @@ model/teamDtoResponse.ts
 model/teamDtoResponseAllOf.ts
 model/teamLightDto.ts
 model/teamStatsDto.ts
-model/teamStatsDtoResponse.ts
-model/teamStatsDtoResponseAllOf.ts
+model/teamStatsDtoPaginatedResponse.ts
+model/teamStatsDtoPaginatedResponseAllOf.ts
 model/user.ts
 model/userDto.ts
 model/userDtoCreatedResponse.ts
