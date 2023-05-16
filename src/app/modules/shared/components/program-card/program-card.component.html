@@ -13,7 +13,7 @@
     [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, program.id]"
   >
     <div class="d-flex justify-content-between">
-      <p class="title">{{ program.name }}</p>
+      <p class="title" [ngClass]="{ 'w-100': !displayToggle }">{{ program.name }}</p>
     </div>
     <div class="card-bottom">
       <ng-container *ngIf="program.teams.length > 0; else elseTeams">
