@@ -100,6 +100,11 @@ export class LeadHomeComponent implements OnInit {
             .slice(0, 5);
         }),
         tap(() => this.getGlobalScore(this.globalFilters)),
+        switchMap(() => this.userService.getUsers()),
+        tap((users) => {
+          this.activeMembers = users.filter((user) => user.isActive).length;
+          this.inactiveMembers = users.length - this.activeMembers;
+        }),
         untilDestroyed(this),
       )
       .subscribe();

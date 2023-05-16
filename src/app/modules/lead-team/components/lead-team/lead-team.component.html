@@ -17,6 +17,7 @@
 
 <hr class="my-5" />
 
+<!-- TEAMS -->
 <div>
   <button type="button" class="btn btn-primary float-end" (click)="openTeamForm()">
     <i class="bi bi-plus-lg"></i> {{ I18ns.leadTeam.createTeam }}
@@ -87,6 +88,8 @@
 
 <hr class="my-5" />
 
+<!-- MEMBERS -->
+
 <div>
   <button type="button" class="btn btn-outline-secondary float-end" (click)="airtableRedirect()">
     <i class="bi bi-person-plus me-2 fs-5"></i>
@@ -121,6 +124,7 @@
       class="text-start col-3"
       [data]="teams"
       [displayLabel]="'shortName'"
+      [isColored]="true"
       [placeholder]="I18ns.leadTeam.members.filters.teams"
       (selectChange)="filterUsers($event)"
     ></alto-dropdown-filter>
