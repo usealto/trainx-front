@@ -47,7 +47,6 @@ export class ProgramCardListComponent implements OnInit {
   programFilters: ProgramFilters = { teams: [], search: '' };
 
   displayToggle = false;
-  displayEdit = false;
 
   constructor(
     private readonly programRunsService: ProgramRunsRestService,
@@ -63,10 +62,8 @@ export class ProgramCardListComponent implements OnInit {
   ngOnInit(): void {
     if (this.place === 'home') {
       this.displayToggle = false;
-      this.displayEdit = false;
     } else if (this.place === 'program') {
       this.displayToggle = true;
-      this.displayEdit = true;
     }
     this.getPrograms();
     this.setPageSize(window.innerWidth);

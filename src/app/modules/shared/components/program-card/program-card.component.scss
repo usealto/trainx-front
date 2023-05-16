@@ -1,12 +1,23 @@
+:host {
+  position: relative;
+}
 .panel {
   height: 18rem;
   position: relative;
 }
-
+.form-switch {
+  position: absolute;
+  right: 1.714rem;
+  top: 1.429rem;
+}
 .title {
   font-size: 1.429rem;
   line-height: 2rem;
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 86%;
 }
 
 .card-bottom {
