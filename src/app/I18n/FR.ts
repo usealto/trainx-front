@@ -329,8 +329,8 @@ export const FR = {
       },
       statistics: {
         total: 'Total',
-        active: 'Actifs',
-        inactive: 'Inactifs',
+        active: 'Membres réguliers',
+        inactive: 'Membres irréguliers',
       },
       table: {
         name: 'Nom',

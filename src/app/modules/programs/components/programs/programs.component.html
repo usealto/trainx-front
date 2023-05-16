@@ -101,7 +101,7 @@
                 {{ question.title }}
               </td>
               <td class="w-5">
-                <span class="alto-badge" [class]="(getQuestionScore(question.id) || 0) * 100 | pillColor">
+                <span class="alto-score" [class]="(getQuestionScore(question.id) || 0) * 100 | pillColor">
                   {{ getQuestionScore(question.id) | percent }}
                 </span>
               </td>
@@ -241,7 +241,7 @@
           <tr *ngFor="let tag of paginatedTags">
             <td class="w-15">{{ tag.name }}</td>
             <td class="w-5">
-              <span class="alto-badge" [class]="(getTagScore(tag.id) || 0) * 100 | pillColor">
+              <span class="alto-score" [class]="(getTagScore(tag.id) || 0) * 100 | pillColor">
                 {{ getTagScore(tag.id) | percent }}
               </span>
             </td>

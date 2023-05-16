@@ -203,7 +203,7 @@
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.programs?.top | slice : 0 : 3" class="mb-3">
                 <span>{{ item.label | slice : 0 : 32 }}</span>
-                <span class="float-end alto-badge me-4" [class]="item.avg * 100 | pillColor">
+                <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
@@ -214,7 +214,7 @@
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.programs?.flop | slice : 0 : 3" class="mb-3">
                 <span>{{ item.label | slice : 0 : 32 }}</span>
-                <span class="float-end alto-badge" [class]="item.avg * 100 | pillColor">
+                <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
@@ -248,7 +248,7 @@
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.teams?.top | slice : 0 : 3" class="mb-3">
                 <span>{{ item.label | slice : 0 : 32 }}</span>
-                <span class="float-end alto-badge me-4" [class]="item.avg * 100 | pillColor">
+                <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
@@ -259,7 +259,7 @@
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.teams?.flop" class="mb-3">
                 <span>{{ item.label | slice : 0 : 32 }}</span>
-                <span class="float-end alto-badge" [class]="item.avg * 100 | pillColor">
+                <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>

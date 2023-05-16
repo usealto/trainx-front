@@ -6,13 +6,23 @@ import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
-import { TeamDtoApi, UserDtoApi } from 'src/app/sdk';
+import {
+  ScoreTimeframeEnumApi,
+  ScoreTypeEnumApi,
+  ScoresResponseDtoApi,
+  TeamDtoApi,
+  UserDtoApi,
+} from 'src/app/sdk';
 import { environment } from 'src/environments/environment';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
 import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
 import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
 
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ScoresService } from 'src/app/modules/programs/services/scores.service';
+
+@UntilDestroy()
 @Component({
   selector: 'alto-lead-team',
   templateUrl: './lead-team.component.html',
@@ -35,6 +45,7 @@ export class LeadTeamComponent implements OnInit {
   usersPageSize = 10;
 
   teamsScores = new Map<string, number>();
+  usersScores = new Map<string, number | null>();
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -43,6 +54,7 @@ export class LeadTeamComponent implements OnInit {
     private readonly usersService: UsersService,
     private readonly profileStore: ProfileStore,
     private readonly scoreRestService: ScoresRestService,
+    private readonly scoreService: ScoresService,
   ) {}
 
   ngOnInit(): void {
@@ -69,7 +81,28 @@ export class LeadTeamComponent implements OnInit {
             this.teamsScores.set(s.id, s.score || 0);
           });
         }),
+        switchMap(() => {
+          return this.scoreRestService.getScores({
+            duration: ScoreDuration.Trimester,
+            timeframe: ScoreTimeframeEnumApi.Day,
+            type: ScoreTypeEnumApi.User,
+          });
+        }),
+        tap(({ scores }: ScoresResponseDtoApi) => {
+          scores.forEach((s) => {
+            this.usersScores.set(s.id, this.scoreService.reduceWithoutNull(s.averages));
+          });
+        }),
+        // switchMap(() => {
+        //   return this.scoreRestService.getScores({
+        //     duration: ScoreDuration.Month,
+        //     timeframe: ScoreTimeframeEnumApi.Day,
+        //     type: ScoreTypeEnumApi.Guess,
+        //     user: this.users.map((u) => u.id).join(','),
+        //   });
+        // }),
         tap(console.log),
+        untilDestroyed(this),
       )
       .subscribe();
   }

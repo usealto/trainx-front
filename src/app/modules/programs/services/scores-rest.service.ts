@@ -46,6 +46,7 @@ export class ScoresRestService {
     team,
     timeframe,
     sortBy,
+    user,
     ids,
   }: ChartFilters): Observable<ScoresResponseDtoApi> {
     const par: GetScoresRequestParams = {
@@ -60,6 +61,9 @@ export class ScoresRestService {
     if (team) {
       par.scoredBy = ScoreByTypeEnumApi.Team;
       par.scoredById = team;
+    } else if (user) {
+      par.scoredBy = ScoreByTypeEnumApi.User;
+      par.scoredById = user;
     }
     if (ids) {
       par.ids = ids.join(',');

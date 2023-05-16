@@ -3,6 +3,7 @@ import { ScoreDuration } from '../../programs/models/score.model';
 
 export interface ChartFilters {
   team?: string;
+  user?: string;
   duration?: ScoreDuration | string;
   type?: ScoreTypeEnumApi;
   timeframe?: ScoreTimeframeEnumApi;

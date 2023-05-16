@@ -18,10 +18,16 @@
   color: red;
 }
 
-.alto-badge {
+.alto-score {
   @extend .alto-badge-no-size;
   min-height: 1.58rem;
   min-width: 3.5rem;
+  line-height: 1.6rem;
+}
+.alto-badge {
+  @extend .alto-badge-no-size;
+  min-height: 1.58rem;
+  min-width: 1.58rem;
   line-height: 1.6rem;
 }
 .alto-badge-big {
