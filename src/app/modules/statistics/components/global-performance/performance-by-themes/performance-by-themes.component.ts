@@ -1,24 +1,12 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
-import { ProgramsStore } from 'src/app/modules/programs/programs.store';
-import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
-import {
-  ProgramDtoApi,
-  ScoreDtoApi,
-  ScoreTimeframeEnumApi,
-  ScoreTypeEnumApi,
-  TagDtoApi,
-  TeamDtoApi,
-  TeamStatsDtoApi,
-} from 'src/app/sdk';
+import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi, TeamStatsDtoApi } from 'src/app/sdk';
 import Chart, { ChartData } from 'chart.js/auto';
 import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { StatisticsService, Point } from '../../../services/statistics.service';
+import { StatisticsService } from '../../../services/statistics.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { ScoresService } from 'src/app/modules/programs/services/scores.service';
 
@@ -30,7 +18,9 @@ import { ScoresService } from 'src/app/modules/programs/services/scores.service'
 export class PerformanceByThemesComponent implements OnChanges {
   I18ns = I18ns;
   activeTab = 1;
-  teams: TeamDtoApi[] = [];
+  teams: { label: string; id: string }[] = [];
+  selectedTeams: { label: string; id: string }[] = [];
+  teamsStats: TeamStatsDtoApi[] = [];
   @Input() duration: ScoreDuration = ScoreDuration.Year;
   items: ScoreDtoApi[] = [];
   scoredItems: { label: string; score: number | null }[] = [];
@@ -39,19 +29,31 @@ export class PerformanceByThemesComponent implements OnChanges {
   performanceChart?: Chart;
 
   constructor(
-    private readonly teamRestService: TeamsRestService,
     private readonly scoresRestService: ScoresRestService,
     private readonly statisticsServices: StatisticsService,
     private readonly scoresServices: ScoresService,
   ) {}
 
   ngOnChanges(): void {
-    this.teamRestService
-      .getTeams()
-      .pipe(tap((res) => (this.teams = res)))
-      .subscribe();
     this.getScores();
-    this.getPerformanceStats();
+    this.scoresRestService
+      .getTeamsStats(this.duration)
+      .pipe(
+        tap((res) => {
+          this.teamsStats = res;
+          this.teams = res
+            .sort((a, b) => a.label.localeCompare(b.label))
+            .map((t) => ({
+              label: t.label,
+              id: t.id,
+            }));
+          this.selectedTeams = this.teams.splice(0, 5);
+        }),
+        tap(() => {
+          this.createPerformanceChart(this.selectedTeams);
+        }),
+      )
+      .subscribe();
   }
 
   getScores() {
@@ -84,17 +86,6 @@ export class PerformanceByThemesComponent implements OnChanges {
       .sort((a, b) => (a.score && b.score ? b.score - a.score : 0));
   }
 
-  getPerformanceStats() {
-    this.scoresRestService
-      .getTeamsStats(this.duration)
-      .pipe(
-        tap((res) => {
-          this.createPerformanceChart(res);
-        }),
-      )
-      .subscribe();
-  }
-
   getThemesLabel(stats: TeamStatsDtoApi[]): string[] {
     const labels: string[] = [];
     const type = this.activeTab === 1 ? 'tags' : 'programs';
@@ -110,8 +101,11 @@ export class PerformanceByThemesComponent implements OnChanges {
     return labels;
   }
 
-  createPerformanceChart(stats: TeamStatsDtoApi[]) {
+  createPerformanceChart(selectedTeams: { label: string; id: string }[]) {
     const type = this.activeTab === 1 ? 'tags' : 'programs';
+    const stats = selectedTeams.length
+      ? this.teamsStats.filter((t) => selectedTeams.some((st) => st.id === t.id))
+      : this.teamsStats;
     const labels = this.getThemesLabel(stats);
 
     const dataset = stats.map((s) => {
@@ -224,10 +218,12 @@ export class PerformanceByThemesComponent implements OnChanges {
   changeTabs() {
     this.activeTab = this.activeTab === 1 ? 2 : 1;
     this.getScores();
-    this.getPerformanceStats();
+    this.createPerformanceChart(this.selectedTeams);
   }
 
-  filterTeams(teams: TeamDtoApi[]) {
+  filterTeams(teams: { label: string; id: string }[]) {
+    this.selectedTeams = teams;
+    this.createPerformanceChart(this.selectedTeams);
     return;
   }
 

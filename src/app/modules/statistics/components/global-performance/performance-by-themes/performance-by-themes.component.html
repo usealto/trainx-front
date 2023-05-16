@@ -1,8 +1,9 @@
 <div class="border-bottom py-4">
   <alto-dropdown-filter
     class="float-end"
-    [data]="teams"
-    [displayLabel]="'shortName'"
+    [data]="teamsStats"
+    [selectedItems]="selectedTeams"
+    [displayLabel]="'label'"
     [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.teams"
     (selectChange)="filterTeams($event)"
   ></alto-dropdown-filter>
