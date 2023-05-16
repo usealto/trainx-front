@@ -16,11 +16,16 @@
       <p class="title">{{ program.name }}</p>
     </div>
     <div class="card-bottom">
-      <alto-colored-pill-list
-        [limit]="5"
-        [hasDynamicColor]="true"
-        [data]="program.teams"
-      ></alto-colored-pill-list>
+      <ng-container *ngIf="program.teams.length > 0; else elseTeams">
+        <alto-colored-pill-list
+          [limit]="5"
+          [hasDynamicColor]="true"
+          [data]="program.teams"
+        ></alto-colored-pill-list>
+      </ng-container>
+      <ng-template #elseTeams>
+        <span class="alto-badge">{{ I18ns.shared.noTeam }}</span>
+      </ng-template>
       <hr />
       <p class="score">
         <span>

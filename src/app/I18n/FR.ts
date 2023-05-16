@@ -11,6 +11,7 @@ export const FR = {
     clipboard: 'Copier dans le presse-papier',
     showMore: 'Voir plus',
     showAll: 'Tout voir',
+    noTeam: 'No teams',
     optional: '(facultatif)',
     noData: 'Aucune donnée à afficher',
     noDataSubtitle: 'Aucun résultat ne correspond à votre recherche',
