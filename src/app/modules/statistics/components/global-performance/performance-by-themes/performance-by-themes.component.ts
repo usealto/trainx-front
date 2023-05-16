@@ -92,7 +92,10 @@ export class PerformanceByThemesComponent implements OnChanges {
 
     stats.forEach((s) => {
       s[type]?.forEach((t) => {
-        if (!labels.includes(t.label)) {
+        if (
+          (!this.selectedItems.length || this.selectedItems.some((item) => item.id === t.id)) &&
+          !labels.includes(t.label)
+        ) {
           labels.push(t.label);
         }
       });
@@ -107,10 +110,13 @@ export class PerformanceByThemesComponent implements OnChanges {
       ? this.teamsStats.filter((t) => selectedTeams.some((st) => st.id === t.id))
       : this.teamsStats;
     const labels = this.getThemesLabel(stats);
-
     const dataset = stats.map((s) => {
       const res = { label: s.label, data: [] as number[], fill: true };
-      s[type]?.forEach((item) => res.data.push(item.score || NaN));
+      s[type]?.forEach((item) => {
+        if (!this.selectedItems.length || this.selectedItems.some((i) => i.id === item.id)) {
+          res.data.push(item.score || NaN);
+        }
+      });
       return res;
     });
 
@@ -219,5 +225,6 @@ export class PerformanceByThemesComponent implements OnChanges {
   filterTagsAndPrograms(items: ScoreDtoApi[]) {
     this.selectedItems = items;
     this.getScores();
+    this.createPerformanceChart(this.selectedTeams);
   }
 }

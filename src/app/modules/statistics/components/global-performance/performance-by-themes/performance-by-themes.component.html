@@ -19,14 +19,14 @@
     "
     (selectChange)="filterTagsAndPrograms($event)"
   ></alto-dropdown-filter>
-  <ul ngbNav #nav="ngbNav" [activeId]="activeTab" class="nav-tabs mt-4" (navChange)="changeTabs()">
-    <li [ngbNavItem]="1">
-      <a ngbNavLink>{{ I18ns.statistics.globalPerformance.perThemePerformance.nav.tags }}</a>
-    </li>
-    <li [ngbNavItem]="2">
-      <a ngbNavLink>{{ I18ns.statistics.globalPerformance.perThemePerformance.nav.programs }}</a>
-    </li>
-  </ul>
+  <alto-tabs
+    class="mt-4"
+    (tabChanged)="changeTabs()"
+    [data]="[
+      { label: I18ns.statistics.globalPerformance.perThemePerformance.nav.tags, value: 1 },
+      { label: I18ns.statistics.globalPerformance.perThemePerformance.nav.programs, value: 2 }
+    ]"
+  ></alto-tabs>
   <div class="row mt-4">
     <div class="col-7 panel mx-2">
       <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}</h2>
