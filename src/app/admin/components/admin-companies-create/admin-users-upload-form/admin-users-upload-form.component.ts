@@ -46,6 +46,13 @@ export class AdminUsersUploadFormComponent {
       (result) => {
         // need to edit all users
         this.csvData[userIndex].email = result.email;
+
+        this.csvData[userIndex].firstname = result.firstname;
+
+        this.csvData[userIndex].lastname = result.lastname;
+
+        this.csvData[userIndex].role = result.role;
+
         this.refreshUsers();
       },
       (reason) => {},

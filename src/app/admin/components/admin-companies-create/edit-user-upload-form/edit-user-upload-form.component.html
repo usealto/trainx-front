@@ -9,13 +9,38 @@
   </div>
 </div>
 <hr />
-<div class="offcanvas-body">
+<div class="offcanvas-body h-100">
   <form *ngIf="userForm" [formGroup]="userForm">
-    <label class="form-label required">Name</label>
-    <input type="text" class="form-control" formControlName="name" placeholder="Name" />
-
+    <label class="form-label required">FirstName</label>
+    <input type="text" class="form-control" formControlName="firstname" placeholder="FirstName" />
+    <label class="form-label required">Lastname</label>
+    <input type="text" class="form-control" formControlName="lastname" placeholder="Lastname" />
     <label class="mt-4 form-label required">Email</label>
     <input type="email" class="form-control" formControlName="email" placeholder="email" />
+    <label class="mt-4 form-label required">Role</label>
+    <ng-select
+      class="w-100"
+      required
+      [items]="rolesPossibleValues"
+      placeholder="Select a role"
+      [selectableGroup]="true"
+      [closeOnSelect]="false"
+      formControlName="role"
+    >
+      <ng-template ng-label-tmp let-item="item" let-clear="clear">
+        <div class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
+          <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+            <i class="bi bi-x-lg"></i>
+          </span>
+          <span>{{ item }}</span>
+        </div>
+      </ng-template>
+      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+        <span class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
+          {{ item }}
+        </span>
+      </ng-template>
+    </ng-select>
   </form>
 </div>
 <button type="button" class="btn btn-primary" (click)="activeOffcanvas.close(userForm.value)">Save</button>

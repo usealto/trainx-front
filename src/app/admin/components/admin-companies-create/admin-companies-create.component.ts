@@ -123,26 +123,37 @@ export class AdminCompaniesCreateComponent implements OnInit {
     this.createTeams();
 
     const { name, domain, slackDays, slackActive, slackQuestionsPerQuiz } = this.companyForm.value;
-    // const slackDays = ['Monday', 'Wednesday', 'Friday'] as WeekDayEnumApi[];
-    console.log(slackQuestionsPerQuiz);
-    //const slackQuestionsPerQuiz = 2;
     const slackTimes = ['13h30'] as SlackTimeEnumApi[];
     const slackAdmin = '';
 
-    this.companiesRestService
-      .createCompany({
-        name,
-        domain,
-        slackDays: slackDays as WeekDayEnumApi[],
-        slackQuestionsPerQuiz: slackQuestionsPerQuiz as number,
-        slackTimes,
-        slackAdmin,
-        isSlackActive: slackActive,
-      })
-
-      .subscribe((company) => {
-        this.uploadFormComponent.upload(company.data?.id);
-        this.createTeams(company.data?.id);
-      });
+    if (this.edit && this.id) {
+      this.companiesRestService
+        .patchCompany(this.id, {
+          name,
+          domain,
+          slackDays: slackDays as WeekDayEnumApi[],
+          slackQuestionsPerQuiz: slackQuestionsPerQuiz as number,
+          slackTimes,
+          slackAdmin,
+          isSlackActive: slackActive,
+        })
+        .subscribe();
+    } else {
+      this.companiesRestService
+        .createCompany({
+          name,
+          domain,
+          slackDays: slackDays as WeekDayEnumApi[],
+          slackQuestionsPerQuiz: slackQuestionsPerQuiz as number,
+          slackTimes,
+          slackAdmin,
+          isSlackActive: slackActive,
+        })
+        .subscribe((company) => {
+          console.log(company);
+          this.uploadFormComponent.upload(company.data?.id);
+          this.createTeams(company.data?.id);
+        });
+    }
   }
 }
