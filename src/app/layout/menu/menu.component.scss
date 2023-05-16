@@ -29,6 +29,9 @@
     color: #f2f4f7;
     font-weight: 500;
     font-size: 1.143rem;
+    img {
+      padding-right: 0.857rem;
+    }
     &.menu-selected,
     &:hover {
       background-color: var(--alto-blue-second);
