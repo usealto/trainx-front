@@ -60,7 +60,6 @@ export class AdminTabsComponent {
       tab.active = true;
       this.activeTab = this.tabs.toArray().findIndex((tab) => tab.active);
       this.activeNumberChanges.emit(this.activeTab);
-      console.log(this.activeTab);
     }
   }
 }

@@ -5,7 +5,9 @@ import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { EditUserUploadFormComponent } from '../edit-user-upload-form/edit-user-upload-form.component';
 import { UntypedFormBuilder } from '@angular/forms';
 import { IFormBuilder } from 'src/app/core/form-types';
-import { take } from 'rxjs';
+import { Observable, forkJoin, from, map, mergeMap, take, toArray } from 'rxjs';
+import { RoleEnumApi, UserDtoCreatedResponseApi, UsersApiService } from 'src/app/sdk';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'alto-admin-users-upload-form',
@@ -20,8 +22,12 @@ export class AdminUsersUploadFormComponent {
   reg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   page = 1;
   showUserList = true;
+  id: any;
 
-  constructor(private readonly offcanvasService: NgbOffcanvas) {}
+  constructor(
+    private readonly offcanvasService: NgbOffcanvas,
+    private readonly usersApiService: UsersApiService,
+  ) {}
 
   ngOnInit(): void {
     this.refreshUsers();
@@ -66,12 +72,12 @@ export class AdminUsersUploadFormComponent {
     Papa.parse(file, {
       complete: (results: { data: any[] }) => {
         results.data.forEach((userRow: string[]) => {
-          if (this.reg.test(userRow[0])) {
+          if (this.reg.test(userRow[2])) {
             const user = {
-              email: userRow[0],
-              team: userRow[1],
-              companyId: undefined,
-              isUploaded: false,
+              firstname: userRow[0],
+              lastname: userRow[1],
+              email: userRow[2],
+              role: userRow[3],
             };
             this.csvData.push(user);
           } else {
@@ -85,5 +91,35 @@ export class AdminUsersUploadFormComponent {
         this.refreshUsers();
       },
     });
+  }
+
+  public upload(id: string | undefined): void {
+    console.log('in upload');
+    console.log(id);
+
+    if (this.csvData.length > 0) {
+      this.csvData.forEach((user) => {
+        const roles =
+          RoleEnumApi[user.role as keyof typeof RoleEnumApi] !== RoleEnumApi.CompanyUser
+            ? [RoleEnumApi[user.role as keyof typeof RoleEnumApi], RoleEnumApi.CompanyUser]
+            : [RoleEnumApi[user.role as keyof typeof RoleEnumApi]];
+        this.usersApiService
+          .createUser({
+            createUserDtoApi: {
+              firstname: user.firstname,
+              lastname: user.lastname,
+              email: user.email,
+              companyId: id,
+              roles: roles,
+            },
+          })
+          .subscribe((res) => {
+            console.log(res);
+            if (res.statusCode === 201) {
+              user.isUploaded = true;
+            }
+          });
+      });
+    }
   }
 }

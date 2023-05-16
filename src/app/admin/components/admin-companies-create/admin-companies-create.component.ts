@@ -3,11 +3,12 @@ import { CompanyForm } from './models/company.create';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { FormArray, FormGroup, UntypedFormBuilder } from '@angular/forms';
-import { CompanyDtoApi, SlackTimeEnumApi, TeamDtoApi, WeekDayEnumApi } from 'src/app/sdk';
+import { CompanyDtoApi, CreateTeamDtoApi, SlackTimeEnumApi, TeamDtoApi, WeekDayEnumApi } from 'src/app/sdk';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { tap } from 'rxjs';
+import { Observable, forkJoin, from, map, mergeMap, switchMap, tap, toArray } from 'rxjs';
 import { AdminTabsComponent } from '../admin-shared/admin-tabs/admin-tabs.component';
+import { AdminUsersUploadFormComponent } from './admin-users-upload-form/admin-users-upload-form.component';
 @Component({
   selector: 'alto-admin-companies-create',
   templateUrl: './admin-companies-create.component.html',
@@ -16,12 +17,14 @@ import { AdminTabsComponent } from '../admin-shared/admin-tabs/admin-tabs.compon
 })
 export class AdminCompaniesCreateComponent implements OnInit {
   @ViewChild(AdminTabsComponent) tabs!: AdminTabsComponent;
+  @ViewChild(AdminUsersUploadFormComponent) uploadFormComponent!: AdminUsersUploadFormComponent;
   edit = false;
   company!: CompanyDtoApi;
   companyForm!: IFormGroup<CompanyForm>;
   teams: TeamDtoApi[] = [];
   id: string | undefined;
   tabNumber = 0;
+  weekDayEnum = Object.keys(WeekDayEnumApi);
   private fb: IFormBuilder;
 
   constructor(
@@ -45,6 +48,9 @@ export class AdminCompaniesCreateComponent implements OnInit {
       domain: ['', []],
       teams: ['', []],
       newTeams: this.fb.array([]),
+      slackDays: [[]],
+      slackQuestionsPerQuiz: [undefined],
+      slackActive: [false],
     });
     if (this.id) {
       this.edit = true;
@@ -53,11 +59,15 @@ export class AdminCompaniesCreateComponent implements OnInit {
         .pipe(tap((company) => (this.company = company)))
         .pipe(
           tap(() => {
+            console.log(this.company);
             this.companyForm = this.fb.group<CompanyForm>({
               domain: [this.company.domain || ''],
               name: [this.company.name],
-              teams: [''],
+              teams: [],
               newTeams: this.fb.array([]),
+              slackDays: [this.company.slackDays],
+              slackQuestionsPerQuiz: [this.company.slackQuestionsPerQuiz],
+              slackActive: [this.company.isSlackActive],
             });
           }),
         )
@@ -96,19 +106,43 @@ export class AdminCompaniesCreateComponent implements OnInit {
     }
   }
 
+  createTeams(companyId?: string): void {
+    this.newTeams.value.forEach((team: CreateTeamDtoApi) => {
+      this.teamService
+        .createTeam({ shortName: team.shortName, longName: team.longName, companyId: companyId })
+        .pipe(map((uploadedTeam) => uploadedTeam))
+        .subscribe((res) => {
+          console.log(res);
+        });
+    });
+  }
+
   async submit() {
     if (!this.companyForm.value) return;
 
-    const { name, domain } = this.companyForm.value;
-    const slackDays = ['Monday', 'Wednesday', 'Friday'] as WeekDayEnumApi[];
-    const slackQuestionsPerQuiz = 2;
+    this.createTeams();
+
+    const { name, domain, slackDays, slackActive, slackQuestionsPerQuiz } = this.companyForm.value;
+    // const slackDays = ['Monday', 'Wednesday', 'Friday'] as WeekDayEnumApi[];
+    console.log(slackQuestionsPerQuiz);
+    //const slackQuestionsPerQuiz = 2;
     const slackTimes = ['13h30'] as SlackTimeEnumApi[];
     const slackAdmin = '';
 
     this.companiesRestService
-      .createCompany({ name, domain, slackDays, slackQuestionsPerQuiz, slackTimes, slackAdmin })
-      .subscribe();
+      .createCompany({
+        name,
+        domain,
+        slackDays: slackDays as WeekDayEnumApi[],
+        slackQuestionsPerQuiz: slackQuestionsPerQuiz as number,
+        slackTimes,
+        slackAdmin,
+        isSlackActive: slackActive,
+      })
 
-    this.router.navigate(['/admin/companies']);
+      .subscribe((company) => {
+        this.uploadFormComponent.upload(company.data?.id);
+        this.createTeams(company.data?.id);
+      });
   }
 }

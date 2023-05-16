@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { forkJoin, switchMap, tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
+import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { CompanyDtoApi, UserDtoApi } from 'src/app/sdk';
+import { CompanyDtoApi, TeamDtoApi, UserDtoApi } from 'src/app/sdk';
 
 @Component({
   selector: 'alto-admin-company-users',
@@ -19,16 +20,28 @@ export class AdminCompanyUsersComponent implements OnInit {
   page = 1;
   pageSize = 7;
   pageCount = 0;
+  teams: TeamDtoApi[] = [];
 
   constructor(
     private readonly companiesRestService: CompaniesRestService,
     private readonly usersRestService: UsersRestService,
+    private readonly teamsRestService: TeamsRestService,
     private route: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') || '';
     console.log(this.id);
+
+    this.teamsRestService
+      .getTeams({ companyId: this.id })
+      .pipe(
+        tap((teams) => {
+          console.log(teams);
+          this.teams = teams;
+        }),
+      )
+      .subscribe();
 
     forkJoin({
       company: this.companiesRestService.getCompanyById(this.id),
