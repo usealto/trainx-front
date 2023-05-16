@@ -68,7 +68,11 @@
           ngbTooltip="{{ I18ns.leadHome.statistics.globalScoreToolTip }}"
         ></i>
       </p>
-      <h1>{{ globalScore | percent }}</h1>
+      <h1 class="d-inline-block">{{ globalScore | percent }}</h1>
+      <alto-progression-badge
+        class="float-end mt-2"
+        [score]="globalScoreProgression"
+      ></alto-progression-badge>
     </div>
   </div>
   <div class="col-3">
@@ -104,9 +108,12 @@
           ngbTooltip="{{ I18ns.leadHome.statistics.activeMembersToolTip }}"
         ></i>
       </p>
-      <div class="row g-0">
-        <h1 class="col">{{ activeMembers }}</h1>
-        <!-- <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge> -->
+      <div>
+        <h1 class="d-inline-block">{{ activeMembers }}</h1>
+        <!-- <alto-progression-badge
+          class="float-end mt-2"
+          [score]="activeMembersProgression"
+        ></alto-progression-badge> -->
       </div>
     </div>
   </div>
@@ -120,11 +127,15 @@
           class="alto-grey bi bi-question-circle float-end"
           placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.inactiveMembersToolTip }}"
+          placement="start"
         ></i>
       </p>
-      <div class="row g-0">
-        <h1 class="col">{{ inactiveMembers }}</h1>
-        <!-- <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge> -->
+      <div>
+        <h1 class="d-inline-block">{{ inactiveMembers }}</h1>
+        <!-- <alto-progression-badge
+          class="float-end mt-2"
+          [score]="inactiveMembersProgression"
+        ></alto-progression-badge> -->
       </div>
     </div>
   </div>

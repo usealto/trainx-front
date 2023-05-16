@@ -54,10 +54,13 @@ export class LeadHomeComponent implements OnInit {
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
   evolutionChart?: Chart;
   globalScore = 0;
+  globalScoreProgression = 0;
   averageCompletion = 0;
   completionProgression = 0;
   activeMembers = 0;
+  activeMembersProgression = 0;
   inactiveMembers = 0;
+  inactiveMembersProgression = 0;
   //
   challengesByTeam: ChallengeDtoApi[] = [];
   challengesByUser: ChallengeDtoApi[] = [];
@@ -210,13 +213,18 @@ export class LeadHomeComponent implements OnInit {
     this.globalFilters.team = team;
     this.globalFilters.timeframe = ScoreTimeframeEnumApi.Day;
 
-    return this.scoresRestService
-      .getScores(this.globalFilters)
+    return combineLatest([
+      this.scoresRestService.getScores(this.globalFilters),
+      this.scoresRestService.getScores(this.globalFilters, true),
+    ])
       .pipe(
-        tap(({ scores }) => {
-          this.globalScore = !scores.length
-            ? 0
-            : this.scoreService.reduceWithoutNull(scores[0].averages) ?? 0;
+        tap(([current, previous]) => {
+          this.globalScore = current.scores.length
+            ? this.scoreService.reduceWithoutNull(current.scores[0].averages) ?? 0
+            : 0;
+          this.globalScoreProgression = previous.scores.length
+            ? this.scoreService.reduceWithoutNull(previous.scores[0].averages) ?? 0
+            : 0;
         }),
         switchMap(() => this.getAverageCompletion(this.globalFilters)),
         untilDestroyed(this),
@@ -237,9 +245,8 @@ export class LeadHomeComponent implements OnInit {
         const avgCompletion = currentAvg[1] === 0 ? 0 : currentAvg[0] / currentAvg[1];
         this.averageCompletion = avgCompletion;
         const previousAvgCompletion = previousAvg[1] === 0 ? 0 : previousAvg[0] / previousAvg[1];
-        this.completionProgression = avgCompletion
-          ? previousAvgCompletion - avgCompletion / avgCompletion
-          : 0;
+        this.completionProgression =
+          avgCompletion && previousAvgCompletion ? previousAvgCompletion - avgCompletion / avgCompletion : 0;
       }),
     );
   }

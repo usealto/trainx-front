@@ -40,15 +40,10 @@ export class ScoresRestService {
       .pipe(map((r) => r.data || []));
   }
 
-  getScores({
-    duration,
-    type,
-    team,
-    timeframe,
-    sortBy,
-    user,
-    ids,
-  }: ChartFilters): Observable<ScoresResponseDtoApi> {
+  getScores(
+    { duration, type, team, timeframe, sortBy, user, ids }: ChartFilters,
+    isProgression = false,
+  ): Observable<ScoresResponseDtoApi> {
     const par: GetScoresRequestParams = {
       type: type ?? ScoreTypeEnumApi.Guess,
       timeframe: timeframe ?? ScoreTimeframeEnumApi.Day,
@@ -57,6 +52,29 @@ export class ScoresRestService {
       fillValues: ScoreFillValuesEnumApi.Null,
       sortBy,
     };
+
+    if (isProgression) {
+      let date = new Date();
+      switch (duration) {
+        case 'week':
+          date = addDays(date, -14);
+          break;
+        case 'month':
+          date = addDays(date, -60);
+          break;
+        case 'trimester':
+          date = addDays(date, -180);
+          break;
+        case 'year':
+          date = addDays(date, -730);
+          break;
+      }
+      par.dateAfter = date;
+      par.dateBefore = this.service.getStartDate(duration as ScoreDuration);
+    } else {
+      par.dateAfter = this.service.getStartDate(duration as ScoreDuration);
+      par.dateBefore = new Date();
+    }
 
     if (team) {
       par.scoredBy = ScoreByTypeEnumApi.Team;
@@ -90,20 +108,20 @@ export class ScoresRestService {
     );
   }
 
-  getProgramScore(req: GetScoresRequestParams): Observable<ScoresResponseDtoApi> {
-    const par = {
-      ...req,
-      type: ScoreTypeEnumApi.Program,
-      timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Day,
-      dateBefore: new Date(),
-    };
-    par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
+  // getProgramScore(req: GetScoresRequestParams): Observable<ScoresResponseDtoApi> {
+  //   const par = {
+  //     ...req,
+  //     type: ScoreTypeEnumApi.Program,
+  //     timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Day,
+  //     dateBefore: new Date(),
+  //   };
+  //   par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
 
-    return this.scoresApi.getScores(par).pipe(
-      map((r) => r.data || ({} as ScoresResponseDtoApi)),
-      filter((x) => !!x),
-    );
-  }
+  //   return this.scoresApi.getScores(par).pipe(
+  //     map((r) => r.data || ({} as ScoresResponseDtoApi)),
+  //     filter((x) => !!x),
+  //   );
+  // }
 
   getCompletion(filt: ScoreFilters, isProgression: boolean): Observable<ProgramRunApi[]> {
     const par = {
