@@ -193,17 +193,6 @@ export class PerformanceByThemesComponent implements OnChanges {
       datasets: dataSet,
     };
 
-    const options = {
-      ...chartDefaultOptions,
-    };
-    if (dataSet.length > 10) {
-      options.plugins = {
-        legend: {
-          display: false,
-        },
-      };
-    }
-
     if (this.scoreEvolutionChart) {
       this.scoreEvolutionChart.destroy();
     }
@@ -211,7 +200,7 @@ export class PerformanceByThemesComponent implements OnChanges {
     this.scoreEvolutionChart = new Chart('themeScoreEvolution', {
       type: 'line',
       data: data,
-      options: options,
+      options: chartDefaultOptions,
     });
   }
 
