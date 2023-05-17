@@ -43,13 +43,11 @@
               <i class="bi bi-arrow-up-short"></i> Domain
             </th>
             <th scope="col">Biling</th>
-            <th scope="col">Teams</th>
             <th scope="col">User admin</th>
             <th scope="col">Sending days</th>
             <th scope="col" sortable="slackQuestionsPerQuiz" (sort)="onSort($event)">
               <i class="bi bi-arrow-up-short"></i> Nb of questions
             </th>
-            <th scope="col">Admin Slack</th>
             <th scope="col" class="action-btn-list"></th>
           </tr>
         </thead>
@@ -77,22 +75,13 @@
             <td>{{ company.domain }}</td>
             <td>Lorem ipsum</td>
             <td>
-              <div class="d-flex gap-1">
-                <alto-colored-pill-list
-                  [hasDynamicColor]="true"
-                  [data]="[
-                    { name: 'CSM', id: 'AFE8238' },
-                    { name: 'SDR', id: 'FF1238' },
-                    { name: 'BDR', id: '9DAA38' }
-                  ]"
-                  [limit]="3"
-                ></alto-colored-pill-list>
+              <div>
+                <span>{{company?.admins?.[0]?.username ?? '' }}</span>
+                <span>{{company?.admins?.[0]?.email ?? '' }}</span>
               </div>
             </td>
-            <td>{{ company.isSlackActive }}</td>
             <td>{{ company.slackDays }}</td>
             <td>{{ company.slackQuestionsPerQuiz }}</td>
-            <td>{{ company.slackAdmin }}</td>
             <td class="action-btn-list-container">
               <div class="shaddow"></div>
               <div class="d-flex action-btn-list align-items-center gap-2 px-3">

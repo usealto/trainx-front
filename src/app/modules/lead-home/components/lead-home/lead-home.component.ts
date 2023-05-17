@@ -10,7 +10,6 @@ import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ScoreDuration, ScoreFilters } from 'src/app/modules/programs/models/score.model';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
-import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/programs/services/scores.service';
@@ -20,14 +19,17 @@ import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import {
   ChallengeDtoApi,
   ChallengeDtoApiTypeEnumApi,
-  GetProgramRunsRequestParams,
-  ProgramRunApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
-  ScoresResponseDtoApi,
-  TeamDtoApi,
   UserDtoApi,
 } from 'src/app/sdk';
+
+type TopFlop = { top: any[]; flop: any[] };
+
+type TopFlopDisplay = {
+  label: string;
+  avg: number;
+};
 
 @UntilDestroy()
 @Component({
@@ -52,21 +54,21 @@ export class LeadHomeComponent implements OnInit {
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
   evolutionChart?: Chart;
   globalScore = 0;
+  globalScoreProgression = 0;
   averageCompletion = 0;
   completionProgression = 0;
-  //
-  programs!: ProgramRunApi[];
-  programsPage = 1;
-  programsCount = 0;
-  programPageSize = 3;
+  activeMembers = 0;
+  activeMembersProgression = 0;
+  inactiveMembers = 0;
+  inactiveMembersProgression = 0;
   //
   challengesByTeam: ChallengeDtoApi[] = [];
   challengesByUser: ChallengeDtoApi[] = [];
 
   topFlopData: {
-    programs: any[];
-    teams: any[];
-  } = { programs: [], teams: [] };
+    programs: TopFlop;
+    teams: TopFlop;
+  } = { programs: { top: [], flop: [] }, teams: { top: [], flop: [] } };
   topFlopProgramTab: ScoreTypeEnumApi = ScoreTypeEnumApi.Program;
   topFlopTeamTab: ScoreTypeEnumApi = ScoreTypeEnumApi.Team;
 
@@ -75,7 +77,6 @@ export class LeadHomeComponent implements OnInit {
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
-    private readonly programRunsService: ProgramRunsRestService,
     private readonly challengesRestService: ChallengesRestService,
     private readonly userService: UsersRestService,
     public readonly teamStore: TeamStore,
@@ -84,7 +85,6 @@ export class LeadHomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.userName = this.profileStore.user.value.firstname ?? this.profileStore.user.value.username ?? '';
-    this.getProgramRuns();
 
     combineLatest([
       this.commentsRestService.getComments(),
@@ -103,7 +103,12 @@ export class LeadHomeComponent implements OnInit {
             .slice(0, 5);
         }),
         tap(() => this.getGlobalScore(this.globalFilters)),
-        // switchMap(() => this.getAverageCompletion(this.globalFilters.duration as ScoreDuration)),
+        tap(console.log),
+        switchMap(() => this.userService.getUsers()),
+        tap((users) => {
+          this.activeMembers = users.filter((user) => user.isActive).length;
+          this.inactiveMembers = users.length - this.activeMembers;
+        }),
         untilDestroyed(this),
       )
       .subscribe();
@@ -150,6 +155,7 @@ export class LeadHomeComponent implements OnInit {
             options: chartDefaultOptions,
           });
         }),
+        untilDestroyed(this),
       )
       .subscribe();
   }
@@ -158,23 +164,31 @@ export class LeadHomeComponent implements OnInit {
     this.scoresRestService
       .getScores({
         ...this.chartFilters,
-        timeframe: this.scoreService.durationToTimeFrame(this.chartFilters.duration as ScoreDuration),
+        timeframe: ScoreTimeframeEnumApi.Day,
         type: val,
         sortBy: 'lastAverage:desc',
       })
       .pipe(
-        tap((sc: ScoresResponseDtoApi) => {
-          const output = sc.scores.map((s) => ({
-            label: s.label,
-            avg: s.averages.at(-1),
-          }));
+        tap(({ scores }) => {
+          const output: TopFlopDisplay[] = scores
+            .map((s) => ({
+              label: s.label,
+              avg: this.scoreService.reduceWithoutNull(s.averages) ?? 0,
+            }))
+            .filter((x) => !!x.avg);
           if (val === ScoreTypeEnumApi.Program || val === ScoreTypeEnumApi.Tag) {
             this.topFlopProgramTab = val;
-            this.topFlopData.programs = output;
+            this.topFlopData.programs = {
+              top: this.getTop(output),
+              flop: this.getFlop(output),
+            };
           }
           if (val === ScoreTypeEnumApi.Team || val === ScoreTypeEnumApi.User) {
             this.topFlopTeamTab = val;
-            this.topFlopData.teams = output;
+            this.topFlopData.teams = {
+              top: this.getTop(output),
+              flop: this.getFlop(output),
+            };
           }
         }),
         untilDestroyed(this),
@@ -182,24 +196,12 @@ export class LeadHomeComponent implements OnInit {
       .subscribe();
   }
 
-  changeProgramPage() {
-    this.getProgramRuns();
+  getTop(data: TopFlopDisplay[]) {
+    return data.filter(({ avg }) => !!avg && avg >= 0.5).sort((a, b) => (a.avg < b.avg ? 1 : -1));
   }
 
-  getProgramRuns(teams: string[] = []) {
-    this.programRunsService
-      .getProgramRunsPaginated({
-        isFinished: false,
-        page: this.programsPage,
-        itemsPerPage: this.programPageSize,
-        teamIds: teams.join(','),
-      })
-      .pipe(
-        tap((p) => (this.programs = p.data ?? [])),
-        tap((p) => (this.programsCount = p.meta.totalItems ?? [])),
-        untilDestroyed(this),
-      )
-      .subscribe();
+  getFlop(data: TopFlopDisplay[]) {
+    return data.filter(({ avg }) => !!avg && avg < 0.5).sort((a, b) => (a.avg > b.avg ? 1 : -1));
   }
 
   getGlobalScore({
@@ -212,18 +214,21 @@ export class LeadHomeComponent implements OnInit {
     this.globalFilters.team = team;
     this.globalFilters.timeframe = ScoreTimeframeEnumApi.Day;
 
-    return this.scoresRestService
-      .getScores(this.globalFilters)
+    return combineLatest([
+      this.scoresRestService.getScores(this.globalFilters),
+      this.scoresRestService.getScores(this.globalFilters, true),
+    ])
       .pipe(
-        tap(({ scores }) => {
-          if (!scores.length) {
-            this.globalScore = 0;
-          } else {
-            const data = scores[0].averages.filter((x) => !!x);
-            this.globalScore = data.reduce((prev, curr) => prev + curr, 0) / data.length;
-          }
+        tap(([current, previous]) => {
+          this.globalScore = current.scores.length
+            ? this.scoreService.reduceWithoutNull(current.scores[0].averages) ?? 0
+            : 0;
+          this.globalScoreProgression = previous.scores.length
+            ? this.scoreService.reduceWithoutNull(previous.scores[0].averages) ?? 0
+            : 0;
         }),
         switchMap(() => this.getAverageCompletion(this.globalFilters)),
+        untilDestroyed(this),
       )
       .subscribe();
   }
@@ -241,15 +246,10 @@ export class LeadHomeComponent implements OnInit {
         const avgCompletion = currentAvg[1] === 0 ? 0 : currentAvg[0] / currentAvg[1];
         this.averageCompletion = avgCompletion;
         const previousAvgCompletion = previousAvg[1] === 0 ? 0 : previousAvg[0] / previousAvg[1];
-        this.completionProgression = avgCompletion
-          ? previousAvgCompletion - avgCompletion / avgCompletion
-          : 0;
+        this.completionProgression =
+          avgCompletion && previousAvgCompletion ? previousAvgCompletion - avgCompletion / avgCompletion : 0;
       }),
     );
-  }
-
-  filterPrograms(teams: TeamDtoApi[]) {
-    this.getProgramRuns(teams.map((t) => t.id));
   }
 
   @memoize()

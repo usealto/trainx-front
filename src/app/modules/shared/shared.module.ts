@@ -27,6 +27,9 @@ import { PeriodFilterComponent } from './components/period-filter/period-filter.
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { CustomPaginationComponent } from './components/custom-pagination/custom-pagination.component';
 import { NgbdSortableHeaderDirective } from 'src/app/core/utils/directives/ngbd-sortable-header.directive';
+import { ProgramCardListComponent } from './components/program-card-list/program-card-list.component';
+import { TimePickerComponent } from './components/time-picker/time-picker.component';
+import { TeamColorPipe } from './helpers/team-color.pipe';
 
 @NgModule({
   declarations: [
@@ -43,6 +46,9 @@ import { NgbdSortableHeaderDirective } from 'src/app/core/utils/directives/ngbd-
     PeriodFilterComponent,
     DropzoneComponent,
     CustomPaginationComponent,
+    ProgramCardListComponent,
+    TimePickerComponent,
+    TeamColorPipe,
   ],
   imports: [
     CommonModule,
@@ -73,6 +79,8 @@ import { NgbdSortableHeaderDirective } from 'src/app/core/utils/directives/ngbd-
     SearchComponent,
     StatusPillComponent,
     PeriodFilterComponent,
+    ProgramCardListComponent,
+    TeamColorPipe,
     NgVar,
     NgbdSortableHeaderDirective,
     FormsModule,
@@ -86,6 +94,7 @@ import { NgbdSortableHeaderDirective } from 'src/app/core/utils/directives/ngbd-
     NgbDatepickerModule,
     DropzoneComponent,
     CustomPaginationComponent,
+    TimePickerComponent,
   ],
 })
 export class SharedModule {}

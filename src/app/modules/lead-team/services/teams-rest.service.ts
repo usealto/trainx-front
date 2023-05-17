@@ -28,7 +28,7 @@ export class TeamsRestService {
 
       return this.teamApi.getTeams(par).pipe(
         map((r) => r.data ?? []),
-        tap((tags) => (this.teamStore.teams.value = tags)),
+        tap((teams) => (this.teamStore.teams.value = teams)),
       );
     }
   }

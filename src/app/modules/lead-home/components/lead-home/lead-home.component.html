@@ -1,14 +1,14 @@
-<h1 class="mt-4">{{ I18ns.leadHome.title + userName | titlecase }}</h1>
-<p class="mb-4 alto-grey">{{ I18ns.leadHome.subtitle }}</p>
+<h1>{{ I18ns.leadHome.title + userName | titlecase }}</h1>
+<p class="mb-4 alto-grey fs-6b">{{ I18ns.leadHome.subtitle }}</p>
 <div class="row">
   <div class="col-6">
     <div class="panel">
-      <div class="float-start mx-3 alto-badge-big"><i class="fs-4 bi bi-chat-text"></i></div>
-      <div class="d-inline-block align-bottom">
-        <p class="fw-bold mb-1">
+      <div class="d-inline-block alto-badge-big"><i class="fs-4 bi bi-chat-text"></i></div>
+      <div class="d-inline-block align-bottom ms-4">
+        <p class="fw-bold fs-6b mb-1">
           {{ I18ns.leadHome.comments | plural : commentsCount }}
         </p>
-        <p class="fs-7 alto-grey">
+        <p class="alto-grey">
           {{ I18ns.leadHome.subtitleComment | plural : commentsCount }}
         </p>
       </div>
@@ -20,12 +20,12 @@
       [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
       fragment="submittedQuestionsAnchor"
     >
-      <div class="float-start mx-3 alto-badge-big"><i class="fs-4 bi bi-question-circle"></i></div>
-      <div class="d-inline-block align-bottom">
-        <p class="fw-bold mb-1">
+      <div class="d-inline-block alto-badge-big"><i class="fs-4 bi bi-question-circle"></i></div>
+      <div class="d-inline-block align-bottom ms-4">
+        <p class="fw-bold fs-6b mb-1">
           {{ I18ns.leadHome.question | plural : questionsCount }}
         </p>
-        <p class="fs-7 alto-grey">
+        <p class="alto-grey">
           {{ I18ns.leadHome.subtitleQuestion | plural : questionsCount }}
         </p>
       </div>
@@ -35,7 +35,7 @@
 
 <div class="row mt-5 mb-4">
   <div class="col-5">
-    <h2>{{ I18ns.leadHome.statistics.title }}</h2>
+    <h2 class="title">{{ I18ns.leadHome.statistics.title }}</h2>
   </div>
   <div class="col-7 text-end">
     <alto-period-filter
@@ -55,34 +55,42 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row stats">
   <div class="col-3">
     <div class="panel">
-      <p>
-        {{ I18ns.leadHome.statistics.globalScore }}
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.leadHome.statistics.globalScore }}
+        </span>
         <i
-          class="fs-5 bi bi-question-circle float-end"
+          class="alto-grey bi bi-question-circle float-end"
           placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.globalScoreToolTip }}"
         ></i>
       </p>
-      <h1>{{ globalScore | percent }}</h1>
+      <h1 class="d-inline-block">{{ globalScore | percent }}</h1>
+      <alto-progression-badge
+        class="float-end mt-2"
+        [score]="globalScoreProgression"
+      ></alto-progression-badge>
     </div>
   </div>
   <div class="col-3">
     <div class="panel">
-      <p>
-        {{ I18ns.leadHome.statistics.averageCompletion }}
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.leadHome.statistics.averageCompletion }}
+        </span>
         <i
-          class="fs-5 bi bi-question-circle float-end"
+          class="alto-grey bi bi-question-circle float-end"
           placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.averageCompletionToolTip }}"
         ></i>
       </p>
-      <div class="w-100 row g-0">
-        <h1 class="col">{{ averageCompletion | percent }}</h1>
+      <div>
+        <h1 class="d-inline-block">{{ averageCompletion | percent }}</h1>
         <alto-progression-badge
-          class="col text-end mt-2"
+          class="float-end mt-2"
           [score]="completionProgression"
         ></alto-progression-badge>
       </div>
@@ -90,33 +98,44 @@
   </div>
   <div class="col-3">
     <div class="panel">
-      <p>
-        {{ I18ns.leadHome.statistics.activeMembers }}
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.leadHome.statistics.activeMembers }}
+        </span>
         <i
-          class="fs-5 bi bi-question-circle float-end"
+          class="alto-grey bi bi-question-circle float-end"
           placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.activeMembersToolTip }}"
         ></i>
       </p>
-      <div class="row g-0">
-        <h1 class="col">N/A</h1>
-        <!-- <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge> -->
+      <div>
+        <h1 class="d-inline-block">{{ activeMembers }}</h1>
+        <!-- <alto-progression-badge
+          class="float-end mt-2"
+          [score]="activeMembersProgression"
+        ></alto-progression-badge> -->
       </div>
     </div>
   </div>
   <div class="col-3">
     <div class="panel">
-      <p>
-        {{ I18ns.leadHome.statistics.inactiveMembers }}
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.leadHome.statistics.inactiveMembers }}
+        </span>
         <i
-          class="fs-5 bi bi-question-circle float-end"
+          class="alto-grey bi bi-question-circle float-end"
           placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.inactiveMembersToolTip }}"
+          placement="start"
         ></i>
       </p>
-      <div class="row g-0">
-        <h1 class="col">N/A</h1>
-        <!-- <alto-progression-badge class="col-3" [score]="completionProgression"></alto-progression-badge> -->
+      <div>
+        <h1 class="d-inline-block">{{ inactiveMembers }}</h1>
+        <!-- <alto-progression-badge
+          class="float-end mt-2"
+          [score]="inactiveMembersProgression"
+        ></alto-progression-badge> -->
       </div>
     </div>
   </div>
@@ -125,7 +144,9 @@
 <!-- GLOBAL EVOLUTION -->
 
 <div class="row mt-5 mb-4">
-  <h2 class="col-5">{{ I18ns.leadHome.globalEvolution.title }}</h2>
+  <div class="col-5">
+    <h2 class="title">{{ I18ns.leadHome.globalEvolution.title }}</h2>
+  </div>
   <div class="col-7 text-end">
     <alto-period-filter
       class="text-start me-3"
@@ -169,11 +190,11 @@
     </div>
   </div>
   <!-- TOP / FLOP -->
-  <div class="col-6">
+  <div class="col-6 top-flop">
     <!-- PROGRAMS & TAGS -->
-    <div class="panel mb-3">
+    <div class="panel mb-4">
       <alto-tabs
-        class="mb-3"
+        class="mb-4"
         *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
         (tabChanged)="topFlop($event)"
         [data]="[
@@ -182,26 +203,31 @@
         ]"
       ></alto-tabs>
       <div class="row">
-        <ng-container *ngIf="topFlopData?.programs?.length; else tfProgramTemplate">
-          <div class="col-6 border-end">
-            <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
+        <ng-container
+          *ngIf="
+            topFlopData?.programs?.top?.length || topFlopData?.programs?.flop?.length;
+            else tfProgramTemplate
+          "
+        >
+          <div class="col-6 border-end pe-0">
+            <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.programs | slice : -3" class="mb-1">
-                {{ item.label }}
-                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
-                  item.avg | percent
-                }}</span>
+              <p *ngFor="let item of topFlopData?.programs?.top | slice : 0 : 3" class="mb-3">
+                <span>{{ item.label | slice : 0 : 32 }}</span>
+                <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
+                  {{ item.avg | percent }}
+                </span>
               </p>
             </div>
           </div>
-          <div class="col-6">
-            <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
+          <div class="col-6 ps-4 pe-0">
+            <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.programs | slice : 0 : 3" class="mb-1">
-                {{ item.label }}
-                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
-                  item.avg | percent
-                }}</span>
+              <p *ngFor="let item of topFlopData?.programs?.flop | slice : 0 : 3" class="mb-3">
+                <span>{{ item.label | slice : 0 : 32 }}</span>
+                <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
+                  {{ item.avg | percent }}
+                </span>
               </p>
             </div>
           </div>
@@ -214,9 +240,9 @@
       </div>
     </div>
     <!-- TEAMS & USERS -->
-    <div class="panel mb-3">
+    <div class="panel">
       <alto-tabs
-        class="mb-3"
+        class="mb-4"
         *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
         (tabChanged)="topFlop($event)"
         [data]="[
@@ -225,26 +251,28 @@
         ]"
       ></alto-tabs>
       <div class="row">
-        <ng-container *ngIf="topFlopData?.teams?.length; else tfProgramTemplate2">
-          <div class="col-6 border-end">
-            <h2>{{ I18ns.leadHome.globalEvolution.flop }}</h2>
+        <ng-container
+          *ngIf="topFlopData?.teams?.top?.length || topFlopData?.teams?.flop?.length; else tfProgramTemplate2"
+        >
+          <div class="col-6 border-end pe-0">
+            <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.teams | slice : -3" class="mb-1">
-                {{ item.label }}
-                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
-                  item.avg | percent
-                }}</span>
+              <p *ngFor="let item of topFlopData?.teams?.top | slice : 0 : 3" class="mb-3">
+                <span>{{ item.label | slice : 0 : 32 }}</span>
+                <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
+                  {{ item.avg | percent }}
+                </span>
               </p>
             </div>
           </div>
-          <div class="col-6">
-            <h2>{{ I18ns.leadHome.globalEvolution.top }}</h2>
+          <div class="col-6 ps-4 pe-0">
+            <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.teams | slice : 0 : 3" class="mb-1">
-                {{ item.label }}
-                <span class="float-end badge rounded-pill" [class]="item.avg * 100 | pillColor">{{
-                  item.avg | percent
-                }}</span>
+              <p *ngFor="let item of topFlopData?.teams?.flop" class="mb-3">
+                <span>{{ item.label | slice : 0 : 32 }}</span>
+                <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
+                  {{ item.avg | percent }}
+                </span>
               </p>
             </div>
           </div>
@@ -260,46 +288,16 @@
 </div>
 
 <!-- ONGOING PROGRAMS -->
-<div class="row mt-5 mb-4">
-  <div class="col-5">
-    <h2>{{ I18ns.leadHome.ongoingPrograms.title }}</h2>
-  </div>
-  <div class="col-7 text-end">
-    <alto-dropdown-filter
-      class="text-start me-3"
-      [data]="teamStore.teams.value"
-      [displayLabel]="'shortName'"
-      [placeholder]="I18ns.leadHome.ongoingPrograms.filters.team"
-      (selectChange)="filterPrograms($event)"
-      [isColored]="true"
-    ></alto-dropdown-filter>
-    <button
-      [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
-      class="btn btn-outline-secondary align-bottom"
-    >
-      {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
-    </button>
-  </div>
+<div class="mt-5 ongoing-programs">
+  <h2 class="title">{{ I18ns.leadHome.ongoingPrograms.title }}</h2>
 </div>
 
-<div class="row mb-3">
-  <div class="col-4 mb-3" *ngFor="let prog of programs">
-    <alto-program-card [displayToggle]="false" [programRun]="prog"></alto-program-card>
-  </div>
-</div>
-<ngb-pagination
-  [collectionSize]="programsCount"
-  [(page)]="programsPage"
-  (pageChange)="changeProgramPage()"
-  [pageSize]="programPageSize"
-  [maxSize]="10"
-  aria-label="Default pagination"
-></ngb-pagination>
+<alto-program-card-list [place]="'home'"></alto-program-card-list>
 
 <!-- CHALLENGES -->
 <div class="row mt-5 mb-4">
   <div class="col-5">
-    <h2>{{ I18ns.leadHome.ongoingChallenges.title }}</h2>
+    <h2 class="title">{{ I18ns.leadHome.ongoingChallenges.title }}</h2>
   </div>
   <div class="col-7 text-end">
     <button [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]" class="btn btn-outline-secondary">
@@ -318,21 +316,14 @@
           <thead>
             <tr>
               <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
-              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
               <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
+              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
               <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let chal of challengesByTeam">
-              <td>{{ chal.name }}</td>
-              <td>
-                <alto-colored-pill-list
-                  [hasDynamicColor]="true"
-                  [data]="chal.teams || []"
-                  [limit]="2"
-                ></alto-colored-pill-list>
-              </td>
+              <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
               <td>
                 <span
                   *ngIf="chal.leadTeam"
@@ -342,6 +333,13 @@
                 >
                   {{ chal.leadTeam.shortName }}
                 </span>
+              </td>
+              <td>
+                <alto-colored-pill-list
+                  [hasDynamicColor]="true"
+                  [data]="chal.teams || []"
+                  [limit]="2"
+                ></alto-colored-pill-list>
               </td>
               <td>{{ chal.endDate | date : 'shortDate' }}</td>
             </tr>
@@ -360,7 +358,7 @@
         <a
           [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
           [fragment]="'byTeamAnchor'"
-          class="fw-medium mb-3 me-3 d-block"
+          class="fw-medium mb-4 me-4 d-block"
         >
           {{ I18ns.shared.showMore }}
         </a>
@@ -378,25 +376,25 @@
           <thead>
             <tr>
               <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
-              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
               <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
+              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
               <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let chal of challengesByUser">
-              <td>{{ chal.name }}</td>
+              <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
+              <td>
+                <alto-img-badge
+                  [url]="(getUser(chal.leadUser?.id ?? '') | async)?.pictureUrl"
+                ></alto-img-badge>
+              </td>
               <td>
                 <alto-colored-pill-list
                   [hasDynamicColor]="true"
                   [data]="chal.teams || []"
                   [limit]="2"
                 ></alto-colored-pill-list>
-              </td>
-              <td>
-                <alto-img-badge
-                  [url]="(getUser(chal.leadUser?.id ?? '') | async)?.pictureUrl"
-                ></alto-img-badge>
               </td>
               <td>{{ chal.endDate | date : 'shortDate' }}</td>
             </tr>
@@ -415,7 +413,7 @@
         <a
           [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
           [fragment]="'byUserAnchor'"
-          class="fw-medium mb-3 me-3 d-block"
+          class="fw-medium mb-4 me-4 d-block"
         >
           {{ I18ns.shared.showMore }}
         </a>

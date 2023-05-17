@@ -13,7 +13,7 @@ export class DropdownFilterComponent {
   @Input() returnValue = '';
   @Input() isColored = false;
   @Input() multiple = true;
-  selectedItems = [];
+  @Input() selectedItems: any[] = [];
 
   @Output() selectChange = new EventEmitter<any>();
 

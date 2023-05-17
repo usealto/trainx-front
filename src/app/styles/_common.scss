@@ -18,9 +18,15 @@
   color: red;
 }
 
+.alto-score {
+  @extend .alto-badge-no-size;
+  min-height: 1.58rem;
+  min-width: 3.5rem;
+  line-height: 1.6rem;
+}
 .alto-badge {
   @extend .alto-badge-no-size;
-  height: 1.58rem;
+  min-height: 1.58rem;
   min-width: 1.58rem;
   line-height: 1.6rem;
 }
@@ -28,11 +34,11 @@
   @extend .alto-badge-no-size;
   height: 2.857rem;
   min-width: 2.857rem;
-  line-height: 2.8rem;
+  line-height: 2.86rem;
 }
 .alto-badge-no-size {
   display: inline-block;
-  font-size: 0.85rem;
+  font-size: 0.857rem;
   border-radius: 25px;
   padding: 0 0.5rem;
   text-align: center;
@@ -48,13 +54,13 @@
 .panel {
   background-color: white;
   border-radius: 1.143rem;
-  border: 1px solid #eaecf0;
+  border: 1px solid var(--alto-border);
   padding: 1.4rem 1.7rem;
 }
 .table-panel {
   background-color: white;
   border-radius: 1.143rem;
-  border: 1px solid #eaecf0;
+  border: 1px solid var(--alto-border);
   h2 {
     padding: 1.4rem 1.7rem;
     margin: 0;
@@ -62,6 +68,8 @@
   .table {
     th {
       font-weight: 500;
+      font-size: 0.857rem;
+      padding: 0.929rem;
     }
     tbody tr {
       height: 5.144rem;

@@ -9,11 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { QuestionIdDtoApi } from './questionIdDto';
 
 
 export interface CreateTagDtoApi { 
     createdBy?: string;
     companyId?: string;
+    questions?: Array<QuestionIdDtoApi>;
     name: string;
     description?: string;
 }

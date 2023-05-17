@@ -33,7 +33,7 @@ export interface PutQuestionDtoApi {
      */
     programs?: Array<ProgramApi>;
     /**
-     * The array of accepted answers for the question. Must have at least one answer.  Empty strings are forbidden. Each string in the array will be trimmed of leading and trailing whitespace.
+     * The array of accepted answers for the question. Must have at least one answer.  Empty strings are forbidden. Each string in the array will be trimmed of leading and trailing whitespace.  The order of the answers does not matter but all the answers from the accepted answers of the question need to be provided in the guess.  For example if the accepted answers are: [\'a\', \'b\', \'c\'] If the user provides: [\'a\', \'b\']when creating the guess associated with the question, the guess will be invalid. If the user provides: [\'a\', \'b\', \'c\', \'d\'] when creating the guess associated with the question, the guess will be invalid. If the user provides: [\'a\', \'b\', \'c\'] when creating the guess associated with the question, the guess will be valid. If the user provides: [\'c\', \'b\', \'a\'] when creating the guess associated with the question, the guess will also be valid.
      */
     answersAccepted: Array<string>;
     /**

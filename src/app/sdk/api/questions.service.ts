@@ -179,7 +179,7 @@ export class QuestionsApiService {
 
     /**
      * Create a new question
-     * This method handles POST requests to the \&#39;/questions\&#39; route to create a new question using the data passed in the body. It will respond with the newly created question.
+     * This method handles POST requests to the \&#39;/questions\&#39; route to create a new question using the data passed in the body. It will respond with the newly created question.  The order of the answers does not matter but all the answers from the accepted answers of the question need to be provided in the guess.  For example if the accepted answers are: [\&#39;a\&#39;, \&#39;b\&#39;, \&#39;c\&#39;]  If the user provides: [\&#39;a\&#39;, \&#39;b\&#39;]when creating the guess associated with the question, the guess will be invalid.  If the user provides: [\&#39;a\&#39;, \&#39;b\&#39;, \&#39;c\&#39;, \&#39;d\&#39;] when creating the guess associated with the question, the guess will be invalid.  If the user provides: [\&#39;a\&#39;, \&#39;b\&#39;, \&#39;c\&#39;] when creating the guess associated with the question, the guess will be valid.  If the user provides: [\&#39;c\&#39;, \&#39;b\&#39;, \&#39;a\&#39;] when creating the guess associated with the question, the guess will also be valid.
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.

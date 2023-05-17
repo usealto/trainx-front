@@ -27,13 +27,14 @@ export interface GuessApi {
     programRun?: ProgramRunApi;
     programRunQuestion: ProgramRunQuestionApi;
     programRunId?: string;
-    answer: string;
+    answers: Array<string>;
     isValid: boolean;
     isTimedOut: boolean;
     /**
      * The team ID of the guess creator (if any)
      */
     teamId?: string;
+    isUnknownSelected: boolean;
     /**
      * The bubble ID  ! This field is temporary and will be deleted once all the migration are finished
      */

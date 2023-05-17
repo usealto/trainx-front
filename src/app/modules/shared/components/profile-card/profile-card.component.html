@@ -2,7 +2,7 @@
 <div *ngIf="user" class="profile">
   <alto-img-badge [url]="url" [size]="40"></alto-img-badge>
   <div class="d-inline-block ms-3">
-    <p class="fw-medium" [ngClass]="{ 'text-white': isWhite, 'alto-text': !isWhite }">{{ name }}</p>
+    <p class="name" [ngClass]="{ 'text-white': isWhite, 'alto-text': !isWhite }">{{ name }}</p>
     <p [ngClass]="{ 'text-white': isWhite, 'alto-grey': !isWhite }">{{ email }}</p>
   </div>
 </div>

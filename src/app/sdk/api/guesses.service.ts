@@ -143,7 +143,7 @@ export class GuessesApiService {
 
     /**
      * Create a new guess run
-     * This method handles POST requests to the \&#39;/guesses\&#39; route to create a new guess using the data passed in the body. It will respond with the newly created guess.
+     * This method handles POST requests to the \&#39;/guesses\&#39; route to create a new guess using the data passed in the body. It will respond with the newly created guess.  If answers is not provided, the answer property will be used instead. if the answer property is also not provided, the answers will be empty  in that case, the guess will be rejected if the isUnkownSelected property is not set to true  All the answers from the accepted answers of the question need to be provided. if not, the guess will be invalid, the order does not matter.  For example if the accepted answers are: [\&#39;a\&#39;, \&#39;b\&#39;, \&#39;c\&#39;]  If the user provides: [\&#39;a\&#39;, \&#39;b\&#39;] the guess will be invalid.  If the user provides: [\&#39;a\&#39;, \&#39;b\&#39;, \&#39;c\&#39;, \&#39;d\&#39;] the guess will be invalid.  If the user provides: [\&#39;a\&#39;, \&#39;b\&#39;, \&#39;c\&#39;] the guess will be valid.  If the user provides: [\&#39;c\&#39;, \&#39;b\&#39;, \&#39;a\&#39;] the guess will also be valid.
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
