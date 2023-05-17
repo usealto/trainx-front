@@ -1,30 +1,43 @@
-import { Component, Input, OnChanges } from '@angular/core';
-import { tap } from 'rxjs';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Observable, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
-import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi, TeamStatsDtoApi } from 'src/app/sdk';
+import {
+  ScoreDtoApi,
+  ScoreTimeframeEnumApi,
+  ScoreTypeEnumApi,
+  ScoresResponseDtoApi,
+  TeamStatsDtoApi,
+} from 'src/app/sdk';
 import Chart, { ChartData } from 'chart.js/auto';
 import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { StatisticsService } from '../../../services/statistics.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { ScoresService } from 'src/app/modules/programs/services/scores.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'alto-performance-by-themes',
   templateUrl: './performance-by-themes.component.html',
   styleUrls: ['./performance-by-themes.component.scss'],
 })
 export class PerformanceByThemesComponent implements OnChanges {
+  @Input() duration: ScoreDuration = ScoreDuration.Year;
   I18ns = I18ns;
   activeTab = 1;
+  init = true;
+
   teams: { label: string; id: string }[] = [];
   selectedTeams: { label: string; id: string }[] = [];
   teamsStats: TeamStatsDtoApi[] = [];
-  @Input() duration: ScoreDuration = ScoreDuration.Year;
+
+  // Tags or Programs
   items: ScoreDtoApi[] = [];
   scoredItems: { label: string; score: number | null }[] = [];
   selectedItems: ScoreDtoApi[] = [];
+
   scoreEvolutionChart?: Chart;
   performanceChart?: Chart;
 
@@ -34,30 +47,32 @@ export class PerformanceByThemesComponent implements OnChanges {
     private readonly scoresServices: ScoresService,
   ) {}
 
-  ngOnChanges(): void {
-    this.getScores();
-    this.scoresRestService
-      .getTeamsStats(this.duration)
-      .pipe(
-        tap((res) => {
-          this.teamsStats = res;
-          this.teams = res
-            .sort((a, b) => a.label.localeCompare(b.label))
-            .map((t) => ({
-              label: t.label,
-              id: t.id,
-            }));
-          this.selectedTeams = this.teams.splice(0, 5);
-        }),
-        tap(() => {
-          this.createPerformanceChart(this.selectedTeams);
-        }),
-      )
-      .subscribe();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['duration']) {
+      this.getScores()
+        .pipe(
+          switchMap(() => this.scoresRestService.getTeamsStats(this.duration)),
+          tap((res) => {
+            this.teamsStats = res;
+            this.teams = res
+              .sort((a, b) => a.label.localeCompare(b.label))
+              .map((t) => ({
+                label: t.label,
+                id: t.id,
+              }));
+            this.selectedTeams = this.teams.splice(0, 5);
+          }),
+          tap(() => {
+            this.createPerformanceChart(this.selectedTeams);
+          }),
+          untilDestroyed(this),
+        )
+        .subscribe();
+    }
   }
 
-  getScores() {
-    this.scoresRestService
+  getScores(): Observable<ScoresResponseDtoApi> {
+    return this.scoresRestService
       .getScores({
         timeframe: ScoreTimeframeEnumApi.Day,
         duration: this.duration ?? ScoreDuration.Year,
@@ -65,16 +80,20 @@ export class PerformanceByThemesComponent implements OnChanges {
       } as ChartFilters)
       .pipe(
         tap((res) => {
-          this.items = res.scores;
+          this.items = res.scores.sort((a, b) => a.label.localeCompare(b.label));
           let filteredItems: ScoreDtoApi[] = res.scores;
+          if (this.init) {
+            this.selectedItems = this.items.slice(0, 10);
+          }
           if (this.selectedItems.length) {
             filteredItems = res.scores.filter((s) => this.selectedItems.some((si) => si.id === s.id));
           }
           this.getScoredItems(this.items);
           this.createScoreEvolutionChart(filteredItems, this.duration);
+          this.createPerformanceChart(this.selectedTeams);
         }),
-      )
-      .subscribe();
+        tap(() => (this.init = false)),
+      );
   }
 
   getScoredItems(scores: ScoreDtoApi[]) {
@@ -136,9 +155,8 @@ export class PerformanceByThemesComponent implements OnChanges {
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
-    const aggregatedData = this.statisticsServices.aggregateDataForScores(scores[0], duration);
     const labels = this.statisticsServices.formatLabel(
-      aggregatedData.map((d) => d.x),
+      this.statisticsServices.aggregateDataForScores(scores[0], duration).map((d) => d.x),
       duration,
     );
 
@@ -172,19 +190,17 @@ export class PerformanceByThemesComponent implements OnChanges {
       }
     });
 
-    const dataSet = scores
-      .map((s) => {
-        const d = this.statisticsServices.aggregateDataForScores(s, duration);
-        return {
-          label: s.label,
-          data: d.map((d) => (d.y ? Math.round(d.y * 10000) / 100 : d.y)),
-          fill: false,
-          tension: 0.2,
-          borderDash: [0],
-          spanGaps: true,
-        };
-      })
-      .splice(0, 5);
+    const dataSet = scores.map((s) => {
+      const d = this.statisticsServices.aggregateDataForScores(s, duration);
+      return {
+        label: s.label,
+        data: d.map((d) => (d.y ? Math.round(d.y * 10000) / 100 : d.y)),
+        fill: false,
+        tension: 0.2,
+        borderDash: [0],
+        spanGaps: true,
+      };
+    });
     dataSet.push({
       label: 'Global',
       data: res.map((d) => (d.y ? Math.round(d.y * 10000) / 100 : d.y)),
@@ -212,8 +228,8 @@ export class PerformanceByThemesComponent implements OnChanges {
 
   changeTabs() {
     this.activeTab = this.activeTab === 1 ? 2 : 1;
-    this.getScores();
-    this.createPerformanceChart(this.selectedTeams);
+    this.init = true;
+    this.getScores().subscribe();
   }
 
   filterTeams(teams: { label: string; id: string }[]) {
@@ -224,7 +240,6 @@ export class PerformanceByThemesComponent implements OnChanges {
 
   filterTagsAndPrograms(items: ScoreDtoApi[]) {
     this.selectedItems = items;
-    this.getScores();
-    this.createPerformanceChart(this.selectedTeams);
+    this.getScores().subscribe();
   }
 }
