@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CompanyForm } from './models/company.create';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
-import { FormArray, FormGroup, UntypedFormBuilder } from '@angular/forms';
+import { FormArray, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { CompanyDtoApi, CreateTeamDtoApi, SlackTimeEnumApi, TeamDtoApi, WeekDayEnumApi } from 'src/app/sdk';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
@@ -44,7 +44,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
       .pipe(tap((teams) => (this.teams = teams)))
       .subscribe();
     this.companyForm = this.fb.group<CompanyForm>({
-      name: ['', []],
+      name: ['', [Validators.required]],
       domain: ['', []],
       teams: ['', []],
       newTeams: this.fb.array([]),
@@ -62,7 +62,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
             console.log(this.company);
             this.companyForm = this.fb.group<CompanyForm>({
               domain: [this.company.domain || ''],
-              name: [this.company.name],
+              name: [this.company.name, [Validators.required]],
               teams: [],
               newTeams: this.fb.array([]),
               slackDays: [this.company.slackDays],

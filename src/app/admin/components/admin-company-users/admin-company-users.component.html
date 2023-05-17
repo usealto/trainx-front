@@ -36,10 +36,10 @@
 </div>
 <div *ngIf="users.length > 0; else elseBlock">
   <div class="d-flex justify-content-end gap-2 pb-4">
-    <alto-search></alto-search>
+    <alto-search (searchChange)="onSearch($event)"></alto-search>
     <button type="button" class="btn btn-outline-secondary">Filters</button>
   </div>
-  <div class="table-container table-panel">
+  <div class="table-container table-panel mb-5">
     <table class="table">
       <thead>
         <tr>
@@ -54,9 +54,15 @@
               />
             </div>
           </th>
-          <th scope="col">Name</th>
-          <th scope="col">Username</th>
-          <th scope="col">Email</th>
+          <th scope="col" sortable="lastname" (sort)="onSort($event)">
+            <i class="bi bi-arrow-up-short"></i>Name
+          </th>
+          <th scope="col" sortable="username" (sort)="onSort($event)">
+            <i class="bi bi-arrow-up-short"></i>Username
+          </th>
+          <th scope="col" sortable="email" (sort)="onSort($event)">
+            <i class="bi bi-arrow-up-short"></i>Email
+          </th>
           <th scope="col">Team</th>
           <th scope="col">Role</th>
           <th scope="col">Status</th>

@@ -21,7 +21,7 @@
       <alto-search (searchChange)="onSearch($event)"></alto-search>
       <button type="button" class="btn btn-outline-secondary">Filters</button>
     </div>
-    <div class="table-container table-panel">
+    <div class="table-container table-panel mb-5">
       <table class="table">
         <thead>
           <tr>
@@ -75,9 +75,16 @@
             <td>{{ company.domain }}</td>
             <td>Lorem ipsum</td>
             <td>
-              <div>
-                <span>{{company?.admins?.[0]?.username ?? '' }}</span>
-                <span>{{company?.admins?.[0]?.email ?? '' }}</span>
+              <div class="d-flex">
+                <a
+                  class="btn float-start mx-3 alto-badge-big incognito-btn"
+                  (click)="setImpersonation(company?.admins?.[0]?.email ?? '' )"
+                  ><i class="bi bi-incognito fs-5 text-white"></i
+                ></a>
+                <div class="d-flex flex-column gap-1">
+                  <span class="name alto-text">{{company?.admins?.[0]?.username ?? '' }}</span>
+                  <span class="alto-grey">{{company?.admins?.[0]?.email ?? '' }}</span>
+                </div>
               </div>
             </td>
             <td>{{ company.slackDays }}</td>

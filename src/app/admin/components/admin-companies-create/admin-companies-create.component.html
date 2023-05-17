@@ -155,9 +155,14 @@
             <button type="button" class="btn btn-outline-secondary d-inline-flex align-items-center me-2">
               Cancel
             </button>
-            <button type="button" class="btn btn-primary d-inline-flex align-items-center">
-              Next
-              <i class="bi bi-arrow-right ps-2"></i>
+            <button
+              type="button"
+              class="btn btn-primary d-inline-flex align-items-center"
+              (click)="submit()"
+              [disabled]="!companyForm.valid || companyForm.pristine || !companyForm.dirty"
+            >
+              Save
+              <i class="bi bi-save ps-2"></i>
             </button>
           </div>
         </div>
@@ -249,19 +254,29 @@
         </form>
       </alto-admin-tab>
     </alto-admin-tabs>
-    <div class="d-flex justify-content-between">
-      <div class="py-4">
-        <button type="button" class="btn btn-outline float-end" (click)="submit()">
-          <i class="bi bi-save"></i> Save
-        </button>
-      </div>
+    <div class="d-flex justify-content-end">
       <div>
         <button type="button" class="btn btn-outline-secondary d-inline-flex align-items-center me-2">
           Cancel
         </button>
-        <button type="button" class="btn btn-primary d-inline-flex align-items-center" (click)="nextTab()">
+        <button
+          type="button"
+          *ngIf="tabNumber !== 1"
+          class="btn btn-primary d-inline-flex align-items-center"
+          (click)="nextTab()"
+        >
           Next
           <i class="bi bi-arrow-right ps-2"></i>
+        </button>
+        <button
+          type="button"
+          *ngIf="tabNumber === 1"
+          class="btn btn-primary d-inline-flex align-items-center"
+          (click)="submit()"
+          [disabled]="!companyForm.valid || !companyForm.dirty"
+        >
+          Save
+          <i class="bi bi-save ps-2"></i>
         </button>
       </div>
     </div>

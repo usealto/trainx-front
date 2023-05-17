@@ -8,10 +8,34 @@
     overflow: auto;
     th,
     td {
+      position: relative;
       white-space: nowrap;
     }
     th {
       background-color: #fcfcfd;
+    }
+    th[sortable] {
+      i {
+        position: absolute;
+        left: -5px;
+        display: none;
+      }
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      &.asc {
+        i {
+          display: inline;
+        }
+      }
+      &.desc {
+        i {
+          display: inline;
+          &::before {
+            transform: rotate(180deg);
+          }
+        }
+      }
     }
     .action-btn-list-container {
       display: flex;

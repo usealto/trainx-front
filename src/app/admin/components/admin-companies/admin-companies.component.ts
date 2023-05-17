@@ -9,6 +9,7 @@ import {
   SortEvent,
   compare,
 } from 'src/app/core/utils/directives/ngbd-sortable-header.directive';
+import { AuthUserGet } from '../admin-users/models/authuser.get';
 
 @Component({
   selector: 'alto-admin-companies',
@@ -20,6 +21,7 @@ export class AdminCompaniesComponent implements OnInit {
   companies: CompanyDtoApi[] = [];
   displayedCompanies: CompanyDtoApi[] = [];
   selectedIds: string[] = [];
+  companyAdmins: AuthUserGet[] = [];
   page = 1;
   pageSize = 7;
   pageCount = 0;
@@ -33,6 +35,11 @@ export class AdminCompaniesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.authApiService.getRoleUsers({ role: 'company-admin' }).subscribe((q) => {
+      this.companyAdmins = q.data;
+      console.log(this.companyAdmins);
+    });
+
     this.companiesRestService
       .getCompanies()
       .pipe(tap((companies) => (this.companies = companies)))
@@ -102,5 +109,12 @@ export class AdminCompaniesComponent implements OnInit {
       (this.page - 1) * this.pageSize,
       (this.page - 1) * this.pageSize + this.pageSize,
     );
+  }
+
+  setImpersonation(email: string) {
+    if (email) {
+      localStorage.setItem('impersonatedUser', email);
+      this.dataService.sendData('impersonatedUserUpdated');
+    }
   }
 }

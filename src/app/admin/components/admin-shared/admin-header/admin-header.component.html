@@ -1,6 +1,10 @@
 <nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item active" aria-current="page"><i class="bi bi-house"></i></li>
+    <li class="breadcrumb-item active" aria-current="page">
+      <a [routerLink]="['/', 'admin', 'home']" routerLinkActive="menu-selected"
+        ><i class="bi bi-house"></i
+      ></a>
+    </li>
     <li class="breadcrumb-item active" aria-current="page">Companies</li>
   </ol>
 </nav>
@@ -8,4 +12,4 @@
   <h1>{{ title }}</h1>
   <p class="mb-4">{{ subtitle }}</p>
 </div>
-<hr *ngIf="divider"/>
+<hr *ngIf="divider" />
