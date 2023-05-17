@@ -26,6 +26,7 @@ import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
 import { PeriodFilterComponent } from './components/period-filter/period-filter.component';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { CustomPaginationComponent } from './components/custom-pagination/custom-pagination.component';
+import { NgbdSortableHeaderDirective } from 'src/app/core/utils/directives/ngbd-sortable-header.directive';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { CustomPaginationComponent } from './components/custom-pagination/custom
     RouterModule,
     NgbDatepickerModule,
     NgVar,
+    NgbdSortableHeaderDirective,
   ],
   exports: [
     TranslationModule,
@@ -72,6 +74,7 @@ import { CustomPaginationComponent } from './components/custom-pagination/custom
     StatusPillComponent,
     PeriodFilterComponent,
     NgVar,
+    NgbdSortableHeaderDirective,
     FormsModule,
     ImgBadgeComponent,
     ReactiveFormsModule,

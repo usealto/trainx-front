@@ -18,7 +18,7 @@
   </div>
   <div *ngIf="companies.length > 0; else elseBlock">
     <div class="d-flex justify-content-end gap-2 pb-4">
-      <alto-search></alto-search>
+      <alto-search (searchChange)="onSearch($event)"></alto-search>
       <button type="button" class="btn btn-outline-secondary">Filters</button>
     </div>
     <div class="table-container table-panel">
@@ -36,13 +36,13 @@
                 />
               </div>
             </th>
-            <th scope="col">Corporate name</th>
-            <th scope="col">Domain</th>
+            <th scope="col" sortable="name" (sort)="onSort($event)">Corporate name</th>
+            <th scope="col" sortable="domain" (sort)="onSort($event)">Domain</th>
             <th scope="col">Biling</th>
             <th scope="col">Teams</th>
             <th scope="col">User admin</th>
             <th scope="col">Sending days</th>
-            <th scope="col">Nb of questions</th>
+            <th scope="col" sortable="slackQuestionsPerQuiz" (sort)="onSort($event)" >Nb of questions</th>
             <th scope="col">Admin Slack</th>
             <th scope="col" class="action-btn-list"></th>
           </tr>

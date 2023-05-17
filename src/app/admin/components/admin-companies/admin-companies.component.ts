@@ -1,10 +1,14 @@
 import { AuthApiService } from './../../../sdk/api/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { CompanyDtoApi } from 'src/app/sdk';
 import { DataService } from '../../admin-data.service';
-import { TimeScale } from 'chart.js';
+import {
+  NgbdSortableHeaderDirective,
+  SortEvent,
+  compare,
+} from 'src/app/core/utils/directives/ngbd-sortable-header.directive';
 
 @Component({
   selector: 'alto-admin-companies',
@@ -12,12 +16,15 @@ import { TimeScale } from 'chart.js';
   styleUrls: ['./admin-companies.component.scss'],
 })
 export class AdminCompaniesComponent implements OnInit {
+  @ViewChildren(NgbdSortableHeaderDirective) headers!: QueryList<NgbdSortableHeaderDirective>;
   companies: CompanyDtoApi[] = [];
   displayedCompanies: CompanyDtoApi[] = [];
   selectedIds: string[] = [];
   page = 1;
   pageSize = 7;
   pageCount = 0;
+  searchString = '';
+  sortDirection: SortEvent = { column: '', direction: '' };
 
   constructor(
     private readonly companiesRestService: CompaniesRestService,
@@ -30,10 +37,24 @@ export class AdminCompaniesComponent implements OnInit {
       .getCompanies()
       .pipe(tap((companies) => (this.companies = companies)))
       .subscribe(() => {
-        console.log(this.companies);
         this.pageCount = Math.ceil(this.companies.length / this.pageSize);
         this.refreshCompanies();
       });
+  }
+
+  onSearch(search: string) {
+    this.searchString = search;
+    this.refreshCompanies();
+  }
+
+  onSort(event: SortEvent) {
+    this.sortDirection = event;
+    this.headers.forEach((header) => {
+      if (header.sortable !== event.column) {
+        header.direction = '';
+      }
+    });
+    this.refreshCompanies();
   }
 
   selectAll(event: any) {
@@ -55,7 +76,28 @@ export class AdminCompaniesComponent implements OnInit {
   }
 
   refreshCompanies() {
-    this.displayedCompanies = this.companies.slice(
+    let tmpCompanies = this.companies;
+
+    if (this.sortDirection.direction !== '' && this.sortDirection.column !== '') {
+      tmpCompanies = [...this.companies].sort((a, b) => {
+        const firstValue = a[this.sortDirection.column as keyof CompanyDtoApi] as any;
+        const secondValue = b[this.sortDirection.column as keyof CompanyDtoApi] as any;
+        const res = compare(firstValue, secondValue);
+        // const res = firstValue.localeCompare(secondValue);
+        return this.sortDirection.direction === 'asc' ? res : -res;
+      });
+    }
+
+    if (this.searchString !== '') {
+      tmpCompanies = tmpCompanies.filter((company) => {
+        const term = this.searchString.toLowerCase();
+        return company.name.toLowerCase().includes(term);
+      });
+    }
+
+    this.pageCount = Math.ceil(tmpCompanies.length / this.pageSize);
+
+    this.displayedCompanies = tmpCompanies.slice(
       (this.page - 1) * this.pageSize,
       (this.page - 1) * this.pageSize + this.pageSize,
     );
