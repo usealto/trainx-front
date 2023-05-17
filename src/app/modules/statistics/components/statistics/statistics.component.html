@@ -1,6 +1,6 @@
 <h1 class="mt-4">{{ I18ns.statistics.title }}</h1>
-<p class="mb-4">{{ I18ns.statistics.subtitle }}</p>
-<alto-tabs
+<p class="mb-4 alto-grey fs-6b">{{ I18ns.statistics.subtitle }}</p>
+<!-- <alto-tabs
   class="mb-4 d-block fw-bold"
   (tabChanged)="tabChange($event)"
   [data]="[
@@ -13,4 +13,6 @@
   <alto-statistics-global-engagement *ngSwitchCase="1"></alto-statistics-global-engagement>
   <alto-statistics-global-performance *ngSwitchCase="2"></alto-statistics-global-performance>
   <alto-statistics-per-teams *ngSwitchCase="3"></alto-statistics-per-teams>
-</span>
+</span> -->
+
+<alto-statistics-global-performance></alto-statistics-global-performance>

@@ -1,5 +1,5 @@
-<div class="row border-bottom pb-4">
-  <div class="col-7">
+<div class="row">
+  <div class="col-8">
     <div class="panel">
       <alto-dropdown-filter
         class="float-end mx-2 float-end"
@@ -18,7 +18,7 @@
     </div>
   </div>
 
-  <div *ngIf="scoredTeams.length <= 10; else leaderboardFull" class="col-5">
+  <div *ngIf="scoredTeams.length <= 10; else leaderboardFull" class="col-4">
     <div class="panel">
       <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}</h2>
       <ol class="list-group list-group-flush list-group-numbered">
@@ -32,7 +32,7 @@
     </div>
   </div>
   <ng-template #leaderboardFull>
-    <div class="col-5">
+    <div class="col-4">
       <div class="panel">
         <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h2>
         <ol class="list-group list-group-flush list-group-numbered">

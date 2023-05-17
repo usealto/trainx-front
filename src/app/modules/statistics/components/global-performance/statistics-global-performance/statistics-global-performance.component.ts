@@ -9,7 +9,7 @@ import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
 })
 export class StatisticsGlobalPerformanceComponent {
   I18ns = I18ns;
-  duration: ScoreDuration = ScoreDuration.Year;
+  duration: ScoreDuration = ScoreDuration.Month;
 
   updateTimePicker(event: any): void {
     this.duration = event;

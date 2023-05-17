@@ -445,7 +445,7 @@ export const FR = {
     home: 'Accueil',
     programs: 'Programmes',
     statistics: 'Statistiques',
-    team: 'Équipe',
+    team: 'Équipes',
     challenges: 'Challenges',
     settings: 'Paramètres',
     profile: 'Profil',
