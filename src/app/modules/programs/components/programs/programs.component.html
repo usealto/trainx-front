@@ -1,83 +1,43 @@
-<h1 id="programsAnchor" class="mt-4">{{ I18ns.programs.title }}</h1>
-<p class="mb-4 alto-grey">{{ I18ns.programs.subtitle }}</p>
-<div class="pb-4 border-bottom">
+<h1>{{ I18ns.programs.title }}</h1>
+<p class="mt-2 mb-4 alto-grey fs-6b">{{ I18ns.programs.subtitle }}</p>
+<div class="pb-5 border-bottom">
   <alto-anchor-navigator fragment="programsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-4 fw-medium">
-      {{ I18ns.programs.programs.title }}
-      <span class="alto-badge">{{ programsDisplay.length }}</span>
+    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
+      {{ I18ns.programs.programs.title }}<span class="alto-badge ms-3">{{ programsCount }}</span>
     </button>
   </alto-anchor-navigator>
   <alto-anchor-navigator fragment="questionsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-4 fw-medium">
-      {{ I18ns.programs.questions.title }}
-      <span class="alto-badge">{{ questionsCount }}</span>
+    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
+      {{ I18ns.programs.questions.title }}<span class="alto-badge ms-3">{{ questionsCount }}</span>
     </button>
   </alto-anchor-navigator>
   <alto-anchor-navigator fragment="submittedQuestionsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-4 fw-medium">
-      {{ I18ns.programs.awaitQuestions.title }}
-      <span class="alto-badge">{{ submittedQuestions.length }}</span>
+    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
+      {{ I18ns.programs.awaitQuestions.title
+      }}<span class="alto-badge ms-3">{{ submittedQuestions.length }}</span>
     </button>
   </alto-anchor-navigator>
   <alto-anchor-navigator fragment="tagsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-4 fw-medium">
-      {{ I18ns.programs.tags.title }}
-      <span class="alto-badge">{{ tagsCount }}</span>
+    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
+      {{ I18ns.programs.tags.title }}<span class="alto-badge ms-3">{{ tagsCount }}</span>
     </button>
   </alto-anchor-navigator>
 </div>
 
 <!-- PROGRAMS -->
-<div class="py-4 border-bottom">
+<div class="border-bottom">
   <div>
     <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
       <i class="bi bi-plus-lg"></i> {{ I18ns.programs.programs.createProgram }}
     </a>
-    <h1>{{ I18ns.programs.programs.title }}</h1>
-    <p class="mb-4 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
+    <h2 id="programsAnchor" class="mt-5">{{ I18ns.programs.programs.title }}</h2>
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
   </div>
-  <div class="text-end mb-4">
-    <alto-dropdown-filter
-      class="text-start"
-      [data]="teamStore.teams.value"
-      [displayLabel]="'shortName'"
-      [placeholder]="I18ns.programs.programs.filters.team"
-      (selectChange)="getProgramsFiltered({ teams: $event })"
-      [isColored]="true"
-    ></alto-dropdown-filter>
 
-    <alto-search
-      class="d-inline-block ms-3"
-      (searchChange)="getProgramsFiltered({ search: $event })"
-    ></alto-search>
-  </div>
-  <ng-container *ngIf="programsDisplay.length > 0; else noPrograms">
-    <div class="row mb-3">
-      <div
-        class="col-4 mb-3"
-        *ngFor="
-          let prog of programsDisplay
-            | slice : (programsPage - 1) * programPageSize : programsPage * programPageSize
-        "
-      >
-        <alto-program-card [displayToggle]="true" [program]="prog"></alto-program-card>
-      </div>
-    </div>
-    <ngb-pagination
-      [ngClass]="{ invisible: programsCount <= programPageSize }"
-      [collectionSize]="programsCount"
-      [(page)]="programsPage"
-      [pageSize]="programPageSize"
-      [maxSize]="10"
-      aria-label="Default pagination"
-    ></ngb-pagination>
-  </ng-container>
-  <ng-template #noPrograms>
-    <div class="panel text-center">
-      <h2>{{ I18ns.shared.noData }}</h2>
-      <p>{{ I18ns.shared.noDataSubtitle }}</p>
-    </div>
-  </ng-template>
+  <alto-program-card-list
+    (programTotal)="programsCount = $event"
+    [place]="'program'"
+  ></alto-program-card-list>
 </div>
 
 <!-- QUESTIONS -->
@@ -85,7 +45,7 @@
   <button type="button" class="btn btn-primary float-end" (click)="openQuestionForm()">
     <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.createQuestion }}
   </button>
-  <h1 id="questionsAnchor">{{ I18ns.programs.questions.title }}</h1>
+  <h2 id="questionsAnchor">{{ I18ns.programs.questions.title }}</h2>
   <p class="mb-4 alto-grey">{{ I18ns.programs.questions.subtitle }}</p>
 
   <div class="row mb-4">
@@ -141,17 +101,19 @@
                 {{ question.title }}
               </td>
               <td class="w-5">
-                <span
-                  class="badge rounded-pill"
-                  [class]="getQuestionScore(question.id) ?? 0 * 100 | pillColor"
-                >
+                <span class="alto-score" [class]="(getQuestionScore(question.id) || 0) * 100 | pillColor">
                   {{ getQuestionScore(question.id) | percent }}
                 </span>
               </td>
-              <td *ngIf="question.tags && question.tags.length > 0">
-                <alto-colored-pill-list [data]="question.tags" [limit]="3"></alto-colored-pill-list>
-              </td>
-              <td *ngIf="!question.tags || question.tags.length < 1">-</td>
+              <ng-container *ngIf="question.tags && question.tags.length > 0; else elseQuestionTag">
+                <td>
+                  <alto-colored-pill-list [data]="question.tags" [limit]="3"></alto-colored-pill-list>
+                </td>
+              </ng-container>
+              <ng-template #elseQuestionTag>
+                <td>-</td>
+              </ng-template>
+
               <td *ngIf="question.programs && question.programs.length > 0">
                 <alto-colored-pill-list [data]="question.programs" [limit]="2"></alto-colored-pill-list>
               </td>
@@ -190,7 +152,7 @@
 <!-- SUBMITTED QUESTIONS -->
 <div class="py-4 border-bottom">
   <div>
-    <h1 id="submittedQuestionsAnchor">{{ I18ns.programs.awaitQuestions.title }}</h1>
+    <h2 id="submittedQuestionsAnchor">{{ I18ns.programs.awaitQuestions.title }}</h2>
     <p class="mb-4 alto-grey">{{ I18ns.programs.awaitQuestions.subtitle }}</p>
   </div>
   <ng-container *ngIf="submittedQuestions.length > 0; else noSubmittedQuestions">
@@ -238,7 +200,7 @@
   <button type="button" class="btn btn-primary float-end" (click)="openTagForm()">
     <i class="bi bi-plus-lg"></i> {{ I18ns.programs.tags.createTag }}
   </button>
-  <h1 id="tagsAnchor">{{ I18ns.programs.tags.title }}</h1>
+  <h2 id="tagsAnchor">{{ I18ns.programs.tags.title }}</h2>
   <p class="mb-4 alto-grey">{{ I18ns.programs.tags.subtitle }}</p>
 
   <div class="row mb-4">
@@ -270,22 +232,24 @@
           <tr>
             <th scope="col">{{ I18ns.programs.tags.table.name }}</th>
             <th scope="col">{{ I18ns.programs.tags.table.score }}</th>
-            <th scope="col">{{ I18ns.programs.tags.table.author }}</th>
             <th scope="col">{{ I18ns.programs.tags.table.associatedPrograms }}</th>
+            <th class="text-center" scope="col">{{ I18ns.programs.tags.table.author }}</th>
             <th></th>
           </tr>
         </thead>
         <tbody *ngIf="!isTagsLoading">
           <tr *ngFor="let tag of paginatedTags">
             <td class="w-15">{{ tag.name }}</td>
-            <td>
-              <span class="badge rounded-pill" [class]="70 | pillColor">42%</span>
-            </td>
-            <td class="text-center">
-              <alto-img-badge [url]="getUser(tag.createdBy)?.pictureUrl"></alto-img-badge>
+            <td class="w-5">
+              <span class="alto-score" [class]="(getTagScore(tag.id) || 0) * 100 | pillColor">
+                {{ getTagScore(tag.id) | percent }}
+              </span>
             </td>
             <td *ngIf="!isTagProgramsLoading">
               <alto-colored-pill-list [data]="getTagPrograms(tag.id)" [limit]="4"></alto-colored-pill-list>
+            </td>
+            <td class="w-10 text-center">
+              <alto-img-badge [url]="getUser(tag.createdBy)?.pictureUrl"></alto-img-badge>
             </td>
             <td class="cursor-pointer px-3" (click)="openTagForm(tag)">
               <i class="fs-5 bi bi-pen cursor-pointer"></i>

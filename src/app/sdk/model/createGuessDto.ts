@@ -17,25 +17,33 @@ export interface CreateGuessDtoApi {
     companyId?: string;
     source?: GuessSourceEnumApi;
     /**
-     * Specifies the the program. Required.
+     * Specifies the question. Required.
      */
     questionId: string;
     /**
-     * Specifies the the program. Required.
+     * Specifies the program run. Optional.  if not provided, the guess will be considered a training guess.
      */
     programRunId?: string;
     /**
-     * Specifies the the program. Required.
+     * The answer to the question. Optional. This field is deprecated. Use answers instead.
      */
-    answer: string;
+    answer?: string;
     /**
-     * Specifies the the program. Required.
+     * The answers to the question. Optional.  If not provided, the answer property will be used instead. if the answer property is not provided, the guess will be invalid. and the guess will have no answers. (meaning the user did not know the answer)  All the answers from the accepted answers of the question need to be provided. if not, the guess will be invalid, the order does not matter. For example if the accepted answers are: [\'a\', \'b\', \'c\'] If the user provides: [\'a\', \'b\'] the guess will be invalid. If the user provides: [\'a\', \'b\', \'c\', \'d\'] the guess will be invalid. If the user provides: [\'a\', \'b\', \'c\'] the guess will be valid. If the user provides: [\'c\', \'b\', \'a\'] the guess will also be valid.
      */
-    isValid: boolean;
+    answers?: Array<string>;
     /**
-     * Specifies the program. Required.
+     * Check if the guess is valid. Optional.    The backend will determine if the guess is valid or not.
+     */
+    isValid?: boolean;
+    /**
+     * Check if the guess is timed out. Optional.  This field is calculated on the front end.
      */
     isTimedOut: boolean;
+    /**
+     * The user did not know the answer. Optional. This field should be set to true if the user did not know the answer (clicked the I don\'t know button) If this field is set to true, the answers field will be ignored and the guess will be invalid. If this field is set to false, the answers field will be used to determine if the guess is valid or not. If this field is not provided, the answers field will be used to determine if the guess is valid or not.
+     */
+    isUnknownSelected?: boolean;
 }
 
 

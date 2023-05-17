@@ -24,6 +24,9 @@ import { TabsComponent } from './components/tabs/tabs.component';
 import { ProfileCardComponent } from './components/profile-card/profile-card.component';
 import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
 import { PeriodFilterComponent } from './components/period-filter/period-filter.component';
+import { ProgramCardListComponent } from './components/program-card-list/program-card-list.component';
+import { TimePickerComponent } from './components/time-picker/time-picker.component';
+import { TeamColorPipe } from './helpers/team-color.pipe';
 
 @NgModule({
   declarations: [
@@ -38,6 +41,9 @@ import { PeriodFilterComponent } from './components/period-filter/period-filter.
     TabsComponent,
     ProfileCardComponent,
     PeriodFilterComponent,
+    ProgramCardListComponent,
+    TimePickerComponent,
+    TeamColorPipe,
   ],
   imports: [
     CommonModule,
@@ -67,6 +73,8 @@ import { PeriodFilterComponent } from './components/period-filter/period-filter.
     SearchComponent,
     StatusPillComponent,
     PeriodFilterComponent,
+    ProgramCardListComponent,
+    TeamColorPipe,
     NgVar,
     FormsModule,
     ImgBadgeComponent,
@@ -77,6 +85,7 @@ import { PeriodFilterComponent } from './components/period-filter/period-filter.
     NgbTooltipModule,
     LoadingModule,
     NgbDatepickerModule,
+    TimePickerComponent,
   ],
 })
 export class SharedModule {}

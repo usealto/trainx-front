@@ -8,12 +8,23 @@
   padding: 0;
   margin-left: 0;
 }
+.row {
+  --bs-gutter-x: 1.143rem;
+}
 .btn {
   --bs-btn-border-radius: 24px;
   height: 2.572rem;
 }
 .offcanvas {
   --bs-offcanvas-width: 520px;
+}
+
+.progress {
+  --bs-progress-height: 0.571rem;
+  --bs-progress-bg: #f2f4f7;
+  width: calc(100% - 3.5rem);
+  display: inline-flex;
+  margin-right: 0.571rem;
 }
 
 .btn-outline-secondary {
@@ -41,8 +52,8 @@
   .form-check-input {
     vertical-align: middle;
     cursor: pointer;
-    height: 1.3rem;
-    width: 2.3rem;
+    height: 1.429rem;
+    width: 2.571rem;
   }
   label {
     vertical-align: text-top;
@@ -116,6 +127,7 @@
         background-color: transparent;
         font-weight: 600;
         color: var(--alto-blue-second);
+        border-bottom: 1px solid var(--alto-medium-grey);
         i {
           opacity: 0;
         }

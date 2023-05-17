@@ -11,8 +11,8 @@ export class PeriodFilterComponent {
   I18ns = I18ns;
   @Output() selectChange = new EventEmitter<any>();
   data = [
-    { value: ScoreDuration.Week, label: I18ns.shared.dateFilter.week },
     { value: ScoreDuration.Month, label: I18ns.shared.dateFilter.month },
+    { value: ScoreDuration.Trimester, label: I18ns.shared.dateFilter.trimester },
     { value: ScoreDuration.Year, label: I18ns.shared.dateFilter.year },
   ];
   selectedItem?: any;

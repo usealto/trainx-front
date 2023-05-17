@@ -3,8 +3,9 @@
   --bs-orange: #f36f23;
   --bs-success: #12b76a;
   --bs-danger: #f04438;
+  --bs-warning: #fdb022;
 
-  --alto-blue: #19222f;
+  --alto-blue: #101828;
   --alto-blue-second: #3b434e;
   --alto-blue-disabled: #3b434e;
   --alto-purple: #a757fa;
@@ -22,6 +23,8 @@
 
   --bs-body-bg: #fcfcfd;
   --bs-body-color: var(--alto-grey);
+
+  --alto-border: #d0d5dd;
 }
 .alto-text {
   color: var(--alto-text-color);
@@ -35,9 +38,22 @@
 .alto-grey {
   color: var(--alto-grey);
 }
+.alto-dark-grey {
+  color: var(--alto-dark-grey);
+}
 .alto-grey-bg {
   background-color: var(--alto-medium-grey);
 }
 .alto-blue-bg {
   background-color: var(--alto-blue);
+}
+
+.pill-green {
+  background-color: #32d583;
+}
+.pill-neutral {
+  background-color: #98a2b3;
+}
+.pill-red {
+  background-color: #f04438;
 }

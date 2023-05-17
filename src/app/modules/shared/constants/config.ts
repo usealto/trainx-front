@@ -24,7 +24,7 @@ export const chartDefaultOptions: ChartOptions = {
   responsive: true,
   plugins: {
     legend: {
-      display: true,
+      display: false,
       align: 'end',
       labels: {
         usePointStyle: true,

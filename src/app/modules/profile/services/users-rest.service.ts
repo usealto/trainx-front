@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, map, take, tap } from 'rxjs';
 import {
   GetScoresRequestParams,
   GetUsersRequestParams,
@@ -33,10 +33,7 @@ export class UsersRestService {
   }
 
   getUsersFiltered(req: GetUsersRequestParams): Observable<UserDtoApi[]> {
-    return this.userApi.getUsers({ ...req }).pipe(
-      map((r) => r.data ?? []),
-      tap((users) => (this.userStore.users.value = users)),
-    );
+    return this.userApi.getUsers({ ...req }).pipe(map((r) => r.data ?? []));
   }
 
   getUsersScores(userIds: string[]) {

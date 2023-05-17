@@ -9,4 +9,8 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 export class StatisticsComponent {
   I18ns = I18ns;
   activeTab = 2;
+
+  tabChange(val: number) {
+    this.activeTab = val;
+  }
 }

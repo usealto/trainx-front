@@ -2,37 +2,38 @@ import { PillColorPipe } from './pill-color.pipe';
 
 describe('PillColorPipe', () => {
   const pipe = new PillColorPipe();
+  const extraClass = ' text-white';
 
   beforeEach(() => {
     expect(pipe).toBeTruthy();
   });
 
-  it('checks when num is over 65 == bg-success', () => {
-    expect(pipe.transform(30)).not.toBe('bg-success');
-    expect(pipe.transform(66)).toBe('bg-success');
-    expect(pipe.transform(80)).toBe('bg-success');
-    expect(pipe.transform(100)).toBe('bg-success');
-    expect(pipe.transform(200)).toBe('bg-success');
+  it('checks when num is over 65 == pill-green', () => {
+    expect(pipe.transform(30)).not.toBe('pill-green' + extraClass);
+    expect(pipe.transform(66)).toBe('pill-green' + extraClass);
+    expect(pipe.transform(80)).toBe('pill-green' + extraClass);
+    expect(pipe.transform(100)).toBe('pill-green' + extraClass);
+    expect(pipe.transform(200)).toBe('pill-green' + extraClass);
   });
 
   it('checks when num is over 30 == bg-warning', () => {
-    expect(pipe.transform(31)).toBe('bg-warning');
-    expect(pipe.transform(50)).toBe('bg-warning');
-    expect(pipe.transform(60)).toBe('bg-warning');
-    expect(pipe.transform(90)).not.toBe('g-warning');
+    expect(pipe.transform(31)).toBe('bg-warning' + extraClass);
+    expect(pipe.transform(50)).toBe('bg-warning' + extraClass);
+    expect(pipe.transform(60)).toBe('bg-warning' + extraClass);
+    expect(pipe.transform(90)).not.toBe('g-warning' + extraClass);
   });
 
-  it('checks when num is below 31 == bg-danger', () => {
-    expect(pipe.transform(30)).toBe('bg-danger');
-    expect(pipe.transform(-10)).toBe('bg-danger');
-    expect(pipe.transform(0)).toBe('bg-danger');
-    expect(pipe.transform(90)).not.toBe('bg-danger');
+  it('checks when num is below 31 == pill-red', () => {
+    expect(pipe.transform(30)).toBe('pill-red' + extraClass);
+    expect(pipe.transform(90)).not.toBe('pill-red' + extraClass);
   });
 
-  it('checks when num is string then bg-secondary', () => {
-    expect(pipe.transform('30')).toBe('bg-secondary');
-    expect(pipe.transform('NAN')).toBe('bg-secondary');
-    expect(pipe.transform('test')).toBe('bg-secondary');
-    expect(pipe.transform(90)).not.toBe('bg-secondary');
+  it('checks when num is string then pill-neutral', () => {
+    expect(pipe.transform('30')).toBe('pill-neutral' + extraClass);
+    expect(pipe.transform(0)).toBe('pill-neutral' + extraClass);
+    expect(pipe.transform('NAN')).toBe('pill-neutral' + extraClass);
+    expect(pipe.transform('test')).toBe('pill-neutral' + extraClass);
+    expect(pipe.transform(90)).not.toBe('pill-neutral' + extraClass);
+    expect(pipe.transform(-10)).toBe('pill-neutral' + extraClass);
   });
 });

@@ -1,22 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { combineLatest, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import {
-  ProgramDtoApi,
-  TeamDtoApi,
-  UserDtoApi,
-  CreateTeamDtoApi,
-  PatchTeamDtoApi,
-  PatchProgramDtoApi,
-  TeamApi,
-} from 'src/app/sdk';
-import { TeamForm } from '../../model/team.form';
-import { combineLatest, tap } from 'rxjs';
-import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
+import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
+import { PatchTeamDtoApi, ProgramDtoApi, TeamApi, TeamDtoApi, UserDtoApi } from 'src/app/sdk';
+import { TeamForm } from '../../model/team.form';
 import { TeamsRestService } from '../../services/teams-rest.service';
 @Component({
   selector: 'alto-team-form',

@@ -14,7 +14,7 @@
 export interface PutTagDtoApi { 
     createdBy?: string;
     companyId?: string;
-    name: string;
+    name?: string;
     description?: string;
 }
 

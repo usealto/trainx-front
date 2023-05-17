@@ -1,6 +1,6 @@
 :host {
   display: block;
-  padding: 2rem;
+  padding: var(--alto-page-padding);
 }
 .step {
   padding-bottom: 1rem;

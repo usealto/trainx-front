@@ -3,6 +3,7 @@
   --alto-panel-padding-x: 1.7rem;
   --alto-panel-padding-y: 1.4rem;
   --font-family: 'Inter';
+  --alto-page-padding: 2.286rem;
 }
 body,
 html {
@@ -50,15 +51,15 @@ p {
 }
 h1 {
   font-family: var(--font-family);
-  font-size: 2.14rem;
+  font-size: 1.714rem;
   font-weight: 500;
-  @media screen and (max-width: 700px) {
-    font-size: 1.8rem;
-  }
+  // @media screen and (max-width: 700px) {
+  //   font-size: 1.8rem;
+  // }
 }
 h2 {
   font-family: var(--font-family);
-  font-size: 1.714rem;
+  font-size: 1.286rem;
   font-weight: 500;
 }
 h3 {
@@ -80,6 +81,9 @@ hr {
 .cursor-pointer {
   cursor: pointer;
 }
+.fs-6b {
+  font-size: 1.143rem !important;
+}
 .fs-7 {
   font-size: 0.85rem;
 }
@@ -98,6 +102,9 @@ hr {
   color: var(--bs-orange);
 }
 
+.w-33 {
+  width: 33%;
+}
 // Creates a width class for each multiple of 5
 @for $wdth from 1 through 20 {
   .w-#{$wdth*5} {

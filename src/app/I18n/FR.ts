@@ -11,6 +11,7 @@ export const FR = {
     clipboard: 'Copier dans le presse-papier',
     showMore: 'Voir plus',
     showAll: 'Tout voir',
+    noTeam: 'No teams',
     optional: '(facultatif)',
     noData: 'Aucune donnée à afficher',
     noDataSubtitle: 'Aucun résultat ne correspond à votre recherche',
@@ -31,6 +32,7 @@ export const FR = {
     dateFilter: {
       week: 'Semaine',
       month: 'Mois',
+      trimester: '3 Mois',
       year: 'Année',
     },
     rollingDateFilter: {
@@ -55,9 +57,9 @@ export const FR = {
       globalScoreToolTip: 'Score moyen de toutes les questions répondues sur la période donnée',
       averageCompletion: 'Complétion moyenne',
       averageCompletionToolTip: 'Nombre de programs réussis sur nombre de programmes assignés',
-      activeMembers: 'Membres actifs',
+      activeMembers: 'Membres réguliers',
       activeMembersToolTip: 'Nombre de membres ayant interagi avec Alto sur une période donnée',
-      inactiveMembers: 'Membres inactifs',
+      inactiveMembers: 'Membres irréguliers',
       inactiveMembersToolTip: "Nombre de membres n'ayant pas interagi avec Alto sur une période donnée",
     },
     graph: {
@@ -225,14 +227,13 @@ export const FR = {
       perTeamPerformance: {
         title: 'Performance par équipes',
         subtitle: 'Retrouvez les performances global de vos équipes.',
+        teamFilter: 'Équipes',
         scoreEvolution: {
           title: 'Évolution du score',
           subtitle: "Suivez l'évolution du score de vos équipes.",
-          tooltip: 'Score moyen',
         },
         leaderboard: {
           title: 'Leaderboard',
-          tooltip: 'Score moyen',
           top: 'Top',
           flop: 'Flop',
         },
@@ -240,6 +241,29 @@ export const FR = {
       perThemePerformance: {
         title: 'Performance par thèmatiques',
         subtitle: 'Retrouvez les performances global de vos équipes.',
+        filters: {
+          teams: 'Équipes',
+          tags: 'Tags',
+          programs: 'Programmes',
+        },
+        scoreEvolutionChart: {
+          title: 'Évolution du score',
+        },
+        performanceChart: {
+          title: {
+            tags: 'Performance par tag',
+            programs: 'Performance par programme',
+          },
+        },
+        control: {
+          title: 'Maitrise',
+          top: 'Top',
+          flop: 'Flop',
+        },
+        nav: {
+          tags: 'Tags',
+          programs: 'Programmes',
+        },
       },
     },
     perTeams: {
@@ -306,8 +330,8 @@ export const FR = {
       },
       statistics: {
         total: 'Total',
-        active: 'Actifs',
-        inactive: 'Inactifs',
+        active: 'Membres réguliers',
+        inactive: 'Membres irréguliers',
       },
       table: {
         name: 'Nom',
@@ -339,6 +363,7 @@ export const FR = {
         name: 'Nom',
         initials: 'Initiales',
         usersCount: 'Nombre de membres',
+        users: ['Aucun', '{{}} user', '{{}} users'],
         averageScore: 'Score moyen',
         creationDate: 'Date de création',
       },

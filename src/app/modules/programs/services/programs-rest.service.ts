@@ -5,6 +5,7 @@ import {
   DeleteResponseApi,
   GetProgramsRequestParams,
   PatchProgramDtoApi,
+  ProgramAssignmentPaginatedResponseApi,
   ProgramDtoApi,
   ProgramDtoPaginatedResponseApi,
   ProgramDtoResponseApi,
@@ -81,6 +82,14 @@ export class ProgramsRestService {
         altoBaseIdsDtoApi: { ids: [questionId] },
       });
     }
+  }
+
+  getAssignments(ids: string[]): Observable<ProgramAssignmentPaginatedResponseApi> {
+    return this.programApi.getAllAssignmentsProgram({
+      programIds: ids.join(','),
+      itemsPerPage: 200,
+      page: 1,
+    });
   }
 
   activate(id: string, active: boolean) {
