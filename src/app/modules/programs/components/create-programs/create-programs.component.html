@@ -9,6 +9,7 @@
     }"
     (click)="isEdit && changeTab(1)"
   >
+    <img class="tab-icon" src="../../assets/img/create-program-infos.svg" alt="Informations Icon">
     {{ I18ns.programs.forms.step1.title }}
   </div>
   <div
@@ -20,6 +21,7 @@
     }"
     (click)="isEdit && changeTab(2)"
   >
+    <img class="tab-icon" src="../../assets/img/create-program-questions.svg" alt="Questions Icon">
     {{ I18ns.programs.forms.step2.title }}
   </div>
   <div
@@ -27,6 +29,7 @@
     [ngClass]="{ 'cursor-pointer': isEdit, 'highlight-step': currentStep === 3 }"
     (click)="isEdit && changeTab(3)"
   >
+    <img class="tab-icon" src="../../assets/img/create-program-share.svg" alt="Share Icon">
     {{ I18ns.programs.forms.step3.title }}
   </div>
 </div>
