@@ -20,7 +20,7 @@
     </div>
   </ng-template>
   <ng-template ng-option-tmp let-item="item" let-index="index">
-    <span *ngIf="isColored" class="alto-badge fw-normal fs-6" [style.backgroundColor]="item.id | uuid2color">
+    <span *ngIf="isColored" class="alto-badge badge-option" [style]="item.id | teamColor">
       {{ item[displayLabel] }}
     </span>
     <span *ngIf="!isColored">

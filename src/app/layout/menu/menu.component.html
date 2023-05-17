@@ -1,6 +1,6 @@
 <div class="logo">
   <a [routerLink]="['/', displayAdmin ? AltoRoutes.lead : AltoRoutes.user, AltoRoutes.leadHome]">
-    <img height="34" src="assets/img/logo-white.png" alt="Alto Logo" />
+    <img height="22" src="assets/img/logo-white.png" alt="Alto Logo" />
   </a>
 </div>
 
@@ -91,9 +91,9 @@
     </div>
 
     <hr />
-    <button class="float-end btn btn-link" (click)="logOut()">
-      <i class="m-3 text-white fs-4 bi bi-box-arrow-in-right"></i>
-    </button>
+    <a class="float-end alto-dark-grey" (click)="logOut()">
+      <i class="p-3 mx-4 text-white fs-4 bi bi-box-arrow-right"></i>
+    </a>
     <a class="profile" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile">
       <alto-profile-card [isWhite]="true" [user]="userStore.user.value$ | async"> </alto-profile-card>
     </a>

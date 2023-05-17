@@ -19,11 +19,6 @@ export class AdminHomeComponent implements OnInit {
     this.userForm = this.formBuilder.group({
       name: '',
     });
-
-    this.userRestService
-      .getUsers()
-      .pipe(tap((users) => (this.users = users)))
-      .subscribe();
   }
 
   submit() {

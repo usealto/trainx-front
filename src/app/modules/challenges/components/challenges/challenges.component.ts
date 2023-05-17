@@ -115,7 +115,7 @@ export class ChallengesComponent implements OnInit {
     if (!id) {
       return of(null);
     }
-    return this.userService.getUsers({ ids: id }).pipe(map((u) => u.shift()));
+    return this.userService.getUsersFiltered({ ids: id }).pipe(map((u) => u.shift()));
   }
 
   filterByStatus(type: ChallengeTypeEnumApi) {

@@ -1,4 +1,4 @@
-<span class="badge rounded-pill" [class]="score | pillProgression">
-  <i *ngIf="arrow === true" [class]="score | progressionPillArrow"></i>
-  {{ score | percent }}
+<span class="alto-badge" [class]="score ?? 0 | pillProgression">
+  <i *ngIf="arrow === true" [class]="score ?? 0 | progressionPillArrow"></i>
+  {{ score ?? 0 | percent }}
 </span>

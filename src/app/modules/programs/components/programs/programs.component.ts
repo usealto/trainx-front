@@ -8,25 +8,24 @@ import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import {
-  GetScoresRequestParams,
   ProgramDtoApi,
   QuestionDtoApi,
   QuestionDtoPaginatedResponseApi,
   QuestionSubmittedDtoApi,
-  ScoreTimeframeEnumApi,
+  ScoreTypeEnumApi,
   ScoresResponseDtoApi,
   TagDtoApi,
   UserDtoApi,
 } from 'src/app/sdk';
-import { ProgramFilters } from '../../models/program.model';
 import { QuestionFilters } from '../../models/question.model';
+import { ScoreDuration } from '../../models/score.model';
 import { TagFilters } from '../../models/tag.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
-import { ProgramsService } from '../../services/programs.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
 import { ScoresRestService } from '../../services/scores-rest.service';
+import { ScoresService } from '../../services/scores.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 import { TagsServiceService } from '../../services/tags-service.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
@@ -42,12 +41,7 @@ export class ProgramsComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   //
-  // programs: ProgramDtoApi[] = [];
-  // programsDisplay: ProgramDtoApi[] = [];
-  // programFilters: ProgramFilters = { teams: [], search: '' };
-  // programsPage = 1;
-  // programsCount = 0;
-  // programPageSize = 9;
+  programsCount = 0;
   //
   questions: QuestionDtoApi[] = [];
   questionsPage = 1;
@@ -74,13 +68,17 @@ export class ProgramsComponent implements OnInit {
   tagPrograms = new Map<string, string[]>();
   isTagProgramsLoading = true;
   tagFilters: TagFilters = { programs: [], contributors: [], search: '' };
+  tagsScore = new Map<string, number>();
+
   //
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
     private readonly programRestService: ProgramsRestService,
     private readonly questionsService: QuestionsRestService,
-    private readonly scoresServices: ScoresRestService,
+    private readonly scoresRestServices: ScoresRestService,
+    private readonly scoresServices: ScoresService,
+
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly tagRestService: TagsRestService,
     private readonly tagsService: TagsServiceService,
@@ -156,7 +154,7 @@ export class ProgramsComponent implements OnInit {
         switchMap((questions) => this.getScoresfromQuestions(questions)),
         map(() => this.questions?.map((q) => q.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
-        map((ids) => this.getUsersfromQuestions(ids)),
+        map((ids) => this.getUsersfromIds(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
         tap(() => (this.isQuestionsLoading = false)),
         untilDestroyed(this),
@@ -164,23 +162,48 @@ export class ProgramsComponent implements OnInit {
       .subscribe();
   }
 
-  getUsersfromQuestions(ids: string[]): UserDtoApi[] {
+  getUsersfromIds(ids: string[]): UserDtoApi[] {
     const filter = ids.filter((i) => !this.userCache.has(i));
     return this.profileStore.users.value.filter((u) => filter.some((i) => i === u.id));
   }
 
   getScoresfromQuestions(questions: QuestionDtoPaginatedResponseApi): Observable<ScoresResponseDtoApi> {
     const ids = questions.data?.map((q) => q.id);
-    return this.scoresServices
-      .getQuestionScore({
-        timeframe: ScoreTimeframeEnumApi.Year,
-        ids: ids?.join(','),
-      } as GetScoresRequestParams)
+    return this.scoresRestServices
+      .getScores({
+        type: ScoreTypeEnumApi.Question,
+        duration: ScoreDuration.Month,
+        ids,
+      })
       .pipe(
         tap((scores) => {
-          ids?.forEach((id) =>
-            this.questionsScore.set(id, scores.scores.some((score) => score.id === id) ? 0.42 : 0),
-          );
+          ids?.forEach((id) => {
+            const qScore = scores.scores.filter((score) => score.id === id);
+            this.questionsScore.set(
+              id,
+              this.scoresServices.reduceWithoutNull(qScore.shift()?.averages ?? []) || 0,
+            );
+          });
+        }),
+      );
+  }
+
+  getScoresFromTags(ids: string[]) {
+    return this.scoresRestServices
+      .getScores({
+        type: ScoreTypeEnumApi.Tag,
+        duration: ScoreDuration.Month,
+        ids,
+      })
+      .pipe(
+        tap((scores) => {
+          ids?.forEach((id) => {
+            const qScore = scores.scores.filter((score) => score.id === id);
+            this.tagsScore.set(
+              id,
+              this.scoresServices.reduceWithoutNull(qScore.shift()?.averages ?? []) || 0,
+            );
+          });
         }),
       );
   }
@@ -195,8 +218,15 @@ export class ProgramsComponent implements OnInit {
   }
 
   @memoize()
-  getQuestionScore(id: string) {
-    return this.questionsScore.get(id);
+  getQuestionScore(id: string): number {
+    const output = this.questionsScore.get(id) || 0;
+    return isNaN(output) ? 0 : output;
+  }
+
+  @memoize()
+  getTagScore(id: string): number {
+    const output = this.tagsScore.get(id) || 0;
+    return isNaN(output) ? 0 : output;
   }
 
   getSubmittedQuestions() {
@@ -210,7 +240,7 @@ export class ProgramsComponent implements OnInit {
         tap((q) => (this.submittedQuestionsCount = q.meta.itemsPerPage ?? 0)),
         map((questions) => questions.data?.map((q) => q.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
-        map((ids) => this.getUsersfromQuestions(ids)),
+        map((ids) => this.getUsersfromIds(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
         tap(() => (this.isSubmittedQuestionsLoading = false)),
       )
@@ -229,9 +259,10 @@ export class ProgramsComponent implements OnInit {
         tap((tags) => (this.tagsCount = tags.length)),
         tap((tags) => this.getProgramsfromTags(tags)),
         tap((tags) => this.changeTagsPage(tags)),
-        map((tags) => tags.map((t) => t.createdBy) ?? []),
+        switchMap((tags) => this.getScoresFromTags(tags.map((t) => t.id))),
+        map(() => this.tags.map((t) => t.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
-        map((ids) => this.getUsersfromQuestions(ids)),
+        map((ids) => this.getUsersfromIds(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
         tap(() => (this.isTagsLoading = false)),
       )

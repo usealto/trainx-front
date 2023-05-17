@@ -23,7 +23,7 @@ function getLang(lg: string | null): I18n {
     case 'en':
     case 'uk':
     case 'us':
-      return EN as unknown as I18n; // TODO remove 'as unknown as I18n'
+      return EN as unknown as I18n;
 
     default:
       return defaultLang;

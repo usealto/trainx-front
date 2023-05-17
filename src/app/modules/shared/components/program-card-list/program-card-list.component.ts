@@ -1,8 +1,10 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { combineLatest, of, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramFilters } from 'src/app/modules/programs/models/program.model';
 import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
@@ -12,7 +14,6 @@ import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest
 import { ScoresService } from 'src/app/modules/programs/services/scores.service';
 import { ProgramDtoApi, ScoreTypeEnumApi } from 'src/app/sdk';
 import { AltoRoutes } from '../../constants/routes';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @UntilDestroy()
 @Component({
@@ -24,6 +25,7 @@ export class ProgramCardListComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
 
+  @Output() programTotal = new EventEmitter<number>();
   @Input() place: 'home' | 'program' = 'home';
 
   @HostListener('window:resize', ['$event'])
@@ -36,6 +38,7 @@ export class ProgramCardListComponent implements OnInit {
 
   programsScores = new Map<string, number>();
   programsProgress = new Map<string, number>();
+  programsInvolvement = new Map<string, number>();
   page = 1;
   count = 0;
   pageSize = 3;
@@ -44,7 +47,6 @@ export class ProgramCardListComponent implements OnInit {
   programFilters: ProgramFilters = { teams: [], search: '' };
 
   displayToggle = false;
-  displayEdit = false;
 
   constructor(
     private readonly programRunsService: ProgramRunsRestService,
@@ -53,23 +55,24 @@ export class ProgramCardListComponent implements OnInit {
     public readonly teamStore: TeamStore,
     private readonly scoresRestService: ScoresRestService,
     private readonly programRestService: ProgramsRestService,
+    // private readonly usersRestService: UsersRestService,
+    private userStore: ProfileStore,
   ) {}
 
   ngOnInit(): void {
     if (this.place === 'home') {
       this.displayToggle = false;
-      this.displayEdit = false;
     } else if (this.place === 'program') {
       this.displayToggle = true;
-      this.displayEdit = true;
     }
     this.getPrograms();
     this.setPageSize(window.innerWidth);
   }
 
-  loadScores() {
-    const index = this.page * this.pageSize;
-    of(this.programs.slice(index, index + this.pageSize))
+  loadScores(index?: number) {
+    const pa = index || this.page;
+
+    of(this.programsDisplay.slice((pa - 1) * this.pageSize, pa * this.pageSize))
       .pipe(
         switchMap((p) =>
           combineLatest([
@@ -84,13 +87,41 @@ export class ProgramCardListComponent implements OnInit {
                 .filter((x) => !this.programsProgress.has(x))
                 .join(','),
             }),
+            of(p),
           ]),
         ),
-        tap(([{ scores }, { data }]) => {
+        tap(([{ scores }, { data }, programs]) => {
+          // * INVOLVEMENT
+
+          const prNumbers = new Map<string, number>();
+
+          data?.forEach((pr) => {
+            prNumbers.set(pr.programId, (prNumbers.get(pr.programId) || 0) + 1);
+          });
+          const programTeams = new Map<string, string[]>();
+
+          programs?.forEach((p) => {
+            if (prNumbers.has(p.id)) {
+              programTeams.set(p.id, [...(programTeams.get(p.id) ?? []), ...p.teams.map((t) => t.id)]);
+            }
+          });
+
+          programTeams.forEach((val: string[], key: string) => {
+            if (prNumbers.has(key) && !this.programsInvolvement.has(key)) {
+              this.programsInvolvement.set(
+                key,
+                (prNumbers.get(key) || 0) /
+                  (this.userStore.users.value.filter((u) => u.teamId && val.includes(u.teamId)).length || 1),
+              );
+            }
+          });
+
+          // * SCORES
           scores.forEach((x) => {
-            this.programsScores.set(x.id, this.scoreService.reduceWithoutNull(x.averages));
+            this.programsScores.set(x.id, this.scoreService.reduceWithoutNull(x.averages) ?? 0);
           });
           // Temp map to retrieve progId as key and answered VS total questions
+          // * PROGRESS
           const tmp = new Map<string, number[][]>();
           data?.forEach((pr) => {
             tmp.set(pr.programId, [...(tmp.get(pr.programId) ?? []), [pr.guessesCount, pr.questionsCount]]);
@@ -122,7 +153,10 @@ export class ProgramCardListComponent implements OnInit {
         sortBy: 'updatedAt:desc',
       })
       .pipe(
-        tap((p) => (this.programs = p.data ?? [])),
+        tap((p) => {
+          this.programs = p.data ?? [];
+          this.programTotal.emit(p.meta.totalItems);
+        }),
         tap((p) => (this.programsDisplay = p.data ?? [])),
         tap((p) => (this.count = p.meta.totalItems ?? [])),
         tap(() => this.loadScores()),
@@ -133,7 +167,7 @@ export class ProgramCardListComponent implements OnInit {
 
   setPageSize(width: number) {
     this.width = width;
-    const cardsByLine = width < 1600 ? 3 : width < 1900 ? 4 : 5;
+    const cardsByLine = width < 1700 ? 3 : width < 2000 ? 4 : 5;
     if (this.place === 'home') {
       this.pageSize = cardsByLine;
     } else if (this.place === 'program') {
@@ -143,6 +177,6 @@ export class ProgramCardListComponent implements OnInit {
 
   @memoize()
   getCardWidth(width: number) {
-    return width < 1600 ? 'w-33' : width < 1900 ? 'w-25' : 'w-20';
+    return width < 1700 ? 'col-4' : width < 2000 ? 'col-3' : 'w-20';
   }
 }

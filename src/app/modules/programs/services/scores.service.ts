@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addHours, startOfDay, addDays, add } from 'date-fns';
+import { addDays, addHours, startOfDay } from 'date-fns';
 import { ScoreTimeframeEnumApi } from 'src/app/sdk';
 import { ScoreDuration } from '../models/score.model';
 
@@ -7,8 +7,12 @@ import { ScoreDuration } from '../models/score.model';
   providedIn: 'root',
 })
 export class ScoresService {
-  reduceWithoutNull(data: number[]) {
+  reduceWithoutNull(data: number[]): number | null {
+    if (data.length === 0) return null;
+
     const output = data.filter((x) => !!x);
+    if (output.length === 0) return null;
+
     return output.reduce((prev, curr) => prev + curr, 0) / output.length;
   }
 

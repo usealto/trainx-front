@@ -1,0 +1,74 @@
+<div class="border-bottom py-4">
+  <alto-dropdown-filter
+    class="float-end"
+    [data]="teamsStats"
+    [selectedItems]="selectedTeams"
+    [displayLabel]="'label'"
+    [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.teams"
+    (selectChange)="filterTeams($event)"
+  ></alto-dropdown-filter>
+  <alto-dropdown-filter
+    *ngIf="items.length >= 7"
+    class="float-end mx-2"
+    [data]="items"
+    [displayLabel]="'label'"
+    [selectedItems]="selectedItems"
+    [placeholder]="
+      activeTab === 1
+        ? I18ns.statistics.globalPerformance.perThemePerformance.filters.tags
+        : I18ns.statistics.globalPerformance.perThemePerformance.filters.programs
+    "
+    (selectChange)="filterTagsAndPrograms($event)"
+  ></alto-dropdown-filter>
+  <alto-tabs
+    class="mt-4"
+    (tabChanged)="changeTabs()"
+    [data]="[
+      { label: I18ns.statistics.globalPerformance.perThemePerformance.nav.tags, value: 1 },
+      { label: I18ns.statistics.globalPerformance.perThemePerformance.nav.programs, value: 2 }
+    ]"
+  ></alto-tabs>
+  <i class="fs-5 bi bi-home"></i>
+  <div class="row mt-4">
+    <div class="col-7 panel mx-2">
+      <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}</h2>
+      <div class="chart-container">
+        <canvas id="themeScoreEvolution"></canvas>
+      </div>
+    </div>
+    <div class="col-4 mx-2">
+      <div class="row panel mb-4">
+        <h2>
+          {{
+            activeTab === 1
+              ? I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.title.tags
+              : I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.title.programs
+          }}
+        </h2>
+        <div class="chart-container">
+          <canvas id="themePerformance"></canvas>
+        </div>
+      </div>
+      <div class="row panel">
+        <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
+        <h2 class="mt-2">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h2>
+        <ol class="list-group list-group-flush list-group-numbered">
+          <li class="list-group-item" *ngFor="let team of scoredItems.slice(0, 5)">
+            <alto-progression-badge class="float-end" [score]="team.score"></alto-progression-badge>
+            {{ team.label }}
+          </li>
+        </ol>
+        <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.flop }}</h2>
+        <ol class="list-group list-group-flush list-group-numbered">
+          <li
+            class="list-group-item"
+            *ngFor="let team of scoredItems.slice(scoredItems.length - 5, scoredItems.length)"
+          >
+            <alto-progression-badge class="float-end" [score]="team.score"></alto-progression-badge>
+            {{ team.label }}
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>

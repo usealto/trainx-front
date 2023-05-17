@@ -1,15 +1,15 @@
-<h1 class="mt-4">{{ I18ns.challenges.title }}</h1>
-<p class="mb-4">{{ I18ns.challenges.subtitle }}</p>
+<h1>{{ I18ns.challenges.title }}</h1>
+<p class="mb-4 alto-grey">{{ I18ns.challenges.subtitle }}</p>
 <div class="pb-4">
   <alto-anchor-navigator fragment="byTeamAnchor">
-    <button class="btn btn-outline-secondary me-4">
-      {{ I18ns.challenges.team.shortTitle }} {{ byTeamCount }}
+    <button class="btn btn-outline-secondary me-3">
+      {{ I18ns.challenges.team.shortTitle }}<span class="alto-badge ms-3">{{ byTeamCount }}</span>
     </button>
   </alto-anchor-navigator>
 
   <alto-anchor-navigator fragment="byUserAnchor">
-    <button class="btn btn-outline-secondary me-4">
-      {{ I18ns.challenges.individual.shortTitle }} {{ byUserCount }}
+    <button class="btn btn-outline-secondary me-3">
+      {{ I18ns.challenges.individual.shortTitle }}<span class="alto-badge ms-3">{{ byUserCount }}</span>
     </button>
   </alto-anchor-navigator>
 </div>
@@ -23,11 +23,11 @@
     <i class="bi bi-plus-lg"></i> {{ I18ns.challenges.team.createChallenge }}
   </button>
 
-  <h1 id="byTeamAnchor">{{ I18ns.challenges.team.title }}</h1>
-  <p class="mb-4">{{ I18ns.challenges.team.subtitle }}</p>
+  <h2 id="byTeamAnchor">{{ I18ns.challenges.team.title }}</h2>
+  <p class="mb-4 alto-grey">{{ I18ns.challenges.team.subtitle }}</p>
 
   <ng-container *ngIf="challengesByTeam.length > 0; else noChallengesTeam">
-    <div class="row mb-3">
+    <div class="row mb-4">
       <div class="col-8">
         <alto-dropdown-filter
           [data]="teamStore.teams.value"
@@ -73,7 +73,7 @@
                 | slice : (byTeamPage - 1) * pageSize : byTeamPage * pageSize
             "
           >
-            <td class="fw-medium">{{ chal.name }}</td>
+            <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
             <td>
               <span
                 *ngIf="chal.leadTeam"
@@ -100,7 +100,7 @@
               ></alto-status-pill>
               <ng-template #byTeamNoStatus>N/A</ng-template>
             </td>
-            <td class="px-3">
+            <td class="px-4">
               <i class="bi bi-pen cursor-pointer" [routerLink]="[AltoRoutes.challengeEdit, chal.id]"></i>
             </td>
           </tr>
@@ -123,7 +123,7 @@
     </div>
   </ng-template>
 
-  <hr />
+  <hr class="my-5" />
 
   <button
     type="button"
@@ -133,11 +133,11 @@
     {{ I18ns.challenges.team.createChallenge }}
   </button>
 
-  <h1 id="byUserAnchor" class="mt-4">{{ I18ns.challenges.individual.title }}</h1>
-  <p class="mb-4">{{ I18ns.challenges.individual.subtitle }}</p>
+  <h2 id="byUserAnchor" class="mt-4">{{ I18ns.challenges.individual.title }}</h2>
+  <p class="mb-4 alto-grey">{{ I18ns.challenges.individual.subtitle }}</p>
 
   <ng-container *ngIf="challengesByUser.length > 0; else noChallenges">
-    <div class="row mb-3">
+    <div class="row mb-4">
       <div class="col-8">
         <alto-dropdown-filter
           class="text-start"
@@ -182,7 +182,7 @@
                 | slice : (byUserPage - 1) * pageSize : byUserPage * pageSize
             "
           >
-            <td class="fw-medium">{{ chal.name }}</td>
+            <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
             <td>
               <alto-img-badge [url]="(getUser(chal.leadUser?.id ?? '') | async)?.pictureUrl"></alto-img-badge>
             </td>

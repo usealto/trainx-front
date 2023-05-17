@@ -12,7 +12,6 @@ import { AltoRoutes } from '../../constants/routes';
 })
 export class ProgramCardComponent implements OnChanges {
   @Input() displayToggle = false;
-  @Input() displayEdit = false;
   @Input() program!: ProgramDtoApi;
   @Input() programRun!: ProgramRunApi;
   @Input() score: number | undefined;
@@ -26,23 +25,14 @@ export class ProgramCardComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['programRun']?.firstChange) {
-      //
       this.programRestService
         .getProgram(this.programRun.programId)
-        .pipe(
-          tap((prog) => (this.program = prog)),
-          // tap(console.log),
-          // tap(() => this.getScores()),
-        )
+        .pipe(tap((prog) => (this.program = prog)))
         .subscribe();
-    } else if (changes['program']?.firstChange && changes['program']?.currentValue) {
-      // this.getScores();
     }
   }
 
   changeIsActive(id: string, checked: boolean) {
     this.programRestService.activate(id, checked).pipe().subscribe();
   }
-
-  // getScores() {}
 }

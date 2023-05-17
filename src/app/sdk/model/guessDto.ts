@@ -21,7 +21,7 @@ export interface GuessDtoApi {
     question?: QuestionLightDtoApi;
     programRun?: ProgramRunLightDtoApi;
     programRunId?: string;
-    answer: string;
+    answers?: Array<string>;
     isValid: boolean;
     isTimedOut: boolean;
     team?: TeamLightDtoApi;

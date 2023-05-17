@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { addDays, addMonths } from 'date-fns';
+import { addDays } from 'date-fns';
 import { Observable, filter, map } from 'rxjs';
 import {
   GetProgramRunsRequestParams,
   GetScoresRequestParams,
+  GetTeamsStatsRequestParams,
   ProgramRunApi,
   ProgramRunsApiService,
   ScoreByTypeEnumApi,
@@ -12,6 +13,8 @@ import {
   ScoreTypeEnumApi,
   ScoresApiService,
   ScoresResponseDtoApi,
+  StatsApiService,
+  TeamStatsDtoApi,
 } from 'src/app/sdk';
 import { ChartFilters } from '../../shared/models/chart.model';
 import { ScoreDuration, ScoreFilters } from '../models/score.model';
@@ -25,16 +28,22 @@ export class ScoresRestService {
     private readonly scoresApi: ScoresApiService,
     private readonly service: ScoresService,
     private readonly programsApi: ProgramRunsApiService,
+    private readonly statsApi: StatsApiService,
   ) {}
 
-  getScores({
-    duration,
-    type,
-    team,
-    timeframe,
-    sortBy,
-    ids,
-  }: ChartFilters): Observable<ScoresResponseDtoApi> {
+  getTeamsStats(duration: ScoreDuration): Observable<TeamStatsDtoApi[]> {
+    return this.statsApi
+      .getTeamsStats({
+        from: this.service.getStartDate(duration),
+        to: new Date(),
+      } as GetTeamsStatsRequestParams)
+      .pipe(map((r) => r.data || []));
+  }
+
+  getScores(
+    { duration, type, team, timeframe, sortBy, user, ids }: ChartFilters,
+    isProgression = false,
+  ): Observable<ScoresResponseDtoApi> {
     const par: GetScoresRequestParams = {
       type: type ?? ScoreTypeEnumApi.Guess,
       timeframe: timeframe ?? ScoreTimeframeEnumApi.Day,
@@ -44,9 +53,35 @@ export class ScoresRestService {
       sortBy,
     };
 
+    if (isProgression) {
+      let date = new Date();
+      switch (duration) {
+        case 'week':
+          date = addDays(date, -14);
+          break;
+        case 'month':
+          date = addDays(date, -60);
+          break;
+        case 'trimester':
+          date = addDays(date, -180);
+          break;
+        case 'year':
+          date = addDays(date, -730);
+          break;
+      }
+      par.dateAfter = date;
+      par.dateBefore = this.service.getStartDate(duration as ScoreDuration);
+    } else {
+      par.dateAfter = this.service.getStartDate(duration as ScoreDuration);
+      par.dateBefore = new Date();
+    }
+
     if (team) {
       par.scoredBy = ScoreByTypeEnumApi.Team;
       par.scoredById = team;
+    } else if (user) {
+      par.scoredBy = ScoreByTypeEnumApi.User;
+      par.scoredById = user;
     }
     if (ids) {
       par.ids = ids.join(',');
@@ -73,35 +108,20 @@ export class ScoresRestService {
     );
   }
 
-  getProgramScore(req: GetScoresRequestParams): Observable<ScoresResponseDtoApi> {
-    const par = {
-      ...req,
-      type: ScoreTypeEnumApi.Program,
-      timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Day,
-      dateBefore: new Date(),
-    };
-    par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
+  // getProgramScore(req: GetScoresRequestParams): Observable<ScoresResponseDtoApi> {
+  //   const par = {
+  //     ...req,
+  //     type: ScoreTypeEnumApi.Program,
+  //     timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Day,
+  //     dateBefore: new Date(),
+  //   };
+  //   par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
 
-    return this.scoresApi.getScores(par).pipe(
-      map((r) => r.data || ({} as ScoresResponseDtoApi)),
-      filter((x) => !!x),
-    );
-  }
-
-  getQuestionScore(req: GetScoresRequestParams): Observable<ScoresResponseDtoApi> {
-    const par = {
-      ...req,
-      type: ScoreTypeEnumApi.Question,
-      timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Year,
-      dateBefore: new Date(),
-    };
-    par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
-
-    return this.scoresApi.getScores(par).pipe(
-      map((r) => r.data || ({} as ScoresResponseDtoApi)),
-      filter((x) => !!x),
-    );
-  }
+  //   return this.scoresApi.getScores(par).pipe(
+  //     map((r) => r.data || ({} as ScoresResponseDtoApi)),
+  //     filter((x) => !!x),
+  //   );
+  // }
 
   getCompletion(filt: ScoreFilters, isProgression: boolean): Observable<ProgramRunApi[]> {
     const par = {
@@ -121,6 +141,9 @@ export class ScoresRestService {
           break;
         case 'month':
           date = addDays(date, -60);
+          break;
+        case 'trimester':
+          date = addDays(date, -180);
           break;
         case 'year':
           date = addDays(date, -730);
