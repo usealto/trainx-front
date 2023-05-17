@@ -26,7 +26,7 @@
     <p>{{ I18ns.leadTeam.teams.form.longNameExemple }}</p>
 
     <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.invitationEmails }}</label>
-    <ng-select
+    <ng-select class="alto-form"
       [items]="users"
       [multiple]="true"
       [placeholder]="I18ns.leadTeam.teams.form.invitationEmailsPlaceholder"
@@ -41,7 +41,7 @@
     <label class="mt-4 form-label"
       >{{ I18ns.leadTeam.teams.form.Programs }} {{ I18ns.shared.optional }}</label
     >
-    <ng-select
+    <ng-select class="alto-form"
       [items]="programs"
       [multiple]="true"
       bindLabel="name"

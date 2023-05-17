@@ -149,7 +149,10 @@
   }
   &.alto-form {
     width: 100%;
-    .ng-select-container{
+    .ng-select-container {
+      border-radius: 0.286rem;
+    }
+    &.ng-select-opened > .ng-select-container {
       border-radius: 0.286rem;
     }
     .ng-placeholder {
