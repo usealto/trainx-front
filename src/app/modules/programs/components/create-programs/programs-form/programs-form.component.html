@@ -35,7 +35,7 @@
       <p>{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
     </div>
     <div class="col-6">
-      <ng-select
+      <ng-select class="alto-form"
         required
         [items]="tags"
         [multiple]="true"
@@ -69,7 +69,7 @@
       <p>{{ I18ns.programs.forms.step1.teamsSubtitle }}</p>
     </div>
     <div class="col-6">
-      <ng-select
+      <ng-select class="alto-form"
         [items]="teams"
         [multiple]="true"
         bindLabel="name"
@@ -102,7 +102,7 @@
       <p>{{ I18ns.programs.forms.step1.prioritySubtitle }}</p>
     </div>
     <div class="col-6">
-      <ng-select
+      <ng-select class="alto-form"
         [items]="priorities"
         bindLabel="value"
         [placeholder]="I18ns.programs.forms.step1.priorityPlaceholder"
