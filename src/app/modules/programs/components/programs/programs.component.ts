@@ -208,7 +208,8 @@ export class ProgramsComponent implements OnInit {
       );
   }
 
-  changeQuestionsPage() {
+  changeQuestionsPage(page: number) {
+    this.questionsPage = page;
     this.getQuestions();
   }
 

@@ -3,6 +3,7 @@ export const FR = {
     edit: 'Modifier',
     save: 'Enregistrer',
     next: 'Suivant',
+    previous: 'Précédent',
     cancel: 'Annuler',
     delete: 'Supprimer',
     create: 'Créer',

@@ -62,7 +62,7 @@
   </div>
 </ng-template>
 
-<ngb-pagination
+<alto-pagination
   [ngClass]="{ invisible: count <= pageSize }"
   [collectionSize]="count"
   (pageChange)="loadScores($event)"
@@ -70,4 +70,4 @@
   [pageSize]="pageSize"
   [maxSize]="10"
   aria-label="Default pagination"
-></ngb-pagination>
+></alto-pagination>
