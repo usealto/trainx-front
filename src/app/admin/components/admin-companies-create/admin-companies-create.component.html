@@ -1,5 +1,14 @@
 <div class="">
-  <alto-admin-header title="Companies" subtitle="L'ensemble de nos clients"></alto-admin-header>
+  <alto-admin-header
+    title="Companies"
+    subtitle="L'ensemble de nos clients"
+    [breadcrumbs]="[
+      {
+        label: 'Companies',
+        url: '/admin/companies'
+      }
+    ]"
+  ></alto-admin-header>
   <div class="tabs">
     <alto-admin-tabs (activeNumberChanges)="tabNumber = $event">
       <alto-admin-tab [tabTitle]="'Informations'" icon="bi-file-text">

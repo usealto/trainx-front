@@ -2,6 +2,16 @@
   title="Users"
   subtitle="Find all of our clients here."
   [divider]="true"
+  [breadcrumbs]="[
+    {
+      label: 'Companies',
+      url: '/admin/companies'
+    },
+    {
+      label: company.name,
+      url: ['/', 'admin', 'companies', company.id, 'users']
+    }
+  ]"
 ></alto-admin-header>
 <h2></h2>
 <div class="row d-flex justify-content-end" *ngIf="company">
