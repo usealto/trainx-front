@@ -1,0 +1,6 @@
+:host ::ng-deep {
+  .page-link:focus {
+    box-shadow: none;
+    background-color: transparent;
+  }
+}

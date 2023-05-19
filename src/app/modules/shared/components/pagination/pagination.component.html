@@ -15,10 +15,17 @@
   <ng-template ngbPaginationPages let-page let-pages="pages">
     <li class="ngb-custom-pages-item mt-3" *ngIf="pages.length > 0">
       <span id="paginationDescription" class="col-form-label text-nowrap">
-        <!-- {{ (page - 1) * pageSize + 1 + ' - ' + pageSize * page + ' sur ' + collectionSize }}</span -->
-        {{ (page - 1) * pageSize + 1 + ' - ' + pageSize * page + ' sur ' + collectionSize }}</span
-
-      >
+        {{
+          (page - 1) * pageSize +
+            1 +
+            ' - ' +
+            pageSize * page +
+            ' ' +
+            I18ns.shared.pagination.on +
+            ' ' +
+            collectionSize
+        }}
+      </span>
     </li>
   </ng-template>
   <ng-template ngbPaginationNext let-disabled="disabled">

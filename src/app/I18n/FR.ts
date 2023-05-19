@@ -19,6 +19,9 @@ export const FR = {
     reply: 'Répondre',
     search: 'Rechercher',
     period: 'Période',
+    pagination: {
+      on: 'sur',
+    },
     priorities: {
       high: 'High',
       medium: 'Medium',
