@@ -21,7 +21,6 @@ export class AnchorNavigatorComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.route.snapshot.fragment && this.fragment === this.route.snapshot.fragment) {
-      console.log('help');
       setTimeout(() => {
         this.scrollToAnchor();
       }, 500);
