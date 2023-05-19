@@ -6,13 +6,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ProgressionPillPipe implements PipeTransform {
   transform(score: number, ...args: unknown[]): unknown {
     if (score > 0) {
-      return 'pill-green';
-    } else if (score < 0 && score >= -0.5) {
-      return 'bg-warning';
-    } else if (score < -0.05) {
-      return 'pill-red';
+      return 'progression-pill-green';
+    } else if (score < 0) {
+      return 'progression-pill-red';
     } else {
-      return 'pill-neutral';
+      return 'progression-pill-neutral';
     }
   }
 }

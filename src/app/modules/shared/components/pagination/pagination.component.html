@@ -19,7 +19,7 @@
           (page - 1) * pageSize +
             1 +
             ' - ' +
-            pageSize * page +
+            (pageSize * page < collectionSize ? pageSize * page : collectionSize) +
             ' ' +
             I18ns.shared.pagination.on +
             ' ' +
