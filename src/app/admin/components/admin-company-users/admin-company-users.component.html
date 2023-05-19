@@ -1,4 +1,5 @@
 <alto-admin-header
+  *ngIf="company"
   title="Users"
   subtitle="Find all of our clients here."
   [divider]="true"
@@ -67,6 +68,7 @@
           <th scope="col" sortable="lastname" (sort)="onSort($event)">
             <i class="bi bi-arrow-up-short"></i>Name
           </th>
+          <th scope="col"></th>
           <th scope="col" sortable="username" (sort)="onSort($event)">
             <i class="bi bi-arrow-up-short"></i>Username
           </th>
@@ -107,6 +109,16 @@
               </a>
             </div>
           </th>
+          <td>
+            <div class="d-flex">
+              <a
+                *ngIf="user.roles.includes(eRolesEnum.CompanyAdmin)"
+                class="btn float-start mx-3 alto-badge-big incognito-btn"
+                (click)="setImpersonation(user.email)"
+                ><i class="bi bi-incognito fs-5 text-white"></i
+              ></a>
+            </div>
+          </td>
           <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
           <td>

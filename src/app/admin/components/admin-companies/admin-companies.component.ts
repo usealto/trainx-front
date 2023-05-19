@@ -2,7 +2,7 @@ import { AuthApiService } from './../../../sdk/api/auth.service';
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { CompanyDtoApi } from 'src/app/sdk';
+import { CompanyDtoApi, UserLightDtoApi } from 'src/app/sdk';
 import { DataService } from '../../admin-data.service';
 import {
   NgbdSortableHeaderDirective,
@@ -115,6 +115,22 @@ export class AdminCompaniesComponent implements OnInit {
     if (email) {
       localStorage.setItem('impersonatedUser', email);
       this.dataService.sendData('impersonatedUserUpdated');
+    }
+  }
+
+  isImpersonnatedAsCompanyAdminOfthisCompanyUpdate(companyAdmin?: Array<UserLightDtoApi>) {
+    const impersonatedUserEmail = localStorage.getItem('impersonatedUser');
+
+    if (impersonatedUserEmail && companyAdmin) {
+      const impersonatedUser = companyAdmin.find((user) => user.email === impersonatedUserEmail);
+
+      if (impersonatedUser) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
     }
   }
 }

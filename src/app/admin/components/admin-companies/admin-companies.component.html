@@ -72,11 +72,13 @@
             </td>
             <th scope="row">
               <a
+                *ngIf="isImpersonnatedAsCompanyAdminOfthisCompanyUpdate(company.admins); else simpleName"
                 [routerLink]="['/', 'admin', 'companies', company.id, 'users']"
                 routerLinkActive="menu-selected"
               >
                 {{ company.name }}
               </a>
+              <ng-template #simpleName> {{ company.name }}</ng-template>
             </th>
             <td>{{ company.domain }}</td>
             <td>Lorem ipsum</td>
@@ -95,7 +97,10 @@
             </td>
             <td>{{ company.slackDays }}</td>
             <td>{{ company.slackQuestionsPerQuiz }}</td>
-            <td class="action-btn-list-container">
+            <td
+              class="action-btn-list-container"
+              *ngIf="isImpersonnatedAsCompanyAdminOfthisCompanyUpdate(company.admins)"
+            >
               <div class="shaddow"></div>
               <div class="d-flex action-btn-list align-items-center gap-2 px-3">
                 <button type="button" class="btn btn-link">

@@ -8,23 +8,22 @@ import { UserDtoApi } from 'src/app/sdk';
   styleUrls: ['./admin-layout.component.scss', '../../../layout/app-layout/app-layout.component.scss'],
 })
 export class AdminLayoutComponent implements OnInit {
-  constructor(
-    private readonly usersRestService: UsersRestService, 
-    private readonly router: Router) {}
+  constructor(private readonly usersRestService: UsersRestService, private readonly router: Router) {}
   user!: UserDtoApi;
   authorized = false;
 
   ngOnInit() {
     this.usersRestService.getMe().subscribe((user) => {
+      console.log('hello');
       this.user = user;
       // if the user has the appropriate role, it's ok
       if (/alto-admin/.test(this.user.roles.toString())) {
         this.authorized = true;
       } else {
         // otherwise, if the user is impersonnated, it's ok too
-        if(localStorage.getItem('impersonatedUser') !== '' && localStorage.getItem('impersonatedUser')) {
+        if (localStorage.getItem('impersonatedUser') !== '' && localStorage.getItem('impersonatedUser')) {
           this.authorized = true;
-        }else {
+        } else {
           this.router.navigate(['admin', 'unauthorized']);
         }
       }

@@ -4,6 +4,9 @@
   .table {
     height: 100%;
   }
+  .incognito-btn {
+    background-color: var(--bs-primary);
+  }
   .table-container {
     overflow: auto;
     th,

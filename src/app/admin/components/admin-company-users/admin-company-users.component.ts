@@ -9,7 +9,8 @@ import {
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { CompanyDtoApi, TeamDtoApi, UserDtoApi } from 'src/app/sdk';
+import { CompanyDtoApi, TeamDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from 'src/app/sdk';
+import { DataService } from '../../admin-data.service';
 
 @Component({
   selector: 'alto-admin-company-users',
@@ -21,6 +22,7 @@ export class AdminCompanyUsersComponent implements OnInit {
   company!: CompanyDtoApi;
   users: UserDtoApi[] = [];
   id: string | undefined;
+  eRolesEnum = UserDtoApiRolesEnumApi;
   displayedUsers: UserDtoApi[] = [];
   selectedIds: string[] = [];
   page = 1;
@@ -34,6 +36,7 @@ export class AdminCompanyUsersComponent implements OnInit {
     private readonly companiesRestService: CompaniesRestService,
     private readonly usersRestService: UsersRestService,
     private readonly teamsRestService: TeamsRestService,
+    private dataService: DataService,
     private route: ActivatedRoute,
   ) {}
 
@@ -119,6 +122,7 @@ export class AdminCompanyUsersComponent implements OnInit {
         return (
           user.firstname?.toLowerCase().includes(term) ||
           user.lastname?.toLowerCase().includes(term) ||
+          user.username?.toLowerCase().includes(term) ||
           user.email.toLowerCase().includes(term)
         );
       });
@@ -130,5 +134,12 @@ export class AdminCompanyUsersComponent implements OnInit {
       (this.page - 1) * this.pageSize,
       (this.page - 1) * this.pageSize + this.pageSize,
     );
+  }
+
+  setImpersonation(email: string) {
+    if (email) {
+      localStorage.setItem('impersonatedUser', email);
+      this.dataService.sendData('impersonatedUserUpdated');
+    }
   }
 }
