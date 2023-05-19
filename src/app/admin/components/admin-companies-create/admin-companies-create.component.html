@@ -79,7 +79,7 @@
             </div>
           </div>
           <!-- Teams -->
-          <div class="row py-4 border-bottom">
+          <div class="row py-4 border-bottom" *ngIf="edit">
             <div class="w-80 row">
               <label for="domain" class="col-5 mb-2">Teams</label>
               <div class="col-7 form-group">
@@ -219,7 +219,7 @@
           <div class="py-4 border-bottom">
             <div class="w-80 row">
               <div class="col-5 mb-2">
-                <label for="name">Sending days</label>
+                <label for="name required">Sending days</label>
                 <p class="fs-7">The days on which programs will be sent.</p>
               </div>
               <div class="col-7 form-group">
@@ -255,7 +255,7 @@
           <div class="py-4 border-bottom">
             <div class="w-80 row">
               <div class="col-5 mb-2">
-                <label for="name">Number of questions</label>
+                <label for="name required">Number of questions</label>
                 <p class="fs-7">the number of questions contained in the programs.</p>
               </div>
               <div class="col-7 form-group">

@@ -1,7 +1,7 @@
-<alto-dropzone [multiple]="false" (change)="onSelectUser($event)"></alto-dropzone> Following the CSV format :
-<i>firstname, lastname, email, role</i>
-
-<br /><br />
+<alto-dropzone [multiple]="false" (change)="onSelectUser($event)">
+  <span subtitle class="fs-7">Following the CSV format : <i>firstname, lastname, email, role</i></span>
+</alto-dropzone>
+<br />
 
 <div *ngIf="displayedUsers.length > 0 && showUserList" class="table-container table-panel">
   <table class="table">

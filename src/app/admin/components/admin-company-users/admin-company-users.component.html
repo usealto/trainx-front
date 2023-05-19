@@ -1,7 +1,7 @@
 <alto-admin-header
   *ngIf="company"
   title="Users"
-  subtitle="Find all of our clients here."
+  subtitle="Find here the members of the company."
   [divider]="true"
   [breadcrumbs]="[
     {
@@ -35,7 +35,10 @@
 </div>
 
 <div *ngIf="company" class="d-flex justify-content-between align-items-center alto-grey fs-5 pb-4">
-  <span>{{ users.length }} company account</span>
+  <div class="d-flex flex-column">
+    <span class="alto-text">{{ company.name }}</span>
+    <span class="fs-6">{{ users.length }} company account</span>
+  </div>
   <a
     [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'create']"
     routerLinkActive="menu-selected"
@@ -143,17 +146,26 @@
           <td class="action-btn-list-container">
             <div class="shaddow"></div>
             <div class="d-flex action-btn-list align-items-center gap-2 px-3">
-              <button type="button" class="btn btn-link">
-                <i class="alto-second-grey bi bi-trash"></i>
-              </button>
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input me-2"
+                  type="checkbox"
+                  role="switch"
+                  id="flexSwitchCheckDefault"
+                  [ngModel]="user.isActive"
+                />
+              </div>
               <a
-                [routerLink]="['/', 'admin', 'companies', user.id]"
+                [routerLink]="['/', 'admin', 'companies', company.id, 'users', user.id]"
                 routerLinkActive="menu-selected"
                 role="button"
                 class="btn btn-link"
               >
                 <i class="alto-second-grey bi bi-pencil"></i>
               </a>
+              <button type="button" class="btn btn-link">
+                <i class="alto-second-grey bi bi-trash"></i>
+              </button>
             </div>
           </td>
         </tr>
