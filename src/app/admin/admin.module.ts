@@ -26,6 +26,7 @@ import { AdminUsersUploadFormComponent } from './components/admin-companies-crea
 import { EditUserUploadFormComponent } from './components/admin-companies-create/edit-user-upload-form/edit-user-upload-form.component';
 import { ApiInterceptor } from '../core/interceptors/api.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AdminCompaniesFiltersListComponent } from './components/admin-companies/admin-companies-filters-list/admin-companies-filters-list.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
     AdminTabComponent,
     AdminUsersUploadFormComponent,
     EditUserUploadFormComponent,
+    AdminCompaniesFiltersListComponent,
   ],
   imports: [
     CommonModule,

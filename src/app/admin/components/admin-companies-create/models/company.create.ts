@@ -8,4 +8,5 @@ export interface CompanyForm {
   slackDays?: string[];
   slackQuestionsPerQuiz: number | undefined;
   slackActive?: boolean;
+  slackAdmin?: string;
 }

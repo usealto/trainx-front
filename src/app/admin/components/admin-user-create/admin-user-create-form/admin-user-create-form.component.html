@@ -139,7 +139,21 @@
         <label for="name">ID Slack</label>
       </div>
       <div class="col-7 form-group">
-        <input type="text" class="form-control" placeholder="Example: U0G9QF9C6" formControlName="slackId" />
+        <div class="d-flex gap-3">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Example: U0G9QF9C6"
+            formControlName="slackId"
+          />
+          <button
+            type="button"
+            class="btn btn-primary d-inline-flex align-items-center text-nowrap"
+            (click)="resetSlackId()"
+          >
+            Reset ID
+          </button>
+        </div>
       </div>
     </div>
   </div>

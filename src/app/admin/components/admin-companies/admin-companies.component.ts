@@ -10,6 +10,8 @@ import {
   compare,
 } from 'src/app/core/utils/directives/ngbd-sortable-header.directive';
 import { AuthUserGet } from '../admin-users/models/authuser.get';
+import { AdminCompaniesFiltersListComponent } from './admin-companies-filters-list/admin-companies-filters-list.component';
+import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'alto-admin-companies',
@@ -30,6 +32,7 @@ export class AdminCompaniesComponent implements OnInit {
 
   constructor(
     private readonly companiesRestService: CompaniesRestService,
+    private readonly offcanvasService: NgbOffcanvas,
     private dataService: DataService,
     private readonly authApiService: AuthApiService,
   ) {}
@@ -48,6 +51,22 @@ export class AdminCompaniesComponent implements OnInit {
         this.pageCount = Math.ceil(this.companies.length / this.pageSize);
         this.refreshCompanies();
       });
+  }
+
+  openFilterCanvas() {
+    const canvasRef = this.offcanvasService.open(AdminCompaniesFiltersListComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto',
+    });
+
+    // canvasRef.componentInstance.user = user;
+    canvasRef.result.then(
+      (result: any) => {
+        // need to edit all users
+        console.log(result);
+      },
+      (reason: any) => {},
+    );
   }
 
   onSearch(search: string) {

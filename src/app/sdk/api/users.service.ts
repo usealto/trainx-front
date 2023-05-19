@@ -59,6 +59,14 @@ export interface GetMeRequestParams {
     userId?: string;
 }
 
+export interface UpdateSlackIdRequestParams {
+    /** The ID of the company that the user sending the request is related to.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication. */
+    companyId?: string;
+    /** The ID of the user sending the request.  This field is required when using the API Key.  It will be included in the JSON Web Token (JWT) when using Auth0 authentication.  Used to set the &#x60;createdBy&#x60; property on creation of entities. */
+    userId?: string;
+    slackAdmin?: string;
+}
+
 export interface GetNextQuestionsForUserRequestParams {
     id: string;
     /** An array of  IDs used to filter the results to only include entities with the specified IDs */
@@ -857,5 +865,92 @@ export class UsersApiService {
             }
         );
     }
+
+        /**
+     * Get a single user by ID
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+        public updateSlackid(requestParameters: UpdateSlackIdRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<UserDtoResponseApi>;
+        public updateSlackid(requestParameters: UpdateSlackIdRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpResponse<UserDtoResponseApi>>;
+        public updateSlackid(requestParameters: UpdateSlackIdRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<HttpEvent<UserDtoResponseApi>>;
+        public updateSlackid(requestParameters: UpdateSlackIdRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext}): Observable<any> {
+            const companyId = requestParameters.companyId;
+            const userId = requestParameters.userId;
+            const slackAdmin = requestParameters.slackAdmin;
+    
+            let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+            if (companyId !== undefined && companyId !== null) {
+              localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                <any>companyId, 'companyId');
+            }
+            if (userId !== undefined && userId !== null) {
+              localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                <any>userId, 'userId');
+            }
+
+            if (slackAdmin !== undefined && slackAdmin !== null) {
+                localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                  <any>slackAdmin, 'slackAdmin');
+              }
+    
+            let localVarHeaders = this.defaultHeaders;
+    
+            let localVarCredential: string | undefined;
+            // authentication (x-api-key) required
+            localVarCredential = this.configuration.lookupCredential('x-api-key');
+            if (localVarCredential) {
+                localVarHeaders = localVarHeaders.set('x-api-key', localVarCredential);
+            }
+    
+            // authentication (bearer) required
+            localVarCredential = this.configuration.lookupCredential('bearer');
+            if (localVarCredential) {
+                localVarHeaders = localVarHeaders.set('Authorization', 'Bearer ' + localVarCredential);
+            }
+    
+            let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+            if (localVarHttpHeaderAcceptSelected === undefined) {
+                // to determine the Accept header
+                const httpHeaderAccepts: string[] = [
+                    'application/json'
+                ];
+                localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+            }
+            if (localVarHttpHeaderAcceptSelected !== undefined) {
+                localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+            }
+    
+            let localVarHttpContext: HttpContext | undefined = options && options.context;
+            if (localVarHttpContext === undefined) {
+                localVarHttpContext = new HttpContext();
+            }
+    
+    
+            let responseType_: 'text' | 'json' | 'blob' = 'json';
+            if (localVarHttpHeaderAcceptSelected) {
+                if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                    responseType_ = 'text';
+                } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                    responseType_ = 'json';
+                } else {
+                    responseType_ = 'blob';
+                }
+            }
+    
+            const localVarPath = `/v1/n8n/webhook/update_slackid`;
+            return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+                {
+                    context: localVarHttpContext,
+                    params: localVarQueryParameters,
+                    responseType: <any>responseType_,
+                    withCredentials: this.configuration.withCredentials,
+                    headers: localVarHeaders,
+                    observe: observe,
+                    reportProgress: reportProgress
+                }
+            );
+        }
 
 }

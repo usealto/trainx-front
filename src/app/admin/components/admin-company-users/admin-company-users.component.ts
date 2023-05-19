@@ -44,24 +44,16 @@ export class AdminCompanyUsersComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id') || '';
     console.log(this.id);
 
-    this.teamsRestService
-      .getTeams({ companyId: this.id })
-      .pipe(
-        tap((teams) => {
-          console.log(teams);
-          this.teams = teams;
-        }),
-      )
-      .subscribe();
-
     forkJoin({
+      teams: this.teamsRestService.getTeams({ companyId: this.id }),
       company: this.companiesRestService.getCompanyById(this.id),
       users: this.usersRestService.getUsersFiltered({ companyId: this.id }),
     })
       .pipe(
-        tap(({ company, users }) => {
+        tap(({ company, users, teams }) => {
           this.company = company;
           this.users = users;
+          this.teams = teams;
           console.log(this.users);
           this.pageCount = Math.ceil(this.users.length / this.pageSize);
           this.refreshUsers();

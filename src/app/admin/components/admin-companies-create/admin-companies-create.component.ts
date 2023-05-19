@@ -51,6 +51,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
       slackDays: [[]],
       slackQuestionsPerQuiz: [undefined],
       slackActive: [false],
+      slackAdmin: ['', []],
     });
     if (this.id) {
       this.edit = true;
@@ -68,6 +69,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
               slackDays: [this.company.slackDays],
               slackQuestionsPerQuiz: [this.company.slackQuestionsPerQuiz],
               slackActive: [this.company.isSlackActive],
+              slackAdmin: [this.company.slackAdmin, []],
             });
           }),
         )
@@ -122,9 +124,9 @@ export class AdminCompaniesCreateComponent implements OnInit {
 
     this.createTeams();
 
-    const { name, domain, slackDays, slackActive, slackQuestionsPerQuiz } = this.companyForm.value;
+    const { name, domain, slackDays, slackActive, slackQuestionsPerQuiz, slackAdmin } =
+      this.companyForm.value;
     const slackTimes = ['13h30'] as SlackTimeEnumApi[];
-    const slackAdmin = '';
 
     if (this.edit && this.id) {
       this.companiesRestService
@@ -134,7 +136,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
           slackDays: slackDays as WeekDayEnumApi[],
           slackQuestionsPerQuiz: slackQuestionsPerQuiz as number,
           slackTimes,
-          slackAdmin,
+          slackAdmin: slackAdmin ?? '',
           isSlackActive: slackActive,
         })
         .subscribe();
@@ -146,7 +148,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
           slackDays: slackDays as WeekDayEnumApi[],
           slackQuestionsPerQuiz: slackQuestionsPerQuiz as number,
           slackTimes,
-          slackAdmin,
+          slackAdmin: slackAdmin ?? '',
           isSlackActive: slackActive,
         })
         .subscribe((company) => {

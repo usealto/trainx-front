@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { forkJoin, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import {
   AuthApiService,
+  CompanyDtoApi,
   RoleEnumApi,
   TeamDtoApi,
   UserDtoApi,
@@ -15,6 +16,7 @@ import {
 import { UserForm } from './models/user.form';
 import { AuthUserGet } from '../../admin-users/models/authuser.get';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
+import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 
 @Component({
   selector: 'alto-admin-user-create-form',
@@ -32,6 +34,7 @@ export class AdminUserCreateFormComponent implements OnInit {
   userId!: string;
   userAuth0!: AuthUserGet;
   user!: UserDtoApi;
+  company!: CompanyDtoApi;
 
   constructor(
     private router: Router,
@@ -41,6 +44,7 @@ export class AdminUserCreateFormComponent implements OnInit {
     readonly fob: UntypedFormBuilder,
     private readonly authApiService: AuthApiService,
     private readonly usersRestService: UsersRestService,
+    private readonly companiesRestService: CompaniesRestService,
   ) {
     this.fb = fob;
   }
@@ -51,9 +55,17 @@ export class AdminUserCreateFormComponent implements OnInit {
 
     console.log(this.companyId, this.userId);
 
-    this.teamsRestService
-      .getTeams({ companyId: this.companyId })
-      .pipe(tap((teams) => (this.teams = teams)))
+    forkJoin({
+      teams: this.teamsRestService.getTeams({ companyId: this.companyId }),
+      company: this.companiesRestService.getCompanyById(this.companyId),
+    })
+      .pipe(
+        tap(({ company, teams }) => {
+          this.company = company;
+          this.teams = teams;
+          console.log(this.company);
+        }),
+      )
       .subscribe();
 
     if (this.userId) {
@@ -151,5 +163,15 @@ export class AdminUserCreateFormComponent implements OnInit {
         throw new Error('user not found in auth0');
       }
     });
+  }
+
+  resetSlackId() {
+    this.usersApiService
+      .updateSlackid({
+        companyId: this.companyId,
+        userId: this.userId,
+        slackAdmin: this.company.slackAdmin,
+      })
+      .subscribe((res) => console.log(res));
   }
 }
