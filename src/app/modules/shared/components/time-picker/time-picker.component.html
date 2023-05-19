@@ -2,7 +2,7 @@
   <input
     type="radio"
     class="btn-check"
-    [name]="name"
+    [name]="ID"
     id="year"
     autocomplete="off"
     (change)="updateTimePicker($event)"
@@ -13,7 +13,7 @@
   <input
     type="radio"
     class="btn-check"
-    [name]="name"
+    [name]="ID"
     id="trimester"
     autocomplete="off"
     [checked]="duration === 'trimester' ? true : false"
@@ -26,7 +26,7 @@
   <input
     type="radio"
     class="btn-check"
-    [name]="name"
+    [name]="ID"
     id="month"
     autocomplete="off"
     [checked]="duration === 'month' ? true : false"

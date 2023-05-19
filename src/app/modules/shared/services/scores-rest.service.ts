@@ -17,8 +17,8 @@ import {
   TeamStatsDtoApi,
 } from 'src/app/sdk';
 import { ChartFilters } from '../../shared/models/chart.model';
-import { ScoreDuration, ScoreFilters } from '../models/score.model';
 import { ScoresService } from './scores.service';
+import { ScoreDuration, ScoreFilters } from '../models/score.model';
 
 @Injectable({
   providedIn: 'root',

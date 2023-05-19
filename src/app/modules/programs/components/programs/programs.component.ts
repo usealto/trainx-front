@@ -18,18 +18,18 @@ import {
   UserDtoApi,
 } from 'src/app/sdk';
 import { QuestionFilters } from '../../models/question.model';
-import { ScoreDuration } from '../../models/score.model';
+import { ScoreDuration } from '../../../shared/models/score.model';
 import { TagFilters } from '../../models/tag.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
-import { ScoresRestService } from '../../services/scores-rest.service';
-import { ScoresService } from '../../services/scores.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 import { TagsServiceService } from '../../services/tags-service.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
+import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 
 @UntilDestroy()
 @Component({

@@ -269,6 +269,16 @@ export const FR = {
           programs: 'Programmes',
         },
       },
+      teamsTable: {
+        title: 'Équipes',
+        subtitle: "Découvrez les scores moyens et axes d'amélioration par équipe.",
+        columns: {
+          name: 'Nom',
+          global: 'Global',
+          lessMasteredPrograms: 'Programmes les moins maitrîsés',
+          lessMasteredTags: 'Tags les moins maitrîsés',
+        },
+      },
     },
     perTeams: {
       title: 'Par équipe',

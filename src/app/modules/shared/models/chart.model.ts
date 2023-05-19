@@ -1,5 +1,5 @@
 import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from 'src/app/sdk';
-import { ScoreDuration } from '../../programs/models/score.model';
+import { ScoreDuration } from './score.model';
 
 export interface ChartFilters {
   team?: string;

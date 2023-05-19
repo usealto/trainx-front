@@ -3,13 +3,13 @@ import Chart, { ChartData } from 'chart.js/auto';
 import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
-import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
-import { ScoresService } from 'src/app/modules/programs/services/scores.service';
+import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from 'src/app/sdk';
 import { StatisticsService } from '../../../services/statistics.service';
+import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 
 @Component({
   selector: 'alto-performance-by-teams',
