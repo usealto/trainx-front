@@ -108,7 +108,7 @@
                     </span>
                   </ng-template>
                 </ng-select>
-                <div formArrayName="newTeams">
+                <div formArrayName="newTeams" class="pt-2">
                   <ng-container *ngFor="let newTeam of newTeamsFormArrayControls; let i = index">
                     <div class="row align-items-end position-relative py-2" [formGroup]="newTeam">
                       <div class="col">
@@ -211,7 +211,12 @@
                 <p class="fs-7">The admin user of the Slack account.</p>
               </div>
               <div class="col-7 form-group">
-                <input type="text" class="form-control" formControlName="slackAdmin" placeholder="Search user" />
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="slackAdmin"
+                  placeholder="Search user"
+                />
               </div>
             </div>
           </div>
@@ -294,7 +299,7 @@
           *ngIf="tabNumber === 1"
           class="btn btn-primary d-inline-flex align-items-center"
           (click)="submit()"
-          [disabled]="!companyForm.valid || !companyForm.dirty"
+          [disabled]="!companyForm.valid || companyForm.pristine || !companyForm.dirty"
         >
           Save
           <i class="bi bi-save ps-2"></i>

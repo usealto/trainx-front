@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, tap } from 'rxjs';
+import { combineLatest, take, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import {
@@ -55,18 +55,15 @@ export class AdminUserCreateFormComponent implements OnInit {
 
     console.log(this.companyId, this.userId);
 
-    forkJoin({
+    combineLatest({
       teams: this.teamsRestService.getTeams({ companyId: this.companyId }),
       company: this.companiesRestService.getCompanyById(this.companyId),
     })
-      .pipe(
-        tap(({ company, teams }) => {
-          this.company = company;
-          this.teams = teams;
-          console.log(this.company);
-        }),
-      )
-      .subscribe();
+      .pipe(take(1))
+      .subscribe(({ company, teams }) => {
+        this.company = company;
+        this.teams = teams;
+      });
 
     if (this.userId) {
       this.edit = true;

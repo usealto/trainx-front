@@ -7,7 +7,7 @@
     <h2>Informations</h2>
     <p class="fs-7">Fill in the general information about this company.</p>
   </div>
-  <div>
+  <div *ngIf="userForm">
     <button
       type="button"
       class="btn btn-outline-secondary d-inline-flex align-items-center me-2"
@@ -15,7 +15,12 @@
     >
       Cancel
     </button>
-    <button type="button" class="btn btn-primary d-inline-flex align-items-center" (click)="submit()">
+    <button
+      [disabled]="!userForm.valid || userForm.pristine || !userForm.dirty"
+      type="button"
+      class="btn btn-primary d-inline-flex align-items-center"
+      (click)="submit()"
+    >
       Confirm
     </button>
   </div>
@@ -159,12 +164,7 @@
   </div>
 </form>
 
-<div class="d-flex justify-content-between">
-  <div class="py-4">
-    <button type="button" class="btn btn-outline float-end" (click)="submit()">
-      <i class="bi bi-save"></i> Save
-    </button>
-  </div>
+<div *ngIf="userForm" class="d-flex justify-content-end pt-4">
   <div class="d-flex align-items-center">
     <button
       routerLink=".."
@@ -173,7 +173,12 @@
     >
       Cancel
     </button>
-    <button type="button" class="btn btn-primary d-inline-flex align-items-center" (click)="submit()">
+    <button
+      [disabled]="!userForm.valid || userForm.pristine || !userForm.dirty"
+      type="button"
+      class="btn btn-primary d-inline-flex align-items-center"
+      (click)="submit()"
+    >
       Confirm
     </button>
   </div>

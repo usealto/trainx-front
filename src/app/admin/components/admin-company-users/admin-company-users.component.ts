@@ -1,6 +1,6 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { forkJoin, switchMap, tap } from 'rxjs';
+import { combineLatest, take } from 'rxjs';
 import {
   NgbdSortableHeaderDirective,
   SortEvent,
@@ -44,29 +44,26 @@ export class AdminCompanyUsersComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id') || '';
     console.log(this.id);
 
-    forkJoin({
+    combineLatest({
       teams: this.teamsRestService.getTeams({ companyId: this.id }),
       company: this.companiesRestService.getCompanyById(this.id),
       users: this.usersRestService.getUsersFiltered({ companyId: this.id }),
     })
-      .pipe(
-        tap(({ company, users, teams }) => {
-          this.company = company;
-          this.users = users;
-          this.teams = teams;
-          console.log(this.users);
-          this.pageCount = Math.ceil(this.users.length / this.pageSize);
-          this.refreshUsers();
-        }),
-      )
-      .subscribe();
+      .pipe(take(1))
+      .subscribe(({ company, users, teams }) => {
+        this.company = company;
+        this.users = users;
+        this.teams = teams;
+        this.pageCount = Math.ceil(this.users.length / this.pageSize);
+        this.refreshUsers();
+      });
   }
   selectAll(event: any) {
     this.selectedIds = event.target.checked ? this.users.map((item) => item.id) : [];
   }
 
   openFilterCanvas() {
-    console.log('open filters')
+    console.log('open filters');
   }
 
   selectCompany(id: string) {
