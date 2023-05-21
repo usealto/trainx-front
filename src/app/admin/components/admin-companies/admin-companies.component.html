@@ -14,6 +14,7 @@
   <div class="d-flex justify-content-between align-items-center alto-grey fs-5 pb-4">
     <span>{{ companies.length }} company account</span>
     <a
+      *ngIf="selectedIds.length === 0; else deleteBtn"
       [routerLink]="['/', 'admin', 'companies', 'create']"
       routerLinkActive="menu-selected"
       class="btn btn-primary my-2 align-middle"
@@ -21,6 +22,11 @@
       <i class="bi bi-plus-lg pe-2"></i>
       Créer une company
     </a>
+    <ng-template #deleteBtn>
+      <button class="btn btn-danger my-2 align-middle" (click)="deleteSelectedCompanies()">
+        <i class="bi bi-trash"></i> Delete
+      </button>
+    </ng-template>
   </div>
   <div *ngIf="companies.length > 0; else elseBlock">
     <div class="d-flex justify-content-end gap-2 pb-4">

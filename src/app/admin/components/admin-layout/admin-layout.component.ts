@@ -14,7 +14,6 @@ export class AdminLayoutComponent implements OnInit {
 
   ngOnInit() {
     this.usersRestService.getMe().subscribe((user) => {
-      console.log('hello');
       this.user = user;
       // if the user has the appropriate role, it's ok
       if (/alto-admin/.test(this.user.roles.toString())) {

@@ -82,6 +82,10 @@ export class AdminCompaniesComponent implements OnInit {
     );
   }
 
+  deleteSelectedCompanies() {
+    console.log('delete selected companies')
+  }
+
   onSearch(search: string) {
     this.searchString = search;
     this.refreshCompanies();
