@@ -12,7 +12,7 @@
 <div class="offcanvas-body h-100">
   <form *ngIf="userForm" [formGroup]="userForm">
     <label class="form-label required">Teams</label>
-    <input type="text" class="form-control" formControlName="Teams" placeholder="Teams" />
+    <input type="text" class="form-control" formControlName="teams" placeholder="Teams" />
     <label class="form-label required">Is Slack Active</label>
     <div>
       <div class="btn-group btn-group-toggle gap-2" ngbRadioGroup name="radioBasic">
@@ -22,7 +22,7 @@
             type="radio"
             id="flexRadioDefault1"
             [value]="true"
-            formControlName="IsSlackActive"
+            formControlName="isSlackActive"
           />
           <label class="form-check-label" for="flexRadioDefault1"> Active </label>
         </div>
@@ -32,7 +32,7 @@
             type="radio"
             id="flexRadioDefault2"
             [value]="false"
-            formControlName="IsSlackActive"
+            formControlName="isSlackActive"
           />
           <label class="form-check-label" for="flexRadioDefault2"> Inactive </label>
         </div>

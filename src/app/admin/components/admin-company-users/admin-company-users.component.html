@@ -51,7 +51,9 @@
 <div *ngIf="users.length > 0; else elseBlock">
   <div class="d-flex justify-content-end gap-2 pb-4">
     <alto-search (searchChange)="onSearch($event)"></alto-search>
-    <button type="button" class="btn btn-outline-secondary">Filters</button>
+    <button type="button" class="btn btn-outline-secondary" (click)="openFilterCanvas()">
+      <i class="bi bi-filter"></i> Filters
+    </button>
   </div>
   <div class="table-container table-panel mb-5">
     <table class="table">

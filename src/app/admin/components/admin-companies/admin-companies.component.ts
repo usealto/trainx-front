@@ -2,7 +2,7 @@ import { AuthApiService } from './../../../sdk/api/auth.service';
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { CompanyDtoApi, UserLightDtoApi } from 'src/app/sdk';
+import { CompanyDtoApi, CompanyDtoApiSlackDaysEnumApi, UserLightDtoApi, WeekDayEnumApi } from 'src/app/sdk';
 import { DataService } from '../../admin-data.service';
 import {
   NgbdSortableHeaderDirective,
@@ -10,7 +10,10 @@ import {
   compare,
 } from 'src/app/core/utils/directives/ngbd-sortable-header.directive';
 import { AuthUserGet } from '../admin-users/models/authuser.get';
-import { AdminCompaniesFiltersListComponent } from './admin-companies-filters-list/admin-companies-filters-list.component';
+import {
+  AdminCompaniesFiltersListComponent,
+  FiltersCompaniesList,
+} from './admin-companies-filters-list/admin-companies-filters-list.component';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -29,6 +32,16 @@ export class AdminCompaniesComponent implements OnInit {
   pageCount = 0;
   searchString = '';
   sortDirection: SortEvent = { column: '', direction: '' };
+  activeFilters: FiltersCompaniesList = {
+    teams: undefined,
+    isSlackActive: true,
+    userAdmin: undefined,
+    sendingDays: undefined,
+    nbQuestions: {
+      min: undefined,
+      max: undefined,
+    },
+  };
 
   constructor(
     private readonly companiesRestService: CompaniesRestService,
@@ -59,11 +72,11 @@ export class AdminCompaniesComponent implements OnInit {
       panelClass: 'overflow-auto',
     });
 
-    // canvasRef.componentInstance.user = user;
+    canvasRef.componentInstance.filters = this.activeFilters;
     canvasRef.result.then(
       (result: any) => {
-        // need to edit all users
-        console.log(result);
+        this.activeFilters = result;
+        this.refreshCompanies();
       },
       (reason: any) => {},
     );
@@ -102,6 +115,32 @@ export class AdminCompaniesComponent implements OnInit {
     this.refreshCompanies();
   }
 
+  checkFilters(tmpCompanies: CompanyDtoApi[]) {
+    return tmpCompanies.filter((company) => {
+      return (
+        company.isSlackActive === this.activeFilters.isSlackActive &&
+        // check for user admin
+        (this.activeFilters.userAdmin && this.activeFilters.userAdmin !== ''
+          ? company.admins?.some((admin) => admin.email.toLowerCase() === this.activeFilters.userAdmin)
+          : true) &&
+        // check for sending days
+        (this.activeFilters.sendingDays && this.activeFilters.sendingDays.length > 0
+          ? company.slackDays?.every((day) =>
+              this.activeFilters.sendingDays?.includes(day as unknown as WeekDayEnumApi),
+            )
+          : true) &&
+        // check for minimun
+        (this.activeFilters.nbQuestions.min && company.slackQuestionsPerQuiz
+          ? company.slackQuestionsPerQuiz >= this.activeFilters.nbQuestions.min
+          : true) &&
+        // check for maximum
+        (this.activeFilters.nbQuestions.max && company.slackQuestionsPerQuiz
+          ? company.slackQuestionsPerQuiz <= this.activeFilters.nbQuestions.max
+          : true)
+      );
+    });
+  }
+
   refreshCompanies() {
     let tmpCompanies = this.companies;
 
@@ -121,6 +160,8 @@ export class AdminCompaniesComponent implements OnInit {
         return company.name.toLowerCase().includes(term);
       });
     }
+
+    tmpCompanies = this.checkFilters(tmpCompanies);
 
     this.pageCount = Math.ceil(tmpCompanies.length / this.pageSize);
 

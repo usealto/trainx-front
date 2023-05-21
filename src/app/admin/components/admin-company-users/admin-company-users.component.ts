@@ -65,6 +65,10 @@ export class AdminCompanyUsersComponent implements OnInit {
     this.selectedIds = event.target.checked ? this.users.map((item) => item.id) : [];
   }
 
+  openFilterCanvas() {
+    console.log('open filters')
+  }
+
   selectCompany(id: string) {
     if (this.selectedIds.includes(id)) {
       this.selectedIds = this.selectedIds.filter((arrayId) => arrayId !== id);
