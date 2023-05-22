@@ -1,12 +1,9 @@
-<h2 id="questionsAnchor">{{ I18ns.statistics.globalPerformance.teamsTable.title }}</h2>
-<p class="mb-4 alto-grey">{{ I18ns.statistics.globalPerformance.teamsTable.subtitle }}</p>
-
 <div class="row mb-4">
   <div class="col-8">
     <alto-dropdown-filter
       class="text-start"
-      [data]="teamStore.teams.value"
-      [displayLabel]="'shortName'"
+      [data]="teams"
+      [displayLabel]="'label'"
       [returnValue]="'id'"
       [placeholder]="I18ns.programs.programs.filters.team"
       [isColored]="true"
@@ -16,17 +13,17 @@
     ></alto-dropdown-filter>
     <alto-dropdown-filter
       class="me-3"
-      [data]="programsStore.programs.value"
-      [displayLabel]="'name'"
+      [data]="programs"
+      [displayLabel]="'label'"
       [returnValue]="'id'"
       [placeholder]="I18ns.programs.questions.filters.programs"
       (selectChange)="getTeamsFiltered({ programs: $event })"
     ></alto-dropdown-filter>
     <alto-dropdown-filter
       class="me-3"
-      [data]="programsStore.tags.value"
+      [data]="tags"
       [returnValue]="'id'"
-      [displayLabel]="'name'"
+      [displayLabel]="'label'"
       [placeholder]="I18ns.programs.questions.filters.tags"
       (selectChange)="getTeamsFiltered({ tags: $event })"
     ></alto-dropdown-filter>

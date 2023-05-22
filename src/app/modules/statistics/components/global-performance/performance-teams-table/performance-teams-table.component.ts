@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -8,7 +8,7 @@ import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { TeamsStatsFilters } from 'src/app/modules/shared/models/stats.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
+import { StatsDtoApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
 
 @UntilDestroy()
 @Component({
@@ -22,7 +22,6 @@ export class PerformanceTeamsTableComponent implements OnInit {
   @Input() duration: ScoreDuration = ScoreDuration.Year;
 
   teamFilters: TeamsStatsFilters = {
-    duration: '',
     programs: [],
     tags: [],
     teams: [],
@@ -30,9 +29,12 @@ export class PerformanceTeamsTableComponent implements OnInit {
   };
 
   teams: TeamStatsDtoApi[] = [];
+  teamsDisplay: TeamStatsDtoApi[] = [];
   paginatedTeams: TeamStatsDtoApi[] = [];
   teamsPage = 1;
   teamsPageSize = 10;
+  programs: StatsDtoApi[] = [];
+  tags: StatsDtoApi[] = [];
 
   constructor(
     public readonly teamStore: TeamStore,
@@ -43,16 +45,25 @@ export class PerformanceTeamsTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.scoreRestService
-      .getTeamsStats(this.duration)
+      .getTeamsStats(this.duration as ScoreDuration)
       .pipe(
         tap((t) => {
           this.teams = t;
+          this.teamsDisplay = t;
+          this.programs = t.map((te) => te.programs || []).flat();
+          this.tags = t.map((te) => te.tags || []).flat();
           this.changeTeamsPage(1);
         }),
         tap(console.log),
         untilDestroyed(this),
       )
       .subscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['duration']?.currentValue) {
+      this.getTeamsByDuration();
+    }
   }
 
   getTeamsFiltered(
@@ -70,15 +81,21 @@ export class PerformanceTeamsTableComponent implements OnInit {
     this.teamFilters.teams = teams;
     this.teamFilters.search = search;
 
+    // this.teamsDisplay = this.teams.
+
+    this.changeTeamsPage(1);
+  }
+
+  getTeamsByDuration() {
     this.scoreRestService
-      .getTeamsStats(duration as ScoreDuration)
+      .getTeamsStats(this.duration as ScoreDuration)
       .pipe(
         tap((t) => {
           this.teams = t;
-          this.paginatedTeams = this.teams.slice(
-            (this.teamsPage - 1) * this.teamsPageSize,
-            this.teamsPage * this.teamsPageSize,
-          );
+          this.teamsDisplay = t;
+          this.programs = t.map((te) => te.programs || []).flat();
+          this.tags = t.map((te) => te.tags || []).flat();
+          this.changeTeamsPage(1);
         }),
         tap(console.log),
         untilDestroyed(this),
@@ -88,6 +105,6 @@ export class PerformanceTeamsTableComponent implements OnInit {
 
   changeTeamsPage(page: number) {
     this.teamsPage = page;
-    this.paginatedTeams = this.teams.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
+    this.paginatedTeams = this.teamsDisplay.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
   }
 }
