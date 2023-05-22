@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
 import Chart, { ChartData } from 'chart.js/auto';
-import { tap } from 'rxjs';
+import { combineLatest, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
@@ -19,8 +19,9 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 export class PerformanceByTeamsComponent implements OnChanges {
   I18ns = I18ns;
   teams: ScoreDtoApi[] = [];
+  previousTeams: ScoreDtoApi[] = [];
   selectedTeams: ScoreDtoApi[] = [];
-  scoredTeams: { label: string; score: number | null }[] = [];
+  scoredTeams: { label: string; score: number | null; progression: number | null }[] = [];
   scoreEvolutionChart?: Chart;
   @Input() duration: ScoreDuration = ScoreDuration.Year;
   @Output() selecedDuration = this.duration;
@@ -33,21 +34,22 @@ export class PerformanceByTeamsComponent implements OnChanges {
   ) {}
 
   ngOnChanges(): void {
-    this.scoresRestService
-      .getScores({
-        timeframe: ScoreTimeframeEnumApi.Day,
-        duration: this.duration ?? ScoreDuration.Year,
-        type: ScoreTypeEnumApi.Team,
-      } as ChartFilters)
+    const params = {
+      timeframe: ScoreTimeframeEnumApi.Day,
+      duration: this.duration ?? ScoreDuration.Year,
+      type: ScoreTypeEnumApi.Team,
+    } as ChartFilters;
+    combineLatest(this.scoresRestService.getScores(params), this.scoresRestService.getScores(params, true))
       .pipe(
-        tap((res) => {
-          this.teams = res.scores;
+        tap(([current]) => {
+          this.teams = current.scores;
           if (!this.selectedTeams.length) {
-            this.selectedTeams = res.scores.slice(0, 5);
+            this.selectedTeams = current.scores.slice(0, 5);
           }
         }),
-        tap((res) => {
-          this.getTeamsScores(res.scores);
+        tap(([current, previous]) => {
+          this.previousTeams = previous.scores;
+          this.getTeamsScores(current.scores);
         }),
       )
       .subscribe();
@@ -63,7 +65,13 @@ export class PerformanceByTeamsComponent implements OnChanges {
       (this.scoredTeams = scores
         .map((score) => {
           const average = this.scoresServices.reduceWithoutNull(score.averages);
-          return { label: score.label, score: average };
+          const index = this.previousTeams.findIndex((s) => s.id === score.id);
+          let progression = null;
+          if (index !== -1) {
+            const previousAvg = this.scoresServices.reduceWithoutNull(this.previousTeams[index].averages);
+            progression = previousAvg && average ? (average - previousAvg) / previousAvg : null;
+          }
+          return { label: score.label, score: average, progression: progression };
         })
         .sort((a, b) => (a.score && b.score ? b.score - a.score : 0)));
   }

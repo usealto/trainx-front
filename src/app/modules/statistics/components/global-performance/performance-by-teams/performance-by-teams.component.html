@@ -23,9 +23,12 @@
       <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}</h2>
       <ol class="list-group list-group-flush list-group-numbered">
         <li class="list-group-item" *ngFor="let team of scoredTeams">
-          <span class="float-end alto-badge" [class]="(team.score ? team.score : 0) * 100 | pillColor">
-            {{ team.score | percent }}
-          </span>
+          <div class="float-end d-flex flex-nowrap">
+            <p class="me-3">
+              {{ team.score | percent }}
+            </p>
+            <alto-progression-badge [score]="team.progression"></alto-progression-badge>
+          </div>
           {{ team.label }}
         </li>
       </ol>
@@ -37,9 +40,12 @@
         <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h2>
         <ol class="list-group list-group-flush list-group-numbered">
           <li class="list-group-item" *ngFor="let team of scoredTeams.slice(0, 5)">
-            <span class="float-end alto-badge" [class]="(team.score ? team.score : 0) * 100 | pillColor">
-              {{ team.score | percent }}
-            </span>
+            <div class="float-end d-flex flex-nowrap">
+              <p class="me-3">
+                {{ team.score | percent }}
+              </p>
+              <alto-progression-badge [score]="team.progression"></alto-progression-badge>
+            </div>
             {{ team.label }}
           </li>
         </ol>
@@ -49,9 +55,12 @@
             class="list-group-item"
             *ngFor="let team of scoredTeams.slice(scoredTeams.length - 5, scoredTeams.length)"
           >
-            <span class="float-end alto-badge" [class]="(team.score ? team.score : 0) * 100 | pillColor">
-              {{ team.score | percent }}
-            </span>
+            <div class="float-end d-flex flex-nowrap">
+              <p class="me-3">
+                {{ team.score | percent }}
+              </p>
+              <alto-progression-badge [score]="team.progression"></alto-progression-badge>
+            </div>
             {{ team.label }}
           </li>
         </ol>
