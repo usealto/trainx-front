@@ -31,11 +31,37 @@ export class ScoresRestService {
     private readonly statsApi: StatsApiService,
   ) {}
 
-  getTeamsStats(duration: ScoreDuration): Observable<TeamStatsDtoApi[]> {
+  getTeamsStats(duration: ScoreDuration, isProgression = false): Observable<TeamStatsDtoApi[]> {
+    let dateAfter: Date;
+    let dateBefore: Date;
+
+    if (isProgression) {
+      let date = new Date();
+      switch (duration) {
+        case 'week':
+          date = addDays(date, -14);
+          break;
+        case 'month':
+          date = addDays(date, -60);
+          break;
+        case 'trimester':
+          date = addDays(date, -180);
+          break;
+        case 'year':
+          date = addDays(date, -730);
+          break;
+      }
+      dateAfter = date;
+      dateBefore = this.service.getStartDate(duration);
+    } else {
+      dateAfter = this.service.getStartDate(duration);
+      dateBefore = new Date();
+    }
+
     return this.statsApi
       .getTeamsStats({
-        from: this.service.getStartDate(duration),
-        to: new Date(),
+        from: dateAfter,
+        to: dateBefore,
       } as GetTeamsStatsRequestParams)
       .pipe(map((r) => r.data || []));
   }
