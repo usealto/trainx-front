@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
-import { CommentDtoApi, CommentsApiService, GetCommentsRequestParams } from 'src/app/sdk';
+import { CommentDtoApi, CommentsApiService, GetCommentsRequestParams } from '@usealto/sdk-ts-angular';
 import { ProgramsStore } from '../programs.store';
 
 @Injectable({

@@ -1,4 +1,4 @@
-import { RoleEnumApi } from 'src/app/sdk';
+import { RoleEnumApi } from '@usealto/sdk-ts-angular';
 
 export interface UserForm {
   roles?: RoleEnumApi[];

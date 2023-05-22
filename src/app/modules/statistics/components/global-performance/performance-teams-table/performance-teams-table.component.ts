@@ -8,7 +8,7 @@ import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { TeamsStatsFilters } from 'src/app/modules/shared/models/stats.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { TeamStatsDtoApi } from 'src/app/sdk';
+import { TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
 
 @UntilDestroy()
 @Component({

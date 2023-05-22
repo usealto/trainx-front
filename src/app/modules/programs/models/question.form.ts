@@ -1,4 +1,4 @@
-import { QuestionTypeEnumApi, AnswerFormatTypeEnumApi } from 'src/app/sdk';
+import { QuestionTypeEnumApi, AnswerFormatTypeEnumApi } from '@usealto/sdk-ts-angular';
 
 export interface QuestionForm {
   title: string;

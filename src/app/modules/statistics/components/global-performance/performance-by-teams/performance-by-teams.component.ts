@@ -6,7 +6,7 @@ import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from 'src/app/sdk';
+import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import { StatisticsService } from '../../../services/statistics.service';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';

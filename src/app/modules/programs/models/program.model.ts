@@ -1,4 +1,4 @@
-import { TeamDtoApi } from 'src/app/sdk';
+import { TeamDtoApi } from '@usealto/sdk-ts-angular';
 
 export interface ProgramFilters {
   teams?: TeamDtoApi[];

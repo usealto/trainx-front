@@ -8,7 +8,7 @@ import {
   UserDtoApi,
   UserDtoPaginatedResponseApi,
   UsersApiService,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { ProfileStore } from '../profile.store';
 
 @Injectable({

@@ -12,7 +12,7 @@ import {
   ScoresResponseDtoApi,
   TeamDtoApi,
   UserDtoApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { environment } from 'src/environments/environment';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';

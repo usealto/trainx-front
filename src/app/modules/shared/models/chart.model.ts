@@ -1,4 +1,4 @@
-import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from 'src/app/sdk';
+import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import { ScoreDuration } from './score.model';
 
 export interface ChartFilters {

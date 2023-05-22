@@ -10,7 +10,7 @@ import {
   ProgramDtoPaginatedResponseApi,
   ProgramDtoResponseApi,
   ProgramsApiService,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { ProgramsStore } from '../programs.store';
 
 @Injectable({

@@ -8,7 +8,7 @@ import {
   ScoreTypeEnumApi,
   ScoresResponseDtoApi,
   TeamStatsDtoApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { StatisticsService } from '../../../services/statistics.service';

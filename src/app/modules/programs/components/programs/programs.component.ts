@@ -16,7 +16,7 @@ import {
   ScoresResponseDtoApi,
   TagDtoApi,
   UserDtoApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { QuestionFilters } from '../../models/question.model';
 import { ScoreDuration } from '../../../shared/models/score.model';
 import { TagFilters } from '../../models/tag.model';
