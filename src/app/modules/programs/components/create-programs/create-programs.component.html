@@ -108,34 +108,34 @@
       <div class="col-8">
         <div class="panel">
           <div class="row mb-3">
-            <p class="col-7">{{ I18ns.programs.forms.step2.title }}</p>
-            <div class="col-5"><alto-search (searchChange)="searchQuestions($event)"></alto-search></div>
-          </div>
-
-          <ng-select
-            [items]="programStore.tags.value$ | async"
-            [multiple]="true"
-            bindValue="id"
-            bindLabel="name"
-            [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder"
-            [closeOnSelect]="false"
-            [(ngModel)]="selectedTags"
-            (ngModelChange)="getQuestions()"
-          >
-            <ng-template ng-label-tmp let-item="item" let-clear="clear">
-              <div class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
-                <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
-                  <i class="bi bi-x-lg"></i>
+            <p class="col-4">{{ I18ns.programs.forms.step2.title }}</p>
+            <ng-select class="col-4"
+              [items]="programStore.tags.value$ | async"
+              [multiple]="true"
+              bindValue="id"
+              bindLabel="name"
+              [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder"
+              [closeOnSelect]="false"
+              [(ngModel)]="selectedTags"
+              (ngModelChange)="getQuestions()"
+            >
+  
+              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                <div class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+                  <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+                    <i class="bi bi-x-lg"></i>
+                  </span>
+                  <span>{{ item.name }}</span>
+                </div>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+                  {{ item.name }}
                 </span>
-                <span>{{ item.name }}</span>
-              </div>
-            </ng-template>
-            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-              <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
-                {{ item.name }}
-              </span>
-            </ng-template>
-          </ng-select>
+              </ng-template>
+            </ng-select>
+            <div class="col-4"><alto-search (searchChange)="searchQuestions($event)"></alto-search></div>
+          </div>
           <hr />
           <!-- QUESTION LIST -->
           <ng-container
