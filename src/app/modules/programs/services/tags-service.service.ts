@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TagApi, ProgramDtoApi, TagDtoApi } from 'src/app/sdk';
+import { TagApi, ProgramDtoApi, TagDtoApi } from '@usealto/sdk-ts-angular';
 import { TagFilters } from '../models/tag.model';
 
 @Injectable({

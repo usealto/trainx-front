@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { ChallengeDtoApiStatusEnumApi } from 'src/app/sdk';
+import { ChallengeDtoApiStatusEnumApi } from '@usealto/sdk-ts-angular';
 
 @Component({
   selector: 'alto-status-pill',

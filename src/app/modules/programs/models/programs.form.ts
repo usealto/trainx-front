@@ -1,4 +1,4 @@
-import { ProgramDtoApiPriorityEnumApi } from 'src/app/sdk';
+import { ProgramDtoApiPriorityEnumApi } from '@usealto/sdk-ts-angular';
 
 export interface ProgramForm {
   name: string;

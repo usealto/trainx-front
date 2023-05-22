@@ -3,7 +3,7 @@ import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CompaniesStore } from 'src/app/modules/companies/companies.store';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { CompanyDtoApi } from 'src/app/sdk';
+import { CompanyDtoApi } from '@usealto/sdk-ts-angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()

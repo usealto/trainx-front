@@ -1,24 +1,24 @@
 import { Injectable } from '@angular/core';
 import { addDays } from 'date-fns';
 import { Observable, filter, map } from 'rxjs';
-import {
-  GetProgramRunsRequestParams,
-  GetScoresRequestParams,
-  GetTeamsStatsRequestParams,
-  ProgramRunApi,
-  ProgramRunsApiService,
-  ScoreByTypeEnumApi,
-  ScoreFillValuesEnumApi,
-  ScoreTimeframeEnumApi,
-  ScoreTypeEnumApi,
-  ScoresApiService,
-  ScoresResponseDtoApi,
-  StatsApiService,
-  TeamStatsDtoApi,
-} from 'src/app/sdk';
 import { ChartFilters } from '../../shared/models/chart.model';
 import { ScoresService } from './scores.service';
 import { ScoreDuration, ScoreFilters } from '../models/score.model';
+import {
+  ScoresApiService,
+  ProgramRunsApiService,
+  StatsApiService,
+  TeamStatsDtoApi,
+  GetTeamsStatsRequestParams,
+  ScoresResponseDtoApi,
+  GetScoresRequestParams,
+  ScoreTypeEnumApi,
+  ScoreTimeframeEnumApi,
+  ScoreFillValuesEnumApi,
+  ScoreByTypeEnumApi,
+  ProgramRunApi,
+  GetProgramRunsRequestParams,
+} from '@usealto/sdk-ts-angular';
 
 @Injectable({
   providedIn: 'root',

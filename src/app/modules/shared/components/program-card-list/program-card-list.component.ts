@@ -10,7 +10,7 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { ProgramsService } from 'src/app/modules/programs/services/programs.service';
-import { ProgramDtoApi, ScoreTypeEnumApi } from 'src/app/sdk';
+import { ProgramDtoApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import { AltoRoutes } from '../../constants/routes';
 import { ScoresRestService } from '../../services/scores-rest.service';
 import { ScoresService } from '../../services/scores.service';

@@ -1,4 +1,4 @@
-import { TeamApi, TeamLightDtoApi } from 'src/app/sdk';
+import { TeamApi, TeamLightDtoApi } from '@usealto/sdk-ts-angular';
 
 export interface UserForm {
   team: string;

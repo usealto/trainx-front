@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDays, addHours, startOfDay } from 'date-fns';
-import { ScoreTimeframeEnumApi } from 'src/app/sdk';
+import { ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
 import { ScoreDuration } from '../models/score.model';
 
 @Injectable({

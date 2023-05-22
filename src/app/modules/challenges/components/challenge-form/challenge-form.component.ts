@@ -16,7 +16,7 @@ import {
   CreateChallengeDtoApi,
   TeamApi,
   TeamDtoApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { ChallengeForm } from '../../models/challenge.form';
 import { ChallengesRestService } from '../../services/challenges-rest.service';
 

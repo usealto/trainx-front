@@ -1,7 +1,7 @@
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { ScoreDuration } from '../../shared/models/score.model';
 import { startOfDay, startOfMonth, startOfWeek, format, parseISO } from 'date-fns';
-import { ScoreDtoApi } from 'src/app/sdk';
+import { ScoreDtoApi } from '@usealto/sdk-ts-angular';
 import { ScoresService } from '../../shared/services/scores.service';
 export interface Point {
   x: Date;

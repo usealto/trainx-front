@@ -20,7 +20,7 @@ import {
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   UserDtoApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 
