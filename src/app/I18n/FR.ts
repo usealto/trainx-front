@@ -288,7 +288,7 @@ export const FR = {
     form: {
       title: {
         create: 'Créer une question',
-        edit: 'Éditer une question',
+        edit: 'Modifier une question',
         submitted: 'Question suggérée',
       },
       subtitle: {
@@ -315,11 +315,11 @@ export const FR = {
     form: {
       title: {
         create: 'Créer un tag',
-        edit: 'Éditer un tag',
+        edit: 'Modifier un tag',
       },
       subtitle:
         "Indiquer le nom de votre nouveau tag ainsi que les programmes et questions auxquels vous souhaitez l'associer.",
-      tagName: 'Nom du tage',
+      tagName: 'Nom du tag',
       tagNamePlaceholder: 'Exemple: RGPD',
       programs: 'Programmes',
       programsPlaceholder: 'Rechercher dans vos programmes',
