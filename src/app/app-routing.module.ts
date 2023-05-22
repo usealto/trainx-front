@@ -7,6 +7,7 @@ import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
 import { canActivateLead } from './roles.guard';
+import { JwtComponent } from './layout/jwt/jwt.component';
 
 const routes: Routes = [
   {
@@ -89,6 +90,10 @@ const routes: Routes = [
   {
     path: AltoRoutes.translation,
     loadChildren: () => import('./core/utils/i18n/translation.module').then((m) => m.TranslationModule),
+  },
+  {
+    path: 'jwt',
+    component: JwtComponent,
   },
 
   {

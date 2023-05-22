@@ -21,6 +21,7 @@ import { ApiModule, BASE_PATH, Configuration, ConfigurationParameters } from './
 import { SharedModule } from './modules/shared/shared.module';
 import { TestComponent } from './layout/test/test.component';
 import { AppComponent } from './layout/app/app.component';
+import { JwtComponent } from './layout/jwt/jwt.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {};
@@ -28,7 +29,7 @@ export function apiConfigFactory(): Configuration {
 }
 
 @NgModule({
-  declarations: [AppComponent, AppLayoutComponent, MenuComponent, NotFoundComponent, TestComponent],
+  declarations: [AppComponent, AppLayoutComponent, MenuComponent, NotFoundComponent, TestComponent, JwtComponent],
   imports: [
     ApiModule.forRoot(apiConfigFactory),
     BrowserModule,
