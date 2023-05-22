@@ -11,6 +11,9 @@ import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompanyDtoApi, TeamDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from 'src/app/sdk';
 import { DataService } from '../../admin-data.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AdminAssignUsersTeamModalComponent } from './admin-assign-users-team-modal/admin-assign-users-team-modal.component';
+import { AdminAssignSelectedUsersTeamModalComponent } from './admin-assign-selected-users-team-modal/admin-assign-selected-users-team-modal.component';
 
 @Component({
   selector: 'alto-admin-company-users',
@@ -24,7 +27,7 @@ export class AdminCompanyUsersComponent implements OnInit {
   id: string | undefined;
   eRolesEnum = UserDtoApiRolesEnumApi;
   displayedUsers: UserDtoApi[] = [];
-  selectedIds: string[] = [];
+  selectedEmails: string[] = [];
   page = 1;
   pageSize = 7;
   pageCount = 0;
@@ -38,15 +41,19 @@ export class AdminCompanyUsersComponent implements OnInit {
     private readonly teamsRestService: TeamsRestService,
     private dataService: DataService,
     private route: ActivatedRoute,
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') || '';
     console.log(this.id);
+    this.fetchAll();
+  }
 
+  fetchAll() {
     combineLatest({
       teams: this.teamsRestService.getTeams({ companyId: this.id }),
-      company: this.companiesRestService.getCompanyById(this.id),
+      company: this.companiesRestService.getCompanyById(this.id as string),
       users: this.usersRestService.getUsersFiltered({ companyId: this.id }),
     })
       .pipe(take(1))
@@ -58,21 +65,52 @@ export class AdminCompanyUsersComponent implements OnInit {
         this.refreshUsers();
       });
   }
+
   selectAll(event: any) {
-    this.selectedIds = event.target.checked ? this.users.map((item) => item.id) : [];
+    this.selectedEmails = event.target.checked ? this.users.map((item) => item.email) : [];
+  }
+
+  uploadUsersToTeam() {
+    const modalRef = this.modalService.open(AdminAssignUsersTeamModalComponent, { centered: true });
+    modalRef.componentInstance.teams = this.teams;
+    modalRef.result.then((res) => {
+      this.updateUsersTeam(res);
+    });
+  }
+
+  addSelectedUsersToPrograms() {
+    console.log();
+  }
+
+  addSelectedUsersToTeams() {
+    const modalRef = this.modalService.open(AdminAssignSelectedUsersTeamModalComponent, { centered: true });
+    modalRef.componentInstance.teams = this.teams;
+    modalRef.result.then((res) => {
+      console.log(res);
+      const formatedUsers = this.selectedEmails.map((email) => {
+        return {
+          email: email,
+          team: {
+            id: res,
+          },
+        };
+      });
+      console.log(formatedUsers);
+      this.updateUsersTeam(formatedUsers);
+    });
   }
 
   openFilterCanvas() {
     console.log('open filters');
   }
 
-  selectCompany(id: string) {
-    if (this.selectedIds.includes(id)) {
-      this.selectedIds = this.selectedIds.filter((arrayId) => arrayId !== id);
+  selectUser(email: string) {
+    if (this.selectedEmails.includes(email)) {
+      this.selectedEmails = this.selectedEmails.filter((arrayId) => arrayId !== email);
     } else {
-      this.selectedIds.push(id);
+      this.selectedEmails.push(email);
     }
-    console.log(this.selectedIds);
+    console.log(this.selectedEmails);
   }
 
   onPaginator(page: number) {
@@ -133,6 +171,26 @@ export class AdminCompanyUsersComponent implements OnInit {
     if (email) {
       localStorage.setItem('impersonatedUser', email);
       this.dataService.sendData('impersonatedUserUpdated');
+    }
+  }
+
+  updateUsersTeam(csvData: any[]) {
+    if (csvData.length > 0) {
+      csvData.forEach((user) => {
+        const existingUsers = this.users.find((existingUser) => existingUser.email === user.email);
+        console.log(existingUsers);
+
+        if (existingUsers) {
+          this.usersRestService
+            .patchUser(existingUsers.id, {
+              teamId: user.team.id,
+            })
+            .subscribe((res) => {
+              console.log(res);
+            });
+        }
+      });
+      this.fetchAll();
     }
   }
 }

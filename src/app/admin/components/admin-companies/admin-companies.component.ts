@@ -34,7 +34,7 @@ export class AdminCompaniesComponent implements OnInit {
   sortDirection: SortEvent = { column: '', direction: '' };
   activeFilters: FiltersCompaniesList = {
     teams: undefined,
-    isSlackActive: true,
+    isSlackActive: null,
     userAdmin: undefined,
     sendingDays: undefined,
     nbQuestions: {
@@ -83,7 +83,7 @@ export class AdminCompaniesComponent implements OnInit {
   }
 
   deleteSelectedCompanies() {
-    console.log('delete selected companies')
+    console.log('delete selected companies');
   }
 
   onSearch(search: string) {
@@ -122,7 +122,9 @@ export class AdminCompaniesComponent implements OnInit {
   checkFilters(tmpCompanies: CompanyDtoApi[]) {
     return tmpCompanies.filter((company) => {
       return (
-        company.isSlackActive === this.activeFilters.isSlackActive &&
+        (this.activeFilters.isSlackActive !== null
+          ? company.isSlackActive === this.activeFilters.isSlackActive
+          : true) &&
         // check for user admin
         (this.activeFilters.userAdmin && this.activeFilters.userAdmin !== ''
           ? company.admins?.some((admin) => admin.email.toLowerCase() === this.activeFilters.userAdmin)

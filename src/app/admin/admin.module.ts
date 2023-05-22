@@ -27,6 +27,8 @@ import { EditUserUploadFormComponent } from './components/admin-companies-create
 import { ApiInterceptor } from '../core/interceptors/api.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AdminCompaniesFiltersListComponent } from './components/admin-companies/admin-companies-filters-list/admin-companies-filters-list.component';
+import { AdminAssignUsersTeamModalComponent } from './components/admin-company-users/admin-assign-users-team-modal/admin-assign-users-team-modal.component';
+import { AdminAssignSelectedUsersTeamModalComponent } from './components/admin-company-users/admin-assign-selected-users-team-modal/admin-assign-selected-users-team-modal.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,8 @@ import { AdminCompaniesFiltersListComponent } from './components/admin-companies
     AdminUsersUploadFormComponent,
     EditUserUploadFormComponent,
     AdminCompaniesFiltersListComponent,
+    AdminAssignUsersTeamModalComponent,
+    AdminAssignSelectedUsersTeamModalComponent,
   ],
   imports: [
     CommonModule,

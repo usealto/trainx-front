@@ -6,7 +6,7 @@ import { TeamDtoApi, UserDtoApiRolesEnumApi, WeekDayEnumApi } from 'src/app/sdk'
 
 export interface FiltersCompaniesList {
   teams?: TeamDtoApi;
-  isSlackActive?: boolean;
+  isSlackActive?: boolean | null;
   userAdmin?: string;
   sendingDays?: WeekDayEnumApi[];
   nbQuestions: {
@@ -44,7 +44,7 @@ export class AdminCompaniesFiltersListComponent {
     } else {
       this.userForm = this.fb.group<FiltersCompaniesList>({
         teams: [null],
-        isSlackActive: [true],
+        isSlackActive: [null],
         userAdmin: [''],
         sendingDays: [null],
         nbQuestions: this.fb.group<any>({

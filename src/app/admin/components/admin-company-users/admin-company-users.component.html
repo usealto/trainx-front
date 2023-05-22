@@ -15,38 +15,45 @@
   ]"
 ></alto-admin-header>
 <h2></h2>
-<div class="row d-flex justify-content-end" *ngIf="company">
-  <a
-    [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'create']"
-    routerLinkActive="menu-selected"
-    class="btn btn-primary my-2 align-middle"
-    style="max-width: 150px"
-  >
-    Créer un utilisateur
-  </a>
-  <a
-    [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'upload']"
-    routerLinkActive="menu-selected"
-    class="btn btn-primary my-2"
-    style="max-width: 150px"
-  >
-    Upload CSV d'utilisateur
-  </a>
-</div>
-
 <div *ngIf="company" class="d-flex justify-content-between align-items-center alto-grey fs-5 pb-4">
   <div class="d-flex flex-column">
     <span class="alto-text">{{ company.name }}</span>
     <span class="fs-6">{{ users.length }} company account</span>
   </div>
-  <a
-    [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'create']"
-    routerLinkActive="menu-selected"
-    class="btn btn-primary my-2 align-middle"
-  >
-    <i class="bi bi-plus-lg pe-2"></i>
-    Créer un utilisateur
-  </a>
+  <div class="d-flex align-items-center gap-3" *ngIf="selectedEmails.length === 0; else selectedBtn">
+    <button type="button" (click)="addSelectedUsersToPrograms()" class="btn btn-outline-secondary">
+      <i class="bi bi-cloud-upload"></i>
+      Assign teams to programs
+    </button>
+    <button type="button" (click)="uploadUsersToTeam()" class="btn btn-outline-secondary">
+      <i class="bi bi-cloud-upload"></i>
+      Assign users to teams
+    </button>
+    <a
+      [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'create']"
+      routerLinkActive="menu-selected"
+      class="btn btn-primary my-2 align-middle"
+    >
+      <i class="bi bi-plus-lg pe-2"></i>
+      Créer un utilisateur
+    </a>
+  </div>
+  <ng-template #selectedBtn>
+    <div class="d-flex align-items-center gap-3">
+      <button type="button" (click)="addSelectedUsersToPrograms()" class="btn btn-outline-secondary">
+        <i class="bi bi-trash"></i>
+        Delete program data of selected users
+      </button>
+      <button type="button" (click)="addSelectedUsersToTeams()" class="btn btn-outline-secondary">
+        <i class="bi bi-people"></i>
+        Assign selected users to teams
+      </button>
+      <button type="button" (click)="addSelectedUsersToTeams()" class="btn btn-danger">
+        <i class="bi bi-power"></i>
+        Disable
+      </button>
+    </div>
+  </ng-template>
 </div>
 <div *ngIf="users.length > 0; else elseBlock">
   <div class="d-flex justify-content-end gap-2 pb-4">
@@ -65,7 +72,7 @@
                 class="form-check-input"
                 type="checkbox"
                 (change)="selectAll($event)"
-                [ngModel]="selectedIds.length === users.length"
+                [ngModel]="selectedEmails.length === users.length"
                 id="flexCheckDefault"
               />
             </div>
@@ -94,8 +101,8 @@
               <input
                 class="form-check-input"
                 type="checkbox"
-                (change)="selectCompany(user.id)"
-                [ngModel]="selectedIds.includes(user.id)"
+                (change)="selectUser(user.email)"
+                [ngModel]="selectedEmails.includes(user.email)"
                 id="flexCheckDefault"
               />
             </div>
@@ -143,7 +150,19 @@
               >{{ role }}</span
             >
           </td>
-          <td>{{ user.isActive }}</td>
+          <td>
+            <span
+              *ngIf="user.isActive; else disabledPill"
+              class="alto-badge me-1 mb-1"
+              style="background-color: #ecfdf3; color: #027948"
+              >Active</span
+            >
+            <ng-template #disabledPill
+              ><span class="alto-badge me-1 mb-1" style="background-color: #f2f4f7; color: #344054"
+                >Disabled</span
+              ></ng-template
+            >
+          </td>
           <td>{{ user.slackId }}</td>
           <td class="action-btn-list-container">
             <div class="shaddow"></div>
