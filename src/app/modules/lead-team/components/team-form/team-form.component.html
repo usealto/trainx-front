@@ -4,7 +4,15 @@
 <div class="p-4">
   <h2>
     <img src="../assets/img/create-team-icon.svg" alt="Team Icon">
-    {{ I18ns.leadTeam.teams.form.title }}</h2>
+    <!-- {{ I18ns.leadTeam.teams.form.title }} -->
+    {{
+      isEdit
+        ? I18ns.leadTeam.teams.form.title.edit
+        : isEdit
+        ? I18ns.leadTeam.teams.form.title.create
+        : I18ns.leadTeam.teams.form.title.create
+    }}
+  </h2>
   <p class="fs-7">{{ I18ns.leadTeam.teams.form.subtitle }}</p>
 </div>
 <div class="offcanvas-body px-4">

@@ -292,7 +292,7 @@ export const FR = {
         submitted: 'Question suggérée',
       },
       subtitle: {
-        question: 'Indiquer la question, les réponses possibles et les informations complémentaires.',
+        question: 'Indiquer l’intitulé, les réponses possibles et les informations complémentaires.',
         submitted:
           " a suggéré une question. Vous pouvez choisir de la rejeter, la valider en l'état ou d'apporter des modifications et informations complémentaires.",
       },
@@ -382,7 +382,10 @@ export const FR = {
         creationDate: 'Date de création',
       },
       form: {
-        title: 'Créer une équipe',
+        title: {
+          create: 'Créer une équipe',
+          edit: 'Modifier une équipe',
+        },
         subtitle: 'Donner un nom à votre équipe et inviter vos collaborateurs',
         longName: 'Nom (version longue)',
         longNamePlaceholder: "Nom complet de l'équipe",
