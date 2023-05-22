@@ -22,14 +22,16 @@
 </div>
 <alto-performance-by-themes [duration]="duration"></alto-performance-by-themes>
 
+<hr />
+
 <div class="mb-4 position-relative">
   <alto-time-picker
     class="time-picker2"
     [duration]="duration"
     (durationSelected)="updateTimePicker($event)"
   ></alto-time-picker>
-  <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.title }}</h2>
-  <p class="alto-grey pb-3">{{ I18ns.statistics.globalPerformance.perThemePerformance.subtitle }}</p>
+  <h2>{{ I18ns.statistics.globalPerformance.teamsTable.title }}</h2>
+  <p class="mb-4 alto-grey">{{ I18ns.statistics.globalPerformance.teamsTable.subtitle }}</p>
 </div>
 <alto-performance-teams-table [duration]="duration"></alto-performance-teams-table>
 
