@@ -23,7 +23,7 @@
       Créer une company
     </a>
     <ng-template #deleteBtn>
-      <button class="btn btn-danger my-2 align-middle" (click)="deleteSelectedCompanies()">
+      <button disabled class="btn btn-danger my-2 align-middle" (click)="deleteSelectedCompanies()">
         <i class="bi bi-trash"></i> Delete
       </button>
     </ng-template>
@@ -111,7 +111,7 @@
             >
               <div class="shaddow"></div>
               <div class="d-flex action-btn-list align-items-center gap-2 px-3">
-                <button type="button" class="btn btn-link">
+                <button type="button" disabled class="btn btn-link">
                   <i class="alto-second-grey bi bi-trash"></i>
                 </button>
                 <a

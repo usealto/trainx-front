@@ -1,12 +1,11 @@
 <div class="row">
-
   <div class="col-sm-6" *ngIf="user">
     <h2>User data</h2>
-    
+
     <div class="row">
       <div class="col-10">
-        <alto-img-badge [url]="user.pictureUrl"></alto-img-badge> 
-        <label class="form-label mx-2">{{user.username}}</label>
+        <alto-img-badge [url]="user.pictureUrl"></alto-img-badge>
+        <label class="form-label mx-2">{{ user.username }}</label>
       </div>
     </div>
 
@@ -15,7 +14,10 @@
         <label class="form-label">Email</label>
       </div>
       <div class="col-6">
-        <p> {{user.email }} <span *ngIf="userAuth0">(<span *ngIf="!userAuth0.email_verified">not </span>verified)</span> </p>
+        <p>
+          {{ user.email }}
+          <span *ngIf="userAuth0">(<span *ngIf="!userAuth0.email_verified">not </span>verified)</span>
+        </p>
       </div>
     </div>
 
@@ -24,7 +26,12 @@
         <label class="form-label">Company</label>
       </div>
       <div class="col-6">
-        <a class="btn btn-primary" [routerLink]="['/', 'admin', 'companies',user.companyId]" routerLinkActive="menu-selected">{{user.company.name}}</a>
+        <a
+          class="btn btn-primary"
+          [routerLink]="['/', 'admin', 'companies', user.companyId]"
+          routerLinkActive="menu-selected"
+          >{{ user.company.name }}</a
+        >
       </div>
     </div>
 
@@ -33,7 +40,7 @@
         <label class="form-label">Team</label>
       </div>
       <div class="col-6">
-        <p> {{user.team?.longName  }} </p>
+        <p>{{ user.team?.longName }}</p>
       </div>
     </div>
 
@@ -42,7 +49,7 @@
         <label class="form-label">Slack</label>
       </div>
       <div class="col-6">
-        <p> {{user.slackId || 'not set'  }} </p>
+        <p>{{ user.slackId || 'not set' }}</p>
       </div>
     </div>
 
@@ -51,7 +58,7 @@
         <label class="form-label">Last login</label>
       </div>
       <div class="col-6">
-        <p> {{userAuth0.last_login  }} </p>
+        <p>{{ userAuth0.last_login }}</p>
       </div>
     </div>
 
@@ -60,24 +67,24 @@
         <label class="form-label">Login counts</label>
       </div>
       <div class="col-6">
-        <p> {{userAuth0.logins_count  }} </p>
+        <p>{{ userAuth0.logins_count }}</p>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-4">
-        Deleted 
-      </div>
+      <div class="col-4">Deleted</div>
       <div class="col-6">
-        <p> {{user.deletedAt || 'false'}} </p>
+        <p>{{ user.deletedAt || 'false' }}</p>
       </div>
     </div>
 
-    <hr>
+    <hr />
 
-    <h2 class="my-3">Data brute de ce user Alto-API, version JSON <input type="checkbox" [(ngModel)]="display"/></h2>
+    <h2 class="my-3">
+      Data brute de ce user Alto-API, version JSON <input type="checkbox" [(ngModel)]="display" />
+    </h2>
     <pre *ngIf="display">{{ user | json }}</pre>
-    <h2>Data brute de ce user Auth0, version JSON <input type="checkbox" [(ngModel)]="displayAuth0"/></h2>
+    <h2>Data brute de ce user Auth0, version JSON <input type="checkbox" [(ngModel)]="displayAuth0" /></h2>
     <pre *ngIf="displayAuth0">{{ userAuth0 | json }}</pre>
   </div>
   <div class="col-sm-6" *ngIf="!user">
@@ -88,7 +95,6 @@
   <div class="col-sm-6" *ngIf="user">
     <h2>Edit user</h2>
     <form [formGroup]="userForm" class="page-max-width" *ngIf="userForm">
-
       <div class="row">
         <div class="col-4">
           <label class="form-label">Username</label>
@@ -104,7 +110,10 @@
       <div class="row">
         <div class="col-4">
           <label class="form-label">Slack ID</label>
-          <p class="fs-7">Lien vers le compte Slack du user <small class="text-danger text-smaller">Make sure you know what your are doing</small></p>
+          <p class="fs-7">
+            Lien vers le compte Slack du user
+            <small class="text-danger text-smaller">Make sure you know what your are doing</small>
+          </p>
         </div>
         <div class="col-6">
           <input class="form-control" formControlName="slackId" />
@@ -129,16 +138,13 @@
             [closeOnSelect]="false"
             formControlName="teamId"
           >
-            <ng-template ng-label-tmp let-item="item" let-clear="clear">
-              <div class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
-                <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
-                  <i class="bi bi-x-lg"></i>
-                </span>
+            <ng-template ng-label-tmp let-item="item">
+              <div class="alto-badge fs-6b" [style]="item.id | teamColor">
                 <span>{{ item.shortName }}</span>
               </div>
             </ng-template>
             <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-              <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+              <span class="alto-badge fs-6b" [style]="item.id | teamColor">
                 {{ item.shortName }} - {{ item.longName }}
               </span>
             </ng-template>
@@ -179,10 +185,10 @@
         </div>
       </div>
 
-      <button class="btn btn-primary" type="submit" (click)="submit()" [class.disabled]="isDisabled"><p *ngIf="!isDisabled">Update</p><p *ngIf="isDisabled">Updated ✅</p></button>
+      <button class="btn btn-primary" type="submit" (click)="submit()" [class.disabled]="isDisabled">
+        <p *ngIf="!isDisabled">Update</p>
+        <p *ngIf="isDisabled">Updated ✅</p>
+      </button>
     </form>
   </div>
-
-  
-
 </div>

@@ -78,7 +78,7 @@ export class AdminUserCreateFormComponent implements OnInit {
               this.userForm = this.fb.group<UserForm>({
                 firstname: [this.user.firstname || '', [Validators.required]],
                 lastname: [this.user.lastname || '', [Validators.required]],
-                username: [this.user.username || '', []],
+                username: [this.user.username || '', [Validators.required]],
                 email: [this.user.email || '', [Validators.required, Validators.email]],
                 teamId: [this.user.teamId || '', []],
                 roles: [this.user.roles as unknown as Array<RoleEnumApi>, []],

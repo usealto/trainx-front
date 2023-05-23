@@ -5,7 +5,7 @@
 <div class="d-flex justify-content-between">
   <div>
     <h2>Informations</h2>
-    <p class="fs-7">Fill in the general information about this company.</p>
+    <p class="fs-7">Fill in the general information about this user.</p>
   </div>
   <div *ngIf="userForm">
     <button
@@ -21,7 +21,8 @@
       class="btn btn-primary d-inline-flex align-items-center"
       (click)="submit()"
     >
-      Confirm
+      Save
+      <i class="bi bi-save ps-2"></i>
     </button>
   </div>
 </div>
@@ -43,7 +44,7 @@
   <div class="py-4 border-bottom">
     <div class="w-80 row">
       <div class="col-5 mb-2">
-        <label for="name">Username</label>
+        <label for="name" class="required">Username</label>
       </div>
       <div class="col-7 form-group">
         <input type="text" class="form-control" placeholder="Example: John" formControlName="username" />
@@ -85,16 +86,13 @@
           [closeOnSelect]="false"
           formControlName="teamId"
         >
-          <ng-template ng-label-tmp let-item="item" let-clear="clear">
-            <div class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
-              <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
-                <i class="bi bi-x-lg"></i>
-              </span>
+          <ng-template ng-label-tmp let-item="item">
+            <div class="alto-badge fs-6b" [style]="item.id | teamColor">
               <span>{{ item.shortName }}</span>
             </div>
           </ng-template>
           <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-            <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
+            <span class="alto-badge fs-6b" [style]="item.id | teamColor">
               {{ item.shortName }} - {{ item.longName }}
             </span>
           </ng-template>
@@ -180,7 +178,8 @@
       class="btn btn-primary d-inline-flex align-items-center"
       (click)="submit()"
     >
-      Confirm
+      Save
+      <i class="bi bi-save ps-2"></i>
     </button>
   </div>
 </div>

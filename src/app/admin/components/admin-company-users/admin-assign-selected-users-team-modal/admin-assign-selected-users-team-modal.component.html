@@ -25,7 +25,7 @@
     </ng-template>
     <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
       <span class="alto-badge fs-6b" [style]="item.id | teamColor">
-        {{ item.longName }}
+        {{ item.shortName }} - {{ item.longName }}
       </span>
     </ng-template>
   </ng-select>

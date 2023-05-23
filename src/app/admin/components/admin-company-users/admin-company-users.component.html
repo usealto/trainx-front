@@ -21,7 +21,7 @@
     <span class="fs-6">{{ users.length }} company account</span>
   </div>
   <div class="d-flex align-items-center gap-3" *ngIf="selectedUsers.length === 0; else selectedBtn">
-    <button type="button" (click)="addSelectedUsersToPrograms()" class="btn btn-outline-secondary">
+    <button type="button" disabled (click)="addSelectedUsersToPrograms()" class="btn btn-outline-secondary">
       <i class="bi bi-cloud-upload"></i>
       Assign teams to programs
     </button>
@@ -40,7 +40,7 @@
   </div>
   <ng-template #selectedBtn>
     <div class="d-flex align-items-center gap-3">
-      <button type="button" (click)="addSelectedUsersToPrograms()" class="btn btn-outline-secondary">
+      <button type="button" disabled (click)="addSelectedUsersToPrograms()" class="btn btn-outline-secondary">
         <i class="bi bi-trash"></i>
         Delete program data of selected users
       </button>
@@ -53,6 +53,7 @@
         type="button"
         (click)="addSelectedUsersToTeams()"
         class="btn btn-danger"
+        disabled
       >
         <i class="bi bi-power"></i>
         Disable
@@ -62,12 +63,13 @@
         type="button"
         class="btn btn-success"
         (click)="changeStatusSelectedUsers()"
+        disabled
       >
         <i class="bi bi-power"></i>
         Reactivate
       </button>
       <ng-template #mixedSelected>
-        <button type="button" class="btn btn-primary" (click)="changeStatusSelectedUsers()">
+        <button disabled type="button" class="btn btn-primary" (click)="changeStatusSelectedUsers()">
           <i class="bi bi-power"></i>
           Change status of selected users
         </button>
@@ -189,6 +191,7 @@
             <div class="d-flex action-btn-list align-items-center gap-2 px-3">
               <div class="form-check form-switch">
                 <input
+                  disabled
                   class="form-check-input me-2"
                   type="checkbox"
                   role="switch"
@@ -204,7 +207,7 @@
               >
                 <i class="alto-second-grey bi bi-pencil"></i>
               </a>
-              <button type="button" class="btn btn-link">
+              <button disabled type="button" class="btn btn-link">
                 <i class="alto-second-grey bi bi-trash"></i>
               </button>
             </div>

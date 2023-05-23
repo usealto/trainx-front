@@ -56,7 +56,6 @@ export class AdminUsersUploadFormComponent {
   }
 
   deleteUser(user: any) {
-    console.log('hello');
     this.csvData = this.csvData.filter((csvUser) => csvUser.email !== user.email);
     this.refreshUsers();
   }
