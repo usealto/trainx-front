@@ -1,6 +1,6 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { combineLatest, take } from 'rxjs';
+import { Observable, catchError, combineLatest, of, take } from 'rxjs';
 import {
   NgbdSortableHeaderDirective,
   SortEvent,
@@ -27,7 +27,7 @@ export class AdminCompanyUsersComponent implements OnInit {
   id: string | undefined;
   eRolesEnum = UserDtoApiRolesEnumApi;
   displayedUsers: UserDtoApi[] = [];
-  selectedEmails: string[] = [];
+  selectedUsers: UserDtoApi[] = [];
   page = 1;
   pageSize = 7;
   pageCount = 0;
@@ -67,7 +67,7 @@ export class AdminCompanyUsersComponent implements OnInit {
   }
 
   selectAll(event: any) {
-    this.selectedEmails = event.target.checked ? this.users.map((item) => item.email) : [];
+    this.selectedUsers = event.target.checked ? [...this.users] : [];
   }
 
   uploadUsersToTeam() {
@@ -87,15 +87,14 @@ export class AdminCompanyUsersComponent implements OnInit {
     modalRef.componentInstance.teams = this.teams;
     modalRef.result.then((res) => {
       console.log(res);
-      const formatedUsers = this.selectedEmails.map((email) => {
+      const formatedUsers = this.selectedUsers.map((users) => {
         return {
-          email: email,
+          email: users.email,
           team: {
             id: res,
           },
         };
       });
-      console.log(formatedUsers);
       this.updateUsersTeam(formatedUsers);
     });
   }
@@ -104,13 +103,21 @@ export class AdminCompanyUsersComponent implements OnInit {
     console.log('open filters');
   }
 
-  selectUser(email: string) {
-    if (this.selectedEmails.includes(email)) {
-      this.selectedEmails = this.selectedEmails.filter((arrayId) => arrayId !== email);
+  isUserSelected(user: UserDtoApi) {
+    return this.selectedUsers.some((existingUser) => existingUser.email === user.email);
+  }
+
+  isSelectedUsersSatus(activeValue: boolean) {
+    return this.selectedUsers.every((user) => user.isActive === activeValue);
+  }
+
+  selectUser(user: UserDtoApi) {
+    if (this.selectedUsers.some((existingUser) => existingUser.email === user.email)) {
+      this.selectedUsers = this.selectedUsers.filter((existingUser) => existingUser.email !== user.email);
     } else {
-      this.selectedEmails.push(email);
+      this.selectedUsers.push(user);
     }
-    console.log(this.selectedEmails);
+    console.log(this.selectedUsers);
   }
 
   onPaginator(page: number) {
@@ -176,21 +183,26 @@ export class AdminCompanyUsersComponent implements OnInit {
 
   updateUsersTeam(csvData: any[]) {
     if (csvData.length > 0) {
-      csvData.forEach((user) => {
-        const existingUsers = this.users.find((existingUser) => existingUser.email === user.email);
-        console.log(existingUsers);
+      const obs = csvData
+        .map((user) => {
+          const existingUsers = this.users.find((existingUser) => existingUser.email === user.email);
+          console.log(existingUsers);
+          if (existingUsers) {
+            return this.usersRestService
+              .patchUser(existingUsers.id, {
+                teamId: user.team.id,
+              })
+              .pipe(catchError(() => of(null)));
+          }
+          return null;
+        })
+        .filter((user) => user !== null);
 
-        if (existingUsers) {
-          this.usersRestService
-            .patchUser(existingUsers.id, {
-              teamId: user.team.id,
-            })
-            .subscribe((res) => {
-              console.log(res);
-            });
-        }
-      });
-      this.fetchAll();
+      combineLatest(obs as Observable<UserDtoApi>[])
+        .pipe(take(1))
+        .subscribe((res) => {
+          this.fetchAll();
+        });
     }
   }
 }
