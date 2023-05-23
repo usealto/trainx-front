@@ -18,6 +18,8 @@ import {
   ScoreByTypeEnumApi,
   ProgramRunApi,
   GetProgramRunsRequestParams,
+  GetUsersStatsRequestParams,
+  UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 
 @Injectable({
@@ -31,28 +33,37 @@ export class ScoresRestService {
     private readonly statsApi: StatsApiService,
   ) {}
 
+  getUsersStats(duration: ScoreDuration, isProgression = false): Observable<UserStatsDtoApi[]> {
+    let dateAfter: Date;
+    let dateBefore: Date;
+
+    if (isProgression) {
+      const [start, end] = this.getPreviousPeriod(duration);
+
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration);
+      dateBefore = new Date();
+    }
+
+    return this.statsApi
+      .getUsersStats({
+        from: dateAfter,
+        to: dateBefore,
+      } as GetUsersStatsRequestParams)
+      .pipe(map((r) => r.data || []));
+  }
+
   getTeamsStats(duration: ScoreDuration, isProgression = false): Observable<TeamStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
 
     if (isProgression) {
-      let date = new Date();
-      switch (duration) {
-        case 'week':
-          date = addDays(date, -14);
-          break;
-        case 'month':
-          date = addDays(date, -60);
-          break;
-        case 'trimester':
-          date = addDays(date, -180);
-          break;
-        case 'year':
-          date = addDays(date, -730);
-          break;
-      }
-      dateAfter = date;
-      dateBefore = this.service.getStartDate(duration);
+      const [start, end] = this.getPreviousPeriod(duration);
+
+      dateAfter = start;
+      dateBefore = end;
     } else {
       dateAfter = this.service.getStartDate(duration);
       dateBefore = new Date();
@@ -80,23 +91,10 @@ export class ScoresRestService {
     };
 
     if (isProgression) {
-      let date = new Date();
-      switch (duration) {
-        case 'week':
-          date = addDays(date, -14);
-          break;
-        case 'month':
-          date = addDays(date, -60);
-          break;
-        case 'trimester':
-          date = addDays(date, -180);
-          break;
-        case 'year':
-          date = addDays(date, -730);
-          break;
-      }
-      par.dateAfter = date;
-      par.dateBefore = this.service.getStartDate(duration as ScoreDuration);
+      const [start, end] = this.getPreviousPeriod(duration);
+
+      par.dateAfter = start;
+      par.dateBefore = end;
     } else {
       par.dateAfter = this.service.getStartDate(duration as ScoreDuration);
       par.dateBefore = new Date();
@@ -160,28 +158,37 @@ export class ScoresRestService {
     }
 
     if (isProgression) {
-      let date = new Date();
-      switch (filt.duration) {
-        case 'week':
-          date = addDays(date, -14);
-          break;
-        case 'month':
-          date = addDays(date, -60);
-          break;
-        case 'trimester':
-          date = addDays(date, -180);
-          break;
-        case 'year':
-          date = addDays(date, -730);
-          break;
-      }
-      par.createdAfter = date;
-      par.createdBefore = this.service.getStartDate(filt.duration as ScoreDuration);
+      const [start, end] = this.getPreviousPeriod(filt.duration);
+
+      par.createdAfter = start;
+      par.createdBefore = end;
     } else {
       par.createdAfter = this.service.getStartDate(filt.duration as ScoreDuration);
       par.createdBefore = this.service.getYesterday();
     }
 
     return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));
+  }
+
+  private getPreviousPeriod(duration: string | ScoreDuration | undefined): Date[] {
+    let date = new Date();
+    switch (duration) {
+      case 'week':
+        date = addDays(date, -14);
+        break;
+      case 'month':
+        date = addDays(date, -60);
+        break;
+      case 'trimester':
+        date = addDays(date, -180);
+        break;
+      case 'year':
+        date = addDays(date, -730);
+        break;
+      default:
+        date = addDays(date, -60);
+        break;
+    }
+    return [date, this.service.getStartDate(duration as ScoreDuration)];
   }
 }

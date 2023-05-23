@@ -20,7 +20,7 @@
 
   <div *ngIf="scoredTeams.length <= 10; else leaderboardFull" class="col-4">
     <div class="panel">
-      <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}</h2>
+      <h2 class="mb-4">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}</h2>
       <ol class="list-group list-group-flush list-group-numbered">
         <li class="list-group-item" *ngFor="let team of scoredTeams">
           <div class="float-end d-flex flex-nowrap">
@@ -37,7 +37,7 @@
   <ng-template #leaderboardFull>
     <div class="col-4">
       <div class="panel">
-        <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h2>
+        <h1>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h1>
         <ol class="list-group list-group-flush list-group-numbered">
           <li class="list-group-item" *ngFor="let team of scoredTeams.slice(0, 5)">
             <div class="float-end d-flex flex-nowrap">
@@ -49,7 +49,7 @@
             {{ team.label }}
           </li>
         </ol>
-        <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.flop }}</h2>
+        <h1>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.flop }}</h1>
         <ol class="list-group list-group-flush list-group-numbered">
           <li
             class="list-group-item"

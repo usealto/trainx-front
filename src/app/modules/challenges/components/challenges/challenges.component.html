@@ -37,7 +37,7 @@
           [isColored]="true"
         ></alto-dropdown-filter>
 
-        <ng-select
+        <ng-select 
           class="ms-3"
           [searchable]="false"
           [items]="status"
@@ -108,6 +108,7 @@
       </table>
 
       <alto-pagination
+        class="mx-4 d-block"
         [ngClass]="{ invisible: challengesByTeamDisplay.length <= pageSize }"
         [(page)]="byTeamPage"
         [pageSize]="pageSize"
@@ -210,6 +211,7 @@
       </table>
 
       <alto-pagination
+        class="mx-4 d-block"
         [ngClass]="{ invisible: challengesByUserDisplay.length <= pageSize }"
         [(page)]="byUserPage"
         [pageSize]="pageSize"

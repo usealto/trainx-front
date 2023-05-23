@@ -24,7 +24,7 @@ import {
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 
-type TopFlop = { top: any[]; flop: any[] };
+type TopFlop = { top: TopFlopDisplay[]; flop: TopFlopDisplay[] };
 
 type TopFlopDisplay = {
   label: string;

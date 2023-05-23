@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { addDays, addHours, startOfDay } from 'date-fns';
 import { ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
 import { ScoreDuration } from '../models/score.model';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,7 @@ export class ScoresService {
     return addHours(startOfDay(date), gmtDataOffset);
   }
 
+  @memoize()
   getStartDate(duration: ScoreDuration): Date {
     let date = new Date();
     const gmtDataOffset = -date.getTimezoneOffset() / 60;
