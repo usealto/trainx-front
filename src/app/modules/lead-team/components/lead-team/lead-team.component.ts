@@ -20,6 +20,7 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @UntilDestroy()
 @Component({
@@ -45,6 +46,7 @@ export class LeadTeamComponent implements OnInit {
 
   teamsScores = new Map<string, number>();
   usersScores = new Map<string, number | null>();
+  usersQuestions = new Map<string, number[]>();
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -61,13 +63,31 @@ export class LeadTeamComponent implements OnInit {
       this.usersRestService.getUsers(),
       this.teamsRestService.getTeams(),
       this.scoreRestService.getUsersStats(ScoreDuration.Month),
+      this.scoreRestService.getUsersStats(ScoreDuration.Month, true),
     ])
       .pipe(
-        tap(([users, teams, usersStats]) => {
+        tap(([users, teams, usersStats, previousUsersStats]) => {
           this.teams = teams;
           this.users = users;
           this.absoluteUsersCount = users.length;
           this.activeUsersCount = usersStats.filter((u) => u.respondsRegularly).length;
+
+          usersStats.forEach((u) => {
+            this.usersQuestions.set(u.id, [u.totalGuessesCount || 0]);
+          });
+          previousUsersStats.forEach((u) => {
+            if (this.usersQuestions.has(u.id)) {
+              const data = this.usersQuestions.get(u.id);
+              if (data) {
+                if (data[0] === 0) {
+                  data.push(0);
+                } else {
+                  data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount);
+                }
+                this.usersQuestions.set(u.id, data);
+              }
+            }
+          });
         }),
         tap(([users]) => (this.usersCount = users.length)),
         tap(([users]) => {
@@ -96,8 +116,6 @@ export class LeadTeamComponent implements OnInit {
             this.usersScores.set(s.id, this.scoreService.reduceWithoutNull(s.averages));
           });
         }),
-        // switchMap(() => ),
-        // tap(console.log),
         untilDestroyed(this),
       )
       .subscribe();
@@ -146,8 +164,14 @@ export class LeadTeamComponent implements OnInit {
     canvasRef.componentInstance.user = user;
   }
 
-  getTeamUsersCount(teamId: string) {
+  @memoize()
+  getTeamUsersCount(teamId: string): number {
     return this.profileStore.users.value.filter((user) => user.teamId === teamId).length;
+  }
+
+  @memoize()
+  getQuestionsByUser(id: string): number[] {
+    return this.usersQuestions.get(id) || [];
   }
 
   airtableRedirect() {
