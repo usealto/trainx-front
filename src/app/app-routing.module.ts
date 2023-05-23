@@ -7,6 +7,7 @@ import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
 import { canActivateLead } from './roles.guard';
+import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.component';
 
 const routes: Routes = [
   {
@@ -94,6 +95,10 @@ const routes: Routes = [
   {
     path: '404',
     component: NotFoundComponent,
+  },
+  {
+    path: 'no_access',
+    component: NoWebAccessComponent,
   },
   {
     path: '**',
