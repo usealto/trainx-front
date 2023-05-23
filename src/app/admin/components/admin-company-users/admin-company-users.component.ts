@@ -14,6 +14,7 @@ import { DataService } from '../../admin-data.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AdminAssignUsersTeamModalComponent } from './admin-assign-users-team-modal/admin-assign-users-team-modal.component';
 import { AdminAssignSelectedUsersTeamModalComponent } from './admin-assign-selected-users-team-modal/admin-assign-selected-users-team-modal.component';
+import { ChangeStatusSelectedUsersTeamModalComponent } from './change-status-selected-users-team-modal/change-status-selected-users-team-modal.component';
 
 @Component({
   selector: 'alto-admin-company-users',
@@ -80,6 +81,13 @@ export class AdminCompanyUsersComponent implements OnInit {
 
   addSelectedUsersToPrograms() {
     console.log();
+  }
+
+  changeStatusSelectedUsers() {
+    const modalRef = this.modalService.open(ChangeStatusSelectedUsersTeamModalComponent, { centered: true });
+    modalRef.result.then((res) => {
+      console.log(res);
+    });
   }
 
   addSelectedUsersToTeams() {
@@ -176,7 +184,7 @@ export class AdminCompanyUsersComponent implements OnInit {
 
   setImpersonation(email: string) {
     if (email) {
-      localStorage.setItem('impersonatedUser', email);
+      localStorage.setItem('impersonatedUser', email.toLowerCase());
       this.dataService.sendData('impersonatedUserUpdated');
     }
   }
@@ -186,7 +194,6 @@ export class AdminCompanyUsersComponent implements OnInit {
       const obs = csvData
         .map((user) => {
           const existingUsers = this.users.find((existingUser) => existingUser.email === user.email);
-          console.log(existingUsers);
           if (existingUsers) {
             return this.usersRestService
               .patchUser(existingUsers.id, {

@@ -57,12 +57,17 @@
         <i class="bi bi-power"></i>
         Disable
       </button>
-      <button *ngIf="isSelectedUsersSatus(false); else mixedSelected" type="button" class="btn btn-success">
+      <button
+        *ngIf="isSelectedUsersSatus(false); else mixedSelected"
+        type="button"
+        class="btn btn-success"
+        (click)="changeStatusSelectedUsers()"
+      >
         <i class="bi bi-power"></i>
         Reactivate
       </button>
       <ng-template #mixedSelected>
-        <button type="button" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" (click)="changeStatusSelectedUsers()">
           <i class="bi bi-power"></i>
           Change status of selected users
         </button>

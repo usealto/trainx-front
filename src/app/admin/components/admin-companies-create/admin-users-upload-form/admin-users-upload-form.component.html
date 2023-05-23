@@ -29,10 +29,10 @@
         <td class="action-btn-list-container">
           <div class="shaddow"></div>
           <div class="d-flex action-btn-list align-items-center gap-2">
-            <button type="button" class="btn btn-link">
+            <button type="button" class="btn btn-link" (click)="deleteUser(user)">
               <i class="alto-second-grey bi bi-trash"></i>
             </button>
-            <button type="button" class="btn btn-link" (click)="openEditUserForm(user, index)">
+            <button type="button" class="btn btn-link" (click)="openEditUserForm(user)">
               <i class="alto-second-grey bi bi-pencil"></i>
             </button>
           </div>

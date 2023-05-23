@@ -29,7 +29,7 @@ export class AdminUsersUploadFormComponent {
     this.refreshUsers();
   }
 
-  openEditUserForm(user: any, index: number) {
+  openEditUserForm(user: any) {
     const userIndex = this.csvData.findIndex((csvUser) => csvUser.email === user.email);
 
     const canvasRef = this.offcanvasService.open(EditUserUploadFormComponent, {
@@ -53,6 +53,12 @@ export class AdminUsersUploadFormComponent {
       },
       (reason) => {},
     );
+  }
+
+  deleteUser(user: any) {
+    console.log('hello');
+    this.csvData = this.csvData.filter((csvUser) => csvUser.email !== user.email);
+    this.refreshUsers();
   }
 
   onSelectUser(event: DropzoneChangeEvent) {

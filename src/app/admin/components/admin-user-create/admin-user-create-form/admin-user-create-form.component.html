@@ -152,6 +152,7 @@
             formControlName="slackId"
           />
           <button
+            *ngIf="edit"
             type="button"
             class="btn btn-primary d-inline-flex align-items-center text-nowrap"
             (click)="resetSlackId()"
