@@ -2,3 +2,17 @@
   display: block;
   padding: var(--alto-page-padding);
 }
+
+.calendar {
+  border-radius: 50%;
+  background-color: #d1e9ff;
+  width: 60px;
+  height: 60px;
+}
+
+.highlighted-panel:hover {
+  border-radius: 5px;
+  border-color: #84caff;
+  border-radius: 12px;
+  cursor: pointer;
+}

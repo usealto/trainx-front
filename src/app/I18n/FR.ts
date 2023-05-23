@@ -588,4 +588,16 @@ export const FR = {
     },
   },
   test: 'test',
+  userHome: {
+    title: 'Bonjour ',
+    subtitle: "Retrouvez une vue d'ensemble sur votre planning",
+    programsRun: {
+      title: 'Vos programmes en cours',
+      subtitle: 'Retrouvez ici les programmes auxquels vous participez actuellement.',
+      continueSession: 'Session continue',
+      continueSessionSubtitle:
+        'Entraînez vous chaque jour à votre rythme sur des questions issues de vos programmes.',
+      continueSessionCounts: 'se sont entrainés aujourd’hui',
+    },
+  },
 };
