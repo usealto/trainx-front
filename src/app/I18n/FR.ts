@@ -395,7 +395,8 @@ export const FR = {
         shortNameExemple: 'Exemple : SDR',
         invitationEmails: 'Invitation par mail',
         invitationEmailsPlaceholder: 'Séparer les emails par une virgule',
-        invitationEmailsSubtitle: "Vos collaborateurs recevront une invitation par mail pour s’inscrire à Alto.",
+        invitationEmailsSubtitle:
+          'Vos collaborateurs recevront une invitation par mail pour s’inscrire à Alto.',
         Programs: 'Programmes',
         programsPlaceholder: 'Rechercher dans vos programmes',
         ProgramsSubtitle: 'Sélectionner les programmes auxquels cette équipe doit être assignée.',
@@ -599,5 +600,11 @@ export const FR = {
         'Entraînez vous chaque jour à votre rythme sur des questions issues de vos programmes.',
       continueSessionCounts: 'se sont entrainés aujourd’hui',
     },
+  },
+  training: {
+    secondsRemaining: 'secondes restantes',
+    selectOneAnswer: 'Sélectionnez la bonne réponse',
+    submit: 'Valider',
+    saveAndQuit: 'Enregistrer et quitter',
   },
 };
