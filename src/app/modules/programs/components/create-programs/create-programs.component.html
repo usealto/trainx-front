@@ -9,8 +9,8 @@
     }"
     (click)="isEdit && changeTab(1)"
   >
-    <img class="tab-icon" src="../../assets/img/create-program-infos.svg" alt="Informations Icon">
-    {{ I18ns.programs.forms.step1.title }}
+    <i class="alto-badge-big fs-5 tab-icon me-4 bi bi-file-text"></i>
+    <span class="fs-6b">{{ I18ns.programs.forms.step1.title }}</span>
   </div>
   <div
     class="col-4 step"
@@ -21,16 +21,16 @@
     }"
     (click)="isEdit && changeTab(2)"
   >
-    <img class="tab-icon" src="../../assets/img/create-program-questions.svg" alt="Questions Icon">
-    {{ I18ns.programs.forms.step2.title }}
+    <i class="alto-badge-big fs-5 tab-icon me-4 bi bi-question-circle"></i>
+    <span class="fs-6b">{{ I18ns.programs.forms.step2.title }}</span>
   </div>
   <div
     class="col-4 step"
     [ngClass]="{ 'cursor-pointer': isEdit, 'highlight-step': currentStep === 3 }"
     (click)="isEdit && changeTab(3)"
   >
-    <img class="tab-icon" src="../../assets/img/create-program-share.svg" alt="Share Icon">
-    {{ I18ns.programs.forms.step3.title }}
+    <i class="alto-badge-big fs-5 tab-icon me-4 bi bi-share"></i>
+    <span class="fs-6b">{{ I18ns.programs.forms.step3.title }}</span>
   </div>
 </div>
 
@@ -109,7 +109,8 @@
         <div class="panel">
           <div class="row mb-3">
             <p class="col-4">{{ I18ns.programs.forms.step2.title }}</p>
-            <ng-select class="col-4"
+            <ng-select
+              class="col-4"
               [items]="programStore.tags.value$ | async"
               [multiple]="true"
               bindValue="id"
@@ -119,19 +120,17 @@
               [(ngModel)]="selectedTags"
               (ngModelChange)="getQuestions()"
             >
-  
               <ng-template ng-label-tmp let-item="item" let-clear="clear">
-                <div class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
-                  <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+                <div class="alto-badge">
+                  <span class="cursor-pointer me-2 align-middle" (click)="clear(item)" aria-hidden="true">
                     <i class="bi bi-x-lg"></i>
                   </span>
                   <span>{{ item.name }}</span>
                 </div>
               </ng-template>
               <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
-                  {{ item.name }}
-                </span>
+                <span class="alto-badge">{{ item.name }}</span>
+                <i class="bi bi-check-circle-fill"></i>
               </ng-template>
             </ng-select>
             <div class="col-4"><alto-search (searchChange)="searchQuestions($event)"></alto-search></div>
@@ -193,76 +192,76 @@
     <hr />
     <div class="row">
       <div class="col-4">
-        <p>{{ I18ns.programs.forms.step3.summary }}</p>
+        <p class="mb-3 alto-blue fw-medium">{{ I18ns.programs.forms.step3.summary }}</p>
         <p class="fs-7">{{ I18ns.programs.forms.step3.summarySubtitle }}</p>
       </div>
-      <div class="col-8">
+      <div class="col-6">
         <div class="panel">
-          <h2>{{ programForm.controls.name.value }}</h2>
-          <p>{{ programForm.controls.description.value }}</p>
-          <div class="row mt-3 p-1">
+          <h2 class="mb-3">{{ programForm.controls.name.value }}</h2>
+          <p class="mb-4 alto-grey">{{ programForm.controls.description.value }}</p>
+          <div class="row mb-4">
             <div class="col-5">{{ I18ns.programs.forms.step1.teams }}</div>
             <div class="col-6 p-0 text-end">
               <span
                 *ngFor="let id of programForm.controls.teams.value"
-                class="badge rounded-pill p-2 ms-1"
-                [style.backgroundColor]="id | uuid2color"
+                class="alto-badge ms-1"
+                [style]="id | teamColor"
               >
                 {{ findTeamName(id) }}
               </span>
             </div>
             <div class="col-1">
-              <span class="ms-1 icon-btn-small btn btn-secondary" (click)="changeTab(1)">
+              <span class="ms-1 alto-badge cursor-pointer" (click)="changeTab(1)">
                 <i class="bi bi-plus-lg"></i>
               </span>
             </div>
           </div>
-          <div class="row p-1">
+          <div class="row mb-4">
             <div class="col-5">{{ I18ns.programs.forms.step1.tags }}</div>
             <div class="col-6 p-0 text-end">
-              <span
-                *ngFor="let id of programForm.controls.tags.value"
-                class="badge rounded-pill p-2 ms-1"
-                [style.backgroundColor]="id | uuid2color"
-              >
+              <span *ngFor="let id of programForm.controls.tags.value" class="alto-badge ms-1">
                 {{ findTagName(id) }}
               </span>
             </div>
             <div class="col-1">
-              <span class="ms-1 icon-btn-small btn btn-secondary" (click)="changeTab(1)">
+              <span class="ms-1 alto-badge cursor-pointer" (click)="changeTab(1)">
                 <i class="bi bi-plus-lg"></i>
               </span>
             </div>
           </div>
-          <div class="row p-1">
+          <div class="row mb-4">
             <div class="col-5">{{ I18ns.programs.forms.step1.expectation }}</div>
-            <div class="col-6 p-0 text-end">{{ programForm.controls.expectation.value }}%</div>
+            <div class="col-6 p-0 text-end">
+              <span class="alto-score" [class]="programForm.controls.expectation.value || 0 | pillColor">
+                {{ programForm.controls.expectation.value }}%
+              </span>
+            </div>
             <div class="col-1">
-              <span class="ms-1 icon-btn-small btn btn-secondary" (click)="changeTab(1)">
+              <span class="ms-1 alto-badge cursor-pointer" (click)="changeTab(1)">
                 <i class="bi bi-pen"></i>
               </span>
             </div>
           </div>
-          <div class="row p-1">
+          <div class="row mb-4">
             <div class="col-5">{{ I18ns.programs.forms.questionCount }}</div>
             <div class="col-6 p-0 text-end">
-              {{ getquestionsCount() }}
+              <span class="alto-badge">{{ getquestionsCount() }}</span>
             </div>
 
             <div class="col-1">
-              <span class="ms-1 icon-btn-small btn btn-secondary" (click)="changeTab(2)">
+              <span class="ms-1 alto-badge cursor-pointer" (click)="changeTab(2)">
                 <i class="bi bi-pen"></i>
               </span>
             </div>
           </div>
-          <div class="row p-1">
+          <div class="row mb-4">
             <div class="col-5">{{ I18ns.programs.forms.step1.priority }}</div>
             <div class="col-6 p-0 text-end">
               {{ programForm.controls.priority.value }}
             </div>
 
             <div class="col-1">
-              <span class="ms-1 icon-btn-small btn btn-secondary" (click)="changeTab(1)">
+              <span class="ms-1 alto-badge cursor-pointer" (click)="changeTab(1)">
                 <i class="bi bi-pen"></i>
               </span>
             </div>
