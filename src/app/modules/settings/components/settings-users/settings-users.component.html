@@ -86,13 +86,13 @@
           </tbody>
         </table>
 
-        <ngb-pagination
+        <alto-pagination
           [ngClass]="{ invisible: usersCount <= usersPageSize }"
           [collectionSize]="usersCount"
           [(page)]="usersPage"
           (pageChange)="changeUsersPage($event)"
           [pageSize]="usersPageSize"
-        ></ngb-pagination>
+        ></alto-pagination>
       </div>
     </div>
   </div>

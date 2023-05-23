@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ProgramDtoApi } from 'src/app/sdk';
+import { ProgramDtoApi } from '@usealto/sdk-ts-angular';
 import { ProgramFilters } from '../models/program.model';
 
 @Injectable({

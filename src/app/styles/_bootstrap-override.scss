@@ -142,3 +142,13 @@
     }
   }
 }
+.pagination {
+  --bs-pagination-border-color: transparent;
+  --bs-pagination-hover-color: transparent;
+  --bs-pagination-hover-border-color: transparent;
+  --bs-pagination-hover-bg: transparent;
+  --bs-pagination-bg: transparent;
+  --bs-pagination-disabled-border-color: transparent;
+  --bs-pagination-disabled-bg: transparent;
+  justify-content: space-between;
+}

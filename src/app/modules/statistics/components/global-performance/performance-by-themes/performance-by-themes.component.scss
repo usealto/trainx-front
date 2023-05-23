@@ -1,3 +1,17 @@
-.chart-container {
-  height: 400px;
+.chart-container2 {
+  height: 300px;
+}
+.score-evolution-chart {
+  height: 100%;
+  .chart-container {
+    height: 510px;
+  }
+}
+.top-flop-label {
+  display: inline-block;
+  width: calc(100% - 5rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
 }

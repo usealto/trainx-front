@@ -1,5 +1,3 @@
-import { DeleteResponseApi } from './../../../sdk/model/deleteResponse';
-import { PatchCompanyDtoApi } from './../../../sdk/model/patchCompanyDto';
 import { Injectable } from '@angular/core';
 import { Observable, map, tap } from 'rxjs';
 import {
@@ -8,7 +6,9 @@ import {
   CompanyDtoApi,
   CreateCompanyDtoApi,
   CompanyDtoResponseApi,
-} from 'src/app/sdk';
+  PatchCompanyDtoApi,
+  DeleteResponseApi,
+} from '@usealto/sdk-ts-angular';
 import { ProfileStore } from '../../profile/profile.store';
 import { CompaniesStore } from '../companies.store';
 

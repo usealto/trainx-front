@@ -8,7 +8,7 @@ import { Observable, filter, map, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { PriorityEnumApi, ProgramDtoApi, QuestionDtoApi, TagApi, TeamApi } from 'src/app/sdk';
+import { PriorityEnumApi, ProgramDtoApi, QuestionDtoApi, TagApi, TeamApi } from '@usealto/sdk-ts-angular';
 import { ProgramForm } from '../../models/programs.form';
 import { QuestionDisplay } from '../../models/question.model';
 import { ProgramsStore } from '../../programs.store';

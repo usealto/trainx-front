@@ -10,7 +10,7 @@ import {
   TeamDtoApi,
   UserDtoApi,
   ChallengeDtoApiStatusEnumApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { ChallengesRestService } from '../../services/challenges-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 

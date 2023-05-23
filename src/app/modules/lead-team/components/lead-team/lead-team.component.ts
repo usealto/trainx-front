@@ -12,15 +12,14 @@ import {
   ScoresResponseDtoApi,
   TeamDtoApi,
   UserDtoApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { environment } from 'src/environments/environment';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
-import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
-import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
-
+import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ScoresService } from 'src/app/modules/programs/services/scores.service';
+import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 
 @UntilDestroy()
 @Component({
@@ -73,8 +72,8 @@ export class LeadTeamComponent implements OnInit {
             this.usersMap.set(user.id, member ? member.shortName : '');
           });
         }),
-        tap(() => this.changeTeamsPage()),
-        tap(() => this.changeUsersPage(this.users)),
+        tap(() => this.changeTeamsPage(1)),
+        tap(() => this.changeUsersPage(this.users, this.usersPage)),
         switchMap(() => this.scoreRestService.getTeamsStats(ScoreDuration.Trimester)),
         tap((scores) => {
           scores.forEach((s) => {
@@ -107,11 +106,9 @@ export class LeadTeamComponent implements OnInit {
       .subscribe();
   }
 
-  changeTeamsPage() {
-    this.paginatedTeams = this.teams.slice(
-      (this.teamsPage - 1) * this.teamsPageSize,
-      this.teamsPage * this.teamsPageSize,
-    );
+  changeTeamsPage(page: number) {
+    this.teamsPage = page;
+    this.paginatedTeams = this.teams.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
   }
 
   filterUsers(selectedTeams: TeamDtoApi[] = []) {
@@ -119,21 +116,19 @@ export class LeadTeamComponent implements OnInit {
       teams: selectedTeams,
     };
 
-    this.changeUsersPage(this.usersService.filterUsers(this.users, filter));
+    this.changeUsersPage(this.usersService.filterUsers(this.users, filter), this.usersPage);
   }
 
-  changeUsersPage(users: UserDtoApi[]) {
+  changeUsersPage(users: UserDtoApi[], page: number) {
+    this.usersPage = page;
     this.usersCount = users.length;
-    this.paginatedUsers = users.slice(
-      (this.usersPage - 1) * this.usersPageSize,
-      this.usersPage * this.usersPageSize,
-    );
+    this.paginatedUsers = users.slice((page - 1) * this.usersPageSize, page * this.usersPageSize);
   }
 
   searchUsers(users: UserDtoApi[], s: string) {
     const search = s.toLowerCase();
     const res = search.length ? users.filter((user) => user.username?.toLowerCase().includes(search)) : users;
-    this.changeUsersPage(res);
+    this.changeUsersPage(res, this.usersPage);
   }
 
   openTeamForm(team?: TeamDtoApi) {

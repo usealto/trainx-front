@@ -17,10 +17,10 @@ import { LoadingModule } from './core/utils/loading/loading.module';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { MenuComponent } from './layout/menu/menu.component';
 import { NotFoundComponent } from './layout/not-found/not-found.component';
-import { ApiModule, BASE_PATH, Configuration, ConfigurationParameters } from './sdk';
 import { SharedModule } from './modules/shared/shared.module';
 import { TestComponent } from './layout/test/test.component';
 import { AppComponent } from './layout/app/app.component';
+import { Configuration, ConfigurationParameters, ApiModule, BASE_PATH } from '@usealto/sdk-ts-angular';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {};
@@ -30,7 +30,8 @@ export function apiConfigFactory(): Configuration {
 @NgModule({
   declarations: [AppComponent, AppLayoutComponent, MenuComponent, NotFoundComponent, TestComponent],
   imports: [
-    ApiModule.forRoot(apiConfigFactory),
+    // ApiModule.forRoot(apiConfigFactory),
+    ApiModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,

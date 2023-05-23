@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
-import { ProgramDtoApi, ProgramRunApi } from 'src/app/sdk';
+import { ProgramDtoApi, ProgramRunApi } from '@usealto/sdk-ts-angular';
 import { AltoRoutes } from '../../constants/routes';
 
 @Component({

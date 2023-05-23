@@ -3,6 +3,7 @@ export const FR = {
     edit: 'Modifier',
     save: 'Enregistrer',
     next: 'Suivant',
+    previous: 'Précédent',
     cancel: 'Annuler',
     delete: 'Supprimer',
     create: 'Créer',
@@ -18,6 +19,9 @@ export const FR = {
     reply: 'Répondre',
     search: 'Rechercher',
     period: 'Période',
+    pagination: {
+      on: 'sur',
+    },
     priorities: {
       high: 'High',
       medium: 'Medium',
@@ -265,6 +269,16 @@ export const FR = {
           programs: 'Programmes',
         },
       },
+      teamsTable: {
+        title: 'Équipes',
+        subtitle: "Découvrez les scores moyens et axes d'amélioration par équipe.",
+        columns: {
+          name: 'Nom',
+          global: 'Global',
+          lessMasteredPrograms: 'Programmes les moins maitrîsés',
+          lessMasteredTags: 'Tags les moins maitrîsés',
+        },
+      },
     },
     perTeams: {
       title: 'Par équipe',
@@ -445,7 +459,7 @@ export const FR = {
     home: 'Accueil',
     programs: 'Programmes',
     statistics: 'Statistiques',
-    team: 'Équipe',
+    team: 'Équipes',
     challenges: 'Challenges',
     settings: 'Paramètres',
     profile: 'Profil',
