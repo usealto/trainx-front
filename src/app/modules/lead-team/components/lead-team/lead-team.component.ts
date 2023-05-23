@@ -57,14 +57,18 @@ export class LeadTeamComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    combineLatest([this.usersRestService.getUsers(), this.teamsRestService.getTeams()])
+    combineLatest([
+      this.usersRestService.getUsers(),
+      this.teamsRestService.getTeams(),
+      this.scoreRestService.getUsersStats(ScoreDuration.Month),
+    ])
       .pipe(
-        tap(([users, teams]) => {
+        tap(([users, teams, usersStats]) => {
           this.teams = teams;
           this.users = users;
           this.absoluteUsersCount = users.length;
+          this.activeUsersCount = usersStats.filter((u) => u.respondsRegularly).length;
         }),
-        tap(([users]) => (this.activeUsersCount = users.filter((user) => user.isActive).length)),
         tap(([users]) => (this.usersCount = users.length)),
         tap(([users]) => {
           users.forEach((user) => {
@@ -92,8 +96,8 @@ export class LeadTeamComponent implements OnInit {
             this.usersScores.set(s.id, this.scoreService.reduceWithoutNull(s.averages));
           });
         }),
-        switchMap(() => this.scoreRestService.getUsersStats(ScoreDuration.Month)),
-        tap(console.log),
+        // switchMap(() => ),
+        // tap(console.log),
         untilDestroyed(this),
       )
       .subscribe();

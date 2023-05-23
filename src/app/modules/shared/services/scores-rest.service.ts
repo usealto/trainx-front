@@ -19,6 +19,7 @@ import {
   ProgramRunApi,
   GetProgramRunsRequestParams,
   GetUsersStatsRequestParams,
+  UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 
 @Injectable({
@@ -32,7 +33,7 @@ export class ScoresRestService {
     private readonly statsApi: StatsApiService,
   ) {}
 
-  getUsersStats(duration: ScoreDuration, isProgression = false): Observable<TeamStatsDtoApi[]> {
+  getUsersStats(duration: ScoreDuration, isProgression = false): Observable<UserStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
 
