@@ -147,6 +147,18 @@
       }
     }
   }
+  &.alto-form {
+    width: 100%;
+    .ng-select-container {
+      border-radius: 0.286rem;
+    }
+    &.ng-select-opened > .ng-select-container {
+      border-radius: 0.286rem;
+    }
+    .ng-placeholder {
+      font-weight: 400;
+    }
+  }
 }
 .pagination {
   --bs-pagination-border-color: transparent;
