@@ -92,15 +92,8 @@ export class LeadTeamComponent implements OnInit {
             this.usersScores.set(s.id, this.scoreService.reduceWithoutNull(s.averages));
           });
         }),
-        // switchMap(() => {
-        //   return this.scoreRestService.getScores({
-        //     duration: ScoreDuration.Month,
-        //     timeframe: ScoreTimeframeEnumApi.Day,
-        //     type: ScoreTypeEnumApi.Guess,
-        //     user: this.users.map((u) => u.id).join(','),
-        //   });
-        // }),
-        // tap(console.log),
+        switchMap(() => this.scoreRestService.getUsersStats(ScoreDuration.Month)),
+        tap(console.log),
         untilDestroyed(this),
       )
       .subscribe();

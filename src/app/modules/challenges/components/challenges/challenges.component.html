@@ -108,6 +108,7 @@
       </table>
 
       <alto-pagination
+        class="mx-4 d-block"
         [ngClass]="{ invisible: challengesByTeamDisplay.length <= pageSize }"
         [(page)]="byTeamPage"
         [pageSize]="pageSize"
@@ -210,6 +211,7 @@
       </table>
 
       <alto-pagination
+        class="mx-4 d-block"
         [ngClass]="{ invisible: challengesByUserDisplay.length <= pageSize }"
         [(page)]="byUserPage"
         [pageSize]="pageSize"
