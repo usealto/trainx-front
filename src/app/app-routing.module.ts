@@ -94,6 +94,8 @@ const routes: Routes = [
   {
     path: 'jwt',
     component: JwtComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
   },
 
   {
