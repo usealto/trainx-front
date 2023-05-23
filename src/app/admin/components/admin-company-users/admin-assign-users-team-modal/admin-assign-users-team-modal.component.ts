@@ -55,9 +55,15 @@ export class AdminAssignUsersTeamModalComponent {
         if (this.csvData && this.csvData[0] && this.csvData[0].email === 'email') {
           this.csvData = this.csvData.slice(1);
         }
+        console.log(this.usersFailed);
         this.refreshUsers();
       },
     });
+  }
+
+  deleteUser(user: any) {
+    this.csvData = this.csvData.filter((csvUser) => csvUser.email !== user.email);
+    this.refreshUsers();
   }
 
   findSelectedTeam(teamName: string) {
