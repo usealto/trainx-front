@@ -8,6 +8,7 @@ import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
 import { canActivateLead } from './roles.guard';
 import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.component';
+import { canHaveWebAccess } from './web-access.guard';
 
 const routes: Routes = [
   {
@@ -23,6 +24,7 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.user,
+        canActivate: [canHaveWebAccess],
         children: [
           {
             path: AltoRoutes.userHome,
@@ -97,7 +99,7 @@ const routes: Routes = [
     component: NotFoundComponent,
   },
   {
-    path: 'no_access',
+    path: AltoRoutes.noAccess,
     component: NoWebAccessComponent,
   },
   {
