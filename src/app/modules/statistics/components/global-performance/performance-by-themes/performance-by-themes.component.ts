@@ -222,7 +222,14 @@ export class PerformanceByThemesComponent implements OnChanges {
     this.scoreEvolutionChart = new Chart('themeScoreEvolution', {
       type: 'line',
       data: data,
-      options: chartDefaultOptions,
+      options: {
+        ...chartDefaultOptions,
+        scales: {
+          ...chartDefaultOptions.scales,
+          x: { ...chartDefaultOptions.scales?.['x'], grid: { display: true } },
+          y: { ...chartDefaultOptions.scales?.['y'], grid: { display: false } },
+        },
+      },
     });
   }
 
