@@ -1,9 +1,9 @@
 <div
-  class="panel"
+  class="panel custom-panel"
   [class]="
     type === 'selected'
       ? 'selected-panel'
-      : type === 'good'
+      : type === 'correct'
       ? 'correct-panel'
       : type === 'wrong'
       ? 'wrong-panel'
@@ -15,7 +15,7 @@
     [class]="
       type === 'selected'
         ? 'bi-check-circle-fill text-primary'
-        : type === 'good'
+        : type === 'correct'
         ? 'bi-check-circle-fill text-success'
         : type === 'wrong'
         ? 'bi-x-circle-fill text-danger'
@@ -23,5 +23,5 @@
     "
   ></i>
 
-  <h2 class="mt-4">{{ answer }}</h2>
+  <h2 class="mt-4 user-select-none">{{ answer }}</h2>
 </div>

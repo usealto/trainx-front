@@ -606,5 +606,16 @@ export const FR = {
     selectOneAnswer: 'Sélectionnez la bonne réponse',
     submit: 'Valider',
     saveAndQuit: 'Enregistrer et quitter',
+    canva: {
+      goodAnswer: 'Bonne réponse !',
+      badAnswer: 'Mauvaise réponse !',
+      goodResultSubtitle: "Il s'agissait bien de",
+      badResultSubtitle: "Il s'agissait de",
+      explanation: 'Explication',
+      noExplanation: "Pas d'explication",
+      reference: 'Référence',
+      noReference: 'Pas de référence',
+      continue: 'Continuer',
+    },
   },
 };

@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { GetNextQuestionsForUserRequestParams, QuestionApi } from '@usealto/sdk-ts-angular';
 import { map, tap, timer } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ExplanationComponent } from '../explanation/explanation.component';
 
 interface AnswerCard {
   answer: string;
@@ -19,8 +21,8 @@ interface AnswerCard {
 export class TrainingComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
-  displayTime = 5;
-  time = 5000;
+  displayTime = 30;
+  time = 30000;
   timer: any;
 
   remainingQuestions: QuestionApi[] = [];
@@ -30,11 +32,10 @@ export class TrainingComponent implements OnInit {
   displayedQuestion!: QuestionApi;
   isQuestionsLoading = true;
 
-  answerList: string[] = [];
   currentAnswers: AnswerCard[] = [];
-  selectedAnswer = '';
 
   constructor(
+    private readonly offCanvasService: NgbOffcanvas,
     private readonly usersRestService: UsersRestService,
     private readonly profileStore: ProfileStore,
   ) {}
@@ -60,6 +61,10 @@ export class TrainingComponent implements OnInit {
   }
 
   selectAnswer(answer: string) {
+    this.currentAnswers.forEach((a) => {
+      a.selected = false;
+      a.type = '';
+    });
     const card = this.currentAnswers.find((a) => a.answer === answer);
     if (card) {
       card.selected = !card.selected;
@@ -68,6 +73,43 @@ export class TrainingComponent implements OnInit {
   }
 
   submitAnswer() {
+    this.stopTimer();
+    let result = '';
+    this.currentAnswers.forEach((a) => {
+      if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
+        if (a.selected === true) {
+          result = 'correct';
+        }
+        a.type = 'correct';
+      }
+      if (!this.displayedQuestion.answersAccepted.includes(a.answer) && a.selected === true) {
+        result = 'wrong';
+        a.type = 'wrong';
+      }
+    });
+    this.openCanvas(result);
+  }
+
+  openCanvas(result: string) {
+    const canvasRef = this.offCanvasService.open(ExplanationComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto',
+    });
+    canvasRef.componentInstance.explanation = this.displayedQuestion.explanation;
+    canvasRef.componentInstance.result = result;
+    canvasRef.componentInstance.correctAnswers = this.displayedQuestion.answersAccepted;
+    canvasRef.componentInstance.link = this.displayedQuestion.link;
+    canvasRef.componentInstance.nextQuestion
+      .pipe(
+        tap(() => {
+          canvasRef.dismiss();
+          this.saveAnswer();
+        }),
+      )
+      .subscribe();
+  }
+
+  saveAnswer() {
     this.getNextQuestion();
   }
 
@@ -77,12 +119,9 @@ export class TrainingComponent implements OnInit {
       this.getQuestions(this.questionsPage);
     } else {
       this.displayedQuestion = this.remainingQuestions.pop() as QuestionApi;
-      this.answerList = this.shuffleArray([
-        ...this.displayedQuestion.answersAccepted,
-        ...this.displayedQuestion.answersWrong,
-      ]);
       this.getCurrentAnswers(this.displayedQuestion.answersAccepted, this.displayedQuestion.answersWrong);
     }
+    this.countDown(this.time);
   }
 
   countDown(time: number) {
@@ -95,11 +134,16 @@ export class TrainingComponent implements OnInit {
           const diff = dateNow.getTime() - date.getTime();
           this.displayTime = Math.floor((time - diff) / 1000);
           if (this.displayTime <= 0) {
-            this.timer.unsubscribe();
+            this.submitAnswer();
           }
         }),
       )
       .subscribe();
+  }
+
+  stopTimer() {
+    this.timer.unsubscribe();
+    this.timer.remove();
   }
 
   getCurrentAnswers(correct: string[], wrong: string[]) {
@@ -108,23 +152,8 @@ export class TrainingComponent implements OnInit {
     array.forEach((answer) => {
       this.currentAnswers.push({ answer: answer, selected: false, type: '' });
     });
-    if (this.currentAnswers.length < 4) {
-      while (this.currentAnswers.length < 4) {
-        this.currentAnswers.push({ answer: '', selected: false, type: '' });
-      }
-    }
     this.isQuestionsLoading = false;
   }
-
-  // mergeArrays(correct: string[]) {
-  //   this.currentAnswers.forEach((answer) => {
-  //     if (correct.includes(answer)) {
-  //       this.currentAnswers.set(answer, 'correct');
-  //     } else {
-  //       this.currentAnswers.set(answer, 'wrong');
-  //     }
-  //   });
-  // }
 
   shuffleArray(array: string[]): string[] {
     const shuffledArray = [...array];

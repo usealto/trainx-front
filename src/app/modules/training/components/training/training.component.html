@@ -10,13 +10,13 @@
 <div *ngIf="!isQuestionsLoading" class="mt-4">
   <div class="row my-4">
     <alto-answer-card
-      class="col"
+      class="col-6"
       [answer]="currentAnswers[0].answer"
       [type]="currentAnswers[0].type"
       (click)="selectAnswer(currentAnswers[0].answer)"
     ></alto-answer-card>
     <alto-answer-card
-      class="col"
+      class="col-6"
       [answer]="currentAnswers[1].answer"
       [type]="currentAnswers[1].type"
       (click)="selectAnswer(currentAnswers[1].answer)"
@@ -24,13 +24,15 @@
   </div>
   <div class="row my-4">
     <alto-answer-card
-      class="col"
+      *ngIf="currentAnswers[2]"
+      class="col-6"
       [answer]="currentAnswers[2].answer"
       [type]="currentAnswers[2].type"
       (click)="selectAnswer(currentAnswers[2].answer)"
     ></alto-answer-card>
     <alto-answer-card
-      class="col"
+      *ngIf="currentAnswers[3]"
+      class="col-6"
       [answer]="currentAnswers[3].answer"
       [type]="currentAnswers[3].type"
       (click)="selectAnswer(currentAnswers[3].answer)"

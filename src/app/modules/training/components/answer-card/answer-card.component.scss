@@ -1,23 +1,24 @@
+.custom-panel {
+  cursor: pointer;
+}
+
 .selected-panel {
-  border-width: 2px;
-  border-color: #1570ef;
-  border-radius: 12px;
+  border-color: var(--bs-primary);
+  outline: solid 1px var(--bs-primary);
   background-color: #f5faff;
   cursor: pointer;
 }
 
 .correct-panel {
-  border-width: 2px;
   border-color: #32d583;
-  border-radius: 12px;
+  outline: solid 1px #32d583;
   background-color: #f6fef9;
   cursor: pointer;
 }
 
 .wrong-panel {
-  border-width: 2px;
   border-color: #f97066;
-  border-radius: 12px;
+  outline: solid 1px #f97066;
   background-color: #fffbfa;
   cursor: pointer;
 }
