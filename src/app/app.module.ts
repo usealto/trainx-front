@@ -20,6 +20,7 @@ import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { SharedModule } from './modules/shared/shared.module';
 import { TestComponent } from './layout/test/test.component';
 import { AppComponent } from './layout/app/app.component';
+import { JwtComponent } from './layout/jwt/jwt.component';
 import { Configuration, ConfigurationParameters, ApiModule, BASE_PATH } from '@usealto/sdk-ts-angular';
 
 export function apiConfigFactory(): Configuration {
@@ -28,7 +29,7 @@ export function apiConfigFactory(): Configuration {
 }
 
 @NgModule({
-  declarations: [AppComponent, AppLayoutComponent, MenuComponent, NotFoundComponent, TestComponent],
+  declarations: [AppComponent, AppLayoutComponent, MenuComponent, NotFoundComponent, TestComponent, JwtComponent],
   imports: [
     // ApiModule.forRoot(apiConfigFactory),
     ApiModule,
