@@ -17,6 +17,7 @@ export const AltoRoutes = {
   statistics: 'statistics',
 
   // USER
+
   user: 'u',
   userHome: 'home',
 
@@ -24,6 +25,7 @@ export const AltoRoutes = {
 
   training: 'training',
 
+  noAccess: 'no_access',
   // ADMIN
   translation: 'translation',
   admin: 'admin',

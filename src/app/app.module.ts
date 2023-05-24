@@ -22,6 +22,7 @@ import { TestComponent } from './layout/test/test.component';
 import { AppComponent } from './layout/app/app.component';
 import { JwtComponent } from './layout/jwt/jwt.component';
 import { Configuration, ConfigurationParameters, ApiModule, BASE_PATH } from '@usealto/sdk-ts-angular';
+import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {};
@@ -29,7 +30,7 @@ export function apiConfigFactory(): Configuration {
 }
 
 @NgModule({
-  declarations: [AppComponent, AppLayoutComponent, MenuComponent, NotFoundComponent, TestComponent, JwtComponent],
+  declarations: [AppComponent, AppLayoutComponent, MenuComponent, NotFoundComponent, TestComponent, JwtComponent, NoWebAccessComponent],
   imports: [
     // ApiModule.forRoot(apiConfigFactory),
     ApiModule,
