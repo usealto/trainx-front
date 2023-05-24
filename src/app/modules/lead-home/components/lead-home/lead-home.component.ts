@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import {
+  ChallengeDtoApi,
+  ChallengeDtoApiTypeEnumApi,
+  ScoreTimeframeEnumApi,
+  ScoreTypeEnumApi,
+  UserDtoApi,
+} from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
 import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -8,19 +15,12 @@ import { ChallengesRestService } from 'src/app/modules/challenges/services/chall
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { ScoreDuration, ScoreFilters } from 'src/app/modules/shared/models/score.model';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import {
-  ChallengeDtoApi,
-  ChallengeDtoApiTypeEnumApi,
-  ScoreTimeframeEnumApi,
-  ScoreTypeEnumApi,
-  UserDtoApi,
-} from '@usealto/sdk-ts-angular';
+import { ScoreDuration, ScoreFilters } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 
@@ -90,9 +90,11 @@ export class LeadHomeComponent implements OnInit {
       this.commentsRestService.getComments(),
       this.questionsSubmittedRestService.getQuestions(),
       this.challengesRestService.getChallenges({ itemsPerPage: 40, sortBy: 'endDate:desc' }),
+      this.scoresRestService.getUsersStats(ScoreDuration.Month),
+      this.scoresRestService.getUsersStats(ScoreDuration.Month, true),
     ])
       .pipe(
-        tap(([comments, questions, challenges]) => {
+        tap(([comments, questions, challenges, usersStats, previousUsersStats]) => {
           this.commentsCount = comments.length;
           this.questionsCount = questions.length;
           this.challengesByTeam = challenges
@@ -101,13 +103,16 @@ export class LeadHomeComponent implements OnInit {
           this.challengesByUser = challenges
             .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByUser)
             .slice(0, 5);
+
+          this.activeMembers = usersStats.filter((u) => u.respondsRegularly).length;
+          this.inactiveMembers = usersStats.length - this.activeMembers;
+
+          const prevU = previousUsersStats.filter((u) => u.respondsRegularly).length;
+          this.activeMembersProgression = (this.activeMembers - prevU) / prevU;
+          const prevI = previousUsersStats.length - prevU;
+          this.inactiveMembersProgression = (this.inactiveMembers - prevI) / prevI;
         }),
         tap(() => this.getGlobalScore(this.globalFilters)),
-        switchMap(() => this.userService.getUsers()),
-        tap((users) => {
-          this.activeMembers = users.filter((user) => user.isActive).length;
-          this.inactiveMembers = users.length - this.activeMembers;
-        }),
         untilDestroyed(this),
       )
       .subscribe();
