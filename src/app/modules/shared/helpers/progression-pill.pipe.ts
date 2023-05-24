@@ -4,8 +4,10 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'pillProgression',
 })
 export class ProgressionPillPipe implements PipeTransform {
-  transform(score: number, ...args: unknown[]): unknown {
-    if (score > 0) {
+  transform(score: number | undefined | null): string {
+    if (score === null || score === undefined) {
+      return 'progression-pill-undefined';
+    } else if (score > 0) {
       return 'progression-pill-green';
     } else if (score < 0) {
       return 'progression-pill-red';
