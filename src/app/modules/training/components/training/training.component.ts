@@ -5,6 +5,12 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+
+interface AnswerCard {
+  answer: string;
+  selected: boolean;
+  type: '' | 'selected' | 'correct' | 'wrong';
+}
 @Component({
   selector: 'alto-training',
   templateUrl: './training.component.html',
@@ -24,8 +30,8 @@ export class TrainingComponent implements OnInit {
   displayedQuestion!: QuestionApi;
   isQuestionsLoading = true;
 
-  currentAnswers: string[] = [];
-  currentAnswersWithResponse = new Map<string, boolean>();
+  answerList: string[] = [];
+  currentAnswers: AnswerCard[] = [];
   selectedAnswer = '';
 
   constructor(
@@ -54,7 +60,11 @@ export class TrainingComponent implements OnInit {
   }
 
   selectAnswer(answer: string) {
-    this.selectedAnswer = answer;
+    const card = this.currentAnswers.find((a) => a.answer === answer);
+    if (card) {
+      card.selected = !card.selected;
+      card.type = card.selected === true ? 'selected' : '';
+    }
   }
 
   submitAnswer() {
@@ -67,12 +77,11 @@ export class TrainingComponent implements OnInit {
       this.getQuestions(this.questionsPage);
     } else {
       this.displayedQuestion = this.remainingQuestions.pop() as QuestionApi;
-      this.currentAnswers = this.shuffleArray([
+      this.answerList = this.shuffleArray([
         ...this.displayedQuestion.answersAccepted,
         ...this.displayedQuestion.answersWrong,
       ]);
-      this.mergeArrays(this.displayedQuestion.answersAccepted);
-      this.isQuestionsLoading = false;
+      this.getCurrentAnswers(this.displayedQuestion.answersAccepted, this.displayedQuestion.answersWrong);
     }
   }
 
@@ -93,15 +102,29 @@ export class TrainingComponent implements OnInit {
       .subscribe();
   }
 
-  mergeArrays(correct: string[]) {
-    this.currentAnswers.forEach((answer) => {
-      if (correct.includes(answer)) {
-        this.currentAnswersWithResponse.set(answer, true);
-      } else {
-        this.currentAnswersWithResponse.set(answer, false);
-      }
+  getCurrentAnswers(correct: string[], wrong: string[]) {
+    this.currentAnswers = [];
+    const array = this.shuffleArray([...correct, ...wrong]);
+    array.forEach((answer) => {
+      this.currentAnswers.push({ answer: answer, selected: false, type: '' });
     });
+    if (this.currentAnswers.length < 4) {
+      while (this.currentAnswers.length < 4) {
+        this.currentAnswers.push({ answer: '', selected: false, type: '' });
+      }
+    }
+    this.isQuestionsLoading = false;
   }
+
+  // mergeArrays(correct: string[]) {
+  //   this.currentAnswers.forEach((answer) => {
+  //     if (correct.includes(answer)) {
+  //       this.currentAnswers.set(answer, 'correct');
+  //     } else {
+  //       this.currentAnswers.set(answer, 'wrong');
+  //     }
+  //   });
+  // }
 
   shuffleArray(array: string[]): string[] {
     const shuffledArray = [...array];
