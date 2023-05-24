@@ -1,6 +1,10 @@
 :host {
   position: relative;
+  & > div {
+    position: relative;
+  }
 }
+
 .panel {
   height: 16.5rem;
   position: relative;

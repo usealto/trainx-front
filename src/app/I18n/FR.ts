@@ -540,7 +540,7 @@ export const FR = {
     },
     Unauthorized: {
       title: 'Unauthorized',
-      message: 'You are not logged in!',
+      message: "Vous n'avez pas accès !",
     },
     Notfound: {
       title: 'Item not found',
