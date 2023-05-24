@@ -9,6 +9,10 @@
 }
 .highlight-step {
   border-bottom: 2px var(--bs-primary) solid;
+  .tab-icon {
+    background-color: var(--bs-primary);
+    color: white;
+  }
 }
 .passed-step {
   border-bottom: 2px var(--alto-blue) solid;

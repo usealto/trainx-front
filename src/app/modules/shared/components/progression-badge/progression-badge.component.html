@@ -1,6 +1,11 @@
-<span class="alto-badge d-flex flex-nowrap justify-content-center" style="width:80px" [class]="score ?? 0 | pillProgression">
-  <i *ngIf="arrow === true" class="fs-4" [class]="score ?? 0 | progressionPillArrow"></i>
+<span
+  class="alto-badge d-flex flex-nowrap justify-content-center"
+  style="width: 5.71rem"
+  [class]="score | pillProgression"
+>
+  <i *ngIf="arrow === true" class="fs-4" [class]="score | progressionPillArrow"></i>
   <p class="fw-bold pe-2">
-    {{ score ?? 0 | percent }}
+    {{ score | percent }}
   </p>
 </span>
+

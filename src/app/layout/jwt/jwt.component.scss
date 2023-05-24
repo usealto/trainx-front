@@ -1,0 +1,21 @@
+.menu {
+  background-color: #101828;
+  height: 100vh;
+  position: fixed;
+  color: #f2f4f7;
+
+  width: 20rem;
+  @media (max-width: 1300px) {
+    width: 230px;
+  }
+}
+.main{
+  margin-left: 20rem;
+}
+.logo {
+  margin: 2.286rem 0 2rem 1.714rem;
+}
+
+.clicked-button {
+  background-color: green;
+}

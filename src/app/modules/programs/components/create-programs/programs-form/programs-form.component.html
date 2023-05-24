@@ -36,28 +36,27 @@
     </div>
     <div class="col-6">
       <ng-select
+        class="alto-form"
         required
         [items]="tags"
         [multiple]="true"
         bindValue="id"
         bindLabel="name"
         [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder"
-        [selectableGroup]="true"
         [closeOnSelect]="false"
         formControlName="tags"
       >
         <ng-template ng-label-tmp let-item="item" let-clear="clear">
-          <div class="badge rounded-pill p-2 alto-blue-bg">
-            <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+          <div class="alto-badge">
+            <span>{{ item.name }}</span>
+            <span class="cursor-pointer ms-2 align-middle" (click)="clear(item)" aria-hidden="true">
               <i class="bi bi-x-lg"></i>
             </span>
-            <span>{{ item.name }}</span>
           </div>
         </ng-template>
         <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-          <span class="badge rounded-pill p-2 alto-blue-bg">
-            {{ item.name }}
-          </span>
+          <span class="alto-badge">{{ item.name }}</span>
+          <i class="bi bi-check-circle-fill"></i>
         </ng-template>
       </ng-select>
     </div>
@@ -70,27 +69,26 @@
     </div>
     <div class="col-6">
       <ng-select
+        class="alto-form"
         [items]="teams"
         [multiple]="true"
         bindLabel="name"
         [placeholder]="I18ns.programs.forms.step1.teamsPlaceholder"
-        [selectableGroup]="true"
         [closeOnSelect]="false"
         bindValue="id"
         formControlName="teams"
       >
         <ng-template ng-label-tmp let-item="item" let-clear="clear">
-          <div class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
-            <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+          <div class="alto-badge" [style]="item.id | teamColor">
+            <span>{{ item.shortName }}</span>
+            <span class="cursor-pointer ms-2 align-middle" (click)="clear(item)" aria-hidden="true">
               <i class="bi bi-x-lg"></i>
             </span>
-            <span>{{ item.shortName }}</span>
           </div>
         </ng-template>
         <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-          <span class="badge rounded-pill p-2" [style.backgroundColor]="item.id | uuid2color">
-            {{ item.longName }}
-          </span>
+          <p class="alto-badge" [style]="item.id | teamColor">{{ item.longName }}</p>
+          <i class="bi bi-check-circle-fill"></i>
         </ng-template>
       </ng-select>
     </div>
@@ -103,6 +101,7 @@
     </div>
     <div class="col-6">
       <ng-select
+        class="alto-form"
         [items]="priorities"
         bindLabel="value"
         [placeholder]="I18ns.programs.forms.step1.priorityPlaceholder"

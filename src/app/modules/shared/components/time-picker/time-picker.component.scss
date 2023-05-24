@@ -3,6 +3,9 @@
   background-color: #f1f1f1;
   border-color: var(--bs-btn-border-color);
 }
+.btn-group label {
+  line-height: 1.714rem;
+}
 .btn-group label:first-of-type {
   padding-left: 1.143rem;
 }

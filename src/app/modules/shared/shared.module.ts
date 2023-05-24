@@ -28,9 +28,13 @@ import { ProgramCardListComponent } from './components/program-card-list/program
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
 import { TeamColorPipe } from './helpers/team-color.pipe';
 import { PaginationComponent } from './components/pagination/pagination.component';
+import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
+import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 
 @NgModule({
   declarations: [
+    ProgressionPillPipe,
+    ProgressionPillArrowPipe,
     ProgramCardComponent,
     ProgressionBadgeComponent,
     ColoredPillListComponent,
@@ -77,6 +81,8 @@ import { PaginationComponent } from './components/pagination/pagination.componen
     PeriodFilterComponent,
     ProgramCardListComponent,
     TeamColorPipe,
+    ProgressionPillPipe,
+    ProgressionPillArrowPipe,
     NgVar,
     FormsModule,
     ImgBadgeComponent,

@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 
 import { TrainingRoutingModule } from './training-routing.module';
 import { TrainingComponent } from './components/training/training.component';
+import { AnswerCardComponent } from './components/answer-card/answer-card.component';
 
 
 @NgModule({
   declarations: [
-    TrainingComponent
+    TrainingComponent,
+    AnswerCardComponent
   ],
   imports: [
     CommonModule,
