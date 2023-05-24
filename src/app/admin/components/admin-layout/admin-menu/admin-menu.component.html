@@ -7,22 +7,39 @@
   <div class="menu">
     <div>
       <a [routerLink]="'home'" routerLinkActive="menu-selected" class="module">
-        Home
+        <i class="bi bi-house alto-grey"></i> Home
       </a>
-      <a [routerLink]="'companies'" routerLinkActive="menu-selected" class="module">
+      <a
+        [routerLink]="'companies'"
+        routerLinkActive="menu-selected"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="module"
+      >
+        <i class="bi bi-buildings alto-grey"></i>
+
         Companies
       </a>
+      <a
+        *ngIf="user && impersonatedUser"
+        [routerLink]="['/', 'admin', 'companies', user.company.id, 'users']"
+        routerLinkActive="menu-selected"
+        class="module submenu"
+      >
+        <i class="bi bi-people alto-grey"></i>
+        Company's Users
+      </a>
       <a [routerLink]="'users'" routerLinkActive="menu-selected" class="module">
-        Users
+        <i class="bi bi-people alto-grey"></i> Users
       </a>
     </div>
     <div class="bottom-block mb-2" *ngIf="user">
-      <alto-img-badge [url]="user.pictureUrl"></alto-img-badge> 
+      <alto-img-badge [url]="user.pictureUrl"></alto-img-badge>
       <div class="d-inline-block ms-3">
-        <p *ngIf="impersonatedUser" class="btn btn-danger" (click)="removeImpersonation()">remove impersonation</p>
+        <p *ngIf="impersonatedUser" class="btn btn-danger" (click)="removeImpersonation()">
+          remove impersonation
+        </p>
         <p>{{ user.email }}</p>
       </div>
     </div>
   </div>
-  
 </div>
