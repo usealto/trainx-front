@@ -58,12 +58,12 @@ export class AdminUsersComponent implements OnInit {
   }
 
   setImpersonation(email: string) {
-    localStorage.setItem('impersonatedUser', email);
+    localStorage.setItem('impersonatedUser', email.toLowerCase());
     this.dataService.sendData('impersonatedUserUpdated');
   }
 
   setLocalStorage(email: string) {
-    localStorage.setItem('impersonatedUser', email);
+    localStorage.setItem('impersonatedUser', email.toLowerCase());
   }
     
 }

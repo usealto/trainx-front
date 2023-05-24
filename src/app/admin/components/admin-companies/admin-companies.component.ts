@@ -179,7 +179,7 @@ export class AdminCompaniesComponent implements OnInit {
 
   setImpersonation(email: string) {
     if (email) {
-      localStorage.setItem('impersonatedUser', email);
+      localStorage.setItem('impersonatedUser', email.toLowerCase());
       this.dataService.sendData('impersonatedUserUpdated');
     }
   }
@@ -188,7 +188,9 @@ export class AdminCompaniesComponent implements OnInit {
     const impersonatedUserEmail = localStorage.getItem('impersonatedUser');
 
     if (impersonatedUserEmail && companyAdmin) {
-      const impersonatedUser = companyAdmin.find((user) => user.email === impersonatedUserEmail);
+      const impersonatedUser = companyAdmin.find(
+        (user) => user.email.toLowerCase() === impersonatedUserEmail,
+      );
 
       if (impersonatedUser) {
         return true;
