@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
+import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 
 @Component({
   selector: 'alto-period-filter',

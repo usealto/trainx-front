@@ -1,74 +1,104 @@
-<div class="border-bottom py-4">
-  <alto-dropdown-filter
-    class="float-end"
-    [data]="teamsStats"
-    [selectedItems]="selectedTeams"
-    [displayLabel]="'label'"
-    [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.teams"
-    (selectChange)="filterTeams($event)"
-  ></alto-dropdown-filter>
-  <alto-dropdown-filter
-    *ngIf="items.length >= 7"
-    class="float-end mx-2"
-    [data]="items"
-    [displayLabel]="'label'"
-    [selectedItems]="selectedItems"
-    [placeholder]="
-      activeTab === 1
-        ? I18ns.statistics.globalPerformance.perThemePerformance.filters.tags
-        : I18ns.statistics.globalPerformance.perThemePerformance.filters.programs
-    "
-    (selectChange)="filterTagsAndPrograms($event)"
-  ></alto-dropdown-filter>
-  <alto-tabs
-    class="mt-4"
-    (tabChanged)="changeTabs()"
-    [data]="[
-      { label: I18ns.statistics.globalPerformance.perThemePerformance.nav.tags, value: 1 },
-      { label: I18ns.statistics.globalPerformance.perThemePerformance.nav.programs, value: 2 }
-    ]"
-  ></alto-tabs>
-  <i class="fs-5 bi bi-home"></i>
-  <div class="row mt-4">
-    <div class="col-7 panel mx-2">
-      <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}</h2>
+<alto-dropdown-filter
+  class="float-end"
+  [data]="teamsStats"
+  [selectedItems]="selectedTeams"
+  [displayLabel]="'label'"
+  [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.teams"
+  (selectChange)="filterTeams($event)"
+  [isColored]="true"
+></alto-dropdown-filter>
+<alto-dropdown-filter
+  *ngIf="items.length >= 7"
+  class="float-end mx-2"
+  [data]="items"
+  [displayLabel]="'label'"
+  [selectedItems]="selectedItems"
+  [placeholder]="
+    activeTab === 1
+      ? I18ns.statistics.globalPerformance.perThemePerformance.filters.tags
+      : I18ns.statistics.globalPerformance.perThemePerformance.filters.programs
+  "
+  (selectChange)="filterTagsAndPrograms($event)"
+></alto-dropdown-filter>
+<alto-tabs
+  (tabChanged)="changeTabs()"
+  [data]="[
+    { label: I18ns.statistics.globalPerformance.perThemePerformance.nav.tags, value: 1 },
+    { label: I18ns.statistics.globalPerformance.perThemePerformance.nav.programs, value: 2 }
+  ]"
+></alto-tabs>
+
+<div class="row mt-4">
+  <div class="col-7">
+    <div class="score-evolution-chart panel">
+      <h2 class="mb-4">
+        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}
+      </h2>
       <div class="chart-container">
         <canvas id="themeScoreEvolution"></canvas>
       </div>
     </div>
-    <div class="col-4 mx-2">
-      <div class="row panel mb-4">
-        <h2>
-          {{
-            activeTab === 1
-              ? I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.title.tags
-              : I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.title.programs
-          }}
-        </h2>
-        <div class="chart-container">
-          <canvas id="themePerformance"></canvas>
+  </div>
+  <div class="col-5">
+    <div class="panel mb-4">
+      <h2 class="mb-4">
+        {{
+          activeTab === 1
+            ? I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.title.tags
+            : I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.title.programs
+        }}
+      </h2>
+      <div class="chart-container2">
+        <canvas id="themePerformance"></canvas>
+      </div>
+    </div>
+    <div class="panel">
+      <h2 class="mb-5">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
+      <div class="row">
+        <div class="col-6 border-end pe-0">
+          <h1 class="mb-4">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h1>
+          <div class="height-100">
+            <p *ngFor="let team of scoredItems.slice(0, 3)" class="mb-3">
+              <span class="top-flop-label">{{ team.label }}</span>
+              <span class="float-end alto-score me-4" [class]="(team.score ?? 0) * 100 | pillColor">
+                {{ team.score | percent }}
+              </span>
+            </p>
+          </div>
+        </div>
+        <div class="col-6 ps-4 pe-0">
+          <h1 class="mb-4">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.flop }}</h1>
+          <div class="height-100">
+            <p
+              *ngFor="let team of scoredItems.slice(scoredItems.length - 3, scoredItems.length)"
+              class="mb-3"
+            >
+              <span class="top-flop-label">{{ team.label }}</span>
+              <span class="float-end alto-score" [class]="(team.score ?? 0) * 100 | pillColor">
+                {{ team.score | percent }}
+              </span>
+            </p>
+          </div>
         </div>
       </div>
-      <div class="row panel">
-        <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
-        <h2 class="mt-2">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h2>
-        <ol class="list-group list-group-flush list-group-numbered">
-          <li class="list-group-item" *ngFor="let team of scoredItems.slice(0, 5)">
-            <alto-progression-badge class="float-end" [score]="team.score"></alto-progression-badge>
-            {{ team.label }}
-          </li>
-        </ol>
-        <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.flop }}</h2>
-        <ol class="list-group list-group-flush list-group-numbered">
-          <li
-            class="list-group-item"
-            *ngFor="let team of scoredItems.slice(scoredItems.length - 5, scoredItems.length)"
-          >
-            <alto-progression-badge class="float-end" [score]="team.score"></alto-progression-badge>
-            {{ team.label }}
-          </li>
-        </ol>
-      </div>
+
+      <!-- <h2 class="mt-2">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h2>
+      <ol class="list-group list-group-flush list-group-numbered">
+        <li class="list-group-item" *ngFor="let team of scoredItems.slice(0, 5)">
+          <alto-progression-badge class="float-end" [score]="team.score"></alto-progression-badge>
+          {{ team.label }}
+        </li>
+      </ol>
+      <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.flop }}</h2>
+      <ol class="list-group list-group-flush list-group-numbered">
+        <li
+          class="list-group-item"
+          *ngFor="let team of scoredItems.slice(scoredItems.length - 5, scoredItems.length)"
+        >
+          <alto-progression-badge class="float-end" [score]="team.score"></alto-progression-badge>
+          {{ team.label }}
+        </li>
+      </ol> -->
     </div>
   </div>
 </div>

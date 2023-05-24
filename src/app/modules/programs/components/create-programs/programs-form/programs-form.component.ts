@@ -3,7 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { combineLatest, tap } from 'rxjs';
 import { IFormGroup } from 'src/app/core/form-types';
 import { getTranslation, I18ns } from 'src/app/core/utils/i18n/I18n';
-import { PriorityEnumApi, TagDtoApi, TeamDtoApi } from 'src/app/sdk';
+import { PriorityEnumApi, TagDtoApi, TeamDtoApi } from '@usealto/sdk-ts-angular';
 import { TeamsRestService } from '../../../../lead-team/services/teams-rest.service';
 import { ProgramForm } from '../../../models/programs.form';
 import { TagsRestService } from '../../../services/tags-rest.service';

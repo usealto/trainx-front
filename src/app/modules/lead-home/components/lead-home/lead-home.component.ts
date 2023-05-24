@@ -8,11 +8,9 @@ import { ChallengesRestService } from 'src/app/modules/challenges/services/chall
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { ScoreDuration, ScoreFilters } from 'src/app/modules/programs/models/score.model';
+import { ScoreDuration, ScoreFilters } from 'src/app/modules/shared/models/score.model';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
-import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
-import { ScoresService } from 'src/app/modules/programs/services/scores.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
@@ -22,9 +20,11 @@ import {
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   UserDtoApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
+import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 
-type TopFlop = { top: any[]; flop: any[] };
+type TopFlop = { top: TopFlopDisplay[]; flop: TopFlopDisplay[] };
 
 type TopFlopDisplay = {
   label: string;
@@ -103,7 +103,6 @@ export class LeadHomeComponent implements OnInit {
             .slice(0, 5);
         }),
         tap(() => this.getGlobalScore(this.globalFilters)),
-        tap(console.log),
         switchMap(() => this.userService.getUsers()),
         tap((users) => {
           this.activeMembers = users.filter((user) => user.isActive).length;

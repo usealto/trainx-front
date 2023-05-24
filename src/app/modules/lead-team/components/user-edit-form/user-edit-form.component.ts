@@ -8,7 +8,7 @@ import {
   TeamLightDtoApi,
   UserDtoApi,
   UserDtoApiRolesEnumApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { UserForm } from '../../model/user-edit.form';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntypedFormBuilder, Validators } from '@angular/forms';

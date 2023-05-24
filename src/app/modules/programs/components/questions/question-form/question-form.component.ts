@@ -15,7 +15,7 @@ import {
   QuestionTypeEnumApi,
   TagApi,
   TagDtoApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { QuestionForm } from '../../../models/question.form';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
 import { QuestionsRestService } from '../../../services/questions-rest.service';

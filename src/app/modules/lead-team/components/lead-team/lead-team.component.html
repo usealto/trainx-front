@@ -64,18 +64,18 @@
               {{ team.createdAt | date : 'shortDate' }}
             </td>
             <td>
-              <i class="fs-5 bi bi-pencil" (click)="openTeamForm(team)"></i>
+              <i class="fs-5 bi bi-pencil cursor-pointer" (click)="openTeamForm(team)"></i>
             </td>
           </tr>
         </tbody>
       </table>
-      <ngb-pagination
+      <alto-pagination
+        class="mx-4 d-block"
         [collectionSize]="teams.length"
-        [(page)]="teamsPage"
-        (pageChange)="changeTeamsPage()"
+        (pageChange)="changeTeamsPage($event)"
         [pageSize]="teamsPageSize"
-        [maxSize]="5"
-      ></ngb-pagination>
+        [page]="teamsPage"
+      ></alto-pagination>
     </div>
   </ng-container>
   <ng-template #noTeams>
@@ -140,7 +140,7 @@
             <th scope="col" class="w-5">{{ I18ns.leadTeam.members.table.team }}</th>
             <th scope="col">{{ I18ns.leadTeam.members.table.averageScore }}</th>
             <th scope="col" class="text-center w-20">{{ I18ns.leadTeam.members.table.questionsPerMonth }}</th>
-            <th></th>
+            <th class="w-5"></th>
           </tr>
         </thead>
         <tbody>
@@ -168,20 +168,28 @@
                 {{ usersScores.get(user.id) | percent }}
               </ng-container>
             </td>
-            <td class="text-center">3</td>
+            <td class="text-center">
+              {{ getQuestionsByUser(user.id)[0] }}
+              <alto-progression-badge
+                *ngIf="getQuestionsByUser(user.id)[1]"
+                class="d-inline-block ms-3"
+                [score]="getQuestionsByUser(user.id)[1]"
+              ></alto-progression-badge>
+            </td>
             <td>
-              <i class="fs-5 bi bi-pencil" (click)="openUserEditionForm(user)"></i>
+              <i class="fs-5 bi bi-pencil cursor-pointer" (click)="openUserEditionForm(user)"></i>
             </td>
           </tr>
         </tbody>
       </table>
-      <ngb-pagination
+
+      <alto-pagination
+        class="mx-4 d-block"
         [collectionSize]="usersCount"
-        [(page)]="usersPage"
-        (pageChange)="changeUsersPage(users)"
+        (pageChange)="changeUsersPage(users, $event)"
         [pageSize]="usersPageSize"
-        [maxSize]="10"
-      ></ngb-pagination>
+        [page]="usersPage"
+      ></alto-pagination>
     </div>
   </ng-container>
   <ng-template #noUsers>

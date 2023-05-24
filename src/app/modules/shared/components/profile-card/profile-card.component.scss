@@ -3,9 +3,19 @@
     display: none;
   }
 }
-
+alto-img-badge {
+  width: 2.857rem;
+  display: inline-block;
+}
 .name {
   font-weight: 600;
 }
 .email {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.names-container {
+  width: calc(100% - 5rem);
+  vertical-align: text-bottom;
 }

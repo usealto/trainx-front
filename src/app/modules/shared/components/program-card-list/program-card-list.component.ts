@@ -6,14 +6,14 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramFilters } from 'src/app/modules/programs/models/program.model';
-import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
+import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { ProgramsService } from 'src/app/modules/programs/services/programs.service';
-import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
-import { ScoresService } from 'src/app/modules/programs/services/scores.service';
-import { ProgramDtoApi, ScoreTypeEnumApi } from 'src/app/sdk';
+import { ProgramDtoApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import { AltoRoutes } from '../../constants/routes';
+import { ScoresRestService } from '../../services/scores-rest.service';
+import { ScoresService } from '../../services/scores.service';
 
 @UntilDestroy()
 @Component({
@@ -55,7 +55,6 @@ export class ProgramCardListComponent implements OnInit {
     public readonly teamStore: TeamStore,
     private readonly scoresRestService: ScoresRestService,
     private readonly programRestService: ProgramsRestService,
-    // private readonly usersRestService: UsersRestService,
     private userStore: ProfileStore,
   ) {}
 

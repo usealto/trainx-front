@@ -15,6 +15,7 @@ export class TestComponent {
   I18ns = I18ns;
   isDev = !environment.production;
 
+  pageSize = 5;
   constructor(
     public readonly teamStore: TeamStore,
     public readonly userStore: ProfileStore,

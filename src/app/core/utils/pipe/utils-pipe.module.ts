@@ -5,6 +5,7 @@ import { PillColorPipe } from './pill-color.pipe';
 import { ProgressionPillPipe } from './progression-pill.pipe';
 import { ProgressionPillArrowPipe } from './progression-pill-arrow.pipe';
 import { SliceWithDotsPipe } from './slice-with-dots.pipe';
+import { SortPipe } from './sort.pipe';
 
 @NgModule({
   declarations: [
@@ -13,8 +14,16 @@ import { SliceWithDotsPipe } from './slice-with-dots.pipe';
     ProgressionPillPipe,
     ProgressionPillArrowPipe,
     SliceWithDotsPipe,
+    SortPipe,
   ],
   imports: [CommonModule],
-  exports: [Uuid2colorPipe, PillColorPipe, ProgressionPillPipe, ProgressionPillArrowPipe, SliceWithDotsPipe],
+  exports: [
+    Uuid2colorPipe,
+    PillColorPipe,
+    ProgressionPillPipe,
+    ProgressionPillArrowPipe,
+    SliceWithDotsPipe,
+    SortPipe,
+  ],
 })
 export class UtilsPipeModule {}

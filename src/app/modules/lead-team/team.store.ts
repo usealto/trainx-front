@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from 'src/app/core/utils/store/store';
-import { TeamDtoApi } from 'src/app/sdk';
+import { TeamDtoApi } from '@usealto/sdk-ts-angular';
 
 @Injectable({ providedIn: 'root' })
 export class TeamStore {

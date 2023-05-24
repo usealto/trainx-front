@@ -1,21 +1,21 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Observable, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
+import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import {
   ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   ScoresResponseDtoApi,
   TeamStatsDtoApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
-import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { StatisticsService } from '../../../services/statistics.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
-import { ScoresService } from 'src/app/modules/programs/services/scores.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 
 @UntilDestroy()
 @Component({

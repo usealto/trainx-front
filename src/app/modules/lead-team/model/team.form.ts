@@ -1,4 +1,4 @@
-import { ProgramDtoApi, UserDtoApi } from 'src/app/sdk';
+import { ProgramDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 
 export interface TeamForm {
   longName: string;

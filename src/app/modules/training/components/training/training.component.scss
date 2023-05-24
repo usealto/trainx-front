@@ -2,3 +2,11 @@
   display: block;
   padding: var(--alto-page-padding);
 }
+
+.selected-panel {
+  border-width: 2px;
+  border-color: #1570ef;
+  border-radius: 12px;
+  background-color: #f5faff;
+  cursor: pointer;
+}

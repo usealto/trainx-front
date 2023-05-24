@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { CommentsApiService } from 'src/app/sdk';
+import { CommentsApiService } from '@usealto/sdk-ts-angular';
 
 describe('CommentsService', () => {
   let service: CommentsApiService;

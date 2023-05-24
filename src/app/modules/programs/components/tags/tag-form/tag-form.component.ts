@@ -4,7 +4,13 @@ import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { filter, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { PatchTagDtoApi, PatchTagRequestParams, ProgramDtoApi, QuestionDtoApi, TagDtoApi } from 'src/app/sdk';
+import {
+  PatchTagDtoApi,
+  PatchTagRequestParams,
+  ProgramDtoApi,
+  QuestionDtoApi,
+  TagDtoApi,
+} from '@usealto/sdk-ts-angular';
 import { TagForm } from '../../../models/tag.form';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
 import { TagsRestService } from '../../../services/tags-rest.service';

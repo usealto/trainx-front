@@ -130,15 +130,16 @@
         </tbody>
       </table>
 
-      <ngb-pagination
+      <alto-pagination
+        class="mx-4 d-block"
         [ngClass]="{ invisible: questionsCount <= questionsPageSize }"
         [collectionSize]="questionsCount"
         [(page)]="questionsPage"
-        (pageChange)="changeQuestionsPage()"
+        (pageChange)="changeQuestionsPage($event)"
         [pageSize]="questionsPageSize"
         [maxSize]="10"
         aria-label="Default pagination"
-      ></ngb-pagination>
+      ></alto-pagination>
     </div>
   </ng-container>
   <ng-template #noQuestions>
@@ -177,7 +178,8 @@
           </tr>
         </tbody>
       </table>
-      <ngb-pagination
+      <alto-pagination
+        class="mx-4 d-block"
         [ngClass]="{ invisible: submittedQuestionsCount <= submittedQuestionsPageSize }"
         [collectionSize]="submittedQuestionsCount"
         [(page)]="submittedQuestionsPage"
@@ -185,7 +187,7 @@
         [pageSize]="submittedQuestionsPageSize"
         [maxSize]="10"
         aria-label="Default pagination"
-      ></ngb-pagination>
+      ></alto-pagination>
     </div>
   </ng-container>
   <ng-template #noSubmittedQuestions>
@@ -257,15 +259,15 @@
           </tr>
         </tbody>
       </table>
-      <ngb-pagination
+      <alto-pagination
+        class="mx-4 d-block"
         [ngClass]="{ invisible: tagsCount <= tagsPageSize }"
         [collectionSize]="tagsCount"
         [(page)]="tagsPage"
         (pageChange)="filterTags()"
         [pageSize]="tagsPageSize"
-        [maxSize]="10"
         aria-label="Default pagination"
-      ></ngb-pagination>
+      ></alto-pagination>
     </div>
   </ng-container>
   <ng-template #noTags>

@@ -8,6 +8,7 @@ import { StatisticsGlobalPerformanceComponent } from './components/global-perfor
 import { StatisticsPerTeamsComponent } from './components/statistics-per-teams/statistics-per-teams.component';
 import { PerformanceByTeamsComponent } from './components/global-performance/performance-by-teams/performance-by-teams.component';
 import { PerformanceByThemesComponent } from './components/global-performance/performance-by-themes/performance-by-themes.component';
+import { PerformanceTeamsTableComponent } from './components/global-performance/performance-teams-table/performance-teams-table.component';
 @NgModule({
   declarations: [
     StatisticsComponent,
@@ -16,6 +17,7 @@ import { PerformanceByThemesComponent } from './components/global-performance/pe
     StatisticsPerTeamsComponent,
     PerformanceByTeamsComponent,
     PerformanceByThemesComponent,
+    PerformanceTeamsTableComponent,
   ],
   imports: [CommonModule, StatisticsRoutingModule, SharedModule],
 })

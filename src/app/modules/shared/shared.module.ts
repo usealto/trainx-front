@@ -27,6 +27,7 @@ import { PeriodFilterComponent } from './components/period-filter/period-filter.
 import { ProgramCardListComponent } from './components/program-card-list/program-card-list.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
 import { TeamColorPipe } from './helpers/team-color.pipe';
+import { PaginationComponent } from './components/pagination/pagination.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     ProgramCardListComponent,
     TimePickerComponent,
     TeamColorPipe,
+    PaginationComponent,
   ],
   imports: [
     CommonModule,
@@ -86,6 +88,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     LoadingModule,
     NgbDatepickerModule,
     TimePickerComponent,
+    PaginationComponent,
   ],
 })
 export class SharedModule {}

@@ -37,7 +37,7 @@
           [isColored]="true"
         ></alto-dropdown-filter>
 
-        <ng-select
+        <ng-select 
           class="ms-3"
           [searchable]="false"
           [items]="status"
@@ -107,12 +107,13 @@
         </tbody>
       </table>
 
-      <ngb-pagination
+      <alto-pagination
+        class="mx-4 d-block"
         [ngClass]="{ invisible: challengesByTeamDisplay.length <= pageSize }"
         [(page)]="byTeamPage"
         [pageSize]="pageSize"
         [collectionSize]="challengesByTeamDisplay.length"
-      ></ngb-pagination>
+      ></alto-pagination>
     </div>
   </ng-container>
   <ng-template #noChallengesTeam>
@@ -209,12 +210,13 @@
         </tbody>
       </table>
 
-      <ngb-pagination
+      <alto-pagination
+        class="mx-4 d-block"
         [ngClass]="{ invisible: challengesByUserDisplay.length <= pageSize }"
         [(page)]="byUserPage"
         [pageSize]="pageSize"
         [collectionSize]="challengesByUserDisplay.length"
-      ></ngb-pagination>
+      ></alto-pagination>
     </div>
   </ng-container>
   <ng-template #noChallenges>

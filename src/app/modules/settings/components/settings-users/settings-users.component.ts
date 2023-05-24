@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UserDtoApi } from 'src/app/sdk';
+import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { UserEditFormComponent } from 'src/app/modules/lead-team/components/user-edit-form/user-edit-form.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { tap } from 'rxjs';
