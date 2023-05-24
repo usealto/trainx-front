@@ -83,6 +83,7 @@
                 *ngIf="isImpersonnatedAsCompanyAdminOfthisCompanyUpdate(company.admins); else simpleName"
                 [routerLink]="['/', 'admin', 'companies', company.id, 'users']"
                 routerLinkActive="menu-selected"
+                class="fs-6b alto-success"
               >
                 {{ company.name }}
               </a>
