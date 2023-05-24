@@ -73,21 +73,22 @@ export class TrainingComponent implements OnInit {
   }
 
   submitAnswer() {
-    this.stopTimer();
+    // this.stopTimer();
     let result = '';
     this.currentAnswers.forEach((a) => {
       if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
         if (a.selected === true) {
           result = 'correct';
+          this.openCanvas(result);
         }
         a.type = 'correct';
       }
       if (!this.displayedQuestion.answersAccepted.includes(a.answer) && a.selected === true) {
         result = 'wrong';
         a.type = 'wrong';
+        this.openCanvas(result);
       }
     });
-    this.openCanvas(result);
   }
 
   openCanvas(result: string) {
@@ -121,7 +122,7 @@ export class TrainingComponent implements OnInit {
       this.displayedQuestion = this.remainingQuestions.pop() as QuestionApi;
       this.getCurrentAnswers(this.displayedQuestion.answersAccepted, this.displayedQuestion.answersWrong);
     }
-    this.countDown(this.time);
+    // this.countDown(this.time);
   }
 
   countDown(time: number) {
