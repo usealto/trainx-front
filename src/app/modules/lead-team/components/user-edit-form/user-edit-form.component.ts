@@ -59,9 +59,7 @@ export class UserEditFormComponent implements OnInit {
   }
 
   getHigherRole(list: Array<UserDtoApiRolesEnumApi>): UserDtoApiRolesEnumApi {
-    if (list.includes(UserDtoApiRolesEnumApi.AltoAdmin)) {
-      return UserDtoApiRolesEnumApi.AltoAdmin;
-    } else if (list.includes(UserDtoApiRolesEnumApi.CompanyAdmin)) {
+    if (list.includes(UserDtoApiRolesEnumApi.CompanyAdmin)) {
       return UserDtoApiRolesEnumApi.CompanyAdmin;
     } else {
       return UserDtoApiRolesEnumApi.CompanyUser;
