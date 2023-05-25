@@ -37,8 +37,6 @@ export class SettingsUsersComponent implements OnInit {
       .getUsersPaginated({ isCompanyAdmin: true })
       .pipe(
         tap((users) => (this.adminDisplay = users.data ?? [])),
-        tap(console.log),
-
         untilDestroyed(this),
       )
       .subscribe();

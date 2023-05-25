@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Observable, map, take, tap } from 'rxjs';
 import {
   GetNextQuestionsForUserRequestParams,
   GetScoresRequestParams,
   GetUsersRequestParams,
   PatchUserDtoApi,
-  QuestionApi,
   QuestionPaginatedResponseApi,
   ScoresApiService,
   UserDtoApi,
   UserDtoPaginatedResponseApi,
   UsersApiService,
 } from '@usealto/sdk-ts-angular';
+import { Observable, map, tap } from 'rxjs';
 import { ProfileStore } from '../profile.store';
 
 @Injectable({
@@ -58,10 +57,14 @@ export class UsersRestService {
   }
 
   getMe(): Observable<UserDtoApi> {
-    return this.userApi.getMe({}).pipe(
-      map((u) => u.data || ({} as UserDtoApi)),
-      tap((u) => (this.userStore.user.value = u)),
-    );
+    if (this.userStore.user.value) {
+      return this.userStore.user.value$;
+    } else {
+      return this.userApi.getMe({}).pipe(
+        map((u) => u.data || ({} as UserDtoApi)),
+        tap((u) => (this.userStore.user.value = u)),
+      );
+    }
   }
 
   patchUser(id: string, patchUserDtoApi: PatchUserDtoApi): Observable<UserDtoApi> {
