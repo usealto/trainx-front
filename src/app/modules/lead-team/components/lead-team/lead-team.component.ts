@@ -22,6 +22,12 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 
+interface TeamDisplay extends TeamDtoApi {
+  score?: number;
+}
+interface UserDisplay extends UserDtoApi {
+  score?: number;
+}
 @UntilDestroy()
 @Component({
   selector: 'alto-lead-team',
@@ -30,22 +36,23 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 })
 export class LeadTeamComponent implements OnInit {
   I18ns = I18ns;
-  activeUsersCount = 0;
+  // Teams
   teams: TeamDtoApi[] = [];
-  paginatedTeams: TeamDtoApi[] = [];
+  paginatedTeams: TeamDisplay[] = [];
   teamsPage = 1;
   teamsPageSize = 7;
-
-  usersMap = new Map<string, string>();
+  teamsScores: TeamDisplay[] = [];
+  // Users
+  activeUsersCount = 0;
   absoluteUsersCount = 0;
   usersCount = 0;
+  usersMap = new Map<string, string>();
   users: UserDtoApi[] = [];
-  paginatedUsers: UserDtoApi[] = [];
+  paginatedUsers: UserDisplay[] = [];
   usersPage = 1;
   usersPageSize = 10;
+  usersScores: UserDisplay[] = [];
 
-  teamsScores = new Map<string, number>();
-  usersScores = new Map<string, number | null>();
   usersQuestions = new Map<string, number[]>();
 
   constructor(
@@ -68,6 +75,8 @@ export class LeadTeamComponent implements OnInit {
       .pipe(
         tap(([users, teams, usersStats, previousUsersStats]) => {
           this.teams = teams;
+          this.teamsScores = this.teams;
+
           this.users = users;
           this.absoluteUsersCount = users.length;
           this.activeUsersCount = usersStats.filter((u) => u.respondsRegularly).length;
@@ -96,26 +105,36 @@ export class LeadTeamComponent implements OnInit {
             this.usersMap.set(user.id, member ? member.shortName : '');
           });
         }),
-        tap(() => this.changeTeamsPage(1)),
-        tap(() => this.changeUsersPage(this.users, this.usersPage)),
-        switchMap(() => this.scoreRestService.getTeamsStats(ScoreDuration.Trimester)),
+        switchMap(() => this.scoreRestService.getTeamsStats(ScoreDuration.Month)),
         tap((scores) => {
-          scores.forEach((s) => {
-            this.teamsScores.set(s.id, s.score || 0);
+          this.teamsScores = this.teams.map((t) => {
+            const score = scores.find((s) => s.id === t.id);
+            if (score) {
+              return { ...t, score: score.score };
+            } else {
+              return t;
+            }
           });
         }),
         switchMap(() => {
           return this.scoreRestService.getScores({
-            duration: ScoreDuration.Trimester,
+            duration: ScoreDuration.Month,
             timeframe: ScoreTimeframeEnumApi.Day,
             type: ScoreTypeEnumApi.User,
           });
         }),
         tap(({ scores }: ScoresResponseDtoApi) => {
-          scores.forEach((s) => {
-            this.usersScores.set(s.id, this.scoreService.reduceWithoutNull(s.averages));
+          this.usersScores = this.users.map((u) => {
+            const score = scores.find((s) => s.id === u.id);
+            if (score) {
+              return { ...u, score: this.scoreService.reduceWithoutNull(score.averages) ?? undefined };
+            } else {
+              return u;
+            }
           });
         }),
+        tap(() => this.changeTeamsPage(1)),
+        tap(() => this.changeUsersPage(this.usersScores, 1)),
         untilDestroyed(this),
       )
       .subscribe();
@@ -123,7 +142,7 @@ export class LeadTeamComponent implements OnInit {
 
   changeTeamsPage(page: number) {
     this.teamsPage = page;
-    this.paginatedTeams = this.teams.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
+    this.paginatedTeams = this.teamsScores.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
   }
 
   filterUsers(selectedTeams: TeamDtoApi[] = []) {
@@ -131,19 +150,19 @@ export class LeadTeamComponent implements OnInit {
       teams: selectedTeams,
     };
 
-    this.changeUsersPage(this.usersService.filterUsers(this.users, filter), this.usersPage);
+    this.changeUsersPage(this.usersService.filterUsers(this.usersScores, filter), 1);
   }
 
-  changeUsersPage(users: UserDtoApi[], page: number) {
+  changeUsersPage(users: UserDisplay[], page: number) {
     this.usersPage = page;
     this.usersCount = users.length;
     this.paginatedUsers = users.slice((page - 1) * this.usersPageSize, page * this.usersPageSize);
   }
 
-  searchUsers(users: UserDtoApi[], s: string) {
+  searchUsers(users: UserDisplay[], s: string) {
     const search = s.toLowerCase();
     const res = search.length ? users.filter((user) => user.username?.toLowerCase().includes(search)) : users;
-    this.changeUsersPage(res, this.usersPage);
+    this.changeUsersPage(res, 1);
   }
 
   openTeamForm(team?: TeamDtoApi) {

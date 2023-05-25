@@ -53,12 +53,10 @@
                 <div
                   class="progress-bar d-inline-block"
                   role="progressbar"
-                  [style]="teamsScores.get(team.id) && 'width:' + teamsScores.get(team.id) + '%'"
+                  [style]="'width:' + team.score + '%'"
                 ></div>
               </div>
-              <ng-container *ngIf="teamsScores.get(team.id)">
-                {{ teamsScores.get(team.id) + '%' }}
-              </ng-container>
+              <ng-container *ngIf="team.score"> {{ team.score }} % </ng-container>
             </td>
             <td class="text-center">
               {{ team.createdAt | date : 'shortDate' }}
@@ -174,14 +172,11 @@
                 <div
                   class="progress-bar d-inline-block"
                   role="progressbar"
-                  [style]="
-                    usersScores.get(user.id) &&
-                    'width:' + (usersScores.get(user.id) | percent : '1.0-0' : 'en-US')
-                  "
+                  [style]="user.score && 'width:' + (user.score | percent : '1.0-0' : 'en-US')"
                 ></div>
               </div>
-              <ng-container *ngIf="usersScores.get(user.id)">
-                {{ usersScores.get(user.id) | percent }}
+              <ng-container *ngIf="user.score">
+                {{ user.score | percent }}
               </ng-container>
             </td>
             <td class="text-center">
@@ -202,7 +197,7 @@
       <alto-pagination
         class="mx-4 d-block"
         [collectionSize]="usersCount"
-        (pageChange)="changeUsersPage(users, $event)"
+        (pageChange)="changeUsersPage(usersScores, $event)"
         [pageSize]="usersPageSize"
         [page]="usersPage"
       ></alto-pagination>
