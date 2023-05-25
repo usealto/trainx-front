@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserDtoApi } from 'src/app/sdk';
+import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { UserFilters } from '../models/user.model';
 
 @Injectable({

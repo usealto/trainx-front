@@ -110,10 +110,10 @@
       </p>
       <div>
         <h1 class="d-inline-block">{{ activeMembers }}</h1>
-        <!-- <alto-progression-badge
+        <alto-progression-badge
           class="float-end mt-2"
           [score]="activeMembersProgression"
-        ></alto-progression-badge> -->
+        ></alto-progression-badge>
       </div>
     </div>
   </div>
@@ -132,10 +132,10 @@
       </p>
       <div>
         <h1 class="d-inline-block">{{ inactiveMembers }}</h1>
-        <!-- <alto-progression-badge
+        <alto-progression-badge
           class="float-end mt-2"
           [score]="inactiveMembersProgression"
-        ></alto-progression-badge> -->
+        ></alto-progression-badge>
       </div>
     </div>
   </div>
@@ -322,7 +322,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let chal of challengesByTeam">
+            <tr
+              *ngFor="let chal of challengesByTeam"
+              [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
+              class="cursor-pointer"
+            >
               <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
               <td>
                 <span
@@ -382,7 +386,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let chal of challengesByUser">
+            <tr
+              *ngFor="let chal of challengesByUser"
+              [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
+              class="cursor-pointer"
+            >
               <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
               <td>
                 <alto-img-badge

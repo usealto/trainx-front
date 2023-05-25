@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { TeamDtoApi } from 'src/app/sdk';
+import { TeamDtoApi } from '@usealto/sdk-ts-angular';
 
 @Component({
   selector: 'alto-admin-assign-selected-users-team-modal',

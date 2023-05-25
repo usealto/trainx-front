@@ -4,7 +4,7 @@ import * as Papa from 'papaparse';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { CompanyDtoApi, TeamDtoApi, UsersApiService } from 'src/app/sdk';
+import { CompanyDtoApi, TeamDtoApi, UsersApiService } from '@usealto/sdk-ts-angular';
 import { UserCreate } from './models/user.create';
 
 @Component({

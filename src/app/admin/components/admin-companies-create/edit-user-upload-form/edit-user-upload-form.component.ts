@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
-import { UserDtoApiRolesEnumApi } from 'src/app/sdk';
+import { UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 
 @Component({
   selector: 'alto-edit-user-upload-form',

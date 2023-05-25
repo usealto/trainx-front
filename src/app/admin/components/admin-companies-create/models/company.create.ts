@@ -1,4 +1,4 @@
-import { CreateTeamDtoApi, WeekDayEnumApi } from 'src/app/sdk';
+import { CreateTeamDtoApi, WeekDayEnumApi } from '@usealto/sdk-ts-angular';
 
 export interface CompanyForm {
   name: string;

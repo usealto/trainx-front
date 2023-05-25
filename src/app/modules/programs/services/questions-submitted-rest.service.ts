@@ -6,7 +6,7 @@ import {
   QuestionsSubmittedApiService,
   QuestionSubmittedDtoApi,
   QuestionSubmittedDtoPaginatedResponseApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 
 @Injectable({
   providedIn: 'root',

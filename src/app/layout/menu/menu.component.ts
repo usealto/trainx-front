@@ -6,7 +6,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { SessionStorageService } from 'src/app/core/utils/local-storage/session-storage.service';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { UserDtoApiRolesEnumApi } from 'src/app/sdk';
+import { UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 import { buildTime } from 'src/build-time';
 
 @UntilDestroy()

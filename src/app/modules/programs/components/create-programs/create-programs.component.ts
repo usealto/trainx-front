@@ -8,7 +8,7 @@ import { Observable, filter, map, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { PriorityEnumApi, ProgramDtoApi, QuestionDtoApi, TagApi, TeamApi } from 'src/app/sdk';
+import { PriorityEnumApi, ProgramDtoApi, QuestionDtoApi, TagApi, TeamApi } from '@usealto/sdk-ts-angular';
 import { ProgramForm } from '../../models/programs.form';
 import { QuestionDisplay } from '../../models/question.model';
 import { ProgramsStore } from '../../programs.store';
@@ -80,7 +80,7 @@ export class CreateProgramsComponent implements OnInit {
       name: [program?.name ?? '', [Validators.required]],
       priority: [program?.priority ?? null, [Validators.required]],
       description: program?.description ?? '',
-      expectation: [program?.expectation ?? null, [Validators.required]],
+      expectation: [program?.expectation ?? 70, [Validators.required]],
       tags: [program?.tags?.map((t) => t.id) ?? [], [Validators.required]],
       teams: [program?.teams?.map((t) => t.id) ?? []],
     });

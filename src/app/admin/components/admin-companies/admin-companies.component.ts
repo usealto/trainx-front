@@ -1,8 +1,13 @@
-import { AuthApiService } from './../../../sdk/api/auth.service';
+import { AuthApiService } from '@usealto/sdk-ts-angular';
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { CompanyDtoApi, CompanyDtoApiSlackDaysEnumApi, UserLightDtoApi, WeekDayEnumApi } from 'src/app/sdk';
+import {
+  CompanyDtoApi,
+  CompanyDtoApiSlackDaysEnumApi,
+  UserLightDtoApi,
+  WeekDayEnumApi,
+} from '@usealto/sdk-ts-angular';
 import { DataService } from '../../admin-data.service';
 import {
   NgbdSortableHeaderDirective,

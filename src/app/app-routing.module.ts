@@ -7,6 +7,9 @@ import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
 import { canActivateLead } from './roles.guard';
+import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.component';
+import { canHaveWebAccess } from './web-access.guard';
+import { JwtComponent } from './layout/jwt/jwt.component';
 
 const routes: Routes = [
   {
@@ -22,6 +25,7 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.user,
+        canActivate: [canHaveWebAccess],
         children: [
           {
             path: AltoRoutes.userHome,
@@ -90,10 +94,20 @@ const routes: Routes = [
     path: AltoRoutes.translation,
     loadChildren: () => import('./core/utils/i18n/translation.module').then((m) => m.TranslationModule),
   },
+  {
+    path: 'jwt',
+    component: JwtComponent,
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+  },
 
   {
     path: '404',
     component: NotFoundComponent,
+  },
+  {
+    path: AltoRoutes.noAccess,
+    component: NoWebAccessComponent,
   },
   {
     path: '**',

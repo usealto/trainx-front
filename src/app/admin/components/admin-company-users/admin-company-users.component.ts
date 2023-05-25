@@ -9,7 +9,7 @@ import {
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { CompanyDtoApi, TeamDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from 'src/app/sdk';
+import { CompanyDtoApi, TeamDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 import { DataService } from '../../admin-data.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AdminAssignUsersTeamModalComponent } from './admin-assign-users-team-modal/admin-assign-users-team-modal.component';

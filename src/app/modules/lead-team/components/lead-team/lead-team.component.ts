@@ -12,15 +12,15 @@ import {
   ScoresResponseDtoApi,
   TeamDtoApi,
   UserDtoApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { environment } from 'src/environments/environment';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
-import { ScoresRestService } from 'src/app/modules/programs/services/scores-rest.service';
-import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
-
+import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ScoresService } from 'src/app/modules/programs/services/scores.service';
+import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @UntilDestroy()
 @Component({
@@ -46,6 +46,7 @@ export class LeadTeamComponent implements OnInit {
 
   teamsScores = new Map<string, number>();
   usersScores = new Map<string, number | null>();
+  usersQuestions = new Map<string, number[]>();
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -58,14 +59,36 @@ export class LeadTeamComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    combineLatest([this.usersRestService.getUsers(), this.teamsRestService.getTeams()])
+    combineLatest([
+      this.usersRestService.getUsers(),
+      this.teamsRestService.getTeams(),
+      this.scoreRestService.getUsersStats(ScoreDuration.Month),
+      this.scoreRestService.getUsersStats(ScoreDuration.Month, true),
+    ])
       .pipe(
-        tap(([users, teams]) => {
+        tap(([users, teams, usersStats, previousUsersStats]) => {
           this.teams = teams;
           this.users = users;
           this.absoluteUsersCount = users.length;
+          this.activeUsersCount = usersStats.filter((u) => u.respondsRegularly).length;
+
+          usersStats.forEach((u) => {
+            this.usersQuestions.set(u.id, [u.totalGuessesCount || 0]);
+          });
+          previousUsersStats.forEach((u) => {
+            if (this.usersQuestions.has(u.id)) {
+              const data = this.usersQuestions.get(u.id);
+              if (data) {
+                if (data[0] === 0) {
+                  data.push(0);
+                } else {
+                  data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount);
+                }
+                this.usersQuestions.set(u.id, data);
+              }
+            }
+          });
         }),
-        tap(([users]) => (this.activeUsersCount = users.filter((user) => user.isActive).length)),
         tap(([users]) => (this.usersCount = users.length)),
         tap(([users]) => {
           users.forEach((user) => {
@@ -73,8 +96,8 @@ export class LeadTeamComponent implements OnInit {
             this.usersMap.set(user.id, member ? member.shortName : '');
           });
         }),
-        tap(() => this.changeTeamsPage()),
-        tap(() => this.changeUsersPage(this.users)),
+        tap(() => this.changeTeamsPage(1)),
+        tap(() => this.changeUsersPage(this.users, this.usersPage)),
         switchMap(() => this.scoreRestService.getTeamsStats(ScoreDuration.Trimester)),
         tap((scores) => {
           scores.forEach((s) => {
@@ -93,25 +116,14 @@ export class LeadTeamComponent implements OnInit {
             this.usersScores.set(s.id, this.scoreService.reduceWithoutNull(s.averages));
           });
         }),
-        // switchMap(() => {
-        //   return this.scoreRestService.getScores({
-        //     duration: ScoreDuration.Month,
-        //     timeframe: ScoreTimeframeEnumApi.Day,
-        //     type: ScoreTypeEnumApi.Guess,
-        //     user: this.users.map((u) => u.id).join(','),
-        //   });
-        // }),
-        // tap(console.log),
         untilDestroyed(this),
       )
       .subscribe();
   }
 
-  changeTeamsPage() {
-    this.paginatedTeams = this.teams.slice(
-      (this.teamsPage - 1) * this.teamsPageSize,
-      this.teamsPage * this.teamsPageSize,
-    );
+  changeTeamsPage(page: number) {
+    this.teamsPage = page;
+    this.paginatedTeams = this.teams.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
   }
 
   filterUsers(selectedTeams: TeamDtoApi[] = []) {
@@ -119,21 +131,19 @@ export class LeadTeamComponent implements OnInit {
       teams: selectedTeams,
     };
 
-    this.changeUsersPage(this.usersService.filterUsers(this.users, filter));
+    this.changeUsersPage(this.usersService.filterUsers(this.users, filter), this.usersPage);
   }
 
-  changeUsersPage(users: UserDtoApi[]) {
+  changeUsersPage(users: UserDtoApi[], page: number) {
+    this.usersPage = page;
     this.usersCount = users.length;
-    this.paginatedUsers = users.slice(
-      (this.usersPage - 1) * this.usersPageSize,
-      this.usersPage * this.usersPageSize,
-    );
+    this.paginatedUsers = users.slice((page - 1) * this.usersPageSize, page * this.usersPageSize);
   }
 
   searchUsers(users: UserDtoApi[], s: string) {
     const search = s.toLowerCase();
     const res = search.length ? users.filter((user) => user.username?.toLowerCase().includes(search)) : users;
-    this.changeUsersPage(res);
+    this.changeUsersPage(res, this.usersPage);
   }
 
   openTeamForm(team?: TeamDtoApi) {
@@ -154,8 +164,14 @@ export class LeadTeamComponent implements OnInit {
     canvasRef.componentInstance.user = user;
   }
 
-  getTeamUsersCount(teamId: string) {
+  @memoize()
+  getTeamUsersCount(teamId: string): number {
     return this.profileStore.users.value.filter((user) => user.teamId === teamId).length;
+  }
+
+  @memoize()
+  getQuestionsByUser(id: string): number[] {
+    return this.usersQuestions.get(id) || [];
   }
 
   airtableRedirect() {

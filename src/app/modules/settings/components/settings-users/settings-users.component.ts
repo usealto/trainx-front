@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UserDtoApi } from 'src/app/sdk';
+import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { UserEditFormComponent } from 'src/app/modules/lead-team/components/user-edit-form/user-edit-form.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { tap } from 'rxjs';
@@ -28,6 +28,11 @@ export class SettingsUsersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getAdmins();
+    this.getUsers();
+  }
+
+  getAdmins() {
     this.userRestService
       .getUsersPaginated({ isCompanyAdmin: true })
       .pipe(
@@ -35,7 +40,6 @@ export class SettingsUsersComponent implements OnInit {
         untilDestroyed(this),
       )
       .subscribe();
-    this.getUsers();
   }
 
   getUsers() {
@@ -61,5 +65,13 @@ export class SettingsUsersComponent implements OnInit {
     });
 
     canvasRef.componentInstance.user = user;
+    canvasRef.componentInstance.editedUser
+      .pipe(
+        tap(() => {
+          this.getAdmins();
+          this.getUsers();
+        }),
+      )
+      .subscribe();
   }
 }

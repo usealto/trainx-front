@@ -2,20 +2,14 @@
   <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
 </div>
 <div class="p-4">
-  <h2>{{ I18ns.leadTeam.teams.form.title }}</h2>
+  <h2>
+    <img src="../assets/img/create-team-icon.svg" alt="Team Icon">
+    {{ isEdit ? I18ns.leadTeam.teams.form.title.edit : I18ns.leadTeam.teams.form.title.create }} 
+  </h2>
   <p class="fs-7">{{ I18ns.leadTeam.teams.form.subtitle }}</p>
 </div>
 <div class="offcanvas-body px-4">
   <form *ngIf="teamForm" [formGroup]="teamForm">
-    <label class="form-label required">{{ I18ns.leadTeam.teams.form.shortName }}</label>
-    <input
-      type="text"
-      class="form-control"
-      formControlName="shortName"
-      placeholder="{{ I18ns.leadTeam.teams.form.shortNamePlaceholder }}"
-    />
-    <p>{{ I18ns.leadTeam.teams.form.shortNameExemple }}</p>
-
     <label class="mt-4 form-label required">{{ I18ns.leadTeam.teams.form.longName }}</label>
     <input
       type="text"
@@ -25,8 +19,17 @@
     />
     <p>{{ I18ns.leadTeam.teams.form.longNameExemple }}</p>
 
+    <label class="mt-4 form-label required">{{ I18ns.leadTeam.teams.form.shortName }}</label>
+    <input
+      type="text"
+      class="form-control"
+      formControlName="shortName"
+      placeholder="{{ I18ns.leadTeam.teams.form.shortNamePlaceholder }}"
+    />
+    <p>{{ I18ns.leadTeam.teams.form.shortNameExemple }}</p>
+
     <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.invitationEmails }}</label>
-    <ng-select
+    <ng-select class="alto-form"
       [items]="users"
       [multiple]="true"
       [placeholder]="I18ns.leadTeam.teams.form.invitationEmailsPlaceholder"
@@ -41,7 +44,7 @@
     <label class="mt-4 form-label"
       >{{ I18ns.leadTeam.teams.form.Programs }} {{ I18ns.shared.optional }}</label
     >
-    <ng-select
+    <ng-select class="alto-form"
       [items]="programs"
       [multiple]="true"
       bindLabel="name"

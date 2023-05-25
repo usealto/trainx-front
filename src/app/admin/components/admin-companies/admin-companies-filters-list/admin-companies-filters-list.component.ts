@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
-import { TeamDtoApi, UserDtoApiRolesEnumApi, WeekDayEnumApi } from 'src/app/sdk';
+import { TeamDtoApi, UserDtoApiRolesEnumApi, WeekDayEnumApi } from '@usealto/sdk-ts-angular';
 
 export interface FiltersCompaniesList {
   teams?: TeamDtoApi;

@@ -1,0 +1,35 @@
+<ngb-pagination
+  (pageChange)="paginate($event)"
+  [maxSize]="maxSize"
+  [page]="page"
+  [pageSize]="pageSize"
+  [collectionSize]="collectionSize"
+>
+  <ng-template ngbPaginationPrevious let-disabled="disabled">
+    <button [disabled]="disabled" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> {{ I18ns.shared.previous }}
+    </button>
+  </ng-template>
+
+  <ng-template ngbPaginationPages let-page let-pages="pages">
+    <div class="ngb-custom-pages-item mt-3" *ngIf="pages.length > 0">
+      <span id="paginationDescription" class="col-form-label text-nowrap">
+        {{
+          (page - 1) * pageSize +
+            1 +
+            ' - ' +
+            (pageSize * page < collectionSize ? pageSize * page : collectionSize) +
+            ' ' +
+            I18ns.shared.pagination.on +
+            ' ' +
+            collectionSize
+        }}
+      </span>
+    </div>
+  </ng-template>
+  <ng-template ngbPaginationNext let-disabled="disabled">
+    <button [disabled]="disabled" class="btn btn-outline-secondary">
+      {{ I18ns.shared.next }} <i class="bi bi-arrow-right"></i>
+    </button>
+  </ng-template>
+</ngb-pagination>

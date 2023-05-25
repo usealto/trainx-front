@@ -30,9 +30,14 @@ import { NgbdSortableHeaderDirective } from 'src/app/core/utils/directives/ngbd-
 import { ProgramCardListComponent } from './components/program-card-list/program-card-list.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
 import { TeamColorPipe } from './helpers/team-color.pipe';
+import { PaginationComponent } from './components/pagination/pagination.component';
+import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
+import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 
 @NgModule({
   declarations: [
+    ProgressionPillPipe,
+    ProgressionPillArrowPipe,
     ProgramCardComponent,
     ProgressionBadgeComponent,
     ColoredPillListComponent,
@@ -49,6 +54,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     ProgramCardListComponent,
     TimePickerComponent,
     TeamColorPipe,
+    PaginationComponent,
   ],
   imports: [
     CommonModule,
@@ -81,6 +87,8 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     PeriodFilterComponent,
     ProgramCardListComponent,
     TeamColorPipe,
+    ProgressionPillPipe,
+    ProgressionPillArrowPipe,
     NgVar,
     NgbdSortableHeaderDirective,
     FormsModule,
@@ -95,6 +103,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     DropzoneComponent,
     CustomPaginationComponent,
     TimePickerComponent,
+    PaginationComponent,
   ],
 })
 export class SharedModule {}

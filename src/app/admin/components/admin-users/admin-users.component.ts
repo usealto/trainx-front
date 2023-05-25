@@ -1,9 +1,9 @@
-import { AuthApiService } from './../../../sdk/api/auth.service';
+import { AuthApiService } from '@usealto/sdk-ts-angular';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UserDtoApi } from 'src/app/sdk';
+import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { AuthUserGet } from './models/authuser.get';
 import { DataService } from '../../admin-data.service';
 

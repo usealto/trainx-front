@@ -2,6 +2,7 @@ import { ChartOptions } from 'chart.js';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 
 //! Changing this constant will change every charts using it!
+
 /**
  * To override scales :
  * ```
@@ -40,6 +41,9 @@ export const chartDefaultOptions: ChartOptions = {
       title: {
         display: true,
         text: I18ns.leadHome.graph.period,
+      },
+      grid: {
+        display: false,
       },
     },
     y: {

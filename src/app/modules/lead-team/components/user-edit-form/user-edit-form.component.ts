@@ -8,7 +8,7 @@ import {
   TeamLightDtoApi,
   UserDtoApi,
   UserDtoApiRolesEnumApi,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { UserForm } from '../../model/user-edit.form';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
@@ -59,9 +59,7 @@ export class UserEditFormComponent implements OnInit {
   }
 
   getHigherRole(list: Array<UserDtoApiRolesEnumApi>): UserDtoApiRolesEnumApi {
-    if (list.includes(UserDtoApiRolesEnumApi.AltoAdmin)) {
-      return UserDtoApiRolesEnumApi.AltoAdmin;
-    } else if (list.includes(UserDtoApiRolesEnumApi.CompanyAdmin)) {
+    if (list.includes(UserDtoApiRolesEnumApi.CompanyAdmin)) {
       return UserDtoApiRolesEnumApi.CompanyAdmin;
     } else {
       return UserDtoApiRolesEnumApi.CompanyUser;

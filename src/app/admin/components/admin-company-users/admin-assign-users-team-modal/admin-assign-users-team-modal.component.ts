@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { DropzoneChangeEvent } from 'src/app/modules/shared/components/dropzone/dropzone.component';
 import * as Papa from 'papaparse';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { TeamDtoApi } from 'src/app/sdk';
+import { TeamDtoApi } from '@usealto/sdk-ts-angular';
 
 @Component({
   selector: 'alto-admin-assign-users-team-modal',

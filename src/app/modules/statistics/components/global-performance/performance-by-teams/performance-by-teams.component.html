@@ -1,5 +1,5 @@
-<div class="row border-bottom pb-4">
-  <div class="col-7">
+<div class="row">
+  <div class="col-8">
     <div class="panel">
       <alto-dropdown-filter
         class="float-end mx-2 float-end"
@@ -18,40 +18,49 @@
     </div>
   </div>
 
-  <div *ngIf="scoredTeams.length <= 10; else leaderboardFull" class="col-5">
+  <div *ngIf="scoredTeams.length <= 10; else leaderboardFull" class="col-4">
     <div class="panel">
-      <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}</h2>
+      <h2 class="mb-4">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}</h2>
       <ol class="list-group list-group-flush list-group-numbered">
         <li class="list-group-item" *ngFor="let team of scoredTeams">
-          <span class="float-end alto-badge" [class]="(team.score ? team.score : 0) * 100 | pillColor">
-            {{ team.score | percent }}
-          </span>
+          <div class="float-end d-flex flex-nowrap">
+            <p class="me-3">
+              {{ team.score | percent }}
+            </p>
+            <alto-progression-badge [score]="team.progression"></alto-progression-badge>
+          </div>
           {{ team.label }}
         </li>
       </ol>
     </div>
   </div>
   <ng-template #leaderboardFull>
-    <div class="col-5">
+    <div class="col-4">
       <div class="panel">
-        <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h2>
+        <h1>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h1>
         <ol class="list-group list-group-flush list-group-numbered">
           <li class="list-group-item" *ngFor="let team of scoredTeams.slice(0, 5)">
-            <span class="float-end alto-badge" [class]="(team.score ? team.score : 0) * 100 | pillColor">
-              {{ team.score | percent }}
-            </span>
+            <div class="float-end d-flex flex-nowrap">
+              <p class="me-3">
+                {{ team.score | percent }}
+              </p>
+              <alto-progression-badge [score]="team.progression"></alto-progression-badge>
+            </div>
             {{ team.label }}
           </li>
         </ol>
-        <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.flop }}</h2>
+        <h1>{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.flop }}</h1>
         <ol class="list-group list-group-flush list-group-numbered">
           <li
             class="list-group-item"
             *ngFor="let team of scoredTeams.slice(scoredTeams.length - 5, scoredTeams.length)"
           >
-            <span class="float-end alto-badge" [class]="(team.score ? team.score : 0) * 100 | pillColor">
-              {{ team.score | percent }}
-            </span>
+            <div class="float-end d-flex flex-nowrap">
+              <p class="me-3">
+                {{ team.score | percent }}
+              </p>
+              <alto-progression-badge [score]="team.progression"></alto-progression-badge>
+            </div>
             {{ team.label }}
           </li>
         </ol>

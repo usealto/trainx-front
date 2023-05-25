@@ -1,0 +1,31 @@
+<div>
+  <i
+    class="fs-1 bi"
+    [class]="result === 'correct' ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'"
+  ></i>
+  <h1>{{ result === 'correct' ? I18ns.training.canva.goodAnswer : I18ns.training.canva.badAnswer }}</h1>
+  <p>
+    {{
+      result === 'correct'
+        ? I18ns.training.canva.goodResultSubtitle + ' "' + correctAnswers + '".'
+        : I18ns.training.canva.badResultSubtitle + ' "' + correctAnswers + '".'
+    }}
+  </p>
+  <hr />
+  <h2>{{ I18ns.training.canva.explanation }}</h2>
+  <p>{{ explanation ? explanation : I18ns.training.canva.noExplanation }}</p>
+  <h2 class="mt-4">{{ I18ns.training.canva.reference }}</h2>
+  <a *ngIf="link" class="text-primary" [href]="link" target="_blank">{{ link }}</a>
+  <p *ngIf="!link">{{ I18ns.training.canva.noReference }}</p>
+</div>
+<div class="mt-auto">
+  <hr />
+  <button
+    class="float-end btn"
+    [class]="result === 'correct' ? 'btn-success' : 'btn-danger'"
+    (click)="next()"
+  >
+    {{ I18ns.training.canva.continue }}
+    <i class="bi bi-arrow-right-short"></i>
+  </button>
+</div>

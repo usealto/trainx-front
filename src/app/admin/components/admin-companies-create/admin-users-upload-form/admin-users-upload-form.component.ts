@@ -3,7 +3,7 @@ import { DropzoneChangeEvent } from 'src/app/modules/shared/components/dropzone/
 import * as Papa from 'papaparse';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { EditUserUploadFormComponent } from '../edit-user-upload-form/edit-user-upload-form.component';
-import { RoleEnumApi, UsersApiService } from 'src/app/sdk';
+import { RoleEnumApi, UsersApiService } from '@usealto/sdk-ts-angular';
 
 @Component({
   selector: 'alto-admin-users-upload-form',

@@ -3,7 +3,7 @@ import { CompanyForm } from './models/company.create';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { FormArray, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { CompanyDtoApi, CreateTeamDtoApi, SlackTimeEnumApi, TeamDtoApi, WeekDayEnumApi } from 'src/app/sdk';
+import { CompanyDtoApi, CreateTeamDtoApi, SlackTimeEnumApi, TeamDtoApi, WeekDayEnumApi } from '@usealto/sdk-ts-angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { Observable, forkJoin, from, map, mergeMap, switchMap, tap, toArray } from 'rxjs';

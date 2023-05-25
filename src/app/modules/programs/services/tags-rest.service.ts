@@ -7,7 +7,7 @@ import {
   TagDtoApi,
   TagDtoPaginatedResponseApi,
   TagsApiService,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { ProgramsStore } from '../programs.store';
 
 @Injectable({

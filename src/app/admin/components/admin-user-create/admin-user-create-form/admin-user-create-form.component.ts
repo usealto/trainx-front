@@ -12,7 +12,7 @@ import {
   UserDtoApi,
   UserDtoApiRolesEnumApi,
   UsersApiService,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { UserForm } from './models/user.form';
 import { AuthUserGet } from '../../admin-users/models/authuser.get';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
@@ -163,12 +163,12 @@ export class AdminUserCreateFormComponent implements OnInit {
   }
 
   resetSlackId() {
-    this.usersApiService
-      .updateSlackid({
-        companyId: this.companyId,
-        userId: this.userId,
-        slackAdmin: this.company.slackAdmin,
-      })
-      .subscribe((res) => console.log(res));
+    // this.usersApiService
+    //   .updateSlackid({
+    //     companyId: this.companyId,
+    //     userId: this.userId,
+    //     slackAdmin: this.company.slackAdmin,
+    //   })
+    //   .subscribe((res) => console.log(res));
   }
 }

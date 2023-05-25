@@ -4,9 +4,9 @@ import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { AuthApiService, TeamDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from 'src/app/sdk';
+import { AuthApiService, TeamDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 import { AuthUserGet } from '../admin-users/models/authuser.get';
-import { TeamsApiService } from './../../../sdk/api/teams.service';
+import { TeamsApiService } from '@usealto/sdk-ts-angular';
 
 @Component({
   selector: 'alto-admin-user',

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UserDtoApi } from 'src/app/sdk';
+import { UserDtoApi } from '@usealto/sdk-ts-angular';
 @Component({
   selector: 'alto-admin-layout',
   templateUrl: './admin-layout.component.html',
