@@ -12,7 +12,7 @@ export const canHaveWebAccess: CanActivateFn = () => {
     .pipe(
       filter((x) => !!x),
       map((user) => {
-        if (!user.company.usersHasWebAccess) {
+        if (!user.company.usersHaveWebAccess) {
           router.navigate(['/', AltoRoutes.noAccess]);
           return false;
         }
