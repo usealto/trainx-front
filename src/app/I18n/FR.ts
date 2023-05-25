@@ -443,7 +443,9 @@ export const FR = {
         byUser: 'Le meilleur membre',
         byUserSubtitle: "La récompense sera remise à l'utilisateur avec le plus haut score.",
       },
-      teamsSubtitle: 'Sélectionnez au minimum 2 équipes concernées par ce challenge.',
+      teamsSubtitle: 'Sélectionnez la, ou les, équipe(s) concerné(es) par ce challenge.',
+      teamsExplained:
+        "Ne sélectionner qu'une équipe pour un challenge par équipe, ou plusieurs pour un challenge inter-équipes.",
       minimum: 'Seuils minimum',
       minimumSubtitle: 'Définissez les seuils à atteindre pour pouvoir participer à ce challenge.',
       activity: 'Activité',
@@ -457,6 +459,7 @@ export const FR = {
       durationSubtitle: 'Choisissez une date de début et de fin pour ce challenge.',
       reward: 'Récompense',
       rewardSubtitle: "Choisissez une récompense pour la personne ou l'équipe remportant ce challenge.",
+      rewardPlaceholder: 'Exemple : iPhone 14 Pro',
     },
   },
   menu: {

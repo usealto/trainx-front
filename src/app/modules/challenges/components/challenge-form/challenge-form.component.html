@@ -2,7 +2,7 @@
 <form *ngIf="challengeForm" [formGroup]="challengeForm" class="page-max-width">
   <hr />
   <div class="row">
-    <div class="col-4 required">{{ I18ns.challenges.form.name }}</div>
+    <div class="col-4 required fw-medium">{{ I18ns.challenges.form.name }}</div>
     <div class="col-6">
       <input
         type="text"
@@ -14,9 +14,9 @@
   </div>
 
   <hr />
-
+  <!-- TYPE -->
   <div class="row">
-    <div class="col-4">{{ I18ns.challenges.form.type.label }}</div>
+    <div class="col-4 fw-medium">{{ I18ns.challenges.form.type.label }}</div>
     <div class="col-6">
       <div class="form-check">
         <input
@@ -43,12 +43,12 @@
       </div>
     </div>
   </div>
-
+  <!-- TEAMS -->
   <hr />
   <div class="row">
     <div class="col-4">
-      <label class="form-label required">{{ I18ns.programs.forms.step1.teams }}</label>
-      <p class="fs-7">{{ I18ns.challenges.form.teamsSubtitle }}</p>
+      <label class="form-label required fw-medium">{{ I18ns.programs.forms.step1.teams }}</label>
+      <p class="alto-grey">{{ I18ns.challenges.form.teamsSubtitle }}</p>
     </div>
     <div class="col-6">
       <ng-select
@@ -75,17 +75,18 @@
           <i class="bi bi-check-circle-fill"></i>
         </ng-template>
       </ng-select>
+      <p class="alto-grey mt-3">{{ I18ns.challenges.form.teamsExplained }}</p>
     </div>
 
     <hr />
     <div class="row">
       <div class="col-4">
-        <label class="form-label required">{{ I18ns.challenges.form.minimum }}</label>
-        <p class="fs-7">{{ I18ns.challenges.form.minimumSubtitle }}</p>
+        <label class="form-label required fw-medium">{{ I18ns.challenges.form.minimum }}</label>
+        <p class="alto-grey">{{ I18ns.challenges.form.minimumSubtitle }}</p>
       </div>
       <div class="col-6">
-        <p>{{ I18ns.challenges.form.activity }}</p>
-        <p class="fs-7">{{ I18ns.challenges.form.activitySubtitle }}</p>
+        <p class="fw-medium">{{ I18ns.challenges.form.activity }}</p>
+        <p>{{ I18ns.challenges.form.activitySubtitle }}</p>
         <div class="row mt-3">
           <div class="col-8">
             <input type="range" class="form-range" min="1" max="20" formControlName="guessesPerDay" />
@@ -97,8 +98,8 @@
 
         <hr />
 
-        <p>{{ I18ns.challenges.form.score }}</p>
-        <p class="fs-7">{{ I18ns.challenges.form.scoreSubtitle }}</p>
+        <p class="fw-medium">{{ I18ns.challenges.form.score }}</p>
+        <p>{{ I18ns.challenges.form.scoreSubtitle }}</p>
         <div class="row">
           <div class="col-8">
             <input type="range" class="form-range" min="1" max="100" formControlName="scoreMinPercent" />
@@ -111,8 +112,8 @@
     <hr />
     <div class="row">
       <div class="col-4">
-        <label class="form-label required">{{ I18ns.challenges.form.duration }}</label>
-        <p class="fs-7">{{ I18ns.challenges.form.durationSubtitle }}</p>
+        <label class="form-label required fw-medium">{{ I18ns.challenges.form.duration }}</label>
+        <p class="alto-grey">{{ I18ns.challenges.form.durationSubtitle }}</p>
       </div>
       <div class="col-6">
         <ngb-datepicker
@@ -141,11 +142,16 @@
     <hr />
     <div class="row">
       <div class="col-4">
-        <label class="form-label required">{{ I18ns.challenges.form.reward }}</label>
-        <p class="fs-7">{{ I18ns.challenges.form.rewardSubtitle }}</p>
+        <label class="form-label required fw-medium">{{ I18ns.challenges.form.reward }}</label>
+        <p class="alto-grey">{{ I18ns.challenges.form.rewardSubtitle }}</p>
       </div>
       <div class="col-6">
-        <input type="text" class="form-control" formControlName="reward" />
+        <input
+          type="text"
+          class="form-control"
+          [placeholder]="I18ns.challenges.form.rewardPlaceholder"
+          formControlName="reward"
+        />
       </div>
     </div>
   </div>
