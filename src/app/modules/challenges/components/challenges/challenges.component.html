@@ -15,6 +15,7 @@
 </div>
 <hr />
 <div class="py-4">
+  <!-- TEAMS -->
   <button
     type="button"
     class="btn btn-primary float-end"
@@ -37,7 +38,7 @@
           [isColored]="true"
         ></alto-dropdown-filter>
 
-        <ng-select 
+        <ng-select
           class="ms-3"
           [searchable]="false"
           [items]="status"
@@ -74,15 +75,17 @@
             "
           >
             <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
-            <td>
-              <span
+            <td class="text-center">
+              <alto-img-badge [url]="(getUser(chal.createdBy) | async)?.pictureUrl"></alto-img-badge>
+
+              <!-- <span
                 *ngIf="chal.leadTeam"
                 class="alto-badge"
                 [style.backgroundColor]="chal.leadTeam.id | uuid2color"
                 [style.color]="'white'"
               >
                 {{ chal.leadTeam.shortName }}
-              </span>
+              </span> -->
             </td>
             <td class="text-center">
               <alto-colored-pill-list
@@ -126,6 +129,7 @@
 
   <hr class="my-5" />
 
+  <!-- SOLO -->
   <button
     type="button"
     class="btn btn-primary float-end mt-4"
@@ -184,8 +188,8 @@
             "
           >
             <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
-            <td>
-              <alto-img-badge [url]="(getUser(chal.leadUser?.id ?? '') | async)?.pictureUrl"></alto-img-badge>
+            <td class="text-center">
+              <alto-img-badge [url]="(getUser(chal.createdBy) | async)?.pictureUrl"></alto-img-badge>
             </td>
             <td class="text-center">
               <alto-colored-pill-list
