@@ -101,18 +101,34 @@
   <div class="row py-4">
     <div class="col-4">
       <div class="panel">
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          placement="top"
+          ngbTooltip="{{ I18ns.leadTeam.members.statistics.totalTooltip }}"
+        ></i>
         <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.total }}</p>
         <h1>{{ absoluteUsersCount }}</h1>
       </div>
     </div>
     <div class="col-4">
       <div class="panel">
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          placement="top"
+          ngbTooltip="{{ I18ns.leadHome.statistics.activeMembersToolTip }}"
+        ></i>
         <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.active }}</p>
         <h1>{{ activeUsersCount }}</h1>
       </div>
     </div>
     <div class="col-4">
       <div class="panel">
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          placement="top"
+          ngbTooltip="{{ I18ns.leadHome.statistics.inactiveMembersToolTip }}"
+          placement="start"
+        ></i>
         <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.inactive }}</p>
         <h1>{{ absoluteUsersCount - activeUsersCount }}</h1>
       </div>

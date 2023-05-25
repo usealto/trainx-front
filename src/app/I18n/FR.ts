@@ -344,6 +344,7 @@ export const FR = {
       },
       statistics: {
         total: 'Total',
+        totalTooltip: "L'ensemble des membres de votre entreprise",
         active: 'Membres réguliers',
         inactive: 'Membres irréguliers',
       },
