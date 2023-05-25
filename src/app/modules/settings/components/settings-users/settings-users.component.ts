@@ -28,14 +28,20 @@ export class SettingsUsersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getAdmins();
+    this.getUsers();
+  }
+
+  getAdmins() {
     this.userRestService
       .getUsersPaginated({ isCompanyAdmin: true })
       .pipe(
         tap((users) => (this.adminDisplay = users.data ?? [])),
+        tap(console.log),
+
         untilDestroyed(this),
       )
       .subscribe();
-    this.getUsers();
   }
 
   getUsers() {
@@ -61,5 +67,13 @@ export class SettingsUsersComponent implements OnInit {
     });
 
     canvasRef.componentInstance.user = user;
+    canvasRef.componentInstance.editedUser
+      .pipe(
+        tap(() => {
+          this.getAdmins();
+          this.getUsers();
+        }),
+      )
+      .subscribe();
   }
 }
