@@ -1,5 +1,5 @@
 <div class="d-flex flex-nowrap justify-content-end" [class]="displayTime <= 10 ? 'text-danger' : ''">
-  <i class="bi bi-stopwatch me-3"></i>
+  <i class="fs-5 bi bi-stopwatch me-3"></i>
   <p class="fw-bold">{{ displayTime + ' ' + I18ns.training.secondsRemaining }}</p>
 </div>
 
@@ -44,6 +44,7 @@
     type="button"
     class="btn btn-outline-secondary"
     [routerLink]="['/', AltoRoutes.user, AltoRoutes.userHome]"
+    (click)="stopTimer()"
   >
     <i class="bi bi-save me-2"></i>
     {{ I18ns.training.saveAndQuit }}</a

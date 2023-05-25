@@ -15,10 +15,10 @@
   <h2>{{ I18ns.training.canva.explanation }}</h2>
   <p>{{ explanation ? explanation : I18ns.training.canva.noExplanation }}</p>
   <h2 class="mt-4">{{ I18ns.training.canva.reference }}</h2>
-  <a *ngIf="link" class="text-primary" [href]="link" target="_blank">{{ link }}</a>
+  <a *ngIf="link" class="text-primary link" [href]="link" target="_blank">{{ link }}</a>
   <p *ngIf="!link">{{ I18ns.training.canva.noReference }}</p>
 </div>
-<div class="mt-auto">
+<div class=" footer">
   <hr />
   <button
     class="float-end btn"

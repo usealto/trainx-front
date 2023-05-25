@@ -2,3 +2,18 @@
   display: block;
   padding: var(--alto-page-padding);
 }
+
+.footer {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  padding-bottom: 2.286rem;
+  button {
+    margin-right: 2.286rem;
+  }
+}
+
+.link {
+  overflow-wrap: break-word;
+}

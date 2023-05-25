@@ -29,7 +29,7 @@ export class UserHomeComponent implements OnInit {
       .getGuesses()
       .pipe(
         tap((guesses) => {
-          const date = addDays(new Date(), -1);
+          const date = new Date();
           const reducedGuesses = [] as GuessDtoApi[];
           guesses.forEach((guess) => {
             if (
