@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-import { combineLatest, take, tap } from 'rxjs';
+import { combineLatest, take } from 'rxjs';
 import { TeamsRestService } from './modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from './modules/profile/services/users-rest.service';
 import { ProgramsRestService } from './modules/programs/services/programs-rest.service';

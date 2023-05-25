@@ -12,19 +12,19 @@
   z-index: 150;
 }
 .loader-container {
-  width: 150px;
+  width: 21rem;
   padding: 12px 0;
   margin: 45vh auto;
+  text-align: center;
+  p {
+    margin: 1.143rem 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
 }
-.spin-loader {
-  width: 42px;
-  height: 42px;
-  border-radius: 25px;
-  border: solid 6px white;
-  border-bottom-color: grey;
-  border-top-color: grey;
-  animation: spin 1s linear infinite;
-  display: inline-block;
+
+.spinner-border {
+  border-right-color: #ec644a;
 }
 @keyframes spin {
   100% {
