@@ -53,7 +53,7 @@ export class ApiErrorInterceptor implements HttpInterceptor {
               break;
             case 400: // bad request
               apiError = {
-                message: e.error.title ?? e.error[0],
+                message: e.error?.message ?? e.error?.error?.message,
                 title: this.translationsMessages.BadParameters.title,
                 details: e.error.detail,
                 level: 'error',
@@ -87,8 +87,6 @@ export class ApiErrorInterceptor implements HttpInterceptor {
                 handled: true,
                 code: e.status,
               };
-              // TODO Improve
-              // this.storageService.destroyAll();
               break;
             case 404: // not found
               apiError = {
@@ -113,7 +111,7 @@ export class ApiErrorInterceptor implements HttpInterceptor {
               break;
             case 500: // internal error
               apiError = {
-                message: e.statusText,
+                message: e.error.message,
                 title: this.translationsMessages.ServerError.title,
                 level: 'error',
                 err,

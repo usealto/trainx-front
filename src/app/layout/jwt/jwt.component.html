@@ -1,0 +1,16 @@
+<div class="container-gl">
+  <div class="menu">
+    <div class="logo">
+      <a [routerLink]="['/']">
+        <img height="22" src="assets/img/logo-white.png" alt="Alto Logo" />
+      </a>
+    </div>
+  </div>
+  <div class="main">
+    <pre>{{jwt | json}}</pre>
+    <button class="btn btn-primary"  
+    [class.clicked-button]="isClicked"
+    [disabled]="isClicked"
+    (click)="copy()">Copy raw JWT</button>
+  </div>
+</div>

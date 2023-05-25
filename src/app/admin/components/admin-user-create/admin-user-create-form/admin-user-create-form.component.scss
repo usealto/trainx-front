@@ -1,0 +1,14 @@
+alto-admin-user-create-form {
+  .ng-select.ng-select-opened.ng-select-bottom > .ng-select-container,
+  .ng-select.ng-select-opened.ng-select-top > .ng-select-container,
+  .ng-select .ng-select-container {
+    border-radius: 4px;
+  }
+  ng-select .ng-select-container {
+    color: #333;
+  }
+  .ng-select .ng-select-container .ng-value-container .ng-placeholder {
+    color: var(--bs-body-color);
+    font-weight: initial;
+  }
+}

@@ -26,6 +26,14 @@
 
   --alto-border: #d0d5dd;
 }
+.alto-primary {
+  color: var(--bs-primary);
+}
+
+.alto-success {
+  color: var(--bs-success);
+}
+
 .alto-text {
   color: var(--alto-text-color);
 }
@@ -41,6 +49,11 @@
 .alto-dark-grey {
   color: var(--alto-dark-grey);
 }
+
+.alto-second-grey {
+  color: var(--alto-text-second-color);
+}
+
 .alto-grey-bg {
   background-color: var(--alto-medium-grey);
 }
@@ -56,4 +69,14 @@
 }
 .pill-red {
   background-color: #f04438;
+}
+
+.alto-green {
+  color: var(--bs-success);
+}
+.alto-red {
+  color: var(--bs-danger);
+}
+.alto-neutral {
+  color: #d0d5dd;
 }

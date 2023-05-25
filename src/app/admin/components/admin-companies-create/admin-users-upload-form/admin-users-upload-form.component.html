@@ -1,0 +1,63 @@
+<alto-dropzone [multiple]="false" (change)="onSelectUser($event)">
+  <span subtitle class="fs-7">Following the CSV format : <i>firstname, lastname, email, role</i></span>
+</alto-dropzone>
+<br />
+
+<div *ngIf="displayedUsers.length > 0 && showUserList" class="table-container table-panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>name</th>
+        <th>email</th>
+        <th>Role</th>
+        <th scope="col" class="action-btn-list"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of displayedUsers; let index = index">
+        <td>
+          <div>{{ user.firstname }} {{ user.lastname }}</div>
+        </td>
+        <td>
+          <span>{{ user.email }}</span>
+        </td>
+        <td>
+          <span class="alto-badge text-white me-1 mb-1" [style.backgroundColor]="user.role | uuid2color">{{
+            user.role
+          }}</span>
+        </td>
+        <td class="action-btn-list-container">
+          <div class="shaddow"></div>
+          <div class="d-flex action-btn-list align-items-center gap-2">
+            <button type="button" class="btn btn-link" (click)="deleteUser(user)">
+              <i class="alto-second-grey bi bi-trash"></i>
+            </button>
+            <button type="button" class="btn btn-link" (click)="openEditUserForm(user)">
+              <i class="alto-second-grey bi bi-pencil"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="px-2">
+    <alto-custom-pagination
+      [(page)]="page"
+      [collectionSize]="csvData.length"
+      [pageSize]="pageSize"
+      (pageChange)="refreshUsers()"
+    ></alto-custom-pagination>
+  </div>
+</div>
+
+<div *ngIf="displayedUsers.length > 0" class="d-flex align-items-center justify-content-center pt-3">
+  <button type="button" class="btn btn-outline-secondary" (click)="showUserList = !showUserList">
+    {{ showUserList ? 'Mask users list' : 'Show users list' }}
+  </button>
+</div>
+
+<div *ngIf="usersFailed.length > 0">
+  <br /><br /><br />
+  <p>Users with incorrect emails</p>
+  <pre>{{ usersFailed | json }}</pre>
+</div>

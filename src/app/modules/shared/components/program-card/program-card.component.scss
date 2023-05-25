@@ -1,9 +1,16 @@
 :host {
   position: relative;
+  & > div {
+    position: relative;
+  }
 }
+
 .panel {
-  height: 18rem;
+  height: 16.5rem;
   position: relative;
+  &:hover {
+    border-color: #84caff;
+  }
 }
 .form-switch {
   position: absolute;

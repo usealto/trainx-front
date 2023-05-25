@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UserDtoApi } from 'src/app/sdk';
+import { UserDtoApi } from '@usealto/sdk-ts-angular';
 @Component({
   selector: 'alto-admin-layout',
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.scss', '../../../layout/app-layout/app-layout.component.scss'],
 })
 export class AdminLayoutComponent implements OnInit {
-  constructor(
-    private readonly usersRestService: UsersRestService, 
-    private readonly router: Router) {}
+  constructor(private readonly usersRestService: UsersRestService, private readonly router: Router) {}
   user!: UserDtoApi;
   authorized = false;
 
@@ -22,9 +20,9 @@ export class AdminLayoutComponent implements OnInit {
         this.authorized = true;
       } else {
         // otherwise, if the user is impersonnated, it's ok too
-        if(localStorage.getItem('impersonatedUser') !== '' && localStorage.getItem('impersonatedUser')) {
+        if (localStorage.getItem('impersonatedUser') !== '' && localStorage.getItem('impersonatedUser')) {
           this.authorized = true;
-        }else {
+        } else {
           this.router.navigate(['admin', 'unauthorized']);
         }
       }

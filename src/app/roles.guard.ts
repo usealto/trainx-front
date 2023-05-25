@@ -1,11 +1,11 @@
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
+import { UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 import { map, tap } from 'rxjs';
 import { UsersRestService } from './modules/profile/services/users-rest.service';
-import { UserDtoApiRolesEnumApi } from './sdk';
 import { AltoRoutes } from './modules/shared/constants/routes';
 
-export const canActivateLead: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+export const canActivateLead: CanActivateFn = () => {
   const router = inject(Router);
   return inject(UsersRestService)
     .getMe()

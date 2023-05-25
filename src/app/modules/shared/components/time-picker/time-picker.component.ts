@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
+import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 
 @Component({
   selector: 'alto-time-picker',
@@ -10,8 +10,9 @@ import { ScoreDuration } from 'src/app/modules/programs/models/score.model';
 export class TimePickerComponent {
   I18ns = I18ns;
   @Input() duration: ScoreDuration = ScoreDuration.Year;
-  @Input() name = 'timePicker';
   @Output() durationSelected = new EventEmitter<string>();
+
+  ID = 'timePicker' + Math.round(Math.random() * 1000);
 
   updateTimePicker(event: any) {
     this.duration = event.target.id;

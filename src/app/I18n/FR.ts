@@ -3,6 +3,7 @@ export const FR = {
     edit: 'Modifier',
     save: 'Enregistrer',
     next: 'Suivant',
+    previous: 'Précédent',
     cancel: 'Annuler',
     delete: 'Supprimer',
     create: 'Créer',
@@ -18,6 +19,9 @@ export const FR = {
     reply: 'Répondre',
     search: 'Rechercher',
     period: 'Période',
+    pagination: {
+      on: 'sur',
+    },
     priorities: {
       high: 'High',
       medium: 'Medium',
@@ -265,6 +269,16 @@ export const FR = {
           programs: 'Programmes',
         },
       },
+      teamsTable: {
+        title: 'Équipes',
+        subtitle: "Découvrez les scores moyens et axes d'amélioration par équipe.",
+        columns: {
+          name: 'Nom',
+          global: 'Global',
+          lessMasteredPrograms: 'Programmes les moins maitrîsés',
+          lessMasteredTags: 'Tags les moins maitrîsés',
+        },
+      },
     },
     perTeams: {
       title: 'Par équipe',
@@ -274,11 +288,11 @@ export const FR = {
     form: {
       title: {
         create: 'Créer une question',
-        edit: 'Éditer une question',
+        edit: 'Modifier une question',
         submitted: 'Question suggérée',
       },
       subtitle: {
-        question: 'Indiquer la question, les réponses possibles et les informations complémentaires.',
+        question: 'Indiquer l’intitulé, les réponses possibles et les informations complémentaires.',
         submitted:
           " a suggéré une question. Vous pouvez choisir de la rejeter, la valider en l'état ou d'apporter des modifications et informations complémentaires.",
       },
@@ -301,11 +315,11 @@ export const FR = {
     form: {
       title: {
         create: 'Créer un tag',
-        edit: 'Éditer un tag',
+        edit: 'Modifier un tag',
       },
       subtitle:
         "Indiquer le nom de votre nouveau tag ainsi que les programmes et questions auxquels vous souhaitez l'associer.",
-      tagName: 'Nom du tage',
+      tagName: 'Nom du tag',
       tagNamePlaceholder: 'Exemple: RGPD',
       programs: 'Programmes',
       programsPlaceholder: 'Rechercher dans vos programmes',
@@ -330,6 +344,7 @@ export const FR = {
       },
       statistics: {
         total: 'Total',
+        totalTooltip: "L'ensemble des membres de votre entreprise",
         active: 'Membres réguliers',
         inactive: 'Membres irréguliers',
       },
@@ -368,20 +383,24 @@ export const FR = {
         creationDate: 'Date de création',
       },
       form: {
-        title: 'Créer une équipe',
+        title: {
+          create: 'Créer une équipe',
+          edit: 'Modifier une équipe',
+        },
         subtitle: 'Donner un nom à votre équipe et inviter vos collaborateurs',
-        shortName: 'Nom (version abrégé)',
-        shortNamePlaceholder: "Nom de l'équipe",
-        shortNameExemple: 'Exemple : SDR',
         longName: 'Nom (version longue)',
         longNamePlaceholder: "Nom complet de l'équipe",
         longNameExemple: 'Exemple : Sales Development Representative',
+        shortName: 'Nom (version abrégée)',
+        shortNamePlaceholder: "Nom de l'équipe",
+        shortNameExemple: 'Exemple : SDR',
         invitationEmails: 'Invitation par mail',
         invitationEmailsPlaceholder: 'Séparer les emails par une virgule',
-        invitationEmailsSubtitle: "Vos collaborateurs recevront un email pour s'inscrire à Alto",
+        invitationEmailsSubtitle:
+          'Vos collaborateurs recevront une invitation par mail pour s’inscrire à Alto.',
         Programs: 'Programmes',
         programsPlaceholder: 'Rechercher dans vos programmes',
-        ProgramsSubtitle: 'Sélectionner les programmes que vous auxquels cette équipe doit être assignée.',
+        ProgramsSubtitle: 'Sélectionner les programmes auxquels cette équipe doit être assignée.',
       },
     },
   },
@@ -425,7 +444,9 @@ export const FR = {
         byUser: 'Le meilleur membre',
         byUserSubtitle: "La récompense sera remise à l'utilisateur avec le plus haut score.",
       },
-      teamsSubtitle: 'Sélectionnez au minimum 2 équipes concernées par ce challenge.',
+      teamsSubtitle: 'Sélectionnez la, ou les, équipe(s) concerné(es) par ce challenge.',
+      teamsExplained:
+        "Ne sélectionner qu'une équipe pour un challenge par équipe, ou plusieurs pour un challenge inter-équipes.",
       minimum: 'Seuils minimum',
       minimumSubtitle: 'Définissez les seuils à atteindre pour pouvoir participer à ce challenge.',
       activity: 'Activité',
@@ -439,13 +460,14 @@ export const FR = {
       durationSubtitle: 'Choisissez une date de début et de fin pour ce challenge.',
       reward: 'Récompense',
       rewardSubtitle: "Choisissez une récompense pour la personne ou l'équipe remportant ce challenge.",
+      rewardPlaceholder: 'Exemple : iPhone 14 Pro',
     },
   },
   menu: {
     home: 'Accueil',
     programs: 'Programmes',
     statistics: 'Statistiques',
-    team: 'Équipe',
+    team: 'Équipes',
     challenges: 'Challenges',
     settings: 'Paramètres',
     profile: 'Profil',
@@ -522,7 +544,7 @@ export const FR = {
     },
     Unauthorized: {
       title: 'Unauthorized',
-      message: 'You are not logged in!',
+      message: "Vous n'avez pas accès !",
     },
     Notfound: {
       title: 'Item not found',
@@ -571,4 +593,33 @@ export const FR = {
     },
   },
   test: 'test',
+  userHome: {
+    title: 'Bonjour ',
+    subtitle: "Retrouvez une vue d'ensemble sur votre planning",
+    programsRun: {
+      title: 'Vos programmes en cours',
+      subtitle: 'Retrouvez ici les programmes auxquels vous participez actuellement.',
+      continueSession: 'Session continue',
+      continueSessionSubtitle:
+        'Entraînez vous chaque jour à votre rythme sur des questions issues de vos programmes.',
+      continueSessionCounts: 'se sont entrainés aujourd’hui',
+    },
+  },
+  training: {
+    secondsRemaining: 'secondes restantes',
+    selectOneAnswer: 'Sélectionnez la bonne réponse',
+    submit: 'Valider',
+    saveAndQuit: 'Enregistrer et quitter',
+    canva: {
+      goodAnswer: 'Bonne réponse !',
+      badAnswer: 'Mauvaise réponse !',
+      goodResultSubtitle: "Il s'agissait bien de",
+      badResultSubtitle: "Il s'agissait de",
+      explanation: 'Explication',
+      noExplanation: "Pas d'explication",
+      reference: 'Référence',
+      noReference: 'Pas de référence',
+      continue: 'Continuer',
+    },
+  },
 };

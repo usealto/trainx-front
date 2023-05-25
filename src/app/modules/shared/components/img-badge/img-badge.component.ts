@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @Component({
@@ -9,8 +9,11 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 export class ImgBadgeComponent implements OnChanges {
   @Input() url: string | null | undefined = '';
   @Input() size = 32;
+  // eslint-disable-next-line @angular-eslint/no-output-native
+  @Output() error = new EventEmitter<any>();
 
   thumb = '';
+  public broken = false;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['url']?.currentValue) {

@@ -1,0 +1,25 @@
+.tab-close {
+  color: gray;
+  text-align: right;
+  cursor: pointer;
+}
+.admin-tab {
+  position: relative;
+  &.active {
+    .indicator {
+      border-bottom: 2px #175cd3 solid;
+    }
+
+    .alto-badge-big {
+      background-color: #175cd3;
+      i {
+        color: white;
+      }
+    }
+  }
+  .indicator {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+  }
+}

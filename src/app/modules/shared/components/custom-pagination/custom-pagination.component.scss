@@ -1,0 +1,32 @@
+.alto-custom-pagination {
+  ngb-pagination {
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+    }
+    li {
+      all: unset;
+      &.active {
+        .page-link {
+          all: unset;
+          button {
+            background-color: var(--alto-medium-grey);
+          }
+        }
+      }
+      &.disabled {
+        button {
+          color: var(--bs-btn-disabled-color);
+          pointer-events: none;
+          background-color: var(--bs-btn-disabled-bg);
+          border-color: var(--bs-btn-disabled-border-color);
+          opacity: var(--bs-btn-disabled-opacity);
+          cursor: pointer;
+        }
+      }
+      a {
+        all: unset;
+      }
+    }
+  }
+}

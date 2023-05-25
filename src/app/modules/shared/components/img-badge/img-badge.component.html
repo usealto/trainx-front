@@ -1,6 +1,17 @@
-<ng-container *ngIf="thumb; else elseTemplate">
-  <img src="{{ thumb }}" alt="Profile Picture" [style]="getStyle(size)" />
-</ng-container>
-<ng-template #elseTemplate>
-  <div class="d-inline-block" [style]="getStyle(size)"></div>
-</ng-template>
+<div *ngIf="!broken === true">
+  <ng-container *ngIf="thumb; else elseTemplate">
+    <img
+      src="{{ thumb }}"
+      alt="Profile Picture"
+      [style]="getStyle(size)"
+      (error)="error.emit()"
+      (error)="broken = true"
+    />
+  </ng-container>
+  <ng-template #elseTemplate>
+    <div class="d-inline-block" [style]="getStyle(size)"></div>
+  </ng-template>
+</div>
+<div *ngIf="broken === true" class="float-start mx-3 alto-badge-big">
+  <i class="fs-4 bi bi-person"></i>
+</div>

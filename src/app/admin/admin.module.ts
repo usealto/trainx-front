@@ -19,9 +19,50 @@ import { AdminUsersUploadComponent } from './components/admin-users-upload/admin
 import { SharedModule } from '../modules/shared/shared.module';
 import { AdminUnauthorizedComponent } from './components/admin-unauthorized/admin-unauthorized.component';
 import { AdminCompaniesCreateComponent } from './components/admin-companies-create/admin-companies-create.component';
+import { AdminHeaderComponent } from './components/admin-shared/admin-header/admin-header.component';
+import { AdminTabsComponent } from './components/admin-shared/admin-tabs/admin-tabs.component';
+import { AdminTabComponent } from './components/admin-shared/admin-tabs/admin-tab.component';
+import { AdminUsersUploadFormComponent } from './components/admin-companies-create/admin-users-upload-form/admin-users-upload-form.component';
+import { EditUserUploadFormComponent } from './components/admin-companies-create/edit-user-upload-form/edit-user-upload-form.component';
+import { ApiInterceptor } from '../core/interceptors/api.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AdminCompaniesFiltersListComponent } from './components/admin-companies/admin-companies-filters-list/admin-companies-filters-list.component';
+import { AdminAssignUsersTeamModalComponent } from './components/admin-company-users/admin-assign-users-team-modal/admin-assign-users-team-modal.component';
+import { AdminAssignSelectedUsersTeamModalComponent } from './components/admin-company-users/admin-assign-selected-users-team-modal/admin-assign-selected-users-team-modal.component';
+import { ChangeStatusSelectedUsersTeamModalComponent } from './components/admin-company-users/change-status-selected-users-team-modal/change-status-selected-users-team-modal.component';
 
 @NgModule({
-  declarations: [AdminHomeComponent, AdminLayoutComponent, AdminCompaniesComponent, AdminCompanyComponent, AdminMenuComponent, AdminCompanyUsersComponent, AdminUserComponent, AdminUserCreateComponent, AdminUserCreateFormComponent, AdminUsersComponent, AdminUsersUploadComponent, AdminUnauthorizedComponent, AdminCompaniesCreateComponent],
-  imports: [CommonModule, AdminRoutingModule, FormsModule, ReactiveFormsModule, NgbPaginationModule, SharedModule],
+  declarations: [
+    AdminHomeComponent,
+    AdminLayoutComponent,
+    AdminCompaniesComponent,
+    AdminCompanyComponent,
+    AdminMenuComponent,
+    AdminCompanyUsersComponent,
+    AdminUserComponent,
+    AdminUserCreateComponent,
+    AdminUserCreateFormComponent,
+    AdminUsersComponent,
+    AdminUsersUploadComponent,
+    AdminUnauthorizedComponent,
+    AdminCompaniesCreateComponent,
+    AdminHeaderComponent,
+    AdminTabsComponent,
+    AdminTabComponent,
+    AdminUsersUploadFormComponent,
+    EditUserUploadFormComponent,
+    AdminCompaniesFiltersListComponent,
+    AdminAssignUsersTeamModalComponent,
+    AdminAssignSelectedUsersTeamModalComponent,
+    ChangeStatusSelectedUsersTeamModalComponent,
+  ],
+  imports: [
+    CommonModule,
+    AdminRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgbPaginationModule,
+    SharedModule,
+  ],
 })
 export class AdminModule {}

@@ -24,12 +24,20 @@ import { TabsComponent } from './components/tabs/tabs.component';
 import { ProfileCardComponent } from './components/profile-card/profile-card.component';
 import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
 import { PeriodFilterComponent } from './components/period-filter/period-filter.component';
+import { DropzoneComponent } from './components/dropzone/dropzone.component';
+import { CustomPaginationComponent } from './components/custom-pagination/custom-pagination.component';
+import { NgbdSortableHeaderDirective } from 'src/app/core/utils/directives/ngbd-sortable-header.directive';
 import { ProgramCardListComponent } from './components/program-card-list/program-card-list.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
 import { TeamColorPipe } from './helpers/team-color.pipe';
+import { PaginationComponent } from './components/pagination/pagination.component';
+import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
+import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 
 @NgModule({
   declarations: [
+    ProgressionPillPipe,
+    ProgressionPillArrowPipe,
     ProgramCardComponent,
     ProgressionBadgeComponent,
     ColoredPillListComponent,
@@ -41,9 +49,12 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     TabsComponent,
     ProfileCardComponent,
     PeriodFilterComponent,
+    DropzoneComponent,
+    CustomPaginationComponent,
     ProgramCardListComponent,
     TimePickerComponent,
     TeamColorPipe,
+    PaginationComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +70,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     RouterModule,
     NgbDatepickerModule,
     NgVar,
+    NgbdSortableHeaderDirective,
   ],
   exports: [
     TranslationModule,
@@ -75,7 +87,10 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     PeriodFilterComponent,
     ProgramCardListComponent,
     TeamColorPipe,
+    ProgressionPillPipe,
+    ProgressionPillArrowPipe,
     NgVar,
+    NgbdSortableHeaderDirective,
     FormsModule,
     ImgBadgeComponent,
     ReactiveFormsModule,
@@ -85,7 +100,10 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     NgbTooltipModule,
     LoadingModule,
     NgbDatepickerModule,
+    DropzoneComponent,
+    CustomPaginationComponent,
     TimePickerComponent,
+    PaginationComponent,
   ],
 })
 export class SharedModule {}

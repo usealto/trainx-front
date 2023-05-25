@@ -1,4 +1,77 @@
 :host {
   display: block;
   padding: 2rem;
+  .icon-people-container {
+    color: var(--alto-text-second-color);
+    background-color: #f2f4f7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+  }
+
+  .incognito-btn{
+    background-color: var(--bs-primary);
+  }
+
+  .table {
+    height: 100%;
+  }
+  .table-container {
+    overflow: auto;
+    th,
+    td {
+      white-space: nowrap;
+      position: relative;
+    }
+    th {
+      background-color: #fcfcfd;
+    }
+    th[sortable] {
+      i {
+        position: absolute;
+        left: -5px;
+        display: none;
+      }
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      &.asc {
+        i {
+          display: inline;
+        }
+      }
+      &.desc {
+        i {
+          display: inline;
+          &::before {
+            transform: rotate(180deg);
+          }
+        }
+      }
+    }
+    .action-btn-list-container {
+      display: flex;
+      padding: 0;
+      height: 100%;
+      position: sticky;
+      right: 0;
+      top: 0;
+      .shaddow {
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.1) 100%);
+        height: 100%;
+        width: 10px;
+      }
+      .action-btn-list {
+        background-color: white;
+        z-index: 2;
+        height: 100%;
+      }
+    }
+    tr {
+      position: relative;
+    }
+  }
 }

@@ -1,46 +1,170 @@
-<div class="py-4 border-bottom">
-  <div>
-    <h1>Companies</h1>
-    <p class="mb-4">L'ensemble de nos clients</p>
-  </div>
+<div>
+  <alto-admin-header
+    title="Companies"
+    subtitle="L'ensemble de nos clients"
+    [divider]="true"
+    [breadcrumbs]="[
+      {
+        label: 'Companies',
+        url: '/admin/companies'
+      }
+    ]"
+  ></alto-admin-header>
 
-  <div class="row d-flex justify-content-end">
-    <a [routerLink]="['/', 'admin', 'companies', 'create']" routerLinkActive="menu-selected" class="btn btn-primary my-2 align-middle" style="max-width:150px">
+  <div class="d-flex justify-content-between align-items-center alto-grey fs-5 pb-4">
+    <span>{{ companies.length }} company account</span>
+    <a
+      *ngIf="selectedIds.length === 0; else deleteBtn"
+      [routerLink]="['/', 'admin', 'companies', 'create']"
+      routerLinkActive="menu-selected"
+      class="btn btn-primary my-2 align-middle"
+    >
+      <i class="bi bi-plus-lg pe-2"></i>
       Créer une company
     </a>
+    <ng-template #deleteBtn>
+      <button disabled class="btn btn-danger my-2 align-middle" (click)="deleteSelectedCompanies()">
+        <i class="bi bi-trash"></i> Delete
+      </button>
+    </ng-template>
   </div>
-
-  
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Nom</th>
-        <th scope="col">slackDays</th>
-        <th scope="col">slackTimes</th>
-        <th scope="col">domain</th>
-        <th scope="col">isSlackActive</th>
-        <th scope="col">slackAdmin</th>
-        <th scope="col">slackQuestionsPerQuiz</th>
-        
-        <th></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let company of companies">
-        <th scope="row">{{ company.name }}</th>
-        <td>{{company.slackDays}}</td>
-        <td>{{company.slackTimes}}</td>
-        <td>{{company.domain}}</td>
-        <td>{{company.isSlackActive}}</td>
-        <td>{{company.slackAdmin}}</td>
-        <td>{{company.slackQuestionsPerQuiz}}</td>
-        <td>
-          <a [routerLink]="['/', 'admin', 'companies',company.id]" routerLinkActive="menu-selected" class="btn btn-primary">
-            Voir
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div *ngIf="companies.length > 0; else elseBlock">
+    <div class="d-flex justify-content-end gap-2 pb-4">
+      <alto-search (searchChange)="onSearch($event)"></alto-search>
+      <button type="button" class="btn btn-outline-secondary" (click)="openFilterCanvas()">
+        <i class="bi bi-filter"></i> Filters
+      </button>
+    </div>
+    <div class="table-container table-panel mb-5">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  (change)="selectAll($event)"
+                  [ngModel]="selectedIds.length === companies.length"
+                  id="flexCheckDefault"
+                />
+              </div>
+            </th>
+            <th scope="col" sortable="name" (sort)="onSort($event)">
+              <i class="bi bi-arrow-up-short"></i> Corporate name
+            </th>
+            <th scope="col" sortable="domain" (sort)="onSort($event)">
+              <i class="bi bi-arrow-up-short"></i> Domain
+            </th>
+            <th scope="col">Biling</th>
+            <th scope="col">User admin</th>
+            <th scope="col">Sending days</th>
+            <th scope="col" sortable="slackQuestionsPerQuiz" (sort)="onSort($event)">
+              <i class="bi bi-arrow-up-short"></i> Nb of questions
+            </th>
+            <th scope="col" class="action-btn-list"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let company of displayedCompanies">
+            <td>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  (change)="selectCompany(company.id)"
+                  [ngModel]="selectedIds.includes(company.id)"
+                  id="flexCheckDefault"
+                />
+              </div>
+            </td>
+            <th scope="row">
+              <a
+                *ngIf="isImpersonnatedAsCompanyAdminOfthisCompanyUpdate(company.admins); else simpleName"
+                [routerLink]="['/', 'admin', 'companies', company.id, 'users']"
+                routerLinkActive="menu-selected"
+                class="fs-6b alto-success"
+              >
+                {{ company.name }}
+              </a>
+              <ng-template #simpleName> {{ company.name }}</ng-template>
+            </th>
+            <td>{{ company.domain }}</td>
+            <td>Lorem ipsum</td>
+            <td>
+              <div class="d-flex">
+                <a
+                  class="btn float-start mx-3 alto-badge-big incognito-btn"
+                  (click)="setImpersonation(company?.admins?.[0]?.email ?? '' )"
+                  ><i class="bi bi-incognito fs-5 text-white"></i
+                ></a>
+                <div class="d-flex flex-column gap-1">
+                  <span class="name alto-text">{{company?.admins?.[0]?.username ?? '' }}</span>
+                  <span class="alto-grey">{{company?.admins?.[0]?.email ?? '' }}</span>
+                </div>
+              </div>
+            </td>
+            <td>{{ company.slackDays }}</td>
+            <td>{{ company.slackQuestionsPerQuiz }}</td>
+            <td class="action-btn-list-container">
+              <div class="shaddow"></div>
+              <div class="d-flex action-btn-list align-items-center gap-2 px-3">
+                <button type="button" disabled class="btn btn-link">
+                  <i class="alto-second-grey bi bi-trash"></i>
+                </button>
+                <a
+                  [routerLink]="['/', 'admin', 'companies', company.id]"
+                  routerLinkActive="menu-selected"
+                  role="button"
+                  class="btn btn-link"
+                >
+                  <i class="alto-second-grey bi bi-pencil"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="d-flex align-items-center justify-content-between">
+      <span>Page {{ page }} of {{ pageCount }}</span>
+      <div class="d-flex gap-2">
+        <button
+          type="button"
+          [disabled]="page === 1"
+          (click)="onPaginator(page - 1)"
+          class="btn btn-outline-secondary"
+        >
+          Previous
+        </button>
+        <button
+          type="button"
+          [disabled]="page === pageCount"
+          (click)="onPaginator(page + 1)"
+          class="btn btn-outline-secondary"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+  <ng-template #elseBlock>
+    <div class="card bg-white align-items-center py-5">
+      <div class="icon-people-container mb-3">
+        <i class="bi bi-people fs-4 fw-bolder"></i>
+      </div>
+      <span class="fs-4 fw-bolder pb-1">No company account available</span>
+      <span class="pb-4 alto-second-grey">Create your first company account and add teams to it.</span>
+      <div>
+        <a
+          type="button"
+          class="btn btn-primary"
+          [routerLink]="['/', 'admin', 'companies', 'create']"
+          routerLinkActive="menu-selected"
+        >
+          <i class="bi bi-plus-lg pe-2"></i>Create a company account
+        </a>
+      </div>
+    </div>
+  </ng-template>
 </div>

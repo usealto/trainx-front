@@ -1,0 +1,24 @@
+<div class="alto-custom-pagination">
+  <ngb-pagination
+    [maxSize]="6"
+    [pageSize]="pageSize"
+    [collectionSize]="collectionSize"
+    (pageChange)="onPageChange($event)"
+    [(page)]="page"
+  >
+    <ng-template ngbPaginationPrevious
+      ><button type="button" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left pe-2"></i>Previous
+      </button></ng-template
+    >
+    <ng-template ngbPaginationNext
+      ><button type="button" class="btn btn-outline-secondary d-inline-flex align-items-center">
+        Next
+        <i class="bi bi-arrow-right ps-2"></i></button
+    ></ng-template>
+    <ng-template ngbPaginationEllipsis>...</ng-template>
+    <ng-template ngbPaginationNumber let-page
+      ><button type="button" class="btn btn-outline-secondary">{{ page }}</button></ng-template
+    >
+  </ngb-pagination>
+</div>

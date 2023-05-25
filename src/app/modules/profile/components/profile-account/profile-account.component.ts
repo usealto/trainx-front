@@ -4,7 +4,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { UserForm } from '../../models/user.form';
 import { UntypedFormBuilder } from '@angular/forms';
 import { ProfileStore } from '../../profile.store';
-import { UserDtoApi } from 'src/app/sdk';
+import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { UsersRestService } from '../../services/users-rest.service';
 
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';

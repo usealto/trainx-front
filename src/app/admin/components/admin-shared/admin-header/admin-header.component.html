@@ -1,0 +1,19 @@
+<nav style="--bs-breadcrumb-divider: '>'" aria-label="breadcrumb">
+  <ol *ngIf="breadcrumbs && breadcrumbs.length > 0" class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">
+      <a [routerLink]="['/', 'admin', 'home']" routerLinkActive="menu-selected"
+        ><i class="bi bi-house"></i
+      ></a>
+    </li>
+    <li *ngFor="let breadcrumb of breadcrumbs" class="breadcrumb-item">
+      <a [routerLink]="breadcrumb.url" routerLinkActive="menu-selected">
+        {{ breadcrumb.label }}
+      </a>
+    </li>
+  </ol>
+</nav>
+<div>
+  <h1>{{ title }}</h1>
+  <p class="mb-4">{{ subtitle }}</p>
+</div>
+<hr *ngIf="divider" />

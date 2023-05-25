@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { CompanyDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from 'src/app/sdk';
+import { CompanyDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 import { FormBuilder } from '@angular/forms';
 
 @Component({

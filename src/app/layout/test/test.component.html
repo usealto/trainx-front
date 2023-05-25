@@ -75,9 +75,10 @@
     <alto-program-card [displayToggle]="true" [program]="programStore.programs.value[0]"></alto-program-card>
     <br />
     <alto-progression-badge class="me-2"></alto-progression-badge>
+    <alto-progression-badge class="me-2" [score]="0"></alto-progression-badge>
     <alto-progression-badge class="me-2" [score]="0.05"></alto-progression-badge>
     <alto-progression-badge class="me-2" [score]="-0.5"></alto-progression-badge>
-    <alto-progression-badge class="me-2" [score]="-0.88"></alto-progression-badge>
+    <alto-progression-badge class="me-2" [score]="-1"></alto-progression-badge>
     <br />
     <br />
     <alto-search></alto-search>
@@ -105,7 +106,7 @@
     </button>
     <br />
     <br />
-    <ngb-pagination [maxSize]="5" [page]="1" [pageSize]="5" [collectionSize]="50"></ngb-pagination>
+    <alto-pagination></alto-pagination>
 
     <input type="range" min="1" max="100" class="form-range" />
 

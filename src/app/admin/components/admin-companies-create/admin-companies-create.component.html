@@ -1,22 +1,307 @@
-<div class="page-max-width px-2">
-  <form *ngIf="companyForm" [formGroup]="companyForm">
-    <div class="row py-4 border-bottom">
-      <label for="name" class="col-5 mb-2">name</label>
-      <div class="col-7 form-group">
-        <input type="select" class="form-control" placeholder="name" formControlName="name" />
-      </div>
-    </div>
-    <div class="row py-4 border-bottom">
-      <label for="domain" class="col-5 mb-2">domain (pour matcher les user automatiquement sur slack par ex)</label>
-      <div class="col-7 form-group">
-        <input type="select" class="form-control" placeholder="domain" formControlName="domain" />
-      </div>
-    </div>
-  </form>
-</div>
+<div class="">
+  <alto-admin-header
+    title="Companies"
+    subtitle="L'ensemble de nos clients"
+    [breadcrumbs]="[
+      {
+        label: 'Companies',
+        url: '/admin/companies'
+      }
+    ]"
+  ></alto-admin-header>
+  <div class="tabs">
+    <alto-admin-tabs (activeNumberChanges)="tabNumber = $event">
+      <alto-admin-tab [tabTitle]="'Informations'" icon="bi-file-text">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h2>Informations</h2>
+            <p class="fs-7">Fill in the general information about this company.</p>
+          </div>
+          <div>
+            <button
+              routerLink=".."
+              type="button"
+              class="btn btn-outline-secondary d-inline-flex align-items-center me-2"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary d-inline-flex align-items-center"
+              (click)="nextTab()"
+            >
+              Next
+              <i class="bi bi-arrow-right ps-2"></i>
+            </button>
+          </div>
+        </div>
+        <hr />
+        <form *ngIf="companyForm" [formGroup]="companyForm">
+          <!-- Name -->
+          <div class="py-4 border-bottom">
+            <div class="w-80 row">
+              <label for="name" class="col-5 mb-2 required">Corporate name</label>
+              <div class="col-7 form-group">
+                <input type="text" class="form-control" placeholder="Example: Apple" formControlName="name" />
+              </div>
+            </div>
+          </div>
+          <!-- Domain -->
+          <div class="row py-4 border-bottom">
+            <div class="w-80 row">
+              <label for="domain" class="col-5 mb-2">Domain</label>
+              <div class="col-7 form-group">
+                <input
+                  type="select"
+                  class="form-control"
+                  placeholder="Example: apple.com"
+                  formControlName="domain"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Logo Finally removed from the final form for a generated logo, here if needed -->
+          <!-- <div class="row py-4 border-bottom">
+            <div class="w-80 row">
+              <label for="domain" class="col-5 mb-2">Logo</label>
+              <div class="col-7 form-group">
+                <alto-dropzone [multiple]="false" (change)="onSelectLogo($event)"></alto-dropzone>
+              </div>
+            </div>
+          </div> -->
+          <!-- Billing -->
+          <div class="row py-4 border-bottom">
+            <div class="w-80 row">
+              <label for="domain" class="col-5 mb-2">Billing</label>
+              <div class="col-7 form-group">
+                <input type="select" class="form-control" placeholder="Lorem ipsum" />
+              </div>
+            </div>
+          </div>
+          <!-- Teams -->
+          <div class="row py-4 border-bottom" *ngIf="edit">
+            <div class="w-80 row">
+              <label for="domain" class="col-5 mb-2">Teams</label>
+              <div class="col-7 form-group">
+                <ng-select
+                  class="w-100"
+                  [items]="teams"
+                  [multiple]="true"
+                  bindLabel="name"
+                  placeholder="teams"
+                  [selectableGroup]="true"
+                  [closeOnSelect]="false"
+                  bindValue="id"
+                  formControlName="teams"
+                >
+                  <ng-template ng-label-tmp let-item="item">
+                    <div class="alto-badge fs-6b" [style]="item.id | teamColor">
+                      <span>{{ item.shortName }}</span>
+                    </div>
+                  </ng-template>
+                  <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                    <span class="alto-badge fs-6b" [style]="item.id | teamColor">
+                      {{ item.shortName }} - {{ item.longName }}
+                    </span>
+                  </ng-template>
+                </ng-select>
+                <div formArrayName="newTeams" class="pt-2">
+                  <ng-container *ngFor="let newTeam of newTeamsFormArrayControls; let i = index">
+                    <div class="row align-items-end position-relative py-2" [formGroup]="newTeam">
+                      <div class="col">
+                        <label class="form-label">Long name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Example: Sales Development Representative"
+                          formControlName="longName"
+                        />
+                      </div>
+                      <div class="col">
+                        <label class="form-label">Short name</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          placeholder="Example: SDR"
+                          formControlName="shortName"
+                        />
+                      </div>
+                      <div class="position-absolute team-delete-btn">
+                        <button type="button" class="btn btn-outline-danger" (click)="deleteTeam(i)">
+                          <i class="bi bi-x-lg"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <div>
+                    <button type="button" class="btn" (click)="addTeam()">
+                      <i class="bi bi-plus-lg"></i>Add a team
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Users -->
+          <div class="row py-4 border-bottom">
+            <div class="w-80 row">
+              <label for="domain" class="col-5 mb-2">Users</label>
+              <div class="col-7 form-group">
+                <alto-admin-users-upload-form></alto-admin-users-upload-form>
+              </div>
+            </div>
+          </div>
+        </form>
+      </alto-admin-tab>
 
-<div class="py-4 page-max-width">
-  <button type="button" class="btn btn-primary float-end" (click)="submit()">
-    Save
-  </button>
+      <!-- SETTINGS TAB -->
+      <alto-admin-tab [tabTitle]="'Program settings'" icon="bi-gear">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h2>Settings</h2>
+            <p class="fs-7">Configure the programs of this company.</p>
+          </div>
+          <div>
+            <button
+              routerLink=".."
+              type="button"
+              class="btn btn-outline-secondary d-inline-flex align-items-center me-2"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary d-inline-flex align-items-center"
+              (click)="submit()"
+              [disabled]="!companyForm.valid || companyForm.pristine || !companyForm.dirty"
+            >
+              Save
+              <i class="bi bi-save ps-2"></i>
+            </button>
+          </div>
+        </div>
+        <hr />
+        <form *ngIf="companyForm" [formGroup]="companyForm">
+          <!-- Slack account -->
+          <div class="py-4 border-bottom">
+            <div class="w-80 row">
+              <label for="name" class="col-5 mb-2">Slack account</label>
+              <div class="col-7 form-group">
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input me-2"
+                    type="checkbox"
+                    role="switch"
+                    id="flexSwitchCheckDefault"
+                    formControlName="slackActive"
+                  />
+                  <label class="form-check-label" for="flexSwitchCheckDefault">Active Slack</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- User admin -->
+          <div class="py-4 border-bottom">
+            <div class="w-80 row">
+              <div class="col-5 mb-2">
+                <label for="name">User admin</label>
+                <p class="fs-7">The admin user of the Slack account.</p>
+              </div>
+              <div class="col-7 form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="slackAdmin"
+                  placeholder="Search user"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Sending days -->
+          <div class="py-4 border-bottom">
+            <div class="w-80 row">
+              <div class="col-5 mb-2">
+                <label for="name required">Sending days</label>
+                <p class="fs-7">The days on which programs will be sent.</p>
+              </div>
+              <div class="col-7 form-group">
+                <ng-select
+                  class="w-100"
+                  [items]="weekDayEnum"
+                  [multiple]="true"
+                  bindLabel="item"
+                  placeholder="Select one or more days"
+                  [selectableGroup]="true"
+                  [closeOnSelect]="false"
+                  bindValue="id"
+                  formControlName="slackDays"
+                >
+                  <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                    <div class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
+                      <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+                        <i class="bi bi-x-lg"></i>
+                      </span>
+                      <span>{{ item }}</span>
+                    </div>
+                  </ng-template>
+                  <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                    <span class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
+                      {{ item }}
+                    </span>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <!-- Number of questions -->
+          <div class="py-4 border-bottom">
+            <div class="w-80 row">
+              <div class="col-5 mb-2">
+                <label for="name required">Number of questions</label>
+                <p class="fs-7">the number of questions contained in the programs.</p>
+              </div>
+              <div class="col-7 form-group">
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="slackQuestionsPerQuiz"
+                  formControlName="slackQuestionsPerQuiz"
+                />
+              </div>
+            </div>
+          </div>
+        </form>
+      </alto-admin-tab>
+    </alto-admin-tabs>
+    <div class="d-flex justify-content-end">
+      <div>
+        <button
+          routerLink=".."
+          type="button"
+          class="btn btn-outline-secondary d-inline-flex align-items-center me-2"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          *ngIf="tabNumber !== 1"
+          class="btn btn-primary d-inline-flex align-items-center"
+          (click)="nextTab()"
+        >
+          Next
+          <i class="bi bi-arrow-right ps-2"></i>
+        </button>
+        <button
+          type="button"
+          *ngIf="tabNumber === 1"
+          class="btn btn-primary d-inline-flex align-items-center"
+          (click)="submit()"
+          [disabled]="!companyForm.valid || companyForm.pristine || !companyForm.dirty"
+        >
+          Save
+          <i class="bi bi-save ps-2"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

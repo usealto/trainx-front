@@ -1,0 +1,20 @@
+alto-admin-companies-create {
+  display: block;
+  padding: 2rem;
+  .ng-select.ng-select-opened.ng-select-bottom > .ng-select-container,
+  .ng-select.ng-select-opened.ng-select-top > .ng-select-container,
+  .ng-select .ng-select-container {
+    border-radius: 4px;
+  }
+  ng-select .ng-select-container {
+    color: #333;
+  }
+  .ng-select .ng-select-container .ng-value-container .ng-placeholder {
+    color: var(--bs-body-color);
+    font-weight: initial;
+  }
+}
+.team-delete-btn {
+  width: inherit;
+  right: -50px;
+}

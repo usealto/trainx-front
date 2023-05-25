@@ -4,7 +4,7 @@ import * as Papa from 'papaparse';
 import { tap } from 'rxjs';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { CompanyDtoApi, TeamDtoApi, UsersApiService } from 'src/app/sdk';
+import { CompanyDtoApi, TeamDtoApi, UsersApiService } from '@usealto/sdk-ts-angular';
 import { UserCreate } from './models/user.create';
 
 @Component({
@@ -68,12 +68,12 @@ export class AdminUsersUploadComponent implements OnInit {
   upload() {
     console.log('here');
 
-    let yourJWTToken =
-      localStorage.getItem(
-        '@@auth0spajs@@::ThcIBQZrRso5QaZq67kCU5eFYTfZwTSK::https://api.usealto.com::openid profile email offline_access',
-      ) || '';
-    yourJWTToken = JSON.parse(yourJWTToken).body.access_token;
-    console.log(yourJWTToken);
+    // let yourJWTToken =
+    //   localStorage.getItem(
+    //     '@@auth0spajs@@::ThcIBQZrRso5QaZq67kCU5eFYTfZwTSK::https://api.usealto.com::openid profile email offline_access',
+    //   ) || '';
+    // yourJWTToken = JSON.parse(yourJWTToken).body.access_token;
+    // console.log(yourJWTToken);
 
     this.csvData.forEach((user) => {
       console.log(user);

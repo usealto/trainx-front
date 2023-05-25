@@ -6,7 +6,7 @@ import {
   PatchTeamRequestParams,
   TeamDtoApi,
   TeamsApiService,
-} from 'src/app/sdk';
+} from '@usealto/sdk-ts-angular';
 import { TeamStore } from '../team.store';
 
 @Injectable({
