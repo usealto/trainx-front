@@ -16,11 +16,12 @@ import {
 import { environment } from 'src/environments/environment';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
+import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { UserFilters } from 'src/app/modules/profile/models/user.model';
 
 interface TeamDisplay extends TeamDtoApi {
   score?: number;
@@ -28,6 +29,7 @@ interface TeamDisplay extends TeamDtoApi {
 interface UserDisplay extends UserDtoApi {
   score?: number;
 }
+
 @UntilDestroy()
 @Component({
   selector: 'alto-lead-team',
@@ -52,8 +54,10 @@ export class LeadTeamComponent implements OnInit {
   usersPage = 1;
   usersPageSize = 10;
   usersScores: UserDisplay[] = [];
-
   usersQuestions = new Map<string, number[]>();
+  userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
+
+  scoreFilters = Object.values(ScoreFilter).map((c) => ({ name: c }));
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -145,12 +149,18 @@ export class LeadTeamComponent implements OnInit {
     this.paginatedTeams = this.teamsScores.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
   }
 
-  filterUsers(selectedTeams: TeamDtoApi[] = []) {
-    const filter = {
-      teams: selectedTeams,
-    };
+  filterUsers(
+    { teams = this.userFilters.teams, score = this.userFilters.score }: UserFilters = this.userFilters,
+  ) {
+    this.userFilters.teams = teams;
+    this.userFilters.score = score;
 
-    this.changeUsersPage(this.usersService.filterUsers(this.usersScores, filter), 1);
+    let output = this.usersService.filterUsers(this.usersScores, { teams }) as UserDisplay[];
+    if (score) {
+      output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
+    }
+
+    this.changeUsersPage(output, 1);
   }
 
   changeUsersPage(users: UserDisplay[], page: number) {
