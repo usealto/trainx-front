@@ -30,7 +30,7 @@ export class AdminCompanyUsersComponent implements OnInit {
   displayedUsers: UserDtoApi[] = [];
   selectedUsers: UserDtoApi[] = [];
   page = 1;
-  pageSize = 7;
+  pageSize = 15;
   pageCount = 0;
   teams: TeamDtoApi[] = [];
   searchString = '';

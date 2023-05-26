@@ -33,7 +33,7 @@ export class AdminCompaniesComponent implements OnInit {
   selectedIds: string[] = [];
   companyAdmins: AuthUserGet[] = [];
   page = 1;
-  pageSize = 7;
+  pageSize = 12;
   pageCount = 0;
   searchString = '';
   sortDirection: SortEvent = { column: '', direction: '' };
@@ -194,7 +194,7 @@ export class AdminCompaniesComponent implements OnInit {
 
     if (impersonatedUserEmail && companyAdmin) {
       const impersonatedUser = companyAdmin.find(
-        (user) => user.email.toLowerCase() === impersonatedUserEmail,
+        (user) => user.email.toLowerCase() === impersonatedUserEmail.toLowerCase(),
       );
 
       if (impersonatedUser) {

@@ -60,7 +60,7 @@
               </div>
             </div>
           </div>
-          <!-- Logo Finally removed from the final form for a generated logo, here if needed -->
+          <!-- Logo removed from the final form for a generated logo, here if needed -->
           <!-- <div class="row py-4 border-bottom">
             <div class="w-80 row">
               <label for="domain" class="col-5 mb-2">Logo</label>
@@ -70,14 +70,14 @@
             </div>
           </div> -->
           <!-- Billing -->
-          <div class="row py-4 border-bottom">
+          <!-- <div class="row py-4 border-bottom">
             <div class="w-80 row">
               <label for="domain" class="col-5 mb-2">Billing</label>
               <div class="col-7 form-group">
                 <input type="select" class="form-control" placeholder="Lorem ipsum" />
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- Teams -->
           <div class="row py-4 border-bottom" *ngIf="edit">
             <div class="w-80 row">
@@ -204,16 +204,11 @@
           <div class="py-4 border-bottom">
             <div class="w-80 row">
               <div class="col-5 mb-2">
-                <label for="name">User admin</label>
-                <p class="fs-7">The admin user of the Slack account.</p>
+                <label for="name">Slack admin</label>
+                <p class="fs-7">The security admin user of the Slack workspace.</p>
               </div>
               <div class="col-7 form-group">
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="slackAdmin"
-                  placeholder="Search user"
-                />
+                <input type="text" class="form-control" formControlName="slackAdmin" placeholder="Email" />
               </div>
             </div>
           </div>

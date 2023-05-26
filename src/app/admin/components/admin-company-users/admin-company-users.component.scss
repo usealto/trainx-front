@@ -16,6 +16,10 @@
     }
     th {
       background-color: #fcfcfd;
+      .name-cell {
+        max-width: 30vw;
+        overflow: hidden;
+      }
     }
     th[sortable] {
       i {

@@ -17,6 +17,7 @@ import { UserForm } from './models/user.form';
 import { AuthUserGet } from '../../admin-users/models/authuser.get';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
+import { UsersApiService as SlackApiService } from 'src/app/sdk/api/users.service';
 
 @Component({
   selector: 'alto-admin-user-create-form',
@@ -45,6 +46,7 @@ export class AdminUserCreateFormComponent implements OnInit {
     private readonly authApiService: AuthApiService,
     private readonly usersRestService: UsersRestService,
     private readonly companiesRestService: CompaniesRestService,
+    private readonly slackApiService: SlackApiService,
   ) {
     this.fb = fob;
   }
@@ -156,19 +158,31 @@ export class AdminUserCreateFormComponent implements OnInit {
     this.authApiService.getAuth0Users({ q: email }).subscribe((q) => {
       if (q.data && q.data.length > 0) {
         this.userAuth0 = q.data[0];
+        console.log(this.userAuth0);
       } else {
         throw new Error('user not found in auth0');
       }
     });
   }
 
+  sendResetPassword() {
+    if (!this.userForm.value) return;
+    const { email } = this.userForm.value;
+
+    this.authApiService.resetUserPassword({
+      auth0ResetPasswordParamsDtoApi: {
+        email: email,
+      },
+    });
+  }
+
   resetSlackId() {
-    // this.usersApiService
-    //   .updateSlackid({
-    //     companyId: this.companyId,
-    //     userId: this.userId,
-    //     slackAdmin: this.company.slackAdmin,
-    //   })
-    //   .subscribe((res) => console.log(res));
+    this.slackApiService
+      .updateSlackid({
+        companyId: this.companyId,
+        userId: this.userId,
+        slackAdmin: this.company.slackAdmin,
+      })
+      .subscribe((res) => console.log(res));
   }
 }

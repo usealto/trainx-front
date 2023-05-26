@@ -67,6 +67,23 @@
       </div>
     </div>
   </div>
+  <!-- Password -->
+  <div class="py-4 border-bottom" *ngIf="edit">
+    <div class="w-80 row">
+      <div class="col-5 mb-2">
+        <label for="name" class="required">Password</label>
+      </div>
+      <div class="col-7 form-group">
+        <button
+          type="button"
+          class="btn btn-primary d-inline-flex align-items-center text-nowrap"
+          (click)="sendResetPassword()"
+        >
+          Send reset password email
+        </button>
+      </div>
+    </div>
+  </div>
   <!-- Team -->
   <div class="py-4 border-bottom">
     <div class="w-80 row">
@@ -157,6 +174,26 @@
           >
             Reset ID
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-4 border-bottom" *ngIf="edit">
+    <div class="w-80 row">
+      <div class="col-5 mb-2">
+        <label for="name">Auth0</label>
+      </div>
+      <div class="col-7 form-group">
+        <div class="d-flex flex-column gap-2 fw-bolder">
+          <div><span class="me-2">Connected to Auth0:</span>{{ userAuth0 ? 'Yes' : 'No' }}</div>
+          <ng-container *ngIf="userAuth0">
+            <div>
+              <span class="me-2">Last connection to Auth0:</span>{{ userAuth0.last_login || 'Never' }}
+            </div>
+            <div>
+              <span class="me-2">Verified email on Auth0:</span>{{ userAuth0.email_verified ? 'Yes' : 'No' }}
+            </div>
+          </ng-container>
         </div>
       </div>
     </div>

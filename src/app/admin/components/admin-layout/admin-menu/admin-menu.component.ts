@@ -2,6 +2,7 @@ import { UsersRestService } from 'src/app/modules/profile/services/users-rest.se
 import { Component, OnInit } from '@angular/core';
 import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { DataService } from 'src/app/admin/admin-data.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'alto-admin-menu',
@@ -9,7 +10,11 @@ import { DataService } from 'src/app/admin/admin-data.service';
   styleUrls: ['./admin-menu.component.scss', '../../../../layout/menu/menu.component.scss'],
 })
 export class AdminMenuComponent implements OnInit {
-  constructor(private readonly usersRestService: UsersRestService, private dataService: DataService) {}
+  constructor(
+    private readonly usersRestService: UsersRestService,
+    private dataService: DataService,
+    private router: Router,
+  ) {}
   user!: UserDtoApi;
   userEmail = '';
   impersonatedUser =
@@ -34,6 +39,7 @@ export class AdminMenuComponent implements OnInit {
   }
 
   removeImpersonation() {
+    console.log('héo');
     localStorage.setItem('impersonatedUser', '');
     this.impersonatedUser = false;
     this.dataService.sendData('impersonatedUserUpdated');
@@ -43,6 +49,10 @@ export class AdminMenuComponent implements OnInit {
     this.refreshMe();
     this.impersonatedUser =
       localStorage.getItem('impersonatedUser') !== '' && localStorage.getItem('impersonatedUser');
-    window.location.reload();
+    if (localStorage.getItem('impersonatedUser') === '') {
+      this.router.navigate(['/admin/companies/']).then(() => window.location.reload());
+    } else {
+      window.location.reload();
+    }
   }
 }
