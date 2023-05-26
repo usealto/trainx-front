@@ -394,7 +394,7 @@
               <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
               <td>
                 <alto-img-badge
-                  [url]="(getUser(chal.leadUser?.id ?? '') | async)?.pictureUrl"
+                  [user]="getUser(chal.createdBy) | async"
                 ></alto-img-badge>
               </td>
               <td>

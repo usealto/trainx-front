@@ -76,7 +76,7 @@
           >
             <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
             <td class="text-center">
-              <alto-img-badge [url]="(getUser(chal.createdBy) | async)?.pictureUrl"></alto-img-badge>
+              <alto-img-badge [user]="getUser(chal.createdBy) | async" ></alto-img-badge>
 
               <!-- <span
                 *ngIf="chal.leadTeam"
@@ -189,7 +189,7 @@
           >
             <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
             <td class="text-center">
-              <alto-img-badge [url]="(getUser(chal.createdBy) | async)?.pictureUrl"></alto-img-badge>
+              <alto-img-badge [user]="getUser(chal.createdBy) | async"></alto-img-badge>
             </td>
             <td class="text-center">
               <alto-colored-pill-list
