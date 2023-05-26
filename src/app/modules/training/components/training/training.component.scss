@@ -2,3 +2,22 @@
   display: block;
   padding: var(--alto-page-padding);
 }
+.timer {
+  span {
+    min-width: 11.429rem;
+    display: inline-block;
+  }
+}
+alto-answer-card {
+  padding: 0 1.714rem 1.714rem 0;
+}
+
+alto-answer-card:nth-child(even) {
+  padding: 0 0 1.714rem 0;
+}
+h1 {
+  margin-bottom: 4.571rem;
+}
+.footer {
+  margin-top: 4.571rem;
+}

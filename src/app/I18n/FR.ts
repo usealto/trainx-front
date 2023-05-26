@@ -19,6 +19,7 @@ export const FR = {
     reply: 'Répondre',
     search: 'Rechercher',
     period: 'Période',
+    soon: 'Bientôt',
     pagination: {
       on: 'sur',
     },
@@ -129,7 +130,7 @@ export const FR = {
     questions: {
       title: 'Questions',
       subtitle: "Retrouvez l'ensemble des questions présentes dans vos programmes.",
-      createQuestion: 'Ajouter',
+      createQuestion: 'Créer',
       table: {
         question: 'Question',
         score: 'Score',
@@ -330,7 +331,7 @@ export const FR = {
   },
   leadTeam: {
     title: 'Équipes',
-    subtitle: "Retrouvez une vue d'ensemble sur vos collaborateurs.",
+    subtitle: "Retrouvez une vue d'ensemble sur vos membres.",
     createTeam: 'Créer',
     members: {
       title: 'Vos membres',
@@ -344,6 +345,7 @@ export const FR = {
       },
       statistics: {
         total: 'Total',
+        totalTooltip: "L'ensemble des membres de votre entreprise",
         active: 'Membres réguliers',
         inactive: 'Membres irréguliers',
       },
@@ -358,7 +360,7 @@ export const FR = {
       forms: {
         edition: {
           title: 'Modifier un membre',
-          subtitle: 'Modifiez le role de vos collaborateurs et assignez leur une équipe.',
+          subtitle: 'Modifiez le role de vos membres et assignez leur une équipe.',
           teams: 'Équipes',
           teamsPlaceholder: 'Rechercher dans vos équipes',
           type: "Type d'utilisateur",
@@ -375,9 +377,9 @@ export const FR = {
       subtitle: "Retrouvez l'ensemble des équipes de votre entreprise.",
       table: {
         name: 'Nom',
-        initials: 'Initiales',
+        initials: '',
         usersCount: 'Nombre de membres',
-        users: ['Aucun', '{{}} user', '{{}} users'],
+        users: ['Aucun', '{{}}', '{{}}'],
         averageScore: 'Score moyen',
         creationDate: 'Date de création',
       },
@@ -395,7 +397,8 @@ export const FR = {
         shortNameExemple: 'Exemple : SDR',
         invitationEmails: 'Invitation par mail',
         invitationEmailsPlaceholder: 'Séparer les emails par une virgule',
-        invitationEmailsSubtitle: "Vos collaborateurs recevront une invitation par mail pour s’inscrire à Alto.",
+        invitationEmailsSubtitle:
+          "Vos collaborateurs recevront une invitation par mail pour s'inscrire à Alto.",
         Programs: 'Programmes',
         programsPlaceholder: 'Rechercher dans vos programmes',
         ProgramsSubtitle: 'Sélectionner les programmes auxquels cette équipe doit être assignée.',
@@ -442,7 +445,9 @@ export const FR = {
         byUser: 'Le meilleur membre',
         byUserSubtitle: "La récompense sera remise à l'utilisateur avec le plus haut score.",
       },
-      teamsSubtitle: 'Sélectionnez au minimum 2 équipes concernées par ce challenge.',
+      teamsSubtitle: 'Sélectionnez la, ou les, équipe(s) concerné(es) par ce challenge.',
+      teamsExplained:
+        "Ne sélectionner qu'une équipe pour un challenge par équipe, ou plusieurs pour un challenge inter-équipes.",
       minimum: 'Seuils minimum',
       minimumSubtitle: 'Définissez les seuils à atteindre pour pouvoir participer à ce challenge.',
       activity: 'Activité',
@@ -456,6 +461,7 @@ export const FR = {
       durationSubtitle: 'Choisissez une date de début et de fin pour ce challenge.',
       reward: 'Récompense',
       rewardSubtitle: "Choisissez une récompense pour la personne ou l'équipe remportant ce challenge.",
+      rewardPlaceholder: 'Exemple : iPhone 14 Pro',
     },
   },
   menu: {
@@ -539,7 +545,7 @@ export const FR = {
     },
     Unauthorized: {
       title: 'Unauthorized',
-      message: 'You are not logged in!',
+      message: "Vous n'avez pas accès !",
     },
     Notfound: {
       title: 'Item not found',
@@ -597,7 +603,28 @@ export const FR = {
       continueSession: 'Session continue',
       continueSessionSubtitle:
         'Entraînez vous chaque jour à votre rythme sur des questions issues de vos programmes.',
-      continueSessionCounts: 'se sont entrainés aujourd’hui',
+      continueSessionCounts: [
+        "personne ne s'est entrainé aujourd'hui",
+        "{{}} s'est entrainé aujourd'hui",
+        "{{}} se sont entrainés aujourd'hui",
+      ],
+    },
+  },
+  training: {
+    secondsRemaining: 'secondes restantes',
+    selectOneAnswer: 'Sélectionnez la bonne réponse',
+    submit: 'Valider',
+    saveAndQuit: 'Enregistrer et quitter',
+    canva: {
+      goodAnswer: 'Bonne réponse !',
+      badAnswer: 'Mauvaise réponse !',
+      goodResultSubtitle: "Il s'agissait bien de",
+      badResultSubtitle: "Il s'agissait de",
+      explanation: 'Explication',
+      noExplanation: "Pas d'explication",
+      reference: 'Référence',
+      noReference: 'Pas de référence',
+      continue: 'Continuer',
     },
   },
 };

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { addDays, addHours, startOfDay } from 'date-fns';
 import { ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
-import { ScoreDuration } from '../models/score.model';
+import { ScoreDuration, ScoreFilter } from '../models/score.model';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @Injectable({
@@ -15,6 +15,42 @@ export class ScoresService {
     if (output.length === 0) return null;
 
     return output.reduce((prev, curr) => prev + curr, 0) / output.length;
+  }
+
+  /**
+   * @param isDecimal Indications for the score format : true => 0.86 ; false => 86
+   */
+  filterByScore<T extends { score?: number }>(data: T[], score: ScoreFilter, isDecimal: boolean): T[] {
+    let scoreCap = 0;
+    let isUnder = false;
+    switch (score) {
+      case ScoreFilter.Under25:
+        isUnder = true;
+        scoreCap = 25;
+        break;
+      case ScoreFilter.Under50:
+        isUnder = true;
+        scoreCap = 50;
+        break;
+      case ScoreFilter.Under75:
+        isUnder = true;
+        scoreCap = 75;
+        break;
+      case ScoreFilter.Over25:
+        scoreCap = 25;
+        break;
+      case ScoreFilter.Over50:
+        scoreCap = 50;
+        break;
+      case ScoreFilter.Over75:
+        scoreCap = 75;
+        break;
+    }
+    return data.filter((d) => {
+      if (!d.score) return false;
+      const sc = isDecimal ? d.score * 100 : d.score;
+      return isUnder ? sc < scoreCap : sc > scoreCap;
+    });
   }
 
   getYesterday() {

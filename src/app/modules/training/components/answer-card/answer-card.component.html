@@ -1,0 +1,27 @@
+<div
+  class="panel custom-panel"
+  [class]="
+    type === 'selected'
+      ? 'selected-panel'
+      : type === 'correct'
+      ? 'correct-panel'
+      : type === 'wrong'
+      ? 'wrong-panel'
+      : ''
+  "
+>
+  <i
+    class="fs-3 bi"
+    [class]="
+      type === 'selected'
+        ? 'bi-check-circle-fill text-primary'
+        : type === 'correct'
+        ? 'bi-check-circle-fill text-success'
+        : type === 'wrong'
+        ? 'bi-x-circle-fill text-danger'
+        : 'bi-circle alto-grey'
+    "
+  ></i>
+
+  <h2 class="mt-4 user-select-none">{{ answer }}</h2>
+</div>

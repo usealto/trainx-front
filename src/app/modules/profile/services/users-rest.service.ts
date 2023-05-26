@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Observable, map, take, tap } from 'rxjs';
 import {
+  GetNextQuestionsForUserRequestParams,
   GetScoresRequestParams,
   GetUsersRequestParams,
   PatchUserDtoApi,
+  QuestionPaginatedResponseApi,
   ScoresApiService,
   UserDtoApi,
   UserDtoPaginatedResponseApi,
   UsersApiService,
 } from '@usealto/sdk-ts-angular';
+import { Observable, map, tap } from 'rxjs';
 import { ProfileStore } from '../profile.store';
 
 @Injectable({
@@ -55,13 +57,30 @@ export class UsersRestService {
   }
 
   getMe(): Observable<UserDtoApi> {
-    return this.userApi.getMe({}).pipe(
-      map((u) => u.data || ({} as UserDtoApi)),
-      tap((u) => (this.userStore.user.value = u)),
-    );
+    if (this.userStore.user.value) {
+      return this.userStore.user.value$;
+    } else {
+      return this.userApi.getMe({}).pipe(
+        map((u) => u.data || ({} as UserDtoApi)),
+        tap((u) => (this.userStore.user.value = u)),
+      );
+    }
   }
 
   patchUser(id: string, patchUserDtoApi: PatchUserDtoApi): Observable<UserDtoApi> {
     return this.userApi.patchUser({ id, patchUserDtoApi }).pipe(map((u) => u.data || ({} as UserDtoApi)));
+  }
+
+  getNextQuestionsPaginated(
+    userId: string,
+    req?: GetNextQuestionsForUserRequestParams,
+  ): Observable<QuestionPaginatedResponseApi> {
+    const params = {
+      ...req,
+      id: userId,
+      page: req?.page ?? 1,
+      itemsPerPage: req?.itemsPerPage ?? 25,
+    } as GetNextQuestionsForUserRequestParams;
+    return this.userApi.getNextQuestionsForUser(params).pipe();
   }
 }

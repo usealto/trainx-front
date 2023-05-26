@@ -215,13 +215,6 @@
         [placeholder]="I18ns.programs.tags.filters.programs"
         (selectChange)="filterTags({ programs: $event })"
       ></alto-dropdown-filter>
-      <alto-dropdown-filter
-        [data]="profileStore.users.value"
-        [returnValue]="'id'"
-        [displayLabel]="'username'"
-        [placeholder]="I18ns.programs.questions.filters.contributors"
-        (selectChange)="filterTags({ contributors: $event })"
-      ></alto-dropdown-filter>
     </div>
     <div class="col-4 text-end">
       <alto-search (searchChange)="filterTags({ search: $event })"></alto-search>
@@ -232,11 +225,10 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">{{ I18ns.programs.tags.table.name }}</th>
-            <th scope="col">{{ I18ns.programs.tags.table.score }}</th>
-            <th scope="col">{{ I18ns.programs.tags.table.associatedPrograms }}</th>
+            <th scope="col" class="w-30">{{ I18ns.programs.tags.table.name }}</th>
+            <th scope="col" class="w-25">{{ I18ns.programs.tags.table.score }}</th>
             <th class="text-center" scope="col">{{ I18ns.programs.tags.table.author }}</th>
-            <th></th>
+            <th class="w-5"></th>
           </tr>
         </thead>
         <tbody *ngIf="!isTagsLoading">
@@ -246,9 +238,6 @@
               <span class="alto-score" [class]="(getTagScore(tag.id) || 0) * 100 | pillColor">
                 {{ getTagScore(tag.id) | percent }}
               </span>
-            </td>
-            <td *ngIf="!isTagProgramsLoading">
-              <alto-colored-pill-list [data]="getTagPrograms(tag.id)" [limit]="4"></alto-colored-pill-list>
             </td>
             <td class="w-10 text-center">
               <alto-img-badge [url]="getUser(tag.createdBy)?.pictureUrl"></alto-img-badge>

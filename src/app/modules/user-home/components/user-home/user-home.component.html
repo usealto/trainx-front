@@ -3,7 +3,7 @@
 <div class="row mt-5 mb-4">
   <div class="col-5">
     <h2 class="title">{{ I18ns.userHome.programsRun.title }}</h2>
-    <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.programsRun.subtitle }}</p>
+    <!-- <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.programsRun.subtitle }}</p> -->
   </div>
   <div class="col-7 text-end">
     <!-- <button class="btn btn-outline-secondary" [routerLink]="['/', AltoRoutes.user, AltoRoutes.training]">
@@ -20,7 +20,9 @@
       </div>
       <h2 class="mt-4">{{ I18ns.userHome.programsRun.continueSession }}</h2>
       <p class="alto-grey mb-4">{{ I18ns.userHome.programsRun.continueSessionSubtitle }}</p>
-      <p class="text-end alto-light-grey">{{ guessesCount + ' ' +  I18ns.userHome.programsRun.continueSessionCounts }}</p>
+      <p class="text-end alto-light-grey">
+        {{ I18ns.userHome.programsRun.continueSessionCounts | plural : guessesCount }}
+      </p>
     </div>
   </div>
 </div>

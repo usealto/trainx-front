@@ -16,4 +16,8 @@
 }
 .passed-step {
   border-bottom: 2px var(--alto-blue) solid;
+  .tab-icon {
+    background-color: var(--alto-blue);
+    color: white;
+  }
 }

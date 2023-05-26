@@ -11,7 +11,7 @@ export class SearchComponent {
   /**
    * To avoid server clog when a request is connected to the search
    */
-  @Input() debounceTime = 750;
+  @Input() debounceTime = 450;
   @Output() searchChange = new EventEmitter<string>();
 
   timeOut: any;

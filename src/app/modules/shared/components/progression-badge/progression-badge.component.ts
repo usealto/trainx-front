@@ -8,6 +8,6 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 })
 export class ProgressionBadgeComponent {
   I18ns = I18ns;
-  @Input() score: number | null = 0;
+  @Input() score?: number | null;
   @Input() arrow = true;
 }

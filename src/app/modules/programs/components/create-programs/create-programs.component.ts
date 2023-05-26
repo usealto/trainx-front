@@ -80,7 +80,7 @@ export class CreateProgramsComponent implements OnInit {
       name: [program?.name ?? '', [Validators.required]],
       priority: [program?.priority ?? null, [Validators.required]],
       description: program?.description ?? '',
-      expectation: [program?.expectation ?? 60, [Validators.required]],
+      expectation: [program?.expectation ?? 70, [Validators.required]],
       tags: [program?.tags?.map((t) => t.id) ?? [], [Validators.required]],
       teams: [program?.teams?.map((t) => t.id) ?? []],
     });

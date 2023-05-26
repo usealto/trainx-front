@@ -6,11 +6,15 @@ import { UserFilters } from '../models/user.model';
   providedIn: 'root',
 })
 export class UsersService {
-  filterUsers(users: UserDtoApi[], { teams }: UserFilters) {
+  filterUsers(users: UserDtoApi[], { teams, search }: UserFilters) {
     let output: UserDtoApi[] = [...users];
 
     if (teams?.length) {
       output = output.filter((u) => teams.some((t) => u.teamId === t.id));
+    }
+    if (search) {
+      const s = search.toLowerCase();
+      output = s.length ? output.filter((user) => user.username?.toLowerCase().includes(s)) : users;
     }
 
     return output;

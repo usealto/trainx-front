@@ -1,0 +1,29 @@
+:host {
+  display: block;
+  padding: var(--alto-page-padding);
+}
+
+.footer {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  padding-bottom: 1.143rem;
+  button {
+    margin-right: 1.714rem;
+  }
+}
+
+.link-crop {
+  width: 90%;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.text-green {
+  color: #32d583;
+}
+.text-red {
+  color: #f04438;
+}

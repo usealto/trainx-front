@@ -34,7 +34,7 @@
             <th scope="col" class="w-20 text-center">{{ I18ns.leadTeam.teams.table.usersCount }}</th>
             <th scope="col" class="w-25">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
             <th scope="col" class="text-center">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
-            <th></th>
+            <th class="w-5"></th>
           </tr>
         </thead>
         <tbody>
@@ -53,12 +53,10 @@
                 <div
                   class="progress-bar d-inline-block"
                   role="progressbar"
-                  [style]="teamsScores.get(team.id) && 'width:' + teamsScores.get(team.id) + '%'"
+                  [style]="'width:' + team.score + '%'"
                 ></div>
               </div>
-              <ng-container *ngIf="teamsScores.get(team.id)">
-                {{ teamsScores.get(team.id) + '%' }}
-              </ng-container>
+              <ng-container *ngIf="team.score"> {{ team.score }} % </ng-container>
             </td>
             <td class="text-center">
               {{ team.createdAt | date : 'shortDate' }}
@@ -101,34 +99,63 @@
   <div class="row py-4">
     <div class="col-4">
       <div class="panel">
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          placement="top"
+          ngbTooltip="{{ I18ns.leadTeam.members.statistics.totalTooltip }}"
+        ></i>
         <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.total }}</p>
         <h1>{{ absoluteUsersCount }}</h1>
       </div>
     </div>
     <div class="col-4">
       <div class="panel">
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          placement="top"
+          ngbTooltip="{{ I18ns.leadHome.statistics.activeMembersToolTip }}"
+        ></i>
         <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.active }}</p>
         <h1>{{ activeUsersCount }}</h1>
       </div>
     </div>
     <div class="col-4">
       <div class="panel">
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          placement="top"
+          ngbTooltip="{{ I18ns.leadHome.statistics.inactiveMembersToolTip }}"
+          placement="start"
+        ></i>
         <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.inactive }}</p>
         <h1>{{ absoluteUsersCount - activeUsersCount }}</h1>
       </div>
     </div>
   </div>
 
-  <div class="row mb-4">
+  <div class="mb-4">
+    <alto-search
+      class="float-end d-inline-block"
+      (searchChange)="filterUsers({ search: $event })"
+    ></alto-search>
+
     <alto-dropdown-filter
-      class="text-start col-3"
+      class="d-inline-block me-3"
       [data]="teams"
       [displayLabel]="'shortName'"
       [isColored]="true"
       [placeholder]="I18ns.leadTeam.members.filters.teams"
-      (selectChange)="filterUsers($event)"
+      (selectChange)="filterUsers({ teams: $event })"
     ></alto-dropdown-filter>
-    <alto-search class="col-2 ms-auto" (searchChange)="searchUsers(users, $event)"></alto-search>
+    <alto-dropdown-filter
+      class="d-inline-block me-3"
+      displayLabel="name"
+      returnValue="name"
+      [data]="scoreFilters"
+      [multiple]="false"
+      [placeholder]="I18ns.leadTeam.members.filters.score"
+      (selectChange)="filterUsers({ score: $event })"
+    ></alto-dropdown-filter>
   </div>
 
   <ng-container *ngIf="paginatedUsers.length > 0; else noUsers">
@@ -158,15 +185,10 @@
                 <div
                   class="progress-bar d-inline-block"
                   role="progressbar"
-                  [style]="
-                    usersScores.get(user.id) &&
-                    'width:' + (usersScores.get(user.id) | percent : '1.0-0' : 'en-US')
-                  "
+                  [style]="user.score && 'width:' + (user.score | percent : '1.0-0' : 'en-US')"
                 ></div>
               </div>
-              <ng-container *ngIf="usersScores.get(user.id)">
-                {{ usersScores.get(user.id) | percent }}
-              </ng-container>
+              <ng-container *ngIf="user.score">{{ user.score | percent }}</ng-container>
             </td>
             <td class="text-center">
               {{ getQuestionsByUser(user.id)[0] }}
@@ -186,7 +208,7 @@
       <alto-pagination
         class="mx-4 d-block"
         [collectionSize]="usersCount"
-        (pageChange)="changeUsersPage(users, $event)"
+        (pageChange)="changeUsersPage(usersScores, $event)"
         [pageSize]="usersPageSize"
         [page]="usersPage"
       ></alto-pagination>

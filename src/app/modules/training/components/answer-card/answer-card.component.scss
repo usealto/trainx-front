@@ -1,0 +1,32 @@
+:host {
+  display: inline-block;
+}
+
+.panel {
+  min-height: 10.357rem;
+}
+
+.custom-panel {
+  cursor: pointer;
+}
+
+.selected-panel {
+  border-color: var(--bs-primary);
+  outline: solid 1px var(--bs-primary);
+  background-color: #f5faff;
+  cursor: pointer;
+}
+
+.correct-panel {
+  border-color: #32d583;
+  outline: solid 1px #32d583;
+  background-color: #f6fef9;
+  cursor: pointer;
+}
+
+.wrong-panel {
+  border-color: #f97066;
+  outline: solid 1px #f97066;
+  background-color: #fffbfa;
+  cursor: pointer;
+}

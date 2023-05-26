@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
-import { GetGuessesRequestParams, GuessDtoApi, GuessesApiService } from '@usealto/sdk-ts-angular';
+import {
+  CreateGuessDtoApi,
+  GetGuessesRequestParams,
+  GuessDtoApi,
+  GuessesApiService,
+} from '@usealto/sdk-ts-angular';
 import { Observable, map } from 'rxjs';
 
 @Injectable({
@@ -10,5 +15,9 @@ export class GuessesRestService {
 
   getGuesses(): Observable<GuessDtoApi[]> {
     return this.guessesApi.getGuesses({} as GetGuessesRequestParams).pipe(map((d) => d.data ?? []));
+  }
+
+  postGuess(createGuessDtoApi: CreateGuessDtoApi): Observable<GuessDtoApi | undefined> {
+    return this.guessesApi.createGuess({ createGuessDtoApi }).pipe(map((r) => r.data));
   }
 }
