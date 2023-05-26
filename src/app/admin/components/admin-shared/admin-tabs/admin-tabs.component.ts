@@ -17,7 +17,6 @@ import { AdminTabComponent } from './admin-tab.component';
             <i [class]="tab.icon" class="fs-4 bi"></i>
           </div>
           <span>{{ tab.tabTitle }}</span>
-          <i class="ms-2 fs-5 bi float-end bi-question-circle" placement="top" ngbTooltip="test"></i>
         </div>
       </div>
     </div>

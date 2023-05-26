@@ -125,6 +125,19 @@ export class AdminCompaniesCreateComponent implements OnInit {
     });
   }
 
+  isFormDisabled(): boolean {
+    if (this.edit) {
+      return !this.companyForm.valid || this.companyForm.pristine || !this.companyForm.dirty;
+    }
+    return (
+      this.uploadFormComponent?.csvData?.length <= 0 ||
+      !this.uploadFormComponent?.csvData.some((user) => user.role === 'CompanyAdmin') ||
+      !this.companyForm.valid ||
+      this.companyForm.pristine ||
+      !this.companyForm.dirty
+    );
+  }
+
   async submit() {
     if (!this.companyForm.value) return;
 

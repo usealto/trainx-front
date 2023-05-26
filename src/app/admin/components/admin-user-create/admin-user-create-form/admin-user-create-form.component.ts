@@ -18,6 +18,7 @@ import { AuthUserGet } from '../../admin-users/models/authuser.get';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { UsersApiService as SlackApiService } from 'src/app/sdk/api/users.service';
+import { MsgService } from 'src/app/core/message/msg.service';
 
 @Component({
   selector: 'alto-admin-user-create-form',
@@ -47,6 +48,7 @@ export class AdminUserCreateFormComponent implements OnInit {
     private readonly usersRestService: UsersRestService,
     private readonly companiesRestService: CompaniesRestService,
     private readonly slackApiService: SlackApiService,
+    private readonly msg: MsgService,
   ) {
     this.fb = fob;
   }
@@ -169,11 +171,13 @@ export class AdminUserCreateFormComponent implements OnInit {
     if (!this.userForm.value) return;
     const { email } = this.userForm.value;
 
-    this.authApiService.resetUserPassword({
-      auth0ResetPasswordParamsDtoApi: {
-        email: email,
-      },
-    });
+    this.authApiService
+      .resetUserPassword({
+        auth0ResetPasswordParamsDtoApi: {
+          email: email,
+        },
+      })
+      .subscribe((res) => this.msg.add({ message: res.data, severity: 'success' }));
   }
 
   resetSlackId() {

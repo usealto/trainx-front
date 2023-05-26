@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { DataService } from 'src/app/admin/admin-data.service';
 import { Router } from '@angular/router';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'alto-admin-menu',
@@ -14,6 +15,7 @@ export class AdminMenuComponent implements OnInit {
     private readonly usersRestService: UsersRestService,
     private dataService: DataService,
     private router: Router,
+    public auth: AuthService,
   ) {}
   user!: UserDtoApi;
   userEmail = '';
@@ -39,10 +41,14 @@ export class AdminMenuComponent implements OnInit {
   }
 
   removeImpersonation() {
-    console.log('héo');
     localStorage.setItem('impersonatedUser', '');
     this.impersonatedUser = false;
     this.dataService.sendData('impersonatedUserUpdated');
+  }
+
+  logOut() {
+    this.auth.logout({ logoutParams: { returnTo: window.location.origin } });
+    return;
   }
 
   refreshUserImpersonated() {

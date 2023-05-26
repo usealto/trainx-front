@@ -1,7 +1,7 @@
 <div>
-  <div class="logo">
-    <img src="/assets/img/logo.svg" alt="Alto Logo" />
-    <span class="company-name">Alto Admin</span>
+  <div class="logo d-flex align-items-baseline">
+    <img height="22" src="assets/img/logo-white.png" alt="Alto Logo" />
+    <span class="company-name">Admin</span>
   </div>
 
   <div class="menu">
@@ -32,14 +32,25 @@
         <i class="bi bi-people alto-grey"></i> All users
       </a>
     </div>
+
     <div class="bottom-block mb-2" *ngIf="user">
-      <alto-img-badge [url]="user.pictureUrl"></alto-img-badge>
-      <div class="d-inline-block ms-3">
-        <p *ngIf="impersonatedUser" class="btn btn-danger" (click)="removeImpersonation()">
+      <div class="px-4">
+        <a
+          *ngIf="impersonatedUser"
+          class="btn btn-danger"
+          (click)="removeImpersonation()"
+          [routerLink]="'/admin/home'"
+        >
           remove impersonation
-        </p>
-        <p>{{ user.email }}</p>
+        </a>
       </div>
+      <hr />
+      <a class="logout" (click)="logOut()">
+        <i class="p-3 mx-4 text-white fs-4 bi bi-box-arrow-right"></i>
+      </a>
+      <a class="profile">
+        <alto-profile-card [isWhite]="true" [user]="user"> </alto-profile-card>
+      </a>
     </div>
   </div>
 </div>

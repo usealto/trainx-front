@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DropzoneChangeEvent } from 'src/app/modules/shared/components/dropzone/dropzone.component';
 import * as Papa from 'papaparse';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { EditUserUploadFormComponent } from '../edit-user-upload-form/edit-user-upload-form.component';
 import { RoleEnumApi, UsersApiService } from '@usealto/sdk-ts-angular';
+import { UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'alto-admin-users-upload-form',
@@ -11,6 +12,8 @@ import { RoleEnumApi, UsersApiService } from '@usealto/sdk-ts-angular';
   styleUrls: ['./admin-users-upload-form.component.scss'],
 })
 export class AdminUsersUploadFormComponent {
+  @Input() form?: UntypedFormGroup;
+
   displayedUsers: any[] = [];
   pageSize = 5;
   csvData: any[] = [];
@@ -96,6 +99,7 @@ export class AdminUsersUploadFormComponent {
           this.csvData = this.csvData.slice(1);
         }
         console.log(this.csvData);
+        this.form?.markAsDirty();
         this.refreshUsers();
       },
     });

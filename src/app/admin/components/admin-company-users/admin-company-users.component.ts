@@ -169,7 +169,8 @@ export class AdminCompanyUsersComponent implements OnInit {
           user.firstname?.toLowerCase().includes(term) ||
           user.lastname?.toLowerCase().includes(term) ||
           user.username?.toLowerCase().includes(term) ||
-          user.email.toLowerCase().includes(term)
+          user.email.toLowerCase().includes(term) ||
+          user.slackId?.toLowerCase().includes(term)
         );
       });
     }

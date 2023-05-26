@@ -1,7 +1,7 @@
 <div class="">
   <alto-admin-header
     title="Companies"
-    subtitle="L'ensemble de nos clients"
+    subtitle="All of our customers"
     [breadcrumbs]="[
       {
         label: 'Companies',
@@ -83,28 +83,18 @@
             <div class="w-80 row">
               <label for="domain" class="col-5 mb-2">Teams</label>
               <div class="col-7 form-group">
-                <ng-select
-                  class="w-100"
-                  [items]="teams"
-                  [multiple]="true"
-                  bindLabel="name"
-                  placeholder="teams"
-                  [selectableGroup]="true"
-                  [closeOnSelect]="false"
-                  bindValue="id"
-                  formControlName="teams"
-                >
-                  <ng-template ng-label-tmp let-item="item">
-                    <div class="alto-badge fs-6b" [style]="item.id | teamColor">
-                      <span>{{ item.shortName }}</span>
-                    </div>
-                  </ng-template>
-                  <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                    <span class="alto-badge fs-6b" [style]="item.id | teamColor">
-                      {{ item.shortName }} - {{ item.longName }}
-                    </span>
-                  </ng-template>
-                </ng-select>
+                <ng-container *ngIf="edit">
+                  <span
+                    *ngFor="let item of teams"
+                    class="alto-badge fs-6b me-2"
+                    [style]="item.id | teamColor"
+                    placement="top"
+                    [ngbTooltip]="item.longName"
+                  >
+                    {{ item.shortName }}
+                  </span>
+                </ng-container>
+
                 <div formArrayName="newTeams" class="pt-2">
                   <ng-container *ngFor="let newTeam of newTeamsFormArrayControls; let i = index">
                     <div class="row align-items-end position-relative py-2" [formGroup]="newTeam">
@@ -143,11 +133,14 @@
             </div>
           </div>
           <!-- Users -->
-          <div class="row py-4 border-bottom">
+          <div class="py-4 border-bottom">
             <div class="w-80 row">
-              <label for="domain" class="col-5 mb-2">Users</label>
+              <div class="col-5 mb-2">
+                <label for="name" class="required">Users</label>
+                <p class="fs-7">We need at least one company admin</p>
+              </div>
               <div class="col-7 form-group">
-                <alto-admin-users-upload-form></alto-admin-users-upload-form>
+                <alto-admin-users-upload-form [form]="companyForm"></alto-admin-users-upload-form>
               </div>
             </div>
           </div>
@@ -173,7 +166,7 @@
               type="button"
               class="btn btn-primary d-inline-flex align-items-center"
               (click)="submit()"
-              [disabled]="!companyForm.valid || companyForm.pristine || !companyForm.dirty"
+              [disabled]="isFormDisabled()"
             >
               Save
               <i class="bi bi-save ps-2"></i>
@@ -291,7 +284,7 @@
           *ngIf="tabNumber === 1"
           class="btn btn-primary d-inline-flex align-items-center"
           (click)="submit()"
-          [disabled]="!companyForm.valid || companyForm.pristine || !companyForm.dirty"
+          [disabled]="isFormDisabled()"
         >
           Save
           <i class="bi bi-save ps-2"></i>
