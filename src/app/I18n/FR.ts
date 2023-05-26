@@ -19,6 +19,7 @@ export const FR = {
     reply: 'Répondre',
     search: 'Rechercher',
     period: 'Période',
+    soon: 'Bientôt',
     pagination: {
       on: 'sur',
     },

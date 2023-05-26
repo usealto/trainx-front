@@ -7,6 +7,7 @@
       <div class="d-inline-block align-bottom ms-4">
         <p class="fw-bold fs-6b mb-1">
           {{ I18ns.leadHome.comments | plural : commentsCount }}
+          <span class="fst-italic alto-grey">({{ I18ns.shared.soon }})</span>
         </p>
         <p class="alto-grey">
           {{ I18ns.leadHome.subtitleComment | plural : commentsCount }}
@@ -148,10 +149,6 @@
     <h2 class="title">{{ I18ns.leadHome.globalEvolution.title }}</h2>
   </div>
   <div class="col-7 text-end">
-    <!-- <alto-period-filter
-      class="text-start me-3"
-      (selectChange)="createCharts({ duration: $event })"
-    ></alto-period-filter> -->
     <alto-time-picker
       class="text-start me-3"
       (durationSelected)="createCharts({ duration: $event })"
@@ -216,7 +213,7 @@
             <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.programs?.top | slice : 0 : 3" class="mb-3">
-                <span>{{ item.label | slice : 0 : 32 }}</span>
+                <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
                 <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
@@ -227,7 +224,7 @@
             <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.programs?.flop | slice : 0 : 3" class="mb-3">
-                <span>{{ item.label | slice : 0 : 32 }}</span>
+                <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
                 <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
@@ -261,7 +258,7 @@
             <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.teams?.top | slice : 0 : 3" class="mb-3">
-                <span>{{ item.label | slice : 0 : 32 }}</span>
+                <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
                 <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
@@ -272,7 +269,7 @@
             <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
             <div class="height-100">
               <p *ngFor="let item of topFlopData?.teams?.flop" class="mb-3">
-                <span>{{ item.label | slice : 0 : 32 }}</span>
+                <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
                 <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
