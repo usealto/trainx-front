@@ -38,10 +38,10 @@
     <h2 class="title">{{ I18ns.leadHome.statistics.title }}</h2>
   </div>
   <div class="col-7 text-end">
-    <alto-period-filter
+    <alto-time-picker
       class="text-start me-3"
-      (selectChange)="getGlobalScore({ duration: $event })"
-    ></alto-period-filter>
+      (durationSelected)="getGlobalScore({ duration: $event })"
+    ></alto-time-picker>
     <alto-dropdown-filter
       class="text-start"
       [data]="teamStore.teams.value"
@@ -148,11 +148,14 @@
     <h2 class="title">{{ I18ns.leadHome.globalEvolution.title }}</h2>
   </div>
   <div class="col-7 text-end">
-    <alto-period-filter
+    <!-- <alto-period-filter
       class="text-start me-3"
       (selectChange)="createCharts({ duration: $event })"
-    ></alto-period-filter>
-
+    ></alto-period-filter> -->
+    <alto-time-picker
+      class="text-start me-3"
+      (durationSelected)="createCharts({ duration: $event })"
+    ></alto-time-picker>
     <alto-dropdown-filter
       class="text-start"
       [data]="teamStore.teams.value"

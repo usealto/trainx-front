@@ -128,7 +128,6 @@ export class LeadHomeComponent implements OnInit {
     this.chartFilters.duration = duration;
     this.chartFilters.type = type;
     this.chartFilters.team = team;
-
     this.topFlop(this.topFlopProgramTab);
     this.topFlop(this.topFlopTeamTab);
 
