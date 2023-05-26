@@ -43,9 +43,7 @@ export class Store<T> {
 
   isExpired(): boolean {
     const check = (new Date().valueOf() - this.createdAt) / 60_000 >= this.expire;
-    if (check) {
-      console.log('isExpired', check);
-    }
+
     return check;
   }
 
