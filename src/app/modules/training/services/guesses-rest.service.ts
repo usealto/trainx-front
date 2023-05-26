@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
   CreateGuessDtoApi,
-  CreateGuessRequestParams,
   GetGuessesRequestParams,
   GuessDtoApi,
   GuessesApiService,
 } from '@usealto/sdk-ts-angular';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',

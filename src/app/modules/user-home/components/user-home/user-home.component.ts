@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { GuessDtoApi } from '@usealto/sdk-ts-angular';
+import { getDayOfYear } from 'date-fns';
 import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
-import { getDayOfYear, addDays } from 'date-fns';
 
 @Component({
   selector: 'alto-user-home',

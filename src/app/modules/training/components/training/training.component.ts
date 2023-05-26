@@ -5,13 +5,13 @@ import {
   GuessSourceEnumApi,
   QuestionApi,
 } from '@usealto/sdk-ts-angular';
-import { map, tap, timer } from 'rxjs';
+import { tap, timer } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ExplanationComponent } from '../explanation/explanation.component';
 import { GuessesRestService } from '../../services/guesses-rest.service';
+import { ExplanationComponent } from '../explanation/explanation.component';
 
 interface AnswerCard {
   answer: string;

@@ -129,7 +129,7 @@ export const FR = {
     questions: {
       title: 'Questions',
       subtitle: "Retrouvez l'ensemble des questions présentes dans vos programmes.",
-      createQuestion: 'Ajouter',
+      createQuestion: 'Créer',
       table: {
         question: 'Question',
         score: 'Score',
@@ -330,7 +330,7 @@ export const FR = {
   },
   leadTeam: {
     title: 'Équipes',
-    subtitle: "Retrouvez une vue d'ensemble sur vos collaborateurs.",
+    subtitle: "Retrouvez une vue d'ensemble sur vos membres.",
     createTeam: 'Créer',
     members: {
       title: 'Vos membres',
@@ -359,7 +359,7 @@ export const FR = {
       forms: {
         edition: {
           title: 'Modifier un membre',
-          subtitle: 'Modifiez le role de vos collaborateurs et assignez leur une équipe.',
+          subtitle: 'Modifiez le role de vos membres et assignez leur une équipe.',
           teams: 'Équipes',
           teamsPlaceholder: 'Rechercher dans vos équipes',
           type: "Type d'utilisateur",
@@ -376,9 +376,9 @@ export const FR = {
       subtitle: "Retrouvez l'ensemble des équipes de votre entreprise.",
       table: {
         name: 'Nom',
-        initials: 'Initiales',
+        initials: '',
         usersCount: 'Nombre de membres',
-        users: ['Aucun', '{{}} user', '{{}} users'],
+        users: ['Aucun', '{{}}', '{{}}'],
         averageScore: 'Score moyen',
         creationDate: 'Date de création',
       },
@@ -397,7 +397,7 @@ export const FR = {
         invitationEmails: 'Invitation par mail',
         invitationEmailsPlaceholder: 'Séparer les emails par une virgule',
         invitationEmailsSubtitle:
-          'Vos collaborateurs recevront une invitation par mail pour s’inscrire à Alto.',
+          "Vos collaborateurs recevront une invitation par mail pour s'inscrire à Alto.",
         Programs: 'Programmes',
         programsPlaceholder: 'Rechercher dans vos programmes',
         ProgramsSubtitle: 'Sélectionner les programmes auxquels cette équipe doit être assignée.',
@@ -602,7 +602,11 @@ export const FR = {
       continueSession: 'Session continue',
       continueSessionSubtitle:
         'Entraînez vous chaque jour à votre rythme sur des questions issues de vos programmes.',
-      continueSessionCounts: 'se sont entrainés aujourd’hui',
+      continueSessionCounts: [
+        "personne ne s'est entrainé aujourd'hui",
+        "{{}} s'est entrainé aujourd'hui",
+        "{{}} se sont entrainés aujourd'hui",
+      ],
     },
   },
   training: {
