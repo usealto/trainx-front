@@ -134,7 +134,10 @@
   </div>
 
   <div class="mb-4">
-    <alto-search class="float-end d-inline-block" (searchChange)="searchUsers(users, $event)"></alto-search>
+    <alto-search
+      class="float-end d-inline-block"
+      (searchChange)="filterUsers({ search: $event })"
+    ></alto-search>
 
     <alto-dropdown-filter
       class="d-inline-block me-3"

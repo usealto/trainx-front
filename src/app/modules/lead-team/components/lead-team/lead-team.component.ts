@@ -150,12 +150,17 @@ export class LeadTeamComponent implements OnInit {
   }
 
   filterUsers(
-    { teams = this.userFilters.teams, score = this.userFilters.score }: UserFilters = this.userFilters,
+    {
+      teams = this.userFilters.teams,
+      score = this.userFilters.score,
+      search = this.userFilters.search,
+    }: UserFilters = this.userFilters,
   ) {
     this.userFilters.teams = teams;
     this.userFilters.score = score;
+    this.userFilters.search = search;
 
-    let output = this.usersService.filterUsers(this.usersScores, { teams }) as UserDisplay[];
+    let output = this.usersService.filterUsers(this.usersScores, { teams, search }) as UserDisplay[];
     if (score) {
       output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
     }
@@ -167,12 +172,6 @@ export class LeadTeamComponent implements OnInit {
     this.usersPage = page;
     this.usersCount = users.length;
     this.paginatedUsers = users.slice((page - 1) * this.usersPageSize, page * this.usersPageSize);
-  }
-
-  searchUsers(users: UserDisplay[], s: string) {
-    const search = s.toLowerCase();
-    const res = search.length ? users.filter((user) => user.username?.toLowerCase().includes(search)) : users;
-    this.changeUsersPage(res, 1);
   }
 
   openTeamForm(team?: TeamDtoApi) {
