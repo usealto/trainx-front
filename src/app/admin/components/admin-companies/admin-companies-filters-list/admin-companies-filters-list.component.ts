@@ -7,7 +7,7 @@ import { TeamDtoApi, UserDtoApiRolesEnumApi, WeekDayEnumApi } from '@usealto/sdk
 export interface FiltersCompaniesList {
   teams?: TeamDtoApi;
   isSlackActive?: boolean | null;
-  userAdmin?: string;
+  userAdmin?: boolean | null;
   sendingDays?: WeekDayEnumApi[];
   nbQuestions: {
     min?: number;
@@ -45,7 +45,7 @@ export class AdminCompaniesFiltersListComponent {
       this.userForm = this.fb.group<FiltersCompaniesList>({
         teams: [null],
         isSlackActive: [null],
-        userAdmin: [''],
+        userAdmin: [null],
         sendingDays: [null],
         nbQuestions: this.fb.group<any>({
           min: [''],
