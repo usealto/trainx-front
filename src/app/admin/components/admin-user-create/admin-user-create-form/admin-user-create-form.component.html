@@ -186,7 +186,13 @@
       <div class="col-7 form-group">
         <div class="d-flex flex-column gap-2 fw-bolder">
           <div class="w-100 d-flex justify-content-between">
-            <span class="alto-grey">Connected to Auth0:</span><span>{{ userAuth0 ? 'Yes' : 'No' }}</span>
+            <span class="alto-grey">Connected to Auth0:</span>
+            <span *ngIf="userAuth0; else connectedElse"
+              ><i class="bi bi-check-circle-fill fs-4 fw-bolder alto-success"></i
+            ></span>
+            <ng-template #connectedElse>
+              <span><i class="bi bi-x-circle-fill fs-4 fw-bolder alto-red"></i></span>
+            </ng-template>
           </div>
           <hr />
           <ng-container *ngIf="userAuth0">
@@ -199,12 +205,18 @@
             </div>
             <hr />
             <div class="w-100 d-flex justify-content-between">
-              <span class="alto-grey">Verified email on Auth0:</span
-              >{{ userAuth0.email_verified ? 'Yes' : 'No' }}
+              <span class="alto-grey">Verified email on Auth0:</span>
+              <span *ngIf="userAuth0.email_verified; else emailVerifiedElse"
+                ><i class="bi bi-check-circle-fill fs-4 fw-bolder alto-success"></i
+              ></span>
+              <ng-template #emailVerifiedElse>
+                <span><i class="bi bi-x-circle-fill fs-4 fw-bolder alto-red"></i></span>
+              </ng-template>
             </div>
             <hr />
             <div class="w-100 d-flex justify-content-between">
-              <span class="alto-grey">logins count</span>{{ userAuth0.logins_count }}
+              <span class="alto-grey">Logins count</span>
+              <span class="alto-badge fw-bolder">{{ userAuth0.logins_count || 0 }}</span>
             </div>
             <hr />
             <div class="w-100 d-flex justify-content-between">
@@ -217,7 +229,14 @@
     </div>
   </div>
 </form>
-
+<button
+  *ngIf="edit"
+  type="button"
+  class="btn btn-primary d-inline-flex align-items-center text-nowrap mt-4"
+  (click)="resetSlackId()"
+>
+  Show raw data
+</button>
 <div *ngIf="userForm" class="d-flex justify-content-end pt-4">
   <div class="d-flex align-items-center">
     <button
