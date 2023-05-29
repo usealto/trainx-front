@@ -557,6 +557,11 @@ export const FR = {
     },
     Unauthorized: {
       title: 'Unauthorized',
+      message:
+        "Vous n'êtes pas reconnu par l'API, veuillez contacter un administrateur. Il s'agit probablement d'une erreur technique",
+    },
+    Forbiden: {
+      title: 'Forbiden',
       message: "Vous n'avez pas accès !",
     },
     Notfound: {
