@@ -33,6 +33,7 @@
       {{ I18ns.menu.training }}
     </a>
     <a
+      *ngIf=""
       class="module"
       [routerLink]="AltoRoutes.user + '/' + AltoRoutes.userTeams"
       routerLinkActive="menu-selected"
@@ -121,6 +122,7 @@
 
   <div class="bottom-block">
     <a
+      *ngIf="!AltoRoutes.lead"
       class="module mb-4"
       [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.settings"
       routerLinkActive="menu-selected"
