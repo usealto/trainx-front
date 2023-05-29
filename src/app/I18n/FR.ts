@@ -1,5 +1,3 @@
-import { SubTitle } from 'chart.js';
-
 export const FR = {
   shared: {
     edit: 'Modifier',
