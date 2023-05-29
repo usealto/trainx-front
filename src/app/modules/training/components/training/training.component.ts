@@ -32,7 +32,7 @@ export class TrainingComponent implements OnInit {
 
   remainingQuestions: QuestionApi[] = [];
   questionsCount = 0;
-  questionsPage = 1;
+  questionsPage = 0;
   questionsPageSize = 25;
   displayedQuestion!: QuestionApi;
   isQuestionsLoading = true;
@@ -61,7 +61,9 @@ export class TrainingComponent implements OnInit {
         tap((res) => {
           this.remainingQuestions = res.data ?? [];
           this.questionsCount = res.meta.totalItems ?? 0;
-          this.getNextQuestion();
+          if (this.remainingQuestions.length > 0) {
+            this.getNextQuestion();
+          }
         }),
       )
       .subscribe();

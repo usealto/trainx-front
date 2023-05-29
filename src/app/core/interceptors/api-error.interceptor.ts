@@ -54,7 +54,7 @@ export class ApiErrorInterceptor implements HttpInterceptor {
               break;
             case 400: // bad request
               apiError = {
-                message: e.error.title ?? e.error[0],
+                message: e.error.title ?? e.error.message[0],
                 title: this.translationsMessages.BadParameters.title,
                 details: e.error.detail,
                 level: 'error',
