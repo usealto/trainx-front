@@ -215,7 +215,7 @@ export const FR = {
         title2: 'Partager votre programme',
         subtitle: 'Retrouvez les options de partage à vos équipes.',
         summary: 'Récapitulatif',
-        summarySubtitle: 'Les informations que vous avez rempli à propos de ce programme.',
+        summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
       },
     },
   },
@@ -239,7 +239,7 @@ export const FR = {
       navbarTitle: 'Performance globale',
       perTeamPerformance: {
         title: 'Performance par équipes',
-        subtitle: 'Retrouvez les performances global de vos équipes.',
+        subtitle: 'Retrouvez les performances globales de vos équipes.',
         teamFilter: 'Équipes',
         scoreEvolution: {
           title: 'Évolution du score',
@@ -253,7 +253,7 @@ export const FR = {
       },
       perThemePerformance: {
         title: 'Performance par thèmatiques',
-        subtitle: 'Retrouvez les performances global de vos équipes.',
+        subtitle: 'Retrouvez les performances globales de vos équipes.',
         filters: {
           teams: 'Équipes',
           tags: 'Tags',
@@ -368,14 +368,14 @@ export const FR = {
       forms: {
         edition: {
           title: 'Modifier un membre',
-          subtitle: 'Modifiez le role de vos membres et assignez leur une équipe.',
+          subtitle: 'Modifiez le rôle de vos membres et assignez leur une équipe.',
           teams: 'Équipes',
           teamsPlaceholder: 'Rechercher dans vos équipes',
           type: "Type d'utilisateur",
           standardType: 'Standard',
           adminType: 'Administrateur',
           typeSubtitle:
-            'Les utilisateurs de type "Administrateur" peuvent créer des programmes, des challenges et ont accés à plus de statistiques détaillées sur les résultats de leurs équipes.',
+            'Les utilisateurs de type "Administrateur" peuvent créer des programmes, des challenges et ont accès à plus de statistiques détaillées sur les résultats de leurs équipes.',
         },
       },
     },
@@ -432,7 +432,7 @@ export const FR = {
     individual: {
       title: 'Challenges individuels',
       shortTitle: 'Individuels',
-      subtitle: "Retrouvez l'ensemble des challenges assignés à vos vos membres.",
+      subtitle: "Retrouvez l'ensemble des challenges assignés à vos membres.",
       createChallenge: 'Créer',
       table: {
         name: 'Nom',
@@ -453,14 +453,14 @@ export const FR = {
         byUser: 'Le meilleur membre',
         byUserSubtitle: "La récompense sera remise à l'utilisateur avec le plus haut score.",
       },
-      teamsSubtitle: 'Sélectionnez la, ou les, équipe(s) concerné(es) par ce challenge.',
+      teamsSubtitle: 'Sélectionnez la ou les équipe(s) concerné(es) par ce challenge.',
       teamsExplained:
         "Ne sélectionner qu'une équipe pour un challenge par équipe, ou plusieurs pour un challenge inter-équipes.",
       minimum: 'Seuils minimum',
       minimumSubtitle: 'Définissez les seuils à atteindre pour pouvoir participer à ce challenge.',
       activity: 'Activité',
       activitySubtitle:
-        'Les participants doivent répondre en moyenne à plus que X questions par jour ouvrés pour pouvoir participer à ce challenge',
+        'Les participants doivent répondre en moyenne à plus de X questions par jours ouvrés pour pouvoir participer à ce challenge',
       questions: ['{{}} question', '{{}} questions'],
       score: 'Score',
       scoreSubtitle:
@@ -498,7 +498,7 @@ export const FR = {
         name: 'Nom',
         createdAt: "Date d'ajout",
         lastConnection: 'Dernière activité',
-        connexion: 'Connection',
+        connexion: 'Connexion',
       },
     },
     integrations: {
