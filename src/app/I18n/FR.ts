@@ -1,5 +1,6 @@
 export const FR = {
   shared: {
+    smiley: '👍',
     edit: 'Modifier',
     save: 'Enregistrer',
     next: 'Suivant',
