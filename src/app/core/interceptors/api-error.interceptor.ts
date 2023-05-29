@@ -12,6 +12,7 @@ import { MsgService } from '../message/msg.service';
 import { ApiError } from '../models/api-error';
 import { I18ns } from '../utils/i18n/I18n';
 import { LocalStorageService } from '../utils/local-storage/local-storage.service';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +20,7 @@ import { LocalStorageService } from '../utils/local-storage/local-storage.servic
 export class ApiErrorInterceptor implements HttpInterceptor {
   translationsMessages = I18ns.errors;
 
-  constructor(private readonly msg: MsgService, private readonly storageService: LocalStorageService) {}
+  constructor(private readonly msg: MsgService, private readonly authService: AuthService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
@@ -53,7 +54,7 @@ export class ApiErrorInterceptor implements HttpInterceptor {
               break;
             case 400: // bad request
               apiError = {
-                message: e.error.title ?? e.error[0],
+                message: e.error.title ?? e.error.message[0],
                 title: this.translationsMessages.BadParameters.title,
                 details: e.error.detail,
                 level: 'error',
@@ -63,6 +64,7 @@ export class ApiErrorInterceptor implements HttpInterceptor {
               };
               break;
             case 401: // authentification error
+              // Auth0 is good but the API does not recognize you
               apiError = {
                 message: this.translationsMessages.Unauthorized.message,
                 title: this.translationsMessages.Unauthorized.title,
@@ -73,14 +75,12 @@ export class ApiErrorInterceptor implements HttpInterceptor {
                 code: e.status,
               };
               // La 401 peut être causée par un token corrompu que angular ne peut pas détecter.
-              // Du coup on efface
-              // TODO Improve
-              // this.storageService.destroyAll();
+              this.authService.getAccessTokenSilently().subscribe();
               break;
             case 403: // right problem
               apiError = {
-                message: this.translationsMessages.Unauthorized.message,
-                title: this.translationsMessages.Unauthorized.title,
+                message: this.translationsMessages.Forbiden.message,
+                title: this.translationsMessages.Forbiden.title,
                 details: e.error?.details ?? '',
                 level: 'error',
                 err,
