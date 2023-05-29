@@ -120,7 +120,7 @@
               <td *ngIf="!question.programs || question.programs.length < 1">-</td>
 
               <td class="text-center">
-                <alto-img-badge [url]="getUser(question.createdBy)?.pictureUrl"></alto-img-badge>
+                <alto-img-badge [user]="getUser(question.createdBy)"></alto-img-badge>
               </td>
               <td class="cursor-pointer px-3" (click)="openQuestionForm(question)">
                 <i class="fs-5 bi bi-pen"></i>
@@ -170,7 +170,7 @@
           <tr *ngFor="let question of submittedQuestions">
             <th scope="row">{{ question.title }}</th>
             <td>
-              <alto-img-badge [url]="getUser(question.createdBy)?.pictureUrl"></alto-img-badge>
+              <alto-img-badge [user]="getUser(question.createdBy)"></alto-img-badge>
             </td>
             <td>
               <i class="fs-5 bi bi-pen cursor-pointer" (click)="openSubmittedQuestionForm(question)"></i>
@@ -240,7 +240,7 @@
               </span>
             </td>
             <td class="w-10 text-center">
-              <alto-img-badge [url]="getUser(tag.createdBy)?.pictureUrl"></alto-img-badge>
+              <alto-img-badge [user]="getUser(tag.createdBy)"></alto-img-badge>
             </td>
             <td class="cursor-pointer px-3" (click)="openTagForm(tag)">
               <i class="fs-5 bi bi-pen cursor-pointer"></i>

@@ -20,6 +20,10 @@
     ></alto-colored-pill-list>
     <br />
     <br />
+    <alto-status-pill [status]="ChallengeDtoApiStatusEnumApi.InProgress"></alto-status-pill>&nbsp;
+    <alto-status-pill [status]="ChallengeDtoApiStatusEnumApi.Ended"></alto-status-pill>
+    <br />
+    <br />
     <alto-colored-pill-list [data]="['test', 'alpha', 'beta', 'gamma']" [limit]="3"></alto-colored-pill-list>
     <br />
     <br />
@@ -46,18 +50,8 @@
     ></alto-dropdown-filter>
     <br />
     <br />
-    <!-- <div class="d-inline-block" style="width: 12rem">
-      <ng-select [searchable]="false" [items]="['Week', 'Month', 'Year']" placeholder="Période">
-        <ng-template ng-label-tmp let-item="item">
-          {{ item }}
-        </ng-template>
-        <ng-template ng-option-tmp let-item="item" let-index="index">
-          <span>{{ item }}</span>
-          <i class="bi bi-check-circle-fill"></i>
-        </ng-template>
-      </ng-select>
-    </div> -->
-    <alto-period-filter></alto-period-filter>
+    <!-- <alto-period-filter></alto-period-filter> -->
+    <alto-time-picker></alto-time-picker>
     <br />
     <br />
 
@@ -74,7 +68,7 @@
 
     <alto-program-card [displayToggle]="true" [program]="programStore.programs.value[0]"></alto-program-card>
     <br />
-    <alto-progression-badge class="me-2"></alto-progression-badge>
+    <alto-progression-badge class="me-2"></alto-progression-badge> rien
     <alto-progression-badge class="me-2" [score]="0"></alto-progression-badge>
     <alto-progression-badge class="me-2" [score]="0.05"></alto-progression-badge>
     <alto-progression-badge class="me-2" [score]="-0.5"></alto-progression-badge>
@@ -141,6 +135,6 @@
     <div class="progress">
       <div class="progress-bar d-inline-block" role="progressbar" style="width: 50%"></div>
     </div>
-    100%
+    50%
   </div>
 </div>

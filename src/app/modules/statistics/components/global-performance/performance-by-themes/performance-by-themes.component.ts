@@ -133,7 +133,7 @@ export class PerformanceByThemesComponent implements OnChanges {
       const res = { label: s.label, data: [] as number[], fill: true };
       s[type]?.forEach((item) => {
         if (!this.selectedItems.length || this.selectedItems.some((i) => i.id === item.id)) {
-          res.data.push(item.score || NaN);
+          res.data.push(item.score ? Math.round(item.score) : NaN);
         }
       });
       return res;
@@ -194,7 +194,7 @@ export class PerformanceByThemesComponent implements OnChanges {
       const d = this.statisticsServices.aggregateDataForScores(s, duration);
       return {
         label: s.label,
-        data: d.map((d) => (d.y ? Math.round(d.y * 10000) / 100 : d.y)),
+        data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
         fill: false,
         tension: 0.2,
         borderDash: [0],
@@ -203,7 +203,7 @@ export class PerformanceByThemesComponent implements OnChanges {
     });
     dataSet.push({
       label: 'Global',
-      data: res.map((d) => (d.y ? Math.round(d.y * 10000) / 100 : d.y)),
+      data: res.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
       fill: false,
       tension: 0.2,
       borderDash: [4],

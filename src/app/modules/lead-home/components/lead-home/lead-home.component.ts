@@ -145,7 +145,7 @@ export class LeadHomeComponent implements OnInit {
             labels: labels,
             datasets: scores.map((s) => ({
               label: s.label,
-              data: s.averages.map((u) => (u ? Math.round(u * 10000) / 100 : u)),
+              data: s.averages.map((u) => (u ? Math.round((u * 10000) / 100) : u)),
               fill: false,
               tension: 0.2,
               spanGaps: true,

@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @Component({
@@ -7,14 +8,14 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
   styleUrls: ['./img-badge.component.scss'],
 })
 export class ImgBadgeComponent implements OnChanges {
-  @Input() url: string | null | undefined = '';
+  @Input() user: UserDtoApi | null | undefined;
   @Input() size = 32;
 
   thumb = '';
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['url']?.currentValue) {
-      this.thumb = changes['url']?.currentValue.replace('s=480', 's=' + this.size) || '';
+    if (changes['user']?.currentValue?.pictureUrl) {
+      this.thumb = changes['user']?.currentValue.pictureUrl.replace('s=480', 's=' + this.size) || '';
     }
   }
 

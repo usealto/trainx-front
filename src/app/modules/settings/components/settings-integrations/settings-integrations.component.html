@@ -1,11 +1,12 @@
 <div class="py-4">
   <h2>{{ I18ns.settings.integrations.title }}</h2>
-  <p class="mb-4">{{ I18ns.settings.integrations.subtitle }}</p>
+  <p class="mb-4 alto-grey">{{ I18ns.settings.integrations.subtitle }}</p>
 </div>
-<div class="row py-2 border-bottom border-top">
-  <div class="col-7">
+<hr />
+<div class="row">
+  <div class="col-8">
     <svg
-      class="mx-3"
+      class="d-inline-block mx-4"
       width="30"
       height="30"
       enable-background="new 0 0 2447.6 2452.5"
@@ -32,11 +33,11 @@
       </g>
     </svg>
     <div class="mt-1 d-inline-block align-middle">
-      <h3>Slack</h3>
-      <p class="alto-grey">Envoyez des notifications aux canaux et créez des projets à partir de messages.</p>
+      <p class="fw-bold fs-6b">{{ I18ns.settings.integrations.slack.title }}</p>
+      <p class="alto-grey">{{ I18ns.settings.integrations.slack.subtitle }}</p>
     </div>
   </div>
-  <div class="col-5 text-end">
+  <div class="col-4 text-end">
     <div class="py-3">
       <!-- <a class="me-2">{{ I18ns.settings.integrations.learnMore }}</a> -->
       <div class="form-check form-switch d-inline-block align-middle">
@@ -51,3 +52,4 @@
     </div>
   </div>
 </div>
+<hr />
