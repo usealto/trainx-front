@@ -46,8 +46,12 @@ export const FR = {
       trimester: '3 mois',
       month: '1 mois',
     },
-    noWebAcces: {
-      title: 'Félici',
+    noWebAccess: {
+      title: 'Bravo !',
+      subtitle: 'Félicitations ! Votre compte est actif 🚀.',
+      description:
+        "Comme souhaité par vos collaborateurs, vous profiterez bientôt d'Alto directement dans vos outils préférés tels Slack ou Teams 💜",
+      subdescription: '🙏🏻',
     },
   },
   leadHome: {
