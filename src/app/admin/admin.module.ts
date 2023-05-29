@@ -29,6 +29,7 @@ import { AdminAssignUsersTeamModalComponent } from './components/admin-company-u
 import { AdminAssignSelectedUsersTeamModalComponent } from './components/admin-company-users/admin-assign-selected-users-team-modal/admin-assign-selected-users-team-modal.component';
 import { ChangeStatusSelectedUsersTeamModalComponent } from './components/admin-company-users/change-status-selected-users-team-modal/change-status-selected-users-team-modal.component';
 import { ShowRawDataModalComponent } from './components/admin-user-create/admin-user-create-form/show-raw-data-modal/show-raw-data-modal.component';
+import { AdminUsersFiltersListComponent } from './components/admin-company-users/admin-users-filters-list/admin-users-filters-list.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { ShowRawDataModalComponent } from './components/admin-user-create/admin-
     AdminAssignSelectedUsersTeamModalComponent,
     ChangeStatusSelectedUsersTeamModalComponent,
     ShowRawDataModalComponent,
+    AdminUsersFiltersListComponent,
   ],
   imports: [
     CommonModule,

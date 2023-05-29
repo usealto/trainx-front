@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
@@ -20,7 +20,7 @@ export interface FiltersCompaniesList {
   templateUrl: './admin-companies-filters-list.component.html',
   styleUrls: ['./admin-companies-filters-list.component.scss'],
 })
-export class AdminCompaniesFiltersListComponent {
+export class AdminCompaniesFiltersListComponent implements OnInit {
   @Input() filters: FiltersCompaniesList | undefined;
   private fb: IFormBuilder;
   SendingDaysValues = Object.keys(WeekDayEnumApi);

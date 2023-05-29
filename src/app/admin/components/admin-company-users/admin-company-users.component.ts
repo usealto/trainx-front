@@ -11,10 +11,14 @@ import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompanyDtoApi, TeamDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 import { DataService } from '../../admin-data.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { AdminAssignUsersTeamModalComponent } from './admin-assign-users-team-modal/admin-assign-users-team-modal.component';
 import { AdminAssignSelectedUsersTeamModalComponent } from './admin-assign-selected-users-team-modal/admin-assign-selected-users-team-modal.component';
 import { ChangeStatusSelectedUsersTeamModalComponent } from './change-status-selected-users-team-modal/change-status-selected-users-team-modal.component';
+import {
+  AdminUsersFiltersListComponent,
+  FiltersUsersList,
+} from './admin-users-filters-list/admin-users-filters-list.component';
 
 @Component({
   selector: 'alto-admin-company-users',
@@ -35,6 +39,9 @@ export class AdminCompanyUsersComponent implements OnInit {
   teams: TeamDtoApi[] = [];
   searchString = '';
   sortDirection: SortEvent = { column: '', direction: '' };
+  activeFilters: FiltersUsersList = {
+    roles: undefined,
+  };
 
   constructor(
     private readonly companiesRestService: CompaniesRestService,
@@ -43,6 +50,7 @@ export class AdminCompanyUsersComponent implements OnInit {
     private dataService: DataService,
     private route: ActivatedRoute,
     private modalService: NgbModal,
+    private readonly offcanvasService: NgbOffcanvas,
   ) {}
 
   ngOnInit(): void {
@@ -108,7 +116,20 @@ export class AdminCompanyUsersComponent implements OnInit {
   }
 
   openFilterCanvas() {
-    console.log('open filters');
+    const canvasRef = this.offcanvasService.open(AdminUsersFiltersListComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto',
+    });
+
+    canvasRef.componentInstance.filters = this.activeFilters;
+    canvasRef.result.then(
+      (result: any) => {
+        console.log(result);
+        this.activeFilters = result;
+        this.refreshUsers();
+      },
+      (reason: any) => {},
+    );
   }
 
   isUserSelected(user: UserDtoApi) {
@@ -149,6 +170,17 @@ export class AdminCompanyUsersComponent implements OnInit {
     this.refreshUsers();
   }
 
+  checkFilters(tmpUsers: UserDtoApi[]) {
+    return tmpUsers.filter((user) => {
+      if (this.activeFilters.roles !== null && this.activeFilters.roles?.length) {
+        if (!this.activeFilters.roles?.every((role) => user.roles?.includes(role))) {
+          return false;
+        }
+      }
+      return true;
+    });
+  }
+
   refreshUsers() {
     let tmpUsers = this.users;
 
@@ -174,6 +206,8 @@ export class AdminCompanyUsersComponent implements OnInit {
         );
       });
     }
+
+    tmpUsers = this.checkFilters(tmpUsers);
 
     this.pageCount = Math.ceil(tmpUsers.length / this.pageSize);
 
