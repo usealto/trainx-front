@@ -66,7 +66,6 @@ export class AdminCompaniesCreateComponent implements OnInit {
         .pipe(tap((company) => (this.company = company)))
         .pipe(
           tap(() => {
-            console.log(this.company);
             this.companyForm = this.fb.group<CompanyForm>({
               domain: [this.company.domain || ''],
               name: [this.company.name, [Validators.required]],
@@ -119,9 +118,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
       this.teamService
         .createTeam({ shortName: team.shortName, longName: team.longName, companyId: companyId })
         .pipe(map((uploadedTeam) => uploadedTeam))
-        .subscribe((res) => {
-          console.log(res);
-        });
+        .subscribe();
     });
   }
 
@@ -171,7 +168,6 @@ export class AdminCompaniesCreateComponent implements OnInit {
           isSlackActive: slackActive,
         })
         .subscribe((company) => {
-          console.log(company);
           this.uploadFormComponent.upload(company.data?.id);
           this.createTeams(company.data?.id);
         });

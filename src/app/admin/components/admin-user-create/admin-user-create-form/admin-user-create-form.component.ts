@@ -12,6 +12,7 @@ import {
   UserDtoApi,
   UserDtoApiRolesEnumApi,
   UsersApiService,
+  DefaultApiService,
 } from '@usealto/sdk-ts-angular';
 import { UserForm } from './models/user.form';
 import { AuthUserGet } from '../../admin-users/models/authuser.get';
@@ -51,6 +52,7 @@ export class AdminUserCreateFormComponent implements OnInit {
     private readonly companiesRestService: CompaniesRestService,
     private readonly slackApiService: SlackApiService,
     private readonly msg: MsgService,
+    private readonly defaultApiService: DefaultApiService,
     private modalService: NgbModal,
   ) {
     this.fb = fob;
@@ -59,8 +61,6 @@ export class AdminUserCreateFormComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.companyId = this.route.snapshot.paramMap.get('companyId') || '';
     this.userId = this.route.snapshot.paramMap.get('userId') || '';
-
-    console.log(this.companyId, this.userId);
 
     combineLatest({
       teams: this.teamsRestService.getTeams({ companyId: this.companyId }),
@@ -115,8 +115,6 @@ export class AdminUserCreateFormComponent implements OnInit {
   }
 
   async submit() {
-    console.log('new user to be created if service is created as well');
-
     if (!this.userForm.value) return;
 
     const { firstname, lastname, username, email, teamId, roles, slackId } = this.userForm.value;
@@ -135,7 +133,6 @@ export class AdminUserCreateFormComponent implements OnInit {
           },
         })
         .subscribe((q) => {
-          console.log(q);
           this.router.navigate(['/admin/companies/', this.companyId, 'users', this.userId]);
         });
     } else {
@@ -153,7 +150,6 @@ export class AdminUserCreateFormComponent implements OnInit {
           },
         })
         .subscribe((q) => {
-          console.log(q);
           this.router.navigate(['/admin/companies/', this.companyId, 'users']);
         });
     }
@@ -194,6 +190,7 @@ export class AdminUserCreateFormComponent implements OnInit {
   }
 
   resetSlackId() {
+    // this.defaultApiService.n8nProxyControllerProxyGetRequest();
     this.slackApiService
       .updateSlackid({
         companyId: this.companyId,

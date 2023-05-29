@@ -34,7 +34,6 @@ export class AdminMenuComponent implements OnInit {
 
   refreshMe() {
     this.usersRestService.getMe().subscribe((user) => {
-      console.log(user);
       this.user = user;
       this.userEmail = user.email;
     });

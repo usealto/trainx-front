@@ -55,7 +55,7 @@ export class AdminCompanyUsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') || '';
-    console.log(this.id);
+
     this.fetchAll();
   }
 
@@ -93,16 +93,12 @@ export class AdminCompanyUsersComponent implements OnInit {
 
   changeStatusSelectedUsers() {
     const modalRef = this.modalService.open(ChangeStatusSelectedUsersTeamModalComponent, { centered: true });
-    modalRef.result.then((res) => {
-      console.log(res);
-    });
   }
 
   addSelectedUsersToTeams() {
     const modalRef = this.modalService.open(AdminAssignSelectedUsersTeamModalComponent, { centered: true });
     modalRef.componentInstance.teams = this.teams;
     modalRef.result.then((res) => {
-      console.log(res);
       const formatedUsers = this.selectedUsers.map((users) => {
         return {
           email: users.email,
@@ -124,7 +120,6 @@ export class AdminCompanyUsersComponent implements OnInit {
     canvasRef.componentInstance.filters = this.activeFilters;
     canvasRef.result.then(
       (result: any) => {
-        console.log(result);
         this.activeFilters = result;
         this.refreshUsers();
       },
@@ -146,7 +141,6 @@ export class AdminCompanyUsersComponent implements OnInit {
     } else {
       this.selectedUsers.push(user);
     }
-    console.log(this.selectedUsers);
   }
 
   onPaginator(page: number) {
@@ -155,7 +149,6 @@ export class AdminCompanyUsersComponent implements OnInit {
   }
 
   onSearch(search: string) {
-    console.log(search);
     this.searchString = search;
     this.refreshUsers();
   }

@@ -58,14 +58,12 @@ export class AdminCompaniesComponent implements OnInit {
   ngOnInit(): void {
     this.authApiService.getRoleUsers({ role: 'company-admin' }).subscribe((q) => {
       this.companyAdmins = q.data;
-      console.log(this.companyAdmins);
     });
 
     this.companiesRestService
       .getCompanies()
       .pipe(tap((companies) => (this.companies = companies)))
       .subscribe(() => {
-        console.log(this.companies);
         this.pageCount = Math.ceil(this.companies.length / this.pageSize);
         this.refreshCompanies();
       });
@@ -116,7 +114,6 @@ export class AdminCompaniesComponent implements OnInit {
     } else {
       this.selectedIds.push(id);
     }
-    console.log(this.selectedIds);
   }
 
   onPaginator(page: number) {
@@ -181,7 +178,6 @@ export class AdminCompaniesComponent implements OnInit {
         const firstValue = a[this.sortDirection.column as keyof CompanyDtoApi] as any;
         const secondValue = b[this.sortDirection.column as keyof CompanyDtoApi] as any;
         const res = compare(firstValue, secondValue);
-        // const res = firstValue.localeCompare(secondValue);
         return this.sortDirection.direction === 'asc' ? res : -res;
       });
     }

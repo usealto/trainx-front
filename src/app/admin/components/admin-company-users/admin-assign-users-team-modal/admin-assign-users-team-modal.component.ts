@@ -22,7 +22,6 @@ export class AdminAssignUsersTeamModalComponent {
   constructor(public modal: NgbActiveModal) {}
 
   onDropzoneEvent(event: DropzoneChangeEvent) {
-    console.log(event);
     if (event.addedFiles.length > 0) {
       this.onFileSelected(event.addedFiles[0]);
     }

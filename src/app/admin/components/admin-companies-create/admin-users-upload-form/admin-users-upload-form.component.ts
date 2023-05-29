@@ -64,7 +64,6 @@ export class AdminUsersUploadFormComponent {
   }
 
   onSelectUser(event: DropzoneChangeEvent) {
-    console.log(event);
     if (event.addedFiles.length > 0) {
       this.onFileSelected(event.addedFiles[0]);
     }
@@ -98,7 +97,6 @@ export class AdminUsersUploadFormComponent {
         if (this.csvData && this.csvData[0] && this.csvData[0].email === 'email') {
           this.csvData = this.csvData.slice(1);
         }
-        console.log(this.csvData);
         this.form?.markAsDirty();
         this.refreshUsers();
       },
@@ -106,9 +104,6 @@ export class AdminUsersUploadFormComponent {
   }
 
   public upload(id: string | undefined): void {
-    console.log('in upload');
-    console.log(id);
-
     if (this.csvData.length > 0) {
       this.csvData.forEach((user) => {
         const roles =
@@ -126,7 +121,6 @@ export class AdminUsersUploadFormComponent {
             },
           })
           .subscribe((res) => {
-            console.log(res);
             if (res.statusCode === 201) {
               user.isUploaded = true;
             }
