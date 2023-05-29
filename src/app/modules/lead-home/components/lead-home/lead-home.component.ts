@@ -90,11 +90,9 @@ export class LeadHomeComponent implements OnInit {
       this.commentsRestService.getComments(),
       this.questionsSubmittedRestService.getQuestions(),
       this.challengesRestService.getChallenges({ itemsPerPage: 40, sortBy: 'endDate:desc' }),
-      this.scoresRestService.getUsersStats(ScoreDuration.Month),
-      this.scoresRestService.getUsersStats(ScoreDuration.Month, true),
     ])
       .pipe(
-        tap(([comments, questions, challenges, usersStats, previousUsersStats]) => {
+        tap(([comments, questions, challenges]) => {
           this.commentsCount = comments.length;
           this.questionsCount = questions.length;
           this.challengesByTeam = challenges
@@ -103,14 +101,6 @@ export class LeadHomeComponent implements OnInit {
           this.challengesByUser = challenges
             .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByUser)
             .slice(0, 5);
-
-          this.activeMembers = usersStats.filter((u) => u.respondsRegularly).length;
-          this.inactiveMembers = usersStats.length - this.activeMembers;
-
-          const prevU = previousUsersStats.filter((u) => u.respondsRegularly).length;
-          this.activeMembersProgression = (this.activeMembers - prevU) / prevU;
-          const prevI = previousUsersStats.length - prevU;
-          this.inactiveMembersProgression = (this.inactiveMembers - prevI) / prevI;
         }),
         tap(() => this.getGlobalScore(this.globalFilters)),
         untilDestroyed(this),
@@ -220,15 +210,25 @@ export class LeadHomeComponent implements OnInit {
     return combineLatest([
       this.scoresRestService.getScores(this.globalFilters),
       this.scoresRestService.getScores(this.globalFilters, true),
+      this.scoresRestService.getUsersStats(this.globalFilters.duration as ScoreDuration),
+      this.scoresRestService.getUsersStats(this.globalFilters.duration as ScoreDuration, true),
     ])
       .pipe(
-        tap(([current, previous]) => {
+        tap(([current, previous, usersStats, previousUsersStats]) => {
           this.globalScore = current.scores.length
             ? this.scoreService.reduceWithoutNull(current.scores[0].averages) ?? 0
             : 0;
           this.globalScoreProgression = previous.scores.length
             ? this.scoreService.reduceWithoutNull(previous.scores[0].averages) ?? 0
             : 0;
+
+          this.activeMembers = usersStats.filter((u) => u.respondsRegularly).length;
+          this.inactiveMembers = usersStats.length - this.activeMembers;
+
+          const prevU = previousUsersStats.filter((u) => u.respondsRegularly).length;
+          this.activeMembersProgression = (this.activeMembers - prevU) / prevU;
+          const prevI = previousUsersStats.length - prevU;
+          this.inactiveMembersProgression = (this.inactiveMembers - prevI) / prevI;
         }),
         switchMap(() => this.getAverageCompletion(this.globalFilters)),
         untilDestroyed(this),
