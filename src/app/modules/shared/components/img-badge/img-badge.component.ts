@@ -9,13 +9,16 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 })
 export class ImgBadgeComponent implements OnChanges {
   @Input() user: UserDtoApi | null | undefined;
+  @Input() url: string | null | undefined = '';
   @Input() size = 32;
 
   thumb = '';
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['user']?.currentValue?.pictureUrl) {
-      this.thumb = changes['user']?.currentValue.pictureUrl.replace('s=480', 's=' + this.size) || '';
+    if (changes['user']?.currentValue) {
+      this.thumb = this.user?.pictureUrl?.replace('s=480', 's=' + this.size) || '';
+    } else if (changes['url']?.currentValue) {
+      this.thumb = this.url || '';
     }
   }
 
