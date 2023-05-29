@@ -19,6 +19,8 @@ import { UsersRestService } from 'src/app/modules/profile/services/users-rest.se
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { UsersApiService as SlackApiService } from 'src/app/sdk/api/users.service';
 import { MsgService } from 'src/app/core/message/msg.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ShowRawDataModalComponent } from './show-raw-data-modal/show-raw-data-modal.component';
 
 @Component({
   selector: 'alto-admin-user-create-form',
@@ -49,6 +51,7 @@ export class AdminUserCreateFormComponent implements OnInit {
     private readonly companiesRestService: CompaniesRestService,
     private readonly slackApiService: SlackApiService,
     private readonly msg: MsgService,
+    private modalService: NgbModal,
   ) {
     this.fb = fob;
   }
@@ -154,6 +157,16 @@ export class AdminUserCreateFormComponent implements OnInit {
           this.router.navigate(['/admin/companies/', this.companyId, 'users']);
         });
     }
+  }
+
+  showRawDataModal() {
+    const modalRef = this.modalService.open(ShowRawDataModalComponent, {
+      centered: true,
+      scrollable: true,
+      size: 'xl',
+    });
+    modalRef.componentInstance.userAuth0 = this.userAuth0;
+    modalRef.componentInstance.user = this.user;
   }
 
   fetchAuth0Data(email: string) {
