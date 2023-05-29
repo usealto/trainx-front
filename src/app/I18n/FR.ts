@@ -497,6 +497,10 @@ export const FR = {
       title: 'Intégrations',
       subtitle: 'Gérez les connexions avec vos applications',
       learnMore: 'En savoir plus',
+      slack: {
+        title: 'Slack',
+        subtitle: 'Envoyez des notifications aux canaux et créez des projets à partir de messages.',
+      },
     },
   },
   profile: {

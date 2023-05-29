@@ -14,7 +14,7 @@ export class ImgBadgeComponent implements OnChanges {
   thumb = '';
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['user']?.currentValue) {
+    if (changes['user']?.currentValue?.pictureUrl) {
       this.thumb = changes['user']?.currentValue.pictureUrl.replace('s=480', 's=' + this.size) || '';
     }
   }
