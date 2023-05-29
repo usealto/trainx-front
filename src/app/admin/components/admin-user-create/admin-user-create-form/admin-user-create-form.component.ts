@@ -169,7 +169,6 @@ export class AdminUserCreateFormComponent implements OnInit {
     this.authApiService.getAuth0Users({ q: email }).subscribe((q) => {
       if (q.data && q.data.length > 0) {
         this.userAuth0 = q.data[0];
-        console.log(this.userAuth0);
       } else {
         throw new Error('user not found in auth0');
       }

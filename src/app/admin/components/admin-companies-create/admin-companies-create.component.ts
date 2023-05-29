@@ -123,16 +123,15 @@ export class AdminCompaniesCreateComponent implements OnInit {
   }
 
   isFormDisabled(): boolean {
-    if (this.edit) {
-      return !this.companyForm.valid || this.companyForm.pristine || !this.companyForm.dirty;
+    if (!this.edit) {
+      if (
+        this.uploadFormComponent?.csvData?.length <= 0 ||
+        !this.uploadFormComponent?.csvData.some((user) => user.role === 'CompanyAdmin')
+      ) {
+        return true;
+      }
     }
-    return (
-      this.uploadFormComponent?.csvData?.length <= 0 ||
-      !this.uploadFormComponent?.csvData.some((user) => user.role === 'CompanyAdmin') ||
-      !this.companyForm.valid ||
-      this.companyForm.pristine ||
-      !this.companyForm.dirty
-    );
+    return !this.companyForm.valid || this.companyForm.pristine || !this.companyForm.dirty;
   }
 
   async submit() {
