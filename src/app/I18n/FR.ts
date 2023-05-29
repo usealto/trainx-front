@@ -1,5 +1,6 @@
 export const FR = {
   shared: {
+    smiley: '👍',
     edit: 'Modifier',
     save: 'Enregistrer',
     next: 'Suivant',
@@ -44,6 +45,9 @@ export const FR = {
       year: '12 mois',
       trimester: '3 mois',
       month: '1 mois',
+    },
+    noWebAcces: {
+      title: 'Félici',
     },
   },
   leadHome: {
