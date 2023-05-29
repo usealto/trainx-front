@@ -122,7 +122,10 @@
   <div class="py-4 border-bottom">
     <div class="w-80 row">
       <div class="col-5 mb-2">
-        <label for="name">Roles</label>
+        <div class="col-5 mb-2">
+          <label for="name" class="required">Roles</label>
+          <p class="fs-7">The user must always have at least the role `company-user`.</p>
+        </div>
       </div>
       <div class="col-7 form-group">
         <ng-select
@@ -137,7 +140,12 @@
         >
           <ng-template ng-label-tmp let-item="item" let-clear="clear">
             <div class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
-              <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+              <span
+                *ngIf="item !== 'company-user'"
+                class="cursor-pointer me-1"
+                (click)="clear(item)"
+                aria-hidden="true"
+              >
                 <i class="bi bi-x-lg"></i>
               </span>
               <span>{{ item }}</span>
