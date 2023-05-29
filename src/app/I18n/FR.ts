@@ -1,3 +1,5 @@
+import { SubTitle } from 'chart.js';
+
 export const FR = {
   shared: {
     edit: 'Modifier',
@@ -44,6 +46,13 @@ export const FR = {
       year: '12 mois',
       trimester: '3 mois',
       month: '1 mois',
+    },
+    noWebAccess: {
+      title: 'Bravo !',
+      subtitle: 'Félicitations ! Votre compte est actif 🚀.',
+      description:
+        "Comme souhaité par vos collaborateurs, vous profiterez bientôt d'Alto directement dans vos outils préférés tels Slack ou Teams 💜",
+      subdescription: '🙏🏻',
     },
   },
   leadHome: {
