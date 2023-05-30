@@ -1,7 +1,7 @@
 <div class="row" *ngIf="isDev">
   <div class="col-6">
     <span class="fs-4">{{ I18ns.shared.smiley }}</span>
-
+    <a [routerLink]="['/', AltoRoutes.notFound]">404 page</a>
     <br />
     <alto-anchor-navigator>
       <button type="button" class="btn btn-outline-secondary me-4 ps-3">
