@@ -212,23 +212,33 @@
           <div class="col-6 border-end pe-0">
             <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.programs?.top | slice : 0 : 3" class="mb-3">
-                <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
-                <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
-                  {{ item.avg | percent }}
-                </span>
-              </p>
+              <div *ngIf="topFlopData?.programs?.top; else placeholder">
+                <p *ngFor="let item of topFlopData?.programs?.top | slice : 0 : 3" class="mb-3">
+                  <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
+                  <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
+                    {{ item.avg | percent }}
+                  </span>
+                </p>
+              </div>
+              <ng-template #placeholder>
+                <p>Here a placeholder</p>
+              </ng-template>
             </div>
           </div>
           <div class="col-6 ps-4 pe-0">
             <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
             <div class="height-100">
-              <p *ngFor="let item of topFlopData?.programs?.flop | slice : 0 : 3" class="mb-3">
-                <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
-                <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
-                  {{ item.avg | percent }}
-                </span>
-              </p>
+              <div *ngIf="topFlopData?.programs?.flop; else placeholder">
+                <p *ngFor="let item of topFlopData?.programs?.flop | slice : 0 : 3" class="mb-3">
+                  <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
+                  <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
+                    {{ item.avg | percent }}
+                  </span>
+                </p>
+              </div>
+              <ng-template #placeholder>
+                <p>Here a placeholder</p>
+              </ng-template>
             </div>
           </div>
         </ng-container>
@@ -393,9 +403,7 @@
             >
               <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
               <td>
-                <alto-img-badge
-                  [user]="getUser(chal.createdBy) | async"
-                ></alto-img-badge>
+                <alto-img-badge [user]="getUser(chal.createdBy) | async"></alto-img-badge>
               </td>
               <td>
                 <alto-colored-pill-list
