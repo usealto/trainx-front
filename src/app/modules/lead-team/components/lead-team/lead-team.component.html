@@ -62,7 +62,7 @@
               {{ team.createdAt | date : 'shortDate' }}
             </td>
             <td>
-              <i class="fs-5 bi bi-pencil cursor-pointer" (click)="openTeamForm(team)"></i>
+              <i class="fs-5 bi bi-pencil cursor-pointer float end me-4" (click)="openTeamForm(team)"></i>
             </td>
           </tr>
         </tbody>
@@ -199,7 +199,10 @@
               ></alto-progression-badge>
             </td>
             <td>
-              <i class="fs-5 bi bi-pencil cursor-pointer" (click)="openUserEditionForm(user)"></i>
+              <i
+                class="fs-5 bi bi-pencil cursor-pointer float end me-4"
+                (click)="openUserEditionForm(user)"
+              ></i>
             </td>
           </tr>
         </tbody>
