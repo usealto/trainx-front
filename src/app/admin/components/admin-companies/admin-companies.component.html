@@ -1,7 +1,7 @@
 <div>
   <alto-admin-header
     title="Companies"
-    subtitle="L'ensemble de nos clients"
+    subtitle="All of our customers"
     [divider]="true"
     [breadcrumbs]="[
       {
@@ -56,7 +56,7 @@
             <th scope="col" sortable="domain" (sort)="onSort($event)">
               <i class="bi bi-arrow-up-short"></i> Domain
             </th>
-            <th scope="col">Biling</th>
+
             <th scope="col">User admin</th>
             <th scope="col">Sending days</th>
             <th scope="col" sortable="slackQuestionsPerQuiz" (sort)="onSort($event)">
@@ -66,7 +66,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let company of displayedCompanies">
+          <tr
+            *ngFor="let company of displayedCompanies"
+            [style.backgroundColor]="
+              isImpersonnatedAsCompanyAdminOfthisCompanyUpdate(company.admins) ? '#E3F2FD' : ''
+            "
+          >
             <td>
               <div class="form-check">
                 <input
@@ -78,21 +83,21 @@
                 />
               </div>
             </td>
-            <th scope="row">
+            <td scope="row">
               <a
                 *ngIf="isImpersonnatedAsCompanyAdminOfthisCompanyUpdate(company.admins); else simpleName"
                 [routerLink]="['/', 'admin', 'companies', company.id, 'users']"
                 routerLinkActive="menu-selected"
-                class="fs-6b alto-success"
+                class="fw-bolder"
               >
                 {{ company.name }}
               </a>
               <ng-template #simpleName> {{ company.name }}</ng-template>
-            </th>
+            </td>
             <td>{{ company.domain }}</td>
-            <td>Lorem ipsum</td>
+
             <td>
-              <div class="d-flex">
+              <div class="d-flex" *ngIf="company?.admins?.length ?? 0 > 0">
                 <a
                   class="btn float-start mx-3 alto-badge-big incognito-btn"
                   (click)="setImpersonation(company?.admins?.[0]?.email ?? '' )"
@@ -106,9 +111,12 @@
             </td>
             <td>{{ company.slackDays }}</td>
             <td>{{ company.slackQuestionsPerQuiz }}</td>
-            <td class="action-btn-list-container">
+            <td
+              class="action-btn-list-container"
+              *ngIf="isImpersonnatedAsCompanyAdminOfthisCompanyUpdate(company.admins)"
+            >
               <div class="shaddow"></div>
-              <div class="d-flex action-btn-list align-items-center gap-2 px-3">
+              <div class="d-flex action-btn-list align-items-center gap-2 px-3 w-100 justify-content-evenly">
                 <button type="button" disabled class="btn btn-link">
                   <i class="alto-second-grey bi bi-trash"></i>
                 </button>

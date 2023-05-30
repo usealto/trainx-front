@@ -3,7 +3,13 @@ import { CompanyForm } from './models/company.create';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { FormArray, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
-import { CompanyDtoApi, CreateTeamDtoApi, SlackTimeEnumApi, TeamDtoApi, WeekDayEnumApi } from '@usealto/sdk-ts-angular';
+import {
+  CompanyDtoApi,
+  CreateTeamDtoApi,
+  SlackTimeEnumApi,
+  TeamDtoApi,
+  WeekDayEnumApi,
+} from '@usealto/sdk-ts-angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { Observable, forkJoin, from, map, mergeMap, switchMap, tap, toArray } from 'rxjs';
@@ -60,7 +66,6 @@ export class AdminCompaniesCreateComponent implements OnInit {
         .pipe(tap((company) => (this.company = company)))
         .pipe(
           tap(() => {
-            console.log(this.company);
             this.companyForm = this.fb.group<CompanyForm>({
               domain: [this.company.domain || ''],
               name: [this.company.name, [Validators.required]],
@@ -113,10 +118,20 @@ export class AdminCompaniesCreateComponent implements OnInit {
       this.teamService
         .createTeam({ shortName: team.shortName, longName: team.longName, companyId: companyId })
         .pipe(map((uploadedTeam) => uploadedTeam))
-        .subscribe((res) => {
-          console.log(res);
-        });
+        .subscribe();
     });
+  }
+
+  isFormDisabled(): boolean {
+    if (!this.edit) {
+      if (
+        this.uploadFormComponent?.csvData?.length <= 0 ||
+        !this.uploadFormComponent?.csvData.some((user) => user.role === 'CompanyAdmin')
+      ) {
+        return true;
+      }
+    }
+    return !this.companyForm.valid || this.companyForm.pristine || !this.companyForm.dirty;
   }
 
   async submit() {
@@ -139,7 +154,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
           slackAdmin: slackAdmin ?? '',
           isSlackActive: slackActive,
         })
-        .subscribe();
+        .subscribe(() => this.uploadFormComponent.upload(this.id));
     } else {
       this.companiesRestService
         .createCompany({
@@ -152,7 +167,6 @@ export class AdminCompaniesCreateComponent implements OnInit {
           isSlackActive: slackActive,
         })
         .subscribe((company) => {
-          console.log(company);
           this.uploadFormComponent.upload(company.data?.id);
           this.createTeams(company.data?.id);
         });

@@ -24,12 +24,12 @@ import { AdminTabsComponent } from './components/admin-shared/admin-tabs/admin-t
 import { AdminTabComponent } from './components/admin-shared/admin-tabs/admin-tab.component';
 import { AdminUsersUploadFormComponent } from './components/admin-companies-create/admin-users-upload-form/admin-users-upload-form.component';
 import { EditUserUploadFormComponent } from './components/admin-companies-create/edit-user-upload-form/edit-user-upload-form.component';
-import { ApiInterceptor } from '../core/interceptors/api.interceptor';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AdminCompaniesFiltersListComponent } from './components/admin-companies/admin-companies-filters-list/admin-companies-filters-list.component';
 import { AdminAssignUsersTeamModalComponent } from './components/admin-company-users/admin-assign-users-team-modal/admin-assign-users-team-modal.component';
 import { AdminAssignSelectedUsersTeamModalComponent } from './components/admin-company-users/admin-assign-selected-users-team-modal/admin-assign-selected-users-team-modal.component';
 import { ChangeStatusSelectedUsersTeamModalComponent } from './components/admin-company-users/change-status-selected-users-team-modal/change-status-selected-users-team-modal.component';
+import { ShowRawDataModalComponent } from './components/admin-user-create/admin-user-create-form/show-raw-data-modal/show-raw-data-modal.component';
+import { AdminUsersFiltersListComponent } from './components/admin-company-users/admin-users-filters-list/admin-users-filters-list.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +55,8 @@ import { ChangeStatusSelectedUsersTeamModalComponent } from './components/admin-
     AdminAssignUsersTeamModalComponent,
     AdminAssignSelectedUsersTeamModalComponent,
     ChangeStatusSelectedUsersTeamModalComponent,
+    ShowRawDataModalComponent,
+    AdminUsersFiltersListComponent,
   ],
   imports: [
     CommonModule,

@@ -12,11 +12,16 @@ import {
   UserDtoApi,
   UserDtoApiRolesEnumApi,
   UsersApiService,
+  DefaultApiService,
 } from '@usealto/sdk-ts-angular';
 import { UserForm } from './models/user.form';
 import { AuthUserGet } from '../../admin-users/models/authuser.get';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
+import { UsersApiService as SlackApiService } from 'src/app/sdk/api/users.service';
+import { MsgService } from 'src/app/core/message/msg.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ShowRawDataModalComponent } from './show-raw-data-modal/show-raw-data-modal.component';
 
 @Component({
   selector: 'alto-admin-user-create-form',
@@ -45,6 +50,10 @@ export class AdminUserCreateFormComponent implements OnInit {
     private readonly authApiService: AuthApiService,
     private readonly usersRestService: UsersRestService,
     private readonly companiesRestService: CompaniesRestService,
+    private readonly slackApiService: SlackApiService,
+    private readonly msg: MsgService,
+    private readonly defaultApiService: DefaultApiService,
+    private modalService: NgbModal,
   ) {
     this.fb = fob;
   }
@@ -52,8 +61,6 @@ export class AdminUserCreateFormComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.companyId = this.route.snapshot.paramMap.get('companyId') || '';
     this.userId = this.route.snapshot.paramMap.get('userId') || '';
-
-    console.log(this.companyId, this.userId);
 
     combineLatest({
       teams: this.teamsRestService.getTeams({ companyId: this.companyId }),
@@ -101,15 +108,13 @@ export class AdminUserCreateFormComponent implements OnInit {
         username: ['', []],
         email: ['', [Validators.required, Validators.email]],
         teamId: [null, []],
-        roles: [[], []],
+        roles: [[RoleEnumApi.CompanyUser], []],
         slackId: ['', []],
       });
     }
   }
 
   async submit() {
-    console.log('new user to be created if service is created as well');
-
     if (!this.userForm.value) return;
 
     const { firstname, lastname, username, email, teamId, roles, slackId } = this.userForm.value;
@@ -128,7 +133,6 @@ export class AdminUserCreateFormComponent implements OnInit {
           },
         })
         .subscribe((q) => {
-          console.log(q);
           this.router.navigate(['/admin/companies/', this.companyId, 'users', this.userId]);
         });
     } else {
@@ -146,10 +150,19 @@ export class AdminUserCreateFormComponent implements OnInit {
           },
         })
         .subscribe((q) => {
-          console.log(q);
           this.router.navigate(['/admin/companies/', this.companyId, 'users']);
         });
     }
+  }
+
+  showRawDataModal() {
+    const modalRef = this.modalService.open(ShowRawDataModalComponent, {
+      centered: true,
+      scrollable: true,
+      size: 'xl',
+    });
+    modalRef.componentInstance.userAuth0 = this.userAuth0;
+    modalRef.componentInstance.user = this.user;
   }
 
   fetchAuth0Data(email: string) {
@@ -162,13 +175,27 @@ export class AdminUserCreateFormComponent implements OnInit {
     });
   }
 
+  sendResetPassword() {
+    if (!this.userForm.value) return;
+    const { email } = this.userForm.value;
+
+    this.authApiService
+      .resetUserPassword({
+        auth0ResetPasswordParamsDtoApi: {
+          email: email,
+        },
+      })
+      .subscribe((res) => this.msg.add({ message: res.data, severity: 'success' }));
+  }
+
   resetSlackId() {
-    // this.usersApiService
-    //   .updateSlackid({
-    //     companyId: this.companyId,
-    //     userId: this.userId,
-    //     slackAdmin: this.company.slackAdmin,
-    //   })
-    //   .subscribe((res) => console.log(res));
+    // this.defaultApiService.n8nProxyControllerProxyGetRequest();
+    this.slackApiService
+      .updateSlackid({
+        companyId: this.companyId,
+        userId: this.userId,
+        slackAdmin: this.company.slackAdmin,
+      })
+      .subscribe((res) => console.log(res));
   }
 }

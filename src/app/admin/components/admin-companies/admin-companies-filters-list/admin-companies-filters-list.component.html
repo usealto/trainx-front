@@ -46,8 +46,42 @@
         </div>
       </div>
     </div>
-    <label class="mt-4 form-label required">User admin</label>
-    <input type="email" class="form-control" formControlName="userAdmin" placeholder="email" />
+    <label class="mt-4 form-label required">As user admin</label>
+    <div>
+      <div class="btn-group btn-group-toggle gap-2" ngbRadioGroup name="radioBasic">
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            id="flexRadioDefault1"
+            [value]="true"
+            formControlName="userAdmin"
+          />
+          <label class="form-check-label" for="flexRadioDefault1"> Yes </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            id="flexRadioDefault2"
+            [value]="false"
+            formControlName="userAdmin"
+          />
+          <label class="form-check-label" for="flexRadioDefault2"> No </label>
+        </div>
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="radio"
+            id="flexRadioDefault2"
+            [value]="null"
+            formControlName="userAdmin"
+          />
+          <label class="form-check-label" for="flexRadioDefault2"> all </label>
+        </div>
+      </div>
+    </div>
+
     <label class="mt-4 form-label required">Sending days</label>
     <ng-select
       class="w-100"

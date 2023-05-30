@@ -33,14 +33,14 @@ export class AdminCompaniesComponent implements OnInit {
   selectedIds: string[] = [];
   companyAdmins: AuthUserGet[] = [];
   page = 1;
-  pageSize = 7;
+  pageSize = 12;
   pageCount = 0;
   searchString = '';
   sortDirection: SortEvent = { column: '', direction: '' };
   activeFilters: FiltersCompaniesList = {
     teams: undefined,
     isSlackActive: null,
-    userAdmin: undefined,
+    userAdmin: null,
     sendingDays: undefined,
     nbQuestions: {
       min: undefined,
@@ -58,14 +58,12 @@ export class AdminCompaniesComponent implements OnInit {
   ngOnInit(): void {
     this.authApiService.getRoleUsers({ role: 'company-admin' }).subscribe((q) => {
       this.companyAdmins = q.data;
-      console.log(this.companyAdmins);
     });
 
     this.companiesRestService
       .getCompanies()
       .pipe(tap((companies) => (this.companies = companies)))
       .subscribe(() => {
-        console.log(this.companies);
         this.pageCount = Math.ceil(this.companies.length / this.pageSize);
         this.refreshCompanies();
       });
@@ -116,7 +114,6 @@ export class AdminCompaniesComponent implements OnInit {
     } else {
       this.selectedIds.push(id);
     }
-    console.log(this.selectedIds);
   }
 
   onPaginator(page: number) {
@@ -126,29 +123,50 @@ export class AdminCompaniesComponent implements OnInit {
 
   checkFilters(tmpCompanies: CompanyDtoApi[]) {
     return tmpCompanies.filter((company) => {
-      return (
-        (this.activeFilters.isSlackActive !== null
-          ? company.isSlackActive === this.activeFilters.isSlackActive
-          : true) &&
-        // check for user admin
-        (this.activeFilters.userAdmin && this.activeFilters.userAdmin !== ''
-          ? company.admins?.some((admin) => admin.email.toLowerCase() === this.activeFilters.userAdmin)
-          : true) &&
-        // check for sending days
-        (this.activeFilters.sendingDays && this.activeFilters.sendingDays.length > 0
-          ? company.slackDays?.every((day) =>
-              this.activeFilters.sendingDays?.includes(day as unknown as WeekDayEnumApi),
-            )
-          : true) &&
-        // check for minimun
-        (this.activeFilters.nbQuestions.min && company.slackQuestionsPerQuiz
-          ? company.slackQuestionsPerQuiz >= this.activeFilters.nbQuestions.min
-          : true) &&
-        // check for maximum
-        (this.activeFilters.nbQuestions.max && company.slackQuestionsPerQuiz
-          ? company.slackQuestionsPerQuiz <= this.activeFilters.nbQuestions.max
-          : true)
-      );
+      // check for Active slack
+      if (this.activeFilters.isSlackActive !== null) {
+        if (!(company.isSlackActive === this.activeFilters.isSlackActive)) {
+          return false;
+        }
+      }
+
+      // check for user admin
+      if (this.activeFilters.userAdmin !== null) {
+        if (this.activeFilters.userAdmin === true) {
+          if (!(!!company.admins && company.admins?.length > 0)) {
+            return false;
+          }
+        } else {
+          if (!(!company.admins || !(company.admins?.length > 0))) {
+            return false;
+          }
+        }
+      }
+
+      // check for sendings days
+      if (this.activeFilters.sendingDays && this.activeFilters.sendingDays.length > 0) {
+        if (
+          !company.slackDays?.every((day) =>
+            this.activeFilters.sendingDays?.includes(day as unknown as WeekDayEnumApi),
+          )
+        ) {
+          return false;
+        }
+      }
+
+      // check for min nb question
+      if (this.activeFilters.nbQuestions.min) {
+        if (!(company.slackQuestionsPerQuiz ?? 0 >= this.activeFilters.nbQuestions.min)) {
+          return false;
+        }
+      }
+      // check for max nb question
+      if (this.activeFilters.nbQuestions.max && company.slackQuestionsPerQuiz) {
+        if (!(company.slackQuestionsPerQuiz ?? 0 <= this.activeFilters.nbQuestions.max)) {
+          return false;
+        }
+      }
+      return true;
     });
   }
 
@@ -160,7 +178,6 @@ export class AdminCompaniesComponent implements OnInit {
         const firstValue = a[this.sortDirection.column as keyof CompanyDtoApi] as any;
         const secondValue = b[this.sortDirection.column as keyof CompanyDtoApi] as any;
         const res = compare(firstValue, secondValue);
-        // const res = firstValue.localeCompare(secondValue);
         return this.sortDirection.direction === 'asc' ? res : -res;
       });
     }
@@ -194,7 +211,7 @@ export class AdminCompaniesComponent implements OnInit {
 
     if (impersonatedUserEmail && companyAdmin) {
       const impersonatedUser = companyAdmin.find(
-        (user) => user.email.toLowerCase() === impersonatedUserEmail,
+        (user) => user.email.toLowerCase() === impersonatedUserEmail.toLowerCase(),
       );
 
       if (impersonatedUser) {

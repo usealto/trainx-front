@@ -67,6 +67,23 @@
       </div>
     </div>
   </div>
+  <!-- Password -->
+  <div class="py-4 border-bottom" *ngIf="edit">
+    <div class="w-80 row">
+      <div class="col-5 mb-2">
+        <label for="name" class="required">Password</label>
+      </div>
+      <div class="col-7 form-group">
+        <button
+          type="button"
+          class="btn btn-primary d-inline-flex align-items-center text-nowrap"
+          (click)="sendResetPassword()"
+        >
+          Send reset password email
+        </button>
+      </div>
+    </div>
+  </div>
   <!-- Team -->
   <div class="py-4 border-bottom">
     <div class="w-80 row">
@@ -105,7 +122,10 @@
   <div class="py-4 border-bottom">
     <div class="w-80 row">
       <div class="col-5 mb-2">
-        <label for="name">Roles</label>
+        <div class="col-5 mb-2">
+          <label for="name" class="required">Roles</label>
+          <p class="fs-7">The user must always have at least the role `company-user`.</p>
+        </div>
       </div>
       <div class="col-7 form-group">
         <ng-select
@@ -120,7 +140,12 @@
         >
           <ng-template ng-label-tmp let-item="item" let-clear="clear">
             <div class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
-              <span class="cursor-pointer me-1" (click)="clear(item)" aria-hidden="true">
+              <span
+                *ngIf="item !== 'company-user'"
+                class="cursor-pointer me-1"
+                (click)="clear(item)"
+                aria-hidden="true"
+              >
                 <i class="bi bi-x-lg"></i>
               </span>
               <span>{{ item }}</span>
@@ -161,8 +186,65 @@
       </div>
     </div>
   </div>
+  <div class="py-4 border-bottom" *ngIf="edit">
+    <div class="w-80 row">
+      <div class="col-5 mb-2">
+        <label for="name">Auth0</label>
+      </div>
+      <div class="col-7 form-group">
+        <div class="d-flex flex-column gap-2 fw-bolder">
+          <div class="w-100 d-flex justify-content-between">
+            <span class="alto-grey">Connected to Auth0:</span>
+            <span *ngIf="userAuth0; else connectedElse"
+              ><i class="bi bi-check-circle-fill fs-4 fw-bolder alto-success"></i
+            ></span>
+            <ng-template #connectedElse>
+              <span><i class="bi bi-x-circle-fill fs-4 fw-bolder alto-red"></i></span>
+            </ng-template>
+          </div>
+          <hr />
+          <ng-container *ngIf="userAuth0">
+            <div class="w-100 d-flex justify-content-between">
+              <span class="alto-grey">Last connection to Auth0:</span
+              ><span *ngIf="userAuth0.last_login; else never">{{
+                userAuth0.last_login | date : 'fullDate'
+              }}</span>
+              <ng-template #never><span>Never</span></ng-template>
+            </div>
+            <hr />
+            <div class="w-100 d-flex justify-content-between">
+              <span class="alto-grey">Verified email on Auth0:</span>
+              <span *ngIf="userAuth0.email_verified; else emailVerifiedElse"
+                ><i class="bi bi-check-circle-fill fs-4 fw-bolder alto-success"></i
+              ></span>
+              <ng-template #emailVerifiedElse>
+                <span><i class="bi bi-x-circle-fill fs-4 fw-bolder alto-red"></i></span>
+              </ng-template>
+            </div>
+            <hr />
+            <div class="w-100 d-flex justify-content-between">
+              <span class="alto-grey">Logins count</span>
+              <span class="alto-badge fw-bolder">{{ userAuth0.logins_count || 0 }}</span>
+            </div>
+            <hr />
+            <div class="w-100 d-flex justify-content-between">
+              <span class="alto-grey">Deleted</span>{{ user.deletedAt }}
+            </div>
+            <hr />
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
 </form>
-
+<button
+  *ngIf="edit"
+  type="button"
+  class="btn btn-primary d-inline-flex align-items-center text-nowrap mt-4"
+  (click)="showRawDataModal()"
+>
+  Show raw data
+</button>
 <div *ngIf="userForm" class="d-flex justify-content-end pt-4">
   <div class="d-flex align-items-center">
     <button
