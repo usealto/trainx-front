@@ -14,7 +14,8 @@ export class ApiInterceptor implements HttpInterceptor {
   }
 
   private nextHandle(next: HttpHandler, request: HttpRequest<any>): Observable<HttpEvent<any>> {
-    this.loadingStore.isLoading.value = true;
+    this.loadingStore.isLoading.value = this.loadingStore.maxLoad > 15;
+
     this.loadingStore.maxLoad++;
 
     return next.handle(request).pipe(
@@ -32,7 +33,7 @@ export class ApiInterceptor implements HttpInterceptor {
           this.loadingStore.maxLoad = 0;
         }
 
-        this.loadingStore.isLoading.value = this.loadingStore.maxLoad > 0;
+        this.loadingStore.isLoading.value = this.loadingStore.maxLoad > 15;
       }),
     );
   }
