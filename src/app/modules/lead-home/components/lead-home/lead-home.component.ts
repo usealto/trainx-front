@@ -3,6 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ChallengeDtoApi,
   ChallengeDtoApiTypeEnumApi,
+  ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   UserDtoApi,
@@ -23,13 +24,7 @@ import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoreDuration, ScoreFilters } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-
-type TopFlop = { top: TopFlopDisplay[]; flop: TopFlopDisplay[] };
-
-type TopFlopDisplay = {
-  label: string;
-  avg: number;
-};
+import { TopFlop, TopFlopDisplay } from 'src/app/modules/shared/models/score.model';
 
 @UntilDestroy()
 @Component({
@@ -130,6 +125,7 @@ export class LeadHomeComponent implements OnInit {
         tap(({ scores }) => (this.scoreCount = scores.length)),
         filter(() => !!this.scoreCount),
         tap(({ scores }) => {
+          scores = this.scoreService.reduceChartData(scores);
           const labels = scores[0].dates.map((d) => d.toLocaleDateString());
           const data: ChartData = {
             labels: labels,
@@ -172,29 +168,21 @@ export class LeadHomeComponent implements OnInit {
           if (val === ScoreTypeEnumApi.Program || val === ScoreTypeEnumApi.Tag) {
             this.topFlopProgramTab = val;
             this.topFlopData.programs = {
-              top: this.getTop(output),
-              flop: this.getFlop(output),
+              top: this.scoreService.getTop(output),
+              flop: this.scoreService.getFlop(output),
             };
           }
           if (val === ScoreTypeEnumApi.Team || val === ScoreTypeEnumApi.User) {
             this.topFlopTeamTab = val;
             this.topFlopData.teams = {
-              top: this.getTop(output),
-              flop: this.getFlop(output),
+              top: this.scoreService.getTop(output),
+              flop: this.scoreService.getFlop(output),
             };
           }
         }),
         untilDestroyed(this),
       )
       .subscribe();
-  }
-
-  getTop(data: TopFlopDisplay[]) {
-    return data.filter(({ avg }) => !!avg && avg >= 0.5).sort((a, b) => (a.avg < b.avg ? 1 : -1));
-  }
-
-  getFlop(data: TopFlopDisplay[]) {
-    return data.filter(({ avg }) => !!avg && avg < 0.5).sort((a, b) => (a.avg > b.avg ? 1 : -1));
   }
 
   getGlobalScore({

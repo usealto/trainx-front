@@ -58,10 +58,10 @@
         <div class="col-6 border-end pe-0">
           <h1 class="mb-4">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h1>
           <div class="height-100">
-            <p *ngFor="let team of scoredItems.slice(0, 3)" class="mb-3">
+            <p *ngFor="let team of scoredItems.top" class="mb-3">
               <span class="top-flop-label">{{ team.label }}</span>
-              <span class="float-end alto-score me-4" [class]="(team.score ?? 0) * 100 | pillColor">
-                {{ team.score | percent }}
+              <span class="float-end alto-score me-4" [class]="team.avg * 100 | pillColor">
+                {{ team.avg | percent }}
               </span>
             </p>
           </div>
@@ -69,13 +69,10 @@
         <div class="col-6 ps-4 pe-0">
           <h1 class="mb-4">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.flop }}</h1>
           <div class="height-100">
-            <p
-              *ngFor="let team of scoredItems.slice(scoredItems.length - 3, scoredItems.length)"
-              class="mb-3"
-            >
+            <p *ngFor="let team of scoredItems.flop" class="mb-3">
               <span class="top-flop-label">{{ team.label }}</span>
-              <span class="float-end alto-score" [class]="(team.score ?? 0) * 100 | pillColor">
-                {{ team.score | percent }}
+              <span class="float-end alto-score" [class]="team.avg * 100 | pillColor">
+                {{ team.avg | percent }}
               </span>
             </p>
           </div>

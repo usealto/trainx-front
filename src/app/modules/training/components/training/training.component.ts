@@ -5,7 +5,7 @@ import {
   GuessSourceEnumApi,
   QuestionApi,
 } from '@usealto/sdk-ts-angular';
-import { tap, timer } from 'rxjs';
+import { Subscription, tap, timer } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
@@ -18,6 +18,10 @@ interface AnswerCard {
   selected: boolean;
   type: '' | 'selected' | 'correct' | 'wrong';
 }
+
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+
+@UntilDestroy()
 @Component({
   selector: 'alto-training',
   templateUrl: './training.component.html',
@@ -28,15 +32,17 @@ export class TrainingComponent implements OnInit {
   AltoRoutes = AltoRoutes;
   displayTime = 30;
   time = 31000;
-  timer: any;
+  timer?: Subscription;
 
+  isContinuous = true;
+  // TODO : Use when we do the program based question
+  // questionsCount = 0;
+  // questionsPage = 0;
+  // questionsPageSize = 25;
   remainingQuestions: QuestionApi[] = [];
-  questionsCount = 0;
-  questionsPage = 0;
-  questionsPageSize = 25;
+
   displayedQuestion!: QuestionApi;
   isQuestionsLoading = true;
-
   currentAnswers: AnswerCard[] = [];
   isTimedOut = false;
 
@@ -51,22 +57,32 @@ export class TrainingComponent implements OnInit {
     this.getNextQuestion();
   }
 
-  getQuestions(page: number) {
+  getQuestions(page?: number) {
     this.isQuestionsLoading = true;
-    this.usersRestService
-      .getNextQuestionsPaginated(this.profileStore.user.value.id, {
-        page: page,
-      } as GetNextQuestionsForUserRequestParams)
-      .pipe(
-        tap((res) => {
-          this.remainingQuestions = res.data ?? [];
-          this.questionsCount = res.meta.totalItems ?? 0;
-          if (this.remainingQuestions.length > 0) {
-            this.getNextQuestion();
-          }
-        }),
-      )
-      .subscribe();
+
+    // * CONTINUOUS TRAINNG
+    if (this.isContinuous) {
+      this.usersRestService
+        .getNextQuestionsPaginated(this.profileStore.user.value.id, {
+          page: 1,
+          itemsPerPage: 1,
+        } as GetNextQuestionsForUserRequestParams)
+        .pipe(
+          tap(({ data }) => {
+            if (data) {
+              this.setDisplayedQuestion(data[0]);
+            }
+            // TODO : Use when we do the program based question
+            // this.remainingQuestions = res.data ?? [];
+            // this.questionsCount = res.meta.totalItems ?? 0;
+            // if (this.remainingQuestions.length > 0) {
+            //   this.getNextQuestion();
+            // }
+          }),
+          untilDestroyed(this),
+        )
+        .subscribe();
+    }
   }
 
   selectAnswer(answer: string) {
@@ -117,6 +133,7 @@ export class TrainingComponent implements OnInit {
           canvasRef.dismiss();
           this.saveAnswer();
         }),
+        untilDestroyed(this),
       )
       .subscribe();
   }
@@ -140,15 +157,23 @@ export class TrainingComponent implements OnInit {
   }
 
   getNextQuestion() {
-    if (this.remainingQuestions.length === 0) {
-      this.questionsPage++;
-      this.getQuestions(this.questionsPage);
+    if (this.isContinuous) {
+      this.getQuestions();
     } else {
-      this.displayedQuestion = this.remainingQuestions.pop() as QuestionApi;
-      this.getCurrentAnswers(this.displayedQuestion.answersAccepted, this.displayedQuestion.answersWrong);
-      this.isTimedOut = false;
-      this.countDown(this.time);
+      if (this.remainingQuestions.length === 0) {
+        // this.questionsPage++;
+        this.getQuestions();
+      } else {
+        this.setDisplayedQuestion(this.remainingQuestions.pop() as QuestionApi);
+      }
     }
+  }
+
+  setDisplayedQuestion(quest: QuestionApi) {
+    this.displayedQuestion = quest;
+    this.getCurrentAnswers(this.displayedQuestion.answersAccepted, this.displayedQuestion.answersWrong);
+    this.isTimedOut = false;
+    this.countDown(this.time);
   }
 
   countDown(time: number) {
@@ -165,13 +190,15 @@ export class TrainingComponent implements OnInit {
             this.isTimedOut = true;
           }
         }),
+        untilDestroyed(this),
       )
       .subscribe();
   }
 
   stopTimer() {
-    this.timer.unsubscribe();
-    this.timer.remove();
+    if (this.timer) {
+      this.timer.unsubscribe();
+    }
   }
 
   getCurrentAnswers(correct: string[], wrong: string[]) {

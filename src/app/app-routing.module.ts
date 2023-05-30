@@ -102,7 +102,7 @@ const routes: Routes = [
   },
 
   {
-    path: '404',
+    path: AltoRoutes.notFound,
     component: NotFoundComponent,
   },
   {

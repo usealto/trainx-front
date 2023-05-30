@@ -26,6 +26,7 @@ export const AltoRoutes = {
   training: 'training',
 
   noAccess: 'no_access',
+  notFound: '404',
   // ADMIN
   translation: 'translation',
   admin: 'admin',
