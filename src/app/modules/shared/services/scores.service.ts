@@ -109,6 +109,10 @@ export class ScoresService {
   }
 
   reduceChartData(scores: ScoreDtoApi[]): ScoreDtoApi[] {
+    if (scores.length === 0) {
+      return [];
+    }
+
     let firstIndex = scores[0].dates.length;
     scores.forEach((s) => {
       s.averages.forEach((a, i) => {
@@ -117,6 +121,7 @@ export class ScoresService {
         }
       });
     });
+
     scores.forEach((s) => {
       s.averages = s.averages.slice(firstIndex, s.averages.length);
       s.counts = s.counts.slice(firstIndex, s.counts.length);
