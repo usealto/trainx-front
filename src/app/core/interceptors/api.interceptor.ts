@@ -7,6 +7,7 @@ import { LoadingStore } from '../utils/loading/loading.store';
 
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
+  loadingThreshold = 15;
   constructor(private loadingStore: LoadingStore) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -14,7 +15,7 @@ export class ApiInterceptor implements HttpInterceptor {
   }
 
   private nextHandle(next: HttpHandler, request: HttpRequest<any>): Observable<HttpEvent<any>> {
-    this.loadingStore.isLoading.value = this.loadingStore.maxLoad > 15;
+    this.loadingStore.isLoading.value = this.loadingStore.maxLoad > this.loadingThreshold;
 
     this.loadingStore.maxLoad++;
 
@@ -33,7 +34,7 @@ export class ApiInterceptor implements HttpInterceptor {
           this.loadingStore.maxLoad = 0;
         }
 
-        this.loadingStore.isLoading.value = this.loadingStore.maxLoad > 15;
+        this.loadingStore.isLoading.value = this.loadingStore.maxLoad > this.loadingThreshold;
       }),
     );
   }
