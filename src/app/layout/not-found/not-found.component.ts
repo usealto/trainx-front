@@ -12,20 +12,19 @@ import { ProfileStore } from 'src/app/modules/profile/profile.store';
 export class NotFoundComponent implements OnInit {
   AltoRoutes = AltoRoutes;
   I18ns = I18ns;
-
-  isAdmin = false;
-
-  leadRoute = ['/', AltoRoutes.lead, AltoRoutes.leadHome];
-  userRoute = ['/', AltoRoutes.user, AltoRoutes.userHome];
+  route: string[] = [];
 
   constructor(public readonly userStore: ProfileStore, private readonly router: Router) {}
 
   ngOnInit(): void {
-    const { roles } = this.userStore.user.value;
     if (
-      roles.some((r) => r === UserDtoApiRolesEnumApi.AltoAdmin || r === UserDtoApiRolesEnumApi.CompanyAdmin)
+      this.userStore.user.value?.roles.some(
+        (r) => r === UserDtoApiRolesEnumApi.AltoAdmin || r === UserDtoApiRolesEnumApi.CompanyAdmin,
+      )
     ) {
-      this.isAdmin = true;
+      this.route = ['/', AltoRoutes.lead, AltoRoutes.leadHome];
+    } else {
+      this.route = ['/', AltoRoutes.user, AltoRoutes.userHome];
     }
   }
 }
