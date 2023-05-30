@@ -16,7 +16,7 @@ import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-
+import { TopFlop, TopFlopDisplay } from 'src/app/modules/shared/models/score.model';
 @UntilDestroy()
 @Component({
   selector: 'alto-performance-by-themes',
@@ -35,7 +35,7 @@ export class PerformanceByThemesComponent implements OnChanges {
 
   // Tags or Programs
   items: ScoreDtoApi[] = [];
-  scoredItems: { label: string; score: number | null }[] = [];
+  scoredItems: TopFlop = { top: [], flop: [] };
   selectedItems: ScoreDtoApi[] = [];
 
   scoreEvolutionChart?: Chart;
@@ -97,12 +97,14 @@ export class PerformanceByThemesComponent implements OnChanges {
   }
 
   getScoredItems(scores: ScoreDtoApi[]) {
-    this.scoredItems = scores
+    const scoredItems = scores
       .map((score) => {
         const average = this.scoresServices.reduceWithoutNull(score.averages);
-        return { label: score.label, score: average };
+        return { label: score.label, avg: average ?? 0 };
       })
-      .sort((a, b) => (a.score && b.score ? b.score - a.score : 0));
+      .sort((a, b) => b.avg - a.avg);
+    this.scoredItems.top = this.scoresServices.getTop(scoredItems).slice(0, 3);
+    this.scoredItems.flop = this.scoresServices.getFlop(scoredItems).slice(0, 3);
   }
 
   getThemesLabel(stats: TeamStatsDtoApi[]): string[] {

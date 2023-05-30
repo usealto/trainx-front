@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { addDays, addHours, startOfDay } from 'date-fns';
 import { ScoreDtoApi, ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
-import { ScoreDuration, ScoreFilter } from '../models/score.model';
+import { ScoreDuration, ScoreFilter, TopFlopDisplay } from '../models/score.model';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @Injectable({
@@ -129,6 +129,14 @@ export class ScoresService {
       s.valids = s.valids.slice(firstIndex, s.valids.length);
     });
     return scores;
+  }
+
+  getTop(data: TopFlopDisplay[]) {
+    return data.filter(({ avg }) => !!avg && avg >= 0.5).sort((a, b) => (a.avg < b.avg ? 1 : -1));
+  }
+
+  getFlop(data: TopFlopDisplay[]) {
+    return data.filter(({ avg }) => !!avg && avg < 0.5).sort((a, b) => (a.avg > b.avg ? 1 : -1));
   }
 
   /**
