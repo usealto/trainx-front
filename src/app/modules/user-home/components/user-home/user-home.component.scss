@@ -10,8 +10,10 @@
   height: 60px;
 }
 
+.highlighted-panel {
+  cursor: pointer;
+}
 .highlighted-panel:hover {
   border-color: #84caff;
   border-radius: 12px;
-  cursor: pointer;
 }

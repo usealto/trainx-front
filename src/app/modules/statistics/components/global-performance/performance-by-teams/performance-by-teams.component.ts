@@ -88,7 +88,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
         const d = this.statisticsServices.aggregateDataForScores(s, duration);
         return {
           label: s.label,
-          data: d.map((d) => (d.y ? Math.round(d.y * 10000) / 100 : d.y)),
+          data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
           fill: false,
           tension: 0.2,
           spanGaps: true,

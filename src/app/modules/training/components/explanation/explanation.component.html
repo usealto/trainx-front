@@ -1,10 +1,10 @@
 <div>
   <i
-    class="fs-1 bi"
-    [class]="result === 'correct' ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'"
+    class="fs-1 bi mb-3 d-inline-block"
+    [class]="result === 'correct' ? 'bi-check-circle-fill text-green' : 'bi-x-circle-fill text-red'"
   ></i>
   <h1>{{ result === 'correct' ? I18ns.training.canva.goodAnswer : I18ns.training.canva.badAnswer }}</h1>
-  <p>
+  <p class="alto-grey">
     {{
       result === 'correct'
         ? I18ns.training.canva.goodResultSubtitle + ' "' + correctAnswers + '".'
@@ -13,18 +13,21 @@
   </p>
   <hr />
   <h2>{{ I18ns.training.canva.explanation }}</h2>
-  <p>{{ explanation ? explanation : I18ns.training.canva.noExplanation }}</p>
+  <p class="fs-6b alto-grey">{{ explanation ? explanation : I18ns.training.canva.noExplanation }}</p>
   <h2 class="mt-4">{{ I18ns.training.canva.reference }}</h2>
-  <a *ngIf="link" class="text-primary" [href]="link" target="_blank">{{ link }}</a>
-  <p *ngIf="!link">{{ I18ns.training.canva.noReference }}</p>
+  <ng-container *ngIf="link; else elseTemplate">
+    <a class="text-primary d-inline-block w-100" [href]="link" target="_blank">
+      <span class="link-crop">{{ link }} </span>
+      <i class="text-primary align-text-bottom fs-5 bi bi-box-arrow-up-right"></i>
+    </a>
+  </ng-container>
+  <ng-template #elseTemplate>
+    <p class="alto-grey fs-6b">{{ I18ns.training.canva.noReference }}</p>
+  </ng-template>
 </div>
-<div class="mt-auto">
+<div class="footer">
   <hr />
-  <button
-    class="float-end btn"
-    [class]="result === 'correct' ? 'btn-success' : 'btn-danger'"
-    (click)="next()"
-  >
+  <button class="float-end btn" [class]="result === 'correct' ? 'btn-green' : 'btn-red'" (click)="next()">
     {{ I18ns.training.canva.continue }}
     <i class="bi bi-arrow-right-short"></i>
   </button>

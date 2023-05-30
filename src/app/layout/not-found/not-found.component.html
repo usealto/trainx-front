@@ -1,5 +1,15 @@
 <div class="container">
-  <h1>404</h1>
-
-  <h2>Sorry, we can't find what you are looking for!</h2>
+  <h1 class="mt-4">{{ I18ns.errors.NotFound404.title }}</h1>
+  <div class="row p-5">
+    <div class="col-3"></div>
+    <div class="col-6 text-center">
+      <i class="bi bi-compass"></i>
+      <h2>{{ I18ns.errors.NotFound404.subtitle }}</h2>
+      <p>{{ I18ns.errors.NotFound404.message }}</p>
+      <!-- <a type="button" class="btn btn-primary float m-5" [routerLink]="AltoRoutes">
+        <i class="bi bi-arrow-left"></i>
+        {{ I18ns.errors.NotFound404.return }}
+      </a> -->
+    </div>
+  </div>
 </div>

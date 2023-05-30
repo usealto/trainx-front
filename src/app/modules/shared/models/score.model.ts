@@ -16,3 +16,12 @@ export enum ScoreDuration {
   Trimester = 'trimester',
   Year = 'year',
 }
+
+export enum ScoreFilter {
+  Under25 = '< 25%',
+  Under50 = '< 50%',
+  Under75 = '< 75%',
+  Over25 = '> 25%',
+  Over50 = '> 50%',
+  Over75 = '> 75%',
+}

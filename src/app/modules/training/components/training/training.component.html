@@ -1,6 +1,6 @@
-<div class="d-flex flex-nowrap justify-content-end" [class]="displayTime <= 10 ? 'text-danger' : ''">
-  <i class="bi bi-stopwatch me-3"></i>
-  <p class="fw-bold">{{ displayTime + ' ' + I18ns.training.secondsRemaining }}</p>
+<div class="text-end timer" [class]="displayTime <= 10 ? 'text-danger' : ''">
+  <i class="fs-5 bi bi-stopwatch me-3"></i>
+  <span class="fw-bold">{{ displayTime + ' ' + I18ns.training.secondsRemaining }}</span>
 </div>
 
 <div *ngIf="!isQuestionsLoading" class="mt-4">
@@ -11,6 +11,13 @@
   <div class="row my-4">
     <alto-answer-card
       class="col-6"
+      *ngFor="let ans of currentAnswers"
+      [answer]="ans.answer"
+      [type]="ans.type"
+      (click)="selectAnswer(ans.answer)"
+    ></alto-answer-card>
+    <!-- <alto-answer-card
+      class="col-6"
       [answer]="currentAnswers[0].answer"
       [type]="currentAnswers[0].type"
       (click)="selectAnswer(currentAnswers[0].answer)"
@@ -20,9 +27,9 @@
       [answer]="currentAnswers[1].answer"
       [type]="currentAnswers[1].type"
       (click)="selectAnswer(currentAnswers[1].answer)"
-    ></alto-answer-card>
+    ></alto-answer-card> -->
   </div>
-  <div class="row my-4">
+  <!-- <div class="row my-4">
     <alto-answer-card
       *ngIf="currentAnswers[2]"
       class="col-6"
@@ -37,13 +44,14 @@
       [type]="currentAnswers[3].type"
       (click)="selectAnswer(currentAnswers[3].answer)"
     ></alto-answer-card>
-  </div>
+  </div> -->
 </div>
-<div class="d-flex flex-nowrap justify-content-between">
+<div class="d-flex flex-nowrap justify-content-between footer">
   <a
     type="button"
     class="btn btn-outline-secondary"
     [routerLink]="['/', AltoRoutes.user, AltoRoutes.userHome]"
+    (click)="stopTimer()"
   >
     <i class="bi bi-save me-2"></i>
     {{ I18ns.training.saveAndQuit }}</a
