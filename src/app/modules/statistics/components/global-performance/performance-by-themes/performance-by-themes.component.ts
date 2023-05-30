@@ -155,6 +155,7 @@ export class PerformanceByThemesComponent implements OnChanges {
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
+    scores = this.scoresServices.reduceChartData(scores);
     const labels = this.statisticsServices.formatLabel(
       this.statisticsServices.aggregateDataForScores(scores[0], duration).map((d) => d.x),
       duration,

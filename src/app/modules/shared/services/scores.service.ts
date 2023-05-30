@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addDays, addHours, startOfDay } from 'date-fns';
-import { ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
+import { ScoreDtoApi, ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
 import { ScoreDuration, ScoreFilter } from '../models/score.model';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 
@@ -106,6 +106,24 @@ export class ScoresService {
       default:
         return ScoreTimeframeEnumApi.Week;
     }
+  }
+
+  reduceChartData(scores: ScoreDtoApi[]): ScoreDtoApi[] {
+    let firstIndex = scores[0].dates.length;
+    scores.forEach((s) => {
+      s.averages.forEach((a, i) => {
+        if (a && i < firstIndex) {
+          firstIndex = i;
+        }
+      });
+    });
+    scores.forEach((s) => {
+      s.averages = s.averages.slice(firstIndex, s.averages.length);
+      s.counts = s.counts.slice(firstIndex, s.counts.length);
+      s.dates = s.dates.slice(firstIndex, s.dates.length);
+      s.valids = s.valids.slice(firstIndex, s.valids.length);
+    });
+    return scores;
   }
 
   /**

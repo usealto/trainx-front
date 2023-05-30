@@ -3,6 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ChallengeDtoApi,
   ChallengeDtoApiTypeEnumApi,
+  ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   UserDtoApi,
@@ -130,6 +131,7 @@ export class LeadHomeComponent implements OnInit {
         tap(({ scores }) => (this.scoreCount = scores.length)),
         filter(() => !!this.scoreCount),
         tap(({ scores }) => {
+          scores = this.scoreService.reduceChartData(scores);
           const labels = scores[0].dates.map((d) => d.toLocaleDateString());
           const data: ChartData = {
             labels: labels,
