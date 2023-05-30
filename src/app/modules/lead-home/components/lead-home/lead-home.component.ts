@@ -64,6 +64,7 @@ export class LeadHomeComponent implements OnInit {
     programs: TopFlop;
     teams: TopFlop;
   } = { programs: { top: [], flop: [] }, teams: { top: [], flop: [] } };
+
   topFlopProgramTab: ScoreTypeEnumApi = ScoreTypeEnumApi.Program;
   topFlopTeamTab: ScoreTypeEnumApi = ScoreTypeEnumApi.Team;
 

@@ -21,6 +21,12 @@ export const FR = {
     search: 'Rechercher',
     period: 'Période',
     soon: 'Bientôt',
+    tag: 'tag',
+    program: 'programme',
+    tags: 'tags',
+    programs: 'programmes',
+    teams: 'équipes',
+    members: 'membres',
     pagination: {
       on: 'sur',
     },
@@ -69,11 +75,11 @@ export const FR = {
       globalScore: 'Score global',
       globalScoreToolTip: 'Score moyen de toutes les questions répondues sur la période donnée',
       averageCompletion: 'Complétion moyenne',
-      averageCompletionToolTip: 'Nombre de programs réussis sur nombre de programmes assignés',
+      averageCompletionToolTip: 'Nombre de programmes réussis sur le nombre de programmes assignés',
       activeMembers: 'Membres réguliers',
-      activeMembersToolTip: 'Nombre de membres ayant interagi avec Alto sur une période donnée',
+      activeMembersToolTip: 'Nombre de membres ayant répondues à plus de 50% des questions envoyés”',
       inactiveMembers: 'Membres irréguliers',
-      inactiveMembersToolTip: "Nombre de membres n'ayant pas interagi avec Alto sur une période donnée",
+      inactiveMembersToolTip: 'Nombre de membres ayant répondues à moins de 50% des questions envoyés',
     },
     graph: {
       period: 'Période',
@@ -82,6 +88,7 @@ export const FR = {
     globalEvolution: {
       title: 'Évolution globale',
       score: 'Score moyen',
+      chartToolTip: 'Évolution du score d’un {{}} en fonction du temps',
       tabs: {
         program: 'Programmes',
         tag: 'Tags',
@@ -90,6 +97,7 @@ export const FR = {
       },
       top: 'Top',
       flop: 'Flop',
+      topFlopTooltip: 'Classement des {{}} en fonction du score',
     },
     ongoingPrograms: {
       title: 'Programmes en cours',
@@ -291,6 +299,8 @@ export const FR = {
     },
     perTeams: {
       title: 'Par équipe',
+      globalTooltip:
+        'Pourcentage de questions justes sur le nombre de questions répondues et variation sur la période passée',
     },
   },
   questions: {
@@ -353,7 +363,9 @@ export const FR = {
       },
       statistics: {
         total: 'Total',
-        totalTooltip: "L'ensemble des membres de votre entreprise",
+        totalTooltip: 'Nombre total de membres qui vous sont affectés',
+        regularMembersTooltip: 'Nombre de membres ayant répondues à plus de 50% des questions envoyés',
+        iregularMembersTooltip: 'Nombre de membres ayant répondues à moins de 50% des questions envoyés',
         active: 'Membres réguliers',
         inactive: 'Membres irréguliers',
       },
@@ -362,6 +374,8 @@ export const FR = {
         team: 'Équipe',
         averageScore: 'Score moyen',
         questionsPerMonth: 'Questions sur 30j',
+        questionsPerMonthTooltip:
+          'Nombre de questions répondues sur les 30 derniers jours et variation sur la dernière période',
         active: 'Actif',
         inactive: 'Inactif',
       },
