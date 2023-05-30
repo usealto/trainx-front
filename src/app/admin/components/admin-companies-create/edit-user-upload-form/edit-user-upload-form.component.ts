@@ -23,7 +23,7 @@ export class EditUserUploadFormComponent {
       firstname: [this.user.firstname, [Validators.required]],
       lastname: [this.user.lastname, [Validators.required]],
       email: [this.user.email, [Validators.email, Validators.required]],
-      role: [this.user.role],
+      roles: [this.user.roles],
     });
   }
 }

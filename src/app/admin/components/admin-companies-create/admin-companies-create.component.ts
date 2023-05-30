@@ -9,10 +9,11 @@ import {
   SlackTimeEnumApi,
   TeamDtoApi,
   WeekDayEnumApi,
+  RoleEnumApi,
 } from '@usealto/sdk-ts-angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { Observable, forkJoin, from, map, mergeMap, switchMap, tap, toArray } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { AdminTabsComponent } from '../admin-shared/admin-tabs/admin-tabs.component';
 import { AdminUsersUploadFormComponent } from './admin-users-upload-form/admin-users-upload-form.component';
 @Component({
@@ -118,7 +119,15 @@ export class AdminCompaniesCreateComponent implements OnInit {
       this.teamService
         .createTeam({ shortName: team.shortName, longName: team.longName, companyId: companyId })
         .pipe(map((uploadedTeam) => uploadedTeam))
-        .subscribe();
+        .subscribe(() => {
+          if (this.edit) {
+            this.router.navigate(['/admin/companies/', companyId]).then((page) => {
+              window.location.reload();
+            });
+          } else {
+            this.router.navigate(['/admin/companies/']);
+          }
+        });
     });
   }
 
@@ -126,7 +135,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
     if (!this.edit) {
       if (
         this.uploadFormComponent?.csvData?.length <= 0 ||
-        !this.uploadFormComponent?.csvData.some((user) => user.role === 'CompanyAdmin')
+        !this.uploadFormComponent?.csvData.some((user) => user.roles.includes('CompanyAdmin'))
       ) {
         return true;
       }
@@ -136,8 +145,6 @@ export class AdminCompaniesCreateComponent implements OnInit {
 
   async submit() {
     if (!this.companyForm.value) return;
-
-    this.createTeams();
 
     const { name, domain, slackDays, slackActive, slackQuestionsPerQuiz, slackAdmin } =
       this.companyForm.value;
@@ -154,7 +161,10 @@ export class AdminCompaniesCreateComponent implements OnInit {
           slackAdmin: slackAdmin ?? '',
           isSlackActive: slackActive,
         })
-        .subscribe(() => this.uploadFormComponent.upload(this.id));
+        .subscribe(() => {
+          this.uploadFormComponent.upload(this.id);
+          this.createTeams(this.id);
+        });
     } else {
       this.companiesRestService
         .createCompany({

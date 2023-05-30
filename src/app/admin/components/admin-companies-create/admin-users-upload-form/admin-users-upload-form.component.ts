@@ -50,7 +50,7 @@ export class AdminUsersUploadFormComponent {
 
         this.csvData[userIndex].lastname = result.lastname;
 
-        this.csvData[userIndex].role = result.role;
+        this.csvData[userIndex].roles = result.roles;
 
         this.refreshUsers();
       },
@@ -87,7 +87,7 @@ export class AdminUsersUploadFormComponent {
               firstname: userRow[0],
               lastname: userRow[1],
               email: userRow[2],
-              role: userRow[3],
+              roles: [userRow[3]],
             };
             this.csvData.push(user);
           } else {
@@ -106,10 +106,11 @@ export class AdminUsersUploadFormComponent {
   public upload(id: string | undefined): void {
     if (this.csvData.length > 0) {
       this.csvData.forEach((user) => {
-        const roles =
-          RoleEnumApi[user.role as keyof typeof RoleEnumApi] !== RoleEnumApi.CompanyUser
-            ? [RoleEnumApi[user.role as keyof typeof RoleEnumApi], RoleEnumApi.CompanyUser]
-            : [RoleEnumApi[user.role as keyof typeof RoleEnumApi]];
+        const roles = user.roles.map((role: string) => RoleEnumApi[role as keyof typeof RoleEnumApi]);
+        if (!roles.includes(RoleEnumApi.CompanyUser)) {
+          roles.push(RoleEnumApi.CompanyUser);
+        }
+
         this.usersApiService
           .createUser({
             createUserDtoApi: {

@@ -17,15 +17,16 @@
     <input type="text" class="form-control" formControlName="lastname" placeholder="Lastname" />
     <label class="mt-4 form-label required">Email</label>
     <input type="email" class="form-control" formControlName="email" placeholder="email" />
-    <label class="mt-4 form-label required">Role</label>
+    <label class="mt-4 form-label required">Roles</label>
     <ng-select
       class="w-100"
       required
+      [multiple]="true"
       [items]="rolesPossibleValues"
       placeholder="Select a role"
       [selectableGroup]="true"
       [closeOnSelect]="false"
-      formControlName="role"
+      formControlName="roles"
     >
       <ng-template ng-label-tmp let-item="item" let-clear="clear">
         <div class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
@@ -42,5 +43,7 @@
       </ng-template>
     </ng-select>
   </form>
-  <button type="button" class="btn btn-primary mt-4" (click)="activeOffcanvas.close(userForm.value)">Save</button>
+  <button type="button" class="btn btn-primary mt-4" (click)="activeOffcanvas.close(userForm.value)">
+    Save
+  </button>
 </div>
