@@ -22,9 +22,12 @@
           <span>{{ user.email }}</span>
         </td>
         <td>
-          <span class="alto-badge text-white me-1 mb-1" [style.backgroundColor]="user.role | uuid2color">{{
-            user.role
-          }}</span>
+          <span
+            *ngFor="let role of user.roles"
+            class="alto-badge text-white me-1 mb-1"
+            [style.backgroundColor]="role | uuid2color"
+            >{{ role }}</span
+          >
         </td>
         <td class="action-btn-list-container">
           <div class="shaddow"></div>
