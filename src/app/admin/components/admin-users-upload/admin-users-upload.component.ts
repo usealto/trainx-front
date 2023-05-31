@@ -36,7 +36,7 @@ export class AdminUsersUploadComponent implements OnInit {
       .subscribe();
 
     this.teamsRestService
-      .getTeams({ companyId: this.id })
+      .getTeams({ companyId: this.id, itemsPerPage: 1000 })
       .pipe(tap((teams) => (this.teams = teams)))
       .subscribe();
   }

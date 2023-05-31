@@ -61,7 +61,7 @@ export class AdminCompaniesComponent implements OnInit {
     });
 
     this.companiesRestService
-      .getCompanies()
+      .getCompanies({itemsPerPage: 1000 })
       .pipe(tap((companies) => (this.companies = companies)))
       .subscribe(() => {
         this.pageCount = Math.ceil(this.companies.length / this.pageSize);
