@@ -642,7 +642,7 @@ export const FR = {
       continueSessionSubtitle:
         'Entraînez vous chaque jour à votre rythme sur des questions issues de vos programmes.',
       continueSessionCounts: [
-        "personne ne s'est entrainé aujourd'hui",
+        "Personne ne s'est entrainé aujourd'hui",
         "{{}} personne s'est entrainé aujourd'hui",
         "{{}} personnes se sont entrainés aujourd'hui",
       ],
