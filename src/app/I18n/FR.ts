@@ -73,13 +73,13 @@ export const FR = {
     statistics: {
       title: 'Statistiques',
       globalScore: 'Score global',
-      globalScoreToolTip: 'Score moyen de toutes les questions répondues sur la période donnée',
+      globalScoreToolTip: 'Score moyen des questions répondues par vos membres',
       averageCompletion: 'Complétion moyenne',
       averageCompletionToolTip: 'Nombre de programmes réussis sur le nombre de programmes assignés',
       activeMembers: 'Membres réguliers',
-      activeMembersToolTip: 'Nombre de membres ayant répondues à plus de 50% des questions envoyés”',
+      activeMembersToolTip: 'Nombre de membres ayant répondu à plus de 50% des questions envoyées',
       inactiveMembers: 'Membres irréguliers',
-      inactiveMembersToolTip: 'Nombre de membres ayant répondues à moins de 50% des questions envoyés',
+      inactiveMembersToolTip: 'Nombre de membres ayant répondu à moins de 50% des questions envoyées',
     },
     graph: {
       period: 'Période',
@@ -139,6 +139,7 @@ export const FR = {
       progress: 'Avancement',
       progressToolTip: 'Nombre de questions répondues par tout les membres sur le nombre total de questions',
       score: 'Score',
+      scoreToolTip: 'Score moyen du programme',
       filters: {
         team: 'Équipe',
       },
@@ -364,8 +365,8 @@ export const FR = {
       statistics: {
         total: 'Total',
         totalTooltip: 'Nombre total de membres qui vous sont affectés',
-        regularMembersTooltip: 'Nombre de membres ayant répondues à plus de 50% des questions envoyés',
-        iregularMembersTooltip: 'Nombre de membres ayant répondues à moins de 50% des questions envoyés',
+        regularMembersTooltip: 'Nombre de membres ayant répondu à plus de 50% des questions envoyées',
+        iregularMembersTooltip: 'Nombre de membres ayant répondu à moins de 50% des questions envoyées',
         active: 'Membres réguliers',
         inactive: 'Membres irréguliers',
       },
