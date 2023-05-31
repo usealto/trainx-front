@@ -6,13 +6,13 @@ import {
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AuthService } from '@auth0/auth0-angular';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { MsgService } from '../message/msg.service';
 import { ApiError } from '../models/api-error';
 import { I18ns } from '../utils/i18n/I18n';
-import { LocalStorageService } from '../utils/local-storage/local-storage.service';
-import { AuthService } from '@auth0/auth0-angular';
 
 @Injectable({
   providedIn: 'root',
@@ -75,7 +75,16 @@ export class ApiErrorInterceptor implements HttpInterceptor {
                 code: e.status,
               };
               // La 401 peut être causée par un token corrompu que angular ne peut pas détecter.
-              this.authService.getAccessTokenSilently().subscribe();
+              this.authService
+                .getAccessTokenSilently({
+                  authorizationParams: {
+                    audience: environment.audience,
+                    scope: 'openid profile email offline_access',
+                    redirect_uri: window.location.origin,
+                  },
+                })
+                .pipe(tap(console.log))
+                .subscribe();
               break;
             case 403: // right problem
               apiError = {

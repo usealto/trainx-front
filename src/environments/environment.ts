@@ -8,7 +8,8 @@ export const environment = {
   auth0Domain: 'dev-bmttww5s.eu.auth0.com',
   auth0ClientId: 'ThcIBQZrRso5QaZq67kCU5eFYTfZwTSK',
   airtableURL: 'https://airtable.com/shr0l3s2lxxXhvgao?prefill_Requested+by=',
-  audience : 'https://api.usealto.com',
+  audience: 'https://api.usealto.com',
+  // audience: 'https://dev-bmttww5s.eu.auth0.com/api/v2',
 };
 
 /*
