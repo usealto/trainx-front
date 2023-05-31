@@ -204,30 +204,30 @@
       ></alto-tabs>
       <div class="row">
         <div class="col-6 border-end pe-0">
-          <ng-container *ngIf="topFlopData?.programs?.top?.length; else tfProgramTemplate">
-            <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
-            <div class="height-100">
+          <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
+          <div class="height-100">
+            <ng-container *ngIf="topFlopData?.programs?.top?.length; else tfProgramTemplate">
               <p *ngFor="let item of topFlopData?.programs?.top | slice : 0 : 3" class="mb-3">
                 <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
                 <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
-            </div>
-          </ng-container>
+            </ng-container>
+          </div>
         </div>
         <div class="col-6 ps-4 pe-0">
-          <ng-container *ngIf="topFlopData?.programs?.flop?.length; else tfProgramTemplate">
-            <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
-            <div class="height-100">
+          <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
+          <div class="height-100">
+            <ng-container *ngIf="topFlopData?.programs?.flop?.length; else tfProgramTemplate">
               <p *ngFor="let item of topFlopData?.programs?.flop | slice : 0 : 3" class="mb-3">
                 <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
                 <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
-            </div>
-          </ng-container>
+            </ng-container>
+          </div>
         </div>
       </div>
     </div>
@@ -244,30 +244,30 @@
       ></alto-tabs>
       <div class="row">
         <div class="col-6 border-end pe-0">
-          <ng-container *ngIf="topFlopData?.teams?.top?.length; else tfProgramTemplate">
-            <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
-            <div class="height-100">
+          <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
+          <div class="height-100">
+            <ng-container *ngIf="topFlopData?.teams?.top?.length; else tfProgramTemplate">
               <p *ngFor="let item of topFlopData?.teams?.top | slice : 0 : 3" class="mb-3">
                 <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
                 <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
-            </div>
-          </ng-container>
+            </ng-container>
+          </div>
         </div>
         <div class="col-6 ps-4 pe-0">
-          <ng-container *ngIf="topFlopData?.teams?.flop?.length; else tfProgramTemplate">
-            <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
-            <div class="height-100">
+          <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
+          <div class="height-100">
+            <ng-container *ngIf="topFlopData?.teams?.flop?.length; else tfProgramTemplate">
               <p *ngFor="let item of topFlopData?.teams?.flop" class="mb-3">
                 <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
                 <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
-            </div>
-          </ng-container>
+            </ng-container>
+          </div>
         </div>
         <ng-template #tfProgramTemplate>
           <div class="text-center py-3">
