@@ -3,23 +3,27 @@
     type="radio"
     class="btn-check"
     [name]="ID"
-    id="year"
+    [id]="'year' + ID"
     autocomplete="off"
     (change)="updateTimePicker($event)"
+    value="year"
     [checked]="duration === 'year' ? true : false"
   />
-  <label class="btn btn-outline-secondary" for="year">{{ I18ns.shared.rollingDateFilter.year }}</label>
+  <label class="btn btn-outline-secondary" [for]="'year' + ID">{{
+    I18ns.shared.rollingDateFilter.year
+  }}</label>
 
   <input
     type="radio"
     class="btn-check"
     [name]="ID"
-    id="trimester"
+    [id]="'trimester' + ID"
     autocomplete="off"
     [checked]="duration === 'trimester' ? true : false"
+    value="trimester"
     (change)="updateTimePicker($event)"
   />
-  <label class="btn btn-outline-secondary" for="trimester">
+  <label class="btn btn-outline-secondary" [for]="'trimester' + ID">
     {{ I18ns.shared.rollingDateFilter.trimester }}
   </label>
 
@@ -27,10 +31,13 @@
     type="radio"
     class="btn-check"
     [name]="ID"
-    id="month"
+    [id]="'month' + ID"
     autocomplete="off"
     [checked]="duration === 'month' ? true : false"
+    value="month"
     (change)="updateTimePicker($event)"
   />
-  <label class="btn btn-outline-secondary" for="month">{{ I18ns.shared.rollingDateFilter.month }}</label>
+  <label class="btn btn-outline-secondary" [for]="'month' + ID">{{
+    I18ns.shared.rollingDateFilter.month
+  }}</label>
 </div>

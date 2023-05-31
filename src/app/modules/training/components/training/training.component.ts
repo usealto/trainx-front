@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { GetNextQuestionsForUserRequestParams, QuestionApi } from '@usealto/sdk-ts-angular';
-import { map, tap, timer } from 'rxjs';
+import {
+  GetNextQuestionsForUserRequestParams,
+  GuessSourceEnumApi,
+  QuestionApi,
+} from '@usealto/sdk-ts-angular';
+import { tap, timer } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { GuessesRestService } from '../../services/guesses-rest.service';
 import { ExplanationComponent } from '../explanation/explanation.component';
 
 interface AnswerCard {
@@ -22,21 +27,23 @@ export class TrainingComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   displayTime = 30;
-  time = 30000;
+  time = 31000;
   timer: any;
 
   remainingQuestions: QuestionApi[] = [];
   questionsCount = 0;
-  questionsPage = 1;
+  questionsPage = 0;
   questionsPageSize = 25;
   displayedQuestion!: QuestionApi;
   isQuestionsLoading = true;
 
   currentAnswers: AnswerCard[] = [];
+  isTimedOut = false;
 
   constructor(
     private readonly offCanvasService: NgbOffcanvas,
     private readonly usersRestService: UsersRestService,
+    private readonly guessRestService: GuessesRestService,
     private readonly profileStore: ProfileStore,
   ) {}
 
@@ -54,7 +61,9 @@ export class TrainingComponent implements OnInit {
         tap((res) => {
           this.remainingQuestions = res.data ?? [];
           this.questionsCount = res.meta.totalItems ?? 0;
-          this.getNextQuestion();
+          if (this.remainingQuestions.length > 0) {
+            this.getNextQuestion();
+          }
         }),
       )
       .subscribe();
@@ -73,28 +82,30 @@ export class TrainingComponent implements OnInit {
   }
 
   submitAnswer() {
-    // this.stopTimer();
-    let result = '';
+    this.stopTimer();
+    let result = 'wrong';
     this.currentAnswers.forEach((a) => {
-      if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
-        if (a.selected === true) {
+      if (a.selected) {
+        if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
           result = 'correct';
-          this.openCanvas(result);
+          a.type = 'correct';
+        } else {
+          a.type = 'wrong';
         }
-        a.type = 'correct';
-      }
-      if (!this.displayedQuestion.answersAccepted.includes(a.answer) && a.selected === true) {
-        result = 'wrong';
-        a.type = 'wrong';
-        this.openCanvas(result);
+      } else {
+        if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
+          a.type = 'correct';
+        }
       }
     });
+    this.openCanvas(result);
   }
 
   openCanvas(result: string) {
     const canvasRef = this.offCanvasService.open(ExplanationComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
+      backdrop: 'static',
     });
     canvasRef.componentInstance.explanation = this.displayedQuestion.explanation;
     canvasRef.componentInstance.result = result;
@@ -111,7 +122,21 @@ export class TrainingComponent implements OnInit {
   }
 
   saveAnswer() {
-    this.getNextQuestion();
+    const selectedAnswers = this.currentAnswers.filter((a) => a.selected).map((a) => a.answer);
+    this.guessRestService
+      .postGuess({
+        questionId: this.displayedQuestion.id,
+        answers: selectedAnswers.length > 0 ? selectedAnswers : undefined,
+        source: GuessSourceEnumApi.Web,
+        isTimedOut: this.isTimedOut,
+        isUnknownSelected: selectedAnswers.length === 0,
+      })
+      .pipe(
+        tap(() => {
+          this.getNextQuestion();
+        }),
+      )
+      .subscribe();
   }
 
   getNextQuestion() {
@@ -121,8 +146,9 @@ export class TrainingComponent implements OnInit {
     } else {
       this.displayedQuestion = this.remainingQuestions.pop() as QuestionApi;
       this.getCurrentAnswers(this.displayedQuestion.answersAccepted, this.displayedQuestion.answersWrong);
+      this.isTimedOut = false;
+      this.countDown(this.time);
     }
-    // this.countDown(this.time);
   }
 
   countDown(time: number) {
@@ -135,7 +161,8 @@ export class TrainingComponent implements OnInit {
           const diff = dateNow.getTime() - date.getTime();
           this.displayTime = Math.floor((time - diff) / 1000);
           if (this.displayTime <= 0) {
-            this.submitAnswer();
+            this.stopTimer();
+            this.isTimedOut = true;
           }
         }),
       )

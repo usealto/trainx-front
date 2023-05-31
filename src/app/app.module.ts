@@ -1,38 +1,40 @@
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ApiModule, BASE_PATH } from '@usealto/sdk-ts-angular';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { ApiErrorInterceptor } from './core/interceptors/api-error.interceptor';
 import { ApiInterceptor } from './core/interceptors/api.interceptor';
 import { AppErrorHandler } from './core/interceptors/app-error.handler';
 import { MsgModule } from './core/message/msg.module';
-import { localeIdFactory, localeInitializer, LocaleService } from './core/utils/i18n/locale.service';
+import { LocaleService, localeIdFactory, localeInitializer } from './core/utils/i18n/locale.service';
 import { TranslationModule } from './core/utils/i18n/translation.module';
 import { LoadingModule } from './core/utils/loading/loading.module';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
-import { MenuComponent } from './layout/menu/menu.component';
-import { NotFoundComponent } from './layout/not-found/not-found.component';
-import { SharedModule } from './modules/shared/shared.module';
-import { TestComponent } from './layout/test/test.component';
 import { AppComponent } from './layout/app/app.component';
 import { JwtComponent } from './layout/jwt/jwt.component';
-import { Configuration, ConfigurationParameters, ApiModule, BASE_PATH } from '@usealto/sdk-ts-angular';
+import { MenuComponent } from './layout/menu/menu.component';
 import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.component';
-
-export function apiConfigFactory(): Configuration {
-  const params: ConfigurationParameters = {};
-  return new Configuration(params);
-}
+import { NotFoundComponent } from './layout/not-found/not-found.component';
+import { TestComponent } from './layout/test/test.component';
+import { SharedModule } from './modules/shared/shared.module';
 
 @NgModule({
-  declarations: [AppComponent, AppLayoutComponent, MenuComponent, NotFoundComponent, TestComponent, JwtComponent, NoWebAccessComponent],
+  declarations: [
+    AppComponent,
+    AppLayoutComponent,
+    MenuComponent,
+    NotFoundComponent,
+    TestComponent,
+    JwtComponent,
+    NoWebAccessComponent,
+  ],
   imports: [
-    // ApiModule.forRoot(apiConfigFactory),
     ApiModule,
     BrowserModule,
     HttpClientModule,

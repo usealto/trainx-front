@@ -47,7 +47,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') || undefined;
     this.teamService
-      .getTeams()
+      .getTeams({ itemsPerPage: 1000 })
       .pipe(tap((teams) => (this.teams = teams)))
       .subscribe();
     this.companyForm = this.fb.group<CompanyForm>({

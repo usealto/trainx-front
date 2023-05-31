@@ -51,6 +51,7 @@ export class ScoresRestService {
       .getUsersStats({
         from: dateAfter,
         to: dateBefore,
+        respondsRegularlyThreshold: 0.42,
       } as GetUsersStatsRequestParams)
       .pipe(map((r) => r.data || []));
   }

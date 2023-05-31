@@ -37,7 +37,7 @@ export class AdminUserComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id') || '';
 
     this.usersRestService
-      .getUsersFiltered({ ids: this.id })
+      .getUsersFiltered({ ids: this.id, itemsPerPage: 1000 })
       .pipe(
         tap((users) => {
           if (users[0]) {
@@ -61,7 +61,7 @@ export class AdminUserComponent implements OnInit {
         },
       });
 
-    this.teamsApiService.getTeams({}).subscribe((teams) => {
+    this.teamsApiService.getTeams({itemsPerPage: 1000 }).subscribe((teams) => {
       this.teams = teams.data || [];
     });
   }

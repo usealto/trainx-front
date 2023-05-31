@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @Component({
@@ -7,6 +8,7 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
   styleUrls: ['./img-badge.component.scss'],
 })
 export class ImgBadgeComponent implements OnChanges {
+  @Input() user: UserDtoApi | null | undefined;
   @Input() url: string | null | undefined = '';
   @Input() size = 32;
   // eslint-disable-next-line @angular-eslint/no-output-native
@@ -16,8 +18,10 @@ export class ImgBadgeComponent implements OnChanges {
   public broken = false;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['url']?.currentValue) {
-      this.thumb = changes['url']?.currentValue.replace('s=480', 's=' + this.size) || '';
+    if (changes['user']?.currentValue) {
+      this.thumb = this.user?.pictureUrl?.replace('s=480', 's=' + this.size) || '';
+    } else if (changes['url']?.currentValue) {
+      this.thumb = this.url || '';
     }
   }
 

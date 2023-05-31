@@ -1,5 +1,6 @@
 export const FR = {
   shared: {
+    smiley: '👍',
     edit: 'Modifier',
     save: 'Enregistrer',
     next: 'Suivant',
@@ -19,6 +20,7 @@ export const FR = {
     reply: 'Répondre',
     search: 'Rechercher',
     period: 'Période',
+    soon: 'Bientôt',
     pagination: {
       on: 'sur',
     },
@@ -43,6 +45,13 @@ export const FR = {
       year: '12 mois',
       trimester: '3 mois',
       month: '1 mois',
+    },
+    noWebAccess: {
+      title: 'Bravo !',
+      subtitle: 'Félicitations ! Votre compte est actif 🚀.',
+      description:
+        "Comme souhaité par vos collaborateurs, vous profiterez bientôt d'Alto directement dans vos outils préférés tels Slack ou Teams 💜",
+      subdescription: '🙏🏻',
     },
   },
   leadHome: {
@@ -129,7 +138,7 @@ export const FR = {
     questions: {
       title: 'Questions',
       subtitle: "Retrouvez l'ensemble des questions présentes dans vos programmes.",
-      createQuestion: 'Ajouter',
+      createQuestion: 'Créer',
       table: {
         question: 'Question',
         score: 'Score',
@@ -206,7 +215,7 @@ export const FR = {
         title2: 'Partager votre programme',
         subtitle: 'Retrouvez les options de partage à vos équipes.',
         summary: 'Récapitulatif',
-        summarySubtitle: 'Les informations que vous avez rempli à propos de ce programme.',
+        summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
       },
     },
   },
@@ -230,7 +239,7 @@ export const FR = {
       navbarTitle: 'Performance globale',
       perTeamPerformance: {
         title: 'Performance par équipes',
-        subtitle: 'Retrouvez les performances global de vos équipes.',
+        subtitle: 'Retrouvez les performances globales de vos équipes.',
         teamFilter: 'Équipes',
         scoreEvolution: {
           title: 'Évolution du score',
@@ -244,7 +253,7 @@ export const FR = {
       },
       perThemePerformance: {
         title: 'Performance par thèmatiques',
-        subtitle: 'Retrouvez les performances global de vos équipes.',
+        subtitle: 'Retrouvez les performances globales de vos équipes.',
         filters: {
           teams: 'Équipes',
           tags: 'Tags',
@@ -330,7 +339,7 @@ export const FR = {
   },
   leadTeam: {
     title: 'Équipes',
-    subtitle: "Retrouvez une vue d'ensemble sur vos collaborateurs.",
+    subtitle: "Retrouvez une vue d'ensemble sur vos membres.",
     createTeam: 'Créer',
     members: {
       title: 'Vos membres',
@@ -359,14 +368,14 @@ export const FR = {
       forms: {
         edition: {
           title: 'Modifier un membre',
-          subtitle: 'Modifiez le role de vos collaborateurs et assignez leur une équipe.',
+          subtitle: 'Modifiez le rôle de vos membres et assignez leur une équipe.',
           teams: 'Équipes',
           teamsPlaceholder: 'Rechercher dans vos équipes',
           type: "Type d'utilisateur",
           standardType: 'Standard',
           adminType: 'Administrateur',
           typeSubtitle:
-            'Les utilisateurs de type "Administrateur" peuvent créer des programmes, des challenges et ont accés à plus de statistiques détaillées sur les résultats de leurs équipes.',
+            'Les utilisateurs de type "Administrateur" peuvent créer des programmes, des challenges et ont accès à plus de statistiques détaillées sur les résultats de leurs équipes.',
         },
       },
     },
@@ -376,9 +385,9 @@ export const FR = {
       subtitle: "Retrouvez l'ensemble des équipes de votre entreprise.",
       table: {
         name: 'Nom',
-        initials: 'Initiales',
+        initials: '',
         usersCount: 'Nombre de membres',
-        users: ['Aucun', '{{}} user', '{{}} users'],
+        users: ['Aucun', '{{}}', '{{}}'],
         averageScore: 'Score moyen',
         creationDate: 'Date de création',
       },
@@ -397,7 +406,7 @@ export const FR = {
         invitationEmails: 'Invitation par mail',
         invitationEmailsPlaceholder: 'Séparer les emails par une virgule',
         invitationEmailsSubtitle:
-          'Vos collaborateurs recevront une invitation par mail pour s’inscrire à Alto.',
+          "Vos collaborateurs recevront une invitation par mail pour s'inscrire à Alto.",
         Programs: 'Programmes',
         programsPlaceholder: 'Rechercher dans vos programmes',
         ProgramsSubtitle: 'Sélectionner les programmes auxquels cette équipe doit être assignée.',
@@ -423,7 +432,7 @@ export const FR = {
     individual: {
       title: 'Challenges individuels',
       shortTitle: 'Individuels',
-      subtitle: "Retrouvez l'ensemble des challenges assignés à vos vos membres.",
+      subtitle: "Retrouvez l'ensemble des challenges assignés à vos membres.",
       createChallenge: 'Créer',
       table: {
         name: 'Nom',
@@ -444,14 +453,14 @@ export const FR = {
         byUser: 'Le meilleur membre',
         byUserSubtitle: "La récompense sera remise à l'utilisateur avec le plus haut score.",
       },
-      teamsSubtitle: 'Sélectionnez la, ou les, équipe(s) concerné(es) par ce challenge.',
+      teamsSubtitle: 'Sélectionnez la ou les équipe(s) concerné(es) par ce challenge.',
       teamsExplained:
         "Ne sélectionner qu'une équipe pour un challenge par équipe, ou plusieurs pour un challenge inter-équipes.",
       minimum: 'Seuils minimum',
       minimumSubtitle: 'Définissez les seuils à atteindre pour pouvoir participer à ce challenge.',
       activity: 'Activité',
       activitySubtitle:
-        'Les participants doivent répondre en moyenne à plus que X questions par jour ouvrés pour pouvoir participer à ce challenge',
+        'Les participants doivent répondre en moyenne à plus de X questions par jours ouvrés pour pouvoir participer à ce challenge',
       questions: ['{{}} question', '{{}} questions'],
       score: 'Score',
       scoreSubtitle:
@@ -489,13 +498,17 @@ export const FR = {
         name: 'Nom',
         createdAt: "Date d'ajout",
         lastConnection: 'Dernière activité',
-        connexion: 'Connection',
+        connexion: 'Connexion',
       },
     },
     integrations: {
       title: 'Intégrations',
       subtitle: 'Gérez les connexions avec vos applications',
       learnMore: 'En savoir plus',
+      slack: {
+        title: 'Slack',
+        subtitle: 'Envoyez des notifications aux canaux et créez des projets à partir de messages.',
+      },
     },
   },
   profile: {
@@ -544,6 +557,11 @@ export const FR = {
     },
     Unauthorized: {
       title: 'Unauthorized',
+      message:
+        "Vous n'êtes pas reconnu par l'API, veuillez contacter un administrateur. Il s'agit probablement d'une erreur technique",
+    },
+    Forbiden: {
+      title: 'Forbiden',
       message: "Vous n'avez pas accès !",
     },
     Notfound: {
@@ -591,6 +609,13 @@ export const FR = {
         message: 'You have reached the max. number of files for this ressource: ',
       },
     },
+    NotFound404: {
+      title: 'Erreur 404',
+      subtitle: "Désolé, nous n'avons pas trouvé cette page.",
+      message:
+        "Cela peut être dû à une erreur de saisie de l'adresse URL, à un lien rompu ou à une suppression de la page. Nous vous invitons à vérifier l'URL, à retourner à la page d'accueil pour trouver ce que vous cherchez.",
+      return: 'Revenir à l’accueil',
+    },
   },
   test: 'test',
   userHome: {
@@ -602,7 +627,11 @@ export const FR = {
       continueSession: 'Session continue',
       continueSessionSubtitle:
         'Entraînez vous chaque jour à votre rythme sur des questions issues de vos programmes.',
-      continueSessionCounts: 'se sont entrainés aujourd’hui',
+      continueSessionCounts: [
+        "personne ne s'est entrainé aujourd'hui",
+        "{{}} s'est entrainé aujourd'hui",
+        "{{}} se sont entrainés aujourd'hui",
+      ],
     },
   },
   training: {

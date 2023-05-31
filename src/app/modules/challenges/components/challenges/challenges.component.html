@@ -59,7 +59,7 @@
         <thead>
           <tr>
             <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
-            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
+            <!-- <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th> -->
             <th scope="col" class="w-25 text-center">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.startDate }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.endDate }}</th>
@@ -75,10 +75,10 @@
             "
           >
             <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
-            <td class="text-center">
-              <alto-img-badge [url]="(getUser(chal.createdBy) | async)?.pictureUrl"></alto-img-badge>
+            <!-- <td class="text-center">
+              <alto-img-badge [user]="getUser(chal.createdBy) | async" ></alto-img-badge> -->
 
-              <!-- <span
+            <!-- <span
                 *ngIf="chal.leadTeam"
                 class="alto-badge"
                 [style.backgroundColor]="chal.leadTeam.id | uuid2color"
@@ -86,7 +86,7 @@
               >
                 {{ chal.leadTeam.shortName }}
               </span> -->
-            </td>
+            <!-- </td> -->
             <td class="text-center">
               <alto-colored-pill-list
                 [hasDynamicColor]="true"
@@ -172,7 +172,7 @@
         <thead>
           <tr>
             <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
-            <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
+            <!-- <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th> -->
             <th scope="col" class="w-25 text-center">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.startDate }}</th>
             <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.endDate }}</th>
@@ -188,9 +188,9 @@
             "
           >
             <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
-            <td class="text-center">
-              <alto-img-badge [url]="(getUser(chal.createdBy) | async)?.pictureUrl"></alto-img-badge>
-            </td>
+            <!-- <td class="text-center">
+              <alto-img-badge [user]="getUser(chal.createdBy) | async"></alto-img-badge>
+            </td> -->
             <td class="text-center">
               <alto-colored-pill-list
                 [hasDynamicColor]="true"

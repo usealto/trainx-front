@@ -121,12 +121,16 @@ export class ChallengesComponent implements OnInit {
   filterByStatus(type: ChallengeTypeEnumApi) {
     if (type === ChallengeTypeEnumApi.ByTeam) {
       this.challengesByTeamDisplay = this.byTeamSelectedStatus
-        ? this.challengesByTeamDisplay.filter((ch) => ch.status === this.byTeamSelectedStatus?.value)
+        ? this.filterArrayByStatus(this.challengesByTeam, this.byTeamSelectedStatus?.value)
         : this.challengesByTeam;
     } else {
       this.challengesByUserDisplay = this.byUserSelectedStatus
-        ? this.challengesByUserDisplay.filter((ch) => ch.status === this.byUserSelectedStatus?.value)
+        ? this.filterArrayByStatus(this.challengesByUser, this.byUserSelectedStatus?.value)
         : this.challengesByUser;
     }
+  }
+
+  filterArrayByStatus(challenges: ChallengeDtoApi[], filter: string): ChallengeDtoApi[] {
+    return challenges.filter((ch) => ch.status === filter);
   }
 }

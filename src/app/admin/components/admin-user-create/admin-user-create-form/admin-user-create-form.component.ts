@@ -63,7 +63,7 @@ export class AdminUserCreateFormComponent implements OnInit {
     this.userId = this.route.snapshot.paramMap.get('userId') || '';
 
     combineLatest({
-      teams: this.teamsRestService.getTeams({ companyId: this.companyId }),
+      teams: this.teamsRestService.getTeams({ companyId: this.companyId, itemsPerPage: 1000 }),
       company: this.companiesRestService.getCompanyById(this.companyId),
     })
       .pipe(take(1))
