@@ -183,11 +183,11 @@ export const FR = {
         subtitle: 'Renseignez les informations générales à propos de ce programme',
         name: 'Nom du programme',
         nameSubtitle: 'Visible par tout le monde',
-        namePlaceholder: 'Exemple : Onboarding',
+        namePlaceholder: 'Onboarding',
         description: 'Description',
         descriptionSubtitle: 'Ecrivez une brève description du contenu du programme',
         descriptionPlaceholder:
-          "Exemple : I'm a Product Designer based in Melbourne, Australia. I specialise in UX/UI design, brand strategy, and Webflow development.",
+          "Le programme d'onboarding vise à entraîner les nouveaux arrivants avec les notions fondamentales à connaître au sein de l'entreprise.",
         tags: 'Tags',
         tagsSubtitle: 'Les sujets abordés dans le programme',
         tagsPlaceholder: 'Rechercher dans vos tags',
