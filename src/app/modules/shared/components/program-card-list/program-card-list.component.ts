@@ -1,6 +1,6 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { combineLatest, of, switchMap, tap } from 'rxjs';
+import { combineLatest, map, of, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -148,10 +148,10 @@ export class ProgramCardListComponent implements OnInit {
   getPrograms() {
     this.programRestService
       .getProgramsPaginated({
-        isActive: true,
         sortBy: 'updatedAt:desc',
       })
       .pipe(
+        map(({ meta, data }) => ({ meta, data: data?.sort((a) => (a.isActive ? -1 : 1)) })),
         tap((p) => {
           this.programs = p.data ?? [];
           this.programTotal.emit(p.meta.totalItems);
