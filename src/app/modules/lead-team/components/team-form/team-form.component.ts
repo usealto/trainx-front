@@ -124,7 +124,9 @@ export class TeamFormComponent implements OnInit {
       this.programService.updateProgram(program.id, { teams: [{ id: team.id } as TeamApi] }).subscribe();
     });
     members.forEach((member) => {
-      this.userRestService.patchUser(member.id, { teamId: team.id }).subscribe();
+      if (member.teamId !== team.id) {
+        this.userRestService.patchUser(member.id, { teamId: team.id }).subscribe();
+      }
     });
   }
 }

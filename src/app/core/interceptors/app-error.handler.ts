@@ -21,7 +21,7 @@ export class AppErrorHandler extends ErrorHandler {
     }
 
     // Angular Errors
-    if (error.error instanceof ErrorEvent) {
+    if (error.error instanceof ErrorEvent || typeof err.status === 'undefined') {
       return;
     }
 
