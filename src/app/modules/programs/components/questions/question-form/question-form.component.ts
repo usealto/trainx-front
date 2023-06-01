@@ -129,7 +129,7 @@ export class QuestionFormComponent implements OnInit {
           title,
           type,
           tags: tags.map((id) => ({ id } as TagApi)),
-          programs: programs.map((id) => ({ id } as ProgramApi)),
+          programs: programs ? programs.map((id) => ({ id } as ProgramApi)) : [],
           answerType,
           answersAccepted: [answersAccepted],
           answersWrong: [answersWrong1, answersWrong2, answersWrong3].filter((a) => !!a),
