@@ -16,7 +16,7 @@
           : I18ns.questions.form.title.create
       }}
     </h2>
-    <p>
+    <p class="alto-grey">
       {{
         isSubmitted
           ? question?.createdByUser?.username + I18ns.questions.form.subtitle.submitted
@@ -43,41 +43,41 @@
       placeholder="{{ I18ns.questions.form.namePlaceholder }}"
       altoAutoResizeTextarea
     ></textarea>
-
-    <!-- <input
-      type="text"
-      class="form-control"
-      formControlName="title"
-      placeholder="{{ I18ns.questions.form.namePlaceholder }}"
-    /> -->
-    <!-- <div class="form-control" formControlName="title" contenteditable="true" aria-multiline="true"></div> -->
-
     <label class="form-label required">{{ I18ns.questions.form.goodAnswer }}</label>
-    <input
-      type="text"
-      class="form-control"
-      formControlName="answersAccepted"
-      placeholder="{{ I18ns.questions.form.answerPlaceholder + ' 1' }}"
-    />
+
+    <ng-container formArrayName="answersAccepted">
+      <ng-container *ngFor="let answer of answersAccepted.controls; let i = index">
+        <input
+          type="text"
+          class="form-control"
+          [formControl]="answer"
+          placeholder="{{ I18ns.questions.form.answerPlaceholder + ' ' + (i + 1) }}"
+        />
+      </ng-container>
+    </ng-container>
+    <p class="add-field" *ngIf="answersAccepted.controls.length < 4" (click)="addGoodAnwswer()">
+      <i class="bi bi-plus"></i> {{ I18ns.questions.form.addGoodAnswer }}
+    </p>
+
+    <hr />
+
     <label class="form-label required">{{ I18ns.questions.form.badAnswer }}</label>
-    <input
-      type="text"
-      class="form-control"
-      formControlName="answersWrong1"
-      placeholder="{{ I18ns.questions.form.answerPlaceholder + ' 1' }}"
-    />
-    <input
-      type="text"
-      class="form-control"
-      formControlName="answersWrong2"
-      placeholder="{{ I18ns.questions.form.answerPlaceholder + ' 2' }}"
-    />
-    <input
-      type="text"
-      class="form-control"
-      formControlName="answersWrong3"
-      placeholder="{{ I18ns.questions.form.answerPlaceholder + ' 3' }}"
-    />
+
+    <ng-container formArrayName="answersWrong">
+      <ng-container *ngFor="let answer of answersWrong.controls; let i = index">
+        <input
+          type="text"
+          class="form-control"
+          [formControl]="answer"
+          placeholder="{{ I18ns.questions.form.answerPlaceholder + ' ' + (i + 1) }}"
+        />
+      </ng-container>
+    </ng-container>
+
+    <p class="add-field" *ngIf="answersWrong.controls.length < 4" (click)="addBadAnwswer()">
+      <i class="bi bi-plus"></i> {{ I18ns.questions.form.addBadAnswer }}
+    </p>
+
     <hr />
 
     <label class="form-label">{{ I18ns.questions.form.programs }}</label>
