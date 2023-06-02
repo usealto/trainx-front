@@ -31,6 +31,7 @@ import { TimePickerComponent } from './components/time-picker/time-picker.compon
 import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
+import { TrainingCardComponent } from './components/training-card/training-card.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     TimePickerComponent,
     TeamColorPipe,
     PaginationComponent,
+    TrainingCardComponent,
   ],
   imports: [
     CommonModule,
@@ -98,6 +100,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     TimePickerComponent,
     PaginationComponent,
     AutoResizeTextareaDirective,
+    TrainingCardComponent,
   ],
 })
 export class SharedModule {}
