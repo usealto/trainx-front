@@ -1,28 +1,32 @@
-<div class="text-end px-4 mt-3">
+<div class="text-end px-4">
   <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
 </div>
-<div class="px-4 my-2">
-  <h2>
-    <i class="alto-badge-big fs-5 tab-icon me-4 bi bi-question-circle"></i>
+<div class="row m-5 g-0">
+  <div class="col-2" style="width: 2.857rem">
+    <i class="alto-badge-big alto-badge-blue me-4 bi bi-question-circle"></i>
+  </div>
 
-    {{
-      isSubmitted
-        ? I18ns.questions.form.title.submitted
-        : isEdit
-        ? I18ns.questions.form.title.edit
-        : I18ns.questions.form.title.create
-    }}
-  </h2>
-  <p class="fs-7">
-    {{
-      isSubmitted
-        ? question?.createdByUser?.username + I18ns.questions.form.subtitle.submitted
-        : I18ns.questions.form.subtitle.question
-    }}
-  </p>
+  <div class="col ms-4">
+    <h2>
+      {{
+        isSubmitted
+          ? I18ns.questions.form.title.submitted
+          : isEdit
+          ? I18ns.questions.form.title.edit
+          : I18ns.questions.form.title.create
+      }}
+    </h2>
+    <p>
+      {{
+        isSubmitted
+          ? question?.createdByUser?.username + I18ns.questions.form.subtitle.submitted
+          : I18ns.questions.form.subtitle.question
+      }}
+    </p>
+  </div>
 </div>
 <hr />
-<div class="offcanvas-body px-4">
+<div class="offcanvas-body m-5">
   <div *ngIf="isSubmitted" class="mb-4 row">
     <alto-profile-card class="col-7" [user]="question?.createdByUser"> </alto-profile-card>
     <div class="col-5 text-end">
@@ -33,31 +37,38 @@
   </div>
   <form *ngIf="questionForm" [formGroup]="questionForm">
     <label class="form-label required">{{ I18ns.questions.form.name }}</label>
-    <input
+    <textarea
+      class="form-control"
+      formControlName="title"
+      placeholder="{{ I18ns.questions.form.namePlaceholder }}"
+      altoAutoResizeTextarea
+    ></textarea>
+
+    <!-- <input
       type="text"
       class="form-control"
       formControlName="title"
       placeholder="{{ I18ns.questions.form.namePlaceholder }}"
-    />
+    /> -->
+    <!-- <div class="form-control" formControlName="title" contenteditable="true" aria-multiline="true"></div> -->
 
-    <label class="form-label required mt-3">{{ I18ns.questions.form.goodAnswer }}</label>
+    <label class="form-label required">{{ I18ns.questions.form.goodAnswer }}</label>
     <input
       type="text"
       class="form-control"
       formControlName="answersAccepted"
       placeholder="{{ I18ns.questions.form.answerPlaceholder + ' 1' }}"
     />
-
-    <label class="form-label required mt-3">{{ I18ns.questions.form.badAnswer }}</label>
+    <label class="form-label required">{{ I18ns.questions.form.badAnswer }}</label>
     <input
       type="text"
-      class="form-control mb-1"
+      class="form-control"
       formControlName="answersWrong1"
       placeholder="{{ I18ns.questions.form.answerPlaceholder + ' 1' }}"
     />
     <input
       type="text"
-      class="form-control mb-1"
+      class="form-control"
       formControlName="answersWrong2"
       placeholder="{{ I18ns.questions.form.answerPlaceholder + ' 2' }}"
     />
@@ -67,10 +78,11 @@
       formControlName="answersWrong3"
       placeholder="{{ I18ns.questions.form.answerPlaceholder + ' 3' }}"
     />
+    <hr />
 
-    <label class="form-label mt-3">{{ I18ns.questions.form.programs }}</label>
+    <label class="form-label">{{ I18ns.questions.form.programs }}</label>
     <ng-select
-      class="alto-form"
+      class="alto-form mb-4"
       [items]="programs"
       [multiple]="true"
       bindLabel="name"
@@ -93,9 +105,9 @@
       </ng-template>
     </ng-select>
 
-    <label class="form-label required mt-3">{{ I18ns.questions.form.tags }}</label>
+    <label class="form-label required">{{ I18ns.questions.form.tags }}</label>
     <ng-select
-      class="alto-form"
+      class="alto-form mb-4"
       required
       [items]="tags"
       [multiple]="true"
@@ -120,7 +132,7 @@
       </ng-template>
     </ng-select>
 
-    <label class="form-label mt-3">{{ I18ns.questions.form.explanation }}</label>
+    <label class="form-label">{{ I18ns.questions.form.explanation }}</label>
     <textarea
       class="form-control"
       rows="5"
@@ -128,50 +140,52 @@
       placeholder="{{ I18ns.questions.form.explanationPlaceholder }}"
     ></textarea>
 
-    <label class="form-label mt-3">{{ I18ns.questions.form.link }}</label>
+    <label class="form-label">{{ I18ns.questions.form.link }}</label>
     <input
       type="text"
       class="form-control"
       formControlName="link"
       placeholder="{{ I18ns.questions.form.linkPlaceholder }}"
     />
+  </form>
+</div>
 
+<div class="footer">
+  <hr class="m-0" />
+  <div class="button-container">
+    <button
+      type="button"
+      class="btn btn-outline-secondary me-3"
+      aria-label="Close"
+      (click)="activeOffcanvas.dismiss()"
+    >
+      {{ I18ns.shared.cancel }}
+    </button>
     <ng-container *ngIf="isSubmitted; else elseTemplate">
-      <div class="my-4">
-        <button
-          type="button"
-          class="btn btn-outline-secondary me-3"
-          aria-label="Close"
-          (click)="activeOffcanvas.dismiss()"
-        >
-          {{ I18ns.shared.cancel }}
-        </button>
+      <input
+        type="submit"
+        [disabled]="questionForm && !questionForm.valid"
+        class="btn btn-primary float-end"
+        [value]="I18ns.shared.save"
+        (click)="createQuestion()"
+      />
 
-        <button
-          type="button"
-          class="btn btn-danger me-3"
-          (click)="changeStatus(QuestionSubmittedStatusEnum.Declined)"
-        >
-          {{ I18ns.shared.refuse }}
-        </button>
-
-        <input
-          type="submit"
-          [disabled]="!questionForm.valid"
-          class="btn btn-primary"
-          [value]="I18ns.shared.save"
-          (click)="createQuestion()"
-        />
-      </div>
+      <button
+        type="button"
+        class="btn btn-danger me-3 float-end"
+        (click)="changeStatus(QuestionSubmittedStatusEnum.Declined)"
+      >
+        {{ I18ns.shared.refuse }}
+      </button>
     </ng-container>
     <ng-template #elseTemplate>
       <input
         type="submit"
-        [disabled]="!questionForm.valid"
-        class="w-100 btn btn-primary my-4"
+        [disabled]="questionForm && !questionForm.valid"
+        class="btn btn-primary float-end"
         [value]="I18ns.shared.save"
         (click)="createQuestion()"
       />
     </ng-template>
-  </form>
+  </div>
 </div>

@@ -18,6 +18,13 @@
   color: red;
 }
 
+.alto-badge-no-size {
+  display: inline-block;
+  border-radius: 25px;
+  padding: 0 0.5rem;
+  text-align: center;
+  font-weight: 500;
+}
 .alto-score {
   @extend .alto-badge-no-size;
   min-height: 1.58rem;
@@ -29,22 +36,24 @@
   min-height: 1.58rem;
   min-width: 1.58rem;
   line-height: 1.6rem;
+  font-size: 0.857rem;
+  color: var(--alto-blue);
+  background-color: var(--alto-medium-grey);
 }
+
 .alto-badge-big {
   @extend .alto-badge-no-size;
   height: 2.857rem;
   min-width: 2.857rem;
   line-height: 2.86rem;
-}
-.alto-badge-no-size {
-  display: inline-block;
-  font-size: 0.857rem;
-  border-radius: 25px;
-  padding: 0 0.5rem;
-  text-align: center;
+  font-size: 1.5rem;
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
-  font-weight: 500;
+}
+.alto-badge-blue {
+  @extend .alto-badge-big;
+  color: var(--bs-primary);
+  background-color: #d1e9ff;
 }
 
 .subtitles {

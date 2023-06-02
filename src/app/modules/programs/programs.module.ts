@@ -7,6 +7,7 @@ import { CreateProgramsComponent } from './components/create-programs/create-pro
 import { ProgramsFormComponent } from './components/create-programs/programs-form/programs-form.component';
 import { QuestionFormComponent } from './components/questions/question-form/question-form.component';
 import { TagsFormComponent } from './components/tags/tag-form/tag-form.component';
+import { AutoResizeTextareaDirective } from 'src/app/core/utils/directives/auto-resize-textarea.directive';
 
 @NgModule({
   declarations: [
