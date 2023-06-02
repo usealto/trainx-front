@@ -1,11 +1,15 @@
 <div class="">
   <alto-admin-header
-    title="Companies"
-    subtitle="All of our customers"
+    title="Company {{company.name}}"
+    subtitle="Information about this company"
     [breadcrumbs]="[
       {
         label: 'Companies',
         url: '/admin/companies'
+      },
+      {
+        label: company.name,
+        url: ['/', 'admin', 'companies', company.id]
       }
     ]"
   ></alto-admin-header>
