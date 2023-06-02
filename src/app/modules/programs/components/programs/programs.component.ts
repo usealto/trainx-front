@@ -110,6 +110,7 @@ export class ProgramsComponent implements OnInit {
     canvasRef.componentInstance.question = question;
     canvasRef.componentInstance.isSubmitted = true;
     canvasRef.componentInstance.dismissedQuestion.pipe(tap(() => this.getSubmittedQuestions())).subscribe();
+    canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
   }
 
   openTagForm(tag?: TagDtoApi) {

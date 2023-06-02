@@ -57,6 +57,11 @@
         <span>
           {{ I18ns.programs.programs.score }}
         </span>
+        <i
+          class="bi bi-question-circle"
+          placement="top"
+          ngbTooltip="{{ I18ns.programs.programs.scoreToolTip }}"
+        ></i>
         <span class="float-end alto-score" [class]="(score ? score * 100 : '') | pillColor">
           {{ score ? (score | percent) : 'N/A' }}
         </span>
