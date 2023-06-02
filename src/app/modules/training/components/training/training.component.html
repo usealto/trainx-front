@@ -1,10 +1,10 @@
 <div class="text-end timer" [class]="displayTime <= 10 ? 'text-danger' : ''">
   <i class="fs-5 bi bi-stopwatch me-3"></i>
-  <span class="fw-bold">{{ displayTime + ' ' + I18ns.training.secondsRemaining }}</span>
+  <span class="fw-bold">{{ displayTime + ' ' + I18ns.training.quizz.secondsRemaining }}</span>
 </div>
 
 <div *ngIf="!isQuestionsLoading" class="mt-4">
-  <h2 class="alto-grey">{{ I18ns.training.selectOneAnswer }}</h2>
+  <h2 class="alto-grey">{{ I18ns.training.quizz.selectOneAnswer }}</h2>
   <h1>{{ displayedQuestion.title }}</h1>
 </div>
 <div *ngIf="!isQuestionsLoading" class="mt-4">
@@ -26,10 +26,10 @@
     (click)="stopTimer()"
   >
     <i class="bi bi-save me-2"></i>
-    {{ I18ns.training.saveAndQuit }}</a
+    {{ I18ns.training.quizz.saveAndQuit }}</a
   >
   <button class="btn btn-primary" (click)="submitAnswer()">
-    {{ I18ns.training.submit }}
+    {{ I18ns.training.quizz.submit }}
     <i class="bi bi-arrow-right-short"></i>
   </button>
 </div>

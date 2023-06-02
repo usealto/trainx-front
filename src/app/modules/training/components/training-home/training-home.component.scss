@@ -1,0 +1,15 @@
+:host {
+  display: block;
+  padding: var(--alto-page-padding);
+}
+.btn-check:checked + .alto-tab-btn {
+  border-bottom: 2px #175cd3 solid;
+  color: #175cd3;
+}
+
+.alto-tab-btn {
+  margin-right: 1rem;
+  cursor: pointer;
+  padding-bottom: 0.75rem;
+  font-weight: 500;
+}
