@@ -79,10 +79,14 @@ export class AdminUsersUploadFormComponent {
   private onFileSelected(file: File) {
     this.displayedUsers = [];
     this.csvData = [];
+    this.usersFailed = [];
     Papa.parse(file, {
       complete: (results: { data: any[] }) => {
         results.data.forEach((userRow: string[]) => {
-          if (this.reg.test(userRow[2])) {
+          if (
+            this.reg.test(userRow[2]) &&
+            Object.values(RoleEnumApi).includes(userRow[3] as unknown as RoleEnumApi)
+          ) {
             const user = {
               firstname: userRow[0],
               lastname: userRow[1],
@@ -106,11 +110,14 @@ export class AdminUsersUploadFormComponent {
   public upload(id: string | undefined): void {
     if (this.csvData.length > 0) {
       this.csvData.forEach((user) => {
-        const roles = user.roles.map((role: string) => RoleEnumApi[role as keyof typeof RoleEnumApi]);
+        const roles = user.roles.flatMap((role: string) =>
+          Object.values(RoleEnumApi).includes(role as unknown as RoleEnumApi)
+            ? (role as unknown as RoleEnumApi)
+            : [],
+        );
         if (!roles.includes(RoleEnumApi.CompanyUser)) {
           roles.push(RoleEnumApi.CompanyUser);
         }
-
         this.usersApiService
           .createUser({
             createUserDtoApi: {
