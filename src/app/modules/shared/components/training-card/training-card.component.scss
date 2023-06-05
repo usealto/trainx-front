@@ -3,9 +3,10 @@
   inherits: false;
   initial-value: 0;
 }
-@keyframes html-progress {
+
+@keyframes progression {
   to {
-    --progress-value: 92;
+    --progress-value: var(--progress-value-dynamic);
   }
 }
 
@@ -13,31 +14,43 @@
   width: 4.571rem;
   height: 4.571rem;
   border-radius: 50%;
+  font-weight: 500;
 
   /* to center the percentage value */
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 1.143rem;
 }
 
-.round-progress-bar::before {
-  counter-reset: percentage var(--progress-value);
-  //   content: counter(percentage) '%';
-}
-
-.html {
+.progress {
   background: radial-gradient(closest-side, white 79%, transparent 80% 100%),
-    conic-gradient(hotpink calc(var(--progress-value) * 1%), pink 0);
-  animation: html-progress 2s 1 forwards;
+    conic-gradient(var(--bs-primary) calc(var(--progress-value) * 1%), #f2f4f7 0);
+  animation: progression 2s 1 forwards;
 }
 
-.html::before {
-  animation: html-progress 2s 1 forwards;
+.progress::before {
+  animation: progression 2s 1 forwards;
 }
 
-progress {
-  visibility: hidden;
-  width: 0;
-  height: 0;
+.score {
+  border: 6px solid;
+  // border-radius: 50%;
+}
+.score-good {
+  border-color: #6ce9a6;
+  background-color: #ecfdf3;
+  color: #05603a;
+}
+.score-warning {
+  border-color: #fec84b;
+  background-color: #fffaeb;
+  color: #93370d;
+}
+.score-bad {
+  border-color: #fda19b;
+  background-color: #fef3f2;
+  color: #912018;
+}
+.no-score {
+  opacity: 0;
 }

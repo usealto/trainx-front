@@ -1,7 +1,11 @@
 <div class="panel highlighted-panel pe-auto">
-  <div class="round-progress-bar html">
-    <progress id="html" min="0" max="100" [value]="score"></progress>
-  </div>
+  <ng-container *ngIf="isProgress; else elseTemplate">
+    <div class="round-progress-bar progress mb-4"></div>
+  </ng-container>
+  <ng-template #elseTemplate>
+    <div class="round-progress-bar score mb-4" [ngClass]="getScoreClass(score)">{{ score }}%</div>
+  </ng-template>
+
   <div class="mb-3"><i class="bi bi-clock me-3"></i>{{ duration }} minutes</div>
   <h2>{{ title }}</h2>
   <hr />

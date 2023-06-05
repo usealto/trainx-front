@@ -68,10 +68,13 @@
     <alto-profile-card [user]="userStore.user.value"></alto-profile-card>
     <br />
     <br />
+    <alto-training-card [title]="'Title'" [score]="27"></alto-training-card>
+
+    <br />
+    <br />
 
     <alto-program-card [displayToggle]="true" [program]="programStore.programs.value[0]"></alto-program-card>
     <br />
-    <alto-training-card title="Title" [score]="55"></alto-training-card>
     <br />
     <alto-progression-badge class="me-2"></alto-progression-badge> rien
     <alto-progression-badge class="me-2" [score]="0"></alto-progression-badge>
