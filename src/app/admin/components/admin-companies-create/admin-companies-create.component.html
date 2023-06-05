@@ -1,6 +1,7 @@
 <div class="">
   <alto-admin-header
-    title="Company {{company.name}}"
+    *ngIf="company && edit; else createHeader"
+    title="Company {{ company.name }}"
     subtitle="Information about this company"
     [breadcrumbs]="[
       {
@@ -13,6 +14,18 @@
       }
     ]"
   ></alto-admin-header>
+  <ng-template #createHeader
+    ><alto-admin-header
+      title="New company"
+      subtitle="Information about this company"
+      [breadcrumbs]="[
+        {
+          label: 'Companies',
+          url: '/admin/companies'
+        }
+      ]"
+    ></alto-admin-header
+  ></ng-template>
   <div class="tabs">
     <alto-admin-tabs (activeNumberChanges)="tabNumber = $event">
       <alto-admin-tab [tabTitle]="'Informations'" icon="bi-file-text">
@@ -296,11 +309,7 @@
       </div>
     </div>
     <div class="d-flex justify-content-end">
-      <p 
-        *ngIf="tabNumber === 1 && isFormDisabled()"
-        class="alto-red">
-        Missing data in "Informations" tab
-      </p>
+      <p *ngIf="tabNumber === 1 && isFormDisabled()" class="alto-red">Missing data in "Informations" tab</p>
     </div>
   </div>
 </div>
