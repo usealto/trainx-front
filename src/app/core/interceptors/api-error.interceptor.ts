@@ -83,7 +83,6 @@ export class ApiErrorInterceptor implements HttpInterceptor {
                     redirect_uri: window.location.origin,
                   },
                 })
-                .pipe(tap(console.log))
                 .subscribe();
               break;
             case 403: // right problem

@@ -30,6 +30,5 @@ export class TestComponent {
     programRestService: ProgramsRestService,
   ) {
     programRestService.getPrograms().subscribe();
-    this.http.get('https://api-test-develop.usealto.com/v1/users').pipe(tap(console.log)).subscribe();
   }
 }
