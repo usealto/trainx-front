@@ -45,6 +45,10 @@ export class AdminCompaniesCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initComponent();
+  }
+
+  initComponent() {
     this.id = this.route.snapshot.paramMap.get('id') || undefined;
     this.teamService
       .getTeams({ itemsPerPage: 1000 })
@@ -121,9 +125,9 @@ export class AdminCompaniesCreateComponent implements OnInit {
         .pipe(map((uploadedTeam) => uploadedTeam))
         .subscribe(() => {
           if (this.edit) {
-            this.router.navigate(['/admin/companies/', companyId]).then((page) => {
-              window.location.reload();
-            });
+            this.router
+              .navigateByUrl('/', { skipLocationChange: true })
+              .then(() => this.router.navigate(['/admin/companies/', companyId]));
           } else {
             this.router.navigate(['/admin/companies/']);
           }
@@ -164,6 +168,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
         .subscribe(() => {
           this.uploadFormComponent.upload(this.id);
           this.createTeams(this.id);
+          this.initComponent();
         });
     } else {
       this.companiesRestService
