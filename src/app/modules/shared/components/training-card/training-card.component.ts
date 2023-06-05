@@ -11,6 +11,7 @@ export class TrainingCardComponent implements OnInit {
   @Input() duration?: number = 5;
   @Input() title?: string;
   @Input() isProgress = true;
+  // @Input() users = true;
 
   constructor(private elementRef: ElementRef) {}
 
