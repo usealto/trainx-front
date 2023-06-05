@@ -309,7 +309,7 @@
       </div>
     </div>
     <div class="d-flex justify-content-end">
-      <p *ngIf="tabNumber === 1 && isFormDisabled()" class="alto-red">Missing data in "Informations" tab</p>
+      <p *ngIf="tabNumber === 1 && isFormDisabled() && !edit" class="alto-red">Missing data in "Informations" tab</p>
     </div>
   </div>
 </div>
