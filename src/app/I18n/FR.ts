@@ -643,7 +643,7 @@ export const FR = {
       subtitle: 'Retrouvez ici les programmes auxquels vous participez actuellement.',
       continueSession: 'Session continue',
       continueSessionSubtitle:
-        'Entraînez vous chaque jour à votre rythme sur des questions issues de vos programmes.',
+        'Entraînez vous chaque jour à votre rythme sur des questions issues de vos différents programmes en cours.',
       continueSessionCounts: [
         "Personne ne s'est entrainé aujourd'hui",
         "{{}} personne s'est entrainé aujourd'hui",
@@ -652,20 +652,53 @@ export const FR = {
     },
   },
   training: {
-    secondsRemaining: 'secondes restantes',
-    selectOneAnswer: 'Sélectionnez la bonne réponse',
-    submit: 'Valider',
-    saveAndQuit: 'Enregistrer et quitter',
-    canva: {
-      goodAnswer: 'Bonne réponse !',
-      badAnswer: 'Mauvaise réponse !',
-      goodResultSubtitle: "Il s'agissait bien de",
-      badResultSubtitle: "Il s'agissait de",
-      explanation: 'Explication',
-      noExplanation: "Pas d'explication",
-      reference: 'Référence',
-      noReference: 'Pas de référence',
-      continue: 'Continuer',
+    title: 'Programmes',
+    subtitle: "Retrouvez l'ensemble de vos programmes",
+    tabs: {
+      onGoing: 'En cours',
+      done: 'Terminés',
+      showAll: 'Tout voir',
+    },
+    onGoing: {
+      title: 'Continuez votre entraînement',
+      subtitle: "Retrouvez l'ensemble de vos programmes en cours",
+    },
+    continuingTraining: {
+      title: 'Training continu',
+      subtitle: 'Retrouvez les programmes qui vous ont été assignés',
+      panels: {
+        score: 'Score moyen',
+        frequency: 'Régularité',
+        streak: 'Série en cours',
+        bestStreak: 'Meilleure série',
+      },
+    },
+    donePrograms: {
+      title: 'Améliorez votre score',
+      subtitle: 'Tentez de faire mieux sur des programmes que vous avez terminé.',
+      title2: 'Tous vos programmes terminés',
+      subtitle2: 'Retrouvez les programmes qui vous ont été assignés',
+    },
+    showAll: {
+      title: 'Tous vos programmes',
+      subtitle: "Retrouvez l'ensemble des programmes qui vous ont été assignés",
+    },
+    quizz: {
+      secondsRemaining: 'secondes restantes',
+      selectOneAnswer: 'Sélectionnez la bonne réponse',
+      submit: 'Valider',
+      saveAndQuit: 'Enregistrer et quitter',
+      canva: {
+        goodAnswer: 'Bonne réponse !',
+        badAnswer: 'Mauvaise réponse !',
+        goodResultSubtitle: "Il s'agissait bien de",
+        badResultSubtitle: "Il s'agissait de",
+        explanation: 'Explication',
+        noExplanation: "Pas d'explication",
+        reference: 'Référence',
+        noReference: 'Pas de référence',
+        continue: 'Continuer',
+      },
     },
   },
 };
