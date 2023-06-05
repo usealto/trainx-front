@@ -70,6 +70,8 @@ export class TrainingComponent implements OnInit {
         .pipe(
           tap(({ data }) => {
             if (data) {
+              // TODO remove
+              data[0].answersAccepted.push('hello');
               this.setDisplayedQuestion(data[0]);
             }
             // TODO : Use when we do the program based question
@@ -86,11 +88,12 @@ export class TrainingComponent implements OnInit {
   }
 
   selectAnswer(answer: string) {
-    this.currentAnswers.forEach((a) => {
-      a.selected = false;
-      a.type = '';
-    });
+    // this.currentAnswers.forEach((a) => {
+    //   a.selected = false;
+    //   a.type = '';
+    // });
     const card = this.currentAnswers.find((a) => a.answer === answer);
+    console.log('hello', answer);
     if (card) {
       card.selected = !card.selected;
       card.type = card.selected === true ? 'selected' : '';
