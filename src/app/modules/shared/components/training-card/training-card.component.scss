@@ -10,6 +10,11 @@
   }
 }
 
+:host {
+  display: inline-block;
+  width: 100%;
+}
+
 .round-progress-bar {
   width: 4.571rem;
   height: 4.571rem;

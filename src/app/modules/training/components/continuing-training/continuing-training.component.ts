@@ -3,18 +3,13 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 
 @Component({
-  selector: 'alto-training-home',
-  templateUrl: './training-home.component.html',
-  styleUrls: ['./training-home.component.scss'],
+  selector: 'alto-continuing-training',
+  templateUrl: './continuing-training.component.html',
+  styleUrls: ['./continuing-training.component.scss'],
 })
-export class TrainingHomeComponent {
+export class ContinuingTrainingComponent {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
-  activeTab = 1;
 
   guessesCount = 0;
-
-  switchTab(index: number) {
-    this.activeTab = index;
-  }
 }

@@ -32,6 +32,7 @@ import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe'
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
 import { TrainingCardComponent } from './components/training-card/training-card.component';
+import { ScoreFilterComponent } from './components/score-filter/score-filter.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { TrainingCardComponent } from './components/training-card/training-card.
     TeamColorPipe,
     PaginationComponent,
     TrainingCardComponent,
+    ScoreFilterComponent,
   ],
   imports: [
     CommonModule,
@@ -101,6 +103,7 @@ import { TrainingCardComponent } from './components/training-card/training-card.
     PaginationComponent,
     AutoResizeTextareaDirective,
     TrainingCardComponent,
+    ScoreFilterComponent,
   ],
 })
 export class SharedModule {}

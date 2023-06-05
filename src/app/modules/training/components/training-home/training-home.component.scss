@@ -1,6 +1,9 @@
 :host {
   display: block;
   padding: var(--alto-page-padding);
+  & > hr {
+    margin: 1.714rem 0;
+  }
 }
 .btn-check:checked + .alto-tab-btn {
   border-bottom: 2px #175cd3 solid;

@@ -57,8 +57,6 @@ export class LeadTeamComponent implements OnInit {
   usersQuestions = new Map<string, number[]>();
   userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
 
-  scoreFilters = Object.values(ScoreFilter).map((c) => ({ name: c }));
-
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
     private readonly teamsRestService: TeamsRestService,
