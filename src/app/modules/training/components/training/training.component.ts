@@ -71,6 +71,7 @@ export class TrainingComponent implements OnInit {
           tap(({ data }) => {
             if (data) {
               // TODO remove
+              console.log('data is ', data);
               data[0].answersAccepted.push('hello');
               this.setDisplayedQuestion(data[0]);
             }

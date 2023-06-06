@@ -14,8 +14,6 @@ export class AnswerCardComponent implements OnInit {
     this.countCorrectAnswers();
   }
   countCorrectAnswers() {
-    const correctAnswers = [];
-    correctAnswers.push(this.goodAnswers);
-    return correctAnswers[0].length;
+    return this.goodAnswers.length;
   }
 }
