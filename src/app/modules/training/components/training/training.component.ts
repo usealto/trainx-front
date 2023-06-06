@@ -71,7 +71,7 @@ export class TrainingComponent implements OnInit {
           tap(({ data }) => {
             if (data) {
               // TODO remove
-              console.log('data is ', data);
+
               data[0].answersAccepted.push('hello');
               this.setDisplayedQuestion(data[0]);
             }
@@ -96,7 +96,6 @@ export class TrainingComponent implements OnInit {
       });
     }
     const card = this.currentAnswers.find((a) => a.answer === answer);
-    console.log('hello', answer);
     if (card) {
       card.selected = !card.selected;
       card.type = card.selected === true ? 'selected' : '';
