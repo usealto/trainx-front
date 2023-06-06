@@ -11,8 +11,6 @@ export class AnswerCardComponent {
   @Input() goodAnswers!: Array<any>;
 
   countCorrectAnswers() {
-    const test = this.goodAnswers;
-    console.log('test   ', test);
     return this.goodAnswers.length;
   }
 }
