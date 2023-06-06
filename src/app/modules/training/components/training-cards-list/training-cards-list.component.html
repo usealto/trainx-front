@@ -1,15 +1,7 @@
 <div class="row">
-  <div class="col-4">
-    <alto-training-card
-      class="mb-4"
-      [score]="55"
-      [title]="'Placeholder'"
-      [isProgress]="false"
-    ></alto-training-card>
-  </div>
-  <div class="col-4">
-    <alto-training-card class="mb-4" [score]="55" [title]="'Placeholder'"></alto-training-card>
+  <div class="col-4" *ngFor="let item of data">
+    <alto-training-card class="mb-4" [data]="item"></alto-training-card>
   </div>
 </div>
 
-<alto-pagination></alto-pagination>
+<alto-pagination [collectionSize]="data.length" [pageSize]="3" [page]="1"></alto-pagination>

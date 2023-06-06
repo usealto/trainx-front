@@ -6,7 +6,10 @@
     <div class="round-progress-bar score mb-4" [ngClass]="getScoreClass(score)">{{ score }}%</div>
   </ng-template>
 
-  <div class="mb-3"><i class="bi bi-clock me-3"></i>{{ duration }} minutes</div>
+  <div class="mb-3">
+    &nbsp;
+    <ng-container *ngIf="duration"> <i class="bi bi-clock me-3"></i>{{ duration }} minutes </ng-container>
+  </div>
   <h2>{{ title }}</h2>
   <hr />
 </div>

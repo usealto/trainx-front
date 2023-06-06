@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GetProgramRunsRequestParams } from '@usealto/sdk-ts-angular';
-import { combineLatest, tap } from 'rxjs';
+import { combineLatest, map, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
@@ -37,10 +37,27 @@ export class TrainingHomeComponent implements OnInit {
       } as GetProgramRunsRequestParams),
     ])
       .pipe(
-        tap(console.log),
-        tap((prs) => {
-          // this.onGoingPrograms = progs.filter(p => p.)
+        map(([programs, programRuns]) => {
+          return programs.map((p) => {
+            const progRun = programRuns.data?.filter((x) => x.programId === p.id)[0] || null;
+
+            return {
+              title: p.name,
+              score: !progRun ? 0 : (progRun.guessesCount / progRun.questionsCount) * 100,
+              updatedAt: progRun?.updatedAt,
+              programRunId: progRun?.id,
+              programId: p.id,
+              isProgress: !progRun?.finishedAt,
+              duration: progRun?.guessesCount ? progRun?.guessesCount * 30 : undefined,
+            } as TrainingCardData;
+          });
         }),
+        tap((arr) => {
+          this.myPrograms = arr
+            .sort((a, b) => (a.updatedAt?.getTime() ?? 0) - (b.updatedAt?.getTime() ?? 0))
+            .reverse();
+        }),
+        tap(console.log),
       )
       .subscribe();
   }
