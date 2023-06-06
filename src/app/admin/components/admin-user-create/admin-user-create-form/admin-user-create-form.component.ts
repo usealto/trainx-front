@@ -107,7 +107,7 @@ export class AdminUserCreateFormComponent implements OnInit {
         lastname: ['', [Validators.required]],
         username: ['', []],
         email: ['', [Validators.required, Validators.email]],
-        teamId: [null, []],
+        teamId: ['', []],
         roles: [[RoleEnumApi.CompanyUser], []],
         slackId: ['', []],
       });
