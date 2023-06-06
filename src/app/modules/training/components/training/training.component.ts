@@ -88,10 +88,12 @@ export class TrainingComponent implements OnInit {
   }
 
   selectAnswer(answer: string) {
-    // this.currentAnswers.forEach((a) => {
-    //   a.selected = false;
-    //   a.type = '';
-    // });
+    if (this.displayedQuestion.answersAccepted.length < 2) {
+      this.currentAnswers.forEach((a) => {
+        a.selected = false;
+        a.type = '';
+      });
+    }
     const card = this.currentAnswers.find((a) => a.answer === answer);
     console.log('hello', answer);
     if (card) {

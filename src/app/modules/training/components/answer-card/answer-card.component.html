@@ -11,6 +11,7 @@
   "
 >
   <i
+    *ngIf="countCorrectAnswers() < 2"
     class="fs-3 bi"
     [class]="
       type === 'selected'
@@ -20,6 +21,19 @@
         : type === 'wrong'
         ? 'bi-x-circle-fill text-danger'
         : 'bi-circle alto-grey'
+    "
+  ></i>
+  <i
+    *ngIf="countCorrectAnswers() > 1"
+    class="fs-3 bi"
+    [class]="
+      type === 'selected'
+        ? 'bi-check-square-fill text-primary'
+        : type === 'correct'
+        ? 'bi-check-square-fill text-success'
+        : type === 'wrong'
+        ? 'bi-x-square-fill text-danger'
+        : 'bi-square alto-grey'
     "
   ></i>
   <h2 class="mt-4 user-select-none">{{ answer }}</h2>
