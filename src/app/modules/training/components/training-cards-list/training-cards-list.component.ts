@@ -8,6 +8,8 @@ import { TrainingCardData } from '../../models/training.model';
 })
 export class TrainingCardsListComponent {
   @Input() data: TrainingCardData[] = [];
+  @Input() pageSize = 1;
+  page = 1;
 
   filter(e: any) {
     // TODO

@@ -10,6 +10,6 @@
     &nbsp;
     <ng-container *ngIf="duration"> <i class="bi bi-clock me-3"></i>{{ duration }} minutes </ng-container>
   </div>
-  <h2>{{ title }}</h2>
+  <h2 class="text-truncate" [title]="title">{{ title }}</h2>
   <hr />
 </div>
