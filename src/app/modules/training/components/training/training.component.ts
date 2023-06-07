@@ -105,20 +105,43 @@ export class TrainingComponent implements OnInit {
   submitAnswer() {
     this.stopTimer();
     let result = 'wrong';
-    this.currentAnswers.forEach((a) => {
-      if (a.selected) {
-        if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
-          result = 'correct';
-          a.type = 'correct';
-        } else {
-          a.type = 'wrong';
-        }
+    let countGoodAnswers = 0;
+    console.log('this.currentAnswers ', this.currentAnswers);
+    console.log('this.displayedQuestion ', this.displayedQuestion.answersAccepted);
+
+    // itération sur chaque élément du tableau de réponses de la displayedQuestion
+    this.currentAnswers.map((a) => {
+      // si ce tableau contient l'élément a, alors le type de a passe de '' ou 'selected' à 'correct'
+      if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
+        a.type = 'correct';
       } else {
-        if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
-          a.type = 'correct';
-        }
+        // sinon si a est sélectionné ET que le tableau ne contient pas a, alors le type de a passe de '' ou 'selected' à 'wrong'
+        if (a.selected && !this.displayedQuestion.answersAccepted.includes(a.answer)) a.type = 'wrong';
+      }
+      // si a (la réponse sélectionnée) ET son type est correct, on incrémente countGoodAnswers de 1
+      if (a.selected && a.type === 'correct') {
+        countGoodAnswers++;
+      }
+      // si countGoodAnswers est égal au nombre de bonnes réponses, result passe de wrong à correct
+      if (countGoodAnswers === this.displayedQuestion.answersAccepted.length) {
+        result = 'correct';
       }
     });
+    // let result = 'wrong';
+    // this.currentAnswers.forEach((a) => {
+    //   if (a.selected) {
+    //     if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
+    //       result = 'correct';
+    //       a.type = 'correct';
+    //     } else {
+    //       a.type = 'wrong';
+    //     }
+    //   } else {
+    //     if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
+    //       a.type = 'correct';
+    //     }
+    //   }
+    // });
     this.openCanvas(result);
   }
 
