@@ -86,10 +86,12 @@ export class TrainingComponent implements OnInit {
   }
 
   selectAnswer(answer: string) {
-    this.currentAnswers.forEach((a) => {
-      a.selected = false;
-      a.type = '';
-    });
+    if (this.displayedQuestion.answersAccepted.length < 2) {
+      this.currentAnswers.forEach((a) => {
+        a.selected = false;
+        a.type = '';
+      });
+    }
     const card = this.currentAnswers.find((a) => a.answer === answer);
     if (card) {
       card.selected = !card.selected;
@@ -100,18 +102,19 @@ export class TrainingComponent implements OnInit {
   submitAnswer() {
     this.stopTimer();
     let result = 'wrong';
-    this.currentAnswers.forEach((a) => {
-      if (a.selected) {
-        if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
-          result = 'correct';
-          a.type = 'correct';
-        } else {
-          a.type = 'wrong';
-        }
+    let countGoodAnswers = 0;
+
+    this.currentAnswers.map((a) => {
+      if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
+        a.type = 'correct';
       } else {
-        if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
-          a.type = 'correct';
-        }
+        if (a.selected && !this.displayedQuestion.answersAccepted.includes(a.answer)) a.type = 'wrong';
+      }
+      if (a.selected && a.type === 'correct') {
+        countGoodAnswers++;
+      }
+      if (countGoodAnswers === this.displayedQuestion.answersAccepted.length) {
+        result = 'correct';
       }
     });
     this.openCanvas(result);
