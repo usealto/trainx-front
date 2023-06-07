@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, HostListener, Input, OnInit } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnInit } from '@angular/core';
 
 @Directive({
   selector: '[altoAutoResizeTextarea]',
@@ -6,11 +6,6 @@ import { Directive, ElementRef, HostBinding, HostListener, Input, OnInit } from 
 })
 export class AutoResizeTextareaDirective implements OnInit {
   host: any;
-
-  @HostBinding('class.p-inputtext') inputtext = true;
-  @HostBinding('class.p-corner-all') uiCornerAll = true;
-  @HostBinding('class.p-state-default') uiStateDefault = true;
-  @HostBinding('class.p-component') uiWidget = true;
 
   // Entier sans le px
   @Input() minHeight = 34;
