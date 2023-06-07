@@ -3,8 +3,9 @@ import { DropzoneChangeEvent } from 'src/app/modules/shared/components/dropzone/
 import * as Papa from 'papaparse';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { EditUserUploadFormComponent } from '../edit-user-upload-form/edit-user-upload-form.component';
-import { RoleEnumApi, UsersApiService } from '@usealto/sdk-ts-angular';
+import { RoleEnumApi, UserDtoCreatedResponseApi, UsersApiService } from '@usealto/sdk-ts-angular';
 import { UntypedFormGroup } from '@angular/forms';
+import { Observable, catchError, combineLatest, of, take } from 'rxjs';
 
 @Component({
   selector: 'alto-admin-users-upload-form',
@@ -29,6 +30,14 @@ export class AdminUsersUploadFormComponent {
   ) {}
 
   ngOnInit(): void {
+    this.resetComponent();
+  }
+
+  resetComponent(): void {
+    this.csvData = [];
+    this.displayedUsers = [];
+    this.page = 1;
+    this.usersFailed = [];
     this.refreshUsers();
   }
 
@@ -53,6 +62,7 @@ export class AdminUsersUploadFormComponent {
         this.csvData[userIndex].roles = result.roles;
 
         this.refreshUsers();
+        this.form?.markAsDirty();
       },
       (reason) => {},
     );
@@ -95,7 +105,9 @@ export class AdminUsersUploadFormComponent {
             };
             this.csvData.push(user);
           } else {
-            this.usersFailed.push(userRow[0]);
+            if (!userRow.every((item) => item === '')) {
+              this.usersFailed.push(userRow[0]);
+            }
           }
         });
         if (this.csvData && this.csvData[0] && this.csvData[0].email === 'email') {
@@ -109,7 +121,7 @@ export class AdminUsersUploadFormComponent {
 
   public upload(id: string | undefined): void {
     if (this.csvData.length > 0) {
-      this.csvData.forEach((user) => {
+      const obs = this.csvData.map((user) => {
         const roles = user.roles.flatMap((role: string) =>
           Object.values(RoleEnumApi).includes(role as unknown as RoleEnumApi)
             ? (role as unknown as RoleEnumApi)
@@ -118,7 +130,7 @@ export class AdminUsersUploadFormComponent {
         if (!roles.includes(RoleEnumApi.CompanyUser)) {
           roles.push(RoleEnumApi.CompanyUser);
         }
-        this.usersApiService
+        return this.usersApiService
           .createUser({
             createUserDtoApi: {
               firstname: user.firstname,
@@ -128,12 +140,14 @@ export class AdminUsersUploadFormComponent {
               roles: roles,
             },
           })
-          .subscribe((res) => {
-            if (res.statusCode === 201) {
-              user.isUploaded = true;
-            }
-          });
+          .pipe(catchError(() => of(null)));
       });
+
+      combineLatest(obs as Observable<UserDtoCreatedResponseApi>[])
+        .pipe(take(1))
+        .subscribe((res) => {
+          this.resetComponent();
+        });
     }
   }
 }

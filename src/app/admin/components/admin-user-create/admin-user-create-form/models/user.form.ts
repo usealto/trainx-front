@@ -5,7 +5,7 @@ export interface UserForm {
   lastname: string;
   username: string;
   email: string;
-  teamId: string;
+  teamId?: string;
   roles: Array<RoleEnumApi>;
   slackId: string;
 }

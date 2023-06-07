@@ -9,11 +9,10 @@ import {
   SlackTimeEnumApi,
   TeamDtoApi,
   WeekDayEnumApi,
-  RoleEnumApi,
 } from '@usealto/sdk-ts-angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { map, tap } from 'rxjs';
+import { take } from 'rxjs';
 import { AdminTabsComponent } from '../admin-shared/admin-tabs/admin-tabs.component';
 import { AdminUsersUploadFormComponent } from './admin-users-upload-form/admin-users-upload-form.component';
 @Component({
@@ -52,8 +51,10 @@ export class AdminCompaniesCreateComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id') || undefined;
     this.teamService
       .getTeams({ itemsPerPage: 1000 })
-      .pipe(tap((teams) => (this.teams = teams)))
-      .subscribe();
+      .pipe(take(1))
+      .subscribe((teams) => {
+        this.teams = teams;
+      });
     this.companyForm = this.fb.group<CompanyForm>({
       name: ['', [Validators.required]],
       domain: ['', []],
@@ -68,22 +69,20 @@ export class AdminCompaniesCreateComponent implements OnInit {
       this.edit = true;
       this.companiesRestService
         .getCompanyById(this.id)
-        .pipe(tap((company) => (this.company = company)))
-        .pipe(
-          tap(() => {
-            this.companyForm = this.fb.group<CompanyForm>({
-              domain: [this.company.domain || ''],
-              name: [this.company.name, [Validators.required]],
-              teams: [],
-              newTeams: this.fb.array([]),
-              slackDays: [this.company.slackDays],
-              slackQuestionsPerQuiz: [this.company.slackQuestionsPerQuiz],
-              slackActive: [this.company.isSlackActive],
-              slackAdmin: [this.company.slackAdmin, []],
-            });
-          }),
-        )
-        .subscribe();
+        .pipe(take(1))
+        .subscribe((company) => {
+          this.company = company;
+          this.companyForm = this.fb.group<CompanyForm>({
+            domain: [this.company.domain || ''],
+            name: [this.company.name, [Validators.required]],
+            teams: [],
+            newTeams: this.fb.array([]),
+            slackDays: [this.company.slackDays],
+            slackQuestionsPerQuiz: [this.company.slackQuestionsPerQuiz],
+            slackActive: [this.company.isSlackActive],
+            slackAdmin: [this.company.slackAdmin, []],
+          });
+        });
     }
   }
 
@@ -122,14 +121,10 @@ export class AdminCompaniesCreateComponent implements OnInit {
     this.newTeams.value.forEach((team: CreateTeamDtoApi) => {
       this.teamService
         .createTeam({ shortName: team.shortName, longName: team.longName, companyId: companyId })
-        .pipe(map((uploadedTeam) => uploadedTeam))
-        .subscribe(() => {
-          if (this.edit) {
-            this.router
-              .navigateByUrl('/', { skipLocationChange: true })
-              .then(() => this.router.navigate(['/admin/companies/', companyId]));
-          } else {
-            this.router.navigate(['/admin/companies/']);
+        .pipe(take(1))
+        .subscribe((uploadedTeam) => {
+          if (uploadedTeam) {
+            this.teams.push(uploadedTeam);
           }
         });
     });
@@ -139,7 +134,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
     if (!this.edit) {
       if (
         this.uploadFormComponent?.csvData?.length <= 0 ||
-        !this.uploadFormComponent?.csvData.some((user) => user.roles.includes('CompanyAdmin'))
+        !this.uploadFormComponent?.csvData.some((user) => user.roles.includes('company-admin'))
       ) {
         return true;
       }
@@ -184,6 +179,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
         .subscribe((company) => {
           this.uploadFormComponent.upload(company.data?.id);
           this.createTeams(company.data?.id);
+          this.router.navigate(['/admin/companies/']);
         });
     }
   }

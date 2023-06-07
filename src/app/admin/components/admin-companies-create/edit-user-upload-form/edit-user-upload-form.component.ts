@@ -12,7 +12,7 @@ import { UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 export class EditUserUploadFormComponent {
   @Input() user: any;
   private fb: IFormBuilder;
-  rolesPossibleValues = Object.keys(UserDtoApiRolesEnumApi);
+  rolesPossibleValues = Object.values(UserDtoApiRolesEnumApi);
   userForm!: IFormGroup<any>;
 
   constructor(public activeOffcanvas: NgbActiveOffcanvas, readonly fob: UntypedFormBuilder) {
