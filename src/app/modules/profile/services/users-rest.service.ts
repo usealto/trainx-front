@@ -27,7 +27,7 @@ export class UsersRestService {
     if (this.userStore.users.value.length) {
       return this.userStore.users.value$;
     } else {
-      return this.userApi.getUsers({}).pipe(
+      return this.userApi.getUsers({ page: 1, itemsPerPage: 1000 }).pipe(
         map((r) => r.data ?? []),
         tap((users) => (this.userStore.users.value = users)),
       );
