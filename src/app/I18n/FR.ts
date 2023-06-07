@@ -21,6 +21,12 @@ export const FR = {
     search: 'Rechercher',
     period: 'Période',
     soon: 'Bientôt',
+    tag: 'tag',
+    program: 'programme',
+    tags: 'tags',
+    programs: 'programmes',
+    teams: 'équipes',
+    members: 'membres',
     pagination: {
       on: 'sur',
     },
@@ -67,13 +73,13 @@ export const FR = {
     statistics: {
       title: 'Statistiques',
       globalScore: 'Score global',
-      globalScoreToolTip: 'Score moyen de toutes les questions répondues sur la période donnée',
+      globalScoreToolTip: 'Score moyen des questions répondues par vos membres',
       averageCompletion: 'Complétion moyenne',
-      averageCompletionToolTip: 'Nombre de programs réussis sur nombre de programmes assignés',
+      averageCompletionToolTip: 'Nombre de programmes réussis sur le nombre de programmes assignés',
       activeMembers: 'Membres réguliers',
-      activeMembersToolTip: 'Nombre de membres ayant interagi avec Alto sur une période donnée',
+      activeMembersToolTip: 'Nombre de membres ayant répondu à plus de 50% des questions envoyées',
       inactiveMembers: 'Membres irréguliers',
-      inactiveMembersToolTip: "Nombre de membres n'ayant pas interagi avec Alto sur une période donnée",
+      inactiveMembersToolTip: 'Nombre de membres ayant répondu à moins de 50% des questions envoyées',
     },
     graph: {
       period: 'Période',
@@ -82,6 +88,7 @@ export const FR = {
     globalEvolution: {
       title: 'Évolution globale',
       score: 'Score moyen',
+      chartToolTip: 'Évolution du score d’un {{}} en fonction du temps',
       tabs: {
         program: 'Programmes',
         tag: 'Tags',
@@ -90,6 +97,7 @@ export const FR = {
       },
       top: 'Top',
       flop: 'Flop',
+      topFlopTooltip: 'Classement des {{}} en fonction du score',
     },
     ongoingPrograms: {
       title: 'Programmes en cours',
@@ -131,6 +139,7 @@ export const FR = {
       progress: 'Avancement',
       progressToolTip: 'Nombre de questions répondues par tout les membres sur le nombre total de questions',
       score: 'Score',
+      scoreToolTip: 'Score moyen du programme',
       filters: {
         team: 'Équipe',
       },
@@ -183,11 +192,11 @@ export const FR = {
         subtitle: 'Renseignez les informations générales à propos de ce programme',
         name: 'Nom du programme',
         nameSubtitle: 'Visible par tout le monde',
-        namePlaceholder: 'Exemple : Onboarding',
+        namePlaceholder: 'Onboarding',
         description: 'Description',
         descriptionSubtitle: 'Ecrivez une brève description du contenu du programme',
         descriptionPlaceholder:
-          "Exemple : I'm a Product Designer based in Melbourne, Australia. I specialise in UX/UI design, brand strategy, and Webflow development.",
+          "Le programme d'onboarding vise à entraîner les nouveaux arrivants avec les notions fondamentales à connaître au sein de l'entreprise.",
         tags: 'Tags',
         tagsSubtitle: 'Les sujets abordés dans le programme',
         tagsPlaceholder: 'Rechercher dans vos tags',
@@ -291,6 +300,8 @@ export const FR = {
     },
     perTeams: {
       title: 'Par équipe',
+      globalTooltip:
+        'Pourcentage de questions justes sur le nombre de questions répondues et variation sur la période passée',
     },
   },
   questions: {
@@ -353,7 +364,9 @@ export const FR = {
       },
       statistics: {
         total: 'Total',
-        totalTooltip: "L'ensemble des membres de votre entreprise",
+        totalTooltip: 'Nombre total de membres qui vous sont affectés',
+        regularMembersTooltip: 'Nombre de membres ayant répondu à plus de 50% des questions envoyées',
+        iregularMembersTooltip: 'Nombre de membres ayant répondu à moins de 50% des questions envoyées',
         active: 'Membres réguliers',
         inactive: 'Membres irréguliers',
       },
@@ -362,6 +375,8 @@ export const FR = {
         team: 'Équipe',
         averageScore: 'Score moyen',
         questionsPerMonth: 'Questions sur 30j',
+        questionsPerMonthTooltip:
+          'Nombre de questions répondues sur les 30 derniers jours et variation sur la dernière période',
         active: 'Actif',
         inactive: 'Inactif',
       },
@@ -628,9 +643,9 @@ export const FR = {
       continueSessionSubtitle:
         'Entraînez vous chaque jour à votre rythme sur des questions issues de vos programmes.',
       continueSessionCounts: [
-        "personne ne s'est entrainé aujourd'hui",
-        "{{}} s'est entrainé aujourd'hui",
-        "{{}} se sont entrainés aujourd'hui",
+        "Personne ne s'est entrainé aujourd'hui",
+        "{{}} personne s'est entrainé aujourd'hui",
+        "{{}} personnes se sont entrainés aujourd'hui",
       ],
     },
   },

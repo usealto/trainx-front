@@ -1,12 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { combineLatest, tap } from 'rxjs';
-import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   AnswerFormatTypeEnumApi,
-  PatchQuestionDtoApi,
+  CreateQuestionDtoApi,
   PatchQuestionRequestParams,
   PatchQuestionSubmittedDtoApiStatusEnumApi,
   ProgramApi,
@@ -16,13 +14,14 @@ import {
   TagApi,
   TagDtoApi,
 } from '@usealto/sdk-ts-angular';
+import { combineLatest, tap } from 'rxjs';
+import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { QuestionForm } from '../../../models/question.form';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
 import { QuestionsRestService } from '../../../services/questions-rest.service';
-import { TagsRestService } from '../../../services/tags-rest.service';
 import { QuestionsSubmittedRestService } from '../../../services/questions-submitted-rest.service';
-
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TagsRestService } from '../../../services/tags-rest.service';
 
 @UntilDestroy()
 @Component({
@@ -123,39 +122,21 @@ export class QuestionFormComponent implements OnInit {
       link,
     } = this.questionForm.value;
 
-    if (!this.isEdit && !this.question) {
+    const params: CreateQuestionDtoApi = {
+      title,
+      type,
+      tags: tags.map((id) => ({ id } as TagApi)),
+      programs: programs ? programs.map((id) => ({ id } as ProgramApi)) : [],
+      answerType,
+      answersAccepted: [answersAccepted],
+      answersWrong: [answersWrong1, answersWrong2, answersWrong3].filter((a) => !!a),
+      explanation,
+      link,
+    };
+
+    if ((!this.isEdit && !this.question) || this.isSubmitted) {
       this.questionService
-        .createQuestion({
-          title,
-          type,
-          tags: tags.map((id) => ({ id } as TagApi)),
-          programs: programs.map((id) => ({ id } as ProgramApi)),
-          answerType,
-          answersAccepted: [answersAccepted],
-          answersWrong: [answersWrong1, answersWrong2, answersWrong3].filter((a) => !!a),
-          explanation,
-          link,
-        })
-        .pipe(
-          tap((question) => this.createdQuestion.emit(question)),
-          tap(() => this.activeOffcanvas.dismiss()),
-          untilDestroyed(this),
-        )
-        .subscribe();
-    } else {
-      const params: PatchQuestionDtoApi = {
-        title: title,
-        type: type,
-        tags: tags.map((id) => ({ id } as TagApi)),
-        programs: programs.map((id) => ({ id } as ProgramApi)),
-        answerType: answerType,
-        answersAccepted: [answersAccepted],
-        answersWrong: [answersWrong1, answersWrong2, answersWrong3].filter((a) => !!a),
-        explanation,
-        link,
-      };
-      this.questionService
-        .updateQuestion({ id: this.question?.id, patchQuestionDtoApi: params } as PatchQuestionRequestParams)
+        .createQuestion(params)
         .pipe(
           tap((question) => this.createdQuestion.emit(question)),
           tap(() => {
@@ -163,6 +144,15 @@ export class QuestionFormComponent implements OnInit {
               this.changeStatus(PatchQuestionSubmittedDtoApiStatusEnumApi.Accepted);
             }
           }),
+          tap(() => this.activeOffcanvas.dismiss()),
+          untilDestroyed(this),
+        )
+        .subscribe();
+    } else {
+      this.questionService
+        .updateQuestion({ id: this.question?.id, patchQuestionDtoApi: params } as PatchQuestionRequestParams)
+        .pipe(
+          tap((question) => this.createdQuestion.emit(question)),
           tap(() => this.activeOffcanvas.dismiss()),
           untilDestroyed(this),
         )

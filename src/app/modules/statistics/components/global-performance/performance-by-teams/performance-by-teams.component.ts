@@ -77,6 +77,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
+    scores = this.scoresServices.reduceChartData(scores);
     const aggregateData = this.statisticsServices.aggregateDataForScores(scores[0], duration);
     const labels = this.statisticsServices.formatLabel(
       aggregateData.map((d) => d.x),

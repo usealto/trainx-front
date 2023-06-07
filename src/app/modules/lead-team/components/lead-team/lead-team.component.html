@@ -62,7 +62,7 @@
               {{ team.createdAt | date : 'shortDate' }}
             </td>
             <td>
-              <i class="fs-5 bi bi-pencil cursor-pointer" (click)="openTeamForm(team)"></i>
+              <i class="fs-5 bi bi-pencil cursor-pointer float-end me-4" (click)="openTeamForm(team)"></i>
             </td>
           </tr>
         </tbody>
@@ -113,7 +113,7 @@
         <i
           class="alto-grey bi bi-question-circle float-end"
           placement="top"
-          ngbTooltip="{{ I18ns.leadHome.statistics.activeMembersToolTip }}"
+          ngbTooltip="{{ I18ns.leadTeam.members.statistics.regularMembersTooltip }}"
         ></i>
         <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.active }}</p>
         <h1>{{ activeUsersCount }}</h1>
@@ -124,7 +124,7 @@
         <i
           class="alto-grey bi bi-question-circle float-end"
           placement="top"
-          ngbTooltip="{{ I18ns.leadHome.statistics.inactiveMembersToolTip }}"
+          ngbTooltip="{{ I18ns.leadTeam.members.statistics.iregularMembersTooltip }}"
           placement="start"
         ></i>
         <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.inactive }}</p>
@@ -166,7 +166,14 @@
             <th scope="col" class="w-35">{{ I18ns.leadTeam.members.table.name }}</th>
             <th scope="col" class="w-5">{{ I18ns.leadTeam.members.table.team }}</th>
             <th scope="col">{{ I18ns.leadTeam.members.table.averageScore }}</th>
-            <th scope="col" class="text-center w-20">{{ I18ns.leadTeam.members.table.questionsPerMonth }}</th>
+            <th scope="col" class="text-center w-20">
+              {{ I18ns.leadTeam.members.table.questionsPerMonth }}
+              <i
+                class="ms-2 alto-grey bi bi-question-circle"
+                placement="top"
+                ngbTooltip="{{ I18ns.leadTeam.members.table.questionsPerMonthTooltip }}"
+              ></i>
+            </th>
             <th class="w-5"></th>
           </tr>
         </thead>
@@ -199,7 +206,10 @@
               ></alto-progression-badge>
             </td>
             <td>
-              <i class="fs-5 bi bi-pencil cursor-pointer" (click)="openUserEditionForm(user)"></i>
+              <i
+                class="fs-5 bi bi-pencil cursor-pointer float-end me-4"
+                (click)="openUserEditionForm(user)"
+              ></i>
             </td>
           </tr>
         </tbody>

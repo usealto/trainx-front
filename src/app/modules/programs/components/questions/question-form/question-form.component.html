@@ -68,10 +68,9 @@
       placeholder="{{ I18ns.questions.form.answerPlaceholder + ' 3' }}"
     />
 
-    <label class="form-label required mt-3">{{ I18ns.questions.form.programs }}</label>
+    <label class="form-label mt-3">{{ I18ns.questions.form.programs }}</label>
     <ng-select
       class="alto-form"
-      required
       [items]="programs"
       [multiple]="true"
       bindLabel="name"

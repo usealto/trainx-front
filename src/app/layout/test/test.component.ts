@@ -7,6 +7,7 @@ import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -16,6 +17,7 @@ import { environment } from 'src/environments/environment';
 })
 export class TestComponent {
   I18ns = I18ns;
+  AltoRoutes = AltoRoutes;
   isDev = !environment.production;
   ChallengeDtoApiStatusEnumApi = ChallengeDtoApiStatusEnumApi;
 

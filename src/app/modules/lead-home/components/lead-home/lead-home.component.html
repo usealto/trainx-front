@@ -170,6 +170,15 @@
   <!-- CHARTS -->
   <div class="col-6">
     <div class="panel h-100">
+      <i
+        class="fs-5 alto-grey bi bi-question-circle float-end"
+        placement="top"
+        ngbTooltip="{{
+          I18ns.leadHome.globalEvolution.chartToolTip
+            | replaceInTranslation
+              : (chartFilters.type === 'program' ? I18ns.shared.program : I18ns.shared.tag)
+        }}"
+      ></i>
       <alto-tabs
         class="mb-3"
         *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
@@ -193,6 +202,16 @@
   <div class="col-6 top-flop">
     <!-- PROGRAMS & TAGS -->
     <div class="panel mb-4">
+      <i
+        class="fs-5 alto-grey bi bi-question-circle float-end"
+        placement="top"
+        ngbTooltip="{{
+          I18ns.leadHome.globalEvolution.topFlopTooltip
+            | replaceInTranslation
+              : (topFlopProgramTab === 'program' ? I18ns.shared.programs : I18ns.shared.tags)
+        }}"
+        placement="start"
+      ></i>
       <alto-tabs
         class="mb-4"
         *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
@@ -203,44 +222,45 @@
         ]"
       ></alto-tabs>
       <div class="row">
-        <ng-container
-          *ngIf="
-            topFlopData?.programs?.top?.length || topFlopData?.programs?.flop?.length;
-            else tfProgramTemplate
-          "
-        >
-          <div class="col-6 border-end pe-0">
-            <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
-            <div class="height-100">
+        <div class="col-6 border-end pe-0">
+          <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
+          <div class="height-100">
+            <ng-container *ngIf="topFlopData?.programs?.top?.length; else tfProgramTemplate">
               <p *ngFor="let item of topFlopData?.programs?.top | slice : 0 : 3" class="mb-3">
                 <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
                 <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
-            </div>
+            </ng-container>
           </div>
-          <div class="col-6 ps-4 pe-0">
-            <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
-            <div class="height-100">
+        </div>
+        <div class="col-6 ps-4 pe-0">
+          <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
+          <div class="height-100">
+            <ng-container *ngIf="topFlopData?.programs?.flop?.length; else tfProgramTemplate">
               <p *ngFor="let item of topFlopData?.programs?.flop | slice : 0 : 3" class="mb-3">
                 <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
                 <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
-            </div>
+            </ng-container>
           </div>
-        </ng-container>
-        <ng-template #tfProgramTemplate>
-          <div class="text-center py-3">
-            {{ I18ns.shared.noData }}
-          </div>
-        </ng-template>
+        </div>
       </div>
     </div>
     <!-- TEAMS & USERS -->
     <div class="panel">
+      <i
+        class="fs-5 alto-grey bi bi-question-circle float-end"
+        placement="top"
+        ngbTooltip="{{
+          I18ns.leadHome.globalEvolution.topFlopTooltip
+            | replaceInTranslation : (topFlopTeamTab === 'team' ? I18ns.shared.teams : I18ns.shared.members)
+        }}"
+        placement="start"
+      ></i>
       <alto-tabs
         class="mb-4"
         *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
@@ -251,33 +271,33 @@
         ]"
       ></alto-tabs>
       <div class="row">
-        <ng-container
-          *ngIf="topFlopData?.teams?.top?.length || topFlopData?.teams?.flop?.length; else tfProgramTemplate2"
-        >
-          <div class="col-6 border-end pe-0">
-            <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
-            <div class="height-100">
+        <div class="col-6 border-end pe-0">
+          <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
+          <div class="height-100">
+            <ng-container *ngIf="topFlopData?.teams?.top?.length; else tfProgramTemplate">
               <p *ngFor="let item of topFlopData?.teams?.top | slice : 0 : 3" class="mb-3">
                 <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
                 <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
-            </div>
+            </ng-container>
           </div>
-          <div class="col-6 ps-4 pe-0">
-            <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
-            <div class="height-100">
+        </div>
+        <div class="col-6 ps-4 pe-0">
+          <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
+          <div class="height-100">
+            <ng-container *ngIf="topFlopData?.teams?.flop?.length; else tfProgramTemplate">
               <p *ngFor="let item of topFlopData?.teams?.flop" class="mb-3">
                 <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
                 <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
                   {{ item.avg | percent }}
                 </span>
               </p>
-            </div>
+            </ng-container>
           </div>
-        </ng-container>
-        <ng-template #tfProgramTemplate2>
+        </div>
+        <ng-template #tfProgramTemplate>
           <div class="text-center py-3">
             {{ I18ns.shared.noData }}
           </div>
@@ -393,9 +413,7 @@
             >
               <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
               <td>
-                <alto-img-badge
-                  [user]="getUser(chal.createdBy) | async"
-                ></alto-img-badge>
+                <alto-img-badge [user]="getUser(chal.createdBy) | async"></alto-img-badge>
               </td>
               <td>
                 <alto-colored-pill-list

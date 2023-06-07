@@ -13,14 +13,14 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-3">
+  <div class="col-4">
     <div class="panel highlighted-panel pe-auto" [routerLink]="['/', AltoRoutes.user, AltoRoutes.training]">
       <div class="calendar d-flex justify-content-center align-middle">
         <i class="my-auto fs-2 text-primary bi bi-calendar"></i>
       </div>
       <h2 class="mt-4">{{ I18ns.userHome.programsRun.continueSession }}</h2>
       <p class="alto-grey mb-4">{{ I18ns.userHome.programsRun.continueSessionSubtitle }}</p>
-      <p class="text-end alto-light-grey">
+      <p class="text-end alto-light-grey fs-7">
         {{ I18ns.userHome.programsRun.continueSessionCounts | plural : guessesCount }}
       </p>
     </div>

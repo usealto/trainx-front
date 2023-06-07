@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { addDays, addHours, startOfDay } from 'date-fns';
-import { ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
-import { ScoreDuration, ScoreFilter } from '../models/score.model';
+import { ScoreDtoApi, ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
+import { ScoreDuration, ScoreFilter, TopFlopDisplay } from '../models/score.model';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @Injectable({
@@ -106,6 +106,37 @@ export class ScoresService {
       default:
         return ScoreTimeframeEnumApi.Week;
     }
+  }
+
+  reduceChartData(scores: ScoreDtoApi[]): ScoreDtoApi[] {
+    if (scores.length === 0) {
+      return [];
+    }
+
+    let firstIndex = scores[0].dates.length;
+    scores.forEach((s) => {
+      s.averages.forEach((a, i) => {
+        if (a && i < firstIndex) {
+          firstIndex = i;
+        }
+      });
+    });
+
+    scores.forEach((s) => {
+      s.averages = s.averages.slice(firstIndex, s.averages.length);
+      s.counts = s.counts.slice(firstIndex, s.counts.length);
+      s.dates = s.dates.slice(firstIndex, s.dates.length);
+      s.valids = s.valids.slice(firstIndex, s.valids.length);
+    });
+    return scores;
+  }
+
+  getTop(data: TopFlopDisplay[]) {
+    return data.filter(({ avg }) => !!avg && avg >= 0.5).sort((a, b) => (a.avg < b.avg ? 1 : -1));
+  }
+
+  getFlop(data: TopFlopDisplay[]) {
+    return data.filter(({ avg }) => !!avg && avg < 0.5).sort((a, b) => (a.avg > b.avg ? 1 : -1));
   }
 
   /**

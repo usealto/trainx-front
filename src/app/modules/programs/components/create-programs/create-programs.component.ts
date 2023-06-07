@@ -123,11 +123,12 @@ export class CreateProgramsComponent implements OnInit {
     }
   }
 
-  openQuestionForm() {
+  openQuestionForm(question?: QuestionDisplay) {
     const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
     });
+    canvasRef.componentInstance.question = this.questions.find((q) => q.id === question?.id);
     canvasRef.componentInstance.program = this.isEdit ? this.editedProgram : this.createdProgram;
     canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
   }

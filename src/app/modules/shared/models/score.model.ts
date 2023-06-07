@@ -25,3 +25,13 @@ export enum ScoreFilter {
   Over50 = '> 50%',
   Over75 = '> 75%',
 }
+
+export interface TopFlop {
+  top: TopFlopDisplay[];
+  flop: TopFlopDisplay[];
+}
+
+export interface TopFlopDisplay {
+  label: string;
+  avg: number;
+}
