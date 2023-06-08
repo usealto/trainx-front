@@ -1,0 +1,24 @@
+<div class="panel highlighted-panel pe-auto">
+  <ng-container *ngIf="isProgress; else notProgressTemplate">
+    <div class="round-progress-bar progress mb-4"></div>
+  </ng-container>
+  <ng-template #notProgressTemplate>
+    <div class="round-progress-bar score mb-4" [ngClass]="getScoreClass(score)">{{ score }}%</div>
+  </ng-template>
+
+  <div class="mb-3">
+    <ng-container *ngIf="duration">
+      <i class="bi bi-clock me-3"></i>{{ getFormatedDuration(duration) }}
+    </ng-container>
+    &nbsp;
+  </div>
+  <h2 class="text-truncate" [title]="title">{{ title }}</h2>
+  <hr />
+
+  <div class="user-container">
+    <alto-img-badge-list *ngIf="users.length > 0" [users]="users" class="align-middle"></alto-img-badge-list>
+    <span class="fs-7" [ngClass]="{ 'ms-4': users.length > 0 }">
+      {{ I18ns.shared.imageBadge.userFinished | plural : users.length }}
+    </span>
+  </div>
+</div>

@@ -120,7 +120,7 @@ export class ProgramsComponent implements OnInit {
     });
 
     canvasRef.componentInstance.tag = tag;
-    canvasRef.componentInstance.createdTag.pipe(tap(() => this.getTags()));
+    canvasRef.componentInstance.createdTag.pipe(tap(() => this.getTags())).subscribe();
   }
 
   getQuestions(

@@ -93,25 +93,36 @@ export class ProgramCardListComponent implements OnInit {
           // * INVOLVEMENT
 
           const prNumbers = new Map<string, number>();
-
+          const prCreatedBy: string[][] = [];
+          // Count Program Runs for each program and check for duplicates (only ONE program run by user)
           data?.forEach((pr) => {
-            prNumbers.set(pr.programId, (prNumbers.get(pr.programId) || 0) + 1);
-          });
-          const programTeams = new Map<string, string[]>();
-
-          programs?.forEach((p) => {
-            if (prNumbers.has(p.id)) {
-              programTeams.set(p.id, [...(programTeams.get(p.id) ?? []), ...p.teams.map((t) => t.id)]);
+            if (prCreatedBy.every((x) => x[0] !== pr.id && x[1] !== pr.createdBy)) {
+              prNumbers.set(pr.programId, (prNumbers.get(pr.programId) || 0) + 1);
+              prCreatedBy.push([pr.id, pr.createdBy]);
             }
           });
 
-          programTeams.forEach((val: string[], key: string) => {
+          const programUsers = new Map<string, string[]>();
+          // Gets every users assigned to one program
+          programs?.forEach((p) => {
+            if (prNumbers.has(p.id)) {
+              const users = this.userStore.users.value
+                .filter((u) => u.teamId && p.teams.map((t) => t.id).includes(u.teamId))
+                .map((u) => u.id);
+              programUsers.set(p.id, users);
+            }
+          });
+
+          programUsers.forEach((userIds: string[], key: string) => {
             if (prNumbers.has(key) && !this.programsInvolvement.has(key)) {
-              this.programsInvolvement.set(
-                key,
-                (prNumbers.get(key) || 0) /
-                  (this.userStore.users.value.filter((u) => u.teamId && val.includes(u.teamId)).length || 1),
-              );
+              // Count the number of program runs, making sure the user is still in the team
+              const count = prCreatedBy.reduce((result, element) => {
+                if (!userIds.find((u) => u === element[1])) {
+                  return result;
+                }
+                return result + 1;
+              }, 0);
+              this.programsInvolvement.set(key, count / (userIds.length || 1));
             }
           });
 

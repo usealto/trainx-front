@@ -24,6 +24,7 @@ export const AltoRoutes = {
   userTeams: 'teams',
 
   training: 'training',
+  trainingSession: 'session',
 
   noAccess: 'no_access',
   notFound: '404',

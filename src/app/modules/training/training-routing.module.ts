@@ -7,6 +7,14 @@ const routes: Routes = [
     path: '',
     component: TrainingComponent,
   },
+  // {
+  //   path: '',
+  //   component: TrainingHomeComponent,
+  // },
+  // {
+  //   path: AltoRoutes.trainingSession,
+  //   component: TrainingComponent,
+  // },
 ];
 
 @NgModule({

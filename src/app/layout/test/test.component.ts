@@ -5,6 +5,7 @@ import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
@@ -26,10 +27,10 @@ export class TestComponent {
     public readonly teamStore: TeamStore,
     public readonly userStore: ProfileStore,
     public readonly programStore: ProgramsStore,
-    private readonly http: HttpClient,
     programRestService: ProgramsRestService,
+    userRestService: UsersRestService,
   ) {
     programRestService.getPrograms().subscribe();
-    this.http.get('https://api-test-develop.usealto.com/v1/users').pipe(tap(console.log)).subscribe();
+    userRestService.getUsers().subscribe();
   }
 }

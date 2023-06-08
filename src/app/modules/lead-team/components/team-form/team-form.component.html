@@ -3,8 +3,8 @@
 </div>
 <div class="p-4">
   <h2>
-    <img src="../assets/img/create-team-icon.svg" alt="Team Icon">
-    {{ isEdit ? I18ns.leadTeam.teams.form.title.edit : I18ns.leadTeam.teams.form.title.create }} 
+    <img src="../assets/img/create-team-icon.svg" alt="Team Icon" />
+    {{ isEdit ? I18ns.leadTeam.teams.form.title.edit : I18ns.leadTeam.teams.form.title.create }}
   </h2>
   <p class="fs-7">{{ I18ns.leadTeam.teams.form.subtitle }}</p>
 </div>
@@ -28,7 +28,7 @@
     />
     <p>{{ I18ns.leadTeam.teams.form.shortNameExemple }}</p>
 
-    <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.invitationEmails }}</label>
+    <!-- <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.invitationEmails }}</label>
     <ng-select class="alto-form"
       [items]="users"
       [multiple]="true"
@@ -39,12 +39,13 @@
       formControlName="invitationEmails"
     >
     </ng-select>
-    <p>{{ I18ns.leadTeam.teams.form.invitationEmailsSubtitle }}</p>
+    <p>{{ I18ns.leadTeam.teams.form.invitationEmailsSubtitle }}</p> -->
 
     <label class="mt-4 form-label"
       >{{ I18ns.leadTeam.teams.form.Programs }} {{ I18ns.shared.optional }}</label
     >
-    <ng-select class="alto-form"
+    <ng-select
+      class="alto-form"
       [items]="programs"
       [multiple]="true"
       bindLabel="name"

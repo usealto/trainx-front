@@ -45,10 +45,20 @@ export class TagsRestService {
   }
 
   createTag(createTagDtoApi: CreateTagDtoApi): Observable<TagDtoApi | undefined> {
-    return this.tagApi.createTag({ createTagDtoApi }).pipe(map((r) => r.data));
+    return this.tagApi.createTag({ createTagDtoApi }).pipe(
+      map((r) => r.data),
+      tap(() => {
+        this.programStore.tags.value = [];
+      }),
+    );
   }
 
   updateTag(patchTagRequestParams: PatchTagRequestParams): Observable<TagDtoApi | undefined> {
-    return this.tagApi.patchTag(patchTagRequestParams).pipe(map((r) => r.data));
+    return this.tagApi.patchTag(patchTagRequestParams).pipe(
+      map((r) => r.data),
+      tap(() => {
+        this.programStore.tags.value = [];
+      }),
+    );
   }
 }

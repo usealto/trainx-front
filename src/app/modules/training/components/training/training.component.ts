@@ -44,6 +44,7 @@ export class TrainingComponent implements OnInit {
   displayedQuestion!: QuestionApi;
   isQuestionsLoading = true;
   currentAnswers: AnswerCard[] = [];
+  iDontKnow = false;
   isTimedOut = false;
 
   constructor(
@@ -85,11 +86,22 @@ export class TrainingComponent implements OnInit {
     }
   }
 
-  selectAnswer(answer: string) {
+  uncheck(checked: boolean) {
+    this.iDontKnow = checked;
     this.currentAnswers.forEach((a) => {
       a.selected = false;
       a.type = '';
     });
+  }
+
+  selectAnswer(answer: string) {
+    this.iDontKnow = false;
+    if (this.displayedQuestion.answersAccepted.length < 2) {
+      this.currentAnswers.forEach((a) => {
+        a.selected = false;
+        a.type = '';
+      });
+    }
     const card = this.currentAnswers.find((a) => a.answer === answer);
     if (card) {
       card.selected = !card.selected;
@@ -100,18 +112,22 @@ export class TrainingComponent implements OnInit {
   submitAnswer() {
     this.stopTimer();
     let result = 'wrong';
-    this.currentAnswers.forEach((a) => {
-      if (a.selected) {
-        if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
-          result = 'correct';
-          a.type = 'correct';
-        } else {
-          a.type = 'wrong';
-        }
+    let countGoodAnswers = 0;
+
+    this.currentAnswers.map((a) => {
+      if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
+        a.type = 'correct';
       } else {
-        if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
-          a.type = 'correct';
-        }
+        if (a.selected && !this.displayedQuestion.answersAccepted.includes(a.answer)) a.type = 'wrong';
+      }
+      if (a.selected && a.type === 'correct') {
+        countGoodAnswers++;
+      }
+      if (countGoodAnswers === this.displayedQuestion.answersAccepted.length) {
+        result = 'correct';
+      }
+      if (this.iDontKnow) {
+        result = 'wrong';
       }
     });
     this.openCanvas(result);
@@ -146,10 +162,11 @@ export class TrainingComponent implements OnInit {
         answers: selectedAnswers.length > 0 ? selectedAnswers : undefined,
         source: GuessSourceEnumApi.Web,
         isTimedOut: this.isTimedOut,
-        isUnknownSelected: selectedAnswers.length === 0,
+        isUnknownSelected: this.iDontKnow,
       })
       .pipe(
         tap(() => {
+          this.iDontKnow = false;
           this.getNextQuestion();
         }),
       )

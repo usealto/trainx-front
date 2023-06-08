@@ -64,12 +64,21 @@
     ></alto-img-badge>
     <br />
     <br />
+    <alto-img-badge-list [users]="userStore.users.value" [limit]="10"></alto-img-badge-list>
+
+    <br />
+    <br />
 
     <alto-profile-card [user]="userStore.user.value"></alto-profile-card>
     <br />
     <br />
+    <alto-training-card></alto-training-card>
+
+    <br />
+    <br />
 
     <alto-program-card [displayToggle]="true" [program]="programStore.programs.value[0]"></alto-program-card>
+    <br />
     <br />
     <alto-progression-badge class="me-2"></alto-progression-badge> rien
     <alto-progression-badge class="me-2" [score]="0"></alto-progression-badge>
@@ -92,6 +101,17 @@
   </div>
   <!--  COL 2 -->
   <div class="col-6">
+    Auto resized TextArea
+    <br />
+
+    <textarea
+      class="form-control"
+      placeholder="{{ I18ns.questions.form.namePlaceholder }}"
+      altoAutoResizeTextarea
+    ></textarea>
+    <br />
+    <br />
+
     <button class="btn btn-outline-secondary">
       {{ I18ns.shared.cancel }}
     </button>

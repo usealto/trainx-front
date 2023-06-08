@@ -8,4 +8,9 @@ import { Component, Input } from '@angular/core';
 export class AnswerCardComponent {
   @Input() answer!: string;
   @Input() type = 'empty';
+  @Input() goodAnswers!: Array<any>;
+
+  countCorrectAnswers() {
+    return this.goodAnswers.length;
+  }
 }

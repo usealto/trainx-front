@@ -1,0 +1,19 @@
+:host {
+  display: inline-block;
+  height: 1.714rem;
+}
+.empty-badge {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-color: #f1f1f1;
+  border-radius: 50%;
+  font-size: 0.786rem;
+  border: solid white 2px;
+  vertical-align: top;
+  line-height: 1.5rem;
+  text-align: center;
+}
+alto-img-badge {
+  margin-right: -0.4rem;
+}
