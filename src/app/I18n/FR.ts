@@ -693,6 +693,8 @@ export const FR = {
       selectOneAnswer: 'Sélectionnez la bonne réponse',
       submit: 'Valider',
       saveAndQuit: 'Enregistrer et quitter',
+      dontknow: 'Je ne sais pas',
+
       canva: {
         goodAnswer: 'Bonne réponse !',
         badAnswer: 'Mauvaise réponse !',

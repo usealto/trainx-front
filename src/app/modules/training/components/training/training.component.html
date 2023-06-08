@@ -16,7 +16,19 @@
       [answer]="ans.answer"
       [type]="ans.type"
       (click)="selectAnswer(ans.answer)"
-    ></alto-answer-card>
+    >
+    </alto-answer-card>
+    <div class="d-flex justify-content-center">
+      <input
+        class="me-2"
+        type="radio"
+        id="dontknowinput"
+        (click)="uncheck(idontknowradio.checked)"
+        #idontknowradio
+        [checked]="idontknow"
+      />
+      <label for="dontknowinput">{{ I18ns.training.quizz.dontknow }}</label>
+    </div>
   </div>
 </div>
 <div class="d-flex flex-nowrap justify-content-between footer">
@@ -29,6 +41,7 @@
     <i class="bi bi-save me-2"></i>
     {{ I18ns.training.quizz.saveAndQuit }}</a
   >
+
   <button class="btn btn-primary" (click)="submitAnswer()">
     {{ I18ns.training.quizz.submit }}
     <i class="bi bi-arrow-right-short"></i>
