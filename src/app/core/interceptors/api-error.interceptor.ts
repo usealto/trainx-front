@@ -8,7 +8,7 @@ import {
 import { Injectable } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { MsgService } from '../message/msg.service';
 import { ApiError } from '../models/api-error';
@@ -54,7 +54,8 @@ export class ApiErrorInterceptor implements HttpInterceptor {
               break;
             case 400: // bad request
               apiError = {
-                message: e.error.title ?? e.error.message[0],
+                message:
+                  e.error.title ?? Array.isArray(e.error.message) ? e.error.message[0] : e.error.message,
                 title: this.translationsMessages.BadParameters.title,
                 details: e.error.detail,
                 level: 'error',

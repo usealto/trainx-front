@@ -3,8 +3,14 @@
   <span class="fw-bold">{{ displayTime + ' ' + I18ns.training.quizz.secondsRemaining }}</span>
 </div>
 
-<div *ngIf="!isQuestionsLoading" class="mt-4">
-  <h2 class="alto-grey">{{ I18ns.training.quizz.selectOneAnswer }}</h2>
+<div *ngIf="!isQuestionsLoading" class="mt-4 text-center">
+  <h2 class="alto-grey">
+    {{
+      displayedQuestion.answersAccepted.length > 1
+        ? I18ns.training.quizz.selectAllAnswers
+        : I18ns.training.quizz.selectOneAnswer
+    }}
+  </h2>
   <h1>{{ displayedQuestion.title }}</h1>
 </div>
 <div *ngIf="!isQuestionsLoading" class="mt-4">
@@ -20,14 +26,14 @@
     </alto-answer-card>
     <div class="d-flex justify-content-center">
       <input
-        class="me-2"
+        class="me-2 cursor-pointer"
         type="radio"
         id="dontknowinput"
         (click)="uncheck(idontknowradio.checked)"
         #idontknowradio
-        [checked]="idontknow"
+        [checked]="iDontKnow"
       />
-      <label for="dontknowinput">{{ I18ns.training.quizz.dontknow }}</label>
+      <label class="cursor-pointer" for="dontknowinput">{{ I18ns.training.quizz.dontknow }}</label>
     </div>
   </div>
 </div>

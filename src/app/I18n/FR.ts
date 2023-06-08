@@ -691,6 +691,7 @@ export const FR = {
     quizz: {
       secondsRemaining: 'secondes restantes',
       selectOneAnswer: 'Sélectionnez la bonne réponse',
+      selectAllAnswers: 'Sélectionnez toutes les bonnes réponses',
       submit: 'Valider',
       saveAndQuit: 'Enregistrer et quitter',
       dontknow: 'Je ne sais pas',

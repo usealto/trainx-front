@@ -44,8 +44,7 @@ export class TrainingComponent implements OnInit {
   displayedQuestion!: QuestionApi;
   isQuestionsLoading = true;
   currentAnswers: AnswerCard[] = [];
-  checked = true;
-  idontknow = false;
+  iDontKnow = false;
   isTimedOut = false;
 
   constructor(
@@ -88,7 +87,7 @@ export class TrainingComponent implements OnInit {
   }
 
   uncheck(checked: boolean) {
-    this.idontknow = checked;
+    this.iDontKnow = checked;
     this.currentAnswers.forEach((a) => {
       a.selected = false;
       a.type = '';
@@ -96,7 +95,7 @@ export class TrainingComponent implements OnInit {
   }
 
   selectAnswer(answer: string) {
-    this.idontknow = false;
+    this.iDontKnow = false;
     if (this.displayedQuestion.answersAccepted.length < 2) {
       this.currentAnswers.forEach((a) => {
         a.selected = false;
@@ -127,7 +126,7 @@ export class TrainingComponent implements OnInit {
       if (countGoodAnswers === this.displayedQuestion.answersAccepted.length) {
         result = 'correct';
       }
-      if (this.idontknow) {
+      if (this.iDontKnow) {
         result = 'wrong';
       }
     });
@@ -163,10 +162,11 @@ export class TrainingComponent implements OnInit {
         answers: selectedAnswers.length > 0 ? selectedAnswers : undefined,
         source: GuessSourceEnumApi.Web,
         isTimedOut: this.isTimedOut,
-        isUnknownSelected: this.idontknow,
+        isUnknownSelected: this.iDontKnow,
       })
       .pipe(
         tap(() => {
+          this.iDontKnow = false;
           this.getNextQuestion();
         }),
       )
