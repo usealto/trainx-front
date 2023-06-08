@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
-import { appResolver, programResolver, trainingResolver } from './app.resolver';
+import { appResolver, leadResolver, programResolver, trainingResolver } from './app.resolver';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
@@ -47,6 +47,9 @@ const routes: Routes = [
       {
         path: AltoRoutes.lead,
         canActivate: [canActivateLead],
+        resolve: {
+          appData: leadResolver,
+        },
         children: [
           {
             path: AltoRoutes.leadHome,
