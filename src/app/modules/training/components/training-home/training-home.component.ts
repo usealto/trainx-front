@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { GetProgramRunsRequestParams, UserDtoApi } from '@usealto/sdk-ts-angular';
-import { combineLatest, map, reduce, switchMap, tap } from 'rxjs';
+import { combineLatest, map, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { TrainingCardData } from '../../models/training.model';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 
 @Component({
   selector: 'alto-training-home',

@@ -15,6 +15,10 @@
   <h2 class="text-truncate" [title]="title">{{ title }}</h2>
   <hr />
 
-  <alto-img-badge-list *ngIf="users.length > 0" [users]="users" class="align-middle"></alto-img-badge-list>
-  <span class="fs-7 ms-4">{{ I18ns.shared.imageBadge.userFinished | plural : users.length }} </span>
+  <div class="user-container">
+    <alto-img-badge-list *ngIf="users.length > 0" [users]="users" class="align-middle"></alto-img-badge-list>
+    <span class="fs-7" [ngClass]="{ 'ms-4': users.length > 0 }">
+      {{ I18ns.shared.imageBadge.userFinished | plural : users.length }}
+    </span>
+  </div>
 </div>
