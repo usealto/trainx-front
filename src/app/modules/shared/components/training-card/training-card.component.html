@@ -1,15 +1,20 @@
 <div class="panel highlighted-panel pe-auto">
-  <ng-container *ngIf="isProgress; else elseTemplate">
+  <ng-container *ngIf="isProgress; else notProgressTemplate">
     <div class="round-progress-bar progress mb-4"></div>
   </ng-container>
-  <ng-template #elseTemplate>
+  <ng-template #notProgressTemplate>
     <div class="round-progress-bar score mb-4" [ngClass]="getScoreClass(score)">{{ score }}%</div>
   </ng-template>
 
   <div class="mb-3">
+    <ng-container *ngIf="duration">
+      <i class="bi bi-clock me-3"></i>{{ getFormatedDuration(duration) }}
+    </ng-container>
     &nbsp;
-    <ng-container *ngIf="duration"> <i class="bi bi-clock me-3"></i>{{ duration }} minutes </ng-container>
   </div>
   <h2 class="text-truncate" [title]="title">{{ title }}</h2>
   <hr />
+
+  <alto-img-badge-list *ngIf="users.length > 0" [users]="users" class="align-middle"></alto-img-badge-list>
+  <span class="fs-7 ms-4">{{ I18ns.shared.imageBadge.userFinished | plural : users.length }} </span>
 </div>

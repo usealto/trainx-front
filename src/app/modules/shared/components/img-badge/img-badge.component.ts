@@ -11,6 +11,7 @@ export class ImgBadgeComponent implements OnChanges {
   @Input() user: UserDtoApi | null | undefined;
   @Input() url: string | null | undefined = '';
   @Input() size = 32;
+  @Input() hasBorder = false;
 
   thumb = '';
 

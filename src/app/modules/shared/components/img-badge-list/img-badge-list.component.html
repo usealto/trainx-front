@@ -1,0 +1,11 @@
+<alto-img-badge
+  class="d-inline-block"
+  *ngFor="let us of users | slice : 0 : limit"
+  [size]="24"
+  [user]="us"
+  [hasBorder]="true"
+></alto-img-badge>
+
+<ng-container *ngIf="users.length > limit">
+  <div class="empty-badge">+{{ users.length - limit }}</div>
+</ng-container>

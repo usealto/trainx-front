@@ -13,6 +13,8 @@ export const FR = {
     clipboard: 'Copier dans le presse-papier',
     showMore: 'Voir plus',
     showAll: 'Tout voir',
+    minutes: 'minutes',
+    seconds: 'secondes',
     noTeam: 'No teams',
     optional: '(facultatif)',
     noData: 'Aucune donnée à afficher',
@@ -27,6 +29,9 @@ export const FR = {
     programs: 'programmes',
     teams: 'équipes',
     members: 'membres',
+    imageBadge: {
+      userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],
+    },
     pagination: {
       on: 'sur',
     },
