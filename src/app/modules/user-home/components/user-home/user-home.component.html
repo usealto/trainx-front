@@ -3,13 +3,13 @@
 <div class="row mt-5 mb-4">
   <div class="col-5">
     <h2 class="title">{{ I18ns.userHome.programsRun.title }}</h2>
-    <!-- <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.programsRun.subtitle }}</p> -->
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.programsRun.subtitle }}</p>
   </div>
   <div class="col-7 text-end">
-    <!-- <button class="btn btn-outline-secondary" [routerLink]="['/', AltoRoutes.user, AltoRoutes.training]">
+    <button class="btn btn-outline-secondary" [routerLink]="['/', AltoRoutes.user, AltoRoutes.training]">
       {{ I18ns.shared.showAll }}
       <i class="ms-2 bi bi-arrow-right"></i>
-    </button> -->
+    </button>
   </div>
 </div>
 <div class="row">
@@ -26,6 +26,17 @@
       <p class="text-end alto-light-grey fs-7">
         {{ I18ns.userHome.programsRun.continueSessionCounts | plural : guessesCount }}
       </p>
+    </div>
+    <div
+      class="panel highlighted-panel pe-auto"
+      [routerLink]="['/', AltoRoutes.user, AltoRoutes.training, AltoRoutes.trainingSession]"
+    >
+      <div class="row">
+        <div class="col-4" *ngFor="let item of data | slice : (page - 1) * pageSize : page * pageSize">
+          <alto-training-card class="mb-4" [data]="item"></alto-training-card>
+        </div>
+      </div>
+      <alto-pagination [collectionSize]="data.length" [pageSize]="pageSize" [(page)]="page"></alto-pagination>
     </div>
   </div>
 </div>

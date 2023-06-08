@@ -645,7 +645,7 @@ export const FR = {
     subtitle: "Retrouvez une vue d'ensemble sur votre planning",
     programsRun: {
       title: 'Vos programmes en cours',
-      subtitle: 'Retrouvez ici les programmes auxquels vous participez actuellement.',
+      subtitle: 'Retrouvez les programmes qui vous sont assignés.',
       continueSession: 'Session continue',
       continueSessionSubtitle:
         'Entraînez vous chaque jour à votre rythme sur des questions issues de vos différents programmes en cours.',
