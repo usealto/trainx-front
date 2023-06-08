@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { FormArray, FormControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -44,6 +44,13 @@ export class QuestionFormComponent implements OnInit {
   programs: ProgramDtoApi[] = [];
   tags: TagDtoApi[] = [];
 
+  public get answersAccepted(): FormArray<FormControl<string>> {
+    return this.questionForm.controls.answersAccepted as FormArray<FormControl<string>>;
+  }
+  public get answersWrong(): FormArray<FormControl<string>> {
+    return this.questionForm.controls.answersWrong as FormArray<FormControl<string>>;
+  }
+
   constructor(
     private readonly programService: ProgramsRestService,
     private readonly tagService: TagsRestService,
@@ -73,10 +80,8 @@ export class QuestionFormComponent implements OnInit {
         tags: this.program ? [this.program.tags?.map((t) => t.id) as string[]] : [],
         programs: this.program ? [[this.program.id]] : [],
         answerType: AnswerFormatTypeEnumApi.Text,
-        answersAccepted: ['', [Validators.required]],
-        answersWrong1: ['', [Validators.required]],
-        answersWrong2: [''],
-        answersWrong3: [''],
+        answersAccepted: this.fb.array([this.fb.control('')]),
+        answersWrong: this.fb.array([this.fb.control(''), this.fb.control(''), this.fb.control('')]),
         explanation: '',
         link: '',
       });
@@ -93,13 +98,15 @@ export class QuestionFormComponent implements OnInit {
             title: this.question.title,
             tags: this.question.tags?.map((t) => t.id),
             programs: this.question.programs?.map((p) => p.id),
-            answersAccepted: this.question.answersAccepted[0],
-            answersWrong1: this.question.answersWrong[0],
-            answersWrong2: this.question.answersWrong[1],
-            answersWrong3: this.question.answersWrong[2],
             explanation: this.question.explanation,
             link: this.question.link,
           });
+          this.questionForm.controls.answersAccepted = this.fb.array(
+            this.question.answersAccepted.map((a) => this.fb.control(a)),
+          );
+          this.questionForm.controls.answersWrong = this.fb.array(
+            this.question.answersWrong.map((a) => this.fb.control(a)),
+          );
         }
       }
     }, 0);
@@ -108,19 +115,8 @@ export class QuestionFormComponent implements OnInit {
   createQuestion() {
     if (!this.questionForm.value) return;
 
-    const {
-      title,
-      type,
-      tags,
-      programs,
-      answerType,
-      answersAccepted,
-      answersWrong1,
-      answersWrong2,
-      answersWrong3,
-      explanation,
-      link,
-    } = this.questionForm.value;
+    const { title, type, tags, programs, answerType, answersAccepted, answersWrong, explanation, link } =
+      this.questionForm.value;
 
     const params: CreateQuestionDtoApi = {
       title,
@@ -128,8 +124,8 @@ export class QuestionFormComponent implements OnInit {
       tags: tags.map((id) => ({ id } as TagApi)),
       programs: programs ? programs.map((id) => ({ id } as ProgramApi)) : [],
       answerType,
-      answersAccepted: [answersAccepted],
-      answersWrong: [answersWrong1, answersWrong2, answersWrong3].filter((a) => !!a),
+      answersAccepted: answersAccepted.filter((a) => !!a),
+      answersWrong: answersWrong.filter((a) => !!a),
       explanation,
       link,
     };
@@ -174,5 +170,12 @@ export class QuestionFormComponent implements OnInit {
         )
         .subscribe();
     }
+  }
+
+  addGoodAnwswer() {
+    this.answersAccepted.push(this.fob.control(''));
+  }
+  addBadAnwswer() {
+    this.answersWrong.push(this.fob.control(''));
   }
 }

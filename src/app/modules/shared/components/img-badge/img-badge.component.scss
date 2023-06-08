@@ -1,4 +1,7 @@
 img {
   border-radius: 50px;
-  vertical-align: bottom;
+  vertical-align: unset;
+}
+.white-border {
+  border: solid white 2px;
 }

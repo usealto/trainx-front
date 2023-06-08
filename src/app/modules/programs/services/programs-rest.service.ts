@@ -12,6 +12,7 @@ import {
   ProgramsApiService,
 } from '@usealto/sdk-ts-angular';
 import { ProgramsStore } from '../programs.store';
+import { ProfileStore } from '../../profile/profile.store';
 
 @Injectable({
   providedIn: 'root',
@@ -20,6 +21,7 @@ export class ProgramsRestService {
   constructor(
     private readonly programApi: ProgramsApiService,
     private readonly programStore: ProgramsStore,
+    private readonly profileStore: ProfileStore,
   ) {}
 
   getProgramsPaginated(req: GetProgramsRequestParams): Observable<ProgramDtoPaginatedResponseApi> {
@@ -56,6 +58,17 @@ export class ProgramsRestService {
       filter((p) => !!p.data),
       map((d) => d.data || ({} as ProgramDtoApi)),
     );
+  }
+
+  getMyPrograms() {
+    if (this.profileStore.myPrograms.value.length > 0) {
+      return this.profileStore.myPrograms.value$;
+    } else {
+      return this.getPrograms().pipe(
+        map((ps) => ps.filter((p) => p.teams.some((t) => t.id === this.profileStore.user.value.teamId))),
+        tap((p) => (this.profileStore.myPrograms.value = p)),
+      );
+    }
   }
 
   createProgram(createProgramDtoApi: CreateProgramDtoApi) {

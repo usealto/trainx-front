@@ -147,15 +147,8 @@
       [placeholder]="I18ns.leadTeam.members.filters.teams"
       (selectChange)="filterUsers({ teams: $event })"
     ></alto-dropdown-filter>
-    <alto-dropdown-filter
-      class="d-inline-block me-3"
-      displayLabel="name"
-      returnValue="name"
-      [data]="scoreFilters"
-      [multiple]="false"
-      [placeholder]="I18ns.leadTeam.members.filters.score"
-      (selectChange)="filterUsers({ score: $event })"
-    ></alto-dropdown-filter>
+
+    <alto-score-filter (selectChange)="filterUsers({ score: $event })"></alto-score-filter>
   </div>
 
   <ng-container *ngIf="paginatedUsers.length > 0; else noUsers">

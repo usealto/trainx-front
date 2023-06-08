@@ -6,11 +6,12 @@ export interface QuestionForm {
   tags: string[];
   programs: string[];
   answerType: AnswerFormatTypeEnumApi;
-  answersAccepted: string;
+  answersAccepted: string[];
+  answersWrong: string[];
   /** Change with FormArray when form evolves */
-  answersWrong1: string;
-  answersWrong2: string;
-  answersWrong3: string;
+  // answersWrong1: string;
+  // answersWrong2: string;
+  // answersWrong3: string;
   explanation?: string;
   link?: string;
 }

@@ -8,9 +8,7 @@
   padding: 0;
   margin-left: 0;
 }
-.row {
-  --bs-gutter-x: 1.143rem;
-}
+
 .btn {
   --bs-btn-border-radius: 24px;
   height: 2.572rem;
@@ -23,6 +21,7 @@
 }
 .offcanvas {
   --bs-offcanvas-width: 520px;
+  --bs-offcanvas-color: var(--alto-text-color);
 }
 
 .progress {

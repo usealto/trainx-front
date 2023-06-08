@@ -19,3 +19,11 @@ export const programResolver: ResolveFn<any> = () => {
     take(1),
   );
 };
+
+export const trainingResolver: ResolveFn<any> = () => {
+  return combineLatest([inject(UsersRestService).getUsers()]).pipe(take(1));
+};
+
+export const leadResolver: ResolveFn<any> = () => {
+  return combineLatest([inject(UsersRestService).getUsers()]).pipe(take(1));
+};

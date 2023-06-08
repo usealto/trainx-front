@@ -1,0 +1,101 @@
+<h1>{{ I18ns.training.title }}</h1>
+<p class="mt-2 mb-4 alto-grey fs-6b">{{ I18ns.training.subtitle }}</p>
+<!-- TABS -->
+<input
+  type="radio"
+  class="btn-check"
+  (click)="switchTab(1)"
+  id="tab1"
+  autocomplete="off"
+  [checked]="activeTab === 1"
+/>
+<label class="alto-tab-btn" for="tab1">
+  {{ I18ns.training.tabs.onGoing }}
+</label>
+
+<input
+  type="radio"
+  class="btn-check"
+  (click)="switchTab(2)"
+  id="tab2"
+  autocomplete="off"
+  [checked]="activeTab === 2"
+/>
+<label class="alto-tab-btn" for="tab2">
+  {{ I18ns.training.tabs.done }}
+</label>
+
+<input
+  type="radio"
+  class="btn-check"
+  (click)="switchTab(3)"
+  id="tab3"
+  autocomplete="off"
+  [checked]="activeTab === 3"
+/>
+<label class="alto-tab-btn" for="tab3">
+  {{ I18ns.training.tabs.showAll }}
+</label>
+
+<hr />
+
+<span [ngSwitch]="activeTab">
+  <div *ngSwitchCase="1">
+    <!--  ONGOING -->
+
+    <h2>{{ I18ns.training.onGoing.title }}</h2>
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.onGoing.subtitle }}</p>
+
+    <alto-training-cards-list [pageSize]="3" [data]="myPrograms"></alto-training-cards-list>
+
+    <hr />
+
+    <h2>{{ I18ns.training.continuingTraining.title }}</h2>
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.continuingTraining.subtitle }}</p>
+
+    <alto-continuing-training></alto-continuing-training>
+
+    <hr />
+
+    <h2>{{ I18ns.training.donePrograms.title }}</h2>
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.donePrograms.subtitle }}</p>
+
+    <alto-training-cards-list></alto-training-cards-list>
+  </div>
+  <div *ngSwitchCase="2">
+    <!-- DONE -->
+    <h2>{{ I18ns.training.donePrograms.title }}</h2>
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.donePrograms.subtitle }}</p>
+
+    <alto-training-cards-list></alto-training-cards-list>
+    <hr />
+
+    <h2>{{ I18ns.training.donePrograms.title2 }}</h2>
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.donePrograms.subtitle2 }}</p>
+
+    <div class="row mb-4">
+      <div class="col-7"></div>
+      <div class="col-5 text-end">
+        <alto-search></alto-search>
+      </div>
+    </div>
+
+    <alto-training-cards-list></alto-training-cards-list>
+  </div>
+  <div *ngSwitchCase="3">
+    <!-- SHOW ALL -->
+    <h2>{{ I18ns.training.showAll.title }}</h2>
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.showAll.subtitle }}</p>
+
+    <div class="row mb-4">
+      <div class="col-7">
+        <alto-score-filter></alto-score-filter>
+      </div>
+      <div class="col-5 text-end">
+        <alto-search></alto-search>
+      </div>
+    </div>
+
+    <alto-training-cards-list></alto-training-cards-list>
+  </div>
+</span>
