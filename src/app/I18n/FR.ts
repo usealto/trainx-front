@@ -640,7 +640,7 @@ export const FR = {
     subtitle: "Retrouvez une vue d'ensemble sur votre planning",
     programsRun: {
       title: 'Vos programmes en cours',
-      subtitle: 'Retrouvez ici les programmes auxquels vous participez actuellement.',
+      subtitle: 'Retrouvez les programmes qui vous sont assignés.',
       continueSession: 'Session continue',
       continueSessionSubtitle:
         'Entraînez vous chaque jour à votre rythme sur des questions issues de vos programmes.',
@@ -649,6 +649,41 @@ export const FR = {
         "{{}} personne s'est entrainé aujourd'hui",
         "{{}} personnes se sont entrainés aujourd'hui",
       ],
+    },
+    statistics: {
+      title: 'Vos statistiques',
+      subtitle: 'Découvrez un aperçu de votre performance.',
+      averageScore: {
+        title: 'Score moyen',
+        tooltip: 'tooltip default',
+      },
+      finishedPrograms: {
+        title: 'Programmes terminés',
+        tooltip: 'tooltip default',
+      },
+      responseCount: {
+        title: 'Nombre de réponses',
+        tooltip: 'tooltip default',
+      },
+      progression: {
+        title: 'Progression',
+      },
+    },
+    teams: {
+      title: 'Votre équipe',
+      subtitle: 'Découvrez votre classement et les challenges en cours.',
+      leaderboard: {
+        title: 'Leaderboard',
+        name: 'Nom',
+        score: 'Score',
+      },
+      challenges: {
+        title: 'Challenges en cours',
+        name: 'Nom',
+        leader: 'Leader',
+        position: 'Position',
+        end: 'Fin',
+      },
     },
   },
   training: {

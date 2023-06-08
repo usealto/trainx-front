@@ -1,18 +1,80 @@
 <h1>{{ I18ns.leadHome.title + userName | titlecase }}</h1>
 <p class="mb-4 alto-grey fs-6b">{{ I18ns.userHome.subtitle }}</p>
+
+<!-- STATISTICS -->
 <div class="row mt-5 mb-4">
   <div class="col-5">
-    <h2 class="title">{{ I18ns.userHome.programsRun.title }}</h2>
-    <!-- <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.programsRun.subtitle }}</p> -->
+    <h2 class="title">{{ I18ns.userHome.statistics.title }}</h2>
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.statistics.subtitle }}</p>
   </div>
   <div class="col-7 text-end">
-    <!-- <button class="btn btn-outline-secondary" [routerLink]="['/', AltoRoutes.user, AltoRoutes.training]">
-      {{ I18ns.shared.showAll }}
-      <i class="ms-2 bi bi-arrow-right"></i>
-    </button> -->
+    <alto-time-picker class="time-picker2"></alto-time-picker>
   </div>
 </div>
 <div class="row">
+  <div class="col-3">
+    <div class="panel mb-4">
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.userHome.statistics.averageScore.title }}
+        </span>
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          placement="top"
+          ngbTooltip="{{ I18ns.userHome.statistics.averageScore.tooltip }}"
+        ></i>
+      </p>
+      <h1 class="d-inline-block">{{ 0 | percent }}</h1>
+      <alto-progression-badge class="float-end mt-2" [score]="0.42"></alto-progression-badge>
+    </div>
+    <div class="panel my-4">
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.userHome.statistics.finishedPrograms.title }}
+        </span>
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          placement="top"
+          ngbTooltip="{{ I18ns.userHome.statistics.finishedPrograms.tooltip }}"
+        ></i>
+      </p>
+      <h1 class="d-inline-block">{{ (0 | percent) + ' ' + '(4/5)' }}</h1>
+      <alto-progression-badge class="float-end mt-2" [score]="-0.11"></alto-progression-badge>
+    </div>
+    <div class="panel mt-4">
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.userHome.statistics.responseCount.title }}
+        </span>
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          placement="top"
+          ngbTooltip="{{ I18ns.userHome.statistics.responseCount.tooltip }}"
+        ></i>
+      </p>
+      <h1 class="d-inline-block">{{ 42 }}</h1>
+      <alto-progression-badge class="float-end mt-2" [score]="0.2"></alto-progression-badge>
+    </div>
+  </div>
+  <div class="col">
+    <div class="panel h-100"></div>
+  </div>
+</div>
+
+<!-- PROGRAM RUNS -->
+<div class="row mt-5 mb-2">
+  <div class="col-5">
+    <h2 class="title">{{ I18ns.userHome.programsRun.title }}</h2>
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.programsRun.subtitle }}</p>
+  </div>
+  <div class="col-7 text-end">
+    <button class="btn btn-outline-secondary" [routerLink]="['/', AltoRoutes.user, AltoRoutes.training]">
+      {{ I18ns.shared.showAll }}
+      <i class="ms-2 bi bi-arrow-right"></i>
+    </button>
+  </div>
+</div>
+<div class="row mb-4">
   <div class="col-4">
     <div class="panel highlighted-panel pe-auto" [routerLink]="['/', AltoRoutes.user, AltoRoutes.training]">
       <div class="calendar d-flex justify-content-center align-middle">
@@ -24,5 +86,59 @@
         {{ I18ns.userHome.programsRun.continueSessionCounts | plural : guessesCount }}
       </p>
     </div>
+  </div>
+  <alto-training-card class="col-4" [title]="'Title'" [score]="27"></alto-training-card>
+  <alto-training-card class="col-4" [title]="'Title'" [score]="27"></alto-training-card>
+</div>
+<alto-pagination></alto-pagination>
+
+<!-- TEAMS -->
+<div class="mt-4 mb-2">
+  <h2 class="title">{{ I18ns.userHome.teams.title }}</h2>
+  <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.teams.subtitle }}</p>
+</div>
+<div class="row mt-4">
+  <div class="col me-4 panel">
+    <h2>{{ I18ns.userHome.teams.leaderboard.title }}</h2>
+    <alto-tabs
+      class="mb-3"
+      [data]="[
+        { label: 'First', value: '1' },
+        { label: 'Second', value: '2' },
+        { label: 'Third', value: '3' }
+      ]"
+    ></alto-tabs>
+    <hr />
+    <table>
+      <thead>
+        <th scope="col">{{ I18ns.userHome.teams.leaderboard.name }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.leaderboard.score }}</th>
+      </thead>
+      <tbody>
+        <tr></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col panel">
+    <h2>{{ I18ns.userHome.teams.challenges.title }}</h2>
+    <alto-tabs
+      class="mb-3"
+      [data]="[
+        { label: 'First', value: '1' },
+        { label: 'Second', value: '2' }
+      ]"
+    ></alto-tabs>
+    <hr />
+    <table class="table">
+      <thead>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.name }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.leader }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.position }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.end }}</th>
+      </thead>
+      <tbody>
+        <tr></tr>
+      </tbody>
+    </table>
   </div>
 </div>
