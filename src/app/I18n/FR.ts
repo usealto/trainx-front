@@ -655,6 +655,7 @@ export const FR = {
     secondsRemaining: 'secondes restantes',
     selectOneAnswer: 'Sélectionnez la bonne réponse',
     submit: 'Valider',
+    dontknow: 'Je ne sais pas',
     saveAndQuit: 'Enregistrer et quitter',
     canva: {
       goodAnswer: 'Bonne réponse !',
