@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import {
   GetNextQuestionsForUserRequestParams,
   GuessSourceEnumApi,
+  ProgramDtoApi,
   QuestionApi,
+  QuestionDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { Subscription, tap, timer } from 'rxjs';
+import { Subscription, filter, map, switchMap, tap, timer } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
@@ -19,7 +21,10 @@ interface AnswerCard {
   type: '' | 'selected' | 'correct' | 'wrong';
 }
 
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
+import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
 
 @UntilDestroy()
 @Component({
@@ -30,34 +35,66 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 export class TrainingComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+
   displayTime = 30;
   time = 31000;
   timer?: Subscription;
 
   isContinuous = true;
-  // TODO : Use when we do the program based question
-  // questionsCount = 0;
-  // questionsPage = 0;
-  // questionsPageSize = 25;
-  remainingQuestions: QuestionApi[] = [];
 
-  displayedQuestion!: QuestionApi;
+  questionsCount = 0;
+  programId = '';
+  program?: ProgramDtoApi;
+  score = 0;
+  remainingQuestions: QuestionDtoApi[] = [];
+
+  displayedQuestion!: QuestionApi | QuestionDtoApi;
   isQuestionsLoading = true;
   currentAnswers: AnswerCard[] = [];
   isTimedOut = false;
+
+  @ViewChild('modalContent') modalContent!: ElementRef;
 
   constructor(
     private readonly offCanvasService: NgbOffcanvas,
     private readonly usersRestService: UsersRestService,
     private readonly guessRestService: GuessesRestService,
     private readonly profileStore: ProfileStore,
+    private readonly programsRestService: ProgramsRestService,
+    private readonly questionsRestService: QuestionsRestService,
+    private readonly route: ActivatedRoute,
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit(): void {
-    this.getNextQuestion();
+    this.route.params
+      .pipe(
+        map((p) => {
+          if (p['programId']) {
+            this.isContinuous = false;
+            this.programId = p['programId'];
+          } else {
+            this.getNextQuestion();
+          }
+        }),
+        filter(() => !this.isContinuous),
+        switchMap(() => this.programsRestService.getPrograms()),
+        tap((progs) => {
+          this.program = progs.find((p) => p.id === this.programId);
+          if (this.program) {
+            this.questionsCount = this.program.questionsCount;
+          }
+        }),
+        switchMap(() => this.questionsRestService.getQuestions({ programIds: this.programId })),
+        tap((questions) => {
+          this.remainingQuestions = questions;
+          this.getNextQuestion();
+        }),
+      )
+      .subscribe();
   }
 
-  getQuestions(page?: number) {
+  getQuestions() {
     this.isQuestionsLoading = true;
 
     // * CONTINUOUS TRAINNG
@@ -72,12 +109,6 @@ export class TrainingComponent implements OnInit {
             if (data) {
               this.setDisplayedQuestion(data[0]);
             }
-            // TODO : Use when we do the program based question
-            // this.remainingQuestions = res.data ?? [];
-            // this.questionsCount = res.meta.totalItems ?? 0;
-            // if (this.remainingQuestions.length > 0) {
-            //   this.getNextQuestion();
-            // }
           }),
           untilDestroyed(this),
         )
@@ -164,15 +195,20 @@ export class TrainingComponent implements OnInit {
       this.getQuestions();
     } else {
       if (this.remainingQuestions.length === 0) {
-        // this.questionsPage++;
-        this.getQuestions();
+        /**
+         * TODO SAVE PR ?
+         */
+        this.openModal();
       } else {
-        this.setDisplayedQuestion(this.remainingQuestions.pop() as QuestionApi);
+        const last = this.remainingQuestions.pop();
+        if (last) {
+          this.setDisplayedQuestion(last);
+        }
       }
     }
   }
 
-  setDisplayedQuestion(quest: QuestionApi) {
+  setDisplayedQuestion(quest: QuestionApi | QuestionDtoApi) {
     this.displayedQuestion = quest;
     this.getCurrentAnswers(this.displayedQuestion.answersAccepted, this.displayedQuestion.answersWrong);
     this.isTimedOut = false;
@@ -222,5 +258,20 @@ export class TrainingComponent implements OnInit {
     }
 
     return shuffledArray;
+  }
+
+  openModal() {
+    this.modalService.open(this.modalContent).result.then(
+      (result) => {
+        console.log(result);
+
+        // this.closeResult = `Closed with: ${result}`;
+      },
+      (reason) => {
+        console.log(reason);
+
+        // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      },
+    );
   }
 }

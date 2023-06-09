@@ -4,6 +4,7 @@ import { intervalToDuration } from 'date-fns';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TrainingCardData } from 'src/app/modules/training/models/training.model';
+import { AltoRoutes } from '../../constants/routes';
 
 @Component({
   selector: 'alto-training-card',
@@ -12,6 +13,7 @@ import { TrainingCardData } from 'src/app/modules/training/models/training.model
 })
 export class TrainingCardComponent implements OnInit {
   I18ns = I18ns;
+  AltoRoutes = AltoRoutes;
   @Input() data?: TrainingCardData;
   score?: number;
   /**

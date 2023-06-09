@@ -746,6 +746,13 @@ export const FR = {
         noReference: 'Pas de référence',
         continue: 'Continuer',
       },
+      endModal: {
+        title: 'Programme terminé',
+        subtitle: 'Félicitations, vous avez répondu à toutes les questions du programme "{{}}"',
+        score: 'Votre score est de ',
+        backButton: 'Retour à vos programmes',
+        submitQuestion: 'Suggérer une question',
+      },
     },
   },
 };

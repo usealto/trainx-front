@@ -34,3 +34,15 @@
     <i class="bi bi-arrow-right-short"></i>
   </button>
 </div>
+
+<!-- MODAL -->
+
+<ng-template #modalContent let-modal>
+  <div class="modal-body text-center" *ngVar="I18ns.training.quizz.endModal as trads">
+    <h2>{{ trads.title }}</h2>
+    <p>{{ trads.subtitle | replaceInTranslation : program?.name }}</p>
+    <p>{{ trads.score + score }}</p>
+    <button class="btn btn-primary">{{ trads.backButton }}</button>
+    <button class="btn btn-secondary">{{ trads.submitQuestion }}</button>
+  </div>
+</ng-template>
