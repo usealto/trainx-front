@@ -24,8 +24,8 @@
           ngbTooltip="{{ I18ns.userHome.statistics.averageScore.tooltip }}"
         ></i>
       </p>
-      <h1 class="d-inline-block">{{ 0 | percent }}</h1>
-      <alto-progression-badge class="float-end mt-2" [score]="0.42"></alto-progression-badge>
+      <h1 class="d-inline-block">{{ userScore | percent }}</h1>
+      <alto-progression-badge class="float-end mt-2" [score]="userScoreProgression"></alto-progression-badge>
     </div>
     <div class="panel my-4">
       <p class="mb-3">
