@@ -108,7 +108,17 @@ export class ApiErrorInterceptor implements HttpInterceptor {
                 code: e.status,
               };
               break;
-            case 429:
+            case 409: // Conflict on Data
+              apiError = {
+                message: e.message ?? e.error.message ?? '',
+                title: this.translationsMessages.Conflict.title,
+                level: 'error',
+                err,
+                handled: true,
+                code: e.status,
+              };
+              break;
+            case 429: // Too many requests
               apiError = {
                 message: e.statusText,
                 title: this.translationsMessages.OverLoad.title,
