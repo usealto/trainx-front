@@ -1,0 +1,48 @@
+<div class="text-end px-4">
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
+</div>
+<div class="row m-5 g-0">
+  <div class="col-2" style="width: 2.857rem">
+    <i class="alto-badge-big alto-badge-blue me-4 bi bi-question-circle"></i>
+  </div>
+
+  <div class="col ms-4">
+    <h2>{{ I18ns.programs.awaitQuestions.form.title }}</h2>
+    <p>
+      <span class="alto-grey">{{ I18ns.programs.awaitQuestions.form.subtitle }}</span>
+      <span class="fw-medium"> "{{ programName }}"</span>
+    </p>
+  </div>
+</div>
+<hr />
+<div class="offcanvas-body m-5">
+  <label for="name" class="form-label required">{{ I18ns.programs.awaitQuestions.form.label }}</label>
+  <textarea
+    id="name"
+    class="form-control"
+    [formControl]="name"
+    placeholder="{{ I18ns.programs.awaitQuestions.form.placeholder }}"
+    altoAutoResizeTextarea
+  ></textarea>
+</div>
+
+<div class="footer">
+  <hr class="m-0" />
+  <div class="button-container">
+    <button
+      type="button"
+      class="btn btn-outline-secondary me-3"
+      aria-label="Close"
+      (click)="activeOffcanvas.dismiss()"
+    >
+      {{ I18ns.shared.cancel }}
+    </button>
+
+    <input
+      type="submit"
+      class="btn btn-primary float-end"
+      [value]="I18ns.shared.save"
+      (click)="createQuestion()"
+    />
+  </div>
+</div>

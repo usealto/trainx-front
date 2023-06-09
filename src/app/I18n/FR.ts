@@ -173,6 +173,12 @@ export const FR = {
         question: 'Intitulé',
         author: 'Ajouté par',
       },
+      form: {
+        title: 'Suggérer une question',
+        subtitle: 'Pour le programme',
+        label: 'Question',
+        placeholder: 'Intitulé de la question',
+      },
     },
     tags: {
       title: 'Tags',
@@ -747,7 +753,7 @@ export const FR = {
         continue: 'Continuer',
       },
       endModal: {
-        title: 'Programme terminé',
+        title: 'Programme terminé !',
         subtitle: 'Félicitations, vous avez répondu à toutes les questions du programme "{{}}"',
         score: 'Votre score est de ',
         backButton: 'Retour à vos programmes',

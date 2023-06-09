@@ -21,10 +21,11 @@ interface AnswerCard {
   type: '' | 'selected' | 'correct' | 'wrong';
 }
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
+import { QuestionSubmittedFormComponent } from 'src/app/modules/programs/components/questions/question-submitted-form/question-submitted-form.component';
 
 @UntilDestroy()
 @Component({
@@ -63,6 +64,8 @@ export class TrainingComponent implements OnInit {
     private readonly programsRestService: ProgramsRestService,
     private readonly questionsRestService: QuestionsRestService,
     private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly offcanvasService: NgbOffcanvas,
     private modalService: NgbModal,
   ) {}
 
@@ -89,6 +92,8 @@ export class TrainingComponent implements OnInit {
         tap((questions) => {
           this.remainingQuestions = questions;
           this.getNextQuestion();
+
+          this.openModal();
         }),
       )
       .subscribe();
@@ -261,17 +266,20 @@ export class TrainingComponent implements OnInit {
   }
 
   openModal() {
-    this.modalService.open(this.modalContent).result.then(
-      (result) => {
-        console.log(result);
+    this.modalService.open(this.modalContent, { backdrop: 'static', size: 'sm', centered: true });
+  }
 
-        // this.closeResult = `Closed with: ${result}`;
-      },
-      (reason) => {
-        console.log(reason);
-
-        // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      },
-    );
+  openQuestionForm() {
+    const canvasRef = this.offcanvasService.open(QuestionSubmittedFormComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto',
+      backdrop: 'static',
+    });
+    canvasRef.componentInstance.programName = this.program?.name;
+    canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
+    canvasRef.dismissed
+      .pipe(tap(() => this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training])))
+      .subscribe();
+    this.modalService.dismissAll();
   }
 }

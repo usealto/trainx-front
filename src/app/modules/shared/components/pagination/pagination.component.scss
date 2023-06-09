@@ -1,6 +1,5 @@
 :host {
-  display: inline-block;
-  width: 100%;
+  display: block;
 }
 :host ::ng-deep {
   .page-link:focus {
