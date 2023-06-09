@@ -43,10 +43,29 @@
   <div *ngSwitchCase="1">
     <!--  ONGOING -->
 
+    <alto-button-group
+      class="float-end"
+      [value]="'1'"
+      [items]="[
+        { label: I18ns.training.onGoing.filters.showAll, value: '1' },
+        { label: I18ns.training.onGoing.filters.started, value: '2' },
+        { label: I18ns.training.onGoing.filters.new, value: '3' }
+      ]"
+      (valueSelected)="onGoingFilter($event)"
+    ></alto-button-group>
+
     <h2>{{ I18ns.training.onGoing.title }}</h2>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.onGoing.subtitle }}</p>
 
-    <alto-training-cards-list [pageSize]="3" [data]="myPrograms"></alto-training-cards-list>
+    <div>
+      <alto-training-cards-list [pageSize]="3" [data]="onGoingPrograms">
+        <div class="panel text-center p-5 mb-4">
+          <i class="alto-badge-big fs-5 bi bi-file-text"></i>
+          <h2 class="my-4">{{ I18ns.training.onGoing.noData }}</h2>
+          <p class="alto-grey">{{ I18ns.training.onGoing.noDataSubtitle }}</p>
+        </div>
+      </alto-training-cards-list>
+    </div>
 
     <hr />
 

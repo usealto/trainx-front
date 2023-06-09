@@ -34,6 +34,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
 import { TrainingCardComponent } from './components/training-card/training-card.component';
 import { ScoreFilterComponent } from './components/score-filter/score-filter.component';
 import { ImgBadgeListComponent } from './components/img-badge-list/img-badge-list.component';
+import { ButtonGroupComponent } from './components/button-group/button-group.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { ImgBadgeListComponent } from './components/img-badge-list/img-badge-lis
     TrainingCardComponent,
     ScoreFilterComponent,
     ImgBadgeListComponent,
+    ButtonGroupComponent,
   ],
   imports: [
     CommonModule,
@@ -107,6 +109,7 @@ import { ImgBadgeListComponent } from './components/img-badge-list/img-badge-lis
     TrainingCardComponent,
     ScoreFilterComponent,
     ImgBadgeListComponent,
+    ButtonGroupComponent,
   ],
 })
 export class SharedModule {}

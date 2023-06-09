@@ -66,6 +66,13 @@
   border: 1px solid var(--alto-border);
   padding: 1.4rem 1.7rem;
 }
+
+.alto-placeholder {
+  min-height: 7.143rem;
+  background-color: var(--alto-medium-grey);
+  border-radius: 1.143rem;
+}
+
 .table-panel {
   background-color: white;
   border-radius: 1.143rem;

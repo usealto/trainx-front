@@ -22,6 +22,7 @@ export class TrainingHomeComponent implements OnInit {
   guessesCount = 0;
 
   myPrograms: TrainingCardData[] = [];
+  onGoingPrograms?: TrainingCardData[];
   user = this.userStore.user.value;
 
   constructor(
@@ -50,7 +51,7 @@ export class TrainingHomeComponent implements OnInit {
                 programRunId: progRun?.id,
                 programId: p.id,
                 isProgress: !progRun?.finishedAt,
-                duration: progRun?.questionsCount ? progRun?.questionsCount * 30 : undefined,
+                duration: progRun?.questionsCount ? progRun?.questionsCount * 30 : p.questionsCount * 30,
               });
             }
             return output;
@@ -74,20 +75,33 @@ export class TrainingHomeComponent implements OnInit {
               prs.data?.reduce((result, pr) => {
                 const user = this.getUser(pr.createdBy);
                 if (pr.programId === pDisp.programId && user && !result.find((u) => u.id === user.id)) {
-                  // if (user && !result.find((u) => u.id === user.id)) {
                   result.push(user);
                 }
                 return result;
               }, [] as UserDtoApi[]) ?? [],
           }));
+          this.onGoingPrograms = this.myPrograms;
         }),
-        tap(console.log),
       )
       .subscribe();
   }
 
   switchTab(index: number) {
     this.activeTab = index;
+  }
+
+  onGoingFilter(val: string) {
+    switch (val) {
+      case '1':
+        this.onGoingPrograms = this.myPrograms;
+        break;
+      case '2':
+        this.onGoingPrograms = this.myPrograms.filter((p) => !!p.programRunId);
+        break;
+      case '3':
+        this.onGoingPrograms = this.myPrograms.filter((p) => !p.programRunId);
+        break;
+    }
   }
 
   @memoize()

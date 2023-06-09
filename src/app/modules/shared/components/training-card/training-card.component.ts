@@ -17,7 +17,7 @@ export class TrainingCardComponent implements OnInit {
   /**
    * In Seconds
    */
-  duration?: number = 5;
+  duration?: number = 0;
   title?: string;
   isProgress = true;
   users: UserDtoApi[] = [];

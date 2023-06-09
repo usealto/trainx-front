@@ -702,6 +702,13 @@ export const FR = {
     onGoing: {
       title: 'Continuez votre entraînement',
       subtitle: "Retrouvez l'ensemble de vos programmes en cours",
+      filters: {
+        showAll: 'Tout voir',
+        started: 'Commencés',
+        new: 'Nouveaux',
+      },
+      noData: 'Aucun programme en cours',
+      noDataSubtitle: "Votre équipe n'a été assigné à aucun programme pour le moment",
     },
     continuingTraining: {
       title: 'Training continu',
