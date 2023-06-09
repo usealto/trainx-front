@@ -598,6 +598,9 @@ export const FR = {
       title: 'Server Error',
       message: 'The server encountered an error. Please contact the technical service.',
     },
+    Conflict: {
+      title: 'Conflict on Data',
+    },
     OverLoad: {
       title: 'Too many requests',
       message: 'The server encountered an error. Please contact the technical service.',
