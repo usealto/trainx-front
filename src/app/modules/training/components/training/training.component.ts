@@ -45,6 +45,7 @@ export class TrainingComponent implements OnInit {
   isContinuous = true;
 
   questionsCount = 0;
+  questionsAnswered = 0;
   programRunId = '';
   programId = '';
   program?: ProgramDtoApi;
@@ -95,8 +96,6 @@ export class TrainingComponent implements OnInit {
         tap((questions) => {
           this.remainingQuestions = questions;
           this.getNextQuestion();
-
-          this.openModal();
         }),
       )
       .subscribe();

@@ -1,3 +1,15 @@
+<ng-container *ngIf="!isContinuous">
+  <p class="alto-grey mb-4">
+    <i class="bi bi-house-door fs-5"></i> <i class="bi bi-chevron-right fs-7 mx-3"></i>
+    {{ I18ns.programs.title }}<i class="bi bi-chevron-right fs-7 mx-3"></i>
+    <span class="text-primary">{{ program?.name }}</span>
+  </p>
+  <progress class="w-100" [max]="questionsCount" [value]="questionsAnswered"></progress>
+  <p class="alto-grey">
+    {{ I18ns.training.quizz.questionCounter | replaceInTranslation : questionsAnswered : questionsCount }}
+  </p>
+</ng-container>
+
 <div class="text-end timer" [class]="displayTime <= 10 ? 'text-danger' : ''">
   <i class="fs-5 bi bi-stopwatch me-3"></i>
   <span class="fw-bold">{{ displayTime + ' ' + I18ns.training.quizz.secondsRemaining }}</span>

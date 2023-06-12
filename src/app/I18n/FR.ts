@@ -738,6 +738,7 @@ export const FR = {
     },
     quizz: {
       secondsRemaining: 'secondes restantes',
+      questionCounter: 'Question {{}} sur {{}}',
       selectOneAnswer: 'Sélectionnez la bonne réponse',
       submit: 'Valider',
       saveAndQuit: 'Enregistrer et quitter',
