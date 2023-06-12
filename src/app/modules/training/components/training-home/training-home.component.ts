@@ -30,61 +30,7 @@ export class TrainingHomeComponent implements OnInit {
     private readonly userStore: ProfileStore,
   ) {}
 
-  ngOnInit(): void {
-    combineLatest([
-      this.programsRestService.getMyPrograms(),
-      this.programRunsRestService.getProgramRunsPaginated({
-        createdBy: this.user.id,
-      } as GetProgramRunsRequestParams),
-    ])
-      .pipe(
-        map(([programs, programRuns]) => {
-          return programs.reduce((output, p) => {
-            const progRun = programRuns.data?.filter((x) => x.programId === p.id)[0] || null;
-
-            if (!progRun?.finishedAt) {
-              output.push({
-                title: p.name,
-                score: !progRun ? 0 : (progRun.guessesCount / progRun.questionsCount) * 100,
-                updatedAt: progRun?.updatedAt,
-                programRunId: progRun?.id,
-                programId: p.id,
-                isProgress: !progRun?.finishedAt,
-                duration: progRun?.questionsCount ? progRun?.questionsCount * 30 : undefined,
-              });
-            }
-            return output;
-          }, [] as TrainingCardData[]);
-        }),
-        tap((arr) => {
-          this.myPrograms = arr
-            .sort((a, b) => (a.updatedAt?.getTime() ?? 0) - (b.updatedAt?.getTime() ?? 0))
-            .reverse();
-        }),
-        switchMap((arr) =>
-          this.programRunsRestService.getProgramRunsPaginated({
-            isFinished: true,
-            programIds: arr.map((x) => x.programId).join(','),
-          }),
-        ),
-        tap((prs) => {
-          this.myPrograms = this.myPrograms.map((pDisp) => ({
-            ...pDisp,
-            users:
-              prs.data?.reduce((result, pr) => {
-                const user = this.getUser(pr.createdBy);
-                if (pr.programId === pDisp.programId && user && !result.find((u) => u.id === user.id)) {
-                  // if (user && !result.find((u) => u.id === user.id)) {
-                  result.push(user);
-                }
-                return result;
-              }, [] as UserDtoApi[]) ?? [],
-          }));
-        }),
-        tap(console.log),
-      )
-      .subscribe();
-  }
+  ngOnInit(): void {}
 
   switchTab(index: number) {
     this.activeTab = index;

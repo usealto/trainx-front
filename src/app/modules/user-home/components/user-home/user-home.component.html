@@ -27,16 +27,11 @@
         {{ I18ns.userHome.programsRun.continueSessionCounts | plural : guessesCount }}
       </p>
     </div>
-    <div
-      class="panel highlighted-panel pe-auto"
-      [routerLink]="['/', AltoRoutes.user, AltoRoutes.training, AltoRoutes.trainingSession]"
-    >
-      <div class="row">
-        <div class="col-4" *ngFor="let item of data | slice : (page - 1) * pageSize : page * pageSize">
-          <alto-training-card class="mb-4" [data]="item"></alto-training-card>
-        </div>
-      </div>
-      <alto-pagination [collectionSize]="data.length" [pageSize]="pageSize" [(page)]="page"></alto-pagination>
-    </div>
+  </div>
+  <div
+    class="col-4"
+    *ngFor="let item of myProgramRunsCards | slice : (page - 1) * pageSize : page * pageSize"
+  >
+    <alto-training-card class="mb-4" [data]="item"></alto-training-card>
   </div>
 </div>
