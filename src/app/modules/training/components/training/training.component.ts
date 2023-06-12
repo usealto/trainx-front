@@ -26,6 +26,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
 import { QuestionSubmittedFormComponent } from 'src/app/modules/programs/components/questions/question-submitted-form/question-submitted-form.component';
+import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 
 @UntilDestroy()
 @Component({
@@ -44,6 +45,7 @@ export class TrainingComponent implements OnInit {
   isContinuous = true;
 
   questionsCount = 0;
+  programRunId = '';
   programId = '';
   program?: ProgramDtoApi;
   score = 0;
@@ -63,6 +65,7 @@ export class TrainingComponent implements OnInit {
     private readonly profileStore: ProfileStore,
     private readonly programsRestService: ProgramsRestService,
     private readonly questionsRestService: QuestionsRestService,
+    private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly offcanvasService: NgbOffcanvas,
@@ -276,10 +279,20 @@ export class TrainingComponent implements OnInit {
       backdrop: 'static',
     });
     canvasRef.componentInstance.programName = this.program?.name;
-    canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
+    canvasRef.componentInstance.createdQuestion
+      .pipe(
+        switchMap((title: string) => this.questionsSubmittedRestService.create(title)),
+        tap(console.log),
+        tap(() => {
+          this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training]);
+        }),
+      )
+      .subscribe();
+
     canvasRef.dismissed
       .pipe(tap(() => this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training])))
       .subscribe();
+
     this.modalService.dismissAll();
   }
 }
