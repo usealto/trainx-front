@@ -1,4 +1,4 @@
-<div class="text-end px-4">
+<div class="text-end pt-3 px-4">
   <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
 </div>
 <div class="row m-5 g-0">
@@ -25,8 +25,9 @@
     </p>
   </div>
 </div>
-<hr />
-<div class="offcanvas-body m-5">
+<hr class="mb-0" />
+
+<div class="p-5 sidebar-body">
   <div *ngIf="isSubmitted" class="mb-4 row">
     <alto-profile-card class="col-7" [user]="question?.createdByUser"> </alto-profile-card>
     <div class="col-5 text-end">
@@ -149,9 +150,9 @@
     />
   </form>
 </div>
-
 <div class="footer">
   <hr class="m-0" />
+
   <div class="button-container">
     <button
       type="button"
