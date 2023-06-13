@@ -604,6 +604,9 @@ export const FR = {
       title: 'Server Error',
       message: 'The server encountered an error. Please contact the technical service.',
     },
+    Conflict: {
+      title: 'Conflict on Data',
+    },
     OverLoad: {
       title: 'Too many requests',
       message: 'The server encountered an error. Please contact the technical service.',
@@ -740,8 +743,11 @@ export const FR = {
       secondsRemaining: 'secondes restantes',
       questionCounter: 'Question {{}} sur {{}}',
       selectOneAnswer: 'Sélectionnez la bonne réponse',
+      selectAllAnswers: 'Sélectionnez toutes les bonnes réponses',
       submit: 'Valider',
       saveAndQuit: 'Enregistrer et quitter',
+      dontknow: 'Je ne sais pas',
+
       canva: {
         goodAnswer: 'Bonne réponse !',
         badAnswer: 'Mauvaise réponse !',

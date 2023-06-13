@@ -15,6 +15,10 @@ export class ExplanationComponent {
 
   I18ns = I18ns;
 
+  public get answers(): string {
+    return this.correctAnswers.map((a) => '"' + a + '"').join(', ');
+  }
+
   next() {
     this.nextQuestion.emit();
   }

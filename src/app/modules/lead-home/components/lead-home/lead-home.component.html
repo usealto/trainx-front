@@ -184,8 +184,8 @@
         *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
         (tabChanged)="createCharts({ type: $event })"
         [data]="[
-          { label: trads.program, value: ScoreTypeEnum.Program },
-          { label: trads.tag, value: ScoreTypeEnum.Tag }
+          { label: trads.tag, value: ScoreTypeEnum.Tag },
+          { label: trads.program, value: ScoreTypeEnum.Program }
         ]"
       ></alto-tabs>
 
