@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GuessDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
-import { getDayOfYear } from 'date-fns';
+import { addDays, getDayOfYear } from 'date-fns';
 import { combineLatest, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
@@ -41,16 +41,12 @@ export class UserHomeComponent implements OnInit {
 
   getGuessesCount() {
     this.guessesRestService
-      .getGuesses()
+      .getGuesses({ createdAfter: addDays(new Date(), -1), createdBefore: new Date() })
       .pipe(
         tap((guesses) => {
-          const date = new Date();
           const reducedGuesses = [] as GuessDtoApi[];
           guesses.forEach((guess) => {
-            if (
-              getDayOfYear(guess.createdAt) === getDayOfYear(date) &&
-              !reducedGuesses.some((g) => g.createdBy === guess.createdBy)
-            ) {
+            if (!reducedGuesses.some((g) => g.createdBy === guess.createdBy)) {
               reducedGuesses.push(guess);
               this.guessesCount++;
             }
