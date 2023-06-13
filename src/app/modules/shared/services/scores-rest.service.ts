@@ -97,6 +97,7 @@ export class ScoresRestService {
       par.dateAfter = start;
       par.dateBefore = end;
     } else {
+      // TODO Remove
       par.dateAfter = this.service.getStartDate(duration as ScoreDuration);
       par.dateBefore = new Date();
     }
