@@ -127,7 +127,7 @@ export class TrainingComponent implements OnInit {
         result = 'correct';
       }
       if (this.iDontKnow) {
-        result = 'wrong';
+        result = 'noanswer';
       }
     });
     this.openCanvas(result);
