@@ -16,13 +16,26 @@ alto-answer-card:nth-child(even) {
   padding: 0 0 1.714rem 0;
 }
 
-#dontknowinput ~ label {
-  font-size: 1.18rem;
-  color: #344054;
+.question-title {
+  h1 {
+    font-size: 2.571rem;
+  }
+  h2 {
+    font-size: 1.429rem;
+  }
 }
-
-#dontknowinput:checked ~ label {
-  color: #0d6efd;
+.dontknowinput {
+  input {
+    width: 20px;
+  }
+  input:checked ~ label {
+    color: #0d6efd;
+  }
+  label {
+    font-size: 1.429rem;
+    font-weight: 500;
+    color: var(--alto-text-color2);
+  }
 }
 
 h1 {
