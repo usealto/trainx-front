@@ -96,10 +96,6 @@ export class ScoresRestService {
 
       par.dateAfter = start;
       par.dateBefore = end;
-    } else {
-      // TODO Remove
-      par.dateAfter = this.service.getStartDate(duration as ScoreDuration);
-      par.dateBefore = new Date();
     }
 
     if (team) {
@@ -118,36 +114,6 @@ export class ScoresRestService {
       filter((x) => !!x),
     );
   }
-
-  getGeneralScores(req: GetScoresRequestParams): Observable<ScoresResponseDtoApi> {
-    const par = {
-      ...req,
-      type: req?.type ?? ScoreTypeEnumApi.Guess,
-      timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Week,
-      dateBefore: new Date(),
-    };
-    par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
-
-    return this.scoresApi.getScores(par).pipe(
-      map((r) => r.data || ({} as ScoresResponseDtoApi)),
-      filter((x) => !!x),
-    );
-  }
-
-  // getProgramScore(req: GetScoresRequestParams): Observable<ScoresResponseDtoApi> {
-  //   const par = {
-  //     ...req,
-  //     type: ScoreTypeEnumApi.Program,
-  //     timeframe: req?.timeframe ?? ScoreTimeframeEnumApi.Day,
-  //     dateBefore: new Date(),
-  //   };
-  //   par.dateAfter = this.service.getStartDate(this.service.getDefaultDuration(par.timeframe));
-
-  //   return this.scoresApi.getScores(par).pipe(
-  //     map((r) => r.data || ({} as ScoresResponseDtoApi)),
-  //     filter((x) => !!x),
-  //   );
-  // }
 
   getCompletion(filt: ScoreFilters, isProgression: boolean): Observable<ProgramRunApi[]> {
     const par = {

@@ -34,7 +34,7 @@
   </div>
 </div>
 
-<div class="row mt-5 mb-4">
+<div class="row mt-6 mb-4">
   <div class="col-5">
     <h2 class="title">{{ I18ns.leadHome.statistics.title }}</h2>
   </div>
@@ -144,7 +144,7 @@
 
 <!-- GLOBAL EVOLUTION -->
 
-<div class="row mt-5 mb-4">
+<div class="row mt-6 mb-4">
   <div class="col-5">
     <h2 class="title">{{ I18ns.leadHome.globalEvolution.title }}</h2>
   </div>
@@ -193,7 +193,7 @@
       <div [hidden]="!scoreCount" class="chart-container">
         <canvas id="programScoreEvol"></canvas>
       </div>
-      <div [hidden]="scoreCount > 0" class="text-center pt-5">
+      <div [hidden]="scoreCount > 0" class="text-center pt-6">
         {{ I18ns.shared.noData }}
       </div>
     </div>
@@ -308,14 +308,14 @@
 </div>
 
 <!-- ONGOING PROGRAMS -->
-<div class="mt-5 ongoing-programs">
+<div class="mt-6 ongoing-programs">
   <h2 class="title">{{ I18ns.leadHome.ongoingPrograms.title }}</h2>
 </div>
 
 <alto-program-card-list [place]="'home'"></alto-program-card-list>
 
 <!-- CHALLENGES -->
-<div class="row mt-5 mb-4">
+<div class="row mt-6 mb-4">
   <div class="col-5">
     <h2 class="title">{{ I18ns.leadHome.ongoingChallenges.title }}</h2>
   </div>

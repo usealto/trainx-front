@@ -8,7 +8,7 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
   providedIn: 'root',
 })
 export class ScoresService {
-  reduceWithoutNull(data: number[]): number | null {
+  reduceWithoutNull(data: number[] = []): number | null {
     if (data.length === 0) return null;
 
     const output = data.filter((x) => !!x);
