@@ -39,7 +39,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
       duration: this.duration ?? ScoreDuration.Year,
       type: ScoreTypeEnumApi.Team,
     } as ChartFilters;
-    combineLatest(this.scoresRestService.getScores(params), this.scoresRestService.getScores(params, true))
+    combineLatest([this.scoresRestService.getScores(params), this.scoresRestService.getScores(params, true)])
       .pipe(
         tap(([current]) => {
           this.teams = current.scores;
