@@ -702,6 +702,7 @@ export const FR = {
       canva: {
         goodAnswer: 'Bonne réponse !',
         badAnswer: 'Mauvaise réponse !',
+        tooBad: 'Dommage !',
         goodResultSubtitle: "Il s'agissait bien de",
         badResultSubtitle: "Il s'agissait de",
         explanation: 'Explication',
