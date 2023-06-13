@@ -16,6 +16,11 @@ alto-answer-card:nth-child(even) {
   padding: 0 0 1.714rem 0;
 }
 
+#dontknowinput ~ label {
+  font-size: 1.18rem;
+  color: #344054;
+}
+
 #dontknowinput:checked ~ label {
   color: #0d6efd;
 }
