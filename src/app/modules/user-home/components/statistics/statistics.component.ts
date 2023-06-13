@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { GuessDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
+import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
-import { getDayOfYear } from 'date-fns';
 import { combineLatest, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
-import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
@@ -164,6 +162,7 @@ export class StatisticsComponent implements OnInit {
                 data: teamScores.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
                 fill: false,
                 tension: 0.2,
+                borderDash: [4],
                 spanGaps: true,
               },
             ],
@@ -172,11 +171,19 @@ export class StatisticsComponent implements OnInit {
           if (this.userProgressionChart) {
             this.userProgressionChart.destroy();
           }
-
+          const customChartOptions = {
+            ...chartDefaultOptions,
+            plugins: {
+              legend: {
+                display: true,
+                labels: { usePointStyle: true, boxWidth: 5, boxHeight: 5, pointStyle: 'circle' },
+              },
+            },
+          };
           this.userProgressionChart = new Chart('userProgressionChart', {
             type: 'line',
             data: data,
-            options: chartDefaultOptions,
+            options: customChartOptions,
           });
         }),
       )

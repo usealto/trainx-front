@@ -42,7 +42,6 @@ export class PerformanceByTeamsComponent implements OnChanges {
     combineLatest([this.scoresRestService.getScores(params), this.scoresRestService.getScores(params, true)])
       .pipe(
         tap(([current]) => {
-          console.log(current);
           this.teams = current.scores;
           if (!this.selectedTeams.length) {
             this.selectedTeams = current.scores.slice(0, 5);
