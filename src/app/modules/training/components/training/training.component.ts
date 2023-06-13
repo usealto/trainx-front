@@ -48,6 +48,8 @@ export class TrainingComponent implements OnInit {
 
   questionsCount = 0;
   questionsAnswered = 0;
+  questionsGoodAnswers = 0;
+
   programId = '';
   program?: ProgramDtoApi;
   programRun?: ProgramRunApi;
@@ -102,7 +104,10 @@ export class TrainingComponent implements OnInit {
             return this.programRunsRestService.create({ programId: this.programId }).pipe(map((a) => a.data));
           }
         }),
-        tap((pr) => (this.programRun = pr)),
+        tap((pr) => {
+          this.programRun = pr;
+          this.questionsGoodAnswers = pr?.goodGuessesCount ?? 0;
+        }),
         switchMap(() => this.programsRestService.getPrograms()),
         tap((progs) => {
           this.program = progs.find((p) => p.id === this.programId);
@@ -191,12 +196,15 @@ export class TrainingComponent implements OnInit {
       }
       if (countGoodAnswers === this.displayedQuestion.answersAccepted.length) {
         result = 'correct';
+        this.questionsGoodAnswers++;
       }
       if (this.iDontKnow) {
         result = 'noanswer';
       }
     });
     this.openExplanation(result);
+
+    console.log(this.questionsGoodAnswers);
   }
 
   openExplanation(result: string) {
@@ -312,6 +320,7 @@ export class TrainingComponent implements OnInit {
   }
 
   openDoneModal() {
+    this.score = this.questionsGoodAnswers / this.questionsCount;
     this.modalService.open(this.modalContent, { backdrop: 'static', size: 'sm', centered: true });
   }
 

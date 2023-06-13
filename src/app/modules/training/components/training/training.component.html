@@ -79,7 +79,7 @@
     <h2 class="fw-bold mb-4">{{ trads.title }}</h2>
     <p class="mb-3 alto-grey">{{ trads.subtitle | replaceInTranslation : program?.name }}</p>
     <p class="alto-grey mb-4">
-      {{ trads.score }} <span class="alto-green fw-medium">{{ score }}%</span>
+      {{ trads.score }} <span class="alto-green fw-medium">{{ score | percent }}</span>
     </p>
     <button
       class="btn btn-primary mb-3 w-100"
