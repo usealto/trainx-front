@@ -8,7 +8,7 @@
     class="w-100 mb-4"
     type="primary"
     [max]="questionsCount"
-    [value]="questionsAnswered + 1"
+    [value]="questionsAnswered"
   ></ngb-progressbar>
   <p class="alto-grey fw-medium">
     {{ I18ns.training.quizz.questionCounter | replaceInTranslation : questionsAnswered : questionsCount }}
@@ -20,7 +20,7 @@
   <span class="fw-bold">{{ displayTime + ' ' + I18ns.training.quizz.secondsRemaining }}</span>
 </div>
 
-<div *ngIf="!isQuestionsLoading" class="mt-4 text-center">
+<div *ngIf="!isQuestionsLoading" class="mt-4 text-center question-title">
   <h2 class="alto-grey">
     {{
       displayedQuestion.answersAccepted.length > 1
@@ -41,9 +41,9 @@
       (click)="selectAnswer(ans.answer)"
     >
     </alto-answer-card>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center dontknowinput">
       <input
-        class="me-2 cursor-pointer"
+        class="me-3 cursor-pointer"
         type="radio"
         id="dontknowinput"
         (click)="uncheck(idontknowradio.checked)"

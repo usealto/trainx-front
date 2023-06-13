@@ -4,10 +4,11 @@ import {
   GetNextQuestionsForUserRequestParams,
   GuessSourceEnumApi,
   ProgramDtoApi,
+  ProgramRunApi,
   QuestionApi,
   QuestionDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { Subscription, filter, map, switchMap, tap, timer } from 'rxjs';
+import { Subscription, combineLatest, filter, map, of, switchMap, tap, timer } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
@@ -23,9 +24,10 @@ interface AnswerCard {
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { QuestionSubmittedFormComponent } from 'src/app/modules/programs/components/questions/question-submitted-form/question-submitted-form.component';
+import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
-import { QuestionSubmittedFormComponent } from 'src/app/modules/programs/components/questions/question-submitted-form/question-submitted-form.component';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 
 @UntilDestroy()
@@ -46,9 +48,9 @@ export class TrainingComponent implements OnInit {
 
   questionsCount = 0;
   questionsAnswered = 0;
-  programRunId = '';
   programId = '';
   program?: ProgramDtoApi;
+  programRun?: ProgramRunApi;
   score = 0;
   remainingQuestions: QuestionDtoApi[] = [];
 
@@ -66,6 +68,7 @@ export class TrainingComponent implements OnInit {
     private readonly guessRestService: GuessesRestService,
     private readonly profileStore: ProfileStore,
     private readonly programsRestService: ProgramsRestService,
+    private readonly programRunsRestService: ProgramRunsRestService,
     private readonly questionsRestService: QuestionsRestService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly route: ActivatedRoute,
@@ -86,16 +89,41 @@ export class TrainingComponent implements OnInit {
           }
         }),
         filter(() => !this.isContinuous),
+        switchMap(() =>
+          this.programRunsRestService.getProgramRunsPaginated({
+            programIds: this.programId,
+            createdBy: this.profileStore.user.value.id,
+          }),
+        ),
+        switchMap(({ data }) => {
+          if (data && data?.length > 0) {
+            return of(data[0]);
+          } else {
+            return this.programRunsRestService.create({ programId: this.programId }).pipe(map((a) => a.data));
+          }
+        }),
+        tap((pr) => (this.programRun = pr)),
         switchMap(() => this.programsRestService.getPrograms()),
         tap((progs) => {
           this.program = progs.find((p) => p.id === this.programId);
           if (this.program) {
             this.questionsCount = this.program.questionsCount;
+          } else {
+            throw 'Program Not Found';
           }
         }),
-        switchMap(() => this.questionsRestService.getQuestions({ programIds: this.programId })),
-        tap((questions) => {
-          this.remainingQuestions = questions;
+        switchMap(() =>
+          combineLatest([
+            this.questionsRestService.getQuestions({ programIds: this.programId }),
+            this.guessRestService.getGuesses({
+              createdBy: this.profileStore.user.value.id,
+              programRunIds: this.programRun?.id,
+            }),
+          ]),
+        ),
+        tap(([questions, guesses]) => {
+          this.questionsAnswered = guesses.length;
+          this.remainingQuestions = questions.filter((q) => guesses.every((g) => g.questionId !== q.id));
           this.getNextQuestion();
         }),
       )
@@ -168,10 +196,10 @@ export class TrainingComponent implements OnInit {
         result = 'wrong';
       }
     });
-    this.openCanvas(result);
+    this.openExplanation(result);
   }
 
-  openCanvas(result: string) {
+  openExplanation(result: string) {
     const canvasRef = this.offCanvasService.open(ExplanationComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
@@ -196,6 +224,7 @@ export class TrainingComponent implements OnInit {
     const selectedAnswers = this.currentAnswers.filter((a) => a.selected).map((a) => a.answer);
     this.guessRestService
       .postGuess({
+        programRunId: this.isContinuous ? undefined : this.programRun?.id,
         questionId: this.displayedQuestion.id,
         answers: selectedAnswers.length > 0 ? selectedAnswers : undefined,
         source: GuessSourceEnumApi.Web,
@@ -204,6 +233,7 @@ export class TrainingComponent implements OnInit {
       })
       .pipe(
         tap(() => {
+          this.questionsAnswered++;
           this.iDontKnow = false;
           this.getNextQuestion();
         }),
@@ -219,7 +249,7 @@ export class TrainingComponent implements OnInit {
         /**
          * TODO SAVE PR ?
          */
-        this.openModal();
+        this.openDoneModal();
       } else {
         const last = this.remainingQuestions.pop();
         if (last) {
@@ -281,7 +311,7 @@ export class TrainingComponent implements OnInit {
     return shuffledArray;
   }
 
-  openModal() {
+  openDoneModal() {
     this.modalService.open(this.modalContent, { backdrop: 'static', size: 'sm', centered: true });
   }
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import {
+  CreateProgramRunDtoApi,
   GetProgramRunsRequestParams,
   ProgramRunPaginatedResponseApi,
   ProgramRunsApiService,
@@ -39,5 +40,9 @@ export class ProgramRunsRestService {
     }
 
     return this.programRunApi.getProgramRuns(params).pipe(map((res) => res.data ?? []));
+  }
+
+  create(createProgramRunDtoApi: CreateProgramRunDtoApi) {
+    return this.programRunApi.createProgramRun({ createProgramRunDtoApi });
   }
 }
