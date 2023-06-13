@@ -32,7 +32,13 @@
         <p class="alto-grey">
           {{ I18ns.training.continuingTraining.panels.frequency }}
         </p>
-        <h1 class="mt-4">0</h1>
+        <div class="mt-5">
+          <h1 class="d-inline-block">{{ regularity | percent }}</h1>
+          <alto-progression-badge
+            class="float-end mt-2"
+            [score]="previousRegularity"
+          ></alto-progression-badge>
+        </div>
       </div>
     </div>
     <div class="col-6">
