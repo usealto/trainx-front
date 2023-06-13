@@ -16,7 +16,7 @@ import { ProgramRunsRestService } from 'src/app/modules/programs/services/progra
 })
 export class UserHomeComponent implements OnInit {
   @Input() data: TrainingCardData[] = [];
-  @Input() pageSize = 1;
+  @Input() pageSize = 2;
   page = 1;
 
   I18ns = I18ns;
@@ -26,6 +26,7 @@ export class UserHomeComponent implements OnInit {
   guessesCount = 0;
 
   myProgramRunsCards: TrainingCardData[] = [];
+  myProgramRunsCount = this.myProgramRunsCards.length;
 
   constructor(
     private readonly profileStore: ProfileStore,

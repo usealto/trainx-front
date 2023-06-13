@@ -34,4 +34,14 @@
   >
     <alto-training-card class="mb-4" [data]="item"></alto-training-card>
   </div>
+  <alto-pagination
+    class="mx-4 d-block"
+    [ngClass]="{ invisible: pageSize <= myProgramRunsCount }"
+    [collectionSize]="myProgramRunsCount"
+    [(page)]="page"
+    (pageChange)="(myProgramRunsCount)"
+    [pageSize]="pageSize"
+    [maxSize]="10"
+    aria-label="Default pagination"
+  ></alto-pagination>
 </div>
