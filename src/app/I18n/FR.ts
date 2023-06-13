@@ -669,18 +669,20 @@ export const FR = {
       subtitle: 'Découvrez un aperçu de votre performance.',
       averageScore: {
         title: 'Score moyen',
-        tooltip: 'tooltip default',
+        tooltip: 'Score moyen de vos questions répondues',
       },
       finishedPrograms: {
         title: 'Programmes terminés',
-        tooltip: 'tooltip default',
+        tooltip: 'Nombre de programmes sur le nombre de programmes assignés',
       },
       responseCount: {
         title: 'Nombre de réponses',
-        tooltip: 'tooltip default',
+        tooltip: 'Nombre total de réponses',
       },
       progression: {
         title: 'Progression',
+        you: 'Vous',
+        yourTeam: 'Votre équipe',
       },
     },
     teams: {

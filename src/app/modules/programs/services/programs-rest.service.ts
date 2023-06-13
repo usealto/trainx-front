@@ -13,6 +13,8 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { ProgramsStore } from '../programs.store';
 import { ProfileStore } from '../../profile/profile.store';
+import { ScoreDuration } from '../../shared/models/score.model';
+import { ScoresService } from '../../shared/services/scores.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +24,7 @@ export class ProgramsRestService {
     private readonly programApi: ProgramsApiService,
     private readonly programStore: ProgramsStore,
     private readonly profileStore: ProfileStore,
+    private readonly scoresService: ScoresService,
   ) {}
 
   getProgramsPaginated(req: GetProgramsRequestParams): Observable<ProgramDtoPaginatedResponseApi> {
@@ -38,14 +41,22 @@ export class ProgramsRestService {
     return this.programApi.patchProgram({ id, patchProgramDtoApi });
   }
 
-  getPrograms(): Observable<ProgramDtoApi[]> {
-    if (this.programStore.programs.value.length) {
+  getPrograms(duration?: ScoreDuration, isProgression = false): Observable<ProgramDtoApi[]> {
+    if (this.programStore.programs.value.length && !duration) {
       return this.programStore.programs.value$;
     } else {
       const par = {
         page: 1,
         itemsPerPage: 400,
-      };
+      } as GetProgramsRequestParams;
+
+      if (duration) {
+        par.createdAfter = isProgression
+          ? this.scoresService.getPreviousPeriod(duration)[0]
+          : this.scoresService.getStartDate(duration);
+        par.createdBefore = isProgression ? this.scoresService.getPreviousPeriod(duration)[1] : new Date();
+      }
+
       return this.programApi.getPrograms(par).pipe(
         map((d) => d.data ?? []),
         tap((pr) => (this.programStore.programs.value = pr)),

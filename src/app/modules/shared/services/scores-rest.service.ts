@@ -38,7 +38,7 @@ export class ScoresRestService {
     let dateBefore: Date;
 
     if (isProgression) {
-      const [start, end] = this.getPreviousPeriod(duration);
+      const [start, end] = this.service.getPreviousPeriod(duration);
 
       dateAfter = start;
       dateBefore = end;
@@ -61,7 +61,7 @@ export class ScoresRestService {
     let dateBefore: Date;
 
     if (isProgression) {
-      const [start, end] = this.getPreviousPeriod(duration);
+      const [start, end] = this.service.getPreviousPeriod(duration);
 
       dateAfter = start;
       dateBefore = end;
@@ -92,7 +92,7 @@ export class ScoresRestService {
     };
 
     if (isProgression) {
-      const [start, end] = this.getPreviousPeriod(duration);
+      const [start, end] = this.service.getPreviousPeriod(duration);
 
       par.dateAfter = start;
       par.dateBefore = end;
@@ -160,7 +160,7 @@ export class ScoresRestService {
     }
 
     if (isProgression) {
-      const [start, end] = this.getPreviousPeriod(filt.duration);
+      const [start, end] = this.service.getPreviousPeriod(filt.duration);
 
       par.createdAfter = start;
       par.createdBefore = end;
@@ -170,27 +170,5 @@ export class ScoresRestService {
     }
 
     return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));
-  }
-
-  private getPreviousPeriod(duration: string | ScoreDuration | undefined): Date[] {
-    let date = new Date();
-    switch (duration) {
-      case 'week':
-        date = addDays(date, -14);
-        break;
-      case 'month':
-        date = addDays(date, -60);
-        break;
-      case 'trimester':
-        date = addDays(date, -180);
-        break;
-      case 'year':
-        date = addDays(date, -730);
-        break;
-      default:
-        date = addDays(date, -60);
-        break;
-    }
-    return [date, this.service.getStartDate(duration as ScoreDuration)];
   }
 }

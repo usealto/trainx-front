@@ -1,0 +1,71 @@
+<div class="row mt-5 mb-4">
+  <div class="col-5">
+    <h2 class="title">{{ I18ns.userHome.statistics.title }}</h2>
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.statistics.subtitle }}</p>
+  </div>
+  <div class="col-7 text-end">
+    <alto-time-picker
+      class="time-picker2"
+      [duration]="statisticsDuration"
+      (durationSelected)="updateTimePicker($event)"
+    ></alto-time-picker>
+  </div>
+</div>
+<div class="row">
+  <div class="col-3">
+    <div class="panel mb-4">
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.userHome.statistics.averageScore.title }}
+        </span>
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          placement="top"
+          ngbTooltip="{{ I18ns.userHome.statistics.averageScore.tooltip }}"
+        ></i>
+      </p>
+      <h1 class="d-inline-block">{{ userScore | percent }}</h1>
+      <alto-progression-badge class="float-end mt-2" [score]="userScoreProgression"></alto-progression-badge>
+    </div>
+    <div class="panel my-4">
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.userHome.statistics.finishedPrograms.title }}
+        </span>
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          placement="top"
+          ngbTooltip="{{ I18ns.userHome.statistics.finishedPrograms.tooltip }}"
+        ></i>
+      </p>
+      <h1 class="d-inline-block">
+        {{
+          (averageFinishedPrograms | percent) + ' ' + '(' + finishedProgramsCount + '/' + programsCount + ')'
+        }}
+      </h1>
+      <alto-progression-badge
+        class="float-end mt-2"
+        [score]="finishedProgramsCountProgression"
+      ></alto-progression-badge>
+    </div>
+    <div class="panel mt-4">
+      <p class="mb-3">
+        <span class="alto-grey">
+          {{ I18ns.userHome.statistics.responseCount.title }}
+        </span>
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          placement="top"
+          ngbTooltip="{{ I18ns.userHome.statistics.responseCount.tooltip }}"
+        ></i>
+      </p>
+      <h1 class="d-inline-block">{{ guessCount }}</h1>
+      <alto-progression-badge class="float-end mt-2" [score]="guessCountProgression"></alto-progression-badge>
+    </div>
+  </div>
+  <div class="col">
+    <div class="panel h-100">
+      <canvas id="userProgressionChart"></canvas>
+    </div>
+  </div>
+</div>
