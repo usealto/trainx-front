@@ -334,7 +334,6 @@ export class TrainingComponent implements OnInit {
     canvasRef.componentInstance.createdQuestion
       .pipe(
         switchMap((title: string) => this.questionsSubmittedRestService.create(title)),
-        tap(console.log),
         tap(() => {
           this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training]);
         }),

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { GuessDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
+import { GuessDtoApi } from '@usealto/sdk-ts-angular';
+import { format } from 'date-fns';
 import { combineLatest, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
@@ -8,7 +9,6 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { GuessesRestService } from '../../services/guesses-rest.service';
-import { format } from 'date-fns';
 
 @Component({
   selector: 'alto-continuing-training',
@@ -35,49 +35,33 @@ export class ContinuingTrainingComponent implements OnInit {
     private readonly profileStore: ProfileStore,
   ) {}
   ngOnInit(): void {
-    this.scoresRestService.getUsersStats(ScoreDuration.Month).pipe(tap(console.log)).subscribe();
-    // combineLatest([
-    //   this.scoresRestService.getScores({
-    //     duration: ScoreDuration.Month,
-    //     type: ScoreTypeEnumApi.User,
-    //     timeframe: ScoreTimeframeEnumApi.Day,
-    //     ids: [this.profileStore.user.value.id],
-    //   }),
-    //   this.scoresRestService.getScores(
-    //     {
-    //       duration: ScoreDuration.Month,
-    //       type: ScoreTypeEnumApi.User,
-    //       timeframe: ScoreTimeframeEnumApi.Day,
-    //       ids: [this.profileStore.user.value.id],
-    //     },
-    //     true,
-    //   ),
-    //   this.guessRestService.getGuesses(
-    //     { createdBy: this.profileStore.user.value.id, itemsPerPage: 500 },
-    //     ScoreDuration.Trimester,
-    //   ),
-    //   this.guessRestService.getGuesses(
-    //     { createdBy: this.profileStore.user.value.id, itemsPerPage: 500 },
-    //     ScoreDuration.Trimester,
-    //     true,
-    //   ),
-    // ])
-    //   .pipe(
-    //     tap(([userScore, previousSCore, guesses, previousGuesses]) => {
-    //       // console.log(usersScores);
+    combineLatest([
+      this.scoresRestService.getUsersStats(ScoreDuration.Month),
+      this.scoresRestService.getUsersStats(ScoreDuration.Month, true),
+      this.guessRestService.getGuesses(
+        { createdBy: this.profileStore.user.value.id, itemsPerPage: 500 },
+        ScoreDuration.Trimester,
+      ),
+      this.guessRestService.getGuesses(
+        { createdBy: this.profileStore.user.value.id, itemsPerPage: 500 },
+        ScoreDuration.Trimester,
+        true,
+      ),
+    ])
+      .pipe(
+        tap(([userScore, previousSCore, guesses, previousGuesses]) => {
+          this.regularity = this.getParticipationDays(guesses) / (this.daysInPeriod * this.threshold);
+          this.previousRegularity =
+            this.getParticipationDays(previousGuesses) / (this.daysInPeriod * this.threshold);
 
-    //       this.regularity = this.getParticipationDays(guesses) / (this.daysInPeriod * this.threshold);
-    //       this.previousRegularity =
-    //         this.getParticipationDays(previousGuesses) / (this.daysInPeriod * this.threshold);
+          this.avgScore = userScore.find((u) => u.id === this.profileStore.user.value.id)?.score ?? 0;
+          this.previousAvgScore =
+            previousSCore.find((u) => u.id === this.profileStore.user.value.id)?.score ?? 0;
 
-    //       this.avgScore = this.scoresService.reduceWithoutNull(userScore.scores[0]?.averages) ?? 0;
-    //       this.previousAvgScore =
-    //         this.scoresService.reduceWithoutNull(previousSCore.scores[0]?.averages) ?? 0;
-
-    //       this.streak = this.getStreak(guesses);
-    //     }),
-    //   )
-    //   .subscribe();
+          this.streak = this.getStreak(guesses);
+        }),
+      )
+      .subscribe();
   }
 
   private getStreak(guesses: GuessDtoApi[] = []): number {
