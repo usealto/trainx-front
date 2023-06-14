@@ -32,7 +32,7 @@
     class="col-4"
     *ngFor="let item of myProgramRunsCards | slice : (page - 1) * pageSize : page * pageSize"
   >
-    <alto-training-card class="mb-4" [data]="item" (click)="goToTraining()"></alto-training-card>
+    <alto-training-card class="mb-4" [data]="item"></alto-training-card>
   </div>
   <alto-pagination
     class="mx-4 d-block"

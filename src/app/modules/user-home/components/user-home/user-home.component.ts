@@ -16,9 +16,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./user-home.component.scss'],
 })
 export class UserHomeComponent implements OnInit {
-  @Input() data: TrainingCardData[] = [];
   @Input() pageSize = 2;
-  @Input() programRun!: ProgramRunApi;
 
   page = 1;
 
@@ -67,14 +65,5 @@ export class UserHomeComponent implements OnInit {
 
   paginateProgramRuns(page: number) {
     this.page = page;
-  }
-
-  goToTraining() {
-    const test = this.myProgramRunsCards.map((a) => {
-      return a.programRunId;
-    });
-    const id = test.find((a) => a === test[0]);
-    console.log('id ', id);
-    this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training, AltoRoutes.trainingSession, `${id}`]);
   }
 }
