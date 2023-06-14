@@ -20,7 +20,10 @@
 </div>
 <div class="row mb-4">
   <div class="col-4">
-    <div class="panel highlighted-panel pe-auto" [routerLink]="['/', AltoRoutes.user, AltoRoutes.training]">
+    <div
+      class="panel highlighted-panel pe-auto ongoingSessionPanel"
+      [routerLink]="['/', AltoRoutes.user, AltoRoutes.training, AltoRoutes.trainingSession]"
+    >
       <div class="calendar d-flex justify-content-center align-middle">
         <i class="my-auto fs-2 text-primary bi bi-calendar"></i>
       </div>
@@ -31,16 +34,21 @@
       </p>
     </div>
   </div>
-  <alto-training-card
+  <div
     class="col-4"
-    [data]="{ title: 'test', score: 27, isProgress: true, programId: '' }"
-  ></alto-training-card>
-  <alto-training-card
-    class="col-4"
-    [data]="{ title: 'test', score: 42, isProgress: true, programId: '' }"
-  ></alto-training-card>
-</div>
-<alto-pagination></alto-pagination>
+    *ngFor="let item of myProgramRunsCards | slice : (page - 1) * pageSize : page * pageSize"
+  >
+    <alto-training-card class="mb-4" [data]="item"></alto-training-card>
+  </div>
+  <alto-pagination
+    class="mx-4 d-block"
+    [ngClass]="{ invisible: myProgramRunsCards.length <= pageSize }"
+    [collectionSize]="myProgramRunsCards.length"
+    [page]="page"
+    (pageChange)="paginateProgramRuns($event)"
+    [pageSize]="pageSize"
+    aria-label="Default pagination"
+  ></alto-pagination>
 
 <!-- TEAMS -->
 <div class="mt-4 mb-2">
