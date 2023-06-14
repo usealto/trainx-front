@@ -70,13 +70,11 @@ export class UserHomeComponent implements OnInit {
   }
 
   goToTraining() {
-    console.log('log ', this.programRun);
-    this.router.navigate([
-      '/',
-      AltoRoutes.user,
-      AltoRoutes.training,
-      AltoRoutes.trainingSession,
-      this.programRun,
-    ]);
+    const test = this.myProgramRunsCards.map((a) => {
+      return a.programRunId;
+    });
+    const id = test.find((a) => a === test[0]);
+    console.log('id ', id);
+    this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training, AltoRoutes.trainingSession, `${id}`]);
   }
 }
