@@ -9,6 +9,9 @@ import { ProgramsRestService } from 'src/app/modules/programs/services/programs-
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { TrainingCardData } from '../../models/training.model';
 
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+
+@UntilDestroy()
 @Component({
   selector: 'alto-training-home',
   templateUrl: './training-home.component.html',
@@ -39,8 +42,8 @@ export class TrainingHomeComponent implements OnInit {
       } as GetProgramRunsRequestParams),
     ])
       .pipe(
-        map(([programs, programRuns]) => {
-          return programs.reduce((output, p) => {
+        map(([myPrograms, programRuns]) => {
+          return myPrograms.reduce((output, p) => {
             const progRun = programRuns.data?.filter((x) => x.programId === p.id)[0] || null;
 
             if (!progRun?.finishedAt) {
@@ -82,6 +85,7 @@ export class TrainingHomeComponent implements OnInit {
           }));
           this.onGoingPrograms = this.myPrograms;
         }),
+        untilDestroyed(this),
       )
       .subscribe();
   }

@@ -142,16 +142,16 @@
         {{ I18ns.menu.settings }}
       </a>
     </div>
-    <div *ngIf="isAdmin" class="form-check form-switch ms-6">
+    <div *ngIf="isAdmin" class="form-check form-switch ms-5">
       <input
-        class="form-check-input me-2"
+        class="form-check-input me-3"
         type="checkbox"
         id="flexSwitchCheckDefault"
         #adminSwitch
         [checked]="displayAdmin"
         (change)="switchToAdmin(adminSwitch.checked)"
       />
-      <label class="form-check-label cursor-pointer" for="flexSwitchCheckDefault">
+      <label class="form-check-label cursor-pointer" style="margin-top: 0.1rem" for="flexSwitchCheckDefault">
         {{ I18ns.menu.adminMode }}
       </label>
     </div>

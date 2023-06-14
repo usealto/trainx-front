@@ -59,7 +59,11 @@ export class ProgramsRestService {
 
       return this.programApi.getPrograms(par).pipe(
         map((d) => d.data ?? []),
-        tap((pr) => (this.programStore.programs.value = pr)),
+        tap((pr) => {
+          if (!duration) {
+            this.programStore.programs.value = pr;
+          }
+        }),
       );
     }
   }
@@ -71,12 +75,14 @@ export class ProgramsRestService {
     );
   }
 
-  getMyPrograms() {
+  getMyPrograms(): Observable<ProgramDtoApi[]> {
     if (this.profileStore.myPrograms.value.length > 0) {
       return this.profileStore.myPrograms.value$;
     } else {
       return this.getPrograms().pipe(
-        map((ps) => ps.filter((p) => p.teams.some((t) => t.id === this.profileStore.user.value.teamId))),
+        map((ps: ProgramDtoApi[]) =>
+          ps.filter((p) => p.teams.some((t) => t.id === this.profileStore.user.value.teamId)),
+        ),
         tap((p) => (this.profileStore.myPrograms.value = p)),
       );
     }

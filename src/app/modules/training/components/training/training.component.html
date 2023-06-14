@@ -11,7 +11,7 @@
     [value]="questionsAnswered"
   ></ngb-progressbar>
   <p class="alto-grey fw-medium">
-    {{ I18ns.training.quizz.questionCounter | replaceInTranslation : questionsAnswered : questionsCount }}
+    {{ I18ns.training.quizz.questionCounter | replaceInTranslation : questionsAnswered + 1 : questionsCount }}
   </p>
 </ng-container>
 
