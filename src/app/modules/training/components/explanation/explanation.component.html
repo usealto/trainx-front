@@ -3,15 +3,25 @@
     class="fs-1 bi mb-3 d-inline-block"
     [class]="result === 'correct' ? 'bi-check-circle-fill text-green' : 'bi-x-circle-fill text-red'"
   ></i>
-  <h1>
-    {{ result === 'correct' ? I18ns.training.quizz.canva.goodAnswer : I18ns.training.quizz.canva.badAnswer }}
-  </h1>
+  <ng-container *ngIf="result !== 'noanswer'; else elseAnswer">
+    <h1>
+      {{
+        result === 'correct' ? I18ns.training.quizz.canva.goodAnswer : I18ns.training.quizz.canva.badAnswer
+      }}
+    </h1>
+  </ng-container>
+  <ng-template #elseAnswer>
+    <h1>
+      {{ I18ns.training.quizz.canva.tooBad }}
+    </h1>
+  </ng-template>
   <p class="alto-grey">
     {{
       result === 'correct'
-        ? I18ns.training.quizz.canva.goodResultSubtitle + ' "' + correctAnswers + '".'
-        : I18ns.training.quizz.canva.badResultSubtitle + ' "' + correctAnswers + '".'
+        ? I18ns.training.quizz.canva.goodResultSubtitle
+        : I18ns.training.quizz.canva.badResultSubtitle
     }}
+    <span>{{ answers }}</span>
   </p>
   <hr />
   <h2>{{ I18ns.training.quizz.canva.explanation }}</h2>

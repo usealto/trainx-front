@@ -1,6 +1,12 @@
 <h1>{{ I18ns.leadHome.title + userName | titlecase }}</h1>
 <p class="mb-4 alto-grey fs-6b">{{ I18ns.userHome.subtitle }}</p>
-<div class="row mt-5 mb-4">
+
+<!-- STATISTICS -->
+
+<alto-statistics></alto-statistics>
+
+<!-- PROGRAM RUNS -->
+<div class="row mt-6 mb-2">
   <div class="col-5">
     <h2 class="title">{{ I18ns.userHome.programsRun.title }}</h2>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.programsRun.subtitle }}</p>
@@ -12,7 +18,7 @@
     </button>
   </div>
 </div>
-<div class="row">
+<div class="row mb-4">
   <div class="col-4">
     <div
       class="panel highlighted-panel pe-auto ongoingSessionPanel"
@@ -24,7 +30,7 @@
       <h2 class="mt-4">{{ I18ns.userHome.programsRun.continueSession }}</h2>
       <p class="alto-grey mb-4">{{ I18ns.userHome.programsRun.continueSessionSubtitle }}</p>
       <p class="text-end alto-light-grey fs-7">
-        {{ I18ns.userHome.programsRun.continueSessionCounts | plural : guessesCount }}
+        {{ I18ns.userHome.programsRun.continueSessionCounts | plural : continuousSessionGuessesCount }}
       </p>
     </div>
   </div>
@@ -43,4 +49,54 @@
     [pageSize]="pageSize"
     aria-label="Default pagination"
   ></alto-pagination>
+
+<!-- TEAMS -->
+<div class="mt-4 mb-2">
+  <h2 class="title">{{ I18ns.userHome.teams.title }}</h2>
+  <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.teams.subtitle }}</p>
+</div>
+<div class="row mt-4">
+  <div class="col me-4 panel">
+    <h2>{{ I18ns.userHome.teams.leaderboard.title }}</h2>
+    <alto-tabs
+      class="mb-3"
+      [data]="[
+        { label: 'First', value: '1' },
+        { label: 'Second', value: '2' },
+        { label: 'Third', value: '3' }
+      ]"
+    ></alto-tabs>
+    <hr />
+    <table>
+      <thead>
+        <th scope="col">{{ I18ns.userHome.teams.leaderboard.name }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.leaderboard.score }}</th>
+      </thead>
+      <tbody>
+        <tr></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col panel">
+    <h2>{{ I18ns.userHome.teams.challenges.title }}</h2>
+    <alto-tabs
+      class="mb-3"
+      [data]="[
+        { label: 'First', value: '1' },
+        { label: 'Second', value: '2' }
+      ]"
+    ></alto-tabs>
+    <hr />
+    <table class="table">
+      <thead>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.name }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.leader }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.position }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.end }}</th>
+      </thead>
+      <tbody>
+        <tr></tr>
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -2,6 +2,14 @@
   height: 1.714rem;
 }
 
+.highlighted-panel {
+  cursor: pointer;
+}
+.highlighted-panel:hover {
+  border-color: #84caff;
+  border-radius: 12px;
+}
+
 // *** DONUT
 @property --progress-value {
   syntax: '<integer>';

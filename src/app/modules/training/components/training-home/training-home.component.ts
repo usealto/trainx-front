@@ -9,6 +9,9 @@ import { ProgramsRestService } from 'src/app/modules/programs/services/programs-
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { TrainingCardData } from '../../models/training.model';
 
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+
+@UntilDestroy()
 @Component({
   selector: 'alto-training-home',
   templateUrl: './training-home.component.html',
@@ -22,6 +25,7 @@ export class TrainingHomeComponent implements OnInit {
   guessesCount = 0;
 
   myPrograms: TrainingCardData[] = [];
+  onGoingPrograms?: TrainingCardData[];
   user = this.userStore.user.value;
 
   constructor(
@@ -30,10 +34,25 @@ export class TrainingHomeComponent implements OnInit {
     private readonly userStore: ProfileStore,
   ) {}
 
+
   ngOnInit(): void {}
 
   switchTab(index: number) {
     this.activeTab = index;
+  }
+
+  onGoingFilter(val: string) {
+    switch (val) {
+      case '1':
+        this.onGoingPrograms = this.myPrograms;
+        break;
+      case '2':
+        this.onGoingPrograms = this.myPrograms.filter((p) => !!p.programRunId);
+        break;
+      case '3':
+        this.onGoingPrograms = this.myPrograms.filter((p) => !p.programRunId);
+        break;
+    }
   }
 
   @memoize()

@@ -13,6 +13,10 @@ const routes: Routes = [
     path: AltoRoutes.trainingSession,
     component: TrainingComponent,
   },
+  {
+    path: AltoRoutes.trainingSession + '/:programId',
+    component: TrainingComponent,
+  },
 ];
 
 @NgModule({

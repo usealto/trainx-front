@@ -49,7 +49,10 @@ export const chartDefaultOptions: ChartOptions = {
     y: {
       display: true,
       min: 0,
-      max: 100,
+      max: 105,
+      ticks: {
+        stepSize: 5,
+      },
       title: {
         display: true,
         text: I18ns.leadHome.graph.score,

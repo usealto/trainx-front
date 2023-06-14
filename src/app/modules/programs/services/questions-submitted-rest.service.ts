@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import {
+  CreateQuestionSubmittedDtoApiStatusEnumApi,
   GetQuestionsSubmittedRequestParams,
   PatchQuestionSubmittedRequestParams,
   QuestionsSubmittedApiService,
@@ -40,5 +41,11 @@ export class QuestionsSubmittedRestService {
 
   update(req: PatchQuestionSubmittedRequestParams) {
     return this.questionSubmittedApi.patchQuestionSubmitted(req);
+  }
+
+  create(title: string) {
+    return this.questionSubmittedApi.createQuestionSubmitted({
+      createQuestionSubmittedDtoApi: { title, status: CreateQuestionSubmittedDtoApiStatusEnumApi.Submitted },
+    });
   }
 }

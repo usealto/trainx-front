@@ -1,3 +1,6 @@
+:host {
+  display: block;
+}
 :host ::ng-deep {
   .page-link:focus {
     box-shadow: none;

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, combineLatest, map, switchMap, tap } from 'rxjs';
 import {
+  CreateProgramRunDtoApi,
   GetProgramRunsRequestParams,
   ProgramRunPaginatedResponseApi,
   ProgramRunsApiService,
@@ -9,6 +10,8 @@ import {
 import { ProgramsRestService } from './programs-rest.service';
 import { TrainingCardData } from '../../training/models/training.model';
 import { ProfileStore } from '../../profile/profile.store';
+import { ScoreDuration } from '../../shared/models/score.model';
+import { ScoresService } from '../../shared/services/scores.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +21,7 @@ export class ProgramRunsRestService {
     private readonly programRunApi: ProgramRunsApiService,
     private readonly programsRestService: ProgramsRestService,
     private readonly profileStore: ProfileStore,
+    private readonly scoresService: ScoresService,
   ) {}
 
   getProgramRunsPaginated(req: GetProgramRunsRequestParams): Observable<ProgramRunPaginatedResponseApi> {
@@ -82,7 +86,22 @@ export class ProgramRunsRestService {
         }));
         return myPrograms;
       }),
-      tap(console.log),
     );
+}
+
+  getMyProgramRuns(req?: GetProgramRunsRequestParams, duration?: ScoreDuration, isProgression = false) {
+    const params = { ...req, itemsPerPage: 300, createdBy: this.profileStore.user.value.id };
+    if (duration) {
+      params.createdAfter = isProgression
+        ? this.scoresService.getPreviousPeriod(duration)[0]
+        : this.scoresService.getStartDate(duration);
+      params.createdBefore = isProgression ? this.scoresService.getPreviousPeriod(duration)[1] : new Date();
+    }
+
+    return this.programRunApi.getProgramRuns(params).pipe(map((res) => res.data ?? []));
+  }
+
+  create(createProgramRunDtoApi: CreateProgramRunDtoApi) {
+    return this.programRunApi.createProgramRun({ createProgramRunDtoApi });
   }
 }

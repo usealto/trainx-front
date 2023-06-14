@@ -17,31 +17,40 @@
   </div>
   <div class="col-6 row">
     <div class="col-6">
-      <div class="panel mb-4">
+      <div class="panel mb-4 small-panel">
         <p class="alto-grey">
           {{ I18ns.training.continuingTraining.panels.score }}
         </p>
-        <h1 class="mt-4">0</h1>
+        <div class="mt-5">
+          <h1 class="d-inline-block">{{ avgScore | percent }}</h1>
+          <alto-progression-badge class="float-end mt-2" [score]="previousAvgScore"></alto-progression-badge>
+        </div>
       </div>
     </div>
     <div class="col-6">
-      <div class="panel mb-4">
+      <div class="panel mb-4 small-panel">
         <p class="alto-grey">
           {{ I18ns.training.continuingTraining.panels.frequency }}
         </p>
-        <h1 class="mt-4">0</h1>
+        <div class="mt-5">
+          <h1 class="d-inline-block">{{ regularity | percent }}</h1>
+          <alto-progression-badge
+            class="float-end mt-2"
+            [score]="previousRegularity"
+          ></alto-progression-badge>
+        </div>
       </div>
     </div>
     <div class="col-6">
-      <div class="panel mb-4">
+      <div class="panel mb-4 small-panel">
         <p class="alto-grey">
           {{ I18ns.training.continuingTraining.panels.streak }}
         </p>
-        <h1 class="mt-4">0</h1>
+        <h1 class="mt-4">{{ streak }}</h1>
       </div>
     </div>
     <div class="col-6">
-      <div class="panel mb-4">
+      <div class="panel mb-4 small-panel">
         <p class="alto-grey">
           {{ I18ns.training.continuingTraining.panels.bestStreak }}
         </p>

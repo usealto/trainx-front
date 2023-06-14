@@ -173,6 +173,12 @@ export const FR = {
         question: 'Intitulé',
         author: 'Ajouté par',
       },
+      form: {
+        title: 'Suggérer une question',
+        subtitle: 'Pour le programme',
+        label: 'Question',
+        placeholder: 'Intitulé de la question',
+      },
     },
     tags: {
       title: 'Tags',
@@ -598,6 +604,9 @@ export const FR = {
       title: 'Server Error',
       message: 'The server encountered an error. Please contact the technical service.',
     },
+    Conflict: {
+      title: 'Conflict on Data',
+    },
     OverLoad: {
       title: 'Too many requests',
       message: 'The server encountered an error. Please contact the technical service.',
@@ -655,6 +664,43 @@ export const FR = {
         "{{}} personnes se sont entrainés aujourd'hui",
       ],
     },
+    statistics: {
+      title: 'Vos statistiques',
+      subtitle: 'Découvrez un aperçu de votre performance.',
+      averageScore: {
+        title: 'Score moyen',
+        tooltip: 'Score moyen de vos questions répondues',
+      },
+      finishedPrograms: {
+        title: 'Programmes terminés',
+        tooltip: 'Nombre de programmes sur le nombre de programmes assignés',
+      },
+      responseCount: {
+        title: 'Nombre de réponses',
+        tooltip: 'Nombre total de réponses',
+      },
+      progression: {
+        title: 'Progression',
+        you: 'Vous',
+        yourTeam: 'Votre équipe',
+      },
+    },
+    teams: {
+      title: 'Votre équipe',
+      subtitle: 'Découvrez votre classement et les challenges en cours.',
+      leaderboard: {
+        title: 'Leaderboard',
+        name: 'Nom',
+        score: 'Score',
+      },
+      challenges: {
+        title: 'Challenges en cours',
+        name: 'Nom',
+        leader: 'Leader',
+        position: 'Position',
+        end: 'Fin',
+      },
+    },
   },
   training: {
     title: 'Programmes',
@@ -667,6 +713,13 @@ export const FR = {
     onGoing: {
       title: 'Continuez votre entraînement',
       subtitle: "Retrouvez l'ensemble de vos programmes en cours",
+      filters: {
+        showAll: 'Tout voir',
+        started: 'Commencés',
+        new: 'Nouveaux',
+      },
+      noData: 'Aucun programme en cours',
+      noDataSubtitle: "Votre équipe n'a été assigné à aucun programme pour le moment",
     },
     continuingTraining: {
       title: 'Training continu',
@@ -690,12 +743,17 @@ export const FR = {
     },
     quizz: {
       secondsRemaining: 'secondes restantes',
+      questionCounter: 'Question {{}} sur {{}}',
       selectOneAnswer: 'Sélectionnez la bonne réponse',
+      selectAllAnswers: 'Sélectionnez toutes les bonnes réponses',
       submit: 'Valider',
       saveAndQuit: 'Enregistrer et quitter',
+      dontknow: 'Je ne sais pas',
+
       canva: {
         goodAnswer: 'Bonne réponse !',
         badAnswer: 'Mauvaise réponse !',
+        tooBad: 'Dommage !',
         goodResultSubtitle: "Il s'agissait bien de",
         badResultSubtitle: "Il s'agissait de",
         explanation: 'Explication',
@@ -703,6 +761,13 @@ export const FR = {
         reference: 'Référence',
         noReference: 'Pas de référence',
         continue: 'Continuer',
+      },
+      endModal: {
+        title: 'Programme terminé !',
+        subtitle: 'Félicitations, vous avez répondu à toutes les questions du programme "{{}}"',
+        score: 'Votre score est de ',
+        backButton: 'Retour à vos programmes',
+        submitQuestion: 'Suggérer une question',
       },
     },
   },

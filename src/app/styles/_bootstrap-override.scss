@@ -21,15 +21,14 @@
 }
 .offcanvas {
   --bs-offcanvas-width: 520px;
+  --bs-offcanvas-border-width: 0;
   --bs-offcanvas-color: var(--alto-text-color);
 }
 
 .progress {
   --bs-progress-height: 0.571rem;
   --bs-progress-bg: #f2f4f7;
-  width: calc(100% - 3.5rem);
   display: inline-flex;
-  margin-right: 0.571rem;
 }
 
 .btn-outline-secondary {

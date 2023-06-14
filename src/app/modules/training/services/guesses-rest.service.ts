@@ -6,15 +6,33 @@ import {
   GuessesApiService,
 } from '@usealto/sdk-ts-angular';
 import { Observable, map } from 'rxjs';
+import { ScoreDuration } from '../../shared/models/score.model';
+import { ScoresService } from '../../shared/services/scores.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GuessesRestService {
-  constructor(private readonly guessesApi: GuessesApiService) {}
+  constructor(private readonly guessesApi: GuessesApiService, private readonly scoreService: ScoresService) {}
 
-  getGuesses(): Observable<GuessDtoApi[]> {
-    return this.guessesApi.getGuesses({} as GetGuessesRequestParams).pipe(map((d) => d.data ?? []));
+  getGuesses(
+    params?: GetGuessesRequestParams,
+    duration?: ScoreDuration,
+    isProgression?: boolean,
+  ): Observable<GuessDtoApi[]> {
+    if (duration) {
+      const createdAfter = isProgression
+        ? this.scoreService.getPreviousPeriod(duration)[0]
+        : this.scoreService.getStartDate(duration);
+      const createdBefore = isProgression ? this.scoreService.getPreviousPeriod(duration)[1] : new Date();
+
+      params = {
+        ...params,
+        createdAfter,
+        createdBefore,
+      };
+    }
+    return this.guessesApi.getGuesses(params ?? {}).pipe(map((d) => d.data ?? []));
   }
 
   postGuess(createGuessDtoApi: CreateGuessDtoApi): Observable<GuessDtoApi | undefined> {

@@ -45,12 +45,14 @@ export class TeamFormComponent implements OnInit {
           tap(([programs, users]) => (this.users = users)),
         )
         .subscribe();
+
       this.teamForm = this.fb.group<TeamForm>({
         shortName: ['', [Validators.required]],
         longName: ['', [Validators.required]],
         programs: [],
         invitationEmails: [],
       });
+
       if (this.team) {
         this.isEdit = true;
         const { shortName, longName } = this.team;
@@ -119,10 +121,33 @@ export class TeamFormComponent implements OnInit {
     }
   }
 
-  updateTeamInfos(team: TeamDtoApi, programs: ProgramDtoApi[], members: UserDtoApi[]) {
-    programs.forEach((program) => {
-      this.programService.updateProgram(program.id, { teams: [{ id: team.id } as TeamApi] }).subscribe();
+  updateTeamInfos(team: TeamDtoApi, formProgs: ProgramDtoApi[], members: UserDtoApi[]) {
+    const teamProgs = (this.team?.programs || []).reduce((result, program) => {
+      const longProg = this.programs.find((po) => program.id === po.id);
+      if (longProg) {
+        result.push(longProg);
+      }
+      return result;
+    }, [] as ProgramDtoApi[]);
+
+    teamProgs.forEach((p) => {
+      if (!formProgs.find((po) => po.id === p.id)) {
+        // To Delete
+        this.programService
+          .updateProgram(p.id, {
+            teams: p.teams.filter((t) => t.id !== team.id).map((t) => ({ id: t.id } as TeamApi)),
+          })
+          .subscribe();
+      }
     });
+
+    formProgs.forEach((p) => {
+      if (!teamProgs.find((po) => po.id === p.id) && this.team) {
+        // To Add
+        this.programService.updateProgram(p.id, { teams: [...p.teams, this.team] as TeamApi[] }).subscribe();
+      }
+    });
+
     members.forEach((member) => {
       if (member.teamId !== team.id) {
         this.userRestService.patchUser(member.id, { teamId: team.id }).subscribe();

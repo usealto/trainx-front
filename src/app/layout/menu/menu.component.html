@@ -111,7 +111,7 @@
 
       {{ I18ns.menu.team }}
     </a>
-    <a
+    <!-- <a
       class="module"
       [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.challenges"
       routerLinkActive="menu-selected"
@@ -123,7 +123,7 @@
         />
       </svg>
       {{ I18ns.menu.challenges }}
-    </a>
+    </a> -->
   </div>
 
   <div class="bottom-block">
@@ -144,14 +144,14 @@
     </div>
     <div *ngIf="isAdmin" class="form-check form-switch ms-5">
       <input
-        class="form-check-input me-2"
+        class="form-check-input me-3"
         type="checkbox"
         id="flexSwitchCheckDefault"
         #adminSwitch
         [checked]="displayAdmin"
         (change)="switchToAdmin(adminSwitch.checked)"
       />
-      <label class="form-check-label cursor-pointer" for="flexSwitchCheckDefault">
+      <label class="form-check-label cursor-pointer" style="margin-top: 0.1rem" for="flexSwitchCheckDefault">
         {{ I18ns.menu.adminMode }}
       </label>
     </div>
