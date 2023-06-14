@@ -26,6 +26,7 @@ export class ContinuingTrainingComponent implements OnInit {
   previousAvgScore = 0;
   regularity = 0;
   previousRegularity = 0;
+  streak = 0;
 
   constructor(
     private readonly scoresRestService: ScoresRestService,
@@ -34,41 +35,53 @@ export class ContinuingTrainingComponent implements OnInit {
     private readonly profileStore: ProfileStore,
   ) {}
   ngOnInit(): void {
-    combineLatest([
-      this.scoresRestService.getScores({
-        duration: ScoreDuration.Month,
-        type: ScoreTypeEnumApi.User,
-        timeframe: ScoreTimeframeEnumApi.Day,
-        ids: [this.profileStore.user.value.id],
-      }),
-      this.scoresRestService.getScores(
-        {
-          duration: ScoreDuration.Month,
-          type: ScoreTypeEnumApi.User,
-          timeframe: ScoreTimeframeEnumApi.Day,
-          ids: [this.profileStore.user.value.id],
-        },
-        true,
-      ),
-      this.guessRestService.getGuesses({ createdBy: this.profileStore.user.value.id }, ScoreDuration.Month),
-      this.guessRestService.getGuesses(
-        { createdBy: this.profileStore.user.value.id },
-        ScoreDuration.Month,
-        true,
-      ),
-    ])
-      .pipe(
-        tap(([userScore, previousSCore, guesses, previousGuesses]) => {
-          this.regularity = this.getParticipationDays(guesses) / (this.daysInPeriod * this.threshold);
-          this.previousRegularity =
-            this.getParticipationDays(previousGuesses) / (this.daysInPeriod * this.threshold);
+    this.scoresRestService.getUsersStats(ScoreDuration.Month).pipe(tap(console.log)).subscribe();
+    // combineLatest([
+    //   this.scoresRestService.getScores({
+    //     duration: ScoreDuration.Month,
+    //     type: ScoreTypeEnumApi.User,
+    //     timeframe: ScoreTimeframeEnumApi.Day,
+    //     ids: [this.profileStore.user.value.id],
+    //   }),
+    //   this.scoresRestService.getScores(
+    //     {
+    //       duration: ScoreDuration.Month,
+    //       type: ScoreTypeEnumApi.User,
+    //       timeframe: ScoreTimeframeEnumApi.Day,
+    //       ids: [this.profileStore.user.value.id],
+    //     },
+    //     true,
+    //   ),
+    //   this.guessRestService.getGuesses(
+    //     { createdBy: this.profileStore.user.value.id, itemsPerPage: 500 },
+    //     ScoreDuration.Trimester,
+    //   ),
+    //   this.guessRestService.getGuesses(
+    //     { createdBy: this.profileStore.user.value.id, itemsPerPage: 500 },
+    //     ScoreDuration.Trimester,
+    //     true,
+    //   ),
+    // ])
+    //   .pipe(
+    //     tap(([userScore, previousSCore, guesses, previousGuesses]) => {
+    //       // console.log(usersScores);
 
-          this.avgScore = this.scoresService.reduceWithoutNull(userScore.scores[0]?.averages) ?? 0;
-          this.previousAvgScore =
-            this.scoresService.reduceWithoutNull(previousSCore.scores[0]?.averages) ?? 0;
-        }),
-      )
-      .subscribe();
+    //       this.regularity = this.getParticipationDays(guesses) / (this.daysInPeriod * this.threshold);
+    //       this.previousRegularity =
+    //         this.getParticipationDays(previousGuesses) / (this.daysInPeriod * this.threshold);
+
+    //       this.avgScore = this.scoresService.reduceWithoutNull(userScore.scores[0]?.averages) ?? 0;
+    //       this.previousAvgScore =
+    //         this.scoresService.reduceWithoutNull(previousSCore.scores[0]?.averages) ?? 0;
+
+    //       this.streak = this.getStreak(guesses);
+    //     }),
+    //   )
+    //   .subscribe();
+  }
+
+  private getStreak(guesses: GuessDtoApi[] = []): number {
+    return 0;
   }
 
   private getParticipationDays(guesses: GuessDtoApi[] = []): number {
