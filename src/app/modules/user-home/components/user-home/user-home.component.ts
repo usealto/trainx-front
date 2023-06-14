@@ -1,17 +1,13 @@
-
 import { Component, Input, OnInit } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
-import { GuessDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
-import { addDays, getDayOfYear } from 'date-fns';
-import { combineLatest, tap } from 'rxjs';
+import { GuessDtoApi } from '@usealto/sdk-ts-angular';
+import { addDays } from 'date-fns';
+import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { TrainingCardData } from 'src/app/modules/training/models/training.model';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
-import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
-import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
-import { Router } from '@angular/router';
 @Component({
   selector: 'alto-user-home',
   templateUrl: './user-home.component.html',
@@ -34,9 +30,7 @@ export class UserHomeComponent implements OnInit {
   constructor(
     private readonly profileStore: ProfileStore,
     private readonly guessesRestService: GuessesRestService,
-    private readonly programsRestService: ProgramsRestService,
     private readonly programRunsRestService: ProgramRunsRestService,
-    private router: Router,
   ) {}
 
   ngOnInit(): void {
