@@ -25,7 +25,6 @@ export class TrainingHomeComponent implements OnInit {
   myPrograms: TrainingCardData[] = [];
   onGoingPrograms?: TrainingCardData[];
   improveScorePrograms?: TrainingCardData[];
-  allMyPrograms?: TrainingCardData[];
   user = this.userStore.user.value;
 
   constructor(
@@ -41,7 +40,6 @@ export class TrainingHomeComponent implements OnInit {
           this.myPrograms = a;
           this.onGoingPrograms = a.filter((r) => r.isProgress === true);
           this.improveScorePrograms = a.filter((r) => r.isProgress !== true);
-          this.allMyPrograms = a;
         }),
       )
       .subscribe();
