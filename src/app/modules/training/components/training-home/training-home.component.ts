@@ -24,6 +24,7 @@ export class TrainingHomeComponent implements OnInit {
 
   myPrograms: TrainingCardData[] = [];
   onGoingPrograms?: TrainingCardData[];
+  improveScorePrograms?: any[];
   user = this.userStore.user.value;
 
   constructor(
@@ -37,7 +38,16 @@ export class TrainingHomeComponent implements OnInit {
       .pipe(
         tap((a) => {
           this.myPrograms = a;
-          this.onGoingPrograms = a;
+          this.onGoingPrograms = a.filter((r) => r.isProgress === true);
+        }),
+      )
+      .subscribe();
+
+    this.programRunsRestService
+      .getMyProgramRunsCards()
+      .pipe(
+        tap((a) => {
+          this.improveScorePrograms = a.filter((r) => r.isProgress !== true);
         }),
       )
       .subscribe();

@@ -36,7 +36,7 @@ export class UserHomeComponent implements OnInit {
   ngOnInit(): void {
     this.programRunsRestService
       .getMyProgramRunsCards()
-      .pipe(tap((a) => (this.myProgramRunsCards = a)))
+      .pipe(tap((a) => (this.myProgramRunsCards = a.filter((r) => r.isProgress === true))))
       .subscribe();
 
     this.userName = this.profileStore.user.value.firstname ?? this.profileStore.user.value.username ?? '';
