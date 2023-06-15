@@ -72,27 +72,36 @@ export class StatisticsComponent implements OnInit {
 
   getFinishedPrograms() {
     combineLatest([
-      this.programsRestService.getPrograms(this.statisticsDuration),
-      this.programsRestService.getPrograms(this.statisticsDuration, true),
-      this.programRunsRestService.getMyProgramRuns({}, this.statisticsDuration),
-      this.programRunsRestService.getMyProgramRuns({}, this.statisticsDuration, true),
+      this.programsRestService.getProgramsPaginated(
+        { teamIds: this.profileStore.user.value.teamId },
+        this.statisticsDuration,
+      ),
+      this.programsRestService.getProgramsPaginated(
+        { teamIds: this.profileStore.user.value.teamId },
+        this.statisticsDuration,
+        true,
+      ),
+      this.programRunsRestService.getMyProgramRuns(),
     ])
       .pipe(
-        tap(([currentPrograms, previousPrograms, currentProgramRuns, previousProgramRuns]) => {
+        tap(([currentPrograms, previousPrograms, currentProgramRuns]) => {
           //TODO: refacto when backend will bring latest program run with programs
-          this.programsCount = currentPrograms.length;
-          const finishedPrograms = currentPrograms.filter((p) =>
-            currentProgramRuns.some((pr) => pr.programId === p.id && !!pr.finishedAt),
-          );
-          const previousFinishedPrograms = previousPrograms.filter((p) =>
-            previousProgramRuns.some((pr) => pr.programId === p.id && !!pr.finishedAt),
-          );
+          this.programsCount = currentPrograms.data?.length ?? 0;
+          const finishedPrograms =
+            currentPrograms.data?.filter((p) =>
+              currentProgramRuns.some((pr) => pr.programId === p.id && !!pr.finishedAt),
+            ) ?? [];
+          const previousFinishedPrograms =
+            previousPrograms.data?.filter((p) =>
+              currentProgramRuns.some((pr) => pr.programId === p.id && !!pr.finishedAt),
+            ) ?? [];
           this.finishedProgramsCount = finishedPrograms.length;
           this.averageFinishedPrograms =
-            finishedPrograms.length > 0 ? finishedPrograms.length / currentPrograms.length : 0;
+            finishedPrograms.length > 0 ? finishedPrograms.length / (currentPrograms.data?.length ?? 1) : 0;
           this.finishedProgramsCountProgression =
             previousFinishedPrograms.length > 0
-              ? this.averageFinishedPrograms - previousFinishedPrograms.length / previousPrograms.length
+              ? this.averageFinishedPrograms -
+                previousFinishedPrograms?.length / (previousPrograms.data?.length ?? 1)
               : 0;
         }),
       )

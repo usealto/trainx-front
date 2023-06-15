@@ -27,12 +27,23 @@ export class ProgramsRestService {
     private readonly scoresService: ScoresService,
   ) {}
 
-  getProgramsPaginated(req: GetProgramsRequestParams): Observable<ProgramDtoPaginatedResponseApi> {
+  getProgramsPaginated(
+    req: GetProgramsRequestParams,
+    duration?: ScoreDuration,
+    isProgression = false,
+  ): Observable<ProgramDtoPaginatedResponseApi> {
     const par = {
       ...req,
       page: req?.page ?? 1,
       itemsPerPage: req?.itemsPerPage ?? 300,
-    };
+    } as GetProgramsRequestParams;
+
+    if (duration) {
+      par.createdAfter = isProgression
+        ? this.scoresService.getPreviousPeriod(duration)[0]
+        : this.scoresService.getStartDate(duration);
+      par.createdBefore = isProgression ? this.scoresService.getPreviousPeriod(duration)[1] : new Date();
+    }
 
     return this.programApi.getPrograms(par);
   }
@@ -41,8 +52,8 @@ export class ProgramsRestService {
     return this.programApi.patchProgram({ id, patchProgramDtoApi });
   }
 
-  getPrograms(duration?: ScoreDuration, isProgression = false): Observable<ProgramDtoApi[]> {
-    if (this.programStore.programs.value.length && !duration) {
+  getPrograms(): Observable<ProgramDtoApi[]> {
+    if (this.programStore.programs.value.length) {
       return this.programStore.programs.value$;
     } else {
       const par = {
@@ -50,20 +61,9 @@ export class ProgramsRestService {
         itemsPerPage: 400,
       } as GetProgramsRequestParams;
 
-      if (duration) {
-        par.createdAfter = isProgression
-          ? this.scoresService.getPreviousPeriod(duration)[0]
-          : this.scoresService.getStartDate(duration);
-        par.createdBefore = isProgression ? this.scoresService.getPreviousPeriod(duration)[1] : new Date();
-      }
-
       return this.programApi.getPrograms(par).pipe(
         map((d) => d.data ?? []),
-        tap((pr) => {
-          if (!duration) {
-            this.programStore.programs.value = pr;
-          }
-        }),
+        tap((pr) => (this.programStore.programs.value = pr)),
       );
     }
   }
