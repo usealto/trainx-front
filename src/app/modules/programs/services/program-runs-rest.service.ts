@@ -12,6 +12,7 @@ import { TrainingCardData } from '../../training/models/training.model';
 import { ProfileStore } from '../../profile/profile.store';
 import { ScoreDuration } from '../../shared/models/score.model';
 import { ScoresService } from '../../shared/services/scores.service';
+import { UsersRestService } from '../../profile/services/users-rest.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,7 @@ export class ProgramRunsRestService {
     private readonly programsRestService: ProgramsRestService,
     private readonly profileStore: ProfileStore,
     private readonly scoresService: ScoresService,
+    private readonly usersService: UsersRestService,
   ) {}
 
   getProgramRunsPaginated(req: GetProgramRunsRequestParams): Observable<ProgramRunPaginatedResponseApi> {
@@ -66,19 +68,21 @@ export class ProgramRunsRestService {
           .reverse();
       }),
       switchMap((arr) =>
-        this.getProgramRunsPaginated({
-          isFinished: true,
-          programIds: arr.map((x) => x.programId).join(','),
-        }),
+        combineLatest([
+          this.getProgramRunsPaginated({
+            isFinished: true,
+            programIds: arr.map((x) => x.programId).join(','),
+          }),
+          this.usersService.getUsers(),
+        ]),
       ),
-      map((prs) => {
+      map(([prs, users]) => {
         myPrograms = myPrograms.map((pDisp) => ({
           ...pDisp,
           users:
             prs.data?.reduce((result, pr) => {
-              const user = this.profileStore.users.value.find((x) => x.id === pr.createdBy);
+              const user = users.find((x) => x.id === pr.createdBy);
               if (pr.programId === pDisp.programId && user && !result.find((u) => u.id === user.id)) {
-                // if (user && !result.find((u) => u.id === user.id)) {
                 result.push(user);
               }
               return result;
@@ -87,7 +91,7 @@ export class ProgramRunsRestService {
         return myPrograms;
       }),
     );
-}
+  }
 
   getMyProgramRuns(req?: GetProgramRunsRequestParams, duration?: ScoreDuration, isProgression = false) {
     const params = { ...req, itemsPerPage: 300, createdBy: this.profileStore.user.value.id };
