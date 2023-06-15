@@ -14,3 +14,13 @@
 .small-panel {
   height: 8.429rem;
 }
+.continuing-session-panel {
+  height: 18rem;
+  position: relative;
+}
+.users-counter {
+  width: calc(100% - 3.429rem);
+  margin-bottom: 1.143rem;
+  position: absolute;
+  bottom: 0;
+}
