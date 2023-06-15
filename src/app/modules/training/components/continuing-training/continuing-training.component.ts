@@ -50,15 +50,15 @@ export class ContinuingTrainingComponent implements OnInit {
     ])
       .pipe(
         tap(([userScore, previousSCore, guesses, previousGuesses]) => {
-          this.regularity = this.getParticipationDays(guesses) / (this.daysInPeriod * this.threshold);
+          this.regularity = this.getParticipationDays(guesses.data) / (this.daysInPeriod * this.threshold);
           this.previousRegularity =
-            this.getParticipationDays(previousGuesses) / (this.daysInPeriod * this.threshold);
+            this.getParticipationDays(previousGuesses.data) / (this.daysInPeriod * this.threshold);
 
           this.avgScore = userScore.find((u) => u.id === this.profileStore.user.value.id)?.score ?? 0;
           this.previousAvgScore =
             previousSCore.find((u) => u.id === this.profileStore.user.value.id)?.score ?? 0;
 
-          this.streak = this.getStreak(guesses);
+          this.streak = this.getStreak(guesses.data);
         }),
       )
       .subscribe();

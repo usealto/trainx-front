@@ -3,6 +3,7 @@ import {
   CreateGuessDtoApi,
   GetGuessesRequestParams,
   GuessDtoApi,
+  GuessDtoPaginatedResponseApi,
   GuessesApiService,
 } from '@usealto/sdk-ts-angular';
 import { Observable, map } from 'rxjs';
@@ -19,7 +20,7 @@ export class GuessesRestService {
     params?: GetGuessesRequestParams,
     duration?: ScoreDuration,
     isProgression?: boolean,
-  ): Observable<GuessDtoApi[]> {
+  ): Observable<GuessDtoPaginatedResponseApi> {
     if (duration) {
       const createdAfter = isProgression
         ? this.scoreService.getPreviousPeriod(duration)[0]
@@ -32,7 +33,7 @@ export class GuessesRestService {
         createdBefore,
       };
     }
-    return this.guessesApi.getGuesses(params ?? {}).pipe(map((d) => d.data ?? []));
+    return this.guessesApi.getGuesses(params ?? {});
   }
 
   postGuess(createGuessDtoApi: CreateGuessDtoApi): Observable<GuessDtoApi | undefined> {

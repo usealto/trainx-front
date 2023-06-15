@@ -79,20 +79,21 @@ export class StatisticsComponent implements OnInit {
     ])
       .pipe(
         tap(([currentPrograms, previousPrograms, currentProgramRuns, previousProgramRuns]) => {
+          //TODO: refacto when backend will bring latest program run with programs
           this.programsCount = currentPrograms.length;
           const finishedPrograms = currentPrograms.filter((p) =>
-            currentProgramRuns.some((pr) => pr.programId === p.id),
+            currentProgramRuns.some((pr) => pr.programId === p.id && !!pr.finishedAt),
           );
           const previousFinishedPrograms = previousPrograms.filter((p) =>
-            previousProgramRuns.some((pr) => pr.programId === p.id),
+            previousProgramRuns.some((pr) => pr.programId === p.id && !!pr.finishedAt),
           );
           this.finishedProgramsCount = finishedPrograms.length;
-          this.averageFinishedPrograms = finishedPrograms.length
-            ? finishedPrograms.length / currentPrograms.length
-            : 0;
-          this.finishedProgramsCountProgression = previousFinishedPrograms.length
-            ? previousFinishedPrograms.length / previousPrograms.length - this.averageFinishedPrograms
-            : 0;
+          this.averageFinishedPrograms =
+            finishedPrograms.length > 0 ? finishedPrograms.length / currentPrograms.length : 0;
+          this.finishedProgramsCountProgression =
+            previousFinishedPrograms.length > 0
+              ? this.averageFinishedPrograms - previousFinishedPrograms.length / previousPrograms.length
+              : 0;
         }),
       )
       .subscribe();
@@ -101,21 +102,21 @@ export class StatisticsComponent implements OnInit {
   getGuessesCount() {
     combineLatest([
       this.guessesRestService.getGuesses(
-        { createdBy: this.profileStore.user.value.id, itemsPerPage: 1000 },
+        { createdBy: this.profileStore.user.value.id, itemsPerPage: 1 },
         this.statisticsDuration,
       ),
       this.guessesRestService.getGuesses(
-        { createdBy: this.profileStore.user.value.id, itemsPerPage: 1000 },
+        { createdBy: this.profileStore.user.value.id, itemsPerPage: 1 },
         this.statisticsDuration,
         true,
       ),
     ])
       .pipe(
         tap(([guesses, previousGuesses]) => {
-          this.guessCount = guesses.length;
+          this.guessCount = guesses.meta.totalItems;
           this.guessCountProgression =
-            previousGuesses.length && guesses.length
-              ? (guesses.length - previousGuesses.length) / previousGuesses.length
+            previousGuesses.meta.totalItems && guesses.meta.totalItems
+              ? (guesses.meta.totalItems - previousGuesses.meta.totalItems) / previousGuesses.meta.totalItems
               : 0;
         }),
       )
@@ -135,11 +136,11 @@ export class StatisticsComponent implements OnInit {
       .pipe(
         tap(([usersScores, teamsScores]) => {
           const userScores = this.statisticsService.aggregateDataForScores(
-            usersScores.scores.find((u) => u.id === this.profileStore.user.value.id)!,
+            usersScores.scores.find((u) => u.id === this.profileStore.user.value.id),
             this.statisticsDuration,
           );
           const teamScores = this.statisticsService.aggregateDataForScores(
-            teamsScores.scores.find((t) => t.id === this.profileStore.user.value.teamId)!,
+            teamsScores.scores.find((t) => t.id === this.profileStore.user.value.teamId),
             this.statisticsDuration,
           );
 

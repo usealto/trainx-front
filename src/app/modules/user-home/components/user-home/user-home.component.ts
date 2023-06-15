@@ -49,7 +49,7 @@ export class UserHomeComponent implements OnInit {
       .pipe(
         tap((guesses) => {
           const reducedGuesses = [] as GuessDtoApi[];
-          guesses.forEach((guess) => {
+          guesses.data?.forEach((guess) => {
             if (!reducedGuesses.some((g) => g.createdBy === guess.createdBy)) {
               reducedGuesses.push(guess);
               this.continuousSessionGuessesCount++;

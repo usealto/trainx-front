@@ -127,8 +127,10 @@ export class TrainingComponent implements OnInit {
           ]),
         ),
         tap(([questions, guesses]) => {
-          this.questionsAnswered = guesses.length;
-          this.remainingQuestions = questions.filter((q) => guesses.every((g) => g.questionId !== q.id));
+          this.questionsAnswered = guesses.meta.totalItems;
+          this.remainingQuestions = questions.filter((q) =>
+            guesses.data?.every((g) => g.questionId !== q.id),
+          );
           this.getNextQuestion();
         }),
       )
