@@ -133,30 +133,9 @@ export class TrainingComponent implements OnInit {
           );
           this.getNextQuestion();
         }),
+        untilDestroyed(this),
       )
       .subscribe();
-  }
-
-  getQuestions() {
-    this.isQuestionsLoading = true;
-
-    // * CONTINUOUS TRAINNG
-    if (this.isContinuous) {
-      this.usersRestService
-        .getNextQuestionsPaginated(this.profileStore.user.value.id, {
-          page: 1,
-          itemsPerPage: 1,
-        } as GetNextQuestionsForUserRequestParams)
-        .pipe(
-          tap(({ data }) => {
-            if (data) {
-              this.setDisplayedQuestion(data[0]);
-            }
-          }),
-          untilDestroyed(this),
-        )
-        .subscribe();
-    }
   }
 
   uncheck(checked: boolean) {
@@ -205,8 +184,6 @@ export class TrainingComponent implements OnInit {
       }
     });
     this.openExplanation(result);
-
-    console.log(this.questionsGoodAnswers);
   }
 
   openExplanation(result: string) {
@@ -253,12 +230,24 @@ export class TrainingComponent implements OnInit {
 
   getNextQuestion() {
     if (this.isContinuous) {
-      this.getQuestions();
+      this.isQuestionsLoading = true;
+
+      this.usersRestService
+        .getNextQuestionsPaginated(this.profileStore.user.value.id, {
+          page: 1,
+          itemsPerPage: 1,
+        } as GetNextQuestionsForUserRequestParams)
+        .pipe(
+          tap(({ data }) => {
+            if (data) {
+              this.setDisplayedQuestion(data[0]);
+            }
+          }),
+          untilDestroyed(this),
+        )
+        .subscribe();
     } else {
       if (this.remainingQuestions.length === 0) {
-        /**
-         * TODO SAVE PR ?
-         */
         this.openDoneModal();
       } else {
         const last = this.remainingQuestions.pop();

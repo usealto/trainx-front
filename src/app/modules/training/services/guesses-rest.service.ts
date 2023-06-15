@@ -33,6 +33,10 @@ export class GuessesRestService {
         createdBefore,
       };
     }
+    params = {
+      ...params,
+      itemsPerPage: params?.itemsPerPage || 150,
+    };
     return this.guessesApi.getGuesses(params ?? {});
   }
 

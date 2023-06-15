@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { GuessDtoApi } from '@usealto/sdk-ts-angular';
-import { format } from 'date-fns';
-import { combineLatest, tap } from 'rxjs';
+import { GuessDtoApi, UserLightDtoApi } from '@usealto/sdk-ts-angular';
+import { addDays, format } from 'date-fns';
+import { combineLatest, map, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { GuessesRestService } from '../../services/guesses-rest.service';
 
 @Component({
@@ -29,9 +28,11 @@ export class ContinuingTrainingComponent implements OnInit {
   streak = 0;
   longestStreak = 0;
 
+  continuousSessionUsers: UserLightDtoApi[] = [];
+
   constructor(
     private readonly scoresRestService: ScoresRestService,
-    private readonly scoresService: ScoresService,
+    private readonly guessesRestService: GuessesRestService,
     private readonly guessRestService: GuessesRestService,
     private readonly profileStore: ProfileStore,
   ) {}
@@ -61,6 +62,29 @@ export class ContinuingTrainingComponent implements OnInit {
 
           this.streak = this.profileStore.user.value.currentStreak.count;
           this.longestStreak = this.profileStore.user.value.longestStreak.count;
+        }),
+      )
+      .subscribe();
+
+    this.continuousSessionGetGuessesCount();
+  }
+
+  continuousSessionGetGuessesCount() {
+    this.guessesRestService
+      .getGuesses({
+        createdAfter: addDays(new Date(), -1),
+        createdBefore: addDays(new Date(), 1),
+      })
+      .pipe(
+        map((gs) => gs.data?.filter((g) => !g.programRunId)),
+        tap((guesses = []) => {
+          const reducedGuesses = [] as GuessDtoApi[];
+          guesses.forEach((guess) => {
+            if (!reducedGuesses.some((g) => g.createdBy === guess.createdBy)) {
+              reducedGuesses.push(guess);
+            }
+          });
+          this.continuousSessionUsers = reducedGuesses.map((g) => g.createdByUser ?? '');
         }),
       )
       .subscribe();

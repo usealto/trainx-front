@@ -47,7 +47,7 @@ export class UserHomeComponent implements OnInit {
     this.guessesRestService
       .getGuesses({
         createdAfter: addDays(new Date(), -1),
-        createdBefore: new Date(),
+        createdBefore: addDays(new Date(), 1),
       })
       .pipe(
         map((gs) => gs.data?.filter((g) => !g.programRunId)),
