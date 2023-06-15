@@ -482,7 +482,7 @@ export const FR = {
       minimumSubtitle: 'Définissez les seuils à atteindre pour pouvoir participer à ce challenge.',
       activity: 'Activité',
       activitySubtitle:
-        'Les participants doivent répondre en moyenne à plus de X questions par jours ouvrés pour pouvoir participer à ce challenge',
+        'Les participants doivent répondre à un minimum de questions pour pouvoir remporter le challenge.',
       questions: ['{{}} question', '{{}} questions'],
       score: 'Score',
       scoreSubtitle:
