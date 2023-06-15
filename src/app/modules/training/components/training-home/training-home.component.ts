@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { GetProgramRunsRequestParams, UserDtoApi } from '@usealto/sdk-ts-angular';
-import { combineLatest, map, switchMap, tap } from 'rxjs';
+import { UserDtoApi } from '@usealto/sdk-ts-angular';
+import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
-import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { TrainingCardData } from '../../models/training.model';
 
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Component({
@@ -30,12 +29,20 @@ export class TrainingHomeComponent implements OnInit {
 
   constructor(
     private readonly programRunsRestService: ProgramRunsRestService,
-    private readonly programsRestService: ProgramsRestService,
     private readonly userStore: ProfileStore,
   ) {}
 
-
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.programRunsRestService
+      .getMyProgramRunsCards()
+      .pipe(
+        tap((a) => {
+          this.myPrograms = a;
+          this.onGoingPrograms = a;
+        }),
+      )
+      .subscribe();
+  }
 
   switchTab(index: number) {
     this.activeTab = index;
