@@ -18,9 +18,13 @@
   <div class="col-6 row">
     <div class="col-6">
       <div class="panel mb-4 small-panel">
-        <p class="alto-grey">
+        <span class="alto-grey">
           {{ I18ns.training.continuingTraining.panels.score }}
-        </p>
+        </span>
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          ngbTooltip="{{ I18ns.userHome.statistics.averageScore.tooltip }}"
+        ></i>
         <div class="mt-5">
           <h1 class="d-inline-block">{{ avgScore }} %</h1>
           <alto-progression-badge class="float-end mt-2" [score]="previousAvgScore"></alto-progression-badge>
@@ -29,9 +33,13 @@
     </div>
     <div class="col-6">
       <div class="panel mb-4 small-panel">
-        <p class="alto-grey">
+        <span class="alto-grey">
           {{ I18ns.training.continuingTraining.panels.frequency }}
-        </p>
+        </span>
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          ngbTooltip="{{ I18ns.userHome.statistics.averageScore.tooltip }}"
+        ></i>
         <div class="mt-5">
           <h1 class="d-inline-block">{{ regularity | percent }}</h1>
           <alto-progression-badge
@@ -43,18 +51,26 @@
     </div>
     <div class="col-6">
       <div class="panel mb-4 small-panel">
-        <p class="alto-grey">
+        <span class="alto-grey">
           {{ I18ns.training.continuingTraining.panels.streak }}
-        </p>
-        <h1 class="mt-4">{{ streak }}</h1>
+        </span>
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          ngbTooltip="{{ I18ns.userHome.statistics.averageScore.tooltip }}"
+        ></i>
+        <h1 class="mt-4">{{ streak + ' ' + (I18ns.shared.days | plural : streak) }}</h1>
       </div>
     </div>
     <div class="col-6">
       <div class="panel mb-4 small-panel">
-        <p class="alto-grey">
+        <span class="alto-grey">
           {{ I18ns.training.continuingTraining.panels.bestStreak }}
-        </p>
-        <h1 class="mt-4">0</h1>
+        </span>
+        <i
+          class="alto-grey bi bi-question-circle float-end"
+          ngbTooltip="{{ I18ns.userHome.statistics.averageScore.tooltip }}"
+        ></i>
+        <h1 class="mt-4">{{ longestStreak + ' ' + (I18ns.shared.days | plural : longestStreak) }}</h1>
       </div>
     </div>
   </div>

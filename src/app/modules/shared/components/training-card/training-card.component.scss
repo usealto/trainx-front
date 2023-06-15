@@ -10,6 +10,10 @@
   border-radius: 12px;
 }
 
+hr {
+  margin: 1.429rem 0;
+}
+
 // *** DONUT
 @property --progress-value {
   syntax: '<integer>';
@@ -29,7 +33,7 @@
 }
 
 .panel {
-  min-height: 242px;
+  height: 17.286rem;
   cursor: pointer;
 }
 

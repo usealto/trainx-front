@@ -3,10 +3,10 @@
   [routerLink]="['/', AltoRoutes.user, AltoRoutes.training, AltoRoutes.trainingSession, data?.programId]"
 >
   <ng-container *ngIf="isProgress; else notProgressTemplate">
-    <div class="round-progress-bar progress mb-4"></div>
+    <div class="round-progress-bar progress mb-5"></div>
   </ng-container>
   <ng-template #notProgressTemplate>
-    <div class="round-progress-bar score mb-4" [ngClass]="getScoreClass(score)">{{ score }}%</div>
+    <div class="round-progress-bar score mb-5" [ngClass]="getScoreClass(score)">{{ score }}%</div>
   </ng-template>
 
   <div class="mb-3">

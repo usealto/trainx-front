@@ -27,6 +27,7 @@ export class ContinuingTrainingComponent implements OnInit {
   regularity = 0;
   previousRegularity = 0;
   streak = 0;
+  longestStreak = 0;
 
   constructor(
     private readonly scoresRestService: ScoresRestService,
@@ -58,14 +59,11 @@ export class ContinuingTrainingComponent implements OnInit {
           this.previousAvgScore =
             previousSCore.find((u) => u.id === this.profileStore.user.value.id)?.score ?? 0;
 
-          this.streak = this.getStreak(guesses.data);
+          this.streak = this.profileStore.user.value.currentStreak.count;
+          this.longestStreak = this.profileStore.user.value.longestStreak.count;
         }),
       )
       .subscribe();
-  }
-
-  private getStreak(guesses: GuessDtoApi[] = []): number {
-    return 0;
   }
 
   private getParticipationDays(guesses: GuessDtoApi[] = []): number {

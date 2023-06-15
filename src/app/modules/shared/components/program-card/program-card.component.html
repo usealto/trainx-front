@@ -31,11 +31,7 @@
         <span>
           {{ I18ns.programs.programs.involvement }}
         </span>
-        <i
-          class="bi bi-question-circle"
-          placement="top"
-          ngbTooltip="{{ I18ns.programs.programs.involvementToolTip }}"
-        ></i>
+        <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.involvementToolTip }}"></i>
         <span class="float-end alto-score" [class]="(participation ? participation * 100 : '') | pillColor">{{
           participation ? (participation | percent) : 'N/A'
         }}</span>
@@ -44,11 +40,7 @@
         <span>
           {{ I18ns.programs.programs.progress }}
         </span>
-        <i
-          class="bi bi-question-circle"
-          placement="top"
-          ngbTooltip="{{ I18ns.programs.programs.progressToolTip }}"
-        ></i>
+        <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.progressToolTip }}"></i>
         <span class="float-end alto-score" [class]="(progress ? progress * 100 : '') | pillColor">
           {{ progress ? (progress | percent) : 'N/A' }}
         </span>
@@ -57,11 +49,7 @@
         <span>
           {{ I18ns.programs.programs.score }}
         </span>
-        <i
-          class="bi bi-question-circle"
-          placement="top"
-          ngbTooltip="{{ I18ns.programs.programs.scoreToolTip }}"
-        ></i>
+        <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.scoreToolTip }}"></i>
         <span class="float-end alto-score" [class]="(score ? score * 100 : '') | pillColor">
           {{ score ? (score | percent) : 'N/A' }}
         </span>

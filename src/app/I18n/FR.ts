@@ -29,6 +29,7 @@ export const FR = {
     programs: 'programmes',
     teams: 'équipes',
     members: 'membres',
+    days: ['jour', 'jours'],
     imageBadge: {
       userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],
     },
@@ -660,8 +661,8 @@ export const FR = {
         'Entraînez vous chaque jour à votre rythme sur des questions issues de vos différents programmes en cours.',
       continueSessionCounts: [
         "Personne ne s'est entrainé aujourd'hui",
-        "{{}} personne s'est entrainé aujourd'hui",
-        "{{}} personnes se sont entrainés aujourd'hui",
+        "s'est entrainé aujourd'hui",
+        "se sont entrainés aujourd'hui",
       ],
     },
     statistics: {
@@ -726,9 +727,13 @@ export const FR = {
       subtitle: 'Retrouvez les programmes qui vous ont été assignés',
       panels: {
         score: 'Score moyen',
+        scoreTooltip: 'Score moyen de vos  questions répondues',
         frequency: 'Régularité',
+        frequencyTooltip: 'Pourcentage de questions répondues sur le nombre de question envoyées',
         streak: 'Série en cours',
+        streakTooltip: "Nombre de jours consécutifs d'utilisation de l'application",
         bestStreak: 'Meilleure série',
+        bestStreakTooltip: "Meilleure série de jours consécutifs d'utilisation de l'application",
       },
     },
     donePrograms: {

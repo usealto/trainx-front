@@ -21,7 +21,7 @@
 <div class="row mb-4">
   <div class="col-4">
     <div
-      class="panel highlighted-panel pe-auto ongoingSessionPanel"
+      class="panel highlighted-panel pe-auto ongoing-session-panel"
       [routerLink]="['/', AltoRoutes.user, AltoRoutes.training, AltoRoutes.trainingSession]"
     >
       <div class="calendar d-flex justify-content-center align-middle">
@@ -29,9 +29,14 @@
       </div>
       <h2 class="mt-4">{{ I18ns.userHome.programsRun.continueSession }}</h2>
       <p class="alto-grey mb-4">{{ I18ns.userHome.programsRun.continueSessionSubtitle }}</p>
-      <p class="text-end alto-light-grey fs-7">
-        {{ I18ns.userHome.programsRun.continueSessionCounts | plural : continuousSessionGuessesCount }}
-      </p>
+      <alto-img-badge-list
+        *ngIf="continuousSessionUsers.length > 0"
+        [users]="continuousSessionUsers"
+        class="align-middle"
+      ></alto-img-badge-list>
+      <span class="fs-7" [ngClass]="{ 'ms-4': continuousSessionUsers.length > 0 }">
+        {{ I18ns.userHome.programsRun.continueSessionCounts | plural : continuousSessionUsers.length }}
+      </span>
     </div>
   </div>
   <div
@@ -50,53 +55,54 @@
     aria-label="Default pagination"
   ></alto-pagination>
 
-<!-- TEAMS -->
-<div class="mt-4 mb-2">
-  <h2 class="title">{{ I18ns.userHome.teams.title }}</h2>
-  <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.teams.subtitle }}</p>
-</div>
-<div class="row mt-4">
-  <div class="col me-4 panel">
-    <h2>{{ I18ns.userHome.teams.leaderboard.title }}</h2>
-    <alto-tabs
-      class="mb-3"
-      [data]="[
-        { label: 'First', value: '1' },
-        { label: 'Second', value: '2' },
-        { label: 'Third', value: '3' }
-      ]"
-    ></alto-tabs>
-    <hr />
-    <table>
-      <thead>
-        <th scope="col">{{ I18ns.userHome.teams.leaderboard.name }}</th>
-        <th scope="col">{{ I18ns.userHome.teams.leaderboard.score }}</th>
-      </thead>
-      <tbody>
-        <tr></tr>
-      </tbody>
-    </table>
+  <!-- TEAMS -->
+  <div class="mt-4 mb-2">
+    <h2 class="title">{{ I18ns.userHome.teams.title }}</h2>
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.teams.subtitle }}</p>
   </div>
-  <div class="col panel">
-    <h2>{{ I18ns.userHome.teams.challenges.title }}</h2>
-    <alto-tabs
-      class="mb-3"
-      [data]="[
-        { label: 'First', value: '1' },
-        { label: 'Second', value: '2' }
-      ]"
-    ></alto-tabs>
-    <hr />
-    <table class="table">
-      <thead>
-        <th scope="col">{{ I18ns.userHome.teams.challenges.name }}</th>
-        <th scope="col">{{ I18ns.userHome.teams.challenges.leader }}</th>
-        <th scope="col">{{ I18ns.userHome.teams.challenges.position }}</th>
-        <th scope="col">{{ I18ns.userHome.teams.challenges.end }}</th>
-      </thead>
-      <tbody>
-        <tr></tr>
-      </tbody>
-    </table>
+  <div class="row mt-4">
+    <div class="col me-4 panel">
+      <h2>{{ I18ns.userHome.teams.leaderboard.title }}</h2>
+      <alto-tabs
+        class="mb-3"
+        [data]="[
+          { label: 'First', value: '1' },
+          { label: 'Second', value: '2' },
+          { label: 'Third', value: '3' }
+        ]"
+      ></alto-tabs>
+      <hr />
+      <table>
+        <thead>
+          <th scope="col">{{ I18ns.userHome.teams.leaderboard.name }}</th>
+          <th scope="col">{{ I18ns.userHome.teams.leaderboard.score }}</th>
+        </thead>
+        <tbody>
+          <tr></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col panel">
+      <h2>{{ I18ns.userHome.teams.challenges.title }}</h2>
+      <alto-tabs
+        class="mb-3"
+        [data]="[
+          { label: 'First', value: '1' },
+          { label: 'Second', value: '2' }
+        ]"
+      ></alto-tabs>
+      <hr />
+      <table class="table">
+        <thead>
+          <th scope="col">{{ I18ns.userHome.teams.challenges.name }}</th>
+          <th scope="col">{{ I18ns.userHome.teams.challenges.leader }}</th>
+          <th scope="col">{{ I18ns.userHome.teams.challenges.position }}</th>
+          <th scope="col">{{ I18ns.userHome.teams.challenges.end }}</th>
+        </thead>
+        <tbody>
+          <tr></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

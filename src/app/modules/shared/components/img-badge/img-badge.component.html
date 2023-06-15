@@ -1,5 +1,5 @@
 <ng-template #toolTip>
-  {{ user?.lastname && user?.firstname ? user?.firstname + ' ' + user?.lastname : user?.username }}
+  {{ getUserName(user) }}
   <br />
   {{ user?.email }}
 </ng-template>
@@ -13,5 +13,10 @@
   />
 </ng-container>
 <ng-template #elseTemplate>
-  <div [ngbTooltip]="user && toolTip" class="d-inline-block" [style]="getStyle(size)"></div>
+  <div
+    [ngbTooltip]="user && toolTip"
+    class="d-inline-block empty-badge"
+    [ngClass]="{ 'white-border': hasBorder }"
+    [style]="getStyle(size)"
+  ></div>
 </ng-template>
