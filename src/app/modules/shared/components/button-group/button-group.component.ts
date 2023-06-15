@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 
 @Component({
@@ -6,11 +6,11 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
   templateUrl: './button-group.component.html',
   styleUrls: ['./button-group.component.scss'],
 })
-export class ButtonGroupComponent {
+export class ButtonGroupComponent implements OnInit {
   I18ns = I18ns;
   @Input() value = '';
   @Input() items: { label: string; value: any }[] = [];
-  @Output() valueSelected = new EventEmitter<string>();
+  @Output() valueSelected = new EventEmitter<any>();
   ID = '';
 
   ngOnInit(): void {

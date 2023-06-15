@@ -45,11 +45,11 @@
 
     <alto-button-group
       class="float-end"
-      [value]="'1'"
+      [value]="OngoingFilter.All + ''"
       [items]="[
-        { label: I18ns.training.onGoing.filters.showAll, value: '1' },
-        { label: I18ns.training.onGoing.filters.started, value: '2' },
-        { label: I18ns.training.onGoing.filters.new, value: '3' }
+        { label: I18ns.training.onGoing.filters.showAll, value: OngoingFilter.All },
+        { label: I18ns.training.onGoing.filters.started, value: OngoingFilter.Started },
+        { label: I18ns.training.onGoing.filters.new, value: OngoingFilter.New }
       ]"
       (valueSelected)="onGoingFilter($event)"
     ></alto-button-group>
@@ -58,7 +58,7 @@
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.onGoing.subtitle }}</p>
 
     <div>
-      <alto-training-cards-list [pageSize]="3" [data]="onGoingPrograms">
+      <alto-training-cards-list [pageSize]="3" [data]="onGoingProgramsDisplay">
         <div class="panel text-center p-6 mb-4">
           <i class="alto-badge-big fs-5 bi bi-file-text"></i>
           <h2 class="my-4">{{ I18ns.training.onGoing.noData }}</h2>
@@ -133,7 +133,7 @@
       </div>
     </div>
 
-    <alto-training-cards-list [pageSize]="9" [data]="myPrograms">
+    <alto-training-cards-list [pageSize]="9" [data]="improveScorePrograms">
       <div class="panel text-center p-6 mb-4">
         <i class="alto-badge-big fs-5 bi bi-file-text"></i>
         <h2 class="my-4">{{ I18ns.training.onGoing.noData }}</h2>

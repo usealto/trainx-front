@@ -9,6 +9,12 @@ import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { TrainingCardData } from '../../models/training.model';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
+enum OngoingFilter {
+  All = 'All',
+  Started = 'Started',
+  New = 'New',
+}
+
 @UntilDestroy()
 @Component({
   selector: 'alto-training-home',
@@ -18,13 +24,14 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 export class TrainingHomeComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+  OngoingFilter = OngoingFilter;
   activeTab = 1;
 
   guessesCount = 0;
 
-  myPrograms: TrainingCardData[] = [];
-  onGoingPrograms?: TrainingCardData[];
-  improveScorePrograms?: TrainingCardData[];
+  onGoingPrograms: TrainingCardData[] = [];
+  onGoingProgramsDisplay?: TrainingCardData[];
+  improveScorePrograms?: any[];
   user = this.userStore.user.value;
 
   constructor(
@@ -37,8 +44,7 @@ export class TrainingHomeComponent implements OnInit {
       .getMyProgramRunsCards()
       .pipe(
         tap((a) => {
-          this.myPrograms = a;
-          this.onGoingPrograms = a.filter((r) => r.isProgress === true);
+          this.onGoingPrograms = this.onGoingProgramsDisplay = a.filter((r) => r.isProgress === true);
           this.improveScorePrograms = a.filter((r) => r.isProgress !== true);
         }),
       )
@@ -49,16 +55,16 @@ export class TrainingHomeComponent implements OnInit {
     this.activeTab = index;
   }
 
-  onGoingFilter(val: string) {
+  onGoingFilter(val: OngoingFilter) {
     switch (val) {
-      case '1':
-        this.onGoingPrograms = this.myPrograms;
+      case OngoingFilter.All:
+        this.onGoingProgramsDisplay = this.onGoingPrograms;
         break;
-      case '2':
-        this.onGoingPrograms = this.myPrograms.filter((p) => !!p.programRunId);
+      case OngoingFilter.Started:
+        this.onGoingProgramsDisplay = this.onGoingPrograms.filter((p) => !!p.programRunId);
         break;
-      case '3':
-        this.onGoingPrograms = this.myPrograms.filter((p) => !p.programRunId);
+      case OngoingFilter.New:
+        this.onGoingProgramsDisplay = this.onGoingPrograms.filter((p) => !p.programRunId);
         break;
     }
   }
