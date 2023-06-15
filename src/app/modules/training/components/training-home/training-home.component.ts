@@ -39,14 +39,6 @@ export class TrainingHomeComponent implements OnInit {
         tap((a) => {
           this.myPrograms = a;
           this.onGoingPrograms = a.filter((r) => r.isProgress === true);
-        }),
-      )
-      .subscribe();
-
-    this.programRunsRestService
-      .getMyProgramRunsCards()
-      .pipe(
-        tap((a) => {
           this.improveScorePrograms = a.filter((r) => r.isProgress !== true);
         }),
       )
