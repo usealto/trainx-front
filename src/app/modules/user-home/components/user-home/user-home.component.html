@@ -65,9 +65,9 @@
   <div class="row mt-4">
     <div class="col">
       <div class="table-panel">
-        <h2>{{ I18ns.userHome.teams.leaderboard.title }}</h2>
+        <h2 class="ps-5 pt-5">{{ I18ns.userHome.teams.leaderboard.title }}</h2>
         <alto-tabs
-          class="ps-4 mb-4"
+          class="ps-5 mb-4"
           [data]="[
             { label: I18ns.shared.dateFilter.week, value: ScoreDuration.Week },
             { label: I18ns.shared.dateFilter.month, value: ScoreDuration.Month },
@@ -79,11 +79,12 @@
           <thead class="border-bottom border-top">
             <th scope="col" class="w-5"></th>
             <th scope="col" class="fw-bold">{{ I18ns.userHome.teams.leaderboard.name }}</th>
-            <th scope="col" class="w-20 fw-bold">{{ I18ns.userHome.teams.leaderboard.score }}</th>
+            <th scope="col" class=" text-center w-25 fw-bold">{{ I18ns.userHome.teams.leaderboard.score }}</th>
           </thead>
           <tbody>
             <tr *ngFor="let user of leaderboardUsers">
               <td
+              class="text-center"
                 [ngClass]="{
                   'position-1': user.position === 1,
                   'position-2': user.position === 2,
@@ -91,7 +92,7 @@
                 }"
               >
                 <ng-container *ngIf="user.position < 4; else notInPodium">
-                  <i class="bi bi-award"></i>
+                  <i class="bi bi-award fs-4"></i>
                 </ng-container>
                 <ng-template #notInPodium>
                   {{ user.position }}
@@ -107,7 +108,7 @@
                   }}
                 </div>
               </td>
-              <td>
+              <td class="text-end pe-4">
                 <p class="d-inline-block">
                   {{ (user.score ?? '0') + ' %' }}
                 </p>
