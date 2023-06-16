@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
+import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
 import { combineLatest, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -144,12 +144,25 @@ export class StatisticsComponent implements OnInit {
     ])
       .pipe(
         tap(([usersScores, teamsScores]) => {
+          //USER SCORES: reduce scores to remove all first values without data
+          const rawUserScores = usersScores.scores.find((u) => u.id === this.profileStore.user.value.id);
+          const reducedUserScores = this.scoresService.reduceChartData([
+            rawUserScores ?? ({} as ScoreDtoApi),
+          ]);
+
           const userScores = this.statisticsService.aggregateDataForScores(
-            usersScores.scores.find((u) => u.id === this.profileStore.user.value.id),
+            reducedUserScores[0],
             this.statisticsDuration,
           );
+
+          //TEAM SCORES: reduce scores to remove all first values without data
+          const rawTeamScores = teamsScores.scores.find((t) => t.id === this.profileStore.user.value.teamId);
+          const reducedTeamScores = this.scoresService.reduceChartData([
+            rawTeamScores ?? ({} as ScoreDtoApi),
+          ]);
+
           const teamScores = this.statisticsService.aggregateDataForScores(
-            teamsScores.scores.find((t) => t.id === this.profileStore.user.value.teamId),
+            reducedTeamScores[0],
             this.statisticsDuration,
           );
 
