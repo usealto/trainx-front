@@ -674,7 +674,7 @@ export const FR = {
       },
       finishedPrograms: {
         title: 'Programmes terminés',
-        tooltip: 'Nombre de programmes sur le nombre de programmes assignés',
+        tooltip: 'Nombre de programmes sur terminés le nombre de programmes assignés',
       },
       responseCount: {
         title: 'Nombre de réponses',

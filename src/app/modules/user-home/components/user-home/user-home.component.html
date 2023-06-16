@@ -61,48 +61,87 @@
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.teams.subtitle }}</p>
   </div>
   <div class="row mt-4">
-    <div class="col me-4 panel">
-      <h2>{{ I18ns.userHome.teams.leaderboard.title }}</h2>
-      <alto-tabs
-        class="mb-3"
-        [data]="[
-          { label: 'First', value: '1' },
-          { label: 'Second', value: '2' },
-          { label: 'Third', value: '3' }
-        ]"
-      ></alto-tabs>
-      <hr />
-      <table>
-        <thead>
-          <th scope="col">{{ I18ns.userHome.teams.leaderboard.name }}</th>
-          <th scope="col">{{ I18ns.userHome.teams.leaderboard.score }}</th>
-        </thead>
-        <tbody>
-          <tr></tr>
-        </tbody>
-      </table>
+    <div class="col">
+      <div class="table-panel">
+        <h2>{{ I18ns.userHome.teams.leaderboard.title }}</h2>
+        <alto-tabs
+          class="ps-4 mb-4"
+          [data]="[
+            { label: I18ns.shared.dateFilter.week, value: ScoreDuration.Week },
+            { label: I18ns.shared.dateFilter.month, value: ScoreDuration.Month },
+            { label: I18ns.shared.dateFilter.year, value: ScoreDuration.Year }
+          ]"
+          (tabChanged)="leaderboardTabChanged($event)"
+        ></alto-tabs>
+        <table class="table">
+          <thead class="border-bottom border-top">
+            <th scope="col" class="w-5"></th>
+            <th scope="col" class="fw-bold">{{ I18ns.userHome.teams.leaderboard.name }}</th>
+            <th scope="col" class="w-20 fw-bold">{{ I18ns.userHome.teams.leaderboard.score }}</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of leaderboardUsers">
+              <td
+                [ngClass]="{
+                  'position-1': user.position === 1,
+                  'position-2': user.position === 2,
+                  'position-3': user.position === 3
+                }"
+              >
+                <ng-container *ngIf="user.position < 4; else notInPodium">
+                  <i class="bi bi-award"></i>
+                </ng-container>
+                <ng-template #notInPodium>
+                  {{ user.position }}
+                </ng-template>
+              </td>
+              <td>
+                <alto-img-badge [user]="user.user" [size]="30"></alto-img-badge>
+                <div class="d-inline-block" [ngClass]="{ 'fw-bold': user.position === 1 }">
+                  {{
+                    user.user.firstname && user.user.lastname
+                      ? user.user.firstname + ' ' + user.user.lastname
+                      : user.user.username
+                  }}
+                </div>
+              </td>
+              <td>
+                <p class="d-inline-block">
+                  {{ (user.score ?? '0') + ' %' }}
+                </p>
+                <alto-progression-badge
+                  class="ms-3 d-inline-block"
+                  [score]="user.progression"
+                ></alto-progression-badge>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div class="col panel">
-      <h2>{{ I18ns.userHome.teams.challenges.title }}</h2>
-      <alto-tabs
-        class="mb-3"
-        [data]="[
-          { label: 'First', value: '1' },
-          { label: 'Second', value: '2' }
-        ]"
-      ></alto-tabs>
-      <hr />
-      <table class="table">
-        <thead>
-          <th scope="col">{{ I18ns.userHome.teams.challenges.name }}</th>
-          <th scope="col">{{ I18ns.userHome.teams.challenges.leader }}</th>
-          <th scope="col">{{ I18ns.userHome.teams.challenges.position }}</th>
-          <th scope="col">{{ I18ns.userHome.teams.challenges.end }}</th>
-        </thead>
-        <tbody>
-          <tr></tr>
-        </tbody>
-      </table>
-    </div>
+    <!-- TODO: add challenges table later -->
+    <div class="col"></div>
+    <!-- <div class="col panel">
+    <h2>{{ I18ns.userHome.teams.challenges.title }}</h2>
+    <alto-tabs
+      class="mb-3"
+      [data]="[
+        { label: 'First', value: '1' },
+        { label: 'Second', value: '2' }
+      ]"
+    ></alto-tabs>
+    <hr />
+    <table class="table">
+      <thead>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.name }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.leader }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.position }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.end }}</th>
+      </thead>
+      <tbody>
+        <tr></tr>
+      </tbody>
+    </table>
+  </div> -->
   </div>
 </div>

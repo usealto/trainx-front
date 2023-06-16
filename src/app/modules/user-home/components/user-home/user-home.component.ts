@@ -1,13 +1,23 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { GuessDtoApi, UserLightDtoApi } from '@usealto/sdk-ts-angular';
+import { GuessDtoApi, UserDtoApi, UserLightDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
-import { filter, map, tap } from 'rxjs';
+import { combineLatest, map, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
+import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { TrainingCardData } from 'src/app/modules/training/models/training.model';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
+
+interface leaderboardUser {
+  position: number;
+  user: UserDtoApi;
+  score: number | undefined;
+  progression: number;
+}
 @Component({
   selector: 'alto-user-home',
   templateUrl: './user-home.component.html',
@@ -21,16 +31,23 @@ export class UserHomeComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   userName = '';
-
+  ScoreDuration = ScoreDuration;
+  //programs-run data
   guessesCount = 0;
   myProgramRunsCards: TrainingCardData[] = [];
   //programs-run data
   continuousSessionUsers: UserLightDtoApi[] = [];
 
+  //team data
+  durationTabs = ScoreDuration.Week;
+  leaderboardUsers: leaderboardUser[] | undefined = undefined;
+
   constructor(
     private readonly profileStore: ProfileStore,
+    private readonly userRestService: UsersRestService,
     private readonly guessesRestService: GuessesRestService,
     private readonly programRunsRestService: ProgramRunsRestService,
+    private readonly scoreRestService: ScoresRestService,
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +58,7 @@ export class UserHomeComponent implements OnInit {
 
     this.userName = this.profileStore.user.value.firstname ?? this.profileStore.user.value.username ?? '';
     this.continuousSessionGetGuessesCount();
+    this.getLeaderboard();
   }
 
   continuousSessionGetGuessesCount() {
@@ -66,5 +84,47 @@ export class UserHomeComponent implements OnInit {
 
   paginateProgramRuns(page: number) {
     this.page = page;
+  }
+
+  leaderboardTabChanged(event: ScoreDuration) {
+    this.durationTabs = event;
+    this.getLeaderboard();
+  }
+
+  getLeaderboard() {
+    combineLatest([
+      this.scoreRestService.getUsersStats(this.durationTabs),
+      this.userRestService.getUsers(),
+      this.scoreRestService.getUsersStats(this.durationTabs, true),
+    ])
+      .pipe(
+        map(
+          ([usersStats, users, previousScoredUsers]) =>
+            [
+              usersStats.filter((user) => user.teamId === this.profileStore.user.value.teamId),
+              users.filter((user) => user.teamId === this.profileStore.user.value.teamId),
+              previousScoredUsers.filter((user) => user.teamId === this.profileStore.user.value.teamId),
+            ] as [UserStatsDtoApi[], UserDtoApi[], UserStatsDtoApi[]],
+        ),
+        tap(([teamUsers, users, previousScoredUsers]) => {
+          this.leaderboardUsers = teamUsers
+            .map((scoredUser, index) => {
+              const user = users.find((user) => user.id === scoredUser.id);
+              const previousScoredUser = previousScoredUsers.find((user) => user.id === scoredUser.id);
+              const progression =
+                previousScoredUser && previousScoredUser.score && scoredUser.score
+                  ? (previousScoredUser.score - scoredUser.score) / scoredUser.score
+                  : 0;
+              return {
+                position: index + 1,
+                user: user ? user : {},
+                score: scoredUser.score,
+                progression: progression,
+              } as leaderboardUser;
+            })
+            .slice(0, 5);
+        }),
+      )
+      .subscribe();
   }
 }

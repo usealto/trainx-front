@@ -21,3 +21,26 @@
   border-color: #84caff;
   border-radius: 12px;
 }
+
+@media (max-width: 1300px) {
+  alto-img-badge {
+    display: none;
+  }
+}
+alto-img-badge {
+  width: 2.857rem;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.position-1 {
+  color: gold;
+}
+
+.position-2 {
+  color: silver;
+}
+
+.position-3 {
+  color: coral;
+}
