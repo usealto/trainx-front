@@ -30,7 +30,7 @@
         </span>
         <i
           class="alto-grey bi bi-question-circle float-end"
-          ngbTooltip="{{ I18ns.userHome.statistics.averageScore.tooltip }}"
+          ngbTooltip="{{ I18ns.training.continuingTraining.panels.scoreTooltip }}"
         ></i>
         <div class="mt-5">
           <h1 class="d-inline-block">{{ avgScore }} %</h1>
@@ -45,7 +45,7 @@
         </span>
         <i
           class="alto-grey bi bi-question-circle float-end"
-          ngbTooltip="{{ I18ns.userHome.statistics.averageScore.tooltip }}"
+          ngbTooltip="{{ I18ns.training.continuingTraining.panels.frequencyTooltip }}"
         ></i>
         <div class="mt-5">
           <h1 class="d-inline-block">{{ regularity | percent }}</h1>
@@ -63,7 +63,7 @@
         </span>
         <i
           class="alto-grey bi bi-question-circle float-end"
-          ngbTooltip="{{ I18ns.userHome.statistics.averageScore.tooltip }}"
+          ngbTooltip="{{ I18ns.training.continuingTraining.panels.streakTooltip }}"
         ></i>
         <h1 class="mt-4">{{ streak + ' ' + (I18ns.shared.days | plural : streak) }}</h1>
       </div>
@@ -75,7 +75,7 @@
         </span>
         <i
           class="alto-grey bi bi-question-circle float-end"
-          ngbTooltip="{{ I18ns.userHome.statistics.averageScore.tooltip }}"
+          ngbTooltip="{{ I18ns.training.continuingTraining.panels.bestStreakTooltip }}"
         ></i>
         <h1 class="mt-4">{{ longestStreak + ' ' + (I18ns.shared.days | plural : longestStreak) }}</h1>
       </div>
