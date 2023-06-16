@@ -746,6 +746,8 @@ export const FR = {
         good: 'Validés',
         notGood: 'Non  validés',
       },
+      noData: 'Aucun programme terminé',
+      noDataSubtitle: "Terminez votre premier programme pour pouvoir tenter d'améliorer votre score.",
     },
     showAll: {
       title: 'Tous vos programmes',

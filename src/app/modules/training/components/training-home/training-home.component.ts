@@ -83,15 +83,6 @@ export class TrainingHomeComponent implements OnInit {
     }
   }
 
-  // doneSearch(str: string) {
-  //   this.doneSearchText = str;
-  //   console.log('str', str);
-
-  //   this.improveScoreProgramsFiltered = this.doneSearchText
-  //     ? this.improveScoreProgramsFiltered?.filter((p) => p.title.includes(this.doneSearchText))
-  //     : this.improveScoreProgramsFiltered;
-  // }
-
   doneFilter(val: DoneFilters) {
     let { search, scoreStatus } = val;
 
