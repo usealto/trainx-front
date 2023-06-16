@@ -8,6 +8,8 @@ import { ProgramRunsRestService } from 'src/app/modules/programs/services/progra
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { TrainingCardData } from '../../models/training.model';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { ScoreFilter } from 'src/app/modules/shared/models/score.model';
+import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 
 enum OngoingFilter {
   All = 'All',
@@ -21,6 +23,7 @@ enum DoneFilter {
 }
 
 type DoneFilters = { scoreStatus?: DoneFilter; search?: string };
+type AllProgramsFilters = { score?: ScoreFilter | string; search?: string };
 
 @UntilDestroy()
 @Component({
@@ -39,15 +42,20 @@ export class TrainingHomeComponent implements OnInit {
   guessesCount = 0;
   startedProgramsCount = 0;
   doneFilters: DoneFilters = { scoreStatus: DoneFilter.All, search: '' };
+  allProgramsFilters: AllProgramsFilters = { search: '' };
 
   onGoingPrograms: TrainingCardData[] = [];
   onGoingProgramsDisplay?: TrainingCardData[];
   improveScorePrograms?: TrainingCardData[];
-  improveScoreProgramsFiltered?: TrainingCardData[];
+  doneProgramsFiltered?: TrainingCardData[];
+  donePrograms?: TrainingCardData[];
+  allPrograms?: TrainingCardData[];
+  allProgramsFiltered?: TrainingCardData[];
   user = this.userStore.user.value;
 
   constructor(
     private readonly programRunsRestService: ProgramRunsRestService,
+    private readonly scoresService: ScoresService,
     private readonly userStore: ProfileStore,
   ) {}
 
@@ -56,11 +64,11 @@ export class TrainingHomeComponent implements OnInit {
       .getMyProgramRunsCards()
       .pipe(
         tap((a) => {
+          this.allPrograms = this.allProgramsFiltered = a;
           this.onGoingPrograms = this.onGoingProgramsDisplay = a.filter((r) => r.isProgress === true);
           this.startedProgramsCount = this.onGoingPrograms.filter((p) => !!p.programRunId).length;
-          this.improveScorePrograms = this.improveScoreProgramsFiltered = a.filter(
-            (r) => r.isProgress !== true,
-          );
+          this.improveScorePrograms = a.filter((r) => r.isProgress !== true && r.score < r.expectation);
+          this.donePrograms = this.doneProgramsFiltered = a.filter((r) => r.isProgress !== true);
         }),
       )
       .subscribe();
@@ -94,20 +102,47 @@ export class TrainingHomeComponent implements OnInit {
 
     switch (scoreStatus) {
       case DoneFilter.All:
-        this.improveScoreProgramsFiltered = this.improveScorePrograms;
+        this.doneProgramsFiltered = this.donePrograms;
         break;
       case DoneFilter.Good:
-        this.improveScoreProgramsFiltered = this.improveScorePrograms?.filter((p) => p.score > p.expectation);
+        this.doneProgramsFiltered = this.donePrograms?.filter((p) => p.score > p.expectation);
         break;
       case DoneFilter.NotGood:
-        this.improveScoreProgramsFiltered = this.improveScorePrograms?.filter((p) => p.score < p.expectation);
+        this.doneProgramsFiltered = this.donePrograms?.filter((p) => p.score < p.expectation);
         break;
     }
     if (search) {
-      this.improveScoreProgramsFiltered = this.improveScoreProgramsFiltered?.filter((p) =>
-        p.title.includes(search ?? ''),
+      this.doneProgramsFiltered = this.doneProgramsFiltered?.filter((p) => p.title.includes(search ?? ''));
+    }
+  }
+
+  allProgramsFilter(filters: AllProgramsFilters) {
+    let { score, search } = filters;
+
+    search ??= this.allProgramsFilters.search;
+    if (score === null) {
+      // When he value is unselected from the dropdown
+      score = undefined;
+    } else {
+      score ||= this.allProgramsFilters.score;
+    }
+
+    this.allProgramsFilters = { search, score };
+
+    let output: TrainingCardData[] = this.allPrograms ?? [];
+    if (score) {
+      output = this.scoresService.filterByScore(
+        output.filter((p) => !p.isProgress),
+        score as ScoreFilter,
+        false,
       );
     }
+
+    if (search) {
+      output = output.filter((p) => p.title.includes(search ?? ''));
+    }
+
+    this.allProgramsFiltered = output;
   }
 
   @memoize()

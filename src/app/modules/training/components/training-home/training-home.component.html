@@ -126,7 +126,7 @@
       </div>
     </div>
 
-    <alto-training-cards-list [pageSize]="9" [data]="improveScoreProgramsFiltered">
+    <alto-training-cards-list [pageSize]="9" [data]="doneProgramsFiltered">
       <div class="panel text-center p-6 mb-4">
         <i class="alto-badge-big fs-5 bi bi-file-text"></i>
         <h2 class="my-4">{{ I18ns.training.donePrograms.noData }}</h2>
@@ -141,14 +141,14 @@
 
     <div class="row mb-4">
       <div class="col-7">
-        <alto-score-filter></alto-score-filter>
+        <alto-score-filter (selectChange)="allProgramsFilter({ score: $event })"></alto-score-filter>
       </div>
       <div class="col-5 text-end">
-        <alto-search></alto-search>
+        <alto-search (searchChange)="allProgramsFilter({ search: $event })"> </alto-search>
       </div>
     </div>
 
-    <alto-training-cards-list [pageSize]="9" [data]="improveScorePrograms">
+    <alto-training-cards-list [pageSize]="9" [data]="allProgramsFiltered">
       <div class="panel text-center p-6 mb-4">
         <i class="alto-badge-big fs-5 bi bi-file-text"></i>
         <h2 class="my-4">{{ I18ns.training.donePrograms.noData }}</h2>

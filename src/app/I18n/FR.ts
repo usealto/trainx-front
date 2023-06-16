@@ -738,7 +738,7 @@ export const FR = {
     },
     donePrograms: {
       title: 'Améliorez votre score',
-      subtitle: 'Tentez de faire mieux sur des programmes que vous avez terminé.',
+      subtitle: "Tentez de faire mieux sur des programmes que vous n'avez pas réussi.",
       title2: 'Tous vos programmes terminés',
       subtitle2: 'Retrouvez les programmes qui vous ont été assignés',
       filters: {
