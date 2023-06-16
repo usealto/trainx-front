@@ -34,7 +34,7 @@
   </div>
 </div>
 
-<div class="row mt-5 mb-4">
+<div class="row mt-6 mb-4">
   <div class="col-5">
     <h2 class="title">{{ I18ns.leadHome.statistics.title }}</h2>
   </div>
@@ -65,7 +65,6 @@
         </span>
         <i
           class="alto-grey bi bi-question-circle float-end"
-          placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.globalScoreToolTip }}"
         ></i>
       </p>
@@ -84,7 +83,6 @@
         </span>
         <i
           class="alto-grey bi bi-question-circle float-end"
-          placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.averageCompletionToolTip }}"
         ></i>
       </p>
@@ -105,7 +103,6 @@
         </span>
         <i
           class="alto-grey bi bi-question-circle float-end"
-          placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.activeMembersToolTip }}"
         ></i>
       </p>
@@ -126,9 +123,7 @@
         </span>
         <i
           class="alto-grey bi bi-question-circle float-end"
-          placement="top"
           ngbTooltip="{{ I18ns.leadHome.statistics.inactiveMembersToolTip }}"
-          placement="start"
         ></i>
       </p>
       <div>
@@ -144,7 +139,7 @@
 
 <!-- GLOBAL EVOLUTION -->
 
-<div class="row mt-5 mb-4">
+<div class="row mt-6 mb-4">
   <div class="col-5">
     <h2 class="title">{{ I18ns.leadHome.globalEvolution.title }}</h2>
   </div>
@@ -172,7 +167,6 @@
     <div class="panel h-100">
       <i
         class="fs-5 alto-grey bi bi-question-circle float-end"
-        placement="top"
         ngbTooltip="{{
           I18ns.leadHome.globalEvolution.chartToolTip
             | replaceInTranslation
@@ -193,7 +187,7 @@
       <div [hidden]="!scoreCount" class="chart-container">
         <canvas id="programScoreEvol"></canvas>
       </div>
-      <div [hidden]="scoreCount > 0" class="text-center pt-5">
+      <div [hidden]="scoreCount > 0" class="text-center pt-6">
         {{ I18ns.shared.noData }}
       </div>
     </div>
@@ -204,13 +198,11 @@
     <div class="panel mb-4">
       <i
         class="fs-5 alto-grey bi bi-question-circle float-end"
-        placement="top"
         ngbTooltip="{{
           I18ns.leadHome.globalEvolution.topFlopTooltip
             | replaceInTranslation
               : (topFlopProgramTab === 'program' ? I18ns.shared.programs : I18ns.shared.tags)
         }}"
-        placement="start"
       ></i>
       <alto-tabs
         class="mb-4"
@@ -254,12 +246,10 @@
     <div class="panel">
       <i
         class="fs-5 alto-grey bi bi-question-circle float-end"
-        placement="top"
         ngbTooltip="{{
           I18ns.leadHome.globalEvolution.topFlopTooltip
             | replaceInTranslation : (topFlopTeamTab === 'team' ? I18ns.shared.teams : I18ns.shared.members)
         }}"
-        placement="start"
       ></i>
       <alto-tabs
         class="mb-4"
@@ -308,14 +298,14 @@
 </div>
 
 <!-- ONGOING PROGRAMS -->
-<div class="mt-5 ongoing-programs">
+<div class="mt-6 ongoing-programs">
   <h2 class="title">{{ I18ns.leadHome.ongoingPrograms.title }}</h2>
 </div>
 
 <alto-program-card-list [place]="'home'"></alto-program-card-list>
 
 <!-- CHALLENGES -->
-<div class="row mt-5 mb-4">
+<div class="row mt-6 mb-4">
   <div class="col-5">
     <h2 class="title">{{ I18ns.leadHome.ongoingChallenges.title }}</h2>
   </div>

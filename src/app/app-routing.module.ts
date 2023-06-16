@@ -42,6 +42,10 @@ const routes: Routes = [
             },
             loadChildren: () => import('./modules/training/training.module').then((m) => m.TrainingModule),
           },
+          {
+            path: AltoRoutes.profile,
+            loadChildren: () => import('./modules/profile/profile.module').then((m) => m.ProfileModule),
+          },
         ],
       },
       {
