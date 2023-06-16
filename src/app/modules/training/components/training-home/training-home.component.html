@@ -11,6 +11,9 @@
 />
 <label class="alto-tab-btn" for="tab1">
   {{ I18ns.training.tabs.onGoing }}
+  <span class="ms-3 badge rounded-pill" [ngClass]="activeTab === 1 ? 'alto-orange-bg' : 'alto-dark-grey-bg'">
+    {{ startedProgramsCount }}
+  </span>
 </label>
 
 <input
@@ -25,6 +28,8 @@
   {{ I18ns.training.tabs.done }}
 </label>
 
+<div class="vertical-divider"></div>
+
 <input
   type="radio"
   class="btn-check"
@@ -33,7 +38,7 @@
   autocomplete="off"
   [checked]="activeTab === 3"
 />
-<label class="alto-tab-btn" for="tab3">
+<label class="alto-tab-btn ms-4" for="tab3">
   {{ I18ns.training.tabs.showAll }}
 </label>
 

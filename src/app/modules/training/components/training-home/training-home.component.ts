@@ -28,6 +28,7 @@ export class TrainingHomeComponent implements OnInit {
   activeTab = 1;
 
   guessesCount = 0;
+  startedProgramsCount = 0;
 
   onGoingPrograms: TrainingCardData[] = [];
   onGoingProgramsDisplay?: TrainingCardData[];
@@ -45,6 +46,7 @@ export class TrainingHomeComponent implements OnInit {
       .pipe(
         tap((a) => {
           this.onGoingPrograms = this.onGoingProgramsDisplay = a.filter((r) => r.isProgress === true);
+          this.startedProgramsCount = this.onGoingPrograms.filter((p) => !!p.programRunId).length;
           this.improveScorePrograms = a.filter((r) => r.isProgress !== true);
         }),
       )
