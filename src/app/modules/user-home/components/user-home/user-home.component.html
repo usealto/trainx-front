@@ -29,14 +29,16 @@
       </div>
       <h2 class="mt-4">{{ I18ns.userHome.programsRun.continueSession }}</h2>
       <p class="alto-grey mb-4">{{ I18ns.userHome.programsRun.continueSessionSubtitle }}</p>
-      <alto-img-badge-list
-        *ngIf="continuousSessionUsers.length > 0"
-        [users]="continuousSessionUsers"
-        class="align-middle"
-      ></alto-img-badge-list>
-      <span class="fs-7" [ngClass]="{ 'ms-4': continuousSessionUsers.length > 0 }">
-        {{ I18ns.userHome.programsRun.continueSessionCounts | plural : continuousSessionUsers.length }}
-      </span>
+      <div class="users-counter">
+        <alto-img-badge-list
+          *ngIf="continuousSessionUsers.length > 0"
+          [users]="continuousSessionUsers"
+          class="align-middle"
+        ></alto-img-badge-list>
+        <span class="fs-7" [ngClass]="{ 'ms-4': continuousSessionUsers.length > 0 }">
+          {{ I18ns.userHome.programsRun.continueSessionCounts | plural : continuousSessionUsers.length }}
+        </span>
+      </div>
     </div>
   </div>
   <div

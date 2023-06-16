@@ -33,7 +33,8 @@ export class TrainingHomeComponent implements OnInit {
   AltoRoutes = AltoRoutes;
   OngoingFilter = OngoingFilter;
   DoneFilter = DoneFilter;
-  activeTab = 2;
+  // TODO Change
+  activeTab = 3;
 
   guessesCount = 0;
   startedProgramsCount = 0;

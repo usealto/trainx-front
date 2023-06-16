@@ -2,9 +2,14 @@
   display: block;
   padding: var(--alto-page-padding);
 }
-
+.users-counter {
+  width: calc(100% - 3.429rem);
+  position: absolute;
+  bottom: 1.143rem;
+}
 .ongoing-session-panel {
   height: 17.286rem;
+  position: relative;
 }
 
 .calendar {
