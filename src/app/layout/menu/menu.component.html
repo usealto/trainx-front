@@ -160,7 +160,12 @@
     <a class="logout" (click)="logOut()">
       <i class="p-3 mx-4 text-secondary fs-4 bi bi-box-arrow-right"></i>
     </a>
-    <a class="profile" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile">
+    <a
+      class="profile"
+      [routerLink]="
+        displayAdmin ? AltoRoutes.lead + '/' + AltoRoutes.profile : AltoRoutes.user + '/' + AltoRoutes.profile
+      "
+    >
       <alto-profile-card [isWhite]="true" [user]="userStore.user.value$ | async"> </alto-profile-card>
     </a>
 
