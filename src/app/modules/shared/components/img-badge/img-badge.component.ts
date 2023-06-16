@@ -12,6 +12,7 @@ export class ImgBadgeComponent implements OnChanges {
   @Input() url: string | null | undefined = '';
   @Input() size = 32;
   @Input() hasBorder = false;
+  @Input() toggleTooltip = true;
 
   thumb = '';
 

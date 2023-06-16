@@ -96,7 +96,7 @@
                 </ng-template>
               </td>
               <td>
-                <alto-img-badge [user]="user.user" [size]="30"></alto-img-badge>
+                <alto-img-badge [toggleTooltip]="false" [user]="user.user" [size]="30"></alto-img-badge>
                 <div class="d-inline-block" [ngClass]="{ 'fw-bold': user.position === 1 }">
                   {{
                     user.user.firstname && user.user.lastname
