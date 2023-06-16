@@ -55,6 +55,7 @@ export class ProgramRunsRestService {
               updatedAt: progRun?.updatedAt,
               programRunId: progRun?.id,
               programId: p.id,
+              expectation: p.expectation,
               isProgress: progRun?.finishedAt ? false : true,
               duration: progRun?.questionsCount ? progRun?.questionsCount * 30 : undefined,
             });

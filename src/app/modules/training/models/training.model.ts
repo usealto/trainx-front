@@ -5,6 +5,7 @@ export interface TrainingCardData {
   programId: string;
   title: string;
   score: number;
+  expectation: number;
   isProgress: boolean;
   duration?: number;
   updatedAt?: Date;

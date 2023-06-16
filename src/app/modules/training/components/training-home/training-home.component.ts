@@ -14,6 +14,13 @@ enum OngoingFilter {
   Started = 'Started',
   New = 'New',
 }
+enum DoneFilter {
+  All = 'All',
+  Good = 'Good',
+  NotGood = 'NotGood',
+}
+
+type DoneFilters = { scoreStatus?: DoneFilter; search?: string };
 
 @UntilDestroy()
 @Component({
@@ -25,14 +32,17 @@ export class TrainingHomeComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   OngoingFilter = OngoingFilter;
-  activeTab = 1;
+  DoneFilter = DoneFilter;
+  activeTab = 2;
 
   guessesCount = 0;
   startedProgramsCount = 0;
+  doneFilters: DoneFilters = { scoreStatus: DoneFilter.All, search: '' };
 
   onGoingPrograms: TrainingCardData[] = [];
   onGoingProgramsDisplay?: TrainingCardData[];
-  improveScorePrograms?: any[];
+  improveScorePrograms?: TrainingCardData[];
+  improveScoreProgramsFiltered?: TrainingCardData[];
   user = this.userStore.user.value;
 
   constructor(
@@ -47,7 +57,9 @@ export class TrainingHomeComponent implements OnInit {
         tap((a) => {
           this.onGoingPrograms = this.onGoingProgramsDisplay = a.filter((r) => r.isProgress === true);
           this.startedProgramsCount = this.onGoingPrograms.filter((p) => !!p.programRunId).length;
-          this.improveScorePrograms = a.filter((r) => r.isProgress !== true);
+          this.improveScorePrograms = this.improveScoreProgramsFiltered = a.filter(
+            (r) => r.isProgress !== true,
+          );
         }),
       )
       .subscribe();
@@ -68,6 +80,41 @@ export class TrainingHomeComponent implements OnInit {
       case OngoingFilter.New:
         this.onGoingProgramsDisplay = this.onGoingPrograms.filter((p) => !p.programRunId);
         break;
+    }
+  }
+
+  // doneSearch(str: string) {
+  //   this.doneSearchText = str;
+  //   console.log('str', str);
+
+  //   this.improveScoreProgramsFiltered = this.doneSearchText
+  //     ? this.improveScoreProgramsFiltered?.filter((p) => p.title.includes(this.doneSearchText))
+  //     : this.improveScoreProgramsFiltered;
+  // }
+
+  doneFilter(val: DoneFilters) {
+    let { search, scoreStatus } = val;
+
+    search ||= this.doneFilters.search;
+    scoreStatus ||= DoneFilter.All;
+
+    this.doneFilters = { search, scoreStatus };
+
+    switch (scoreStatus) {
+      case DoneFilter.All:
+        this.improveScoreProgramsFiltered = this.improveScorePrograms;
+        break;
+      case DoneFilter.Good:
+        this.improveScoreProgramsFiltered = this.improveScorePrograms?.filter((p) => p.score > p.expectation);
+        break;
+      case DoneFilter.NotGood:
+        this.improveScoreProgramsFiltered = this.improveScorePrograms?.filter((p) => p.score < p.expectation);
+        break;
+    }
+    if (search) {
+      this.improveScoreProgramsFiltered = this.improveScoreProgramsFiltered?.filter((p) =>
+        p.title.includes(search ?? ''),
+      );
     }
   }
 

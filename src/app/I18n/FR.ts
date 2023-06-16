@@ -741,6 +741,11 @@ export const FR = {
       subtitle: 'Tentez de faire mieux sur des programmes que vous avez terminé.',
       title2: 'Tous vos programmes terminés',
       subtitle2: 'Retrouvez les programmes qui vous ont été assignés',
+      filters: {
+        showAll: 'Tout voir',
+        good: 'Validés',
+        notGood: 'Non  validés',
+      },
     },
     showAll: {
       title: 'Tous vos programmes',
