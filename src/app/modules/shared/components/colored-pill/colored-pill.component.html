@@ -3,6 +3,6 @@
   *ngFor="let d of data | slice : 0 : limit || 50"
   [style]="hasDynamicColor ? (d.id | teamColor) : ''"
 >
-  {{ d.shortName || d.name || d.title || d }}
+  {{ d.shortName || d.name || d.title || d.label || d }}
 </span>
 <span *ngIf="limit && data.length > limit" class="alto-badge me-2"> +{{ data.length - limit }}</span>

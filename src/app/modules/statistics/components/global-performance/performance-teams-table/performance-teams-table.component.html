@@ -71,9 +71,20 @@
           </ng-template>
 
           <div class="text-nowrap overflow-hidden" [ngbTooltip]="programsTooltip">
-            <span *ngFor="let prg of team.programs || [] | sort : 'asc' : 'score'" class="alto-badge me-2">
+            <!-- <span
+              *ngFor="let prg of team.programs || [] | slice : 0 : 3 | sort : 'asc' : 'score'"
+              class="alto-badge me-2"
+            >
               {{ prg.label }}
-            </span>
+            </span> -->
+            <ng-container *ngIf="team.programs">
+              <td>
+                <alto-colored-pill-list
+                  [data]="team.programs | sort : 'asc' : 'score'"
+                  [limit]="3"
+                ></alto-colored-pill-list>
+              </td>
+            </ng-container>
           </div>
         </td>
         <td>
@@ -82,9 +93,20 @@
           </ng-template>
 
           <div class="text-nowrap overflow-hidden" [ngbTooltip]="tagsTooltip">
-            <span *ngFor="let tg of team.tags || [] | sort : 'asc' : 'score'" class="alto-badge me-2">
+            <!-- <span
+              *ngFor="let tg of team.tags || [] | slice : 0 : 3 | sort : 'asc' : 'score'"
+              class="alto-badge me-2"
               {{ tg.label }}
-            </span>
+              </span>
+            > -->
+            <ng-container *ngIf="team.tags">
+              <td>
+                <alto-colored-pill-list
+                  [data]="team.tags | sort : 'asc' : 'score'"
+                  [limit]="3"
+                ></alto-colored-pill-list>
+              </td>
+            </ng-container>
           </div>
         </td>
       </tr>
