@@ -48,6 +48,7 @@ export class TrainingComponent implements OnInit {
 
   questionsCount = 0;
   questionsAnswered = 0;
+  questionNumber = 0;
   questionsGoodAnswers = 0;
 
   programId = '';
@@ -128,6 +129,7 @@ export class TrainingComponent implements OnInit {
         ),
         tap(([questions, guesses]) => {
           this.questionsAnswered = guesses.meta.totalItems;
+          this.questionNumber = this.questionsAnswered;
           this.remainingQuestions = questions.filter((q) =>
             guesses.data?.every((g) => g.questionId !== q.id),
           );
@@ -250,6 +252,7 @@ export class TrainingComponent implements OnInit {
       if (this.remainingQuestions.length === 0) {
         this.openDoneModal();
       } else {
+        this.questionNumber++;
         const last = this.remainingQuestions.pop();
         if (last) {
           this.setDisplayedQuestion(last);
@@ -311,7 +314,10 @@ export class TrainingComponent implements OnInit {
   }
 
   openDoneModal() {
-    this.score = this.questionsGoodAnswers ? this.questionsCount / this.questionsGoodAnswers : 0;
+    console.log('this.questionsCount', this.questionsCount);
+    console.log('this.questionsGoodAnswers', this.questionsGoodAnswers);
+
+    this.score = this.questionsGoodAnswers ? this.questionsGoodAnswers / this.questionsCount : 0;
     this.modalService.open(this.modalContent, { backdrop: 'static', size: 'sm', centered: true });
   }
 

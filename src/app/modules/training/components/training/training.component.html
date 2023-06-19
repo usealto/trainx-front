@@ -8,10 +8,10 @@
     class="w-100 mb-4"
     type="primary"
     [max]="questionsCount"
-    [value]="questionsAnswered"
+    [value]="questionNumber"
   ></ngb-progressbar>
   <p class="alto-grey fw-medium">
-    {{ I18ns.training.quizz.questionCounter | replaceInTranslation : questionsAnswered + 1 : questionsCount }}
+    {{ I18ns.training.quizz.questionCounter | replaceInTranslation : questionNumber : questionsCount }}
   </p>
 </ng-container>
 

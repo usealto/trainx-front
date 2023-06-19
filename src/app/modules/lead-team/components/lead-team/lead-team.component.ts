@@ -68,6 +68,10 @@ export class LeadTeamComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData() {
     combineLatest([
       this.usersRestService.getUsers(),
       this.teamsRestService.getTeams(),
@@ -181,6 +185,7 @@ export class LeadTeamComponent implements OnInit {
     });
 
     canvasRef.componentInstance.team = team;
+    canvasRef.closed.pipe(tap(() => this.loadData())).subscribe();
   }
 
   openUserEditionForm(user: UserDtoApi) {
@@ -190,6 +195,7 @@ export class LeadTeamComponent implements OnInit {
     });
 
     canvasRef.componentInstance.user = user;
+    canvasRef.closed.pipe(tap(() => this.loadData())).subscribe();
   }
 
   @memoize()
