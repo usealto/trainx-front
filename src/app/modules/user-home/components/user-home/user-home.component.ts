@@ -93,9 +93,9 @@ export class UserHomeComponent implements OnInit {
 
   getLeaderboard() {
     combineLatest([
-      this.scoreRestService.getUsersStats(this.durationTabs),
+      this.scoreRestService.getUsersStats(this.durationTabs, false, this.profileStore.user.value.id),
       this.userRestService.getUsers(),
-      this.scoreRestService.getUsersStats(this.durationTabs, true),
+      this.scoreRestService.getUsersStats(this.durationTabs, true, this.profileStore.user.value.id),
     ])
       .pipe(
         map(

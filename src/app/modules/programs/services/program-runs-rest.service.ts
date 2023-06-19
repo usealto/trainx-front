@@ -48,18 +48,16 @@ export class ProgramRunsRestService {
         return programs.reduce((output, p) => {
           const progRun = programRuns.data?.filter((x) => x.programId === p.id)[0] || null;
 
-          if (progRun) {
-            output.push({
-              title: p.name,
-              score: !progRun ? 0 : (progRun.goodGuessesCount / progRun.questionsCount) * 100,
-              updatedAt: progRun?.updatedAt,
-              programRunId: progRun?.id,
-              programId: p.id,
-              expectation: p.expectation,
-              isProgress: progRun?.finishedAt ? false : true,
-              duration: progRun?.questionsCount ? progRun?.questionsCount * 30 : undefined,
-            });
-          }
+          output.push({
+            title: p.name,
+            score: !progRun ? 0 : (progRun.goodGuessesCount / progRun.questionsCount) * 100,
+            updatedAt: progRun?.updatedAt,
+            programRunId: progRun?.id,
+            programId: p.id,
+            expectation: p.expectation,
+            isProgress: !progRun?.finishedAt,
+            duration: progRun?.questionsCount ? progRun?.questionsCount * 30 : undefined,
+          });
           return output;
         }, [] as TrainingCardData[]);
       }),

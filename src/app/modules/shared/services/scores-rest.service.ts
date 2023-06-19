@@ -1,26 +1,25 @@
 import { Injectable } from '@angular/core';
-import { addDays } from 'date-fns';
-import { Observable, filter, map } from 'rxjs';
-import { ChartFilters } from '../../shared/models/chart.model';
-import { ScoresService } from './scores.service';
-import { ScoreDuration, ScoreFilters } from '../models/score.model';
 import {
-  ScoresApiService,
+  GetProgramRunsRequestParams,
+  GetScoresRequestParams,
+  GetTeamsStatsRequestParams,
+  GetUsersStatsRequestParams,
+  ProgramRunApi,
   ProgramRunsApiService,
+  ScoreByTypeEnumApi,
+  ScoreFillValuesEnumApi,
+  ScoreTimeframeEnumApi,
+  ScoreTypeEnumApi,
+  ScoresApiService,
+  ScoresResponseDtoApi,
   StatsApiService,
   TeamStatsDtoApi,
-  GetTeamsStatsRequestParams,
-  ScoresResponseDtoApi,
-  GetScoresRequestParams,
-  ScoreTypeEnumApi,
-  ScoreTimeframeEnumApi,
-  ScoreFillValuesEnumApi,
-  ScoreByTypeEnumApi,
-  ProgramRunApi,
-  GetProgramRunsRequestParams,
-  GetUsersStatsRequestParams,
   UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
+import { Observable, filter, map } from 'rxjs';
+import { ChartFilters } from '../../shared/models/chart.model';
+import { ScoreDuration, ScoreFilters } from '../models/score.model';
+import { ScoresService } from './scores.service';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +32,11 @@ export class ScoresRestService {
     private readonly statsApi: StatsApiService,
   ) {}
 
-  getUsersStats(duration: ScoreDuration, isProgression = false): Observable<UserStatsDtoApi[]> {
+  getUsersStats(
+    duration: ScoreDuration,
+    isProgression?: boolean,
+    id?: string,
+  ): Observable<UserStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
 
@@ -52,6 +55,7 @@ export class ScoresRestService {
         from: dateAfter,
         to: dateBefore,
         respondsRegularlyThreshold: 0.42,
+        userId: id,
       } as GetUsersStatsRequestParams)
       .pipe(map((r) => r.data || []));
   }
