@@ -29,6 +29,7 @@ export const FR = {
     programs: 'programmes',
     teams: 'équipes',
     members: 'membres',
+    days: ['jour', 'jours'],
     imageBadge: {
       userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],
     },
@@ -172,6 +173,12 @@ export const FR = {
       table: {
         question: 'Intitulé',
         author: 'Ajouté par',
+      },
+      form: {
+        title: 'Suggérer une question',
+        subtitle: 'Pour le programme',
+        label: 'Question',
+        placeholder: 'Intitulé de la question',
       },
     },
     tags: {
@@ -482,7 +489,7 @@ export const FR = {
       minimumSubtitle: 'Définissez les seuils à atteindre pour pouvoir participer à ce challenge.',
       activity: 'Activité',
       activitySubtitle:
-        'Les participants doivent répondre en moyenne à plus de X questions par jours ouvrés pour pouvoir participer à ce challenge',
+        'Les participants doivent répondre à un minimum de questions pour pouvoir remporter le challenge.',
       questions: ['{{}} question', '{{}} questions'],
       score: 'Score',
       scoreSubtitle:
@@ -598,6 +605,9 @@ export const FR = {
       title: 'Server Error',
       message: 'The server encountered an error. Please contact the technical service.',
     },
+    Conflict: {
+      title: 'Conflict on Data',
+    },
     OverLoad: {
       title: 'Too many requests',
       message: 'The server encountered an error. Please contact the technical service.',
@@ -645,15 +655,52 @@ export const FR = {
     subtitle: "Retrouvez une vue d'ensemble sur votre planning",
     programsRun: {
       title: 'Vos programmes en cours',
-      subtitle: 'Retrouvez ici les programmes auxquels vous participez actuellement.',
+      subtitle: 'Retrouvez les programmes qui vous sont assignés.',
       continueSession: 'Session continue',
       continueSessionSubtitle:
         'Entraînez vous chaque jour à votre rythme sur des questions issues de vos différents programmes en cours.',
       continueSessionCounts: [
         "Personne ne s'est entrainé aujourd'hui",
-        "{{}} personne s'est entrainé aujourd'hui",
-        "{{}} personnes se sont entrainés aujourd'hui",
+        "s'est entrainé aujourd'hui",
+        "se sont entrainés aujourd'hui",
       ],
+    },
+    statistics: {
+      title: 'Vos statistiques',
+      subtitle: 'Découvrez un aperçu de votre performance.',
+      averageScore: {
+        title: 'Score moyen',
+        tooltip: 'Score moyen de vos questions répondues',
+      },
+      finishedPrograms: {
+        title: 'Programmes terminés',
+        tooltip: 'Nombre de programmes sur terminés le nombre de programmes assignés',
+      },
+      responseCount: {
+        title: 'Nombre de réponses',
+        tooltip: 'Nombre total de réponses',
+      },
+      progression: {
+        title: 'Progression',
+        you: 'Vous',
+        yourTeam: 'Votre équipe',
+      },
+    },
+    teams: {
+      title: 'Votre équipe',
+      subtitle: 'Découvrez votre classement et les challenges en cours.',
+      leaderboard: {
+        title: 'Leaderboard',
+        name: 'Nom',
+        score: 'Score',
+      },
+      challenges: {
+        title: 'Challenges en cours',
+        name: 'Nom',
+        leader: 'Leader',
+        position: 'Position',
+        end: 'Fin',
+      },
     },
   },
   training: {
@@ -667,22 +714,40 @@ export const FR = {
     onGoing: {
       title: 'Continuez votre entraînement',
       subtitle: "Retrouvez l'ensemble de vos programmes en cours",
+      filters: {
+        showAll: 'Tout voir',
+        started: 'Commencés',
+        new: 'Nouveaux',
+      },
+      noData: 'Aucun programme en cours',
+      noDataSubtitle: "Votre équipe n'a été assigné à aucun programme pour le moment",
     },
     continuingTraining: {
       title: 'Training continu',
       subtitle: 'Retrouvez les programmes qui vous ont été assignés',
       panels: {
         score: 'Score moyen',
+        scoreTooltip: 'Score moyen de vos  questions répondues',
         frequency: 'Régularité',
+        frequencyTooltip: 'Pourcentage de questions répondues sur le nombre de question envoyées',
         streak: 'Série en cours',
+        streakTooltip: "Nombre de jours consécutifs d'utilisation de l'application",
         bestStreak: 'Meilleure série',
+        bestStreakTooltip: "Meilleure série de jours consécutifs d'utilisation de l'application",
       },
     },
     donePrograms: {
       title: 'Améliorez votre score',
-      subtitle: 'Tentez de faire mieux sur des programmes que vous avez terminé.',
+      subtitle: "Tentez de faire mieux sur des programmes que vous n'avez pas réussi.",
       title2: 'Tous vos programmes terminés',
       subtitle2: 'Retrouvez les programmes qui vous ont été assignés',
+      filters: {
+        showAll: 'Tout voir',
+        good: 'Validés',
+        notGood: 'Non  validés',
+      },
+      noData: 'Aucun programme terminé',
+      noDataSubtitle: "Terminez votre premier programme pour pouvoir tenter d'améliorer votre score.",
     },
     showAll: {
       title: 'Tous vos programmes',
@@ -690,6 +755,7 @@ export const FR = {
     },
     quizz: {
       secondsRemaining: 'secondes restantes',
+      questionCounter: 'Question {{}} sur {{}}',
       selectOneAnswer: 'Sélectionnez la bonne réponse',
       selectAllAnswers: 'Sélectionnez toutes les bonnes réponses',
       submit: 'Valider',
@@ -699,6 +765,7 @@ export const FR = {
       canva: {
         goodAnswer: 'Bonne réponse !',
         badAnswer: 'Mauvaise réponse !',
+        tooBad: 'Dommage !',
         goodResultSubtitle: "Il s'agissait bien de",
         badResultSubtitle: "Il s'agissait de",
         explanation: 'Explication',
@@ -706,6 +773,13 @@ export const FR = {
         reference: 'Référence',
         noReference: 'Pas de référence',
         continue: 'Continuer',
+      },
+      endModal: {
+        title: 'Programme terminé !',
+        subtitle: 'Félicitations, vous avez répondu à toutes les questions du programme "{{}}"',
+        score: 'Votre score est de ',
+        backButton: 'Retour à vos programmes',
+        submitQuestion: 'Suggérer une question',
       },
     },
   },

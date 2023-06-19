@@ -1,9 +1,26 @@
+<ng-container *ngIf="!isContinuous">
+  <p class="alto-grey mb-4 fw-medium">
+    <i class="bi bi-house-door fs-5"></i> <i class="bi bi-chevron-right fs-7 mx-3"></i>
+    {{ I18ns.programs.title }}<i class="bi bi-chevron-right fs-7 mx-3"></i>
+    <span class="text-primary">{{ program?.name }}</span>
+  </p>
+  <ngb-progressbar
+    class="w-100 mb-4"
+    type="primary"
+    [max]="questionsCount"
+    [value]="questionsAnswered"
+  ></ngb-progressbar>
+  <p class="alto-grey fw-medium">
+    {{ I18ns.training.quizz.questionCounter | replaceInTranslation : questionsAnswered + 1 : questionsCount }}
+  </p>
+</ng-container>
+
 <div class="text-end timer" [class]="displayTime <= 10 ? 'text-danger' : ''">
   <i class="fs-5 bi bi-stopwatch me-3"></i>
   <span class="fw-bold">{{ displayTime + ' ' + I18ns.training.quizz.secondsRemaining }}</span>
 </div>
 
-<div *ngIf="!isQuestionsLoading" class="mt-4 text-center">
+<div *ngIf="!isQuestionsLoading" class="mt-4 text-center question-title">
   <h2 class="alto-grey">
     {{
       displayedQuestion.answersAccepted.length > 1
@@ -24,9 +41,9 @@
       (click)="selectAnswer(ans.answer)"
     >
     </alto-answer-card>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center mt-4 dontknowinput">
       <input
-        class="me-2 cursor-pointer"
+        class="me-3 cursor-pointer"
         type="radio"
         id="dontknowinput"
         (click)="uncheck(idontknowradio.checked)"
@@ -53,3 +70,26 @@
     <i class="bi bi-arrow-right-short"></i>
   </button>
 </div>
+
+<!-- MODAL -->
+
+<ng-template #modalContent let-modal>
+  <div class="modal-body text-center p-4" *ngVar="I18ns.training.quizz.endModal as trads">
+    <i class="alto-badge-big alto-badge-blue mt-3 mb-4 bi bi-check2-square"></i>
+    <h2 class="fw-bold mb-4">{{ trads.title }}</h2>
+    <p class="mb-3 alto-grey">{{ trads.subtitle | replaceInTranslation : program?.name }}</p>
+    <p class="alto-grey mb-4">
+      {{ trads.score }} <span class="alto-green fw-medium">{{ score | percent }}</span>
+    </p>
+    <button
+      class="btn btn-primary mb-3 w-100"
+      [routerLink]="['/', AltoRoutes.user, AltoRoutes.training]"
+      (click)="modal.dismiss('Going Home')"
+    >
+      {{ trads.backButton }}
+    </button>
+    <button class="btn btn-outline-secondary w-100" (click)="openQuestionForm()">
+      <i class="bi bi-pencil-square me-3"></i> {{ trads.submitQuestion }}
+    </button>
+  </div>
+</ng-template>

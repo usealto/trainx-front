@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import {
   GetNextQuestionsForUserRequestParams,
   GuessSourceEnumApi,
+  ProgramDtoApi,
+  ProgramRunApi,
   QuestionApi,
+  QuestionDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { Subscription, tap, timer } from 'rxjs';
+import { Subscription, combineLatest, filter, map, of, switchMap, tap, timer } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
@@ -19,7 +22,13 @@ interface AnswerCard {
   type: '' | 'selected' | 'correct' | 'wrong';
 }
 
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { QuestionSubmittedFormComponent } from 'src/app/modules/programs/components/questions/question-submitted-form/question-submitted-form.component';
+import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
+import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
+import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
+import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 
 @UntilDestroy()
 @Component({
@@ -30,60 +39,103 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 export class TrainingComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+
   displayTime = 30;
   time = 31000;
   timer?: Subscription;
 
   isContinuous = true;
-  // TODO : Use when we do the program based question
-  // questionsCount = 0;
-  // questionsPage = 0;
-  // questionsPageSize = 25;
-  remainingQuestions: QuestionApi[] = [];
 
-  displayedQuestion!: QuestionApi;
+  questionsCount = 0;
+  questionsAnswered = 0;
+  questionsGoodAnswers = 0;
+
+  programId = '';
+  program?: ProgramDtoApi;
+  programRun?: ProgramRunApi;
+  score = 0;
+  remainingQuestions: QuestionDtoApi[] = [];
+
+  displayedQuestion!: QuestionApi | QuestionDtoApi;
   isQuestionsLoading = true;
   currentAnswers: AnswerCard[] = [];
   iDontKnow = false;
   isTimedOut = false;
+
+  @ViewChild('modalContent') modalContent!: ElementRef;
 
   constructor(
     private readonly offCanvasService: NgbOffcanvas,
     private readonly usersRestService: UsersRestService,
     private readonly guessRestService: GuessesRestService,
     private readonly profileStore: ProfileStore,
+    private readonly programsRestService: ProgramsRestService,
+    private readonly programRunsRestService: ProgramRunsRestService,
+    private readonly questionsRestService: QuestionsRestService,
+    private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly offcanvasService: NgbOffcanvas,
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit(): void {
-    this.getNextQuestion();
-  }
-
-  getQuestions(page?: number) {
-    this.isQuestionsLoading = true;
-
-    // * CONTINUOUS TRAINNG
-    if (this.isContinuous) {
-      this.usersRestService
-        .getNextQuestionsPaginated(this.profileStore.user.value.id, {
-          page: 1,
-          itemsPerPage: 1,
-        } as GetNextQuestionsForUserRequestParams)
-        .pipe(
-          tap(({ data }) => {
-            if (data) {
-              this.setDisplayedQuestion(data[0]);
-            }
-            // TODO : Use when we do the program based question
-            // this.remainingQuestions = res.data ?? [];
-            // this.questionsCount = res.meta.totalItems ?? 0;
-            // if (this.remainingQuestions.length > 0) {
-            //   this.getNextQuestion();
-            // }
+    this.route.params
+      .pipe(
+        map((p) => {
+          if (p['programId']) {
+            this.isContinuous = false;
+            this.programId = p['programId'];
+          } else {
+            this.getNextQuestion();
+          }
+        }),
+        filter(() => !this.isContinuous),
+        switchMap(() =>
+          this.programRunsRestService.getProgramRunsPaginated({
+            programIds: this.programId,
+            createdBy: this.profileStore.user.value.id,
           }),
-          untilDestroyed(this),
-        )
-        .subscribe();
-    }
+        ),
+        switchMap(({ data }) => {
+          if (data && data?.length > 0) {
+            return of(data[0]);
+          } else {
+            return this.programRunsRestService.create({ programId: this.programId }).pipe(map((a) => a.data));
+          }
+        }),
+        tap((pr) => {
+          this.programRun = pr;
+          this.questionsGoodAnswers = pr?.goodGuessesCount ?? 0;
+        }),
+        switchMap(() => this.programsRestService.getPrograms()),
+        tap((progs) => {
+          this.program = progs.find((p) => p.id === this.programId);
+          if (this.program) {
+            this.questionsCount = this.program.questionsCount;
+          } else {
+            throw 'Program Not Found';
+          }
+        }),
+        switchMap(() =>
+          combineLatest([
+            this.questionsRestService.getQuestions({ programIds: this.programId }),
+            this.guessRestService.getGuesses({
+              createdBy: this.profileStore.user.value.id,
+              programRunIds: this.programRun?.id,
+            }),
+          ]),
+        ),
+        tap(([questions, guesses]) => {
+          this.questionsAnswered = guesses.meta.totalItems;
+          this.remainingQuestions = questions.filter((q) =>
+            guesses.data?.every((g) => g.questionId !== q.id),
+          );
+          this.getNextQuestion();
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
   }
 
   uncheck(checked: boolean) {
@@ -125,15 +177,16 @@ export class TrainingComponent implements OnInit {
       }
       if (countGoodAnswers === this.displayedQuestion.answersAccepted.length) {
         result = 'correct';
+        this.questionsGoodAnswers++;
       }
       if (this.iDontKnow) {
-        result = 'wrong';
+        result = 'noanswer';
       }
     });
-    this.openCanvas(result);
+    this.openExplanation(result);
   }
 
-  openCanvas(result: string) {
+  openExplanation(result: string) {
     const canvasRef = this.offCanvasService.open(ExplanationComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
@@ -158,6 +211,7 @@ export class TrainingComponent implements OnInit {
     const selectedAnswers = this.currentAnswers.filter((a) => a.selected).map((a) => a.answer);
     this.guessRestService
       .postGuess({
+        programRunId: this.isContinuous ? undefined : this.programRun?.id,
         questionId: this.displayedQuestion.id,
         answers: selectedAnswers.length > 0 ? selectedAnswers : undefined,
         source: GuessSourceEnumApi.Web,
@@ -166,6 +220,7 @@ export class TrainingComponent implements OnInit {
       })
       .pipe(
         tap(() => {
+          this.questionsAnswered++;
           this.iDontKnow = false;
           this.getNextQuestion();
         }),
@@ -175,18 +230,35 @@ export class TrainingComponent implements OnInit {
 
   getNextQuestion() {
     if (this.isContinuous) {
-      this.getQuestions();
+      this.isQuestionsLoading = true;
+
+      this.usersRestService
+        .getNextQuestionsPaginated(this.profileStore.user.value.id, {
+          page: 1,
+          itemsPerPage: 1,
+        } as GetNextQuestionsForUserRequestParams)
+        .pipe(
+          tap(({ data }) => {
+            if (data) {
+              this.setDisplayedQuestion(data[0]);
+            }
+          }),
+          untilDestroyed(this),
+        )
+        .subscribe();
     } else {
       if (this.remainingQuestions.length === 0) {
-        // this.questionsPage++;
-        this.getQuestions();
+        this.openDoneModal();
       } else {
-        this.setDisplayedQuestion(this.remainingQuestions.pop() as QuestionApi);
+        const last = this.remainingQuestions.pop();
+        if (last) {
+          this.setDisplayedQuestion(last);
+        }
       }
     }
   }
 
-  setDisplayedQuestion(quest: QuestionApi) {
+  setDisplayedQuestion(quest: QuestionApi | QuestionDtoApi) {
     this.displayedQuestion = quest;
     this.getCurrentAnswers(this.displayedQuestion.answersAccepted, this.displayedQuestion.answersWrong);
     this.isTimedOut = false;
@@ -236,5 +308,33 @@ export class TrainingComponent implements OnInit {
     }
 
     return shuffledArray;
+  }
+
+  openDoneModal() {
+    this.score = this.questionsGoodAnswers / this.questionsCount;
+    this.modalService.open(this.modalContent, { backdrop: 'static', size: 'sm', centered: true });
+  }
+
+  openQuestionForm() {
+    const canvasRef = this.offcanvasService.open(QuestionSubmittedFormComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto',
+      backdrop: 'static',
+    });
+    canvasRef.componentInstance.programName = this.program?.name;
+    canvasRef.componentInstance.createdQuestion
+      .pipe(
+        switchMap((title: string) => this.questionsSubmittedRestService.create(title)),
+        tap(() => {
+          this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training]);
+        }),
+      )
+      .subscribe();
+
+    canvasRef.dismissed
+      .pipe(tap(() => this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training])))
+      .subscribe();
+
+    this.modalService.dismissAll();
   }
 }

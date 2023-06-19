@@ -34,10 +34,10 @@
   </div>
 </div>
 
-<div [ngSwitch]="currentStep" class="mt-5">
+<div [ngSwitch]="currentStep" class="mt-6">
   <!-- INFORMATIONS -->
   <div *ngSwitchCase="1" class="page-max-width">
-    <div class="mb-5 row">
+    <div class="mb-6 row">
       <div class="col-6">
         <h2>{{ I18ns.programs.forms.step1.title }}</h2>
         <p class="">{{ I18ns.programs.forms.step1.subtitle }}</p>
@@ -154,7 +154,9 @@
                 />
               </div>
               <div class="col-9">{{ quest.title }}</div>
-              <div class="col-2 text-end cursor-pointer" (click)="openQuestionForm(quest)"><i class="bi bi-pen"></i></div>
+              <div class="col-2 text-end cursor-pointer" (click)="openQuestionForm(quest)">
+                <i class="bi bi-pen"></i>
+              </div>
             </div>
             <hr />
           </ng-container>
@@ -178,7 +180,7 @@
   </div>
   <!-- SHARE -->
   <div *ngSwitchCase="3" class="page-max-width-lg">
-    <div class="mb-5 row">
+    <div class="mb-6 row">
       <div class="col-6">
         <h2>{{ I18ns.programs.forms.step3.title2 }}</h2>
         <p class="fs-7">{{ I18ns.programs.forms.step3.subtitle }}</p>
