@@ -215,9 +215,10 @@ export class LeadHomeComponent implements OnInit {
           this.inactiveMembers = usersStats.length - this.activeMembers;
 
           const prevU = previousUsersStats.filter((u) => u.respondsRegularly).length;
-          this.activeMembersProgression = (this.activeMembers - prevU) / prevU;
+          this.activeMembersProgression = (this.activeMembers - prevU) / this.activeMembers;
+
           const prevI = previousUsersStats.length - prevU;
-          this.inactiveMembersProgression = (this.inactiveMembers - prevI) / prevI;
+          this.inactiveMembersProgression = (this.inactiveMembers - prevI) / this.inactiveMembers;
         }),
         switchMap(() => this.getAverageCompletion(this.globalFilters)),
         untilDestroyed(this),
