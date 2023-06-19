@@ -551,7 +551,7 @@ export const FR = {
       email: 'Adresse email',
       profilePicture: 'Photo de profil',
       downloadPicture: 'Cliquez pour télécharger ou faites glisser et déposez',
-      company: 'Company',
+      company: 'Entreprise',
       team: 'Equipe',
       roles: 'Rôles',
     },
