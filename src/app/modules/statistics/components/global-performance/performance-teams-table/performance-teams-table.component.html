@@ -71,12 +71,6 @@
           </ng-template>
 
           <div class="text-nowrap overflow-hidden" [ngbTooltip]="programsTooltip">
-            <!-- <span
-              *ngFor="let prg of team.programs || [] | slice : 0 : 3 | sort : 'asc' : 'score'"
-              class="alto-badge me-2"
-            >
-              {{ prg.label }}
-            </span> -->
             <ng-container *ngIf="team.programs">
               <td>
                 <alto-colored-pill-list
@@ -93,12 +87,6 @@
           </ng-template>
 
           <div class="text-nowrap overflow-hidden" [ngbTooltip]="tagsTooltip">
-            <!-- <span
-              *ngFor="let tg of team.tags || [] | slice : 0 : 3 | sort : 'asc' : 'score'"
-              class="alto-badge me-2"
-              {{ tg.label }}
-              </span>
-            > -->
             <ng-container *ngIf="team.tags">
               <td>
                 <alto-colored-pill-list
