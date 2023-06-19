@@ -117,6 +117,7 @@ export class LeadTeamComponent implements OnInit {
               return t;
             }
           });
+          this.teamsScores.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
         }),
         switchMap(() => {
           return this.scoreRestService.getScores({
@@ -134,6 +135,7 @@ export class LeadTeamComponent implements OnInit {
               return u;
             }
           });
+          this.usersScores.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
         }),
         tap(() => this.changeTeamsPage(1)),
         tap(() => this.changeUsersPage(this.usersScores, 1)),
@@ -197,7 +199,7 @@ export class LeadTeamComponent implements OnInit {
 
   @memoize()
   getQuestionsByUser(id: string): number[] {
-    return this.usersQuestions.get(id) || [];
+    return this.usersQuestions.get(id) || [0, 0];
   }
 
   airtableRedirect() {
