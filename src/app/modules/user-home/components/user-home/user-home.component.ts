@@ -12,9 +12,9 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { TrainingCardData } from 'src/app/modules/training/models/training.model';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
 
-interface leaderboardUser {
+interface LeaderboardUser {
   position: number;
-  user: UserDtoApi;
+  user?: UserDtoApi;
   score: number | undefined;
   progression: number;
 }
@@ -40,7 +40,7 @@ export class UserHomeComponent implements OnInit {
 
   //team data
   durationTabs = ScoreDuration.Week;
-  leaderboardUsers: leaderboardUser[] | undefined = undefined;
+  leaderboardUsers: LeaderboardUser[] | undefined = undefined;
 
   constructor(
     private readonly profileStore: ProfileStore,
@@ -93,9 +93,9 @@ export class UserHomeComponent implements OnInit {
 
   getLeaderboard() {
     combineLatest([
-      this.scoreRestService.getUsersStats(this.durationTabs, false, this.profileStore.user.value.id),
+      this.scoreRestService.getUsersStats(this.durationTabs, false),
       this.userRestService.getUsers(),
-      this.scoreRestService.getUsersStats(this.durationTabs, true, this.profileStore.user.value.id),
+      this.scoreRestService.getUsersStats(this.durationTabs, true),
     ])
       .pipe(
         map(
@@ -117,10 +117,10 @@ export class UserHomeComponent implements OnInit {
                   : 0;
               return {
                 position: index + 1,
-                user: user ? user : {},
+                user: user,
                 score: scoredUser.score,
                 progression: progression,
-              } as leaderboardUser;
+              } as LeaderboardUser;
             })
             .slice(0, 5);
         }),
