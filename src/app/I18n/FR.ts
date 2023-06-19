@@ -652,7 +652,7 @@ export const FR = {
   test: 'test',
   userHome: {
     title: 'Bonjour ',
-    subtitle: "Retrouvez une vue d'ensemble sur votre planning",
+    subtitle: "Retrouvez une vue d'ensemble sur votre training.",
     programsRun: {
       title: 'Vos programmes en cours',
       subtitle: 'Retrouvez les programmes qui vous sont assignés.',
