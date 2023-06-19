@@ -79,12 +79,12 @@
           <thead class="border-bottom border-top">
             <th scope="col" class="w-5"></th>
             <th scope="col" class="fw-bold">{{ I18ns.userHome.teams.leaderboard.name }}</th>
-            <th scope="col" class=" text-center w-25 fw-bold">{{ I18ns.userHome.teams.leaderboard.score }}</th>
+            <th scope="col" class="text-center w-25 fw-bold">{{ I18ns.userHome.teams.leaderboard.score }}</th>
           </thead>
           <tbody>
             <tr *ngFor="let user of leaderboardUsers">
               <td
-              class="text-center"
+                class="text-center"
                 [ngClass]="{
                   'position-1': user.position === 1,
                   'position-2': user.position === 2,
@@ -102,9 +102,9 @@
                 <alto-img-badge [toggleTooltip]="false" [user]="user.user" [size]="30"></alto-img-badge>
                 <div class="d-inline-block" [ngClass]="{ 'fw-bold': user.position === 1 }">
                   {{
-                    user.user.firstname && user.user.lastname
-                      ? user.user.firstname + ' ' + user.user.lastname
-                      : user.user.username
+                    user.user?.firstname && user.user?.lastname
+                      ? user.user?.firstname + ' ' + user.user?.lastname
+                      : user.user?.username
                   }}
                 </div>
               </td>

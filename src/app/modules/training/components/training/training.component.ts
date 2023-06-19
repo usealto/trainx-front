@@ -311,7 +311,7 @@ export class TrainingComponent implements OnInit {
   }
 
   openDoneModal() {
-    this.score = this.questionsGoodAnswers / this.questionsCount;
+    this.score = this.questionsGoodAnswers ? this.questionsCount / this.questionsGoodAnswers : 0;
     this.modalService.open(this.modalContent, { backdrop: 'static', size: 'sm', centered: true });
   }
 
