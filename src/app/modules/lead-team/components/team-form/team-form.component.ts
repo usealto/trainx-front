@@ -18,9 +18,16 @@ import { TeamsRestService } from '../../services/teams-rest.service';
 export class TeamFormComponent implements OnInit {
   I18ns = I18ns;
   @Input() team?: TeamDtoApi;
-  // @Output() createdTag = new EventEmitter<TeamDtoApi>();
-  private fb: IFormBuilder;
-  teamForm!: IFormGroup<TeamForm>;
+
+  private fb: IFormBuilder = this.fob;
+
+  teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
+    shortName: ['', [Validators.required]],
+    longName: ['', [Validators.required]],
+    programs: [],
+    invitationEmails: [],
+  });
+
   isEdit = false;
   programs: ProgramDtoApi[] = [];
   users: UserDtoApi[] = [];
@@ -33,9 +40,7 @@ export class TeamFormComponent implements OnInit {
     private readonly userService: UsersService,
     private readonly programService: ProgramsRestService,
     private readonly teamsRestService: TeamsRestService,
-  ) {
-    this.fb = fob;
-  }
+  ) {}
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -45,13 +50,6 @@ export class TeamFormComponent implements OnInit {
           tap(([programs, users]) => (this.users = users)),
         )
         .subscribe();
-
-      this.teamForm = this.fb.group<TeamForm>({
-        shortName: ['', [Validators.required]],
-        longName: ['', [Validators.required]],
-        programs: [],
-        invitationEmails: [],
-      });
 
       if (this.team) {
         this.isEdit = true;

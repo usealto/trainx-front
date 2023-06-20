@@ -154,6 +154,8 @@ export const FR = {
       title: 'Questions',
       subtitle: "Retrouvez l'ensemble des questions présentes dans vos programmes.",
       createQuestion: 'Créer',
+      remainingCharacters: 'caractères restants',
+
       table: {
         question: 'Question',
         score: 'Score',
@@ -343,6 +345,7 @@ export const FR = {
       explanationPlaceholder: 'Écrire une brève explication de la question.',
       link: 'Référence (facultatif)',
       linkPlaceholder: 'Lien vers une ressource utile',
+      remainingCharacters: 'caractères restants',
     },
   },
   tags: {

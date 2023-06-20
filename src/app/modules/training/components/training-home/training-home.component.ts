@@ -64,10 +64,10 @@ export class TrainingHomeComponent implements OnInit {
       .pipe(
         tap((a) => {
           this.allPrograms = this.allProgramsFiltered = a;
-          this.onGoingPrograms = this.onGoingProgramsDisplay = a.filter((r) => r.isProgress === true);
+          this.onGoingPrograms = this.onGoingProgramsDisplay = a.filter((r) => r.isProgress && r.duration);
           this.startedProgramsCount = this.onGoingPrograms.filter((p) => !!p.programRunId).length;
-          this.improveScorePrograms = a.filter((r) => r.isProgress !== true && r.score < r.expectation);
-          this.donePrograms = this.doneProgramsFiltered = a.filter((r) => r.isProgress !== true);
+          this.improveScorePrograms = a.filter((r) => !r.isProgress && r.score < r.expectation);
+          this.donePrograms = this.doneProgramsFiltered = a.filter((r) => !r.isProgress);
         }),
       )
       .subscribe();
