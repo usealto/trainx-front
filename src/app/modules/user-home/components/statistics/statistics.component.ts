@@ -21,7 +21,7 @@ import { GuessesRestService } from 'src/app/modules/training/services/guesses-re
 })
 export class StatisticsComponent implements OnInit {
   I18ns = I18ns;
-  statisticsDuration = ScoreDuration.Month;
+  statisticsDuration = ScoreDuration.Trimester;
 
   //Statistics data
   userScore = 0;

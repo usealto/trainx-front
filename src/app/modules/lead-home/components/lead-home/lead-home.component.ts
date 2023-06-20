@@ -3,7 +3,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ChallengeDtoApi,
   ChallengeDtoApiTypeEnumApi,
-  ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   UserDtoApi,
@@ -21,10 +20,14 @@ import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { ScoreDuration, ScoreFilters } from 'src/app/modules/shared/models/score.model';
+import {
+  ScoreDuration,
+  ScoreFilters,
+  TopFlop,
+  TopFlopDisplay,
+} from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { TopFlop, TopFlopDisplay } from 'src/app/modules/shared/models/score.model';
 
 @UntilDestroy()
 @Component({
@@ -40,8 +43,8 @@ export class LeadHomeComponent implements OnInit {
 
   userName = '';
 
-  globalFilters: ScoreFilters = { duration: ScoreDuration.Month, type: ScoreTypeEnumApi.Guess, team: '' };
-  chartFilters: ChartFilters = { duration: ScoreDuration.Month, type: ScoreTypeEnumApi.Tag, team: '' };
+  globalFilters: ScoreFilters = { duration: ScoreDuration.Trimester, type: ScoreTypeEnumApi.Guess, team: '' };
+  chartFilters: ChartFilters = { duration: ScoreDuration.Trimester, type: ScoreTypeEnumApi.Tag, team: '' };
   scoreCount = 0;
 
   commentsCount = 0;
