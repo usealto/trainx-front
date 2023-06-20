@@ -44,6 +44,11 @@ export class QuestionFormComponent implements OnInit {
   programs: ProgramDtoApi[] = [];
   tags: TagDtoApi[] = [];
 
+  questionHardLimit = 300;
+  questionSoftLimit = 150;
+  answerHardLimit = 200;
+  answerSoftLimit = 75;
+
   public get answersAccepted(): FormArray<FormControl<string>> {
     return this.questionForm.controls.answersAccepted as FormArray<FormControl<string>>;
   }
@@ -129,7 +134,6 @@ export class QuestionFormComponent implements OnInit {
       explanation,
       link,
     };
-
     if ((!this.isEdit && !this.question) || this.isSubmitted) {
       this.questionService
         .createQuestion(params)
@@ -177,5 +181,13 @@ export class QuestionFormComponent implements OnInit {
   }
   addBadAnwswer() {
     this.answersWrong.push(this.fob.control(''));
+  }
+
+  getLength(data: string | undefined | null): number {
+    if (!data) {
+      return 0;
+    } else {
+      return data.length;
+    }
   }
 }
