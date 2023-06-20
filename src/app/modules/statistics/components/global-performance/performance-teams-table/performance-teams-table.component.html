@@ -70,7 +70,10 @@
             <ng-container *ngFor="let prog of team.programs">{{ prog.label }}<br /></ng-container>
           </ng-template>
 
-          <div class="text-nowrap overflow-hidden" [ngbTooltip]="programsTooltip">
+          <div
+            class="text-nowrap overflow-hidden"
+            [ngbTooltip]="team.programs!.length > 2 ? programsTooltip : ''"
+          >
             <ng-container *ngIf="team.programs">
               <td>
                 <alto-colored-pill-list
@@ -86,7 +89,7 @@
             <ng-container *ngFor="let tag of team.tags">{{ tag.label }}<br /></ng-container>
           </ng-template>
 
-          <div class="text-nowrap overflow-hidden" [ngbTooltip]="tagsTooltip">
+          <div class="text-nowrap overflow-hidden" [ngbTooltip]="team.tags!.length > 2 ? tagsTooltip : ''">
             <ng-container *ngIf="team.tags">
               <td>
                 <alto-colored-pill-list
