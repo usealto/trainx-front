@@ -24,8 +24,15 @@ export class TagsFormComponent implements OnInit {
   I18ns = I18ns;
   @Input() tag?: TagDtoApi;
   @Output() createdTag = new EventEmitter<TagDtoApi>();
-  private fb: IFormBuilder;
-  tagForm!: IFormGroup<TagForm>;
+
+  private fb: IFormBuilder = this.fob;
+  tagForm: IFormGroup<TagForm> = this.fb.group<TagForm>({
+    name: ['', [Validators.required]],
+    programs: [],
+    questions: [],
+    description: '',
+  });
+
   isEdit = false;
 
   programs: ProgramDtoApi[] = [];
@@ -36,19 +43,10 @@ export class TagsFormComponent implements OnInit {
     private readonly programService: ProgramsRestService,
     private readonly tagService: TagsRestService,
     readonly fob: UntypedFormBuilder,
-  ) {
-    this.fb = fob;
-  }
+  ) {}
 
   ngOnInit(): void {
     setTimeout(() => {
-      this.tagForm = this.fb.group<TagForm>({
-        name: ['', [Validators.required]],
-        programs: [],
-        questions: [],
-        description: '',
-      });
-
       this.programService
         .getPrograms()
         .pipe(

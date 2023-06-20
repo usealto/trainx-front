@@ -1,14 +1,22 @@
 <div class="text-end px-4 mt-3">
   <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
 </div>
-<div class="p-4">
-  <h2>
-    <img src="../assets/img/create-tag-icon.svg" alt="Tag Icon">
-    {{ isEdit ? I18ns.tags.form.title.edit : I18ns.tags.form.title.create }}
-  </h2>
-  <p class="fs-7">{{ I18ns.tags.form.subtitle }}</p>
+
+<div class="row m-6 g-0">
+  <div class="col-2" style="width: 2.857rem">
+    <i class="alto-badge-big alto-badge-blue me-4 bi bi-tag"></i>
+  </div>
+  <div class="col ms-4">
+    <h2>
+      {{ isEdit ? I18ns.tags.form.title.edit : I18ns.tags.form.title.create }}
+    </h2>
+    <p class="fs-7">{{ I18ns.tags.form.subtitle }}</p>
+  </div>
 </div>
-<div class="offcanvas-body px-4">
+
+<hr class="mb-0" />
+
+<div class="p-6 sidebar-body">
   <form *ngIf="tagForm" [formGroup]="tagForm">
     <label class="form-label required">{{ I18ns.tags.form.tagName }}</label>
     <input
@@ -46,13 +54,27 @@
 
     <label class="form-label mt-3">{{ I18ns.tags.form.description + ' ' + I18ns.shared.optional }}</label>
     <textarea formControlName="description" class="form-control" cols="30" rows="10"></textarea>
+  </form>
+</div>
 
+<div class="footer">
+  <hr class="m-0" />
+
+  <div class="button-container">
+    <button
+      type="button"
+      class="btn btn-outline-secondary me-3"
+      aria-label="Close"
+      (click)="activeOffcanvas.dismiss()"
+    >
+      {{ I18ns.shared.cancel }}
+    </button>
     <input
       type="submit"
       [disabled]="!tagForm.valid"
-      class="w-100 btn btn-primary my-4"
+      class="btn btn-primary float-end"
       [value]="I18ns.shared.save"
       (click)="createTag()"
     />
-  </form>
+  </div>
 </div>
