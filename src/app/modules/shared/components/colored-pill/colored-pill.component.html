@@ -5,4 +5,6 @@
 >
   {{ d.shortName || d.name || d.title || d.label || d }}
 </span>
-<span *ngIf="limit && data.length > limit" class="alto-badge me-2"> +{{ data.length - limit }}</span>
+<span [ngbTooltip]="tooltip" *ngIf="limit && data.length > limit" class="alto-badge">
+  +{{ data.length - limit }}</span
+>

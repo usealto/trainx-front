@@ -70,35 +70,26 @@
             <ng-container *ngFor="let prog of team.programs">{{ prog.label }}<br /></ng-container>
           </ng-template>
 
-          <div
-            class="text-nowrap overflow-hidden"
-            [ngbTooltip]="team.programs!.length > 2 ? programsTooltip : ''"
-          >
-            <ng-container *ngIf="team.programs">
-              <td>
-                <alto-colored-pill-list
-                  [data]="team.programs | sort : 'asc' : 'score'"
-                  [limit]="3"
-                ></alto-colored-pill-list>
-              </td>
-            </ng-container>
-          </div>
+          <ng-container *ngIf="team.programs">
+            <alto-colored-pill-list
+              [data]="team.programs | sort : 'asc' : 'score'"
+              [limit]="3"
+              [tooltip]="team.programs!.length > 2 ? programsTooltip : ''"
+            ></alto-colored-pill-list>
+          </ng-container>
         </td>
         <td>
           <ng-template #tagsTooltip>
             <ng-container *ngFor="let tag of team.tags">{{ tag.label }}<br /></ng-container>
           </ng-template>
 
-          <div class="text-nowrap overflow-hidden" [ngbTooltip]="team.tags!.length > 2 ? tagsTooltip : ''">
-            <ng-container *ngIf="team.tags">
-              <td>
-                <alto-colored-pill-list
-                  [data]="team.tags | sort : 'asc' : 'score'"
-                  [limit]="3"
-                ></alto-colored-pill-list>
-              </td>
-            </ng-container>
-          </div>
+          <ng-container *ngIf="team.tags">
+            <alto-colored-pill-list
+              [data]="team.tags | sort : 'asc' : 'score'"
+              [limit]="3"
+              [tooltip]="team.tags!.length > 2 ? tagsTooltip : ''"
+            ></alto-colored-pill-list>
+          </ng-container>
         </td>
       </tr>
     </tbody>
