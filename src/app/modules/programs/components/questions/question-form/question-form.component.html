@@ -38,51 +38,26 @@
   </div>
   <form *ngIf="questionForm" [formGroup]="questionForm">
     <label class="form-label required">{{ I18ns.questions.form.name }}</label>
-    <textarea
-      class="form-control mb-0"
-      formControlName="title"
-      placeholder="{{ I18ns.questions.form.namePlaceholder }}"
-      altoAutoResizeTextarea
-      [maxlength]="questionHardLimit"
-    ></textarea>
-    <p
-      class="text-end"
-      [ngClass]="{
-        'text-danger': getLength(questionForm.controls.title.value) >= questionSoftLimit
-      }"
+
+    <alto-text-counter
+      [control]="questionForm.controls.title"
+      [placeholder]="I18ns.questions.form.namePlaceholder"
+      [limit]="questionHardLimit"
+      [softLimit]="questionSoftLimit"
     >
-      {{
-        questionHardLimit -
-          (questionForm.controls.title.value?.length || 0) +
-          ' ' +
-          I18ns.questions.form.remainingCharacters
-      }}
-    </p>
+    </alto-text-counter>
 
     <label class="form-label required">{{ I18ns.questions.form.goodAnswer }}</label>
 
     <ng-container formArrayName="answersAccepted">
       <ng-container *ngFor="let answer of answersAccepted.controls; let i = index">
-        <textarea
-          class="form-control mb-0"
-          [formControl]="answer"
-          placeholder="{{ I18ns.questions.form.answerPlaceholder + ' ' + (i + 1) }}"
-          altoAutoResizeTextarea
-          [maxlength]="answerHardLimit"
-        ></textarea>
-        <p
-          class="text-end mb-4"
-          [ngClass]="{
-            'text-danger': getLength(questionForm.controls.answersAccepted.value![i]) >= answerSoftLimit
-          }"
+        <alto-text-counter
+          [control]="answer"
+          [placeholder]="I18ns.questions.form.answerPlaceholder + ' ' + (i + 1)"
+          [limit]="answerHardLimit"
+          [softLimit]="answerSoftLimit"
         >
-          {{
-            answerHardLimit -
-              getLength(questionForm.controls.answersAccepted.value![i]) +
-              ' ' +
-              I18ns.questions.form.remainingCharacters
-          }}
-        </p>
+        </alto-text-counter>
       </ng-container>
     </ng-container>
     <p class="add-field" *ngIf="answersAccepted.controls.length < 4" (click)="addGoodAnwswer()">
@@ -95,26 +70,13 @@
 
     <ng-container formArrayName="answersWrong">
       <ng-container *ngFor="let answer of answersWrong.controls; let i = index">
-        <textarea
-          class="form-control mb-0"
-          [formControl]="answer"
-          placeholder="{{ I18ns.questions.form.answerPlaceholder + ' ' + (i + 1) }}"
-          altoAutoResizeTextarea
-          [maxlength]="answerHardLimit"
-        ></textarea>
-        <p
-          class="text-end mb-4"
-          [ngClass]="{
-            'text-danger': getLength(questionForm.controls.answersWrong.value![i]) >= answerSoftLimit
-          }"
+        <alto-text-counter
+          [control]="answer"
+          [placeholder]="I18ns.questions.form.answerPlaceholder + ' ' + (i + 1)"
+          [limit]="answerHardLimit"
+          [softLimit]="answerSoftLimit"
         >
-          {{
-            answerHardLimit -
-              getLength(questionForm.controls.answersWrong.value![i]) +
-              ' ' +
-              I18ns.questions.form.remainingCharacters
-          }}
-        </p>
+        </alto-text-counter>
       </ng-container>
     </ng-container>
 

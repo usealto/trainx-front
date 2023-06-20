@@ -36,6 +36,7 @@ import { TrainingCardComponent } from './components/training-card/training-card.
 import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
+import { TextCounterComponent } from './components/text-counter/text-counter.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     ScoreFilterComponent,
     ImgBadgeListComponent,
     ButtonGroupComponent,
+    TextCounterComponent,
   ],
   imports: [
     CommonModule,
@@ -113,6 +115,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     ScoreFilterComponent,
     ImgBadgeListComponent,
     ButtonGroupComponent,
+    TextCounterComponent,
   ],
 })
 export class SharedModule {}

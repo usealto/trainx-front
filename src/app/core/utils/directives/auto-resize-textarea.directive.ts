@@ -7,17 +7,14 @@ import { Directive, ElementRef, HostListener, Input, OnInit } from '@angular/cor
 export class AutoResizeTextareaDirective implements OnInit {
   host: any;
 
-  // Entier sans le px
+  /**
+   * Integer without Pixels
+   */
   @Input() minHeight = 34;
 
   @HostListener('input', ['$event'])
   onInput(e: any) {
-    if (e.target.scrollHeight > this.minHeight + 10) {
-      e.target.style.height = '1px';
-      e.target.style.height = 4 + e.target.scrollHeight + 'px';
-    } else {
-      e.target.style.height = this.minHeight + 'px';
-    }
+    this.resize(e.target);
   }
 
   constructor(el: ElementRef) {
@@ -32,6 +29,16 @@ export class AutoResizeTextareaDirective implements OnInit {
     if (this.minHeight !== 0) {
       this.host.style.minHeight = this.minHeight + 'px';
       this.host.style.height = this.minHeight + 'px';
+    }
+    this.resize(this.host);
+  }
+
+  resize(e: any) {
+    if (e.scrollHeight > this.minHeight + 10) {
+      e.style.height = '1px';
+      e.style.height = 4 + e.scrollHeight + 'px';
+    } else {
+      e.style.height = this.minHeight + 'px';
     }
   }
 }

@@ -22,6 +22,7 @@ import { ProgramsRestService } from '../../../services/programs-rest.service';
 import { QuestionsRestService } from '../../../services/questions-rest.service';
 import { QuestionsSubmittedRestService } from '../../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../../services/tags-rest.service';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @UntilDestroy()
 @Component({
@@ -183,11 +184,12 @@ export class QuestionFormComponent implements OnInit {
     this.answersWrong.push(this.fob.control(''));
   }
 
-  getLength(data: string | undefined | null): number {
-    if (!data) {
-      return 0;
-    } else {
-      return data.length;
-    }
-  }
+  // @memoize()
+  // getLength(data: string | undefined | null): number {
+  //   if (!data) {
+  //     return 0;
+  //   } else {
+  //     return data.length;
+  //   }
+  // }
 }
