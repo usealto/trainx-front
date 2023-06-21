@@ -512,7 +512,7 @@ export const FR = {
     challenges: 'Challenges',
     settings: 'Paramètres',
     profile: 'Profil',
-    training: 'Training',
+    training: 'Programmes',
     adminMode: 'Mode Administrateur',
   },
   settings: {
