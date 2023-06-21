@@ -31,9 +31,12 @@
 <div class="row mt-4">
   <div class="col-7">
     <div class="score-evolution-chart panel">
-      <h2 class="mb-4">
+      <h2>
         {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}
       </h2>
+      <p class="mb-4">
+        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.subtitle }}
+      </p>
       <div class="chart-container">
         <canvas id="themeScoreEvolution"></canvas>
       </div>
@@ -41,19 +44,27 @@
   </div>
   <div class="col-5">
     <div class="panel mb-4">
-      <h2 class="mb-4">
+      <h2>
         {{
           activeTab === 1
             ? I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.title.tags
             : I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.title.programs
         }}
       </h2>
+      <p class="mb-4">
+        {{
+          activeTab === 1
+            ? I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.subtitle.tags
+            : I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.subtitle.programs
+        }}
+      </p>
       <div class="chart-container2">
         <canvas id="themePerformance"></canvas>
       </div>
     </div>
     <div class="panel">
-      <h2 class="mb-6">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
+      <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
+      <p class="mb-6">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle }}</p>
       <div class="row">
         <div class="col-6 border-end pe-0">
           <h1 class="mb-4">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h1>

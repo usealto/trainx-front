@@ -266,7 +266,7 @@ export const FR = {
         teamFilter: 'Équipes',
         scoreEvolution: {
           title: 'Évolution du score',
-          subtitle: "Suivez l'évolution du score de vos équipes.",
+          subtitle: 'Evolution du niveau de maitrise global de vos équipes par tags/programmes',
         },
         leaderboard: {
           title: 'Leaderboard',
@@ -284,15 +284,21 @@ export const FR = {
         },
         scoreEvolutionChart: {
           title: 'Évolution du score',
+          subtitle: 'Evolution du niveau de maitrise des connaissances de vos équipes par tags/programmes',
         },
         performanceChart: {
           title: {
             tags: 'Performance par tag',
             programs: 'Performance par programme',
           },
+          subtitle: {
+            tags: 'Niveau de maitrise (des connaissances) de vos équipes par tags',
+            programs: 'Niveau de maitrise (des connaissances) de vos équipes par programmes',
+          },
         },
         control: {
-          title: 'Maitrise',
+          title: 'Maitrise par thématiques',
+          subtitle: 'Panel des tags les mieux et moins bien maitrisés par vos équipes',
           top: 'Top',
           flop: 'Flop',
         },
