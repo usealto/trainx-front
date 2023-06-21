@@ -64,7 +64,13 @@
     </div>
     <div class="panel">
       <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
-      <p class="mb-6">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle }}</p>
+      <p class="mb-6">
+        {{
+          activeTab === 1
+            ? I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle.tags
+            : I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle.programs
+        }}
+      </p>
       <div class="row">
         <div class="col-6 border-end pe-0">
           <h1 class="mb-4">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h1>

@@ -298,7 +298,10 @@ export const FR = {
         },
         control: {
           title: 'Maitrise par thématiques',
-          subtitle: 'Panel des tags les mieux et moins bien maitrisés par vos équipes',
+          subtitle: {
+            tags: 'Panel des tags les mieux et moins bien maitrisés par vos équipes',
+            programs: 'Panel des programmes les mieux et moins bien maitrisés par vos équipes',
+          },
           top: 'Top',
           flop: 'Flop',
         },
