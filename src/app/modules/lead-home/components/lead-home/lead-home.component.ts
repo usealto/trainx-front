@@ -110,10 +110,12 @@ export class LeadHomeComponent implements OnInit {
   }
 
   createCharts({
+    timeframe = this.chartFilters.timeframe ?? ScoreTimeframeEnumApi.Week,
     duration = this.chartFilters.duration,
     type = this.chartFilters.type ?? ScoreTypeEnumApi.Program,
     team = this.chartFilters.team,
   }: ChartFilters) {
+    this.chartFilters.timeframe = timeframe;
     this.chartFilters.duration = duration;
     this.chartFilters.type = type;
     this.chartFilters.team = team;
