@@ -8,7 +8,6 @@ describe('App Connection Admin', () => {
     cy.get('#welcome').contains('Bonjour E2e-admin');
   });
 
-  /* ==== Test Created with Cypress Studio ==== */
   it('Logout', function () {
     /* ==== Generated with Cypress Studio ==== */
     cy.get('.logout').click();
@@ -22,17 +21,16 @@ describe('App Connection', () => {
     cy.visit('/');
   });
 
-  /* ==== Test Created with Cypress Studio ==== */
-  it('Logout', function () {
-    /* ==== Generated with Cypress Studio ==== */
-    cy.get('.logout').click();
-    /* ==== End Cypress Studio ==== */
-  });
-
-  /* ==== Test Created with Cypress Studio ==== */
   it('Login', function () {
     /* ==== Generated with Cypress Studio ==== */
     cy.get('#welcome').should('have.text', 'Bonjour E2e');
+    /* ==== End Cypress Studio ==== */
+    cy.get('#adminSwitch').should('not.exist');
+  });
+
+  it('Logout', function () {
+    /* ==== Generated with Cypress Studio ==== */
+    cy.get('.logout').click();
     /* ==== End Cypress Studio ==== */
   });
 });
