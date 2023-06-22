@@ -28,6 +28,7 @@ import {
 } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
 
 @UntilDestroy()
 @Component({
@@ -44,7 +45,7 @@ export class LeadHomeComponent implements OnInit {
   userName = '';
 
   globalFilters: ScoreFilters = { duration: ScoreDuration.Trimester, type: ScoreTypeEnumApi.Guess, team: '' };
-  chartFilters: ChartFilters = { duration: ScoreDuration.Trimester, type: ScoreTypeEnumApi.Tag, team: '' };
+  chartFilters: ChartFilters = { duration: ScoreDuration.Day, type: ScoreTypeEnumApi.Tag, team: '' };
   scoreCount = 0;
 
   commentsCount = 0;
@@ -78,6 +79,7 @@ export class LeadHomeComponent implements OnInit {
     private readonly scoreService: ScoresService,
     private readonly challengesRestService: ChallengesRestService,
     private readonly userService: UsersRestService,
+    private readonly statisticsServices: StatisticsService,
     public readonly teamStore: TeamStore,
     private readonly profileStore: ProfileStore,
   ) {}
@@ -110,12 +112,10 @@ export class LeadHomeComponent implements OnInit {
   }
 
   createCharts({
-    timeframe = this.chartFilters.timeframe ?? ScoreTimeframeEnumApi.Week,
     duration = this.chartFilters.duration,
     type = this.chartFilters.type ?? ScoreTypeEnumApi.Program,
     team = this.chartFilters.team,
   }: ChartFilters) {
-    this.chartFilters.timeframe = timeframe;
     this.chartFilters.duration = duration;
     this.chartFilters.type = type;
     this.chartFilters.team = team;
@@ -132,16 +132,30 @@ export class LeadHomeComponent implements OnInit {
         filter(() => !!this.scoreCount),
         tap(({ scores }) => {
           scores = this.scoreService.reduceChartData(scores);
-          const labels = scores[0].dates.map((d) => d.toLocaleDateString());
+
+          const aggregateData = this.statisticsServices.aggregateDataForScores(
+            scores[0],
+            duration as ScoreDuration,
+          );
+
+          const labels = this.statisticsServices.formatLabel(
+            aggregateData.map((d) => d.x),
+            duration as ScoreDuration,
+          );
+
           const data: ChartData = {
             labels: labels,
-            datasets: scores.map((s) => ({
-              label: s.label,
-              data: s.averages.map((u) => (u ? Math.round((u * 10000) / 100) : u)),
-              fill: false,
-              tension: 0.2,
-              spanGaps: true,
-            })),
+            datasets: scores.map((s) => {
+              const d = this.statisticsServices.aggregateDataForScores(s, duration as ScoreDuration);
+
+              return {
+                label: s.label,
+                data: d.map((u) => (u.y ? Math.round((u.y * 10000) / 100) : u.y)),
+                fill: false,
+                tension: 0.2,
+                spanGaps: true,
+              };
+            }),
           };
 
           this.evolutionChart = new Chart('programScoreEvol', {
