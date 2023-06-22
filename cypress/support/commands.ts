@@ -41,3 +41,55 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
+declare namespace Cypress {
+  // interface cy {
+  // declare additional properties on "cy" object, like
+  // label: string
+  // }
+  interface Chainable {
+    // declare additional custom commands as methods, like
+    loginToAuth0(username: string, password: string): any;
+  }
+}
+
+function loginViaAuth0Ui(username: string, password: string) {
+  // App landing page redirects to Auth0.
+  cy.visit('/');
+
+  // Login on Auth0.
+  cy.origin(Cypress.env('auth_url'), { args: { username, password } }, ({ username, password }) => {
+    cy.get('input#username').type(username);
+    cy.get('input#password').type(password, { log: false });
+    // cy.contains('button[value=default]', 'Continue').click();
+    cy.get('button[name=action]').last().click();
+  });
+}
+
+Cypress.Commands.add('loginToAuth0', (username: string, password: string) => {
+  const log = Cypress.log({
+    displayName: 'AUTH0 LOGIN',
+    message: [`🔐 Authenticating | ${username}`],
+    autoEnd: false,
+  });
+  log.snapshot('before');
+
+  cy.session(
+    `auth0-${username}`,
+    () => {
+      loginViaAuth0Ui(username, password);
+    },
+    {
+      validate: () => {
+        // Validate presence of access token in localStorage.
+        cy.wrap(localStorage)
+          .invoke('getItem', '@@auth0spajs@@::' + Cypress.env('auth_client_id') + '::@@user@@')
+          .should('exist');
+      },
+    },
+  );
+
+  log.snapshot('after');
+  log.end();
+});
