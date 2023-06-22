@@ -167,24 +167,30 @@ export class TrainingComponent implements OnInit {
     this.stopTimer();
     let result = 'wrong';
     let countGoodAnswers = 0;
+    let countBadAnswers = 0;
 
     this.currentAnswers.map((a) => {
       if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
         a.type = 'correct';
-      } else {
-        if (a.selected && !this.displayedQuestion.answersAccepted.includes(a.answer)) a.type = 'wrong';
+      } else if (a.selected && !this.displayedQuestion.answersAccepted.includes(a.answer)) {
+        a.type = 'wrong';
       }
       if (a.selected && a.type === 'correct') {
         countGoodAnswers++;
-      }
-      if (countGoodAnswers === this.displayedQuestion.answersAccepted.length) {
-        result = 'correct';
-        this.questionsGoodAnswers++;
-      }
-      if (this.iDontKnow) {
-        result = 'noanswer';
+      } else if (a.selected && a.type === 'wrong') {
+        countBadAnswers++;
       }
     });
+
+    if (countGoodAnswers === this.displayedQuestion.answersAccepted.length && countBadAnswers === 0) {
+      result = 'correct';
+    } else if (this.iDontKnow || (countBadAnswers === 0 && countGoodAnswers === 0)) {
+      this.iDontKnow = true;
+      result = 'noanswer';
+    } else {
+      result = 'wrong';
+    }
+
     this.openExplanation(result);
   }
 
