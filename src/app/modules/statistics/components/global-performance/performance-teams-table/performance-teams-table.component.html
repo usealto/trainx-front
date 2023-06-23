@@ -72,9 +72,7 @@
 
           <ng-container *ngIf="team.programs">
             <alto-colored-pill-list
-              [data]="team.programs | sort : 'asc' : 'score'"
-              [limit]="3"
-              [tooltip]="team.programs!.length > 2 ? programsTooltip : ''"
+              [data]="team.programs | sort : 'asc' : 'score' | slice : 0 : 3"
             ></alto-colored-pill-list>
           </ng-container>
         </td>
@@ -85,9 +83,7 @@
 
           <ng-container *ngIf="team.tags">
             <alto-colored-pill-list
-              [data]="team.tags | sort : 'asc' : 'score'"
-              [limit]="3"
-              [tooltip]="team.tags!.length > 2 ? tagsTooltip : ''"
+              [data]="team.tags | sort : 'asc' : 'score' | slice : 0 : 3"
             ></alto-colored-pill-list>
           </ng-container>
         </td>

@@ -45,7 +45,7 @@ export class LeadHomeComponent implements OnInit {
   userName = '';
 
   globalFilters: ScoreFilters = { duration: ScoreDuration.Trimester, type: ScoreTypeEnumApi.Guess, team: '' };
-  chartFilters: ChartFilters = { duration: ScoreDuration.Day, type: ScoreTypeEnumApi.Tag, team: '' };
+  chartFilters: ChartFilters = { duration: ScoreDuration.Trimester, type: ScoreTypeEnumApi.Tag, team: '' };
   scoreCount = 0;
 
   commentsCount = 0;
