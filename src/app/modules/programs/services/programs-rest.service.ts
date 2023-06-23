@@ -125,4 +125,8 @@ export class ProgramsRestService {
   activate(id: string, active: boolean) {
     return this.programApi.patchProgram({ id, patchProgramDtoApi: { isActive: active } });
   }
+
+  resetCache() {
+    this.programStore.programs.reset();
+  }
 }

@@ -1,0 +1,17 @@
+.chart-container {
+  height: 280px;
+}
+
+.statistics-panel .panel {
+  height: 7.857rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.statistics-panel-end {
+  h1 {
+    margin-bottom: 0;
+  }
+}

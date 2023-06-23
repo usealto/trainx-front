@@ -38,8 +38,8 @@ export class ContinuingTrainingComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     combineLatest([
-      this.scoresRestService.getUsersStats(ScoreDuration.Month),
-      this.scoresRestService.getUsersStats(ScoreDuration.Month, true),
+      this.scoresRestService.getUsersStats(ScoreDuration.Month, false, this.profileStore.user.value.id),
+      this.scoresRestService.getUsersStats(ScoreDuration.Month, true, this.profileStore.user.value.id),
       this.guessRestService.getGuesses(
         { createdBy: this.profileStore.user.value.id, itemsPerPage: 500 },
         ScoreDuration.Trimester,

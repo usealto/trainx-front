@@ -154,6 +154,8 @@ export const FR = {
       title: 'Questions',
       subtitle: "Retrouvez l'ensemble des questions présentes dans vos programmes.",
       createQuestion: 'Créer',
+      remainingCharacters: 'caractères restants',
+
       table: {
         question: 'Question',
         score: 'Score',
@@ -264,7 +266,7 @@ export const FR = {
         teamFilter: 'Équipes',
         scoreEvolution: {
           title: 'Évolution du score',
-          subtitle: "Suivez l'évolution du score de vos équipes.",
+          subtitle: 'Evolution du niveau de maitrise global de vos équipes par tags/programmes',
         },
         leaderboard: {
           title: 'Leaderboard',
@@ -282,15 +284,24 @@ export const FR = {
         },
         scoreEvolutionChart: {
           title: 'Évolution du score',
+          subtitle: 'Evolution du niveau de maitrise des connaissances de vos équipes par tags/programmes',
         },
         performanceChart: {
           title: {
             tags: 'Performance par tag',
             programs: 'Performance par programme',
           },
+          subtitle: {
+            tags: 'Niveau de maitrise (des connaissances) de vos équipes par tags',
+            programs: 'Niveau de maitrise (des connaissances) de vos équipes par programmes',
+          },
         },
         control: {
-          title: 'Maitrise',
+          title: 'Maitrise par thématiques',
+          subtitle: {
+            tags: 'Panel des tags les mieux et moins bien maitrisés par vos équipes',
+            programs: 'Panel des programmes les mieux et moins bien maitrisés par vos équipes',
+          },
           top: 'Top',
           flop: 'Flop',
         },
@@ -343,6 +354,7 @@ export const FR = {
       explanationPlaceholder: 'Écrire une brève explication de la question.',
       link: 'Référence (facultatif)',
       linkPlaceholder: 'Lien vers une ressource utile',
+      remainingCharacters: 'caractères restants',
     },
   },
   tags: {
@@ -509,7 +521,7 @@ export const FR = {
     challenges: 'Challenges',
     settings: 'Paramètres',
     profile: 'Profil',
-    training: 'Training',
+    training: 'Programmes',
     adminMode: 'Mode Administrateur',
   },
   settings: {
@@ -551,7 +563,7 @@ export const FR = {
       email: 'Adresse email',
       profilePicture: 'Photo de profil',
       downloadPicture: 'Cliquez pour télécharger ou faites glisser et déposez',
-      company: 'Company',
+      company: 'Entreprise',
       team: 'Equipe',
       roles: 'Rôles',
     },
@@ -652,7 +664,7 @@ export const FR = {
   test: 'test',
   userHome: {
     title: 'Bonjour ',
-    subtitle: "Retrouvez une vue d'ensemble sur votre planning",
+    subtitle: "Retrouvez une vue d'ensemble sur votre training.",
     programsRun: {
       title: 'Vos programmes en cours',
       subtitle: 'Retrouvez les programmes qui vous sont assignés.',

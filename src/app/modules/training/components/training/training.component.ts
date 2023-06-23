@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import {
   GetNextQuestionsForUserRequestParams,
   GuessSourceEnumApi,
@@ -48,6 +48,7 @@ export class TrainingComponent implements OnInit {
 
   questionsCount = 0;
   questionsAnswered = 0;
+  questionNumber = 0;
   questionsGoodAnswers = 0;
 
   programId = '';
@@ -98,7 +99,7 @@ export class TrainingComponent implements OnInit {
           }),
         ),
         switchMap(({ data }) => {
-          if (data && data?.length > 0) {
+          if (data && data?.length > 0 && !data[0].finishedAt) {
             return of(data[0]);
           } else {
             return this.programRunsRestService.create({ programId: this.programId }).pipe(map((a) => a.data));
@@ -128,6 +129,7 @@ export class TrainingComponent implements OnInit {
         ),
         tap(([questions, guesses]) => {
           this.questionsAnswered = guesses.meta.totalItems;
+          this.questionNumber = this.questionsAnswered;
           this.remainingQuestions = questions.filter((q) =>
             guesses.data?.every((g) => g.questionId !== q.id),
           );
@@ -165,24 +167,31 @@ export class TrainingComponent implements OnInit {
     this.stopTimer();
     let result = 'wrong';
     let countGoodAnswers = 0;
+    let countBadAnswers = 0;
 
     this.currentAnswers.map((a) => {
       if (this.displayedQuestion.answersAccepted.includes(a.answer)) {
         a.type = 'correct';
-      } else {
-        if (a.selected && !this.displayedQuestion.answersAccepted.includes(a.answer)) a.type = 'wrong';
+      } else if (a.selected && !this.displayedQuestion.answersAccepted.includes(a.answer)) {
+        a.type = 'wrong';
       }
       if (a.selected && a.type === 'correct') {
         countGoodAnswers++;
-      }
-      if (countGoodAnswers === this.displayedQuestion.answersAccepted.length) {
-        result = 'correct';
-        this.questionsGoodAnswers++;
-      }
-      if (this.iDontKnow) {
-        result = 'noanswer';
+      } else if (a.selected && a.type === 'wrong') {
+        countBadAnswers++;
       }
     });
+
+    if (countGoodAnswers === this.displayedQuestion.answersAccepted.length && countBadAnswers === 0) {
+      result = 'correct';
+      this.questionsGoodAnswers++;
+    } else if (this.iDontKnow || (countBadAnswers === 0 && countGoodAnswers === 0)) {
+      this.iDontKnow = true;
+      result = 'noanswer';
+    } else {
+      result = 'wrong';
+    }
+
     this.openExplanation(result);
   }
 
@@ -248,8 +257,11 @@ export class TrainingComponent implements OnInit {
         .subscribe();
     } else {
       if (this.remainingQuestions.length === 0) {
-        this.openDoneModal();
+        setTimeout(() => {
+          this.openDoneModal();
+        }, 1000);
       } else {
+        this.questionNumber++;
         const last = this.remainingQuestions.pop();
         if (last) {
           this.setDisplayedQuestion(last);
@@ -310,9 +322,20 @@ export class TrainingComponent implements OnInit {
     return shuffledArray;
   }
 
+  myTest?: NgbModalRef;
   openDoneModal() {
-    this.score = this.questionsGoodAnswers / this.questionsCount;
-    this.modalService.open(this.modalContent, { backdrop: 'static', size: 'sm', centered: true });
+    this.score = this.questionsGoodAnswers ? this.questionsGoodAnswers / this.questionsCount : 0;
+    this.myTest = this.modalService.open(this.modalContent, {
+      backdrop: 'static',
+      size: 'sm',
+      centered: true,
+      animation: false,
+    });
+  }
+  closeModal() {
+    this.myTest?.close();
+    // this.modalService.dismissAll();
+    // this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training]);
   }
 
   openQuestionForm() {

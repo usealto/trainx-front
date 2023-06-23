@@ -26,8 +26,11 @@ export class UserEditFormComponent implements OnInit {
   I18ns = I18ns;
   @Input() user!: UserDtoApi;
   @Output() editedUser = new EventEmitter<UserDtoApi>();
-  private fb: IFormBuilder;
-  userForm!: IFormGroup<UserForm>;
+  private fb: IFormBuilder = this.fob;
+  userForm: IFormGroup<UserForm> = this.fb.group<UserForm>({
+    team: ['', [Validators.required]],
+    type: ['', [Validators.required]],
+  });
   teams: TeamDtoApi[] = [];
   profile: UserDtoApi = this.profileStore.user.value;
 
@@ -37,9 +40,7 @@ export class UserEditFormComponent implements OnInit {
     private readonly teamsRestService: TeamsRestService,
     private readonly userService: UsersRestService,
     private readonly profileStore: ProfileStore,
-  ) {
-    this.fb = fob;
-  }
+  ) {}
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -47,10 +48,6 @@ export class UserEditFormComponent implements OnInit {
         .getTeams()
         .pipe(tap((teams) => (this.teams = teams)))
         .subscribe();
-      this.userForm = this.fb.group<UserForm>({
-        team: ['', [Validators.required]],
-        type: ['', [Validators.required]],
-      });
       this.userForm.patchValue({
         team: this.user.team?.id,
         type: this.getHigherRole(this.user.roles),

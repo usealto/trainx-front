@@ -9,4 +9,5 @@ export class ColoredPillListComponent {
   @Input() data: any[] = [];
   @Input() hasDynamicColor = false;
   @Input() limit = 0;
+  @Input() tooltip: any;
 }

@@ -8,10 +8,10 @@
     class="w-100 mb-4"
     type="primary"
     [max]="questionsCount"
-    [value]="questionsAnswered"
+    [value]="questionNumber"
   ></ngb-progressbar>
   <p class="alto-grey fw-medium">
-    {{ I18ns.training.quizz.questionCounter | replaceInTranslation : questionsAnswered + 1 : questionsCount }}
+    {{ I18ns.training.quizz.questionCounter | replaceInTranslation : questionNumber : questionsCount }}
   </p>
 </ng-container>
 
@@ -62,8 +62,8 @@
     (click)="stopTimer()"
   >
     <i class="bi bi-save me-2"></i>
-    {{ I18ns.training.quizz.saveAndQuit }}</a
-  >
+    {{ I18ns.training.quizz.saveAndQuit }}
+  </a>
 
   <button class="btn btn-primary" (click)="submitAnswer()">
     {{ I18ns.training.quizz.submit }}
@@ -81,11 +81,7 @@
     <p class="alto-grey mb-4">
       {{ trads.score }} <span class="alto-green fw-medium">{{ score | percent }}</span>
     </p>
-    <button
-      class="btn btn-primary mb-3 w-100"
-      [routerLink]="['/', AltoRoutes.user, AltoRoutes.training]"
-      (click)="modal.dismiss('Going Home')"
-    >
+    <button class="btn btn-primary mb-3 w-100" (click)="closeModal()">
       {{ trads.backButton }}
     </button>
     <button class="btn btn-outline-secondary w-100" (click)="openQuestionForm()">

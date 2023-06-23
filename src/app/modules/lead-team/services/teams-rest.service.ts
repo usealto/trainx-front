@@ -40,4 +40,8 @@ export class TeamsRestService {
   updateTeam(patchTeamRequestParams: PatchTeamRequestParams): Observable<TeamDtoApi | undefined> {
     return this.teamApi.patchTeam(patchTeamRequestParams).pipe(map((r) => r.data));
   }
+
+  resetCache() {
+    this.teamStore.teams.reset();
+  }
 }

@@ -9,7 +9,7 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 })
 export class TimePickerComponent implements OnInit {
   I18ns = I18ns;
-  @Input() duration: ScoreDuration = ScoreDuration.Month;
+  @Input() duration: ScoreDuration = ScoreDuration.Trimester;
   @Output() durationSelected = new EventEmitter<string>();
   ID = '';
 

@@ -38,22 +38,26 @@
   </div>
   <form *ngIf="questionForm" [formGroup]="questionForm">
     <label class="form-label required">{{ I18ns.questions.form.name }}</label>
-    <textarea
-      class="form-control"
-      formControlName="title"
-      placeholder="{{ I18ns.questions.form.namePlaceholder }}"
-      altoAutoResizeTextarea
-    ></textarea>
+
+    <alto-text-counter
+      [control]="questionForm.controls.title"
+      [placeholder]="I18ns.questions.form.namePlaceholder"
+      [limit]="questionHardLimit"
+      [softLimit]="questionSoftLimit"
+    >
+    </alto-text-counter>
+
     <label class="form-label required">{{ I18ns.questions.form.goodAnswer }}</label>
 
     <ng-container formArrayName="answersAccepted">
       <ng-container *ngFor="let answer of answersAccepted.controls; let i = index">
-        <input
-          type="text"
-          class="form-control"
-          [formControl]="answer"
-          placeholder="{{ I18ns.questions.form.answerPlaceholder + ' ' + (i + 1) }}"
-        />
+        <alto-text-counter
+          [control]="answer"
+          [placeholder]="I18ns.questions.form.answerPlaceholder + ' ' + (i + 1)"
+          [limit]="answerHardLimit"
+          [softLimit]="answerSoftLimit"
+        >
+        </alto-text-counter>
       </ng-container>
     </ng-container>
     <p class="add-field" *ngIf="answersAccepted.controls.length < 4" (click)="addGoodAnwswer()">
@@ -66,12 +70,13 @@
 
     <ng-container formArrayName="answersWrong">
       <ng-container *ngFor="let answer of answersWrong.controls; let i = index">
-        <input
-          type="text"
-          class="form-control"
-          [formControl]="answer"
-          placeholder="{{ I18ns.questions.form.answerPlaceholder + ' ' + (i + 1) }}"
-        />
+        <alto-text-counter
+          [control]="answer"
+          [placeholder]="I18ns.questions.form.answerPlaceholder + ' ' + (i + 1)"
+          [limit]="answerHardLimit"
+          [softLimit]="answerSoftLimit"
+        >
+        </alto-text-counter>
       </ng-container>
     </ng-container>
 

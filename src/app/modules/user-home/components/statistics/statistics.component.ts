@@ -21,7 +21,7 @@ import { GuessesRestService } from 'src/app/modules/training/services/guesses-re
 })
 export class StatisticsComponent implements OnInit {
   I18ns = I18ns;
-  statisticsDuration = ScoreDuration.Month;
+  statisticsDuration = ScoreDuration.Trimester;
 
   //Statistics data
   userScore = 0;
@@ -61,7 +61,7 @@ export class StatisticsComponent implements OnInit {
     combineLatest([this.scoresRestService.getScores(params), this.scoresRestService.getScores(params, true)])
       .pipe(
         tap(([curr, prev]) => {
-          this.userScore = this.scoresService.reduceWithoutNull(curr.scores[0].averages) ?? 0;
+          this.userScore = this.scoresService.reduceWithoutNull(curr.scores[0]?.averages) ?? 0;
           if (prev.scores.length) {
             this.userScoreProgression = this.scoresService.reduceWithoutNull(prev.scores[0].averages) ?? 0;
           }
@@ -146,6 +146,8 @@ export class StatisticsComponent implements OnInit {
         tap(([usersScores, teamsScores]) => {
           //USER SCORES: reduce scores to remove all first values without data
           const rawUserScores = usersScores.scores.find((u) => u.id === this.profileStore.user.value.id);
+          if (!rawUserScores) return;
+
           const reducedUserScores = this.scoresService.reduceChartData([
             rawUserScores ?? ({} as ScoreDtoApi),
           ]);

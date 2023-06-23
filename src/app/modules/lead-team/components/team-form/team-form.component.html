@@ -1,14 +1,21 @@
 <div class="text-end px-4 mt-3">
   <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
 </div>
-<div class="p-4">
-  <h2>
-    <img src="../assets/img/create-team-icon.svg" alt="Team Icon" />
-    {{ isEdit ? I18ns.leadTeam.teams.form.title.edit : I18ns.leadTeam.teams.form.title.create }}
-  </h2>
-  <p class="fs-7">{{ I18ns.leadTeam.teams.form.subtitle }}</p>
+<div class="row m-5 g-0">
+  <div class="col-2" style="width: 2.857rem">
+    <i class="alto-badge-big alto-badge-blue me-4 bi bi-people"></i>
+  </div>
+  <div class="col ms-4">
+    <h2>
+      {{ isEdit ? I18ns.leadTeam.teams.form.title.edit : I18ns.leadTeam.teams.form.title.create }}
+    </h2>
+    <p class="alto-grey">{{ I18ns.leadTeam.teams.form.subtitle }}</p>
+  </div>
 </div>
-<div class="offcanvas-body px-4">
+
+<hr class="mb-0" />
+
+<div class="p-6 sidebar-body">
   <form *ngIf="teamForm" [formGroup]="teamForm">
     <label class="mt-4 form-label required">{{ I18ns.leadTeam.teams.form.longName }}</label>
     <input
@@ -17,7 +24,7 @@
       formControlName="longName"
       placeholder="{{ I18ns.leadTeam.teams.form.longNamePlaceholder }}"
     />
-    <p>{{ I18ns.leadTeam.teams.form.longNameExemple }}</p>
+    <p class="alto-grey mt-2">{{ I18ns.leadTeam.teams.form.longNameExemple }}</p>
 
     <label class="mt-4 form-label required">{{ I18ns.leadTeam.teams.form.shortName }}</label>
     <input
@@ -26,7 +33,7 @@
       formControlName="shortName"
       placeholder="{{ I18ns.leadTeam.teams.form.shortNamePlaceholder }}"
     />
-    <p>{{ I18ns.leadTeam.teams.form.shortNameExemple }}</p>
+    <p class="alto-grey mt-2">{{ I18ns.leadTeam.teams.form.shortNameExemple }}</p>
 
     <!-- <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.invitationEmails }}</label>
     <ng-select class="alto-form"
@@ -56,14 +63,26 @@
     >
     </ng-select>
 
-    <p>{{ I18ns.leadTeam.teams.form.ProgramsSubtitle }}</p>
-
+    <p class="alto-grey mt-2">{{ I18ns.leadTeam.teams.form.ProgramsSubtitle }}</p>
+  </form>
+</div>
+<div class="footer">
+  <hr class="m-0" />
+  <div class="button-container">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      aria-label="Close"
+      (click)="activeOffcanvas.dismiss()"
+    >
+      {{ I18ns.shared.cancel }}
+    </button>
     <input
       type="submit"
-      class="w-100 btn btn-primary my-4"
+      class="btn btn-primary float-end"
       [disabled]="!teamForm.valid"
       [value]="I18ns.shared.save"
       (click)="createTeam()"
     />
-  </form>
+  </div>
 </div>

@@ -39,6 +39,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
 import { DropzoneComponent } from './components/dropzone/dropzone.component';
 import { CustomPaginationComponent } from './components/custom-pagination/custom-pagination.component';
 import { NgbdSortableHeaderDirective } from 'src/app/core/utils/directives/ngbd-sortable-header.directive';
+import { TextCounterComponent } from './components/text-counter/text-counter.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import { NgbdSortableHeaderDirective } from 'src/app/core/utils/directives/ngbd-
     ScoreFilterComponent,
     ImgBadgeListComponent,
     ButtonGroupComponent,
+    TextCounterComponent,
   ],
   imports: [
     CommonModule,
@@ -122,6 +124,7 @@ import { NgbdSortableHeaderDirective } from 'src/app/core/utils/directives/ngbd-
     ScoreFilterComponent,
     ImgBadgeListComponent,
     ButtonGroupComponent,
+    TextCounterComponent,
   ],
 })
 export class SharedModule {}
