@@ -258,6 +258,7 @@ export class TrainingComponent implements OnInit {
     } else {
       if (this.remainingQuestions.length === 0) {
         setTimeout(() => {
+          // ? SetTimeout is beacause of an animation problem from the Offcanvas (I think)
           this.openDoneModal();
         }, 1000);
       } else {
@@ -322,20 +323,19 @@ export class TrainingComponent implements OnInit {
     return shuffledArray;
   }
 
-  myTest?: NgbModalRef;
   openDoneModal() {
     this.score = this.questionsGoodAnswers ? this.questionsGoodAnswers / this.questionsCount : 0;
-    this.myTest = this.modalService.open(this.modalContent, {
+    this.modalService.open(this.modalContent, {
       backdrop: 'static',
       size: 'sm',
       centered: true,
       animation: false,
     });
   }
+
   closeModal() {
-    this.myTest?.close();
-    // this.modalService.dismissAll();
-    // this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training]);
+    this.modalService.dismissAll();
+    this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training]);
   }
 
   openQuestionForm() {

@@ -3,6 +3,7 @@ import { Observable, combineLatest, map, switchMap, tap } from 'rxjs';
 import {
   CreateProgramRunDtoApi,
   GetProgramRunsRequestParams,
+  ProgramRunApi,
   ProgramRunPaginatedResponseApi,
   ProgramRunsApiService,
   UserDtoApi,
@@ -56,7 +57,7 @@ export class ProgramRunsRestService {
             programId: p.id,
             expectation: p.expectation,
             isProgress: !progRun?.finishedAt,
-            duration: progRun?.questionsCount ? progRun?.questionsCount * 30 : undefined,
+            duration: (progRun?.questionsCount ? progRun?.questionsCount : p.questionsCount) * 30,
           });
           return output;
         }, [] as TrainingCardData[]);
