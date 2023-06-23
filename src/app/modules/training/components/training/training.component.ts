@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import {
   GetNextQuestionsForUserRequestParams,
   GuessSourceEnumApi,
@@ -99,7 +99,7 @@ export class TrainingComponent implements OnInit {
           }),
         ),
         switchMap(({ data }) => {
-          if (data && data?.length > 0) {
+          if (data && data?.length > 0 && !data[0].finishedAt) {
             return of(data[0]);
           } else {
             return this.programRunsRestService.create({ programId: this.programId }).pipe(map((a) => a.data));
@@ -184,6 +184,7 @@ export class TrainingComponent implements OnInit {
 
     if (countGoodAnswers === this.displayedQuestion.answersAccepted.length && countBadAnswers === 0) {
       result = 'correct';
+      this.questionsGoodAnswers++;
     } else if (this.iDontKnow || (countBadAnswers === 0 && countGoodAnswers === 0)) {
       this.iDontKnow = true;
       result = 'noanswer';
@@ -256,7 +257,9 @@ export class TrainingComponent implements OnInit {
         .subscribe();
     } else {
       if (this.remainingQuestions.length === 0) {
-        this.openDoneModal();
+        setTimeout(() => {
+          this.openDoneModal();
+        }, 1000);
       } else {
         this.questionNumber++;
         const last = this.remainingQuestions.pop();
@@ -319,12 +322,20 @@ export class TrainingComponent implements OnInit {
     return shuffledArray;
   }
 
+  myTest?: NgbModalRef;
   openDoneModal() {
-    console.log('this.questionsCount', this.questionsCount);
-    console.log('this.questionsGoodAnswers', this.questionsGoodAnswers);
-
     this.score = this.questionsGoodAnswers ? this.questionsGoodAnswers / this.questionsCount : 0;
-    this.modalService.open(this.modalContent, { backdrop: 'static', size: 'sm', centered: true });
+    this.myTest = this.modalService.open(this.modalContent, {
+      backdrop: 'static',
+      size: 'sm',
+      centered: true,
+      animation: false,
+    });
+  }
+  closeModal() {
+    this.myTest?.close();
+    // this.modalService.dismissAll();
+    // this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training]);
   }
 
   openQuestionForm() {
