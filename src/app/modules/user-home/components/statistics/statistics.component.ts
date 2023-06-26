@@ -125,11 +125,8 @@ export class StatisticsComponent implements OnInit {
           this.guessCount = guesses.meta.totalItems;
           this.guessCountProgression =
             previousGuesses.meta.totalItems && guesses.meta.totalItems
-              ? (guesses.meta.totalItems - previousGuesses.meta.totalItems) /
-                previousGuesses.meta.totalItems /
-                100
+              ? (guesses.meta.totalItems - previousGuesses.meta.totalItems) / previousGuesses.meta.totalItems
               : 0;
-          console.log('test', previousGuesses.meta.totalItems);
         }),
       )
       .subscribe();
