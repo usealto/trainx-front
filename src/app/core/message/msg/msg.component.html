@@ -2,7 +2,7 @@
   <ng-container *ngFor="let item of msg.toasts.value$ | async">
     <div [style.top.px]="toastTop" [ngClass]="getClass(item)" id="{{ item.id }}">
       <div class="d-flex justify-content-between pb-2">
-        <span class="w-100 fw-bold">{{ item.title }}</span>
+        <span class="w-100 fw-bold" data-cy="message-title">{{ item.title }}</span>
 
         <span class="cross-btn" (click)="remove(item.id)">
           <svg viewBox="0 0 32 32" fill="currentColor" class="cross">
