@@ -19,7 +19,7 @@ export class QuestionsRestService {
     const par = {
       ...req,
       page: req?.page ?? 1,
-      itemsPerPage: req?.itemsPerPage ?? 400,
+      itemsPerPage: req?.itemsPerPage ?? 600,
     };
 
     return this.questionApi.getQuestions(par).pipe(map((r) => r.data ?? []));
