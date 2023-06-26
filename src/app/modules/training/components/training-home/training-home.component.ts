@@ -122,7 +122,7 @@ export class TrainingHomeComponent implements OnInit {
 
     search ??= this.allProgramsFilters.search;
     if (score === null) {
-      // When he value is unselected from the dropdown
+      // When the value is unselected from the dropdown
       score = undefined;
     } else {
       score ||= this.allProgramsFilters.score;
@@ -134,6 +134,34 @@ export class TrainingHomeComponent implements OnInit {
     if (score) {
       output = this.scoresService.filterByScore(
         output.filter((p) => !p.isProgress),
+        score as ScoreFilter,
+        false,
+      );
+    }
+
+    if (search) {
+      output = output.filter((p) => p.title.includes(search ?? ''));
+    }
+
+    this.allProgramsFiltered = output;
+  }
+
+  inProgressProgramsFilter(filters: AllProgramsFilters) {
+    let { score, search } = filters;
+
+    search ??= this.allProgramsFilters.search;
+    if (score === null) {
+      score = undefined;
+    } else {
+      score ||= this.allProgramsFilters.score;
+    }
+
+    this.allProgramsFilters = { search, score };
+
+    let output: TrainingCardData[] = this.allPrograms ?? [];
+    if (score) {
+      output = this.scoresService.filterByScore(
+        output.filter((p) => p.isProgress),
         score as ScoreFilter,
         false,
       );

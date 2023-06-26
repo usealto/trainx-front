@@ -149,7 +149,7 @@
       <div class="col-7">
         <alto-score-filter (selectChange)="allProgramsFilter({ score: $event })"></alto-score-filter>
         <alto-progression-filter
-          (selectChange)="allProgramsFilter({ score: $event })"
+          (selectChange)="inProgressProgramsFilter({ score: $event })"
         ></alto-progression-filter>
       </div>
       <div class="col-5 text-end">
