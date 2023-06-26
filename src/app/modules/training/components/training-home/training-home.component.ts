@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -6,10 +8,9 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { TrainingCardData } from '../../models/training.model';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { TrainingCardData } from '../../models/training.model';
 
 enum OngoingFilter {
   All = 'All',
@@ -56,6 +57,7 @@ export class TrainingHomeComponent implements OnInit {
     private readonly programRunsRestService: ProgramRunsRestService,
     private readonly scoresService: ScoresService,
     private readonly userStore: ProfileStore,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -142,6 +144,11 @@ export class TrainingHomeComponent implements OnInit {
     }
 
     this.allProgramsFiltered = output;
+  }
+
+  backToTrainings() {
+    this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training]);
+    this.switchTab(1);
   }
 
   @memoize()

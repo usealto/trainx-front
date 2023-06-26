@@ -732,7 +732,7 @@ export const FR = {
         new: 'Nouveaux',
       },
       noData: 'Aucun programme en cours',
-      noDataSubtitle: "Votre équipe n'a été assigné à aucun programme pour le moment",
+      noDataSubtitle: "Votre équipe n'a été assignée à aucun programme pour le moment",
     },
     continuingTraining: {
       title: 'Training continu',
@@ -750,9 +750,10 @@ export const FR = {
     },
     donePrograms: {
       title: 'Améliorez votre score',
-      subtitle: "Tentez de faire mieux sur des programmes que vous n'avez pas réussi.",
+      subtitle: 'Retrouvez les programmes qui vous ont été assignés',
       title2: 'Tous vos programmes terminés',
-      subtitle2: 'Retrouvez les programmes qui vous ont été assignés',
+      subtitle2: "Tentez de faire mieux sur des programmes que vous n'avez pas réussi.",
+      backButton: 'Retourner à vos programmes',
       filters: {
         showAll: 'Tout voir',
         good: 'Validés',
