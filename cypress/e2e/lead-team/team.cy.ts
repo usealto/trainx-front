@@ -28,6 +28,6 @@ describe('User Team', () => {
   it('not load lead teams from url', function () {
     cy.visit('/l/teams');
     cy.url().should('not.include', '/l/teams');
-    cy.get('[data-cy="message-title"]').should('have.text', 'Forbiden');
+    cy.url().should('include', '/u/home');
   });
 });

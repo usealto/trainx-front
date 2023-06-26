@@ -188,7 +188,6 @@
             <td class="text-center">
               {{ getQuestionsByUser(user.id)[0] }}
               <alto-progression-badge
-                *ngIf="getQuestionsByUser(user.id)[1]"
                 class="d-inline-block ms-3"
                 [score]="getQuestionsByUser(user.id)[1]"
               ></alto-progression-badge>
