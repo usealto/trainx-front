@@ -138,7 +138,7 @@ export const FR = {
     subtitle: "Retrouvez l'ensemble des trainings de vos équipes.",
     programs: {
       title: 'Programmes',
-      subtitle: "Retrouvez l'ensemble des trainings de vos équipes.",
+      subtitle: "Retrouvez l'ensemble des programmes assignés à vos équipes",
       createProgram: 'Créer',
       involvement: 'Participation',
       involvementToolTip: 'Nombre de membres ayant commencé le programme sur le nombre de membres assignés',
