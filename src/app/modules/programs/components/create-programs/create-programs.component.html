@@ -164,6 +164,7 @@
             [(page)]="questionPage"
             [pageSize]="questionPageSize"
             [collectionSize]="questionsDisplay.length"
+            (pageChange)="questionPageChange($event)"
           ></alto-pagination>
         </div>
       </div>
