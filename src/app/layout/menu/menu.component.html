@@ -144,23 +144,28 @@
     </div>
     <div *ngIf="isAdmin" class="form-check form-switch ms-5">
       <input
-        class="form-check-input me-2"
+        class="form-check-input me-3"
         type="checkbox"
-        id="flexSwitchCheckDefault"
+        id="adminSwitch"
         #adminSwitch
         [checked]="displayAdmin"
         (change)="switchToAdmin(adminSwitch.checked)"
       />
-      <label class="form-check-label cursor-pointer" for="flexSwitchCheckDefault">
+      <label class="form-check-label cursor-pointer" style="margin-top: 0.1rem" for="adminSwitch">
         {{ I18ns.menu.adminMode }}
       </label>
     </div>
 
     <hr />
     <a class="logout" (click)="logOut()">
-      <i class="p-3 mx-4 text-white fs-4 bi bi-box-arrow-right"></i>
+      <i class="p-3 mx-4 text-secondary fs-4 bi bi-box-arrow-right"></i>
     </a>
-    <a class="profile" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile">
+    <a
+      class="profile"
+      [routerLink]="
+        displayAdmin ? AltoRoutes.lead + '/' + AltoRoutes.profile : AltoRoutes.user + '/' + AltoRoutes.profile
+      "
+    >
       <alto-profile-card [isWhite]="true" [user]="userStore.user.value$ | async"> </alto-profile-card>
     </a>
 

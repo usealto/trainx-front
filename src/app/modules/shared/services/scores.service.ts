@@ -8,7 +8,7 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
   providedIn: 'root',
 })
 export class ScoresService {
-  reduceWithoutNull(data: number[]): number | null {
+  reduceWithoutNull(data: number[] = []): number | null {
     if (data.length === 0) return null;
 
     const output = data.filter((x) => !!x);
@@ -156,5 +156,27 @@ export class ScoresService {
       default:
         return ScoreTimeframeEnumApi.Week;
     }
+  }
+
+  getPreviousPeriod(duration: string | ScoreDuration | undefined): Date[] {
+    let date = new Date();
+    switch (duration) {
+      case 'week':
+        date = addDays(date, -14);
+        break;
+      case 'month':
+        date = addDays(date, -60);
+        break;
+      case 'trimester':
+        date = addDays(date, -180);
+        break;
+      case 'year':
+        date = addDays(date, -730);
+        break;
+      default:
+        date = addDays(date, -60);
+        break;
+    }
+    return [date, this.getStartDate(duration as ScoreDuration)];
   }
 }

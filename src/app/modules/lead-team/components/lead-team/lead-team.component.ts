@@ -54,7 +54,7 @@ export class LeadTeamComponent implements OnInit {
   usersPage = 1;
   usersPageSize = 10;
   usersScores: UserDisplay[] = [];
-  usersQuestions = new Map<string, number[]>();
+  usersQuestionCount = new Map<string, number[]>();
   userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
 
   constructor(
@@ -68,6 +68,10 @@ export class LeadTeamComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData() {
     combineLatest([
       this.usersRestService.getUsers(),
       this.teamsRestService.getTeams(),
@@ -84,18 +88,18 @@ export class LeadTeamComponent implements OnInit {
           this.activeUsersCount = usersStats.filter((u) => u.respondsRegularly).length;
 
           usersStats.forEach((u) => {
-            this.usersQuestions.set(u.id, [u.totalGuessesCount || 0]);
+            this.usersQuestionCount.set(u.id, [u.totalGuessesCount || 0]);
           });
           previousUsersStats.forEach((u) => {
-            if (this.usersQuestions.has(u.id)) {
-              const data = this.usersQuestions.get(u.id);
+            if (this.usersQuestionCount.has(u.id)) {
+              const data = this.usersQuestionCount.get(u.id);
               if (data) {
                 if (data[0] === 0) {
                   data.push(0);
                 } else {
                   data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount);
                 }
-                this.usersQuestions.set(u.id, data);
+                this.usersQuestionCount.set(u.id, data);
               }
             }
           });
@@ -117,6 +121,7 @@ export class LeadTeamComponent implements OnInit {
               return t;
             }
           });
+          this.teamsScores.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
         }),
         switchMap(() => {
           return this.scoreRestService.getScores({
@@ -134,6 +139,7 @@ export class LeadTeamComponent implements OnInit {
               return u;
             }
           });
+          this.usersScores.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
         }),
         tap(() => this.changeTeamsPage(1)),
         tap(() => this.changeUsersPage(this.usersScores, 1)),
@@ -179,6 +185,7 @@ export class LeadTeamComponent implements OnInit {
     });
 
     canvasRef.componentInstance.team = team;
+    canvasRef.closed.pipe(tap(() => this.loadData())).subscribe();
   }
 
   openUserEditionForm(user: UserDtoApi) {
@@ -188,6 +195,7 @@ export class LeadTeamComponent implements OnInit {
     });
 
     canvasRef.componentInstance.user = user;
+    canvasRef.closed.pipe(tap(() => this.loadData())).subscribe();
   }
 
   @memoize()
@@ -197,7 +205,7 @@ export class LeadTeamComponent implements OnInit {
 
   @memoize()
   getQuestionsByUser(id: string): number[] {
-    return this.usersQuestions.get(id) || [];
+    return this.usersQuestionCount.get(id) || [0, 0];
   }
 
   airtableRedirect() {

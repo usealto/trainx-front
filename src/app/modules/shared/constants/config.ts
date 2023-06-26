@@ -59,4 +59,13 @@ export const chartDefaultOptions: ChartOptions = {
       },
     },
   },
+  hover: {
+    mode: 'nearest',
+    intersect: false,
+  },
+  elements: {
+    point: {
+      hoverRadius: 10,
+    },
+  },
 };

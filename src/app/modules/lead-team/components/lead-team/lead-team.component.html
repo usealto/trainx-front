@@ -15,7 +15,7 @@
   </alto-anchor-navigator>
 </div>
 
-<hr class="my-5" />
+<hr class="my-6" />
 
 <!-- TEAMS -->
 <div>
@@ -84,7 +84,7 @@
   </ng-template>
 </div>
 
-<hr class="my-5" />
+<hr class="my-6" />
 
 <!-- MEMBERS -->
 
@@ -101,7 +101,6 @@
       <div class="panel">
         <i
           class="alto-grey bi bi-question-circle float-end"
-          placement="top"
           ngbTooltip="{{ I18ns.leadTeam.members.statistics.totalTooltip }}"
         ></i>
         <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.total }}</p>
@@ -112,7 +111,6 @@
       <div class="panel">
         <i
           class="alto-grey bi bi-question-circle float-end"
-          placement="top"
           ngbTooltip="{{ I18ns.leadTeam.members.statistics.regularMembersTooltip }}"
         ></i>
         <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.active }}</p>
@@ -123,9 +121,7 @@
       <div class="panel">
         <i
           class="alto-grey bi bi-question-circle float-end"
-          placement="top"
           ngbTooltip="{{ I18ns.leadTeam.members.statistics.iregularMembersTooltip }}"
-          placement="start"
         ></i>
         <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.inactive }}</p>
         <h1>{{ absoluteUsersCount - activeUsersCount }}</h1>
@@ -163,7 +159,6 @@
               {{ I18ns.leadTeam.members.table.questionsPerMonth }}
               <i
                 class="ms-2 alto-grey bi bi-question-circle"
-                placement="top"
                 ngbTooltip="{{ I18ns.leadTeam.members.table.questionsPerMonthTooltip }}"
               ></i>
             </th>
@@ -193,7 +188,6 @@
             <td class="text-center">
               {{ getQuestionsByUser(user.id)[0] }}
               <alto-progression-badge
-                *ngIf="getQuestionsByUser(user.id)[1]"
                 class="d-inline-block ms-3"
                 [score]="getQuestionsByUser(user.id)[1]"
               ></alto-progression-badge>

@@ -1,28 +1,150 @@
-<h1>{{ I18ns.leadHome.title + userName | titlecase }}</h1>
+<h1 id="welcome">{{ I18ns.leadHome.title + userName | titlecase }}</h1>
 <p class="mb-4 alto-grey fs-6b">{{ I18ns.userHome.subtitle }}</p>
-<div class="row mt-5 mb-4">
+
+<!-- STATISTICS -->
+
+<alto-statistics></alto-statistics>
+
+<!-- PROGRAM RUNS -->
+<div class="row mt-6 mb-2">
   <div class="col-5">
     <h2 class="title">{{ I18ns.userHome.programsRun.title }}</h2>
-    <!-- <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.programsRun.subtitle }}</p> -->
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.programsRun.subtitle }}</p>
   </div>
   <div class="col-7 text-end">
-    <!-- <button class="btn btn-outline-secondary" [routerLink]="['/', AltoRoutes.user, AltoRoutes.training]">
+    <button class="btn btn-outline-secondary" [routerLink]="['/', AltoRoutes.user, AltoRoutes.training]">
       {{ I18ns.shared.showAll }}
       <i class="ms-2 bi bi-arrow-right"></i>
-    </button> -->
+    </button>
   </div>
 </div>
-<div class="row">
+<div class="row mb-4">
   <div class="col-4">
-    <div class="panel highlighted-panel pe-auto" [routerLink]="['/', AltoRoutes.user, AltoRoutes.training]">
+    <div
+      class="panel highlighted-panel pe-auto ongoing-session-panel"
+      [routerLink]="['/', AltoRoutes.user, AltoRoutes.training, AltoRoutes.trainingSession]"
+    >
       <div class="calendar d-flex justify-content-center align-middle">
         <i class="my-auto fs-2 text-primary bi bi-calendar"></i>
       </div>
       <h2 class="mt-4">{{ I18ns.userHome.programsRun.continueSession }}</h2>
       <p class="alto-grey mb-4">{{ I18ns.userHome.programsRun.continueSessionSubtitle }}</p>
-      <p class="text-end alto-light-grey fs-7">
-        {{ I18ns.userHome.programsRun.continueSessionCounts | plural : guessesCount }}
-      </p>
+      <div class="users-counter">
+        <alto-img-badge-list
+          *ngIf="continuousSessionUsers.length > 0"
+          [users]="continuousSessionUsers"
+          class="align-middle"
+        ></alto-img-badge-list>
+        <span class="fs-7" [ngClass]="{ 'ms-4': continuousSessionUsers.length > 0 }">
+          {{ I18ns.userHome.programsRun.continueSessionCounts | plural : continuousSessionUsers.length }}
+        </span>
+      </div>
     </div>
+  </div>
+  <div
+    class="col-4"
+    *ngFor="let item of myProgramRunsCards | slice : (page - 1) * pageSize : page * pageSize"
+  >
+    <alto-training-card class="mb-4" [data]="item"></alto-training-card>
+  </div>
+  <alto-pagination
+    class="d-block"
+    [ngClass]="{ invisible: myProgramRunsCards.length <= pageSize }"
+    [collectionSize]="myProgramRunsCards.length"
+    [page]="page"
+    (pageChange)="paginateProgramRuns($event)"
+    [pageSize]="pageSize"
+    aria-label="Default pagination"
+  ></alto-pagination>
+
+  <!-- TEAMS -->
+  <div class="mt-4 mb-2">
+    <h2 class="title">{{ I18ns.userHome.teams.title }}</h2>
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.teams.subtitle }}</p>
+  </div>
+  <div class="row mt-4">
+    <div class="col">
+      <div class="table-panel">
+        <h2 class="ps-5 pt-5">{{ I18ns.userHome.teams.leaderboard.title }}</h2>
+        <alto-tabs
+          class="ps-5 mb-4"
+          [data]="[
+            { label: I18ns.shared.dateFilter.week, value: ScoreDuration.Week },
+            { label: I18ns.shared.dateFilter.month, value: ScoreDuration.Month },
+            { label: I18ns.shared.dateFilter.year, value: ScoreDuration.Year }
+          ]"
+          (tabChanged)="leaderboardTabChanged($event)"
+        ></alto-tabs>
+        <table class="table">
+          <thead class="border-bottom border-top">
+            <th scope="col" class="w-5"></th>
+            <th scope="col" class="fw-bold">{{ I18ns.userHome.teams.leaderboard.name }}</th>
+            <th scope="col" class="text-center w-25 fw-bold">{{ I18ns.userHome.teams.leaderboard.score }}</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of leaderboardUsers">
+              <td
+                class="text-center"
+                [ngClass]="{
+                  'position-1': user.position === 1,
+                  'position-2': user.position === 2,
+                  'position-3': user.position === 3
+                }"
+              >
+                <ng-container *ngIf="user.position < 4; else notInPodium">
+                  <i class="bi bi-award fs-4"></i>
+                </ng-container>
+                <ng-template #notInPodium>
+                  {{ user.position }}
+                </ng-template>
+              </td>
+              <td>
+                <alto-img-badge [toggleTooltip]="false" [user]="user.user" [size]="30"></alto-img-badge>
+                <div class="d-inline-block" [ngClass]="{ 'fw-bold': user.position === 1 }">
+                  {{
+                    user.user?.firstname && user.user?.lastname
+                      ? user.user?.firstname + ' ' + user.user?.lastname
+                      : user.user?.username
+                  }}
+                </div>
+              </td>
+              <td class="text-end pe-4">
+                <p class="d-inline-block">
+                  {{ (user.score ?? '0') + ' %' }}
+                </p>
+                <alto-progression-badge
+                  class="ms-3 d-inline-block"
+                  [score]="user.progression"
+                ></alto-progression-badge>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- TODO: add challenges table later -->
+    <div class="col"></div>
+    <!-- <div class="col panel">
+    <h2>{{ I18ns.userHome.teams.challenges.title }}</h2>
+    <alto-tabs
+      class="mb-3"
+      [data]="[
+        { label: 'First', value: '1' },
+        { label: 'Second', value: '2' }
+      ]"
+    ></alto-tabs>
+    <hr />
+    <table class="table">
+      <thead>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.name }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.leader }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.position }}</th>
+        <th scope="col">{{ I18ns.userHome.teams.challenges.end }}</th>
+      </thead>
+      <tbody>
+        <tr></tr>
+      </tbody>
+    </table>
+  </div> -->
   </div>
 </div>

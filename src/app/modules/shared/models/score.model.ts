@@ -5,7 +5,6 @@ export interface ScoreFilters {
   duration?: ScoreDuration | string;
   type?: ScoreTypeEnumApi;
   timeframe?: ScoreTimeframeEnumApi;
-  // limit?: number;
   sortBy?: string;
 }
 

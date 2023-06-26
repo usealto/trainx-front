@@ -1,0 +1,13 @@
+<textarea
+  class="form-control"
+  [formControl]="control"
+  placeholder="{{ placeholder }}"
+  altoAutoResizeTextarea
+  [maxlength]="limit"
+  (ngModelChange)="wordChange($event)"
+  (focus)="focusText(true)"
+  (blur)="focusText(false)"
+></textarea>
+<p class="text-end" [ngClass]="{ 'text-danger': wordCount >= softLimit, invisible: !isFocused }">
+  {{ limit - wordCount + ' ' + I18ns.questions.form.remainingCharacters }}
+</p>

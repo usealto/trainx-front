@@ -103,6 +103,13 @@
   }
 }
 
+.vertical-divider {
+  display: inline-block;
+  border-left: 2px solid var(--alto-medium-grey);
+  min-height: 2rem;
+  vertical-align: middle;
+}
+
 // Used in modals
 .close-button {
   padding: 0;

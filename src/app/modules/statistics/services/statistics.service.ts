@@ -22,10 +22,12 @@ export class StatisticsService {
     }
   }
 
-  aggregateDataForScores(score: ScoreDtoApi, duration: ScoreDuration) {
+  aggregateDataForScores(score: ScoreDtoApi | undefined, duration: ScoreDuration): Point[] {
     const data: Point[] = [];
     const groupedData: { [key: string]: number[] } = {};
-
+    if (score == undefined) {
+      return [];
+    }
     score.dates.forEach((date, index) => {
       const dateKey = format(
         duration === ScoreDuration.Year

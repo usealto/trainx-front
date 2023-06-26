@@ -11,3 +11,15 @@
   border-color: #84caff;
   border-radius: 12px;
 }
+.small-panel {
+  height: 8.429rem;
+}
+.continuing-session-panel {
+  height: 18rem;
+  position: relative;
+}
+.users-counter {
+  width: calc(100% - 3.429rem);
+  position: absolute;
+  bottom: 1.143rem;
+}

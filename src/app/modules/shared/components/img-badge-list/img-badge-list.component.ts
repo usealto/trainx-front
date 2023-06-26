@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { UserDtoApi } from '@usealto/sdk-ts-angular';
+import { UserDtoApi, UserLightDtoApi } from '@usealto/sdk-ts-angular';
 
 @Component({
   selector: 'alto-img-badge-list',
@@ -7,6 +7,6 @@ import { UserDtoApi } from '@usealto/sdk-ts-angular';
   styleUrls: ['./img-badge-list.component.scss'],
 })
 export class ImgBadgeListComponent {
-  @Input() users: UserDtoApi[] = [];
+  @Input() users: (UserDtoApi | UserLightDtoApi)[] = [];
   @Input() limit = 5;
 }

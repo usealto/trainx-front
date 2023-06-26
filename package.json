@@ -5,16 +5,21 @@
     "ng": "ng",
     "start": "ng serve --host=127.0.0.1",
     "start:hmr": "ng serve --hmr",
-    "prebuild": "node build-time.js",
     "prebuild:preprod": "node build-time.js",
     "build:preprod": "ng build --configuration preprod",
+    "prebuild:staging": "node build-time.js",
+    "build:staging": "ng build --configuration staging",
     "build:sandbox": "ng build --configuration sandbox",
+    "prebuild": "node build-time.js",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test-ci": "ng test --karma-config=karma-ci.conf.js --no-progress",
     "test-ci-bis": "ng test --no-watch --no-progress --watch=false --code-coverage --browsers=ChromeHeadlessCI",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "e2e": "ng e2e",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "private": true,
   "dependencies": {
@@ -31,7 +36,7 @@
     "@ng-select/ng-select": "^10.0.3",
     "@ngneat/until-destroy": "^9.2.3",
     "@popperjs/core": "^2.11.6",
-    "@usealto/sdk-ts-angular": "1.0.202305251145-dev",
+    "@usealto/sdk-ts-angular": "1.0.202306090752",
     "bootstrap": "^5.2.3",
     "chart.js": "^4.2.1",
     "date-fns": "^2.29.3",
@@ -50,6 +55,7 @@
     "@angular/cli": "~15.2.1",
     "@angular/compiler-cli": "^15.2.0",
     "@angular/localize": "^15.2.0",
+    "@cypress/schematic": "^2.5.0",
     "@types/chart.js": "^2.9.37",
     "@types/jasmine": "~4.3.0",
     "@types/memoizee": "^0.4.8",
@@ -62,6 +68,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "typescript": "~4.9.4"
+    "typescript": "~4.9.4",
+    "cypress": "latest"
   }
 }

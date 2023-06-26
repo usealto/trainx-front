@@ -1,7 +1,7 @@
 <div class="text-end pt-3 px-4">
   <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
 </div>
-<div class="row m-5 g-0">
+<div class="row m-6 g-0">
   <div class="col-2" style="width: 2.857rem">
     <i class="alto-badge-big alto-badge-blue me-4 bi bi-question-circle"></i>
   </div>
@@ -27,7 +27,7 @@
 </div>
 <hr class="mb-0" />
 
-<div class="p-5 sidebar-body">
+<div class="p-6 sidebar-body">
   <div *ngIf="isSubmitted" class="mb-4 row">
     <alto-profile-card class="col-7" [user]="question?.createdByUser"> </alto-profile-card>
     <div class="col-5 text-end">
@@ -38,22 +38,26 @@
   </div>
   <form *ngIf="questionForm" [formGroup]="questionForm">
     <label class="form-label required">{{ I18ns.questions.form.name }}</label>
-    <textarea
-      class="form-control"
-      formControlName="title"
-      placeholder="{{ I18ns.questions.form.namePlaceholder }}"
-      altoAutoResizeTextarea
-    ></textarea>
+
+    <alto-text-counter
+      [control]="questionForm.controls.title"
+      [placeholder]="I18ns.questions.form.namePlaceholder"
+      [limit]="questionHardLimit"
+      [softLimit]="questionSoftLimit"
+    >
+    </alto-text-counter>
+
     <label class="form-label required">{{ I18ns.questions.form.goodAnswer }}</label>
 
     <ng-container formArrayName="answersAccepted">
       <ng-container *ngFor="let answer of answersAccepted.controls; let i = index">
-        <input
-          type="text"
-          class="form-control"
-          [formControl]="answer"
-          placeholder="{{ I18ns.questions.form.answerPlaceholder + ' ' + (i + 1) }}"
-        />
+        <alto-text-counter
+          [control]="answer"
+          [placeholder]="I18ns.questions.form.answerPlaceholder + ' ' + (i + 1)"
+          [limit]="answerHardLimit"
+          [softLimit]="answerSoftLimit"
+        >
+        </alto-text-counter>
       </ng-container>
     </ng-container>
     <p class="add-field" *ngIf="answersAccepted.controls.length < 4" (click)="addGoodAnwswer()">
@@ -66,12 +70,13 @@
 
     <ng-container formArrayName="answersWrong">
       <ng-container *ngFor="let answer of answersWrong.controls; let i = index">
-        <input
-          type="text"
-          class="form-control"
-          [formControl]="answer"
-          placeholder="{{ I18ns.questions.form.answerPlaceholder + ' ' + (i + 1) }}"
-        />
+        <alto-text-counter
+          [control]="answer"
+          [placeholder]="I18ns.questions.form.answerPlaceholder + ' ' + (i + 1)"
+          [limit]="answerHardLimit"
+          [softLimit]="answerSoftLimit"
+        >
+        </alto-text-counter>
       </ng-container>
     </ng-container>
 

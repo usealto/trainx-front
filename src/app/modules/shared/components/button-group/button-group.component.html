@@ -1,0 +1,15 @@
+<div class="btn-group" role="group">
+  <ng-container *ngFor="let item of items; let i = index">
+    <input
+      type="radio"
+      class="btn-check"
+      [name]="ID"
+      [id]="ID + i"
+      autocomplete="off"
+      (change)="update($event)"
+      [value]="item.value"
+      [checked]="value === item.value ? true : false"
+    />
+    <label class="btn btn-outline-secondary" [for]="ID + i">{{ item.label }}</label>
+  </ng-container>
+</div>
