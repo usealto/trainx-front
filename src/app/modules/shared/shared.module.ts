@@ -27,16 +27,17 @@ import { ProfileCardComponent } from './components/profile-card/profile-card.com
 import { ProgramCardListComponent } from './components/program-card-list/program-card-list.component';
 import { ProgramCardComponent } from './components/program-card/program-card.component';
 import { ProgressionBadgeComponent } from './components/progression-badge/progression-badge.component';
+import { ProgressionFilterComponent } from './components/progression-filter/progression-filter.component';
 import { ScoreFilterComponent } from './components/score-filter/score-filter.component';
 import { SearchComponent } from './components/search/search.component';
 import { StatusPillComponent } from './components/status-pill/status-pill.component';
 import { TabsComponent } from './components/tabs/tabs.component';
+import { TextCounterComponent } from './components/text-counter/text-counter.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
 import { TrainingCardComponent } from './components/training-card/training-card.component';
 import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
-import { TextCounterComponent } from './components/text-counter/text-counter.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { TextCounterComponent } from './components/text-counter/text-counter.com
     PaginationComponent,
     TrainingCardComponent,
     ScoreFilterComponent,
+    ProgressionFilterComponent,
     ImgBadgeListComponent,
     ButtonGroupComponent,
     TextCounterComponent,
@@ -113,6 +115,7 @@ import { TextCounterComponent } from './components/text-counter/text-counter.com
     AutoResizeTextareaDirective,
     TrainingCardComponent,
     ScoreFilterComponent,
+    ProgressionFilterComponent,
     ImgBadgeListComponent,
     ButtonGroupComponent,
     TextCounterComponent,

@@ -148,6 +148,9 @@
     <div class="row mb-4">
       <div class="col-7">
         <alto-score-filter (selectChange)="allProgramsFilter({ score: $event })"></alto-score-filter>
+        <alto-progression-filter
+          (selectChange)="allProgramsFilter({ score: $event })"
+        ></alto-progression-filter>
       </div>
       <div class="col-5 text-end">
         <alto-search (searchChange)="allProgramsFilter({ search: $event })"> </alto-search>
