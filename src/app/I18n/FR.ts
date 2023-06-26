@@ -761,6 +761,10 @@ export const FR = {
       },
       noData: 'Aucun programme terminé',
       noDataSubtitle: "Terminez votre premier programme pour pouvoir tenter d'améliorer votre score.",
+      noResult: 'Aucun résultat correspondant',
+      noResultSubtitle:
+        'Votre recherche n’a donné aucun résultat, essayez une autre formulation ou d’autres filtres.',
+      resetFilters: 'Réinitialiser',
     },
     showAll: {
       title: 'Tous vos programmes',

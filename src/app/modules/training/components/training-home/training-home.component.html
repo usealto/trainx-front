@@ -158,11 +158,22 @@
     </div>
 
     <alto-training-cards-list [pageSize]="9" [data]="allProgramsFiltered">
-      <div class="panel text-center p-6 mb-4">
+      <div class="panel text-center p-6 mb-4" *ngIf="allProgramsFiltered?.length !== 0; else noResult">
         <i class="alto-badge-big fs-5 bi bi-file-text"></i>
         <h2 class="my-4">{{ I18ns.training.donePrograms.noData }}</h2>
         <p class="alto-grey">{{ I18ns.training.donePrograms.noDataSubtitle }}</p>
       </div>
+      <ng-template #noResult>
+        <div class="panel text-center p-6 mb-4">
+          <i class="alto-badge-big fs-5 bi bi-search"></i>
+          <h2 class="my-4">{{ I18ns.training.donePrograms.noResult }}</h2>
+          <p class="alto-grey mb-4">{{ I18ns.training.donePrograms.noResultSubtitle }}</p>
+          <button class="btn btn-outline-secondary" (click)="resetFilters()">
+            <i class="bi bi-arrow-repeat"></i>
+            {{ I18ns.training.donePrograms.resetFilters }}
+          </button>
+        </div>
+      </ng-template>
     </alto-training-cards-list>
   </ng-container>
 </ng-container>

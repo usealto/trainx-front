@@ -179,6 +179,10 @@ export class TrainingHomeComponent implements OnInit {
     this.switchTab(1);
   }
 
+  resetFilters() {
+    this.allProgramsFilter((this.allProgramsFilters = {}));
+  }
+
   @memoize()
   getUser(id: string): UserDtoApi | undefined {
     return this.userStore.users.value.find((x) => x.id === id);
