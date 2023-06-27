@@ -324,7 +324,7 @@ export const FR = {
     perTeams: {
       title: 'Par équipe',
       globalTooltip:
-        'Questions justes sur le nombre de questions répondues et variation sur la période passée',
+        '% de questions justes sur le nombre de questions répondues et variation sur la période passée',
     },
   },
   questions: {
@@ -741,7 +741,7 @@ export const FR = {
         score: 'Score moyen',
         scoreTooltip: 'Score moyen de vos  questions répondues',
         frequency: 'Régularité',
-        frequencyTooltip: 'Pourcentage de questions répondues sur le nombre de question envoyées',
+        frequencyTooltip: '% de questions répondues sur le nombre de question envoyées',
         streak: 'Série en cours',
         streakTooltip: "Nombre de jours consécutifs d'utilisation de l'application",
         bestStreak: 'Meilleure série',
