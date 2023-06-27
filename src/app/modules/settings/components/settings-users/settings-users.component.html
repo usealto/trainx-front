@@ -10,7 +10,7 @@
 
     <div class="col">
       <div class="table-panel">
-        <table class="table">
+        <table class="table table-no-last-line">
           <thead>
             <tr>
               <th scope="col">{{ I18ns.settings.users.table.name }}</th>
@@ -88,7 +88,6 @@
 
         <alto-pagination
           class="mx-4 d-block"
-          [ngClass]="{ invisible: usersCount <= usersPageSize }"
           [collectionSize]="usersCount"
           [(page)]="usersPage"
           (pageChange)="changeUsersPage($event)"

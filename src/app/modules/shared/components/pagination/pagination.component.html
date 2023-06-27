@@ -12,7 +12,7 @@
   </ng-template>
 
   <ng-template ngbPaginationPages let-page let-pages="pages">
-    <div class="ngb-custom-pages-item mt-3" *ngIf="pages.length > 0">
+    <div class="ngb-custom-pages-item mt-3" *ngIf="collectionSize > pageSize">
       <span id="paginationDescription" class="col-form-label text-nowrap">
         {{
           (page - 1) * pageSize +
