@@ -324,7 +324,7 @@ export const FR = {
     perTeams: {
       title: 'Par équipe',
       globalTooltip:
-        'Pourcentage de questions justes sur le nombre de questions répondues et variation sur la période passée',
+        'Questions justes sur le nombre de questions répondues et variation sur la période passée',
     },
   },
   questions: {
