@@ -146,6 +146,7 @@ export class TrainingHomeComponent implements OnInit {
     this.allProgramsFiltered = output;
   }
 
+  // TODO REFACTO
   inProgressProgramsFilter(filters: AllProgramsFilters) {
     let { score, search } = filters;
 

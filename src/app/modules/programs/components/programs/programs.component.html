@@ -132,7 +132,6 @@
 
       <alto-pagination
         class="mx-4 d-block"
-        [ngClass]="{ invisible: questionsCount <= questionsPageSize }"
         [collectionSize]="questionsCount"
         [(page)]="questionsPage"
         (pageChange)="changeQuestionsPage($event)"
@@ -183,7 +182,6 @@
       </table>
       <alto-pagination
         class="mx-4 d-block"
-        [ngClass]="{ invisible: submittedQuestionsCount <= submittedQuestionsPageSize }"
         [collectionSize]="submittedQuestionsCount"
         [(page)]="submittedQuestionsPage"
         (pageChange)="changeSubmittedQuestionsPage()"
@@ -253,7 +251,6 @@
       </table>
       <alto-pagination
         class="mx-4 d-block"
-        [ngClass]="{ invisible: tagsCount <= tagsPageSize }"
         [collectionSize]="tagsCount"
         [(page)]="tagsPage"
         (pageChange)="filterTags()"
