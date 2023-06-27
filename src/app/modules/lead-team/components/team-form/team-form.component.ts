@@ -1,13 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { PatchTeamDtoApi, ProgramDtoApi, TeamApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, filter, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
-import { PatchTeamDtoApi, ProgramDtoApi, TeamApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { TeamForm } from '../../model/team.form';
 import { TeamsRestService } from '../../services/teams-rest.service';
 @Component({
@@ -89,6 +89,7 @@ export class TeamFormComponent implements OnInit {
             }
           }),
           tap((team) => {
+            this.teamsRestService.resetCache();
             this.activeOffcanvas.close();
           }),
         )
@@ -115,7 +116,6 @@ export class TeamFormComponent implements OnInit {
               return of(null);
             }),
             tap((res) => {
-              console.log(res);
               this.activeOffcanvas.close();
             }),
           )
@@ -155,7 +155,7 @@ export class TeamFormComponent implements OnInit {
       }
     });
 
-    members.forEach((member) => {
+    members?.forEach((member) => {
       if (member.teamId !== team.id) {
         output.push(this.userRestService.patchUser(member.id, { teamId: team.id }));
       }
