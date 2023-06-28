@@ -146,6 +146,7 @@ export class TrainingHomeComponent implements OnInit {
     this.allProgramsFiltered = output;
   }
 
+  // TODO REFACTO
   inProgressProgramsFilter(filters: AllProgramsFilters) {
     let { score, search } = filters;
 
@@ -177,6 +178,10 @@ export class TrainingHomeComponent implements OnInit {
   backToTrainings() {
     this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training]);
     this.switchTab(1);
+  }
+
+  resetFilters() {
+    this.allProgramsFilter((this.allProgramsFilters = {}));
   }
 
   @memoize()

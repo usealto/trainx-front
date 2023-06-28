@@ -31,6 +31,7 @@ export class TrainingCardComponent implements OnInit {
     this.title = this.data?.title;
     this.isProgress = this.data?.isProgress ?? true;
     this.users = this.data?.users ?? [];
+    this.score = 0;
 
     // For display reasons, we keep only integers
     if (this.data?.score) {

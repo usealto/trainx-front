@@ -8,6 +8,7 @@
   [(ngModel)]="selectedItems"
   [searchable]="false"
   (change)="selectChange.emit(selectedItems)"
+  [class]="position"
   #select
 >
   <ng-template ng-header-tmp>
@@ -19,11 +20,11 @@
       {{ placeholder }} <span class="alto-badge ms-1">{{ items.length }}</span>
     </div>
   </ng-template>
-  <ng-template ng-option-tmp let-item="item" let-index="index">
+  <ng-template ng-option-tmp let-item="item">
     <span *ngIf="isColored" class="alto-badge badge-option" [style]="item.id | teamColor">
       {{ item[displayLabel] }}
     </span>
-    <span *ngIf="!isColored">
+    <span *ngIf="!isColored" class="me-4">
       {{ item[displayLabel] }}
     </span>
     <i class="bi bi-check-circle-fill"></i>

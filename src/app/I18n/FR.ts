@@ -138,7 +138,7 @@ export const FR = {
     subtitle: "Retrouvez l'ensemble des trainings de vos équipes.",
     programs: {
       title: 'Programmes',
-      subtitle: "Retrouvez l'ensemble des trainings de vos équipes.",
+      subtitle: "Retrouvez l'ensemble des programmes assignés à vos équipes",
       createProgram: 'Créer',
       involvement: 'Participation',
       involvementToolTip: 'Nombre de membres ayant commencé le programme sur le nombre de membres assignés',
@@ -324,7 +324,7 @@ export const FR = {
     perTeams: {
       title: 'Par équipe',
       globalTooltip:
-        'Pourcentage de questions justes sur le nombre de questions répondues et variation sur la période passée',
+        '% de questions justes sur le nombre de questions répondues et variation sur la période passée',
     },
   },
   questions: {
@@ -741,7 +741,7 @@ export const FR = {
         score: 'Score moyen',
         scoreTooltip: 'Score moyen de vos  questions répondues',
         frequency: 'Régularité',
-        frequencyTooltip: 'Pourcentage de questions répondues sur le nombre de question envoyées',
+        frequencyTooltip: '% de questions répondues sur le nombre de question envoyées',
         streak: 'Série en cours',
         streakTooltip: "Nombre de jours consécutifs d'utilisation de l'application",
         bestStreak: 'Meilleure série',
@@ -753,6 +753,7 @@ export const FR = {
       subtitle: 'Retrouvez les programmes qui vous ont été assignés',
       title2: 'Tous vos programmes terminés',
       subtitle2: "Tentez de faire mieux sur des programmes que vous n'avez pas réussi.",
+      subtitle3: 'Retrouvez les programmes que vous avez terminé',
       backButton: 'Retourner à vos programmes',
       filters: {
         showAll: 'Tout voir',
@@ -761,6 +762,10 @@ export const FR = {
       },
       noData: 'Aucun programme terminé',
       noDataSubtitle: "Terminez votre premier programme pour pouvoir tenter d'améliorer votre score.",
+      noResult: 'Aucun résultat correspondant',
+      noResultSubtitle:
+        'Votre recherche n’a donné aucun résultat, essayez une autre formulation ou d’autres filtres.',
+      resetFilters: 'Réinitialiser',
     },
     showAll: {
       title: 'Tous vos programmes',
