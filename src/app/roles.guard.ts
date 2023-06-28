@@ -15,8 +15,8 @@ export const canActivateLead: CanActivateFn = () => {
           (r) => r === UserDtoApiRolesEnumApi.AltoAdmin || r === UserDtoApiRolesEnumApi.CompanyAdmin,
         ),
       ),
-      tap((isTrue) => {
-        if (!isTrue) {
+      tap((isAdmin) => {
+        if (!isAdmin) {
           router.navigate(['/', AltoRoutes.user, AltoRoutes.userHome]);
         }
       }),

@@ -34,7 +34,10 @@
         ></i>
         <div class="mt-5">
           <h1 class="d-inline-block">{{ avgScore }} %</h1>
-          <alto-progression-badge class="float-end mt-2" [score]="previousAvgScore"></alto-progression-badge>
+          <alto-progression-badge
+            class="float-end mt-2"
+            [score]="previousAvgScore / 100"
+          ></alto-progression-badge>
         </div>
       </div>
     </div>

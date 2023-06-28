@@ -23,7 +23,6 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { SharedModule } from './modules/shared/shared.module';
-
 @NgModule({
   declarations: [
     AppComponent,
