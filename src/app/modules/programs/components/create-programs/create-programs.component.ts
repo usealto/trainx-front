@@ -41,6 +41,7 @@ export class CreateProgramsComponent implements OnInit {
   associatedQuestionsCount = 0;
 
   selectedTags: string[] = [];
+  questionSearch = '';
 
   constructor(
     readonly fob: UntypedFormBuilder,
@@ -134,14 +135,14 @@ export class CreateProgramsComponent implements OnInit {
     canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
   }
 
-  getQuestions(search = '') {
+  getQuestions() {
     this.questionRestService
       .getQuestionsPaginated({
         tagIds: this.selectedTags.join(','),
         sortByProgramId: this.editedProgram.id,
         itemsPerPage: this.questionPageSize,
         page: this.questionPage,
-        search,
+        search: this.questionSearch,
       })
       .pipe(
         tap((questions) => {
@@ -177,11 +178,12 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   searchQuestions(value: string) {
-    this.getQuestions(value);
+    this.questionSearch = value;
+    this.getQuestions();
   }
 
   questionPageChange(e: any) {
-    console.log(e);
+    this.getQuestions();
   }
 
   setquestionsDisplay(quest: QuestionDisplay[]) {

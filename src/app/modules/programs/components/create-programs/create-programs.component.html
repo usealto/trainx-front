@@ -137,12 +137,7 @@
           </div>
           <hr />
           <!-- QUESTION LIST -->
-          <ng-container
-            *ngFor="
-              let quest of questionsDisplay
-                | slice : (questionPage - 1) * questionPageSize : questionPage * questionPageSize
-            "
-          >
+          <ng-container *ngFor="let quest of questionsDisplay">
             <div class="row px-3">
               <div class="form-check form-switch col-1">
                 <input
