@@ -52,6 +52,7 @@
     <div class="col-8">
       <alto-dropdown-filter
         class="me-3"
+        data-cy="questionsProgramFilter"
         [data]="programsStore.programs.value"
         [displayLabel]="'name'"
         [returnValue]="'id'"
@@ -60,6 +61,7 @@
       ></alto-dropdown-filter>
       <alto-dropdown-filter
         class="me-3"
+        data-cy="questionsTagFilter"
         [data]="programsStore.tags.value"
         [returnValue]="'id'"
         [displayLabel]="'name'"
@@ -68,6 +70,7 @@
       ></alto-dropdown-filter>
       <alto-dropdown-filter
         class="me-3"
+        data-cy="questionsContributorFilter"
         [data]="profileStore.users.value"
         [returnValue]="'id'"
         [displayLabel]="'username'"
@@ -76,7 +79,10 @@
       ></alto-dropdown-filter>
     </div>
     <div class="col-4 text-end">
-      <alto-search (searchChange)="getQuestions({ search: $event })"></alto-search>
+      <alto-search
+        data-cy="questionsSearchFilter"
+        (searchChange)="getQuestions({ search: $event })"
+      ></alto-search>
     </div>
   </div>
 
@@ -87,9 +93,13 @@
           <tr>
             <th scope="col">{{ I18ns.programs.questions.table.question }}</th>
             <th scope="col">{{ I18ns.programs.questions.table.score }}</th>
-            <th scope="col">{{ I18ns.programs.questions.table.tags }}</th>
-            <th scope="col">{{ I18ns.programs.questions.table.programs }}</th>
-            <th scope="col" class="text-center">{{ I18ns.programs.questions.table.author }}</th>
+            <th data-cy="questionsTableTagCol" scope="col">{{ I18ns.programs.questions.table.tags }}</th>
+            <th data-cy="questionsTableProgramCol" scope="col">
+              {{ I18ns.programs.questions.table.programs }}
+            </th>
+            <th data-cy="questionsTableContributorCol" scope="col" class="text-center">
+              {{ I18ns.programs.questions.table.author }}
+            </th>
             <th></th>
           </tr>
         </thead>
