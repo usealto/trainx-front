@@ -1,5 +1,5 @@
 <div class="py-4 border-bottom page-max-width">
-  <button type="button" class="btn btn-primary float-end" (click)="save()">
+  <button type="button" class="btn btn-primary float-end" (click)="save()" data-cy="save-button">
     {{ I18ns.shared.save }}
   </button>
   <h1>{{ I18ns.profile.profile.title }}</h1>
@@ -15,12 +15,14 @@
           formControlName="firstname"
           class="form-control me-4"
           placeholder="{{ I18ns.profile.profile.firstName }}"
+          data-cy="firstname"
         />
         <input
           type="text"
           formControlName="lastname"
           class="form-control"
           placeholder="{{ I18ns.profile.profile.name }}"
+          data-cy="lastname"
         />
       </div>
     </div>
