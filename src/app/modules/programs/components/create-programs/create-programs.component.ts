@@ -37,6 +37,7 @@ export class CreateProgramsComponent implements OnInit {
   questionList: { id: string; delete: boolean }[] = [];
   questionPage = 1;
   questionPageSize = 10;
+  questionsCount = 0;
   associatedQuestionsCount = 0;
 
   selectedTags: string[] = [];
@@ -133,37 +134,22 @@ export class CreateProgramsComponent implements OnInit {
     canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
   }
 
-  getQuestions() {
+  getQuestions(search = '') {
     this.questionRestService
-      .getQuestions({
+      .getQuestionsPaginated({
         tagIds: this.selectedTags.join(','),
-        // programIds: this.editedProgram.id,
         sortByProgramId: this.editedProgram.id,
-
+        itemsPerPage: this.questionPageSize,
         page: this.questionPage,
+        search,
       })
       .pipe(
         tap((questions) => {
-          this.questions = questions;
-          this.setquestionsDisplay(this.mapQuestionsToDisplay(questions));
+          const { data = [], meta } = questions;
+          this.setquestionsDisplay(this.mapQuestionsToDisplay(data));
           this.associatedQuestionsCount = this.questionsDisplay.filter((q) => q.isChecked).length;
+          this.questionsCount = meta.totalItems;
         }),
-        // filter((x) => x.length < this.questionPageSize),
-        // switchMap(() =>
-        //   this.questionRestService.getQuestions({
-        //     tagIds: this.selectedTags.join(','),
-        //     page: this.questionPage,
-        //     itemsPerPage: this.questionPageSize,
-        //   }),
-        // ),
-        // tap((questions) => {
-        //   this.questions = [
-        //     ...this.questions,
-        //     ...questions.filter((q) => this.questions.every((qu) => qu.id != q.id)),
-        //   ];
-        //   this.setquestionsDisplay(this.mapQuestionsToDisplay(this.questions));
-        // }),
-        tap(console.log),
         untilDestroyed(this),
       )
       .subscribe();
@@ -191,11 +177,7 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   searchQuestions(value: string) {
-    this.setquestionsDisplay(
-      this.mapQuestionsToDisplay(
-        this.questions.filter((q) => q.title.toLowerCase().includes(value.toLowerCase())),
-      ),
-    );
+    this.getQuestions(value);
   }
 
   questionPageChange(e: any) {
