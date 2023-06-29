@@ -112,20 +112,20 @@ describe('Lead Team', () => {
   });
 });
 
-// describe('User Team', () => {
-//   beforeEach(() => {
-//     cy.loginToAuth0(Cypress.env('auth_username'), Cypress.env('auth_password'));
-//     cy.visit('/');
-//     cy.wait(1500);
-//   });
+describe('User Team', () => {
+  beforeEach(() => {
+    cy.loginToAuth0(Cypress.env('auth_username'), Cypress.env('auth_password'));
+    cy.visit('/');
+    cy.wait(1500);
+  });
 
-//   it('not load lead teams from the menu', function () {
-//     cy.get('[ng-reflect-router-link="l/teams"]').should('be.hidden');
-//   });
+  it('not load lead teams from the menu', function () {
+    cy.get('[ng-reflect-router-link="l/teams"]').should('be.hidden');
+  });
 
-//   it('not load lead teams from url', function () {
-//     cy.visit('/l/teams');
-//     cy.url().should('not.include', '/l/teams');
-//     cy.url().should('include', '/u/home');
-//   });
-// });
+  it('not load lead teams from url', function () {
+    cy.visit('/l/teams');
+    cy.url().should('not.include', '/l/teams');
+    cy.url().should('include', '/u/home');
+  });
+});
