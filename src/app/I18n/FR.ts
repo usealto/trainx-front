@@ -437,7 +437,7 @@ export const FR = {
           create: 'Créer une équipe',
           edit: 'Modifier une équipe',
         },
-        subtitle: 'Donner un nom à votre équipe et inviter vos collaborateurs',
+        subtitle: 'Donner un nom à votre équipe',
         longName: 'Nom (version longue)',
         longNamePlaceholder: "Nom complet de l'équipe",
         longNameExemple: 'Exemple : Sales Development Representative',
