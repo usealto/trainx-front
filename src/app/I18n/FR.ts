@@ -390,7 +390,7 @@ export const FR = {
       },
       statistics: {
         total: 'Total',
-        totalTooltip: 'Nombre total de membres qui vous sont affectés',
+        totalTooltip: 'Nombre total de membres de votre entreprise',
         regularMembersTooltip: 'Nombre de membres ayant répondu à plus de 50% des questions envoyées',
         iregularMembersTooltip: 'Nombre de membres ayant répondu à moins de 50% des questions envoyées',
         active: 'Membres réguliers',
