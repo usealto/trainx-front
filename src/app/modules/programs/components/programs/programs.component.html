@@ -90,16 +90,12 @@
     <div class="table-panel">
       <table class="table">
         <thead>
-          <tr>
-            <th scope="col">{{ I18ns.programs.questions.table.question }}</th>
-            <th scope="col">{{ I18ns.programs.questions.table.score }}</th>
-            <th data-cy="questionsTableTagCol" scope="col">{{ I18ns.programs.questions.table.tags }}</th>
-            <th data-cy="questionsTableProgramCol" scope="col">
-              {{ I18ns.programs.questions.table.programs }}
-            </th>
-            <th data-cy="questionsTableContributorCol" scope="col" class="text-center">
-              {{ I18ns.programs.questions.table.author }}
-            </th>
+          <tr *ngVar="I18ns.programs.questions.table as headers">
+            <th scope="col">{{ headers.question }}</th>
+            <th scope="col">{{ headers.score }}</th>
+            <th data-cy="questionsTableTagCol">{{ headers.tags }}</th>
+            <th data-cy="questionsTableProgramCol">{{ headers.programs }}</th>
+            <th data-cy="questionsTableContributorCol" class="text-center">{{ headers.author }}</th>
             <th></th>
           </tr>
         </thead>
