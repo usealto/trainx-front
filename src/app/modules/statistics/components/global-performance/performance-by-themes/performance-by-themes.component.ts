@@ -17,6 +17,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { TopFlop, TopFlopDisplay } from 'src/app/modules/shared/models/score.model';
+import { pt } from 'date-fns/locale';
 @UntilDestroy()
 @Component({
   selector: 'alto-performance-by-themes',
@@ -178,11 +179,11 @@ export class PerformanceByThemesComponent implements OnChanges {
           if (!element[0].y) {
             element[0].y = point.y;
           } else {
-            element[0].y = element[0].y + (point.y || 0);
+            element[0].y += point.y || 0;
           }
           element[0].z += point.y ? 1 : 0;
         } else {
-          res.push({ ...point, z: 0 });
+          res.push({ ...point, z: point.y ? 1 : 0 });
         }
       });
     });
