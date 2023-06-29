@@ -26,6 +26,7 @@
   <form *ngIf="userForm" [formGroup]="userForm">
     <label class="form-label mt-4">{{ I18ns.leadTeam.members.forms.edition.teams }}</label>
     <ng-select
+      data-cy="editMemberTeam"
       [items]="teams"
       [multiple]="false"
       bindLabel="shortName"
@@ -70,7 +71,13 @@
     >
       {{ I18ns.shared.cancel }}
     </button>
-    <button type="submit" class="btn btn-primary float-end" [disabled]="!userForm.valid" (click)="editUser()">
+    <button
+      data-cy="editMemberSave"
+      type="submit"
+      class="btn btn-primary float-end"
+      [disabled]="!userForm.valid"
+      (click)="editUser()"
+    >
       <i class="bi bi-save me-3"></i> {{ I18ns.shared.save }}
     </button>
   </div>
