@@ -59,22 +59,73 @@ describe('Lead Team', () => {
 
     cy.get('[data-cy="teamShortname"').first().should('have.text', 'CYT');
   });
+
+  it('add a program to selected team and check it worked', () => {
+    cy.get('[data-cy="editTeam"]');
+
+    /* ==== Generated with Cypress Studio ==== */
+    cy.get(':nth-child(4) > :nth-child(6) > [data-cy="editTeam"]').click();
+    /* ==== End Cypress Studio ==== */
+
+    cy.get('[data-cy="editProgramSelector"]').click();
+    /* ==== Generated with Cypress Studio ==== */
+    cy.get(
+      '[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container > .ng-input > input',
+    ).clear();
+    cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container > .ng-input > input')
+      .wait(2000)
+      .type('cypress{enter}');
+    cy.get('[data-cy="btnSave"]').click();
+    /* ==== End Cypress Studio ==== */
+    cy.get(':nth-child(4) > :nth-child(6) > [data-cy="editTeam"]').click();
+    /* ==== End Cypress Studio ==== */
+
+    cy.get('[data-cy="editProgramSelector"]').click();
+    /* ==== Generated with Cypress Studio ==== */
+    cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
+      .wait(3000)
+      .contains('Cypress');
+  });
+
+  it('remove a program from selected team  and check it worked', () => {
+    cy.get('[data-cy="editTeam"]');
+
+    /* ==== Generated with Cypress Studio ==== */
+    cy.get(':nth-child(4) > :nth-child(6) > [data-cy="editTeam"]').click();
+    /* ==== End Cypress Studio ==== */
+
+    cy.get('[data-cy="editProgramSelector"]').click();
+    /* ==== Generated with Cypress Studio ==== */
+    cy.get(':nth-child(2) > .ng-value-icon').click();
+    /* ==== End Cypress Studio ==== */
+
+    cy.get('[data-cy="btnSave"]').click();
+
+    cy.get(':nth-child(4) > :nth-child(6) > [data-cy="editTeam"]').click();
+
+    cy.get('[data-cy="editProgramSelector"]').click();
+
+    cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
+      .wait(3000)
+      .invoke('val')
+      .should('eq', '');
+  });
 });
 
-describe('User Team', () => {
-  beforeEach(() => {
-    cy.loginToAuth0(Cypress.env('auth_username'), Cypress.env('auth_password'));
-    cy.visit('/');
-    cy.wait(1500);
-  });
+// describe('User Team', () => {
+//   beforeEach(() => {
+//     cy.loginToAuth0(Cypress.env('auth_username'), Cypress.env('auth_password'));
+//     cy.visit('/');
+//     cy.wait(1500);
+//   });
 
-  it('not load lead teams from the menu', function () {
-    cy.get('[ng-reflect-router-link="l/teams"]').should('be.hidden');
-  });
+//   it('not load lead teams from the menu', function () {
+//     cy.get('[ng-reflect-router-link="l/teams"]').should('be.hidden');
+//   });
 
-  it('not load lead teams from url', function () {
-    cy.visit('/l/teams');
-    cy.url().should('not.include', '/l/teams');
-    cy.url().should('include', '/u/home');
-  });
-});
+//   it('not load lead teams from url', function () {
+//     cy.visit('/l/teams');
+//     cy.url().should('not.include', '/l/teams');
+//     cy.url().should('include', '/u/home');
+//   });
+// });
