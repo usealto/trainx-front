@@ -33,6 +33,7 @@ export class StatisticsComponent implements OnInit {
   programsCount = 0;
   finishedProgramsCountProgression = 0;
   userProgressionChart?: Chart;
+  hasData = false;
 
   constructor(
     private readonly profileStore: ProfileStore,
@@ -146,7 +147,11 @@ export class StatisticsComponent implements OnInit {
         tap(([usersScores, teamsScores]) => {
           //USER SCORES: reduce scores to remove all first values without data
           const rawUserScores = usersScores.scores.find((u) => u.id === this.profileStore.user.value.id);
-          if (!rawUserScores) return;
+          if (!rawUserScores) {
+            this.hasData = false;
+            return;
+          }
+          this.hasData = true;
 
           const reducedUserScores = this.scoresService.reduceChartData([
             rawUserScores ?? ({} as ScoreDtoApi),

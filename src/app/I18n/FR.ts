@@ -696,6 +696,8 @@ export const FR = {
         title: 'Progression',
         you: 'Vous',
         yourTeam: 'Votre équipe',
+        noData: 'Aucune donnée à afficher',
+        noDataSubtitle: "Vous n'avez pas encore de données à afficher.",
       },
     },
     teams: {
