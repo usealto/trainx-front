@@ -42,8 +42,6 @@ export class LeadHomeComponent implements OnInit {
   ScoreDuration = ScoreDuration;
   ScoreTypeEnum = ScoreTypeEnumApi;
 
-  userName = '';
-
   globalFilters: ScoreFilters = { duration: ScoreDuration.Trimester, type: ScoreTypeEnumApi.Guess, team: '' };
   chartFilters: ChartFilters = { duration: ScoreDuration.Trimester, type: ScoreTypeEnumApi.Tag, team: '' };
   scoreCount = 0;
@@ -81,12 +79,10 @@ export class LeadHomeComponent implements OnInit {
     private readonly userService: UsersRestService,
     private readonly statisticsServices: StatisticsService,
     public readonly teamStore: TeamStore,
-    private readonly profileStore: ProfileStore,
+    public readonly profileStore: ProfileStore,
   ) {}
 
   ngOnInit(): void {
-    this.userName = this.profileStore.user.value.firstname ?? '';
-
     combineLatest([
       this.commentsRestService.getComments(),
       this.questionsSubmittedRestService.getQuestions(),
