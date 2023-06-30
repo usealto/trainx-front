@@ -83,7 +83,14 @@
     <div class="panel h-100">
       <h2>{{ I18ns.userHome.statistics.progression.title }}</h2>
       <div class="chart-container">
-        <canvas id="userProgressionChart"></canvas>
+        <canvas *ngIf="hasData; else noData" id="userProgressionChart"></canvas>
+        <ng-template #noData>
+          <div class="text-center p-6 mb-4">
+            <i class="alto-badge-big fs-5 bi bi-file-text"></i>
+            <h2 class="my-4">{{ I18ns.userHome.statistics.progression.noData }}</h2>
+            <p>{{ I18ns.userHome.statistics.progression.noDataSubtitle }}</p>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>
