@@ -17,9 +17,9 @@
   <alto-img-badge class="d-inline-block" [user]="user" [size]="72"></alto-img-badge>
   <div class="d-inline-block ms-4 align-top mt-3">
     <h2 class="mb-2">
-      {{ !user.firstname || !user.lastname ? user.username : user.firstname + ' ' + user.lastname }}
+      {{ user?.firstname + ' ' + user?.lastname }}
     </h2>
-    <span class="alto-grey">{{ user.email }}</span>
+    <span class="alto-grey">{{ user?.email }}</span>
   </div>
   <hr class="mb-0" />
 
@@ -48,16 +48,18 @@
       </ng-template>
     </ng-select>
 
-    <label class="mt-4 mb-2" *ngIf="profile.id !== user.id">{{
+    <label class="mt-4 mb-2" *ngIf="profile.id !== user?.id">{{
       I18ns.leadTeam.members.forms.edition.type
     }}</label>
 
-    <select *ngIf="profile.id !== user.id" class="form-select" formControlName="type" id="type">
+    <select *ngIf="profile.id !== user?.id" class="form-select" formControlName="type" id="type">
       <option value="company-user">{{ I18ns.leadTeam.members.forms.edition.standardType }}</option>
       <option value="company-admin">{{ I18ns.leadTeam.members.forms.edition.adminType }}</option>
     </select>
 
-    <p class="my-4" *ngIf="profile.id !== user.id">{{ I18ns.leadTeam.members.forms.edition.typeSubtitle }}</p>
+    <p class="my-4" *ngIf="profile.id !== user?.id">
+      {{ I18ns.leadTeam.members.forms.edition.typeSubtitle }}
+    </p>
   </form>
 </div>
 <div class="footer">

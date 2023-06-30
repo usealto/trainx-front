@@ -101,11 +101,7 @@
               <td>
                 <alto-img-badge [toggleTooltip]="false" [user]="user.user" [size]="30"></alto-img-badge>
                 <div class="d-inline-block" [ngClass]="{ 'fw-bold': user.position === 1 }">
-                  {{
-                    user.user?.firstname && user.user?.lastname
-                      ? user.user?.firstname + ' ' + user.user?.lastname
-                      : user.user?.username
-                  }}
+                  {{ user.user?.firstname + ' ' + user.user?.lastname }}
                 </div>
               </td>
               <td class="text-end pe-4">

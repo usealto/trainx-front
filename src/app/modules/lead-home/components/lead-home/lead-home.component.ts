@@ -85,7 +85,7 @@ export class LeadHomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userName = this.profileStore.user.value.firstname ?? this.profileStore.user.value.username ?? '';
+    this.userName = this.profileStore.user.value.firstname ?? '';
 
     combineLatest([
       this.commentsRestService.getComments(),

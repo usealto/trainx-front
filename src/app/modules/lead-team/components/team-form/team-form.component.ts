@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { PatchTeamDtoApi, ProgramDtoApi, TeamApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
+import { IdDtoApi, PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, filter, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -140,7 +140,7 @@ export class TeamFormComponent implements OnInit {
         // To Delete
         output.push(
           this.programService.updateProgram(p.id, {
-            teams: p.teams.filter((t) => t.id !== team.id).map((t) => ({ id: t.id } as TeamApi)),
+            teamIds: p.teams.filter((t) => t.id !== team.id).map((t) => ({ id: t.id })),
           }),
         );
         this.programService.resetCache();
@@ -150,7 +150,11 @@ export class TeamFormComponent implements OnInit {
     formProgs.forEach((p) => {
       if (!teamProgs.find((po) => po.id === p.id) && this.team) {
         // To Add
-        output.push(this.programService.updateProgram(p.id, { teams: [...p.teams, this.team] as TeamApi[] }));
+        output.push(
+          this.programService.updateProgram(p.id, {
+            teamIds: [...p.teams, this.team].map((t) => ({ id: t.id })),
+          }),
+        );
         this.programService.resetCache();
       }
     });
