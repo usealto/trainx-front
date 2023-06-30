@@ -125,8 +125,8 @@ export class ScoresRestService {
       itemPerPage: 300,
     } as GetProgramRunsRequestParams;
 
-    if (filt.team) {
-      par.teamIds = filt.team;
+    if (filt.teams) {
+      par.teamIds = filt.teams.join(',');
     }
 
     if (isProgression) {

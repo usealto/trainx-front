@@ -1,7 +1,7 @@
 import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 
 export interface ScoreFilters {
-  team?: string;
+  teams?: string[];
   duration?: ScoreDuration | string;
   type?: ScoreTypeEnumApi;
   timeframe?: ScoreTimeframeEnumApi;

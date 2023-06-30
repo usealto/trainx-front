@@ -3,9 +3,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ChallengeDtoApi,
   ChallengeDtoApiTypeEnumApi,
+  ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
+  TeamStatsDtoApi,
   UserDtoApi,
+  UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
 import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
@@ -42,7 +45,13 @@ export class LeadHomeComponent implements OnInit {
   ScoreDuration = ScoreDuration;
   ScoreTypeEnum = ScoreTypeEnumApi;
 
-  globalFilters: ScoreFilters = { duration: ScoreDuration.Trimester, type: ScoreTypeEnumApi.Guess, team: '' };
+  userName = '';
+
+  globalFilters: ScoreFilters = {
+    duration: ScoreDuration.Trimester,
+    type: ScoreTypeEnumApi.Team,
+    teams: [],
+  };
   chartFilters: ChartFilters = { duration: ScoreDuration.Trimester, type: ScoreTypeEnumApi.Tag, team: '' };
   scoreCount = 0;
 
@@ -203,29 +212,45 @@ export class LeadHomeComponent implements OnInit {
 
   getGlobalScore({
     duration = this.globalFilters.duration,
-    type = this.globalFilters.type ?? ScoreTypeEnumApi.Guess,
-    team = this.globalFilters.team,
+    type = this.globalFilters.type ?? ScoreTypeEnumApi.Team,
+    teams = this.globalFilters.teams,
   }: ScoreFilters) {
     this.globalFilters.duration = duration;
     this.globalFilters.type = type;
-    this.globalFilters.team = team;
+    this.globalFilters.teams = teams;
     this.globalFilters.timeframe = ScoreTimeframeEnumApi.Day;
 
     return combineLatest([
-      this.scoresRestService.getScores(this.globalFilters),
-      this.scoresRestService.getScores(this.globalFilters, true),
+      this.scoresRestService.getTeamsStats(this.globalFilters.duration as ScoreDuration),
+      this.scoresRestService.getTeamsStats(this.globalFilters.duration as ScoreDuration, true),
       this.scoresRestService.getUsersStats(this.globalFilters.duration as ScoreDuration),
       this.scoresRestService.getUsersStats(this.globalFilters.duration as ScoreDuration, true),
     ])
       .pipe(
+        map(
+          ([current, previous, usersStats, previousUsersStats]) =>
+            [
+              this.globalFilters.teams && this.globalFilters.teams.length > 0
+                ? current.filter((team) => this.globalFilters.teams?.some((teamId) => teamId === team.id))
+                : current,
+              this.globalFilters.teams && this.globalFilters.teams.length > 0
+                ? previous.filter((team) => this.globalFilters.teams?.some((teamId) => teamId === team.id))
+                : previous,
+              usersStats,
+              previousUsersStats,
+            ] as [TeamStatsDtoApi[], TeamStatsDtoApi[], UserStatsDtoApi[], UserStatsDtoApi[]],
+        ),
         tap(([current, previous, usersStats, previousUsersStats]) => {
-          this.globalScore = current.scores.length
-            ? this.scoreService.reduceWithoutNull(current.scores[0].averages) ?? 0
-            : 0;
-          this.globalScoreProgression = previous.scores.length
-            ? this.scoreService.reduceWithoutNull(previous.scores[0].averages) ?? 0
+          //global score
+          const previousScore =
+            previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length / 100;
+
+          this.globalScore = current.reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length / 100;
+          this.globalScoreProgression = previousScore
+            ? (this.globalScore - previousScore) / previousScore
             : 0;
 
+          //Active/inactive members
           this.activeMembers = usersStats.filter((u) => u.respondsRegularly).length;
           this.inactiveMembers = usersStats.length - this.activeMembers;
 

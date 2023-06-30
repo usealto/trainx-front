@@ -51,8 +51,8 @@
       [returnValue]="'id'"
       [placeholder]="I18ns.programs.programs.filters.team"
       [isColored]="true"
-      [multiple]="false"
-      (selectChange)="getGlobalScore({ team: $event })"
+      [multiple]="true"
+      (selectChange)="getGlobalScore({ teams: $event })"
     ></alto-dropdown-filter>
   </div>
 </div>
