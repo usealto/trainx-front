@@ -52,6 +52,7 @@
     <div class="col-8">
       <alto-dropdown-filter
         class="me-3"
+        data-cy="questionsProgramFilter"
         [data]="programsStore.programs.value"
         [displayLabel]="'name'"
         [returnValue]="'id'"
@@ -60,6 +61,7 @@
       ></alto-dropdown-filter>
       <alto-dropdown-filter
         class="me-3"
+        data-cy="questionsTagFilter"
         [data]="programsStore.tags.value"
         [returnValue]="'id'"
         [displayLabel]="'name'"
@@ -68,15 +70,19 @@
       ></alto-dropdown-filter>
       <alto-dropdown-filter
         class="me-3"
-        [data]="profileStore.users.value"
+        data-cy="questionsContributorFilter"
+        [data]="contributors"
         [returnValue]="'id'"
-        [displayLabel]="'username'"
+        [displayLabel]="'fullname'"
         [placeholder]="I18ns.programs.questions.filters.contributors"
         (selectChange)="getQuestions({ contributors: $event })"
       ></alto-dropdown-filter>
     </div>
     <div class="col-4 text-end">
-      <alto-search (searchChange)="getQuestions({ search: $event })"></alto-search>
+      <alto-search
+        data-cy="questionsSearchFilter"
+        (searchChange)="getQuestions({ search: $event })"
+      ></alto-search>
     </div>
   </div>
 
@@ -84,12 +90,12 @@
     <div class="table-panel">
       <table class="table">
         <thead>
-          <tr>
-            <th scope="col">{{ I18ns.programs.questions.table.question }}</th>
-            <th scope="col">{{ I18ns.programs.questions.table.score }}</th>
-            <th scope="col">{{ I18ns.programs.questions.table.tags }}</th>
-            <th scope="col">{{ I18ns.programs.questions.table.programs }}</th>
-            <th scope="col" class="text-center">{{ I18ns.programs.questions.table.author }}</th>
+          <tr *ngVar="I18ns.programs.questions.table as headers">
+            <th scope="col">{{ headers.question }}</th>
+            <th scope="col">{{ headers.score }}</th>
+            <th data-cy="questionsTableTagCol">{{ headers.tags }}</th>
+            <th data-cy="questionsTableProgramCol">{{ headers.programs }}</th>
+            <th data-cy="questionsTableContributorCol" class="text-center">{{ headers.author }}</th>
             <th></th>
           </tr>
         </thead>

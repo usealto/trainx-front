@@ -7,11 +7,9 @@ import {
   CreateQuestionDtoApi,
   PatchQuestionRequestParams,
   PatchQuestionSubmittedDtoApiStatusEnumApi,
-  ProgramApi,
   ProgramDtoApi,
   QuestionDtoApi,
   QuestionTypeEnumApi,
-  TagApi,
   TagDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { combineLatest, tap } from 'rxjs';
@@ -22,7 +20,6 @@ import { ProgramsRestService } from '../../../services/programs-rest.service';
 import { QuestionsRestService } from '../../../services/questions-rest.service';
 import { QuestionsSubmittedRestService } from '../../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../../services/tags-rest.service';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @UntilDestroy()
 @Component({
@@ -127,8 +124,8 @@ export class QuestionFormComponent implements OnInit {
     const params: CreateQuestionDtoApi = {
       title,
       type,
-      tags: tags.map((id) => ({ id } as TagApi)),
-      programs: programs ? programs.map((id) => ({ id } as ProgramApi)) : [],
+      tagIds: tags.map((id) => ({ id })),
+      programIds: programs ? programs.map((id) => ({ id })) : [],
       answerType,
       answersAccepted: answersAccepted.filter((a) => !!a),
       answersWrong: answersWrong.filter((a) => !!a),

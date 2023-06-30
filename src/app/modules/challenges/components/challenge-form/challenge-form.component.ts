@@ -4,19 +4,19 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import {
+  ChallengeDtoApi,
+  ChallengeTypeEnumApi,
+  CreateChallengeDtoApi,
+  IdDtoApi,
+  TeamDtoApi,
+} from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
 import { Observable, filter, map, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import {
-  ChallengeDtoApi,
-  ChallengeTypeEnumApi,
-  CreateChallengeDtoApi,
-  TeamApi,
-  TeamDtoApi,
-} from '@usealto/sdk-ts-angular';
 import { ChallengeForm } from '../../models/challenge.form';
 import { ChallengesRestService } from '../../services/challenges-rest.service';
 
@@ -110,7 +110,7 @@ export class ChallengeFormComponent implements OnInit {
       const { type, teams, ...rest } = this.challengeForm.value;
       const val: CreateChallengeDtoApi = {
         ...rest,
-        teams: teams.map((id) => ({ id } as TeamApi)),
+        teamIds: teams.map((id) => ({ id })),
         type: type as ChallengeTypeEnumApi,
       };
       let obs$: Observable<any>;

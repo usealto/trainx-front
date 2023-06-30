@@ -1,4 +1,4 @@
-<h1 id="welcome">{{ I18ns.leadHome.title + userName | titlecase }}</h1>
+<h1 id="welcome">{{ I18ns.leadHome.title + profileStore.user.value.firstname | titlecase }}</h1>
 <p class="mb-4 alto-grey fs-6b">{{ I18ns.leadHome.subtitle }}</p>
 <div class="row">
   <div class="col-6">
@@ -51,8 +51,8 @@
       [returnValue]="'id'"
       [placeholder]="I18ns.programs.programs.filters.team"
       [isColored]="true"
-      [multiple]="false"
-      (selectChange)="getGlobalScore({ team: $event })"
+      [multiple]="true"
+      (selectChange)="getGlobalScore({ teams: $event })"
     ></alto-dropdown-filter>
   </div>
 </div>
@@ -306,7 +306,7 @@
 <alto-program-card-list [place]="'home'"></alto-program-card-list>
 
 <!-- CHALLENGES -->
-<div class="row mt-6 mb-4">
+<div class="row mt-6 mb-4" hidden>
   <div class="col-5">
     <h2 class="title">{{ I18ns.leadHome.ongoingChallenges.title }}</h2>
   </div>
@@ -316,7 +316,7 @@
     </button>
   </div>
 </div>
-<div class="row">
+<div class="row" hidden>
   <div class="col-6">
     <div class="table-panel">
       <h2>{{ I18ns.leadHome.ongoingChallenges.byTeam }}</h2>

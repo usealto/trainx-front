@@ -68,7 +68,7 @@ export const FR = {
   },
   leadHome: {
     title: 'Bonjour ',
-    subtitle: "Retrouvez l'ensemble des statistiques de vos équipes.",
+    subtitle: "Découvrez une vue d'ensemble sur l'avancée de vos équipes.",
     comments: ['{{}} commentaire', '{{}} commentaires'],
     subtitleComment: [
       'Vos utilisateurs ont laissé {{}} nouveau commentaire.',
@@ -390,7 +390,7 @@ export const FR = {
       },
       statistics: {
         total: 'Total',
-        totalTooltip: 'Nombre total de membres qui vous sont affectés',
+        totalTooltip: 'Nombre total de membres de votre entreprise',
         regularMembersTooltip: 'Nombre de membres ayant répondu à plus de 50% des questions envoyées',
         iregularMembersTooltip: 'Nombre de membres ayant répondu à moins de 50% des questions envoyées',
         active: 'Membres réguliers',
@@ -437,7 +437,7 @@ export const FR = {
           create: 'Créer une équipe',
           edit: 'Modifier une équipe',
         },
-        subtitle: 'Donner un nom à votre équipe et inviter vos collaborateurs',
+        subtitle: 'Donner un nom à votre équipe',
         longName: 'Nom (version longue)',
         longNamePlaceholder: "Nom complet de l'équipe",
         longNameExemple: 'Exemple : Sales Development Representative',
@@ -696,6 +696,8 @@ export const FR = {
         title: 'Progression',
         you: 'Vous',
         yourTeam: 'Votre équipe',
+        noData: 'Aucune donnée à afficher',
+        noDataSubtitle: "Vous n'avez pas encore de données à afficher.",
       },
     },
     teams: {

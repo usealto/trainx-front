@@ -56,7 +56,7 @@ export class UserHomeComponent implements OnInit {
       .pipe(tap((a) => (this.myProgramRunsCards = a.filter((r) => r.isProgress && r.duration))))
       .subscribe();
 
-    this.userName = this.profileStore.user.value.firstname ?? this.profileStore.user.value.username ?? '';
+    this.userName = this.profileStore.user.value.firstname ?? '';
     this.continuousSessionGetGuessesCount();
     this.getLeaderboard();
   }
