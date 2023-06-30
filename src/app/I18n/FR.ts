@@ -356,6 +356,11 @@ export const FR = {
       linkPlaceholder: 'Lien vers une ressource utile',
       remainingCharacters: 'caractères restants',
     },
+    deleteModal: {
+      title: 'Supprimer la question "{{}}"',
+      subtitle: 'Cette question est associée à {{}} programmes et {{}} tags.',
+      subtitle2: ' Êtes-vous sûr de vouloir la supprimer ? Cette action est irréversible.',
+    },
   },
   tags: {
     form: {
