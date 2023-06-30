@@ -181,6 +181,10 @@ export class QuestionFormComponent implements OnInit {
     this.answersWrong.push(this.fob.control(''));
   }
 
+  removeBadAnswer(index: number) {
+    this.answersWrong.removeAt(index);
+  }
+
   // @memoize()
   // getLength(data: string | undefined | null): number {
   //   if (!data) {
