@@ -71,9 +71,9 @@
       <alto-dropdown-filter
         class="me-3"
         data-cy="questionsContributorFilter"
-        [data]="profileStore.users.value"
+        [data]="contributors"
         [returnValue]="'id'"
-        [displayLabel]="'username'"
+        [displayLabel]="'fullname'"
         [placeholder]="I18ns.programs.questions.filters.contributors"
         (selectChange)="getQuestions({ contributors: $event })"
       ></alto-dropdown-filter>

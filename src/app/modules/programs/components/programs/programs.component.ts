@@ -50,6 +50,7 @@ export class ProgramsComponent implements OnInit {
   isQuestionsLoading = true;
   questionsScore = new Map<string, number>();
   questionFilters: QuestionFilters = { programs: [], tags: [], contributors: [], search: '' };
+  contributors: { id: string; fullname: string }[] = [];
   //
   userCache = new Map<string, UserDtoApi>();
   pillsRowDisplayLimit = 3;
@@ -83,7 +84,7 @@ export class ProgramsComponent implements OnInit {
     private readonly tagRestService: TagsRestService,
     private readonly tagsService: TagsServiceService,
     public readonly teamStore: TeamStore,
-    public readonly profileStore: ProfileStore,
+    private readonly profileStore: ProfileStore,
     public readonly programsStore: ProgramsStore,
   ) {}
 
@@ -91,6 +92,11 @@ export class ProgramsComponent implements OnInit {
     this.getQuestions();
     this.getSubmittedQuestions();
     this.getTags();
+
+    this.contributors = this.profileStore.users.value.map((u) => ({
+      id: u.id,
+      fullname: u.firstname + ' ' + u.lastname,
+    }));
   }
 
   openQuestionForm(question?: QuestionDtoApi) {
@@ -323,5 +329,10 @@ export class ProgramsComponent implements OnInit {
   @memoize()
   getTagPrograms(id: string) {
     return this.tagPrograms.get(id) ?? [];
+  }
+
+  @memoize()
+  getFullname(user: UserDtoApi) {
+    return user?.firstname + ' ' + user?.lastname;
   }
 }
