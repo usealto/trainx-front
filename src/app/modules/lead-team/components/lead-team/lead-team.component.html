@@ -1,4 +1,4 @@
-<h1>{{ I18ns.leadTeam.title }}</h1>
+<h1 data-cy="leadTeamTitle">{{ I18ns.leadTeam.title }}</h1>
 <p class="mb-4 alto-grey">{{ I18ns.leadTeam.subtitle }}</p>
 <div>
   <alto-anchor-navigator fragment="teamsAnchor">
@@ -39,10 +39,10 @@
         </thead>
         <tbody>
           <tr *ngFor="let team of paginatedTeams" class="align-middle">
-            <td class="fw-medium">
+            <td data-cy="teamLongname" class="fw-medium">
               {{ team.longName }}
             </td>
-            <td class="text-center">
+            <td data-cy="teamShortname" class="text-center">
               <span class="alto-badge" [style]="team.id | teamColor">{{ team.shortName }}</span>
             </td>
             <td class="w-20 text-center">
@@ -62,7 +62,11 @@
               {{ team.createdAt | date : 'shortDate' }}
             </td>
             <td>
-              <i class="fs-5 bi bi-pencil cursor-pointer float-end me-4" (click)="openTeamForm(team)"></i>
+              <i
+                data-cy="editTeam"
+                class="fs-5 bi bi-pencil cursor-pointer float-end me-4"
+                (click)="openTeamForm(team)"
+              ></i>
             </td>
           </tr>
         </tbody>
@@ -93,7 +97,7 @@
     <i class="bi bi-person-plus me-2 fs-5"></i>
     <span class="align-text-bottom">{{ I18ns.leadTeam.members.invite }}</span>
   </button>
-  <h2 id="membersAnchor">{{ I18ns.leadTeam.members.title }}</h2>
+  <h2 data-cy="companyMembersSection" id="membersAnchor">{{ I18ns.leadTeam.members.title }}</h2>
   <p class="mb-3 alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
 
   <div class="row py-4">
@@ -194,6 +198,7 @@
             </td>
             <td>
               <i
+                data-cy="editCompanyMember"
                 class="fs-5 bi bi-pencil cursor-pointer float-end me-4"
                 (click)="openUserEditionForm(user)"
               ></i>

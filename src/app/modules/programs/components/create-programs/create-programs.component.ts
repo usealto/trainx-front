@@ -37,9 +37,11 @@ export class CreateProgramsComponent implements OnInit {
   questionList: { id: string; delete: boolean }[] = [];
   questionPage = 1;
   questionPageSize = 10;
+  questionsCount = 0;
   associatedQuestionsCount = 0;
 
   selectedTags: string[] = [];
+  questionSearch = '';
 
   constructor(
     readonly fob: UntypedFormBuilder,
@@ -135,13 +137,20 @@ export class CreateProgramsComponent implements OnInit {
 
   getQuestions() {
     this.questionRestService
-      .getQuestions({ tagIds: this.selectedTags.join(',') })
+      .getQuestionsPaginated({
+        tagIds: this.selectedTags.join(','),
+        sortByProgramId: this.editedProgram.id,
+        itemsPerPage: this.questionPageSize,
+        page: this.questionPage,
+        search: this.questionSearch,
+      })
       .pipe(
         tap((questions) => {
-          this.questions = questions;
-          this.setquestionsDisplay(this.mapQuestionsToDisplay(questions));
+          const { data = [], meta } = questions;
+          this.setquestionsDisplay(this.mapQuestionsToDisplay(data));
+          this.associatedQuestionsCount = this.questionsDisplay.filter((q) => q.isChecked).length;
+          this.questionsCount = meta.totalItems;
         }),
-        tap(() => (this.associatedQuestionsCount = this.questionsDisplay.filter((q) => q.isChecked).length)),
         untilDestroyed(this),
       )
       .subscribe();
@@ -169,11 +178,12 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   searchQuestions(value: string) {
-    this.setquestionsDisplay(
-      this.mapQuestionsToDisplay(
-        this.questions.filter((q) => q.title.toLowerCase().includes(value.toLowerCase())),
-      ),
-    );
+    this.questionSearch = value;
+    this.getQuestions();
+  }
+
+  questionPageChange(e: any) {
+    this.getQuestions();
   }
 
   setquestionsDisplay(quest: QuestionDisplay[]) {
@@ -220,9 +230,11 @@ export class CreateProgramsComponent implements OnInit {
   findTagName(id: string) {
     return this.programStore.tags.value.find((t) => t.id === id)?.name;
   }
+
   findTeamName(id: string) {
     return this.teamStore.teams.value.find((t) => t.id === id)?.shortName;
   }
+
   getquestionsCount(): number {
     if (this.isEdit) {
       return this.associatedQuestionsCount;

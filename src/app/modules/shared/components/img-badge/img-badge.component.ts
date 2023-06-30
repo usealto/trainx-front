@@ -30,7 +30,9 @@ export class ImgBadgeComponent implements OnChanges {
   }
   @memoize()
   getUserName(user: UserDtoApi | UserLightDtoApi | null | undefined) {
-    const us = user as UserDtoApi;
-    return us?.lastname && us?.firstname ? us?.firstname + ' ' + us?.lastname : user?.username;
+    if (!user) {
+      return '';
+    }
+    return user?.firstname + ' ' + user?.lastname;
   }
 }

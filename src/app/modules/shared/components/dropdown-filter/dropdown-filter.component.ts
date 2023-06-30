@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NgSelectComponent } from '@ng-select/ng-select';
+import { DropdownPosition, NgSelectComponent } from '@ng-select/ng-select';
 
 @Component({
   selector: 'alto-dropdown-filter',
@@ -14,6 +14,7 @@ export class DropdownFilterComponent {
   @Input() isColored = false;
   @Input() multiple = true;
   @Input() selectedItems: any[] = [];
+  @Input() position: DropdownPosition = 'auto';
 
   @Output() selectChange = new EventEmitter<any>();
 

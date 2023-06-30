@@ -103,6 +103,14 @@
   }
 }
 
+.table-no-last-line {
+  tr:last-child {
+    td {
+      border: 0;
+    }
+  }
+}
+
 .vertical-divider {
   display: inline-block;
   border-left: 2px solid var(--alto-medium-grey);

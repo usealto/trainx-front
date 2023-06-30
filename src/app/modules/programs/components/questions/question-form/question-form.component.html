@@ -19,7 +19,10 @@
     <p class="alto-grey">
       {{
         isSubmitted
-          ? question?.createdByUser?.username + I18ns.questions.form.subtitle.submitted
+          ? question?.createdByUser?.firstname +
+            ' ' +
+            question?.createdByUser?.lastname +
+            I18ns.questions.form.subtitle.submitted
           : I18ns.questions.form.subtitle.question
       }}
     </p>

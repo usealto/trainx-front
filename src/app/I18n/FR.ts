@@ -324,7 +324,7 @@ export const FR = {
     perTeams: {
       title: 'Par équipe',
       globalTooltip:
-        'Pourcentage de questions justes sur le nombre de questions répondues et variation sur la période passée',
+        '% de questions justes sur le nombre de questions répondues et variation sur la période passée',
     },
   },
   questions: {
@@ -390,7 +390,7 @@ export const FR = {
       },
       statistics: {
         total: 'Total',
-        totalTooltip: 'Nombre total de membres qui vous sont affectés',
+        totalTooltip: 'Nombre total de membres de votre entreprise',
         regularMembersTooltip: 'Nombre de membres ayant répondu à plus de 50% des questions envoyées',
         iregularMembersTooltip: 'Nombre de membres ayant répondu à moins de 50% des questions envoyées',
         active: 'Membres réguliers',
@@ -437,7 +437,7 @@ export const FR = {
           create: 'Créer une équipe',
           edit: 'Modifier une équipe',
         },
-        subtitle: 'Donner un nom à votre équipe et inviter vos collaborateurs',
+        subtitle: 'Donner un nom à votre équipe',
         longName: 'Nom (version longue)',
         longNamePlaceholder: "Nom complet de l'équipe",
         longNameExemple: 'Exemple : Sales Development Representative',
@@ -741,7 +741,7 @@ export const FR = {
         score: 'Score moyen',
         scoreTooltip: 'Score moyen de vos  questions répondues',
         frequency: 'Régularité',
-        frequencyTooltip: 'Pourcentage de questions répondues sur le nombre de question envoyées',
+        frequencyTooltip: '% de questions répondues sur le nombre de question envoyées',
         streak: 'Série en cours',
         streakTooltip: "Nombre de jours consécutifs d'utilisation de l'application",
         bestStreak: 'Meilleure série',
@@ -753,6 +753,7 @@ export const FR = {
       subtitle: 'Retrouvez les programmes qui vous ont été assignés',
       title2: 'Tous vos programmes terminés',
       subtitle2: "Tentez de faire mieux sur des programmes que vous n'avez pas réussi.",
+      subtitle3: 'Retrouvez les programmes que vous avez terminé',
       backButton: 'Retourner à vos programmes',
       filters: {
         showAll: 'Tout voir',

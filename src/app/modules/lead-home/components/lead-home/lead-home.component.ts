@@ -85,7 +85,7 @@ export class LeadHomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userName = this.profileStore.user.value.firstname ?? this.profileStore.user.value.username ?? '';
+    this.userName = this.profileStore.user.value.firstname ?? '';
 
     combineLatest([
       this.commentsRestService.getComments(),
@@ -234,11 +234,12 @@ export class LeadHomeComponent implements OnInit {
           this.inactiveMembers = usersStats.length - this.activeMembers;
 
           const prevU = previousUsersStats.filter((u) => u.respondsRegularly).length;
-          this.activeMembersProgression = prevU > 0 ? (this.activeMembers - prevU) / this.activeMembers : 0;
+          this.activeMembersProgression =
+            prevU > 0 && this.activeMembers ? (this.activeMembers - prevU) / this.activeMembers : 0;
 
           const prevI = previousUsersStats.length - prevU;
           this.inactiveMembersProgression =
-            prevI > 0 ? (this.inactiveMembers - prevI) / this.inactiveMembers : 0;
+            prevI > 0 && this.inactiveMembers ? (this.inactiveMembers - prevI) / this.inactiveMembers : 0;
         }),
         switchMap(() => this.getAverageCompletion(this.globalFilters)),
         untilDestroyed(this),
