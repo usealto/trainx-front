@@ -143,6 +143,24 @@ describe('Lead Team', () => {
     cy.get('[data-cy="editCompanyMember"]').first().click();
     cy.get('[data-cy="editMemberRole"]').find(':selected').contains('Administrateur');
   });
+
+  it('Filters members by team', () => {
+    cy.get('[data-cy="filterByTeam"]').click().type('CYP{enter}');
+
+    cy.get('[data-cy="memberTeamShortname"]').first().should('have.text', ' CYP ');
+  });
+
+  it('Filters members by score', () => {
+    cy.get('[data-cy="filterByScore"]').click();
+    cy.get('.ng-dropdown-header > input').clear();
+    cy.get('.ng-dropdown-header > input').type('75{enter}');
+    //here we compare the number of pixels to check the percentage, 1% being 2.9343px
+    cy.get('[data-cy="scoreProgressBar"]').first().invoke('width').should('be.lessThan', 223.005);
+  });
+
+  // it('Filters members using search input', () => {
+
+  // });
 });
 
 describe('User Team', () => {
