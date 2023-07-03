@@ -158,9 +158,20 @@ describe('Lead Team', () => {
     cy.get('[data-cy="scoreProgressBar"]').first().invoke('width').should('be.lessThan', 223.005);
   });
 
-  // it('Filters members using search input', () => {
+  it('Filters members using search input', () => {
+    cy.get('[data-cy="filterBySearch"]').click();
 
-  // });
+    cy.get('.form-control').clear();
+    cy.get('.form-control').type('romain{enter}');
+
+    cy.get('[data-cy="profileCard"] > .profile > alto-img-badge > img')
+      .first()
+      .should(
+        'have.attr',
+        'src',
+        'https://s.gravatar.com/avatar/0989ee1d5d2827fad81a7082283ed8b6?s=40&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fro.png',
+      );
+  });
 });
 
 describe('User Team', () => {

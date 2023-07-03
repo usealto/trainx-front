@@ -135,6 +135,7 @@
 
   <div class="mb-4">
     <alto-search
+      data-cy="filterBySearch"
       class="float-end d-inline-block"
       (searchChange)="filterUsers({ search: $event })"
     ></alto-search>
@@ -176,7 +177,7 @@
         <tbody>
           <tr *ngFor="let user of paginatedUsers" class="align-middle">
             <td>
-              <alto-profile-card [user]="user"></alto-profile-card>
+              <alto-profile-card data-cy="profileCard" [user]="user"></alto-profile-card>
             </td>
             <td>
               <span data-cy="memberTeamShortname" class="alto-badge" [style]="user.teamId || '' | teamColor">
