@@ -123,7 +123,25 @@ describe('Lead Team', () => {
     cy.get('[data-cy="editMemberSave"]').click().wait(2000);
 
     cy.get('[data-cy="editCompanyMember"]').first().click();
-    cy.get('[data-cy="editMemberTeam"] .ng-input > input').wait(2000);
+    cy.get('[data-cy="editMemberTeam"] .ng-select-container > .ng-value-container > .ng-value')
+      .wait(2000)
+      .should('have.text', 'CYP');
+  });
+
+  it('Removes the user team and check save btn is disabled', () => {
+    cy.get('[data-cy="editCompanyMember"]').first().click();
+
+    cy.get('[data-cy="editMemberTeam"] .ng-select-container > .ng-clear-wrapper').click();
+    cy.get('[data-cy="editMemberSave"]').should('have.attr', 'disabled');
+  });
+
+  it('Changes a user role and check it worked', () => {
+    cy.get('[data-cy="editCompanyMember"]').first().click();
+
+    cy.get('[data-cy="editMemberRole"]').select('company-admin');
+    cy.get('[data-cy="editMemberSave"]').click();
+    cy.get('[data-cy="editCompanyMember"]').first().click();
+    cy.get('[data-cy="editMemberRole"]').find(':selected').contains('Administrateur');
   });
 });
 
