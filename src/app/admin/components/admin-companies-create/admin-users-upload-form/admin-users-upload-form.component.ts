@@ -64,7 +64,7 @@ export class AdminUsersUploadFormComponent {
         this.refreshUsers();
         this.form?.markAsDirty();
       },
-      (reason) => {},
+      // (reason) => {},
     );
   }
 
@@ -106,7 +106,7 @@ export class AdminUsersUploadFormComponent {
             this.csvData.push(user);
           } else {
             if (!userRow.every((item) => item === '')) {
-              this.usersFailed.push(userRow[0]);
+              this.usersFailed.push(userRow[2]);
             }
           }
         });

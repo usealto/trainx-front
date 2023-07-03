@@ -104,7 +104,10 @@
                   ><i class="bi bi-incognito fs-5 text-white"></i
                 ></a>
                 <div class="d-flex flex-column gap-1">
-                  <span class="name alto-text">{{company?.admins?.[0]?.username ?? '' }}</span>
+                  <span
+                    class="name alto-text"
+                    >{{(company?.admins?.[0]?.firstname ?? '') + (company?.admins?.[0]?.lastname ?? '') }}</span
+                  >
                   <span class="alto-grey">{{company?.admins?.[0]?.email ?? '' }}</span>
                 </div>
               </div>

@@ -46,7 +46,6 @@ export class AdminUserComponent implements OnInit {
 
             this.userForm = this.formBuilder.group({
               slackId: [this.user.slackId],
-              username: [this.user.username],
               teamId: [this.user.teamId],
               roles: [this.user.roles],
             });
@@ -61,7 +60,7 @@ export class AdminUserComponent implements OnInit {
         },
       });
 
-    this.teamsApiService.getTeams({itemsPerPage: 1000 }).subscribe((teams) => {
+    this.teamsApiService.getTeams({ itemsPerPage: 1000 }).subscribe((teams) => {
       this.teams = teams.data || [];
     });
   }

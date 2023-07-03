@@ -118,13 +118,10 @@ export class AdminCompanyUsersComponent implements OnInit {
     });
 
     canvasRef.componentInstance.filters = this.activeFilters;
-    canvasRef.result.then(
-      (result: any) => {
-        this.activeFilters = result;
-        this.refreshUsers();
-      },
-      (reason: any) => {},
-    );
+    canvasRef.result.then((result: any) => {
+      this.activeFilters = result;
+      this.refreshUsers();
+    });
   }
 
   isUserSelected(user: UserDtoApi) {
@@ -193,7 +190,6 @@ export class AdminCompanyUsersComponent implements OnInit {
         return (
           user.firstname?.toLowerCase().includes(term) ||
           user.lastname?.toLowerCase().includes(term) ||
-          user.username?.toLowerCase().includes(term) ||
           user.email.toLowerCase().includes(term) ||
           user.slackId?.toLowerCase().includes(term)
         );

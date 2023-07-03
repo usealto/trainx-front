@@ -85,7 +85,6 @@ export class AdminUserCreateFormComponent implements OnInit {
               this.userForm = this.fb.group<UserForm>({
                 firstname: [this.user.firstname || '', [Validators.required]],
                 lastname: [this.user.lastname || '', [Validators.required]],
-                username: [this.user.username || '', [Validators.required]],
                 email: [this.user.email || '', [Validators.required, Validators.email]],
                 teamId: [this.user.teamId || '', []],
                 roles: [this.user.roles as unknown as Array<RoleEnumApi>, []],
@@ -105,7 +104,6 @@ export class AdminUserCreateFormComponent implements OnInit {
       this.userForm = this.fb.group<UserForm>({
         firstname: ['', [Validators.required]],
         lastname: ['', [Validators.required]],
-        username: ['', []],
         email: ['', [Validators.required, Validators.email]],
         teamId: ['', []],
         roles: [[RoleEnumApi.CompanyUser], []],
@@ -117,7 +115,7 @@ export class AdminUserCreateFormComponent implements OnInit {
   async submit() {
     if (!this.userForm.value) return;
 
-    const { firstname, lastname, username, email, teamId, roles, slackId } = this.userForm.value;
+    const { firstname, lastname, email, teamId, roles, slackId } = this.userForm.value;
 
     if (this.edit) {
       this.usersApiService
@@ -127,7 +125,6 @@ export class AdminUserCreateFormComponent implements OnInit {
             teamId: teamId,
             firstname: firstname,
             lastname: lastname,
-            username: username,
             roles: roles,
             slackId: slackId,
           },
@@ -144,7 +141,6 @@ export class AdminUserCreateFormComponent implements OnInit {
             teamId: teamId,
             firstname: firstname,
             lastname: lastname,
-            username: username,
             roles: roles,
             slackId: slackId,
           },
@@ -189,7 +185,6 @@ export class AdminUserCreateFormComponent implements OnInit {
   }
 
   resetSlackId() {
-    // this.defaultApiService.n8nProxyControllerProxyGetRequest();
     this.slackApiService
       .updateSlackid({
         companyId: this.companyId,

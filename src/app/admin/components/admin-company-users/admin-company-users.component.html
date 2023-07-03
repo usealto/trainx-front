@@ -104,9 +104,6 @@
             <i class="bi bi-arrow-up-short"></i>Name
           </th>
           <th scope="col"></th>
-          <th scope="col" sortable="username" (sort)="onSort($event)">
-            <i class="bi bi-arrow-up-short"></i>Username
-          </th>
           <th scope="col" sortable="email" (sort)="onSort($event)">
             <i class="bi bi-arrow-up-short"></i>Email
           </th>
@@ -162,7 +159,6 @@
               ></a>
             </div>
           </td>
-          <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
           <td>
             <div class="d-flex gap-1">

@@ -46,17 +46,18 @@ export class AdminUsersUploadComponent implements OnInit {
     Papa.parse(file, {
       complete: (results: { data: any[] }) => {
         results.data.forEach((userRow: string[]) => {
-          if (this.reg.test(userRow[0])) {
-            const user = {
-              email: userRow[0],
-              teamId: this.findSelectedTeam(userRow[1]),
-              companyId: this.id,
-              isUploaded: false,
-            };
-            this.csvData.push(user);
-          } else {
-            this.usersFailed.push(userRow[0]);
-          }
+          console.log(userRow);
+          // if (this.reg.test(userRow[0])) {
+          //   const user = {
+          //     email: userRow[0],
+          //     teamId: this.findSelectedTeam(userRow[1]),
+          //     companyId: this.id,
+          //     isUploaded: false,
+          //   };
+          //   this.csvData.push(user);
+          // } else {
+          //   this.usersFailed.push(userRow[0]);
+          // }
         });
         if (this.csvData && this.csvData[0] && this.csvData[0].email === 'email') {
           this.csvData = this.csvData.slice(1);
@@ -70,6 +71,8 @@ export class AdminUsersUploadComponent implements OnInit {
       this.usersApiService
         .createUser({
           createUserDtoApi: {
+            firstname: '',
+            lastname: '',
             email: user.email,
             companyId: this.id,
             teamId: user.teamId,
