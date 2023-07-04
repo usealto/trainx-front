@@ -74,7 +74,6 @@
     <ng-container formArrayName="answersWrong">
       <ng-container *ngFor="let answer of answersWrong.controls; let i = index">
         <div class="d-flex align-items-center">
-          <i class="bi bi-trash" (click)="removeBadAnswer(i)" style="margin-right: 10px; font-size: 25px; margin-bottom: 17px; color: var(--alto-text-color);"></i>
           <alto-text-counter
             class="flex-grow-1 ml-2"
             [control]="answer"
@@ -83,6 +82,9 @@
             [softLimit]="answerSoftLimit"
           >
           </alto-text-counter>
+          <div class="remove-field flex-grow-2 ms-3 mb-4" (click)="removeBadAnswer(i)">
+            <i class="bi bi-trash"></i>
+          </div>
         </div>
       </ng-container>
     </ng-container>
