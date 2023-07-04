@@ -28,3 +28,12 @@ label {
     vertical-align: middle;
   }
 }
+.remove-field {
+  cursor: pointer;
+  i {
+    font-size: 1.3rem;
+    line-height: 1rem;
+    vertical-align: top;
+    color: var(--alto-grey);
+  }
+}
