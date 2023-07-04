@@ -54,13 +54,19 @@
 
     <ng-container formArrayName="answersAccepted">
       <ng-container *ngFor="let answer of answersAccepted.controls; let i = index">
-        <alto-text-counter
-          [control]="answer"
-          [placeholder]="I18ns.questions.form.answerPlaceholder + ' ' + (i + 1)"
-          [limit]="answerHardLimit"
-          [softLimit]="answerSoftLimit"
-        >
-        </alto-text-counter>
+        <div class="d-flex align-items-center">
+          <alto-text-counter
+            class="flex-grow-1 ml-2"
+            [control]="answer"
+            [placeholder]="I18ns.questions.form.answerPlaceholder + ' ' + (i + 1)"
+            [limit]="answerHardLimit"
+            [softLimit]="answerSoftLimit"
+          >
+          </alto-text-counter>
+          <div class="remove-field flex-grow-2 ms-3 mb-4" (click)="removeAnswer('good', i)">
+            <i class="bi bi-trash"></i>
+          </div>
+        </div>
       </ng-container>
     </ng-container>
     <p class="add-field" *ngIf="answersAccepted.controls.length < 4" (click)="addGoodAnwswer()">
@@ -82,7 +88,7 @@
             [softLimit]="answerSoftLimit"
           >
           </alto-text-counter>
-          <div class="remove-field flex-grow-2 ms-3 mb-4" (click)="removeBadAnswer(i)">
+          <div class="remove-field flex-grow-2 ms-3 mb-4" (click)="removeAnswer('bad', i)">
             <i class="bi bi-trash"></i>
           </div>
         </div>
