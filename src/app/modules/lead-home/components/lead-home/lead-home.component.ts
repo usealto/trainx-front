@@ -3,7 +3,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ChallengeDtoApi,
   ChallengeDtoApiTypeEnumApi,
-  ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   TeamStatsDtoApi,
