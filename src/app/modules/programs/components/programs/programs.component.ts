@@ -92,7 +92,6 @@ export class ProgramsComponent implements OnInit {
     this.getQuestions();
     this.getSubmittedQuestions();
     this.getTags();
-
     this.contributors = this.profileStore.users.value.map((u) => ({
       id: u.id,
       fullname: u.firstname + ' ' + u.lastname,
