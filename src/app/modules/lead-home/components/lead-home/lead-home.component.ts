@@ -162,10 +162,30 @@ export class LeadHomeComponent implements OnInit {
             }),
           };
 
+          const customChartOptions = {
+            ...chartDefaultOptions,
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function (tooltipItem: any) {
+                    let labelType = 'tag';
+                    if (type === 'program') {
+                      labelType = 'programme';
+                    }
+                    return `${labelType} ${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
+                  },
+                },
+              },
+              legend: {
+                display: false,
+              },
+            },
+          };
+
           this.evolutionChart = new Chart('programScoreEvol', {
             type: 'line',
             data: data,
-            options: chartDefaultOptions,
+            options: customChartOptions,
           });
         }),
         untilDestroyed(this),
