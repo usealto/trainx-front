@@ -96,7 +96,6 @@ export class ProgramsComponent implements OnInit {
       id: u.id,
       fullname: u.firstname + ' ' + u.lastname,
     }));
-    this.openQuestionForm();
   }
 
   deleteQuestion(question?: QuestionDtoApi) {
