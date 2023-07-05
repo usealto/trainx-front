@@ -143,7 +143,7 @@ export class TrainingHomeComponent implements OnInit {
         progress as ScoreFilter,
         false,
       );
-    } else if (score || progress) {
+    } else {
       if (score) {
         output = this.scoresService.filterByScore(
           output.filter((p) => !p.isProgress),
