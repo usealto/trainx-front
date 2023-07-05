@@ -63,8 +63,8 @@
             [softLimit]="answerSoftLimit"
           >
           </alto-text-counter>
-          <div class="remove-field flex-grow-2 ms-3 mb-4" (click)="removeAnswer('good', i)">
-            <i class="bi bi-trash"></i>
+          <div *ngIf="answersAccepted.controls.length > 1" class="remove-field flex-grow-2 ms-3 mb-4" (click)="removeAnswer('good', i)">
+            <i class="bi bi-trash3"></i>
           </div>
         </div>
       </ng-container>
@@ -88,8 +88,8 @@
             [softLimit]="answerSoftLimit"
           >
           </alto-text-counter>
-          <div class="remove-field flex-grow-2 ms-3 mb-4" (click)="removeAnswer('bad', i)">
-            <i class="bi bi-trash"></i>
+          <div *ngIf="answersWrong.controls.length > 1" class="remove-field flex-grow-2 ms-3 mb-4" (click)="removeAnswer('bad', i)">
+            <i class="bi bi-trash3"></i>
           </div>
         </div>
       </ng-container>
