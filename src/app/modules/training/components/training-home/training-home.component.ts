@@ -137,27 +137,25 @@ export class TrainingHomeComponent implements OnInit {
 
     let output: TrainingCardData[] = this.allPrograms ?? [];
 
+    const outputP = this.scoresService.filterByScore(
+      output.filter((p) => p.isProgress),
+      progress as ScoreFilter,
+      false,
+    );
+    const outputS = this.scoresService.filterByScore(
+      output.filter((p) => !p.isProgress),
+      score as ScoreFilter,
+      false,
+    );
+
+    if (score) {
+      output = outputS;
+    }
+    if (progress) {
+      output = outputP;
+    }
     if (score && progress) {
-      output = this.scoresService.filterByScore(
-        output.filter((p) => p.isProgress || !p.isProgress),
-        progress as ScoreFilter,
-        false,
-      );
-    } else {
-      if (score) {
-        output = this.scoresService.filterByScore(
-          output.filter((p) => !p.isProgress),
-          score as ScoreFilter,
-          false,
-        );
-      }
-      if (progress) {
-        output = this.scoresService.filterByScore(
-          output.filter((p) => p.isProgress),
-          progress as ScoreFilter,
-          false,
-        );
-      }
+      output = outputP.concat(outputS);
     }
 
     if (search) {
