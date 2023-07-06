@@ -53,10 +53,10 @@
                 <div
                   class="progress-bar d-inline-block"
                   role="progressbar"
-                  [style]="'width:' + team.score + '%'"
+                  [style]="'width:' + (team.score ?? 0) * 100 + '%'"
                 ></div>
               </div>
-              <ng-container *ngIf="team.score"> {{ team.score }} % </ng-container>
+              <ng-container *ngIf="team.score"> {{ team.score | percent }} </ng-container>
             </td>
             <td class="text-center">
               {{ team.createdAt | date : 'shortDate' }}

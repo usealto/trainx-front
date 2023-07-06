@@ -58,7 +58,7 @@
           {{ team.label }}
         </td>
         <td class="text-center">
-          {{ team.score + ' %' }}
+          {{ team.score | percent }}
           <alto-progression-badge
             class="d-inline-block ms-3"
             [score]="getTeamPreviousScore(team)"

@@ -261,10 +261,9 @@ export class LeadHomeComponent implements OnInit {
         ),
         tap(([current, previous, usersStats, previousUsersStats]) => {
           //global score
-          const previousScore =
-            previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length / 100;
+          const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;
 
-          this.globalScore = current.reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length / 100;
+          this.globalScore = current.reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
           this.globalScoreProgression = previousScore
             ? (this.globalScore - previousScore) / previousScore
             : 0;
