@@ -123,7 +123,54 @@ describe('Lead Team', () => {
     cy.get('[data-cy="editMemberSave"]').click().wait(2000);
 
     cy.get('[data-cy="editCompanyMember"]').first().click();
-    cy.get('[data-cy="editMemberTeam"] .ng-input > input').wait(2000);
+    cy.get('[data-cy="editMemberTeam"] .ng-select-container > .ng-value-container > .ng-value')
+      .wait(2000)
+      .should('have.text', 'CYP');
+  });
+
+  it('Removes the user team and check save btn is disabled', () => {
+    cy.get('[data-cy="editCompanyMember"]').first().click();
+
+    cy.get('[data-cy="editMemberTeam"] .ng-select-container > .ng-clear-wrapper').click();
+    cy.get('[data-cy="editMemberSave"]').should('have.attr', 'disabled');
+  });
+
+  it('Changes a user role and check it worked', () => {
+    cy.get('[data-cy="editCompanyMember"]').first().click();
+
+    cy.get('[data-cy="editMemberRole"]').select('company-admin');
+    cy.get('[data-cy="editMemberSave"]').click();
+    cy.get('[data-cy="editCompanyMember"]').first().click();
+    cy.get('[data-cy="editMemberRole"]').find(':selected').contains('Administrateur');
+  });
+
+  it('Filters members by team', () => {
+    cy.get('[data-cy="filterByTeam"]').click().type('CYP{enter}');
+
+    cy.get('[data-cy="memberTeamShortname"]').first().should('have.text', ' CYP ');
+  });
+
+  it('Filters members by score', () => {
+    cy.get('[data-cy="filterByScore"]').click();
+    cy.get('.ng-dropdown-header > input').clear();
+    cy.get('.ng-dropdown-header > input').type('75{enter}');
+    //here we compare the number of pixels to check the percentage, 1% being 2.9343px
+    cy.get('[data-cy="scoreProgressBar"]').first().invoke('width').should('be.lessThan', 223.005);
+  });
+
+  it('Filters members using search input', () => {
+    cy.get('[data-cy="filterBySearch"]').click();
+
+    cy.get('.form-control').clear();
+    cy.get('.form-control').type('romain{enter}');
+
+    cy.get('[data-cy="profileCard"] > .profile > alto-img-badge > img')
+      .first()
+      .should(
+        'have.attr',
+        'src',
+        'https://s.gravatar.com/avatar/0989ee1d5d2827fad81a7082283ed8b6?s=40&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fro.png',
+      );
   });
 });
 

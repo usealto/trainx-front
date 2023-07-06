@@ -54,13 +54,19 @@
 
     <ng-container formArrayName="answersAccepted">
       <ng-container *ngFor="let answer of answersAccepted.controls; let i = index">
-        <alto-text-counter
-          [control]="answer"
-          [placeholder]="I18ns.questions.form.answerPlaceholder + ' ' + (i + 1)"
-          [limit]="answerHardLimit"
-          [softLimit]="answerSoftLimit"
-        >
-        </alto-text-counter>
+        <div class="d-flex align-items-center">
+          <alto-text-counter
+            class="flex-grow-1 ml-2"
+            [control]="answer"
+            [placeholder]="I18ns.questions.form.answerPlaceholder + ' ' + (i + 1)"
+            [limit]="answerHardLimit"
+            [softLimit]="answerSoftLimit"
+          >
+          </alto-text-counter>
+          <div *ngIf="answersAccepted.controls.length > 1" class="remove-field flex-grow-2 ms-3 mb-4" (click)="removeAnswer('good', i)">
+            <i class="bi bi-trash3"></i>
+          </div>
+        </div>
       </ng-container>
     </ng-container>
     <p class="add-field" *ngIf="answersAccepted.controls.length < 4" (click)="addGoodAnwswer()">
@@ -73,17 +79,23 @@
 
     <ng-container formArrayName="answersWrong">
       <ng-container *ngFor="let answer of answersWrong.controls; let i = index">
-        <alto-text-counter
-          [control]="answer"
-          [placeholder]="I18ns.questions.form.answerPlaceholder + ' ' + (i + 1)"
-          [limit]="answerHardLimit"
-          [softLimit]="answerSoftLimit"
-        >
-        </alto-text-counter>
+        <div class="d-flex align-items-center">
+          <alto-text-counter
+            class="flex-grow-1 ml-2"
+            [control]="answer"
+            [placeholder]="I18ns.questions.form.answerPlaceholder + ' ' + (i + 1)"
+            [limit]="answerHardLimit"
+            [softLimit]="answerSoftLimit"
+          >
+          </alto-text-counter>
+          <div *ngIf="answersWrong.controls.length > 1" class="remove-field flex-grow-2 ms-3 mb-4" (click)="removeAnswer('bad', i)">
+            <i class="bi bi-trash3"></i>
+          </div>
+        </div>
       </ng-container>
     </ng-container>
 
-    <p class="add-field" *ngIf="answersWrong.controls.length < 4" (click)="addBadAnwswer()">
+    <p class="add-field" *ngIf="answersWrong.controls.length < 6" (click)="addBadAnwswer()">
       <i class="bi bi-plus"></i> {{ I18ns.questions.form.addBadAnswer }}
     </p>
 

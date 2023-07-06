@@ -1,0 +1,25 @@
+<div class="modal-body text-center p-5">
+  <i class="alto-badge-big alto-badge-red mt-3 mb-4 bi bi-trash3"></i>
+  <h2 class="fw-bold mb-4">
+    {{ I18ns.questions.deleteModal.title | replaceInTranslation : question?.title }}
+  </h2>
+  <p class="mb-3 alto-grey">
+    {{
+      I18ns.questions.deleteModal.subtitle
+        | replaceInTranslation : question?.programs?.length : question?.tags?.length
+    }}
+    {{ I18ns.questions.deleteModal.subtitle2 }}
+  </p>
+  <div class="row mt-6">
+    <div class="col-6">
+      <button class="btn btn-outline-secondary w-100" (click)="closeModal()">
+        {{ I18ns.shared.cancel }}
+      </button>
+    </div>
+    <div class="col-6">
+      <button class="btn btn-danger w-100" (click)="deleteQuestion()">
+        {{ I18ns.shared.delete }}
+      </button>
+    </div>
+  </div>
+</div>

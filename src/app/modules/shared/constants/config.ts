@@ -24,6 +24,13 @@ export const chartDefaultOptions: ChartOptions = {
   maintainAspectRatio: false,
   responsive: true,
   plugins: {
+    tooltip: {
+      callbacks: {
+        label(tooltipItem) {
+          return `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
+        },
+      },
+    },
     legend: {
       display: false,
       align: 'end',

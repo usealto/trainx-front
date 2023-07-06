@@ -135,11 +135,13 @@
 
   <div class="mb-4">
     <alto-search
+      data-cy="filterBySearch"
       class="float-end d-inline-block"
       (searchChange)="filterUsers({ search: $event })"
     ></alto-search>
 
     <alto-dropdown-filter
+      data-cy="filterByTeam"
       class="d-inline-block me-3"
       [data]="teams"
       [displayLabel]="'shortName'"
@@ -148,7 +150,10 @@
       (selectChange)="filterUsers({ teams: $event })"
     ></alto-dropdown-filter>
 
-    <alto-score-filter (selectChange)="filterUsers({ score: $event })"></alto-score-filter>
+    <alto-score-filter
+      data-cy="filterByScore"
+      (selectChange)="filterUsers({ score: $event })"
+    ></alto-score-filter>
   </div>
 
   <ng-container *ngIf="paginatedUsers.length > 0; else noUsers">
@@ -172,16 +177,17 @@
         <tbody>
           <tr *ngFor="let user of paginatedUsers" class="align-middle">
             <td>
-              <alto-profile-card [user]="user"></alto-profile-card>
+              <alto-profile-card data-cy="profileCard" [user]="user"></alto-profile-card>
             </td>
             <td>
-              <span class="alto-badge" [style]="user.teamId || '' | teamColor">
+              <span data-cy="memberTeamShortname" class="alto-badge" [style]="user.teamId || '' | teamColor">
                 {{ usersMap.get(user.id) }}
               </span>
             </td>
             <td>
               <div class="progress">
                 <div
+                  data-cy="scoreProgressBar"
                   class="progress-bar d-inline-block"
                   role="progressbar"
                   [style]="user.score && 'width:' + (user.score | percent : '1.0-0' : 'en-US')"

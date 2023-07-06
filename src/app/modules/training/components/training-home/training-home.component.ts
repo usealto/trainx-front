@@ -24,7 +24,7 @@ enum DoneFilter {
 }
 
 type DoneFilters = { scoreStatus?: DoneFilter; search?: string };
-type AllProgramsFilters = { score?: ScoreFilter | string; search?: string };
+type AllProgramsFilters = { progress?: ScoreFilter | string; score?: ScoreFilter | string; search?: string };
 
 @UntilDestroy()
 @Component({
@@ -118,7 +118,7 @@ export class TrainingHomeComponent implements OnInit {
   }
 
   allProgramsFilter(filters: AllProgramsFilters) {
-    let { score, search } = filters;
+    let { score, progress, search } = filters;
 
     search ??= this.allProgramsFilters.search;
     if (score === null) {
@@ -127,45 +127,35 @@ export class TrainingHomeComponent implements OnInit {
     } else {
       score ||= this.allProgramsFilters.score;
     }
-
-    this.allProgramsFilters = { search, score };
-
-    let output: TrainingCardData[] = this.allPrograms ?? [];
-    if (score) {
-      output = this.scoresService.filterByScore(
-        output.filter((p) => !p.isProgress),
-        score as ScoreFilter,
-        false,
-      );
-    }
-
-    if (search) {
-      output = output.filter((p) => p.title.includes(search ?? ''));
-    }
-
-    this.allProgramsFiltered = output;
-  }
-
-  // TODO REFACTO
-  inProgressProgramsFilter(filters: AllProgramsFilters) {
-    let { score, search } = filters;
-
-    search ??= this.allProgramsFilters.search;
-    if (score === null) {
-      score = undefined;
+    if (progress === null) {
+      progress = undefined;
     } else {
-      score ||= this.allProgramsFilters.score;
+      progress ||= this.allProgramsFilters.progress;
     }
 
-    this.allProgramsFilters = { search, score };
+    this.allProgramsFilters = { score, progress, search };
 
     let output: TrainingCardData[] = this.allPrograms ?? [];
+
+    const outputP = this.scoresService.filterByScore(
+      output.filter((p) => p.isProgress),
+      progress as ScoreFilter,
+      false,
+    );
+    const outputS = this.scoresService.filterByScore(
+      output.filter((p) => !p.isProgress),
+      score as ScoreFilter,
+      false,
+    );
+
     if (score) {
-      output = this.scoresService.filterByScore(
-        output.filter((p) => p.isProgress),
-        score as ScoreFilter,
-        false,
-      );
+      output = outputS;
+    }
+    if (progress) {
+      output = outputP;
+    }
+    if (score && progress) {
+      output = outputP.concat(outputS);
     }
 
     if (search) {

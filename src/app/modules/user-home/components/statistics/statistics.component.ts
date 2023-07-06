@@ -204,6 +204,13 @@ export class StatisticsComponent implements OnInit {
           const customChartOptions = {
             ...chartDefaultOptions,
             plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function (tooltipItem: any) {
+                    return `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
+                  },
+                },
+              },
               legend: {
                 display: true,
                 labels: { usePointStyle: true, boxWidth: 5, boxHeight: 5, pointStyle: 'circle' },
