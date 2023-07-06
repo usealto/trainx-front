@@ -268,7 +268,7 @@ export class PerformanceByThemesComponent implements OnChanges {
         scales: {
           ...customChartOptions.scales,
           x: { ...customChartOptions.scales?.['x'], grid: { display: true } },
-          y: { ...customChartOptions.scales?.['y'], grid: { display: false } },
+          // y: { ...customChartOptions.scales?.['y'], grid: { display: false } },
         },
       },
     });
