@@ -174,7 +174,9 @@
               : (chartFilters.type === 'program' ? I18ns.shared.program : I18ns.shared.tag)
         }}"
       ></i>
-      <alto-tabs
+      <!-- temporarily hidden tabs since data are not relevant -->
+
+      <!-- <alto-tabs
         class="mb-3"
         *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
         (tabChanged)="createCharts({ type: $event })"
@@ -182,9 +184,9 @@
           { label: trads.tag, value: ScoreTypeEnum.Tag },
           { label: trads.program, value: ScoreTypeEnum.Program }
         ]"
-      ></alto-tabs>
+      ></alto-tabs> -->
 
-      <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
+      <h2 class="mb-4">{{ I18ns.leadHome.globalEvolution.score }}</h2>
       <div [hidden]="!scoreCount" class="chart-container">
         <canvas id="programScoreEvol"></canvas>
       </div>
