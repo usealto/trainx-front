@@ -13,7 +13,7 @@ import {
   TagDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { combineLatest, tap } from 'rxjs';
-import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
+import { IFormBuilder, IFormControl, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { QuestionForm } from '../../../models/question.form';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
@@ -83,15 +83,18 @@ export class QuestionFormComponent implements OnInit {
         tags: this.program ? [this.program.tags?.map((t) => t.id) as string[]] : [],
         programs: this.program ? [[this.program.id]] : [],
         answerType: AnswerFormatTypeEnumApi.Text,
-        answersAccepted: this.fb.array([this.fb.control('')]),
-        answersWrong: this.fb.array([this.fb.control(''), this.fb.control(''), this.fb.control('')]),
+        answersAccepted: this.fb.array(
+          this.question ? this.createFormArray(this.question.answersAccepted.length) : [this.fb.control('')],
+        ),
+        answersWrong: this.fb.array(
+          this.question ? this.createFormArray(this.question.answersWrong.length) : [this.fb.control('')],
+        ),
         explanation: '',
         link: '',
       });
 
       if (this.question) {
         this.isEdit = true;
-
         if (this.isSubmitted) {
           this.questionForm.patchValue({
             title: this.question.title,
@@ -104,15 +107,19 @@ export class QuestionFormComponent implements OnInit {
             explanation: this.question.explanation,
             link: this.question.link,
           });
-          this.questionForm.controls.answersAccepted = this.fb.array(
-            this.question.answersAccepted.map((a) => this.fb.control(a)),
-          );
-          this.questionForm.controls.answersWrong = this.fb.array(
-            this.question.answersWrong.map((a) => this.fb.control(a)),
-          );
+          this.questionForm.controls.answersAccepted.patchValue(this.question.answersAccepted);
+          this.questionForm.controls.answersWrong.patchValue(this.question.answersWrong);
         }
       }
     }, 0);
+  }
+
+  createFormArray(size: number): IFormControl<string>[] {
+    const array = [];
+    for (let i = 0; i < size; i++) {
+      array.push(this.fob.control(''));
+    }
+    return array as IFormControl<string>[];
   }
 
   createQuestion() {
@@ -179,6 +186,19 @@ export class QuestionFormComponent implements OnInit {
   }
   addBadAnwswer() {
     this.answersWrong.push(this.fob.control(''));
+  }
+
+  removeAnswer(type: 'good' | 'bad', index: number) {
+    if (type === 'good') {
+      if (this.answersAccepted.length > 1) {
+        this.answersAccepted.removeAt(index);
+        this.questionForm.controls.answersAccepted.value?.splice(index, 1);
+      }
+    } else {
+      if (this.answersWrong.length > 1) {
+        this.answersWrong.removeAt(index);
+      }
+    }
   }
 
   // @memoize()

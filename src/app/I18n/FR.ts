@@ -68,7 +68,7 @@ export const FR = {
   },
   leadHome: {
     title: 'Bonjour ',
-    subtitle: "Retrouvez l'ensemble des statistiques de vos équipes.",
+    subtitle: "Découvrez une vue d'ensemble sur l'avancée de vos équipes.",
     comments: ['{{}} commentaire', '{{}} commentaires'],
     subtitleComment: [
       'Vos utilisateurs ont laissé {{}} nouveau commentaire.',
@@ -356,6 +356,11 @@ export const FR = {
       linkPlaceholder: 'Lien vers une ressource utile',
       remainingCharacters: 'caractères restants',
     },
+    deleteModal: {
+      title: 'Supprimer la question "{{}}"',
+      subtitle: 'Cette question est associée à {{}} programmes et {{}} tags.',
+      subtitle2: ' Êtes-vous sûr de vouloir la supprimer ? Cette action est irréversible.',
+    },
   },
   tags: {
     form: {
@@ -601,8 +606,8 @@ export const FR = {
       message:
         "Vous n'êtes pas reconnu par l'API, veuillez contacter un administrateur. Il s'agit probablement d'une erreur technique",
     },
-    Forbiden: {
-      title: 'Forbiden',
+    Forbidden: {
+      title: 'Forbidden',
       message: "Vous n'avez pas accès !",
     },
     Notfound: {
@@ -696,6 +701,8 @@ export const FR = {
         title: 'Progression',
         you: 'Vous',
         yourTeam: 'Votre équipe',
+        noData: 'Aucune donnée à afficher',
+        noDataSubtitle: "Vous n'avez pas encore de données à afficher.",
       },
     },
     teams: {

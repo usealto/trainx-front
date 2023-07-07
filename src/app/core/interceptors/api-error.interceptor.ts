@@ -88,8 +88,8 @@ export class ApiErrorInterceptor implements HttpInterceptor {
               break;
             case 403: // right problem
               apiError = {
-                message: this.translationsMessages.Forbiden.message,
-                title: this.translationsMessages.Forbiden.title,
+                message: this.translationsMessages.Forbidden.message,
+                title: this.translationsMessages.Forbidden.title,
                 details: e.error?.details ?? '',
                 level: 'error',
                 err,

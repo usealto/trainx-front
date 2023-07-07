@@ -1,15 +1,15 @@
 import { Component, Input, OnChanges, Output } from '@angular/core';
+import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
 import { combineLatest, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
-import { StatisticsService } from '../../../services/statistics.service';
+import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { StatisticsService } from '../../../services/statistics.service';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -100,10 +100,26 @@ export class PerformanceByTeamsComponent implements OnChanges {
       this.scoreEvolutionChart.destroy();
     }
 
+    const customChartOptions = {
+      ...chartDefaultOptions,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function (tooltipItem: any) {
+              const labelType = 'équipe';
+              return `${labelType} ${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
+            },
+          },
+        },
+        legend: {
+          display: false,
+        },
+      },
+    };
     this.scoreEvolutionChart = new Chart('teamScoreEvolution', {
       type: 'line',
       data: data,
-      options: chartDefaultOptions,
+      options: customChartOptions,
     });
   }
 

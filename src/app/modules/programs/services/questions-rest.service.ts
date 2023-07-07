@@ -42,4 +42,8 @@ export class QuestionsRestService {
   updateQuestion(patchQuestionRequestParams: PatchQuestionRequestParams) {
     return this.questionApi.patchQuestion(patchQuestionRequestParams).pipe(map((r) => r.data));
   }
+
+  deleteQuestion(id: string) {
+    return this.questionApi.deleteQuestion({ id });
+  }
 }

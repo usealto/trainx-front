@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable, map, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -30,6 +30,7 @@ import { QuestionFormComponent } from '../questions/question-form/question-form.
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { QuestionDeleteModalComponent } from 'src/app/modules/shared/components/question-delete-modal/question-delete-modal.component';
 
 @UntilDestroy()
 @Component({
@@ -70,7 +71,6 @@ export class ProgramsComponent implements OnInit {
   isTagProgramsLoading = true;
   tagFilters: TagFilters = { programs: [], contributors: [], search: '' };
   tagsScore = new Map<string, number>();
-
   //
 
   constructor(
@@ -79,24 +79,39 @@ export class ProgramsComponent implements OnInit {
     private readonly questionsService: QuestionsRestService,
     private readonly scoresRestServices: ScoresRestService,
     private readonly scoresServices: ScoresService,
-
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly tagRestService: TagsRestService,
     private readonly tagsService: TagsServiceService,
     public readonly teamStore: TeamStore,
     private readonly profileStore: ProfileStore,
     public readonly programsStore: ProgramsStore,
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit(): void {
     this.getQuestions();
     this.getSubmittedQuestions();
     this.getTags();
-
     this.contributors = this.profileStore.users.value.map((u) => ({
       id: u.id,
       fullname: u.firstname + ' ' + u.lastname,
     }));
+  }
+
+  deleteQuestion(question?: QuestionDtoApi) {
+    const modalRef = this.modalService.open(QuestionDeleteModalComponent, { centered: true, size: 'md' });
+    const componentInstance = modalRef.componentInstance as QuestionDeleteModalComponent;
+    componentInstance.question = question;
+    componentInstance.questionDeleted
+      .pipe(
+        switchMap(() => this.questionsService.deleteQuestion(question?.id ?? '')),
+        tap(() => {
+          modalRef.close();
+          this.getQuestions();
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
   }
 
   openQuestionForm(question?: QuestionDtoApi) {

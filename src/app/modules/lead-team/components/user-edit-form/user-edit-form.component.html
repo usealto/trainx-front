@@ -52,7 +52,13 @@
       I18ns.leadTeam.members.forms.edition.type
     }}</label>
 
-    <select *ngIf="profile.id !== user?.id" class="form-select" formControlName="type" id="type">
+    <select
+      data-cy="editMemberRole"
+      *ngIf="profile.id !== user?.id"
+      class="form-select"
+      formControlName="type"
+      id="type"
+    >
       <option value="company-user">{{ I18ns.leadTeam.members.forms.edition.standardType }}</option>
       <option value="company-admin">{{ I18ns.leadTeam.members.forms.edition.adminType }}</option>
     </select>

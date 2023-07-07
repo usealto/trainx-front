@@ -1,7 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Observable, switchMap, tap } from 'rxjs';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ScoreDtoApi,
   ScoreTimeframeEnumApi,
@@ -10,14 +8,14 @@ import {
   TeamStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
-import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { StatisticsService } from '../../../services/statistics.service';
+import { Observable, switchMap, tap } from 'rxjs';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
+import { ScoreDuration, TopFlop } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { TopFlop, TopFlopDisplay } from 'src/app/modules/shared/models/score.model';
-import { pt } from 'date-fns/locale';
+import { StatisticsService } from '../../../services/statistics.service';
 @UntilDestroy()
 @Component({
   selector: 'alto-performance-by-themes',
@@ -84,7 +82,7 @@ export class PerformanceByThemesComponent implements OnChanges {
           this.items = res.scores.sort((a, b) => a.label.localeCompare(b.label));
           let filteredItems: ScoreDtoApi[] = res.scores;
           if (this.init) {
-            this.selectedItems = this.items.slice(0, 10);
+            this.selectedItems = this.items.slice(0, 5);
           }
           if (this.selectedItems.length) {
             filteredItems = res.scores.filter((s) => this.selectedItems.some((si) => si.id === s.id));
@@ -150,14 +148,34 @@ export class PerformanceByThemesComponent implements OnChanges {
     if (this.performanceChart) {
       this.performanceChart.destroy();
     }
+    const customChartOptions = {
+      ...chartDefaultOptions,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function (tooltipItem: any) {
+              let labelType = 'tag';
+              if (type === 'programs') {
+                labelType = 'programme';
+              }
+              return `${labelType} ${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
+            },
+          },
+        },
+        legend: {
+          display: false,
+        },
+      },
+    };
     this.performanceChart = new Chart('themePerformance', {
       type: 'radar',
       data: data,
-      options: { ...chartDefaultOptions, scales: undefined },
+      options: { ...customChartOptions, scales: undefined },
     });
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
+    const type = this.activeTab === 1 ? 'tags' : 'programs';
     scores = this.scoresServices.reduceChartData(scores);
     const labels = this.statisticsServices.formatLabel(
       this.statisticsServices.aggregateDataForScores(scores[0], duration).map((d) => d.x),
@@ -223,15 +241,34 @@ export class PerformanceByThemesComponent implements OnChanges {
       this.scoreEvolutionChart.destroy();
     }
 
+    const customChartOptions = {
+      ...chartDefaultOptions,
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function (tooltipItem: any) {
+              let labelType = 'tag';
+              if (type === 'programs') {
+                labelType = 'programme';
+              }
+              return `${labelType} ${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
+            },
+          },
+        },
+        legend: {
+          display: false,
+        },
+      },
+    };
     this.scoreEvolutionChart = new Chart('themeScoreEvolution', {
       type: 'line',
       data: data,
       options: {
-        ...chartDefaultOptions,
+        ...customChartOptions,
         scales: {
-          ...chartDefaultOptions.scales,
-          x: { ...chartDefaultOptions.scales?.['x'], grid: { display: true } },
-          y: { ...chartDefaultOptions.scales?.['y'], grid: { display: false } },
+          ...customChartOptions.scales,
+          x: { ...customChartOptions.scales?.['x'], grid: { display: true } },
+          y: { ...customChartOptions.scales?.['y'], grid: { display: false } },
         },
       },
     });

@@ -55,6 +55,11 @@
   color: var(--bs-primary);
   background-color: #d1e9ff;
 }
+.alto-badge-red {
+  @extend .alto-badge-big;
+  color: #d92d20;
+  background-color: #fee4e2;
+}
 
 .subtitles {
   color: var(--alto-text-second-color);

@@ -1,5 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { NgbModal, NgbModalRef, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   GetNextQuestionsForUserRequestParams,
   GuessSourceEnumApi,
@@ -12,6 +14,11 @@ import { Subscription, combineLatest, filter, map, of, switchMap, tap, timer } f
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
+import { QuestionSubmittedFormComponent } from 'src/app/modules/programs/components/questions/question-submitted-form/question-submitted-form.component';
+import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
+import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
+import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
+import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { GuessesRestService } from '../../services/guesses-rest.service';
 import { ExplanationComponent } from '../explanation/explanation.component';
@@ -21,14 +28,6 @@ interface AnswerCard {
   selected: boolean;
   type: '' | 'selected' | 'correct' | 'wrong';
 }
-
-import { ActivatedRoute, Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { QuestionSubmittedFormComponent } from 'src/app/modules/programs/components/questions/question-submitted-form/question-submitted-form.component';
-import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
-import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
-import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
-import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 
 @UntilDestroy()
 @Component({

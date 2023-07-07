@@ -38,6 +38,7 @@
     "@popperjs/core": "^2.11.6",
     "@usealto/sdk-ts-angular": "1.0.202306300927-dev",
     "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.10.5",
     "chart.js": "^4.2.1",
     "date-fns": "^2.29.3",
     "memoizee": "^0.4.15",
@@ -61,6 +62,7 @@
     "@types/memoizee": "^0.4.8",
     "@typescript-eslint/eslint-plugin": "5.48.2",
     "@typescript-eslint/parser": "5.48.2",
+    "cypress": "latest",
     "eslint": "^8.33.0",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
@@ -68,7 +70,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "typescript": "~4.9.4",
-    "cypress": "latest"
+    "typescript": "~4.9.4"
   }
 }

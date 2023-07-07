@@ -33,6 +33,7 @@ export class StatisticsComponent implements OnInit {
   programsCount = 0;
   finishedProgramsCountProgression = 0;
   userProgressionChart?: Chart;
+  hasData = true;
 
   constructor(
     private readonly profileStore: ProfileStore,
@@ -146,8 +147,10 @@ export class StatisticsComponent implements OnInit {
         tap(([usersScores, teamsScores]) => {
           //USER SCORES: reduce scores to remove all first values without data
           const rawUserScores = usersScores.scores.find((u) => u.id === this.profileStore.user.value.id);
-          if (!rawUserScores) return;
-
+          if (!rawUserScores) {
+            this.hasData = false;
+            return;
+          }
           const reducedUserScores = this.scoresService.reduceChartData([
             rawUserScores ?? ({} as ScoreDtoApi),
           ]);
@@ -199,6 +202,13 @@ export class StatisticsComponent implements OnInit {
           const customChartOptions = {
             ...chartDefaultOptions,
             plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function (tooltipItem: any) {
+                    return `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
+                  },
+                },
+              },
               legend: {
                 display: true,
                 labels: { usePointStyle: true, boxWidth: 5, boxHeight: 5, pointStyle: 'circle' },
