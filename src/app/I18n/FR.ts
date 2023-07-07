@@ -90,6 +90,7 @@ export const FR = {
     graph: {
       period: 'Période',
       score: 'Score (%)',
+      tagFilter: 'Tags',
     },
     globalEvolution: {
       title: 'Évolution globale',
