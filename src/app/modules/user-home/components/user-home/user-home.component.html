@@ -106,7 +106,7 @@
               </td>
               <td class="text-end pe-4">
                 <p class="d-inline-block">
-                  {{ (user.score ?? '0') + ' %' }}
+                  {{ (user.score ? user.score : 0) | percent }}
                 </p>
                 <alto-progression-badge
                   class="ms-3 d-inline-block"

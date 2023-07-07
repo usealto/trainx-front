@@ -33,7 +33,7 @@ export class StatisticsComponent implements OnInit {
   programsCount = 0;
   finishedProgramsCountProgression = 0;
   userProgressionChart?: Chart;
-  hasData = false;
+  hasData = true;
 
   constructor(
     private readonly profileStore: ProfileStore,
@@ -151,8 +151,6 @@ export class StatisticsComponent implements OnInit {
             this.hasData = false;
             return;
           }
-          this.hasData = true;
-
           const reducedUserScores = this.scoresService.reduceChartData([
             rawUserScores ?? ({} as ScoreDtoApi),
           ]);
