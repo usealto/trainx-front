@@ -45,7 +45,7 @@
       (durationSelected)="getGlobalScore({ duration: $event })"
     ></alto-time-picker>
     <alto-dropdown-filter
-      class="text-start"
+      class="text-start position-relative"
       [data]="teamStore.teams.value"
       [displayLabel]="'shortName'"
       [returnValue]="'id'"
@@ -175,14 +175,14 @@
         }}"
       ></i>
       <alto-dropdown-filter
-      class="float-end mx-2 float-end me-4"
-      [data]="programsStore.tags.value"
-      [displayLabel]="'name'"
-      [placeholder]="I18ns.leadHome.graph.tagFilter"
-      [returnValue]="'id'"
-      [selectedItems]="chartFilters.tags!"
-      (selectChange)="createCharts({ tags: $event })"
-    ></alto-dropdown-filter>
+        class="float-end mx-2 float-end me-4"
+        [data]="programsStore.tags.value"
+        [displayLabel]="'name'"
+        [placeholder]="I18ns.leadHome.graph.tagFilter"
+        [returnValue]="'id'"
+        [selectedItems]="chartFilters.tags!"
+        (selectChange)="createCharts({ tags: $event })"
+      ></alto-dropdown-filter>
       <!-- temporarily hidden tabs since data are not relevant -->
 
       <!-- <alto-tabs
