@@ -341,6 +341,11 @@ export class ProgramsComponent implements OnInit {
     return programList;
   }
 
+  resetFilters() {
+    // console.log('to be coded');
+    this.getQuestions();
+  }
+
   @memoize()
   getTagPrograms(id: string) {
     return this.tagPrograms.get(id) ?? [];

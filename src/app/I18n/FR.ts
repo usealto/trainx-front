@@ -161,6 +161,12 @@ export const FR = {
       createQuestion: 'Créer',
       remainingCharacters: 'caractères restants',
 
+      placeholder: {
+        noData: 'Aucun résultat correspondant',
+        noDataSubtitle:
+          "Votre recherche n'a donné aucun résultat, essayez une autre formulation ou d'autres filtres.",
+        createQuestionPlaceholder: 'Créer une question',
+      },
       table: {
         question: 'Question',
         score: 'Score',

@@ -85,7 +85,6 @@
       ></alto-search>
     </div>
   </div>
-
   <ng-container *ngIf="questionsCount > 0; else noQuestions">
     <div class="table-panel">
       <table class="table">
@@ -152,9 +151,17 @@
     </div>
   </ng-container>
   <ng-template #noQuestions>
-    <div class="panel text-center">
-      <h2>{{ I18ns.shared.noData }}</h2>
-      <p>{{ I18ns.shared.noDataSubtitle }}</p>
+    <div class="panel text-center p-6 mb-4">
+      <i class="alto-badge-big fs-5 bi bi-search"></i>
+      <h2 class="my-4">{{ I18ns.programs.questions.placeholder.noData }}</h2>
+      <p class="alto-grey mb-4">{{ I18ns.programs.questions.placeholder.noDataSubtitle }}</p>
+      <button class="btn btn-outline-secondary me-2" (click)="resetFilters()">
+        <i class="bi bi-arrow-repeat"></i>
+        {{ I18ns.training.donePrograms.resetFilters }}
+      </button>
+      <button type="button" class="btn btn-primary ms-2" (click)="openQuestionForm()">
+        <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.placeholder.createQuestionPlaceholder }}
+      </button>
     </div>
   </ng-template>
 </div>
