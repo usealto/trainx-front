@@ -276,8 +276,7 @@ export class LeadHomeComponent implements OnInit {
           //global score
           const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;
 
-          this.globalScore = 0;
-          //  current.reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
+          this.globalScore = current.reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
           this.globalScoreProgression = previousScore
             ? (this.globalScore - previousScore) / previousScore
             : 0;
