@@ -80,6 +80,7 @@ export const FR = {
       title: 'Statistiques',
       globalScore: 'Score global',
       globalScoreToolTip: 'Score moyen des questions répondues par vos membres',
+      globalScorePlaceholder: '0%',
       averageCompletion: 'Complétion moyenne',
       averageCompletionToolTip: 'Nombre de programmes réussis sur le nombre de programmes assignés',
       activeMembers: 'Membres réguliers',
