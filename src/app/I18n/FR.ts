@@ -111,6 +111,9 @@ export const FR = {
       title: 'Programmes en cours',
       involvement: 'Participation',
       progress: 'Avancement',
+      noData: 'Aucun programme en cours',
+      noDataSubtitle:
+        'Créez votre premier programme et assignez le à vos équipes en quelques minutes seulement',
       score: 'Score',
       filters: {
         team: 'Équipe',

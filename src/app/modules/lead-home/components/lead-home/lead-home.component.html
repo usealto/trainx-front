@@ -69,9 +69,11 @@
           ngbTooltip="{{ I18ns.leadHome.statistics.globalScoreToolTip }}"
         ></i>
       </p>
-      <h1 class="d-inline-block" *ngIf="globalScore; else noGlobalScore">
-        {{ globalScore | percent }}
-      </h1>
+      <ng-container *ngIf="globalScore; else noGlobalScore">
+        <h1 class="d-inline-block">
+          {{ globalScore | percent }}
+        </h1>
+      </ng-container>
       <ng-template #noGlobalScore>
         <h1 class="d-inline-block">
           {{ I18ns.leadHome.statistics.globalScorePlaceholder }}
