@@ -158,7 +158,7 @@
     </div>
 
     <alto-training-cards-list [pageSize]="9" [data]="allProgramsFiltered">
-      <div class="panel text-center p-6 mb-4" *ngIf="allProgramsFiltered?.length !== 0; else noResult">
+      <div class="panel text-center p-6 mb-4" *ngIf="allPrograms?.length === 0; else noResult">
         <i class="alto-badge-big fs-5 bi bi-file-text"></i>
         <h2 class="my-4">{{ I18ns.training.donePrograms.noData }}</h2>
         <p class="alto-grey">{{ I18ns.training.donePrograms.noDataSubtitle }}</p>
