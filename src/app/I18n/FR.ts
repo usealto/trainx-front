@@ -315,10 +315,11 @@ export const FR = {
         title: 'Équipes',
         subtitle: "Découvrez les scores moyens et axes d'amélioration par équipe.",
         columns: {
-          name: 'Nom',
-          global: 'Global',
+          team: 'Équipe',
+          globalScore: 'Score global',
           lessMasteredPrograms: 'Programmes les moins maitrîsés',
           lessMasteredTags: 'Tags les moins maitrîsés',
+          scoreEvolution: 'Évolution du score',
         },
       },
     },
