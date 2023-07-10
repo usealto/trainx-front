@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { IdDtoApi, PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
+import { PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, filter, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -10,6 +10,7 @@ import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { TeamForm } from '../../model/team.form';
 import { TeamsRestService } from '../../services/teams-rest.service';
+
 @Component({
   selector: 'alto-team-form',
   templateUrl: './team-form.component.html',
@@ -88,10 +89,7 @@ export class TeamFormComponent implements OnInit {
               this.updateTeamInfos(team, programs, invitationEmails);
             }
           }),
-          tap((team) => {
-            this.teamsRestService.resetCache();
-            this.activeOffcanvas.close();
-          }),
+          tap(() => this.activeOffcanvas.dismiss()),
         )
         .subscribe();
     } else {
@@ -147,17 +145,19 @@ export class TeamFormComponent implements OnInit {
       }
     });
 
-    formProgs.forEach((p) => {
-      if (!teamProgs.find((po) => po.id === p.id) && this.team) {
-        // To Add
-        output.push(
-          this.programService.updateProgram(p.id, {
-            teamIds: [...p.teams, this.team].map((t) => ({ id: t.id })),
-          }),
-        );
-        this.programService.resetCache();
-      }
-    });
+    if (formProgs) {
+      formProgs.forEach((p) => {
+        if (!teamProgs.find((po) => po.id === p.id) && this.team) {
+          // To Add
+          output.push(
+            this.programService.updateProgram(p.id, {
+              teamIds: [...p.teams, this.team].map((t) => ({ id: t.id })),
+            }),
+          );
+          this.programService.resetCache();
+        }
+      });
+    }
 
     members?.forEach((member) => {
       if (member.teamId !== team.id) {
