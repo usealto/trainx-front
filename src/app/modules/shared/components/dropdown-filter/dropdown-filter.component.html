@@ -30,7 +30,7 @@
       [ngClass]="{
         'score-filter-pill-green': item[displayLabel].includes('>'),
         'score-filter-pill-blue': item[displayLabel].includes('\<'),
-        'alto-badge': item[displayLabel]
+        'alto-badge': item[displayLabel].includes('>') || item[displayLabel].includes('\<')
       }"
     >
       {{ item[displayLabel] }}
