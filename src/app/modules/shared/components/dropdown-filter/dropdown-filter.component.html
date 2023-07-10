@@ -24,7 +24,15 @@
     <span *ngIf="isColored" class="alto-badge badge-option" [style]="item.id | teamColor">
       {{ item[displayLabel] }}
     </span>
-    <span *ngIf="!isColored" class="me-4">
+    <span
+      *ngIf="!isColored"
+      class="me-4"
+      [ngClass]="{
+        'score-filter-pill-green': item[displayLabel].includes('>'),
+        'score-filter-pill-blue': item[displayLabel].includes('\<'),
+        'alto-badge': item[displayLabel]
+      }"
+    >
       {{ item[displayLabel] }}
     </span>
     <i class="bi bi-check-circle-fill"></i>
