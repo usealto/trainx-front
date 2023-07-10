@@ -118,7 +118,7 @@ export class LeadHomeComponent implements OnInit {
         untilDestroyed(this),
       )
       .subscribe();
-    this.chartFilters.tags = this.programsStore.tags.value.slice(0, 5).map((tag) => tag.id);
+    this.chartFilters.tags = this.programsStore.tags.value.slice(0, 3).map((tag) => tag.id);
     this.createCharts(this.chartFilters);
   }
 
