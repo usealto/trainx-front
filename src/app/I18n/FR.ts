@@ -97,6 +97,7 @@ export const FR = {
       title: 'Évolution globale',
       score: 'Score moyen',
       chartToolTip: 'Évolution du score d’un {{}} en fonction du temps',
+      chartSubtitle: 'Évolution du niveau de maitrise global des tags de vos équipes',
       tabs: {
         program: 'Programmes',
         tag: 'Tags',
