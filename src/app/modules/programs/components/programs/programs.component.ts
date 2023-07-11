@@ -341,10 +341,6 @@ export class ProgramsComponent implements OnInit {
     return programList;
   }
 
-  resetFilters() {
-    this.getQuestions((this.questionFilters = {}));
-  }
-
   @memoize()
   getTagPrograms(id: string) {
     return this.tagPrograms.get(id) ?? [];

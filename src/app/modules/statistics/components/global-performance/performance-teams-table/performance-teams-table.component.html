@@ -36,12 +36,13 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col" class="w-20">{{ I18ns.statistics.globalPerformance.teamsTable.columns.team }}</th>
+        <th scope="col" class="w-20">{{ I18ns.statistics.globalPerformance.teamsTable.columns.name }}</th>
         <th scope="col" class="w-15 text-center">
-          {{ I18ns.statistics.globalPerformance.teamsTable.columns.globalScore }}
-        </th>
-        <th scope="col" class="w-15 text-center">
-          {{ I18ns.statistics.globalPerformance.teamsTable.columns.scoreEvolution }}
+          {{ I18ns.statistics.globalPerformance.teamsTable.columns.global }}
+          <i
+            class="ms-2 alto-grey bi bi-question-circle"
+            ngbTooltip="{{ I18ns.statistics.perTeams.globalTooltip }}"
+          ></i>
         </th>
         <th scope="col" class="w-35">
           {{ I18ns.statistics.globalPerformance.teamsTable.columns.lessMasteredPrograms }}
@@ -57,9 +58,7 @@
           {{ team.label }}
         </td>
         <td class="text-center">
-          {{ team.score | percent }}
-        </td>
-        <td class="text-center">
+          {{ team.score + ' %' }}
           <alto-progression-badge
             class="d-inline-block ms-3"
             [score]="getTeamPreviousScore(team)"

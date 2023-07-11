@@ -1,5 +1,4 @@
 import { ChartOptions } from 'chart.js';
-import Chart from 'chart.js/auto';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 
 //! Changing this constant will change every charts using it!
@@ -60,23 +59,10 @@ export const chartDefaultOptions: ChartOptions = {
       max: 105,
       ticks: {
         stepSize: 5,
-        callback: (val, index) => {
-          // No label for values other than multiples of 10
-          return +val % 10 === 0 ? val : '';
-        },
       },
       title: {
         display: true,
         text: I18ns.leadHome.graph.score,
-      },
-      grid: {
-        color: (context) => {
-          // No grid line for values other than multiples of 10
-          if (context.tick.value % 10 === 0) {
-            return Chart.defaults.borderColor.toString();
-          }
-          return '#00000000';
-        },
       },
     },
   },

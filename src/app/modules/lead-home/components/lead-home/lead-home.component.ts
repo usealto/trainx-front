@@ -17,7 +17,6 @@ import { ChallengesRestService } from 'src/app/modules/challenges/services/chall
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
@@ -52,12 +51,7 @@ export class LeadHomeComponent implements OnInit {
     type: ScoreTypeEnumApi.Team,
     teams: [],
   };
-  chartFilters: ChartFilters = {
-    duration: ScoreDuration.Trimester,
-    type: ScoreTypeEnumApi.Tag,
-    team: '',
-    tags: [],
-  };
+  chartFilters: ChartFilters = { duration: ScoreDuration.Trimester, type: ScoreTypeEnumApi.Tag, team: '' };
   scoreCount = 0;
 
   commentsCount = 0;
@@ -94,7 +88,6 @@ export class LeadHomeComponent implements OnInit {
     private readonly statisticsServices: StatisticsService,
     public readonly teamStore: TeamStore,
     public readonly profileStore: ProfileStore,
-    public readonly programsStore: ProgramsStore,
   ) {}
 
   ngOnInit(): void {
@@ -118,7 +111,7 @@ export class LeadHomeComponent implements OnInit {
         untilDestroyed(this),
       )
       .subscribe();
-    this.chartFilters.tags = this.programsStore.tags.value.slice(0, 3).map((tag) => tag.id);
+
     this.createCharts(this.chartFilters);
   }
 
@@ -126,12 +119,10 @@ export class LeadHomeComponent implements OnInit {
     duration = this.chartFilters.duration,
     type = this.chartFilters.type ?? ScoreTypeEnumApi.Program,
     team = this.chartFilters.team,
-    tags = this.chartFilters.tags,
   }: ChartFilters) {
     this.chartFilters.duration = duration;
     this.chartFilters.type = type;
     this.chartFilters.team = team;
-    this.chartFilters.tags = tags;
     this.topFlop(this.topFlopProgramTab);
     this.topFlop(this.topFlopTeamTab);
 
@@ -144,12 +135,8 @@ export class LeadHomeComponent implements OnInit {
         tap(({ scores }) => (this.scoreCount = scores.length)),
         filter(() => !!this.scoreCount),
         tap(({ scores }) => {
-          //temp: manual filter chart by tags until backend updates
-          if (tags && tags.length > 0) {
-            scores = scores.filter((s) => tags.some((t) => s.id.includes(t)));
-          }
-
           scores = this.scoreService.reduceChartData(scores);
+
           const aggregateData = this.statisticsServices.aggregateDataForScores(
             scores[0],
             duration as ScoreDuration,
@@ -274,9 +261,10 @@ export class LeadHomeComponent implements OnInit {
         ),
         tap(([current, previous, usersStats, previousUsersStats]) => {
           //global score
-          const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;
+          const previousScore =
+            previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length / 100;
 
-          this.globalScore = current.reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
+          this.globalScore = current.reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length / 100;
           this.globalScoreProgression = previousScore
             ? (this.globalScore - previousScore) / previousScore
             : 0;

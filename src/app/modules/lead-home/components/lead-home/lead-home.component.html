@@ -45,7 +45,7 @@
       (durationSelected)="getGlobalScore({ duration: $event })"
     ></alto-time-picker>
     <alto-dropdown-filter
-      class="text-start position-relative"
+      class="text-start"
       [data]="teamStore.teams.value"
       [displayLabel]="'shortName'"
       [returnValue]="'id'"
@@ -69,16 +69,7 @@
           ngbTooltip="{{ I18ns.leadHome.statistics.globalScoreToolTip }}"
         ></i>
       </p>
-      <ng-container *ngIf="globalScore; else noGlobalScore">
-        <h1 class="d-inline-block">
-          {{ globalScore | percent }}
-        </h1>
-      </ng-container>
-      <ng-template #noGlobalScore>
-        <h1 class="d-inline-block">
-          {{ I18ns.leadHome.statistics.globalScorePlaceholder }}
-        </h1>
-      </ng-template>
+      <h1 class="d-inline-block">{{ globalScore | percent }}</h1>
       <alto-progression-badge
         class="float-end mt-2"
         [score]="globalScoreProgression"
@@ -159,7 +150,7 @@
       (durationSelected)="createCharts({ duration: $event })"
     ></alto-time-picker>
     <alto-dropdown-filter
-      class="text-start position-relative"
+      class="text-start"
       [data]="teamStore.teams.value"
       [displayLabel]="'shortName'"
       [returnValue]="'id'"
@@ -175,26 +166,15 @@
   <!-- CHARTS -->
   <div class="col-6">
     <div class="panel h-100">
-      <!-- <i
+      <i
         class="fs-5 alto-grey bi bi-question-circle float-end"
         ngbTooltip="{{
           I18ns.leadHome.globalEvolution.chartToolTip
             | replaceInTranslation
               : (chartFilters.type === 'program' ? I18ns.shared.program : I18ns.shared.tag)
         }}"
-      ></i> -->
-      <alto-dropdown-filter
-        class="float-end mx-2 float-end me-2 mt-2"
-        [data]="programsStore.tags.value"
-        [displayLabel]="'name'"
-        [placeholder]="I18ns.leadHome.graph.tagFilter"
-        [returnValue]="'id'"
-        [selectedItems]="chartFilters.tags!"
-        (selectChange)="createCharts({ tags: $event })"
-      ></alto-dropdown-filter>
-      <!-- temporarily hidden tabs since data are not relevant -->
-
-      <!-- <alto-tabs
+      ></i>
+      <alto-tabs
         class="mb-3"
         *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
         (tabChanged)="createCharts({ type: $event })"
@@ -202,10 +182,9 @@
           { label: trads.tag, value: ScoreTypeEnum.Tag },
           { label: trads.program, value: ScoreTypeEnum.Program }
         ]"
-      ></alto-tabs> -->
+      ></alto-tabs>
 
       <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
-      <p class="alto-grey mb-4">{{I18ns.leadHome.globalEvolution.chartSubtitle}}</p>
       <div [hidden]="!scoreCount" class="chart-container">
         <canvas id="programScoreEvol"></canvas>
       </div>
