@@ -185,7 +185,7 @@ export class LeadTeamComponent implements OnInit {
     });
 
     canvasRef.componentInstance.team = team;
-    canvasRef.closed.pipe(tap(() => this.loadData())).subscribe();
+    canvasRef.componentInstance.teamChanged.pipe(tap(() => this.loadData())).subscribe();
   }
 
   openUserEditionForm(user: UserDtoApi) {
