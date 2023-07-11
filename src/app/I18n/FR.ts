@@ -418,7 +418,7 @@ export const FR = {
         name: 'Nom',
         team: 'Équipe',
         averageScore: 'Score moyen',
-        averageScoreTooltip: 'Score moyen sur 30j',
+        averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         questionsPerMonth: 'Questions sur 30j',
         questionsPerMonthTooltip:
           'Nombre de questions répondues sur les 30 derniers jours et variation sur la dernière période',
@@ -449,7 +449,7 @@ export const FR = {
         usersCount: 'Nombre de membres',
         users: ['Aucun', '{{}}', '{{}}'],
         averageScore: 'Score moyen',
-        averageScoreTooltip: 'Score moyen sur 30j',
+        averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         creationDate: 'Date de création',
       },
       form: {
