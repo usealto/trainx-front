@@ -80,6 +80,7 @@ export const FR = {
       title: 'Statistiques',
       globalScore: 'Score global',
       globalScoreToolTip: 'Score moyen des questions répondues par vos membres',
+      globalScorePlaceholder: '0%',
       averageCompletion: 'Complétion moyenne',
       averageCompletionToolTip: 'Nombre de programmes réussis sur le nombre de programmes assignés',
       activeMembers: 'Membres réguliers',
@@ -90,11 +91,13 @@ export const FR = {
     graph: {
       period: 'Période',
       score: 'Score (%)',
+      tagFilter: 'Tags',
     },
     globalEvolution: {
       title: 'Évolution globale',
       score: 'Score moyen',
       chartToolTip: 'Évolution du score d’un {{}} en fonction du temps',
+      chartSubtitle: 'Évolution du niveau de maitrise global des tags de vos équipes',
       tabs: {
         program: 'Programmes',
         tag: 'Tags',
@@ -109,6 +112,9 @@ export const FR = {
       title: 'Programmes en cours',
       involvement: 'Participation',
       progress: 'Avancement',
+      noData: 'Aucun programme en cours',
+      noDataSubtitle:
+        'Créez votre premier programme et assignez le à vos équipes en quelques minutes seulement',
       score: 'Score',
       filters: {
         team: 'Équipe',
@@ -156,6 +162,12 @@ export const FR = {
       createQuestion: 'Créer',
       remainingCharacters: 'caractères restants',
 
+      placeholder: {
+        noData: 'Aucun résultat correspondant',
+        noDataSubtitle:
+          "Votre recherche n'a donné aucun résultat, essayez une autre formulation ou d'autres filtres.",
+        createQuestionPlaceholder: 'Créer une question',
+      },
       table: {
         question: 'Question',
         score: 'Score',
@@ -314,10 +326,11 @@ export const FR = {
         title: 'Équipes',
         subtitle: "Découvrez les scores moyens et axes d'amélioration par équipe.",
         columns: {
-          name: 'Nom',
-          global: 'Global',
+          team: 'Équipe',
+          globalScore: 'Score global',
           lessMasteredPrograms: 'Programmes les moins maitrîsés',
           lessMasteredTags: 'Tags les moins maitrîsés',
+          scoreEvolution: 'Évolution du score',
         },
       },
     },
@@ -405,6 +418,7 @@ export const FR = {
         name: 'Nom',
         team: 'Équipe',
         averageScore: 'Score moyen',
+        averageScoreTooltip: 'Score moyen sur 30j',
         questionsPerMonth: 'Questions sur 30j',
         questionsPerMonthTooltip:
           'Nombre de questions répondues sur les 30 derniers jours et variation sur la dernière période',
@@ -435,6 +449,7 @@ export const FR = {
         usersCount: 'Nombre de membres',
         users: ['Aucun', '{{}}', '{{}}'],
         averageScore: 'Score moyen',
+        averageScoreTooltip: 'Score moyen sur 30j',
         creationDate: 'Date de création',
       },
       form: {

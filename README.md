@@ -66,3 +66,17 @@ Run `ng generate component component-name` to generate a new component. You can 
 Using Cypress
 
 `npm run e2e`
+
+## Push to Staging
+
+Merge `develop` branch into `admin`
+
+## Push to Prod
+
+- Create a tag with '3.x.x' and push it
+- Create a pull request to `main` with title 'v3.x.x' and merge it
+
+## Hotfix
+
+- Create a commit on `main` with the hotfix
+- Make a 'git cherry pick' to bring the hot fix on `develop`

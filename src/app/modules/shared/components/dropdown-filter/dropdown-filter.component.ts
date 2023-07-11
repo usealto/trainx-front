@@ -15,6 +15,7 @@ export class DropdownFilterComponent {
   @Input() multiple = true;
   @Input() selectedItems: any[] = [];
   @Input() position: DropdownPosition = 'auto';
+  @Input() ngClass: string | any;
 
   @Output() selectChange = new EventEmitter<any>();
 

@@ -44,7 +44,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
         tap(([current]) => {
           this.teams = current.scores;
           if (!this.selectedTeams.length) {
-            this.selectedTeams = current.scores.slice(0, 5);
+            this.selectedTeams = current.scores.slice(0, 3);
           }
         }),
         tap(([current, previous]) => {
