@@ -204,6 +204,8 @@ export const FR = {
         score: 'Score',
         author: 'Créé par',
         associatedPrograms: 'Programmes associés',
+        associatedQuestions: 'Questions associées',
+        questions: 'questions'
       },
       filters: {
         programs: 'Programmes',

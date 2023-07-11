@@ -245,6 +245,7 @@
           <tr>
             <th scope="col" class="w-30">{{ I18ns.programs.tags.table.name }}</th>
             <th scope="col" class="w-25">{{ I18ns.programs.tags.table.score }}</th>
+            <th scope="col" class="w-30">{{ I18ns.programs.tags.table.associatedQuestions }}</th>
             <th class="text-center" scope="col">{{ I18ns.programs.tags.table.author }}</th>
             <th class="w-5"></th>
           </tr>
@@ -255,6 +256,11 @@
             <td class="w-5">
               <span class="alto-score" [class]="(getTagScore(tag.id) || 0) * 100 | pillColor">
                 {{ getTagScore(tag.id) | percent }}
+              </span>
+            </td>
+            <td>
+              <span class="alto-badge">
+                {{ tag.questionsCount }} {{ I18ns.programs.tags.table.questions }}
               </span>
             </td>
             <td class="w-10 text-center">
