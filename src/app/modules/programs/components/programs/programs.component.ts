@@ -342,8 +342,7 @@ export class ProgramsComponent implements OnInit {
   }
 
   resetFilters() {
-    // console.log('to be coded');
-    this.getQuestions();
+    this.getQuestions((this.questionFilters = {}));
   }
 
   @memoize()
