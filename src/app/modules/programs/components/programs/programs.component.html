@@ -91,10 +91,16 @@
         <thead>
           <tr *ngVar="I18ns.programs.questions.table as headers">
             <th scope="col">{{ headers.question }}</th>
-            <th scope="col">{{ headers.score }}</th>
+            <th scope="col" class="w-10">
+              {{ headers.score
+              }}<i
+                class="bi bi-question-circle ms-2"
+                ngbTooltip="{{ I18ns.programs.questions.table.scoreToolTip }}"
+              ></i>
+            </th>
             <th data-cy="questionsTableTagCol">{{ headers.tags }}</th>
             <th data-cy="questionsTableProgramCol">{{ headers.programs }}</th>
-            <th data-cy="questionsTableContributorCol" class="text-center">{{ headers.author }}</th>
+            <th data-cy="questionsTableContributorCol" class="text-center w-10">{{ headers.author }}</th>
             <th></th>
             <th></th>
           </tr>
@@ -244,7 +250,13 @@
         <thead>
           <tr>
             <th scope="col" class="w-30">{{ I18ns.programs.tags.table.name }}</th>
-            <th scope="col" class="w-25">{{ I18ns.programs.tags.table.score }}</th>
+            <th scope="col" class="w-25">
+              {{ I18ns.programs.tags.table.score
+              }}<i
+                class="bi bi-question-circle ms-2"
+                ngbTooltip="{{ I18ns.programs.tags.table.scoreToolTip }}"
+              ></i>
+            </th>
             <th class="text-center" scope="col">{{ I18ns.programs.tags.table.author }}</th>
             <th class="w-5"></th>
           </tr>
