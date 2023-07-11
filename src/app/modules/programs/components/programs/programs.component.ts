@@ -194,7 +194,7 @@ export class ProgramsComponent implements OnInit {
     return this.scoresRestServices
       .getScores({
         type: ScoreTypeEnumApi.Question,
-        duration: ScoreDuration.Year,
+        duration: ScoreDuration.Month,
         ids,
       })
       .pipe(
@@ -214,7 +214,7 @@ export class ProgramsComponent implements OnInit {
     return this.scoresRestServices
       .getScores({
         type: ScoreTypeEnumApi.Tag,
-        duration: ScoreDuration.Year,
+        duration: ScoreDuration.Month,
         ids,
       })
       .pipe(
