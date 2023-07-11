@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
@@ -19,6 +19,7 @@ import { TeamsRestService } from '../../services/teams-rest.service';
 export class TeamFormComponent implements OnInit {
   I18ns = I18ns;
   @Input() team?: TeamDtoApi;
+  @Output() teamChanged?: EventEmitter<TeamDtoApi> = new EventEmitter<TeamDtoApi>();
 
   private fb: IFormBuilder = this.fob;
 
@@ -86,10 +87,14 @@ export class TeamFormComponent implements OnInit {
         .pipe(
           tap((team) => {
             if (team) {
+              this.teamsRestService.resetCache();
               this.updateTeamInfos(team, programs, invitationEmails);
             }
           }),
-          tap(() => this.activeOffcanvas.dismiss()),
+          tap((team) => {
+            this.teamChanged?.emit(team);
+            this.activeOffcanvas.dismiss();
+          }),
         )
         .subscribe();
     } else {
@@ -113,7 +118,10 @@ export class TeamFormComponent implements OnInit {
               }
               return of(null);
             }),
-            tap((res) => {
+            tap((team) => {
+              if(team) {
+                this.teamChanged?.emit(team[0]) ;
+              }
               this.activeOffcanvas.close();
             }),
           )
