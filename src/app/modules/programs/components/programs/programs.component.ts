@@ -18,8 +18,6 @@ import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { QuestionDeleteModalComponent } from 'src/app/modules/shared/components/question-delete-modal/question-delete-modal.component';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { ScoreDuration, ScoreFilter } from '../../../shared/models/score.model';
 import { QuestionFilters } from '../../models/question.model';
 import { TagFilters } from '../../models/tag.model';
