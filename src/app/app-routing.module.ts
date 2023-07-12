@@ -27,6 +27,7 @@ const routes: Routes = [
         path: AltoRoutes.user,
         canActivate: [canHaveWebAccess],
         children: [
+          { path: '', redirectTo: AltoRoutes.userHome, pathMatch: 'full' },
           {
             path: AltoRoutes.userHome,
             loadChildren: () => import('./modules/user-home/user-home.module').then((m) => m.UserHomeModule),
@@ -55,6 +56,7 @@ const routes: Routes = [
           appData: leadResolver,
         },
         children: [
+          { path: '', redirectTo: AltoRoutes.leadHome, pathMatch: 'full' },
           {
             path: AltoRoutes.leadHome,
             loadChildren: () => import('./modules/lead-home/lead-home.module').then((m) => m.LeadHomeModule),
