@@ -164,9 +164,13 @@ export const FR = {
 
       placeholder: {
         noData: 'Aucun résultat correspondant',
+        noQuestion: 'Aucune question disponible',
         noDataSubtitle:
           "Votre recherche n'a donné aucun résultat, essayez une autre formulation ou d'autres filtres.",
+        noQuestionSubtitle:
+          'Créez, ou importez, vos premières questions et assignez à des programmes ou des tags existants.',
         createQuestionPlaceholder: 'Créer une question',
+        importQuestionPlaceholder: 'Importer des questions',
       },
       table: {
         question: 'Question',
