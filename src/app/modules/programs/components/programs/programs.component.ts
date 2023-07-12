@@ -18,7 +18,7 @@ import {
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { QuestionFilters } from '../../models/question.model';
-import { ScoreDuration } from '../../../shared/models/score.model';
+import { ScoreDuration, ScoreFilter } from '../../../shared/models/score.model';
 import { TagFilters } from '../../models/tag.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
@@ -31,7 +31,11 @@ import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { QuestionDeleteModalComponent } from 'src/app/modules/shared/components/question-delete-modal/question-delete-modal.component';
+import { TagDeleteModalComponent } from 'src/app/modules/shared/components/tag-delete-modal/tag-delete-modal.component';
 
+interface TagDisplay extends TagDtoApi {
+  score?: number;
+}
 @UntilDestroy()
 @Component({
   selector: 'alto-programs',
@@ -69,7 +73,7 @@ export class ProgramsComponent implements OnInit {
   isTagsLoading = true;
   tagPrograms = new Map<string, string[]>();
   isTagProgramsLoading = true;
-  tagFilters: TagFilters = { programs: [], contributors: [], search: '' };
+  tagFilters: TagFilters = { programs: [], contributors: [], search: '', score: '' };
   tagsScore = new Map<string, number>();
   //
 
@@ -86,6 +90,7 @@ export class ProgramsComponent implements OnInit {
     private readonly profileStore: ProfileStore,
     public readonly programsStore: ProgramsStore,
     private modalService: NgbModal,
+    private readonly scoreService: ScoresService,
   ) {}
 
   ngOnInit(): void {
@@ -105,6 +110,22 @@ export class ProgramsComponent implements OnInit {
     componentInstance.questionDeleted
       .pipe(
         switchMap(() => this.questionsService.deleteQuestion(question?.id ?? '')),
+        tap(() => {
+          modalRef.close();
+          this.getQuestions();
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
+  }
+
+  deleteTag(tag?: TagDtoApi) {
+    const modalRef = this.modalService.open(TagDeleteModalComponent, { centered: true, size: 'md' });
+    const componentInstance = modalRef.componentInstance as TagDeleteModalComponent;
+    componentInstance.tag = tag;
+    componentInstance.tagDeleted
+      .pipe(
+        switchMap(() => this.tagsService.deleteTag(tag?.id ?? '')),
         tap(() => {
           modalRef.close();
           this.getQuestions();
@@ -305,14 +326,23 @@ export class ProgramsComponent implements OnInit {
       programs = this.tagFilters.programs,
       contributors = this.tagFilters.contributors,
       search = this.tagFilters.search,
+      score = this.tagFilters.score,
     }: TagFilters = this.tagFilters,
   ) {
     this.tagFilters.programs = programs;
     this.tagFilters.contributors = contributors;
     this.tagFilters.search = search;
+    this.tagFilters.score = score;
 
-    const res = this.tagsService.filterTags(this.tags, { programs, contributors, search });
-    this.changeTagsPage(res);
+    let output = this.tagsService.filterTags(this.tags, { programs, contributors, search }) as TagDisplay[];
+
+    output.map(tag=>tag.score = this.getTagScore(tag.id))
+
+    if (score) {
+      output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
+    }
+
+    this.changeTagsPage(output);
   }
 
   getProgramsfromTags(tags: TagDtoApi[]) {

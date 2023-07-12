@@ -39,6 +39,7 @@ import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe'
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
 import { QuestionDeleteModalComponent } from './components/question-delete-modal/question-delete-modal.component';
+import { TagDeleteModalComponent } from './components/tag-delete-modal/tag-delete-modal.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { QuestionDeleteModalComponent } from './components/question-delete-modal
     ButtonGroupComponent,
     TextCounterComponent,
     QuestionDeleteModalComponent,
+    TagDeleteModalComponent,
   ],
   imports: [
     CommonModule,
@@ -122,6 +124,7 @@ import { QuestionDeleteModalComponent } from './components/question-delete-modal
     ButtonGroupComponent,
     TextCounterComponent,
     QuestionDeleteModalComponent,
+    TagDeleteModalComponent
   ],
 })
 export class SharedModule {}

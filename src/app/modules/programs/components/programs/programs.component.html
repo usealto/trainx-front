@@ -225,14 +225,20 @@
 
   <div class="row mb-4">
     <div class="col-8">
-      <!-- <alto-dropdown-filter
+      <alto-dropdown-filter
         class="me-3"
-        [data]="programsStore.programs.value"
-        [displayLabel]="'name'"
+        data-cy="questionsContributorFilter"
+        [data]="contributors"
         [returnValue]="'id'"
-        [placeholder]="I18ns.programs.tags.filters.programs"
-        (selectChange)="filterTags({ programs: $event })"
-      ></alto-dropdown-filter> -->
+        [displayLabel]="'fullname'"
+        [placeholder]="I18ns.programs.questions.filters.contributors"
+        (selectChange)="filterTags({ contributors: $event })"
+      ></alto-dropdown-filter>
+
+      <alto-score-filter
+        data-cy="filterByScore"
+        (selectChange)="filterTags({ score: $event })"
+      ></alto-score-filter>
     </div>
     <div class="col-4 text-end">
       <alto-search (searchChange)="filterTags({ search: $event })"></alto-search>
@@ -265,6 +271,9 @@
             </td>
             <td class="w-10 text-center">
               <alto-img-badge [user]="getUser(tag.createdBy)"></alto-img-badge>
+            </td>
+            <td class="cursor-pointer px-3" (click)="deleteTag(tag)">
+              <i class="fs-5 bi bi-trash3 float-end"></i>
             </td>
             <td class="cursor-pointer px-3" (click)="openTagForm(tag)">
               <i class="fs-5 bi bi-pen cursor-pointer float-end me-4"></i>

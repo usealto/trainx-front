@@ -393,6 +393,11 @@ export const FR = {
       questionsPlaceholder: 'Rechercher dans vos questions',
       description: 'Description',
     },
+    deleteModal: {
+      name: 'Supprimer le tag "{{}}"',
+      subtitle: 'Ce tag est associé à {{}} questions et {{}} programes.',
+      subtitle2: ' Êtes-vous sûr de vouloir la supprimer ? Cette action est irréversible.',
+    },
   },
   leadTeam: {
     title: 'Équipes',

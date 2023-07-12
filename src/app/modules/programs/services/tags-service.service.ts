@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { TagApi, ProgramDtoApi, TagDtoApi } from '@usealto/sdk-ts-angular';
+import { TagApi, ProgramDtoApi, TagDtoApi, TagsApiService } from '@usealto/sdk-ts-angular';
 import { TagFilters } from '../models/tag.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TagsServiceService {
+  constructor(private readonly tagApi: TagsApiService) {}
+
   filterTags(tags: TagDtoApi[], { programs, contributors, search }: TagFilters) {
     let output: TagDtoApi[] = [...tags];
 
@@ -23,5 +25,9 @@ export class TagsServiceService {
       );
     }
     return output;
+  }
+
+  deleteTag(id: string) {
+    return this.tagApi.deleteTag({ id });
   }
 }
