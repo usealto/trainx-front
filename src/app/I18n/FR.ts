@@ -151,7 +151,7 @@ export const FR = {
       progress: 'Avancement',
       progressToolTip: 'Nombre de questions répondues par tout les membres sur le nombre total de questions',
       score: 'Score',
-      scoreToolTip: 'Score moyen du programme',
+      scoreToolTip: 'Score moyen du programme depuis sa création',
       filters: {
         team: 'Équipe',
       },
@@ -164,13 +164,18 @@ export const FR = {
 
       placeholder: {
         noData: 'Aucun résultat correspondant',
+        noQuestion: 'Aucune question disponible',
         noDataSubtitle:
           "Votre recherche n'a donné aucun résultat, essayez une autre formulation ou d'autres filtres.",
+        noQuestionSubtitle:
+          'Créez, ou importez, vos premières questions et assignez à des programmes ou des tags existants.',
         createQuestionPlaceholder: 'Créer une question',
+        importQuestionPlaceholder: 'Importer des questions',
       },
       table: {
         question: 'Question',
         score: 'Score',
+        scoreToolTip: 'Score moyen sur cette question depuis sa création',
         author: 'Ajoutée par',
         tags: 'Tags',
         programs: 'Programmes',
@@ -202,6 +207,7 @@ export const FR = {
       table: {
         name: 'Nom',
         score: 'Score',
+        scoreToolTip: 'Score moyen sur ce tag depuis sa création',
         author: 'Créé par',
         associatedPrograms: 'Programmes associés',
         associatedQuestions: 'Questions associées',
@@ -425,7 +431,7 @@ export const FR = {
         name: 'Nom',
         team: 'Équipe',
         averageScore: 'Score moyen',
-        averageScoreTooltip: 'Score moyen sur 30j',
+        averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         questionsPerMonth: 'Questions sur 30j',
         questionsPerMonthTooltip:
           'Nombre de questions répondues sur les 30 derniers jours et variation sur la dernière période',
@@ -456,7 +462,7 @@ export const FR = {
         usersCount: 'Nombre de membres',
         users: ['Aucun', '{{}}', '{{}}'],
         averageScore: 'Score moyen',
-        averageScoreTooltip: 'Score moyen sur 30j',
+        averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         creationDate: 'Date de création',
       },
       form: {
