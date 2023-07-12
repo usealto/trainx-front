@@ -128,7 +128,7 @@ export class ProgramsComponent implements OnInit {
         switchMap(() => this.tagsService.deleteTag(tag?.id ?? '')),
         tap(() => {
           modalRef.close();
-          this.getQuestions();
+          this.getTags();
         }),
         untilDestroyed(this),
       )
@@ -336,7 +336,7 @@ export class ProgramsComponent implements OnInit {
 
     let output = this.tagsService.filterTags(this.tags, { programs, contributors, search }) as TagDisplay[];
 
-    output.map(tag=>tag.score = this.getTagScore(tag.id))
+    output.map((tag) => (tag.score = this.getTagScore(tag.id)));
 
     if (score) {
       output = this.scoreService.filterByScore(output, score as ScoreFilter, true);

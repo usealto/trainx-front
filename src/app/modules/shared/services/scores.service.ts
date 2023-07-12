@@ -47,6 +47,8 @@ export class ScoresService {
         break;
     }
     return data.filter((d) => {
+      if (score === ScoreFilter.Under25 && d.score === 0) return true;
+
       if (!d.score) return false;
       const sc = isDecimal ? d.score * 100 : d.score;
       return isUnder ? sc < scoreCap : sc > scoreCap;
