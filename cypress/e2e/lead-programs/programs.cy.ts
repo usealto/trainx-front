@@ -8,23 +8,40 @@ describe('Lead Programs', () => {
     cy.get('h1').should('have.text', 'Programmes');
   });
 
-  it('Search Programs and check if title or description is right', function () {
+  it('Search Programs and check if title is right', () => {
     cy.get('[ng-reflect-router-link="l/programs"]').click();
-    cy.get('.d-inline-block > .search-group > .form-control').type('test');
-    cy.get(
-      ':nth-child(1) > alto-program-card > :nth-child(1) > .panel > .card-bottom > :nth-child(4)',
-    ).click();
-    cy.get('.ng-invalid > :nth-child(1) > .col-6').click();
-    cy.get(':nth-child(1) > .col-6 > .form-control, :nth-child(3) > .col-6 > .form-control')
-      .filter((i, el: HTMLInputElement) => {
-        return el.value.toLocaleLowerCase().includes('test');
-      })
-      .should('have.length.above', 0);
+    cy.wait(3000);
+
+    cy.get(':nth-child(1) > alto-program-card > :nth-child(1) > .panel > .d-flex > .title').then(($data) => {
+      const text = $data.text();
+      cy.get('.d-inline-block > .search-group > .form-control').type(text);
+      cy.wait(500);
+
+      cy.get(':nth-child(1) > alto-program-card > :nth-child(1) > .panel > .d-flex > .title').should(
+        'have.text',
+        text,
+      );
+    });
+
+    it('Search Programs by description', function () {
+      cy.get('[ng-reflect-router-link="l/programs"]').click();
+      cy.wait(500);
+      cy.get(':nth-child(2) > alto-program-card > :nth-child(1) > .panel').click();
+      cy.wait(500);
+
+      cy.get('[data-cy="descriptionField"]')
+        .invoke('val')
+        .then((data) => {
+          const text = (data as string).slice(0, 10);
+          cy.get('.mb-6 > .text-end > .btn-outline-secondary').click();
+          cy.get('.d-inline-block > .search-group > .form-control').type(text).wait(500);
+          cy.get(':nth-child(1) > alto-program-card > :nth-child(1) > .panel').click();
+          cy.get('[data-cy="descriptionField"]').should('contain.value', text);
+        });
+    });
   });
 
-  /* ==== Test Created with Cypress Studio ==== */
   it('filter programs by team', function () {
-    /* ==== Generated with Cypress Studio ==== */
     cy.get('[ng-reflect-router-link="l/programs"]').click();
     cy.wait(3000);
 
