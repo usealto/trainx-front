@@ -125,9 +125,10 @@ export class ProgramsComponent implements OnInit {
     componentInstance.tag = tag;
     componentInstance.tagDeleted
       .pipe(
-        switchMap(() => this.tagsService.deleteTag(tag?.id ?? '')),
+        switchMap(() => this.tagRestService.deleteTag(tag?.id ?? '')),
         tap(() => {
           modalRef.close();
+          this.tagRestService.resetTags();
           this.getTags();
         }),
         untilDestroyed(this),

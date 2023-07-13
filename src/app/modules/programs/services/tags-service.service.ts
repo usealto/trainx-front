@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TagApi, ProgramDtoApi, TagDtoApi, TagsApiService } from '@usealto/sdk-ts-angular';
+import { TagDtoApi, TagsApiService } from '@usealto/sdk-ts-angular';
 import { TagFilters } from '../models/tag.model';
 
 @Injectable({
@@ -27,7 +27,4 @@ export class TagsServiceService {
     return output;
   }
 
-  deleteTag(id: string) {
-    return this.tagApi.deleteTag({ id });
-  }
 }
