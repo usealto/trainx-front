@@ -85,16 +85,36 @@
       ></alto-search>
     </div>
   </div>
+  <!-- <div *ngIf="!questionsCount">
+    <div class="panel text-center p-6 mb-4">
+      <i class="alto-badge-big fs-5 alto-badge-blue bi bi-chat"></i>
+      <h2 class="my-4">{{ I18ns.programs.questions.placeholder.noQuestion }}</h2>
+      <p class="alto-grey mb-4">{{ I18ns.programs.questions.placeholder.noQuestionSubtitle }}</p>
+      <button class="btn btn-outline-secondary me-2">
+        <i class="bi bi-cloud-upload"></i>
+        {{ I18ns.programs.questions.placeholder.importQuestionPlaceholder }}
+      </button>
+      <button type="button" class="btn btn-primary ms-2" (click)="openQuestionForm()">
+        <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.placeholder.createQuestionPlaceholder }}
+      </button>
+    </div>
+  </div> -->
   <ng-container *ngIf="questionsCount > 0; else noQuestions">
     <div class="table-panel">
       <table class="table">
         <thead>
           <tr *ngVar="I18ns.programs.questions.table as headers">
             <th scope="col">{{ headers.question }}</th>
-            <th scope="col">{{ headers.score }}</th>
+            <th scope="col" class="w-10">
+              {{ headers.score
+              }}<i
+                class="bi bi-question-circle ms-2"
+                ngbTooltip="{{ I18ns.programs.questions.table.scoreToolTip }}"
+              ></i>
+            </th>
             <th data-cy="questionsTableTagCol">{{ headers.tags }}</th>
             <th data-cy="questionsTableProgramCol">{{ headers.programs }}</th>
-            <th data-cy="questionsTableContributorCol" class="text-center">{{ headers.author }}</th>
+            <th data-cy="questionsTableContributorCol" class="text-center w-10">{{ headers.author }}</th>
             <th></th>
             <th></th>
           </tr>
@@ -139,7 +159,7 @@
         </tbody>
       </table>
 
-      <alto-pagination
+      <!-- <alto-pagination
         class="mx-4 d-block"
         [collectionSize]="questionsCount"
         [(page)]="questionsPage"
@@ -147,7 +167,7 @@
         [pageSize]="questionsPageSize"
         [maxSize]="10"
         aria-label="Default pagination"
-      ></alto-pagination>
+      ></alto-pagination> -->
     </div>
   </ng-container>
   <ng-template #noQuestions>
@@ -244,7 +264,13 @@
         <thead>
           <tr>
             <th scope="col" class="w-30">{{ I18ns.programs.tags.table.name }}</th>
-            <th scope="col" class="w-25">{{ I18ns.programs.tags.table.score }}</th>
+            <th scope="col" class="w-25">
+              {{ I18ns.programs.tags.table.score
+              }}<i
+                class="bi bi-question-circle ms-2"
+                ngbTooltip="{{ I18ns.programs.tags.table.scoreToolTip }}"
+              ></i>
+            </th>
             <th class="text-center" scope="col">{{ I18ns.programs.tags.table.author }}</th>
             <th class="w-5"></th>
           </tr>

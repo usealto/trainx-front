@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Observable, map, switchMap, tap } from 'rxjs';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import {
   ProgramDtoApi,
   QuestionDtoApi,
@@ -17,8 +11,17 @@ import {
   TagDtoApi,
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { QuestionFilters } from '../../models/question.model';
+import { Observable, map, switchMap, tap } from 'rxjs';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { QuestionDeleteModalComponent } from 'src/app/modules/shared/components/question-delete-modal/question-delete-modal.component';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { ScoreDuration } from '../../../shared/models/score.model';
+import { QuestionFilters } from '../../models/question.model';
 import { TagFilters } from '../../models/tag.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
@@ -28,9 +31,6 @@ import { TagsRestService } from '../../services/tags-rest.service';
 import { TagsServiceService } from '../../services/tags-service.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
-import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { QuestionDeleteModalComponent } from 'src/app/modules/shared/components/question-delete-modal/question-delete-modal.component';
 
 @UntilDestroy()
 @Component({
