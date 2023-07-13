@@ -18,6 +18,7 @@
     <div class="card-bottom">
       <ng-container *ngIf="program.teams.length > 0; else elseTeams">
         <alto-colored-pill-list
+          data-cy="coloredTeams"
           [limit]="5"
           [hasDynamicColor]="true"
           [data]="program.teams"
