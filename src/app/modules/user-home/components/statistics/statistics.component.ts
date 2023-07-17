@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
-import { combineLatest, tap } from 'rxjs';
+import { combineLatest, map, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
@@ -53,19 +53,23 @@ export class StatisticsComponent implements OnInit {
   }
 
   getScore() {
-    const params = {
-      timeframe: ScoreTimeframeEnumApi.Day,
-      duration: this.statisticsDuration,
-      type: ScoreTypeEnumApi.User,
-      ids: [this.profileStore.user.value.id],
-    } as ChartFilters;
-    combineLatest([this.scoresRestService.getScores(params), this.scoresRestService.getScores(params, true)])
+    combineLatest([
+      this.scoresRestService.getUsersStats(this.statisticsDuration, false),
+      this.scoresRestService.getUsersStats(this.statisticsDuration, true),
+    ])
       .pipe(
+        map(([curr, prev]) => [
+          curr.filter((u) => u.id === this.profileStore.user.value.id),
+          prev.filter((u) => u.id === this.profileStore.user.value.id),
+        ]),
         tap(([curr, prev]) => {
-          this.userScore = this.scoresService.reduceWithoutNull(curr.scores[0]?.averages) ?? 0;
-          if (prev.scores.length) {
-            this.userScoreProgression = this.scoresService.reduceWithoutNull(prev.scores[0].averages) ?? 0;
-          }
+          console.log(curr);
+          this.userScore = curr[0]?.score ?? 0;
+          const previousScore = prev[0]?.score ?? 0;
+          this.userScoreProgression =
+            previousScore !== 0 && this.userScore !== 0
+              ? (previousScore - this.userScore) / this.userScore
+              : 0;
         }),
       )
       .subscribe();
