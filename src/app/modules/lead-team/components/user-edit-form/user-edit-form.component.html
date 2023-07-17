@@ -59,8 +59,12 @@
       formControlName="type"
       id="type"
     >
-      <option value="company-user">{{ I18ns.leadTeam.members.forms.edition.standardType }}</option>
-      <option value="company-admin">{{ I18ns.leadTeam.members.forms.edition.adminType }}</option>
+      <option data-cy="editMemberRoleOption" value="company-user">
+        {{ I18ns.leadTeam.members.forms.edition.standardType }}
+      </option>
+      <option data-cy="editMemberRoleOption" value="company-admin">
+        {{ I18ns.leadTeam.members.forms.edition.adminType }}
+      </option>
     </select>
 
     <p class="my-4" *ngIf="profile.id !== user?.id">

@@ -19,114 +19,133 @@ describe('Lead Team', () => {
     });
   });
 
-  describe('Edits Team', () => {
+  describe('Edits Team Shortname', () => {
     it('Edits team shortname and check "already existing" error', () => {
-      cy.get('[data-cy="editTeam"]').first().click();
+      cy.get(':nth-child(2) > [data-cy="teamShortname"] > .alto-badge')
+        .click()
+        .then(($data) => {
+          const teamShortname = $data.text().trim();
+          const errorToast = '409';
+          cy.get('[data-cy="editTeam"]').first().click();
 
-      cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type('CYP');
-      cy.get('[data-cy="btnSave"').click();
+          cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type(teamShortname);
+          cy.get('[data-cy="btnSave"').click();
 
-      cy.get('[data-cy="closeEditTeamPanel"]').click();
-      cy.get('[data-cy="toastError"]').contains('409');
+          cy.get('[data-cy="closeEditTeamPanel"]').click();
+          cy.get('[data-cy="toastError"]').contains(errorToast);
+        });
     });
   });
 
-  describe('Edits Team', () => {
+  describe('Edits Team Shortname', () => {
     it('Edits team shortname and check it worked', () => {
+      const teamShortname0 = '000';
+      const teamShortname1 = 'CYT';
       cy.get('[data-cy="editTeam"]').first().click();
 
-      cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type('000');
+      cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type(teamShortname0);
       cy.get('[data-cy="btnSave"').click();
 
       cy.get('[data-cy="closeEditTeamPanel"]').click();
 
-      cy.get('[data-cy="teamShortname"').first().should('have.text', '000');
+      cy.get('[data-cy="teamShortname"').first().should('have.text', teamShortname0);
 
       cy.get('[data-cy="editTeam"]').first().click();
 
-      cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type('CYT');
+      cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type(teamShortname1);
       cy.get('[data-cy="btnSave"').click();
 
       cy.get('[data-cy="closeEditTeamPanel"]').click();
 
-      cy.get('[data-cy="teamShortname"').first().should('have.text', 'CYT');
+      cy.get('[data-cy="teamShortname"').first().should('have.text', teamShortname1);
     });
   });
 
-  describe('Edits Team', () => {
+  describe('Edits Team Longname', () => {
     it('Edits team longname and check "already existing" error', () => {
-      cy.get('[data-cy="editTeam"]').first().click();
+      cy.get(':nth-child(2) > [data-cy="teamLongname"]')
+        .click()
+        .then(($data) => {
+          const teamLongname = $data.text().trim();
+          const errorToast = '409';
 
-      cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type('Cypress');
-      cy.get('[data-cy="btnSave"').click();
+          cy.get('[data-cy="editTeam"]').first().click();
 
-      cy.get('[data-cy="closeEditTeamPanel"]').click();
-      cy.get('[data-cy="toastError"]').contains('409');
+          cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(teamLongname);
+          cy.get('[data-cy="btnSave"').click();
+
+          cy.get('[data-cy="closeEditTeamPanel"]').click();
+          cy.get('[data-cy="toastError"]').contains(errorToast);
+        });
     });
   });
 
-  describe('Edits Team', () => {
-    // TODO clean up team name before testing it works
+  describe('Edits Team Longname', () => {
     it('Edits team longname and check it worked', () => {
+      const teamLongname0 = 'Cypress Edit1';
+      const teamLongname1 = 'Cypress Edit2';
+
       cy.get('[data-cy="editTeam"]').first().click();
-
-      cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type('Cypress Edit');
+      cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(teamLongname0);
       cy.get('[data-cy="btnSave"').click();
-
       cy.get('[data-cy="closeEditTeamPanel"]').click();
-      /* ==== Generated with Cypress Studio ==== */
-      cy.get('[data-cy="teamLongname"').first().should('have.text', ' Cypress Edit ');
-      /* ==== End Cypress Studio ==== */
+
+      cy.get('[data-cy="teamLongname"').first().should('contain.text', teamLongname0);
+
+      cy.get('[data-cy="editTeam"]').first().click();
+      cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(teamLongname1);
+      cy.get('[data-cy="btnSave"').click();
+      cy.get('[data-cy="closeEditTeamPanel"]').click();
+
+      cy.get('[data-cy="teamLongname"').first().should('contain.text', teamLongname1);
     });
   });
 
   describe('Add Program', () => {
     it('Add a program to selected team and check it worked', () => {
-      cy.get('[data-cy="editTeam"]');
+      cy.get('[data-cy="editTeam"]').first().click();
+      cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-arrow-wrapper').click();
+      cy.get('.ng-option-label')
+        .first()
+        .then(($data) => {
+          const addedProgram = $data.text();
 
-      /* ==== Generated with Cypress Studio ==== */
-      cy.get(':nth-child(4) > :nth-child(6) > [data-cy="editTeam"]').click();
-      /* ==== End Cypress Studio ==== */
+          cy.get('.btn-close').click();
+          cy.get('[data-cy="editTeam"]').first().click();
 
-      cy.get('[data-cy="editProgramSelector"]').click();
-      /* ==== Generated with Cypress Studio ==== */
-      cy.get(
-        '[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container > .ng-input > input',
-      ).clear();
-      cy.get(
-        '[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container > .ng-input > input',
-      )
-        .wait(1000)
-        .type('cypress{enter}');
-      cy.get('[data-cy="btnSave"]').click();
-      /* ==== End Cypress Studio ==== */
-      cy.get(':nth-child(4) > :nth-child(6) > [data-cy="editTeam"]').click();
-      /* ==== End Cypress Studio ==== */
+          cy.get('[data-cy="editProgramSelector"]').click();
 
-      cy.get('[data-cy="editProgramSelector"]').click();
-      /* ==== Generated with Cypress Studio ==== */
-      cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
-        .wait(1000)
-        .contains('Cypress');
+          cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container').type(
+            '{selectall}{backspace}',
+          );
+
+          cy.get(
+            '[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container > .ng-input > input',
+          ).type(`${addedProgram}{enter}`);
+          cy.get('[data-cy="btnSave"]').click();
+          cy.get('.btn-close').click();
+
+          cy.get('[data-cy="editTeam"]').first().click();
+          cy.get('[data-cy="editProgramSelector"]').click();
+          cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
+            .wait(1000)
+            .contains(addedProgram);
+        });
     });
   });
 
   describe('Remove Program', () => {
     it('Remove a program from selected team  and check it worked', () => {
-      cy.get('[data-cy="editTeam"]');
-
-      /* ==== Generated with Cypress Studio ==== */
-      cy.get(':nth-child(4) > :nth-child(6) > [data-cy="editTeam"]').click();
-      /* ==== End Cypress Studio ==== */
-
-      cy.get('[data-cy="editProgramSelector"]').click();
-      /* ==== Generated with Cypress Studio ==== */
-      cy.get(':nth-child(2) > .ng-value-icon').click();
-      /* ==== End Cypress Studio ==== */
-
+      cy.get('[data-cy="editTeam"]').first().click();
+      cy.get('[data-cy="editProgramSelector"]').then(() => {
+        cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-clear-wrapper')
+          .click()
+          .wait(800);
+      });
       cy.get('[data-cy="btnSave"]').click();
+      cy.get('.btn-close').click();
 
-      cy.get(':nth-child(4) > :nth-child(6) > [data-cy="editTeam"]').click();
+      cy.get('[data-cy="editTeam"]').first().click();
 
       cy.get('[data-cy="editProgramSelector"]').click();
 
@@ -180,14 +199,22 @@ describe('Lead Team', () => {
     });
   });
 
+  //TODO make this test work
   describe('Edits User Role', () => {
-    it('Changes a user role and check it worked', () => {
-      //utilisé pour prendre un role
-      cy.get('[data-cy="editCompanyMember"]').first().click();
+    beforeEach(() => {
+      const teamName = 'e2e';
 
-      cy.get('[data-cy="editMemberRole"]').then(($data) => {
-        // TODO
-      });
+      cy.get('.form-control').clear();
+      cy.get('.form-control').type(`${teamName}{enter}`).wait(1000);
+      cy.get(':nth-child(2) > :nth-child(5) > [data-cy="editCompanyMember"]').click();
+    });
+
+    it('Checks first option is "company-user"', () => {
+      cy.get('[data-cy="editMemberRole"]').select(0).should('have.value', 'company-user');
+    });
+
+    it('Checks second option is "company-admin"', () => {
+      cy.get('[data-cy="editMemberRole"]').select(1).should('have.value', 'company-admin');
     });
   });
 
