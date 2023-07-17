@@ -1,0 +1,21 @@
+<div class="modal-body text-center p-5">
+  <i class="alto-badge-big alto-badge-red mt-3 mb-4 bi bi-trash3"></i>
+  <h2 class="fw-bold mb-4">
+    {{data?.title}}
+  </h2>
+  <p class="mb-3 alto-grey">
+    {{data?.subtitle}}
+  </p>
+  <div class="row mt-6">
+    <div class="col-6">
+      <button class="btn btn-outline-secondary w-100" (click)="closeModal()">
+        {{ I18ns.shared.cancel }}
+      </button>
+    </div>
+    <div class="col-6">
+      <button class="btn btn-danger w-100" (click)="deleteObject()">
+        {{ I18ns.shared.delete }}
+      </button>
+    </div>
+  </div>
+</div>
