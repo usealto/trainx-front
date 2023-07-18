@@ -40,6 +40,7 @@ import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
 import { QuestionDeleteModalComponent } from './components/question-delete-modal/question-delete-modal.component';
 import { TagDeleteModalComponent } from './components/tag-delete-modal/tag-delete-modal.component';
+import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { TagDeleteModalComponent } from './components/tag-delete-modal/tag-delet
     TextCounterComponent,
     QuestionDeleteModalComponent,
     TagDeleteModalComponent,
+    DeleteModalComponent,
   ],
   imports: [
     CommonModule,
@@ -125,6 +127,7 @@ import { TagDeleteModalComponent } from './components/tag-delete-modal/tag-delet
     TextCounterComponent,
     QuestionDeleteModalComponent,
     TagDeleteModalComponent
+    DeleteModalComponent,
   ],
 })
 export class SharedModule {}

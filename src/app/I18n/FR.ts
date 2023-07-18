@@ -261,6 +261,12 @@ export const FR = {
         summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
       },
     },
+    delete: {
+      btn: 'Supprimer le programme',
+      title: 'Supprimer le programme "{{}}"',
+      subtitle:
+        'Ce programme est assigné à {{}} équipes, êtes-vous sûrs de vouloir le supprimer ? Cette action est irreversible.',
+    },
   },
   statistics: {
     title: 'Statistiques',
@@ -484,6 +490,11 @@ export const FR = {
         Programs: 'Programmes',
         programsPlaceholder: 'Rechercher dans vos programmes',
         ProgramsSubtitle: 'Sélectionner les programmes auxquels cette équipe doit être assignée.',
+      },
+      deleteModal: {
+        title: 'Supprimer l\'équipe "{{}}"',
+        subtitle:
+          'Cette équipe contient {{}} membres, êtes-vous sûr de vouloir la supprimer ? Cette action est irréversible.',
       },
     },
   },

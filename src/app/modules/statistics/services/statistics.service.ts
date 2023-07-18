@@ -18,7 +18,9 @@ export class StatisticsService {
       case ScoreDuration.Year:
         return dates.map((date) => date.toLocaleDateString(this.locale, { month: 'long' }));
       default:
-        return dates.map((date) => date.toLocaleDateString());
+        return dates.map((date) =>
+          date.toLocaleDateString(this.locale, { month: '2-digit', day: '2-digit' }),
+        );
     }
   }
 

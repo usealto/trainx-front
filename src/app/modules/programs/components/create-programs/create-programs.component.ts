@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable, filter, map, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
@@ -15,12 +15,15 @@ import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
+import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
+import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 
 @UntilDestroy()
 @Component({
   selector: 'alto-create-programs',
   templateUrl: './create-programs.component.html',
   styleUrls: ['./create-programs.component.scss'],
+  providers: [ReplaceInTranslationPipe],
 })
 export class CreateProgramsComponent implements OnInit {
   I18ns = I18ns;
@@ -52,6 +55,8 @@ export class CreateProgramsComponent implements OnInit {
     private readonly location: Location,
     public programStore: ProgramsStore,
     public teamStore: TeamStore,
+    private modalService: NgbModal,
+    private replaceInTranslationPipe: ReplaceInTranslationPipe,
   ) {
     this.fb = fob;
   }
@@ -208,7 +213,28 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   delete() {
-    // this.programRestService.deleteProgram(this.editedProgram.id).pipe(untilDestroyed(this)).subscribe();
+    const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
+
+    const componentInstance = modalRef.componentInstance as DeleteModalComponent;
+    componentInstance.data = {
+      title: this.replaceInTranslationPipe.transform(I18ns.programs.delete.title, this.editedProgram.name),
+      subtitle: this.replaceInTranslationPipe.transform(
+        I18ns.programs.delete.subtitle,
+        this.editedProgram.teams.length.toString(),
+      ),
+    };
+
+    componentInstance.objectDeleted
+      .pipe(
+        switchMap(() => this.programRestService.deleteProgram(this.editedProgram.id)),
+        tap(() => {
+          this.programRestService.resetCache();
+          modalRef.close();
+          this.location.back();
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
   }
 
   cancel() {

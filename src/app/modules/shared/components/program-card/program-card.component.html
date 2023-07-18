@@ -9,6 +9,7 @@
     />
   </div>
   <div
+    [attr.data-cy]="'program' + program.name"
     class="panel cursor-pointer"
     [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, program.id]"
   >
