@@ -67,7 +67,7 @@ export class StatisticsComponent implements OnInit {
           const previousScore = prev[0]?.score ?? 0;
           this.userScoreProgression =
             previousScore !== 0 && this.userScore !== 0
-              ? (previousScore - this.userScore) / this.userScore
+              ? (this.userScore - previousScore) / previousScore
               : 0;
         }),
       )
