@@ -1,9 +1,8 @@
-<span
-  class="alto-badge me-1 mb-1"
-  *ngFor="let d of data | slice : 0 : limit || 50"
-  [style]="hasDynamicColor ? (d.id | teamColor) : ''"
-  >{{ d.shortName || d.name || d.title || d.label || d }}</span
->
+<ng-container *ngFor="let d of data | slice : 0 : limit || 50">
+  <span *ngIf="d" class="alto-badge me-1 mb-1" [style]="hasDynamicColor ? (d.id | teamColor) : ''">{{
+    d.shortName || d.name || d.title || d.label || d
+  }}</span>
+</ng-container>
 
 <span [ngbTooltip]="tooltip" *ngIf="limit && data.length > limit" class="alto-badge"
   >+{{ data.length - limit }}</span
