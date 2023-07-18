@@ -37,7 +37,6 @@
   </div>
   <div *ngSwitchDefault></div>
 </span>
-
 <ng-container *ngIf="programsDisplay.length > 0; else noPrograms">
   <div class="row mb-4">
     <div
@@ -56,9 +55,13 @@
   </div>
 </ng-container>
 <ng-template #noPrograms>
-  <div class="panel text-center">
-    <h2>{{ I18ns.shared.noData }}</h2>
-    <p>{{ I18ns.shared.noDataSubtitle }}</p>
+  <div class="panel text-center p-6 mb-4">
+    <i class="alto-badge-big alto-badge-blue bi-file-earmark-text"></i>
+    <h2 class="my-4">{{ I18ns.leadHome.ongoingPrograms.noData }}</h2>
+    <p class="alto-grey mb-4">{{ I18ns.leadHome.ongoingPrograms.noDataSubtitle }}</p>
+    <a type="button" class="btn btn-primary" href="/l/programs/e/new"
+      ><i class="bi bi-plus-lg"></i> Créer un programme
+    </a>
   </div>
 </ng-template>
 

@@ -31,6 +31,10 @@ Files will be placed in _dist/alto_
 - npm run start
 - in VS code, press F5 to launch Chrome in debug mode.
 
+### Components
+
+The component demo page is here (http://localhost:4200/test)
+
 ### Packages
 
 - ng bootstrap (https://ng-bootstrap.github.io/#/components/accordion/examples)
@@ -64,6 +68,8 @@ Run `ng generate component component-name` to generate a new component. You can 
 ## E2E testing
 
 Using Cypress
+
+- Ask a friend
 
 `npm run e2e`
 

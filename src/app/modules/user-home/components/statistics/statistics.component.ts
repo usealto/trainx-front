@@ -132,7 +132,6 @@ export class StatisticsComponent implements OnInit {
       )
       .subscribe();
   }
-
   createUserProgressionChart() {
     const params = {
       timeframe: ScoreTimeframeEnumApi.Day,

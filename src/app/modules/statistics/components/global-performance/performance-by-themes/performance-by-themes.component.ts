@@ -82,7 +82,7 @@ export class PerformanceByThemesComponent implements OnChanges {
           this.items = res.scores.sort((a, b) => a.label.localeCompare(b.label));
           let filteredItems: ScoreDtoApi[] = res.scores;
           if (this.init) {
-            this.selectedItems = this.items.slice(0, 5);
+            this.selectedItems = this.items.slice(0, 3);
           }
           if (this.selectedItems.length) {
             filteredItems = res.scores.filter((s) => this.selectedItems.some((si) => si.id === s.id));

@@ -10,4 +10,5 @@ export interface ChartFilters {
   // limit?: number;
   sortBy?: string;
   ids?: string[];
+  tags?: string[];
 }

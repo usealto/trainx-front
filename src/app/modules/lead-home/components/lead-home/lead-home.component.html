@@ -69,7 +69,16 @@
           ngbTooltip="{{ I18ns.leadHome.statistics.globalScoreToolTip }}"
         ></i>
       </p>
-      <h1 class="d-inline-block">{{ globalScore | percent }}</h1>
+      <ng-container *ngIf="globalScore; else noGlobalScore">
+        <h1 class="d-inline-block">
+          {{ globalScore | percent }}
+        </h1>
+      </ng-container>
+      <ng-template #noGlobalScore>
+        <h1 class="d-inline-block">
+          {{ I18ns.leadHome.statistics.globalScorePlaceholder }}
+        </h1>
+      </ng-template>
       <alto-progression-badge
         class="float-end mt-2"
         [score]="globalScoreProgression"
@@ -166,14 +175,23 @@
   <!-- CHARTS -->
   <div class="col-6">
     <div class="panel h-100">
-      <i
+      <!-- <i
         class="fs-5 alto-grey bi bi-question-circle float-end"
         ngbTooltip="{{
           I18ns.leadHome.globalEvolution.chartToolTip
             | replaceInTranslation
               : (chartFilters.type === 'program' ? I18ns.shared.program : I18ns.shared.tag)
         }}"
-      ></i>
+      ></i> -->
+      <alto-dropdown-filter
+        class="float-end mx-2 float-end me-2 mt-2"
+        [data]="programsStore.tags.value"
+        [displayLabel]="'name'"
+        [placeholder]="I18ns.leadHome.graph.tagFilter"
+        [returnValue]="'id'"
+        [selectedItems]="chartFilters.tags!"
+        (selectChange)="createCharts({ tags: $event })"
+      ></alto-dropdown-filter>
       <!-- temporarily hidden tabs since data are not relevant -->
 
       <!-- <alto-tabs
@@ -186,8 +204,9 @@
         ]"
       ></alto-tabs> -->
 
-      <h2 class="mb-4">{{ I18ns.leadHome.globalEvolution.score }}</h2>
-      <div [hidden]="!scoreCount" class="chart-container">
+      <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
+      <p class="alto-grey mb-4">{{ I18ns.leadHome.globalEvolution.chartSubtitle }}</p>
+      <div [hidden]="!scoreCount" class="chart-container pt-6">
         <canvas id="programScoreEvol"></canvas>
       </div>
       <div [hidden]="scoreCount > 0" class="text-center pt-6">

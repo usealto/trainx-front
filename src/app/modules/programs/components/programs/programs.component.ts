@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Observable, map, switchMap, tap } from 'rxjs';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import {
   ProgramDtoApi,
   QuestionDtoApi,
@@ -17,8 +11,17 @@ import {
   TagDtoApi,
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { QuestionFilters } from '../../models/question.model';
+import { Observable, map, switchMap, tap } from 'rxjs';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { QuestionDeleteModalComponent } from 'src/app/modules/shared/components/question-delete-modal/question-delete-modal.component';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { ScoreDuration } from '../../../shared/models/score.model';
+import { QuestionFilters } from '../../models/question.model';
 import { TagFilters } from '../../models/tag.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
@@ -28,9 +31,6 @@ import { TagsRestService } from '../../services/tags-rest.service';
 import { TagsServiceService } from '../../services/tags-service.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
-import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { QuestionDeleteModalComponent } from 'src/app/modules/shared/components/question-delete-modal/question-delete-modal.component';
 
 @UntilDestroy()
 @Component({
@@ -67,8 +67,6 @@ export class ProgramsComponent implements OnInit {
   tagsCount = 0;
   tagsPageSize = 10;
   isTagsLoading = true;
-  tagPrograms = new Map<string, string[]>();
-  isTagProgramsLoading = true;
   tagFilters: TagFilters = { programs: [], contributors: [], search: '' };
   tagsScore = new Map<string, number>();
   //
@@ -280,7 +278,6 @@ export class ProgramsComponent implements OnInit {
       .pipe(
         tap((tags) => (this.tags = tags)),
         tap((tags) => (this.tagsCount = tags.length)),
-        tap((tags) => this.getProgramsfromTags(tags)),
         tap((tags) => this.changeTagsPage(tags)),
         switchMap((tags) => this.getScoresFromTags(tags.map((t) => t.id))),
         map(() => this.tags.map((t) => t.createdBy) ?? []),
@@ -315,35 +312,8 @@ export class ProgramsComponent implements OnInit {
     this.changeTagsPage(res);
   }
 
-  getProgramsfromTags(tags: TagDtoApi[]) {
-    const ids = tags.map((tag) => tag.id);
-    this.isTagProgramsLoading = true;
-    this.programRestService
-      .getPrograms()
-      .pipe(
-        tap((programs) => {
-          ids.forEach((tagId) => {
-            this.tagPrograms.set(tagId, this.tagProgramsLoop(tagId, programs));
-          });
-        }),
-        tap(() => (this.isTagProgramsLoading = false)),
-      )
-      .subscribe();
-  }
-
-  tagProgramsLoop(tagId: string, programs: ProgramDtoApi[]): string[] {
-    const programList: string[] = [];
-    programs.forEach((program) => {
-      if (program.tags?.some((tag) => tag.id === tagId)) {
-        programList.push(program.name);
-      }
-    });
-    return programList;
-  }
-
-  @memoize()
-  getTagPrograms(id: string) {
-    return this.tagPrograms.get(id) ?? [];
+  resetFilters() {
+    this.getQuestions((this.questionFilters = {}));
   }
 
   @memoize()

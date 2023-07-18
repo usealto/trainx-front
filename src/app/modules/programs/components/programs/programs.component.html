@@ -85,17 +85,36 @@
       ></alto-search>
     </div>
   </div>
-
+  <!-- <div *ngIf="!questionsCount">
+    <div class="panel text-center p-6 mb-4">
+      <i class="alto-badge-big fs-5 alto-badge-blue bi bi-chat"></i>
+      <h2 class="my-4">{{ I18ns.programs.questions.placeholder.noQuestion }}</h2>
+      <p class="alto-grey mb-4">{{ I18ns.programs.questions.placeholder.noQuestionSubtitle }}</p>
+      <button class="btn btn-outline-secondary me-2">
+        <i class="bi bi-cloud-upload"></i>
+        {{ I18ns.programs.questions.placeholder.importQuestionPlaceholder }}
+      </button>
+      <button type="button" class="btn btn-primary ms-2" (click)="openQuestionForm()">
+        <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.placeholder.createQuestionPlaceholder }}
+      </button>
+    </div>
+  </div> -->
   <ng-container *ngIf="questionsCount > 0; else noQuestions">
     <div class="table-panel">
       <table class="table">
         <thead>
           <tr *ngVar="I18ns.programs.questions.table as headers">
             <th scope="col">{{ headers.question }}</th>
-            <th scope="col">{{ headers.score }}</th>
+            <th scope="col" class="w-10">
+              {{ headers.score
+              }}<i
+                class="bi bi-question-circle ms-2"
+                ngbTooltip="{{ I18ns.programs.questions.table.scoreToolTip }}"
+              ></i>
+            </th>
             <th data-cy="questionsTableTagCol">{{ headers.tags }}</th>
             <th data-cy="questionsTableProgramCol">{{ headers.programs }}</th>
-            <th data-cy="questionsTableContributorCol" class="text-center">{{ headers.author }}</th>
+            <th data-cy="questionsTableContributorCol" class="text-center w-10">{{ headers.author }}</th>
             <th></th>
             <th></th>
           </tr>
@@ -152,9 +171,17 @@
     </div>
   </ng-container>
   <ng-template #noQuestions>
-    <div class="panel text-center">
-      <h2>{{ I18ns.shared.noData }}</h2>
-      <p>{{ I18ns.shared.noDataSubtitle }}</p>
+    <div class="panel text-center p-6 mb-4">
+      <i class="alto-badge-big fs-5 bi bi-search"></i>
+      <h2 class="my-4">{{ I18ns.programs.questions.placeholder.noData }}</h2>
+      <p class="alto-grey mb-4">{{ I18ns.programs.questions.placeholder.noDataSubtitle }}</p>
+      <button class="btn btn-outline-secondary me-2" (click)="resetFilters()">
+        <i class="bi bi-arrow-repeat"></i>
+        {{ I18ns.training.donePrograms.resetFilters }}
+      </button>
+      <button type="button" class="btn btn-primary ms-2" (click)="openQuestionForm()">
+        <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.placeholder.createQuestionPlaceholder }}
+      </button>
     </div>
   </ng-template>
 </div>
@@ -237,7 +264,13 @@
         <thead>
           <tr>
             <th scope="col" class="w-30">{{ I18ns.programs.tags.table.name }}</th>
-            <th scope="col" class="w-25">{{ I18ns.programs.tags.table.score }}</th>
+            <th scope="col" class="w-25">
+              {{ I18ns.programs.tags.table.score
+              }}<i
+                class="bi bi-question-circle ms-2"
+                ngbTooltip="{{ I18ns.programs.tags.table.scoreToolTip }}"
+              ></i>
+            </th>
             <th class="text-center" scope="col">{{ I18ns.programs.tags.table.author }}</th>
             <th class="w-5"></th>
           </tr>
