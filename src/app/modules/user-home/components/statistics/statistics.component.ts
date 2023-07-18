@@ -63,7 +63,6 @@ export class StatisticsComponent implements OnInit {
           prev.filter((u) => u.id === this.profileStore.user.value.id),
         ]),
         tap(([curr, prev]) => {
-          console.log(curr);
           this.userScore = curr[0]?.score ?? 0;
           const previousScore = prev[0]?.score ?? 0;
           this.userScoreProgression =
