@@ -36,7 +36,7 @@
     "@ng-select/ng-select": "^10.0.3",
     "@ngneat/until-destroy": "^9.2.3",
     "@popperjs/core": "^2.11.6",
-    "@usealto/sdk-ts-angular": "1.0.202306300927-dev",
+    "@usealto/sdk-ts-angular": "^1.0.202307110827",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.5",
     "chart.js": "^4.2.1",

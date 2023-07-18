@@ -245,14 +245,20 @@
 
   <div class="row mb-4">
     <div class="col-8">
-      <!-- <alto-dropdown-filter
+      <alto-dropdown-filter
         class="me-3"
-        [data]="programsStore.programs.value"
-        [displayLabel]="'name'"
+        data-cy="questionsContributorFilter"
+        [data]="contributors"
         [returnValue]="'id'"
-        [placeholder]="I18ns.programs.tags.filters.programs"
-        (selectChange)="filterTags({ programs: $event })"
-      ></alto-dropdown-filter> -->
+        [displayLabel]="'fullname'"
+        [placeholder]="I18ns.programs.questions.filters.contributors"
+        (selectChange)="filterTags({ contributors: $event })"
+      ></alto-dropdown-filter>
+
+      <alto-score-filter
+        data-cy="filterByScore"
+        (selectChange)="filterTags({ score: $event })"
+      ></alto-score-filter>
     </div>
     <div class="col-4 text-end">
       <alto-search (searchChange)="filterTags({ search: $event })"></alto-search>
@@ -264,13 +270,8 @@
         <thead>
           <tr>
             <th scope="col" class="w-30">{{ I18ns.programs.tags.table.name }}</th>
-            <th scope="col" class="w-25">
-              {{ I18ns.programs.tags.table.score
-              }}<i
-                class="bi bi-question-circle ms-2"
-                ngbTooltip="{{ I18ns.programs.tags.table.scoreToolTip }}"
-              ></i>
-            </th>
+            <th scope="col" class="w-25">{{ I18ns.programs.tags.table.score }}</th>
+            <th scope="col" class="w-30">{{ I18ns.programs.tags.table.associatedQuestions }}</th>
             <th class="text-center" scope="col">{{ I18ns.programs.tags.table.author }}</th>
             <th class="w-5"></th>
           </tr>
@@ -283,8 +284,16 @@
                 {{ getTagScore(tag.id) | percent }}
               </span>
             </td>
+            <td>
+              <span class="alto-badge">
+                {{ tag.questionsCount }} {{ I18ns.programs.tags.table.questions }}
+              </span>
+            </td>
             <td class="w-10 text-center">
               <alto-img-badge [user]="getUser(tag.createdBy)"></alto-img-badge>
+            </td>
+            <td class="cursor-pointer px-3" (click)="deleteTag(tag)">
+              <i class="fs-5 bi bi-trash3 float-end"></i>
             </td>
             <td class="cursor-pointer px-3" (click)="openTagForm(tag)">
               <i class="fs-5 bi bi-pen cursor-pointer float-end me-4"></i>
