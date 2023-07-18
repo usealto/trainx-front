@@ -68,8 +68,6 @@ export class ProgramsComponent implements OnInit {
   tagsCount = 0;
   tagsPageSize = 10;
   isTagsLoading = true;
-  tagPrograms = new Map<string, string[]>();
-  isTagProgramsLoading = true;
   tagFilters: TagFilters = { programs: [], contributors: [], search: '' };
   tagsScore = new Map<string, number>();
   //
@@ -282,7 +280,6 @@ export class ProgramsComponent implements OnInit {
       .pipe(
         tap((tags) => (this.tags = tags)),
         tap((tags) => (this.tagsCount = tags.length)),
-        tap((tags) => this.getProgramsfromTags(tags)),
         tap((tags) => this.changeTagsPage(tags)),
         switchMap((tags) => this.getScoresFromTags(tags.map((t) => t.id))),
         map(() => this.tags.map((t) => t.createdBy) ?? []),
@@ -317,39 +314,8 @@ export class ProgramsComponent implements OnInit {
     this.changeTagsPage(res);
   }
 
-  getProgramsfromTags(tags: TagDtoApi[]) {
-    const ids = tags.map((tag) => tag.id);
-    this.isTagProgramsLoading = true;
-    this.programRestService
-      .getPrograms()
-      .pipe(
-        tap((programs) => {
-          ids.forEach((tagId) => {
-            this.tagPrograms.set(tagId, this.tagProgramsLoop(tagId, programs));
-          });
-        }),
-        tap(() => (this.isTagProgramsLoading = false)),
-      )
-      .subscribe();
-  }
-
-  tagProgramsLoop(tagId: string, programs: ProgramDtoApi[]): string[] {
-    const programList: string[] = [];
-    programs.forEach((program) => {
-      if (program.tags?.some((tag) => tag.id === tagId)) {
-        programList.push(program.name);
-      }
-    });
-    return programList;
-  }
-
   resetFilters() {
     this.getQuestions((this.questionFilters = {}));
-  }
-
-  @memoize()
-  getTagPrograms(id: string) {
-    return this.tagPrograms.get(id) ?? [];
   }
 
   @memoize()
