@@ -259,6 +259,12 @@ export const FR = {
         summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
       },
     },
+    delete: {
+      btn: 'Supprimer le programme',
+      title: 'Supprimer le programme "{{}}"',
+      subtitle:
+        'Ce programme est assigné à {{}} équipes, êtes-vous sûrs de vouloir le supprimer ? Cette action est irreversible.',
+    },
   },
   statistics: {
     title: 'Statistiques',
