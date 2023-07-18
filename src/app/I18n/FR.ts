@@ -478,6 +478,11 @@ export const FR = {
         programsPlaceholder: 'Rechercher dans vos programmes',
         ProgramsSubtitle: 'Sélectionner les programmes auxquels cette équipe doit être assignée.',
       },
+      deleteModal: {
+        title: 'Supprimer l\'équipe "{{}}"',
+        subtitle:
+          'Cette équipe contient {{}} membres, êtes-vous sûr de vouloir la supprimer ? Cette action est irréversible.',
+      },
     },
   },
   challenges: {

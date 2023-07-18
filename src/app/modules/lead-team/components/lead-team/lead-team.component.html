@@ -20,7 +20,7 @@
 <!-- TEAMS -->
 <div>
   <button type="button" class="btn btn-primary float-end" (click)="openTeamForm()">
-    <i class="bi bi-plus-lg"></i> {{ I18ns.leadTeam.createTeam }}
+    <i data-cy="createTeam" class="bi bi-plus-lg"></i> {{ I18ns.leadTeam.createTeam }}
   </button>
   <h2 id="teamsAnchor">{{ I18ns.leadTeam.teams.title }}</h2>
   <p class="mb-4 alto-grey">{{ I18ns.leadTeam.teams.subtitle }}</p>
@@ -72,6 +72,11 @@
                 data-cy="editTeam"
                 class="fs-5 bi bi-pencil cursor-pointer float-end me-4"
                 (click)="openTeamForm(team)"
+              ></i>
+              <i
+                [attr.data-cy]="'deleteTeam' + team.shortName"
+                class="fs-5 bi bi-trash cursor-pointer float-end me-4"
+                (click)="deleteTeam(team)"
               ></i>
             </td>
           </tr>
