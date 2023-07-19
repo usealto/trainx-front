@@ -126,7 +126,7 @@ import { DeleteModalComponent } from './components/delete-modal/delete-modal.com
     ButtonGroupComponent,
     TextCounterComponent,
     QuestionDeleteModalComponent,
-    TagDeleteModalComponent
+    TagDeleteModalComponent,
     DeleteModalComponent,
   ],
 })
