@@ -101,8 +101,8 @@ describe('Lead Team', () => {
     });
   });
 
-  describe('Add Program', () => {
-    it('Add a program to selected team and check it worked', () => {
+  describe('Add/Remove Program', () => {
+    it('Add a program to selected team and then remove it', () => {
       cy.get('[data-cy="editTeam"]').first().click();
       cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-arrow-wrapper').click();
       cy.get('.ng-option-label')
@@ -111,14 +111,11 @@ describe('Lead Team', () => {
           const addedProgram = $data.text();
 
           cy.get('.btn-close').click();
+
           cy.get('[data-cy="editTeam"]').first().click();
-
-          cy.get('[data-cy="editProgramSelector"]').click();
-
-          cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container').type(
-            '{selectall}{backspace}',
-          );
-
+          cy.get(
+            '[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container > .ng-input > input',
+          ).should('not.contain', addedProgram);
           cy.get(
             '[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container > .ng-input > input',
           ).type(`${addedProgram}{enter}`);
@@ -129,30 +126,21 @@ describe('Lead Team', () => {
           cy.get('[data-cy="editProgramSelector"]').click();
           cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
             .wait(1000)
-            .contains(addedProgram);
+            .should('contain', addedProgram);
+
+          cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
+            .contains(addedProgram)
+            .parent()
+            .invoke('remove');
+          cy.get('[data-cy="btnSave"]').click();
+          cy.get('.btn-close').click();
+
+          cy.get('[data-cy="editTeam"]').first().click();
+          cy.get('[data-cy="editProgramSelector"]').click();
+          cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
+            .wait(1000)
+            .should('not.contain', addedProgram);
         });
-    });
-  });
-
-  describe('Remove Program', () => {
-    it('Remove a program from selected team  and check it worked', () => {
-      cy.get('[data-cy="editTeam"]').first().click();
-      cy.get('[data-cy="editProgramSelector"]').then(() => {
-        cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-clear-wrapper')
-          .click()
-          .wait(800);
-      });
-      cy.get('[data-cy="btnSave"]').click();
-      cy.get('.btn-close').click();
-
-      cy.get('[data-cy="editTeam"]').first().click();
-
-      cy.get('[data-cy="editProgramSelector"]').click();
-
-      cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
-        .wait(1000)
-        .invoke('val')
-        .should('eq', '');
     });
   });
 
@@ -232,6 +220,7 @@ describe('Lead Team', () => {
     });
   });
 
+  //TODO compare the width value directly
   describe('Filter by Score', () => {
     it('Filters members by score', () => {
       const score = '75';
@@ -239,14 +228,12 @@ describe('Lead Team', () => {
       cy.get('[data-cy="filterByScore"]').click();
       cy.get('.ng-dropdown-header > input').clear();
       cy.get('.ng-dropdown-header > input').type(`${score}{enter}`);
-      //here we compare the number of pixels to check the percentage, 1% being 2.9343px
       cy.get('[data-cy="scoreProgressBar"]').first().invoke('width').should('be.lessThan', 223.005);
     });
   });
 
   describe('Filter Search', () => {
     it('Filters members using search input', () => {
-      /* ==== Generated with Cypress Studio ==== */
       cy.get('[data-cy="profileCard"] > .profile > .names-container > .name')
         .first()
         .click()
