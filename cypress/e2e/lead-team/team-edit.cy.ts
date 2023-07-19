@@ -22,13 +22,13 @@ describe('Add/Remove Program', () => {
 
         cy.get(
           '[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container > .ng-input > input',
-        ).type(`${newProgramToAdd}{enter}`);
+        ).type(`${newProgramToAdd}`);
 
         cy.get('.ng-option-label').contains(newProgramToAdd).click().wait(100);
         cy.get('.offcanvas').click();
 
         cy.get('[data-cy="btnSave"]').click();
-        cy.get('.btn-close').click();
+        cy.get('.btn-close').click().wait(1000);
 
         cy.get('[data-cy="editTeam"]').first().click();
         cy.get('[data-cy="editProgramSelector"]').click();
@@ -45,7 +45,7 @@ describe('Add/Remove Program', () => {
         cy.get('[data-cy="btnSave"]').click();
         cy.get('.btn-close').click();
 
-        cy.get('[data-cy="editTeam"]').first().click();
+        cy.get('[data-cy="editTeam"]').first().click().wait(1000);
         cy.get('[data-cy="editProgramSelector"]').click();
         cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
           .wait(1000)
