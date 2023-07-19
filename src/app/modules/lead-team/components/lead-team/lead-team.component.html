@@ -62,7 +62,7 @@
                   [style]="'width:' + (team.score ?? 0) * 100 + '%'"
                 ></div>
               </div>
-              <ng-container *ngIf="team.score"> {{ team.score | percent }} </ng-container>
+              <ng-container *ngIf="team.score"> {{ team.score | percent }}</ng-container>
             </td>
             <td class="text-center">
               {{ team.createdAt | date : 'shortDate' }}
@@ -99,7 +99,11 @@
 <!-- MEMBERS -->
 
 <div>
-  <button type="button" class="btn btn-outline-secondary float-end d-flex align-items-center" (click)="airtableRedirect()">
+  <button
+    type="button"
+    class="btn btn-outline-secondary float-end d-flex align-items-center"
+    (click)="airtableRedirect()"
+  >
     <i class="bi bi-person-plus me-2 fs-5"></i>
     <span>{{ I18ns.leadTeam.members.invite }}</span>
   </button>
