@@ -82,6 +82,17 @@ Merge `develop` branch into `admin`
 - Create a tag with '3.x.x' and push it
 - Create a pull request to `main` with title 'v3.x.x' and merge it
 
+# Contribute
+
+### Math
+
+- Per default, back-end send us scores in decimal nor in percentage (exemple: 0.88 instead of 88). Make sure to use directly percente pipe.
+- To get variation between percentages: we take only differences (exemple: 10% and 20%, the variation will be +10%).
+- To get variation between numbers: We use this formula: ( A - B) / A (exemple: (20 - 10) / 10 that give us +100% of variation).
+- We try to put maximum of calculations in the backend to provide any errors of "manual" calculations.
+- During testing, make sure all cases are tested and sounds good.
+- As much as you can, use given math library to help you.
+
 ## Hotfix
 
 - Create a commit on `main` with the hotfix
