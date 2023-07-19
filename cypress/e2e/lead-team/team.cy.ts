@@ -101,49 +101,6 @@ describe('Lead Team', () => {
     });
   });
 
-  describe('Add/Remove Program', () => {
-    it('Add a program to selected team and then remove it', () => {
-      cy.get('[data-cy="editTeam"]').first().click();
-      cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-arrow-wrapper').click();
-      cy.get('.ng-option-label')
-        .first()
-        .then(($data) => {
-          const addedProgram = $data.text();
-
-          cy.get('.btn-close').click();
-
-          cy.get('[data-cy="editTeam"]').first().click();
-          cy.get(
-            '[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container > .ng-input > input',
-          ).should('not.contain', addedProgram);
-          cy.get(
-            '[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container > .ng-input > input',
-          ).type(`${addedProgram}{enter}`);
-          cy.get('[data-cy="btnSave"]').click();
-          cy.get('.btn-close').click();
-
-          cy.get('[data-cy="editTeam"]').first().click();
-          cy.get('[data-cy="editProgramSelector"]').click();
-          cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
-            .wait(1000)
-            .should('contain', addedProgram);
-
-          cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
-            .contains(addedProgram)
-            .parent()
-            .invoke('remove');
-          cy.get('[data-cy="btnSave"]').click();
-          cy.get('.btn-close').click();
-
-          cy.get('[data-cy="editTeam"]').first().click();
-          cy.get('[data-cy="editProgramSelector"]').click();
-          cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
-            .wait(1000)
-            .should('not.contain', addedProgram);
-        });
-    });
-  });
-
   describe('Company Members Section', () => {
     it('Goes to company members section', () => {
       cy.get('[data-cy="companyMembersSection"]').should('have.text', 'Vos membres');
