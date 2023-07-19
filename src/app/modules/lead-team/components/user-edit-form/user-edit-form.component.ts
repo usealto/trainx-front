@@ -91,6 +91,7 @@ export class UserEditFormComponent implements OnInit {
         .pipe(
           tap((user) => {
             this.editedUser.emit(user);
+            this.userService.resetUsers();
             this.activeOffcanvas.close();
           }),
         )
