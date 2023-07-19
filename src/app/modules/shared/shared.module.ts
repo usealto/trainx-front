@@ -39,7 +39,6 @@ import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe'
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
 import { QuestionDeleteModalComponent } from './components/question-delete-modal/question-delete-modal.component';
-import { TagDeleteModalComponent } from './components/tag-delete-modal/tag-delete-modal.component';
 import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
 
 @NgModule({
@@ -68,7 +67,6 @@ import { DeleteModalComponent } from './components/delete-modal/delete-modal.com
     ButtonGroupComponent,
     TextCounterComponent,
     QuestionDeleteModalComponent,
-    TagDeleteModalComponent,
     DeleteModalComponent,
   ],
   imports: [
@@ -126,7 +124,6 @@ import { DeleteModalComponent } from './components/delete-modal/delete-modal.com
     ButtonGroupComponent,
     TextCounterComponent,
     QuestionDeleteModalComponent,
-    TagDeleteModalComponent,
     DeleteModalComponent,
   ],
 })

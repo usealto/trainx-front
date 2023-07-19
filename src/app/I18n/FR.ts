@@ -211,7 +211,7 @@ export const FR = {
         author: 'Créé par',
         associatedPrograms: 'Programmes associés',
         associatedQuestions: 'Questions associées',
-        questions: 'questions'
+        questions: 'questions',
       },
       filters: {
         programs: 'Programmes',
@@ -406,9 +406,9 @@ export const FR = {
       description: 'Description',
     },
     deleteModal: {
-      name: 'Supprimer le tag "{{}}"',
-      subtitle: 'Ce tag est associé à {{}} questions et {{}} programes.',
-      subtitle2: ' Êtes-vous sûr de vouloir la supprimer ? Cette action est irréversible.',
+      title: 'Supprimer le tag "{{}}"',
+      subtitle:
+        'Ce tag est associé à {{}} questions. Êtes-vous sûrs de vouloir le supprimer ? Cette action est irreversible.',
     },
   },
   leadTeam: {

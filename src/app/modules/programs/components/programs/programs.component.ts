@@ -31,7 +31,8 @@ import { QuestionFormComponent } from '../questions/question-form/question-form.
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { TagDeleteModalComponent } from 'src/app/modules/shared/components/tag-delete-modal/tag-delete-modal.component';
+import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
+import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 
 interface TagDisplay extends TagDtoApi {
   score?: number;
@@ -41,6 +42,7 @@ interface TagDisplay extends TagDtoApi {
   selector: 'alto-programs',
   templateUrl: './programs.component.html',
   styleUrls: ['./programs.component.scss'],
+  providers: [ReplaceInTranslationPipe],
 })
 export class ProgramsComponent implements OnInit {
   I18ns = I18ns;
@@ -92,6 +94,7 @@ export class ProgramsComponent implements OnInit {
     public readonly programsStore: ProgramsStore,
     private modalService: NgbModal,
     private readonly scoreService: ScoresService,
+    private replaceInTranslationPipe: ReplaceInTranslationPipe,
   ) {}
 
   ngOnInit(): void {
@@ -120,11 +123,18 @@ export class ProgramsComponent implements OnInit {
       .subscribe();
   }
 
-  deleteTag(tag?: TagDtoApi) {
-    const modalRef = this.modalService.open(TagDeleteModalComponent, { centered: true, size: 'md' });
-    const componentInstance = modalRef.componentInstance as TagDeleteModalComponent;
-    componentInstance.tag = tag;
-    componentInstance.tagDeleted
+  deleteTag(tag: TagDtoApi) {
+    const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
+
+    const componentInstance = modalRef.componentInstance as DeleteModalComponent;
+    componentInstance.data = {
+      title: this.replaceInTranslationPipe.transform(I18ns.tags.deleteModal.title, tag.name),
+      subtitle: this.replaceInTranslationPipe.transform(
+        I18ns.tags.deleteModal.subtitle,
+        tag.questionsCount ?? 0,
+      ),
+    };
+    componentInstance.objectDeleted
       .pipe(
         switchMap(() => this.tagRestService.deleteTag(tag?.id ?? '')),
         tap(() => {
