@@ -55,7 +55,6 @@ export class TestComponent {
     xAxis: [
       {
         type: 'category',
-        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
         axisPointer: {
           type: 'shadow',
         },

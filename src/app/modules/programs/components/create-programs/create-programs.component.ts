@@ -88,7 +88,7 @@ export class CreateProgramsComponent implements OnInit {
       priority: [program?.priority ?? null, [Validators.required]],
       description: program?.description ?? '',
       expectation: [program?.expectation ?? 70, [Validators.required]],
-      tags: [program?.tags?.map((t) => t.id) ?? [], [Validators.required]],
+      tags: [[], [Validators.required]],
       teams: [program?.teams?.map((t) => t.id) ?? []],
     });
   }
@@ -120,9 +120,7 @@ export class CreateProgramsComponent implements OnInit {
           map((d) => d.data),
           map((prog: ProgramDtoApi) => {
             this.isEdit ? (this.editedProgram = prog) : (this.createdProgram = prog);
-            return prog.tags ?? [];
           }),
-          tap((tags) => (this.selectedTags = tags?.map((t) => t.id))),
           tap(() => (this.programStore.programs.value = [])),
           untilDestroyed(this),
         )

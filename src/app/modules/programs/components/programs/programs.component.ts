@@ -50,7 +50,8 @@ export class ProgramsComponent implements OnInit {
   //
   questions: QuestionDtoApi[] = [];
   questionsPage = 1;
-  questionsCount = 0;
+  questionsCount: any;
+  collectionSize = 0;
   questionsPageSize = 10;
   isQuestionsLoading = true;
   questionsScore = new Map<string, number>();
@@ -194,6 +195,7 @@ export class ProgramsComponent implements OnInit {
         tap((questions) => {
           this.questions = questions.data ?? [];
           this.questionsCount = questions.meta.totalItems;
+          this.collectionSize = questions.meta.totalItems;
         }),
         switchMap((questions) => this.getScoresfromQuestions(questions)),
         map(() => this.questions?.map((q) => q.createdBy) ?? []),
@@ -302,7 +304,6 @@ export class ProgramsComponent implements OnInit {
       .pipe(
         tap((tags) => (this.tags = tags)),
         tap((tags) => (this.tagsCount = tags.length)),
-        tap((tags) => this.getProgramsfromTags(tags)),
         tap((tags) => this.changeTagsPage(tags)),
         switchMap((tags) => this.getScoresFromTags(tags.map((t) => t.id))),
         map(() => this.tags.map((t) => t.createdBy) ?? []),
@@ -346,39 +347,8 @@ export class ProgramsComponent implements OnInit {
     this.changeTagsPage(output);
   }
 
-  getProgramsfromTags(tags: TagDtoApi[]) {
-    const ids = tags.map((tag) => tag.id);
-    this.isTagProgramsLoading = true;
-    this.programRestService
-      .getPrograms()
-      .pipe(
-        tap((programs) => {
-          ids.forEach((tagId) => {
-            this.tagPrograms.set(tagId, this.tagProgramsLoop(tagId, programs));
-          });
-        }),
-        tap(() => (this.isTagProgramsLoading = false)),
-      )
-      .subscribe();
-  }
-
-  tagProgramsLoop(tagId: string, programs: ProgramDtoApi[]): string[] {
-    const programList: string[] = [];
-    programs.forEach((program) => {
-      if (program.tags?.some((tag) => tag.id === tagId)) {
-        programList.push(program.name);
-      }
-    });
-    return programList;
-  }
-
   resetFilters() {
     this.getQuestions((this.questionFilters = {}));
-  }
-
-  @memoize()
-  getTagPrograms(id: string) {
-    return this.tagPrograms.get(id) ?? [];
   }
 
   @memoize()

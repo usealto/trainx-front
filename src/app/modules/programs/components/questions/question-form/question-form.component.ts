@@ -80,7 +80,7 @@ export class QuestionFormComponent implements OnInit {
       this.questionForm = this.fb.group<QuestionForm>({
         title: ['', [Validators.required]],
         type: QuestionTypeEnumApi.MultipleChoice,
-        tags: this.program ? [this.program.tags?.map((t) => t.id) as string[]] : [],
+        tags: [],
         programs: this.program ? [[this.program.id]] : [],
         answerType: AnswerFormatTypeEnumApi.Text,
         answersAccepted: this.fb.array(
