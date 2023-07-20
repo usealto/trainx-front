@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PriorityEnumApi, ProgramDtoApi, QuestionDtoApi, TeamApi } from '@usealto/sdk-ts-angular';
-import { Observable, filter, map, of, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -117,16 +117,31 @@ export class CreateProgramsComponent implements OnInit {
       } else {
         obs$ = this.programRestService.createProgram(progValues);
       }
-
+      let progId = '';
       obs$
         .pipe(
           filter((x) => !!x),
           map((d) => d.data),
           map((prog: ProgramDtoApi) => {
-            this.editedProgram = prog;
+            progId = prog.id;
+            if (!this.isEdit) {
+              // add questionList to the program
+              return this.questionList.map((q) =>
+                this.programRestService.addOrRemoveQuestion(prog.id, q.id, false),
+              );
+            } else {
+              return of(null);
+            }
+          }),
+          switchMap((obs) => combineLatest(obs ?? [])),
+          tap(() => {
             this.isEdit = true;
           }),
-          tap(() => (this.programStore.programs.value = [])),
+          switchMap(() => this.programRestService.getProgram(progId)),
+          tap((prog) => {
+            this.editedProgram = prog;
+            this.programStore.programs.value = [];
+          }),
           untilDestroyed(this),
         )
         .subscribe();
@@ -138,7 +153,9 @@ export class CreateProgramsComponent implements OnInit {
       position: 'end',
       panelClass: 'overflow-auto',
     });
-    canvasRef.componentInstance.question = this.questions.find((q) => q.id === question?.id);
+    if (question) {
+      canvasRef.componentInstance.question = this.questions.find((q) => q.id === question?.id);
+    }
     canvasRef.componentInstance.program = this.isEdit ? this.editedProgram : this.createdProgram;
     canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
   }
@@ -156,6 +173,7 @@ export class CreateProgramsComponent implements OnInit {
       .pipe(
         tap((questions) => {
           const { data = [], meta } = questions;
+          this.questions = data;
           this.setquestionsDisplay(this.mapQuestionsToDisplay(data));
           this.questionsCount = meta.totalItems;
         }),
@@ -260,9 +278,11 @@ export class CreateProgramsComponent implements OnInit {
       id: q.id,
       title: q.title,
       isChecked:
-        (this.isEdit && this.editedProgram
-          ? q.programs?.some((p) => p.id === this.editedProgram?.id)
-          : false) ?? false,
+        (this.questionList.some((question) => question.id === q.id && !question.delete) ||
+          (this.isEdit && this.editedProgram
+            ? q.programs?.some((p) => p.id === this.editedProgram?.id)
+            : false)) ??
+        false,
     }));
   }
 
@@ -272,9 +292,5 @@ export class CreateProgramsComponent implements OnInit {
 
   findTeamName(id: string) {
     return this.teamStore.teams.value.find((t) => t.id === id)?.shortName;
-  }
-
-  getquestionsCount(): number {
-    this.editedProgram?.questionsCount;
   }
 }
