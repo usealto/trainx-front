@@ -11,6 +11,8 @@ export class ScoreFilterComponent {
   I18ns = I18ns;
   scoreFilters = Object.values(ScoreFilter).map((c) => ({ name: c }));
 
-  @Output() selectChange = new EventEmitter<string>();
   @Input() selectedItems: any[] = [];
+  @Input() disabled: boolean | any;
+
+  @Output() selectChange = new EventEmitter<string>();
 }

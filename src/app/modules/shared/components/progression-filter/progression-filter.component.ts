@@ -13,5 +13,6 @@ export class ProgressionFilterComponent {
   progressionFilters = Object.values(ScoreFilter).map((c) => ({ name: c }));
 
   @Input() selectedItems: any[] = [];
+  @Input() disabled: boolean | any;
   @Output() selectChange = new EventEmitter<string>();
 }
