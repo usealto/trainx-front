@@ -32,7 +32,7 @@ export class CreateProgramsComponent implements OnInit {
   programForm!: IFormGroup<ProgramForm>;
   currentStep = 1;
   createdProgram: ProgramDtoApi | undefined;
-  editedProgram!: ProgramDtoApi;
+  editedProgram?: ProgramDtoApi;
   isEdit = false;
 
   questions!: QuestionDtoApi[];
@@ -75,7 +75,10 @@ export class CreateProgramsComponent implements OnInit {
         }),
         filter((x) => !!x),
         switchMap((id) => this.programRestService.getProgram(id)),
-        tap((p) => (this.editedProgram = p)),
+        tap((p) => {
+          this.editedProgram = p;
+          this.associatedQuestionsCount = p.questionsCount; // store the questions count
+        }),
         tap((p) => this.initForm(p)),
         untilDestroyed(this),
       )
@@ -107,7 +110,7 @@ export class CreateProgramsComponent implements OnInit {
 
       let obs$: Observable<any>;
 
-      if (this.isEdit) {
+      if (this.isEdit && this.editedProgram) {
         obs$ = !this.programForm.touched
           ? of(null)
           : this.programRestService.updateProgram(this.editedProgram.id, progValues);
@@ -120,7 +123,8 @@ export class CreateProgramsComponent implements OnInit {
           filter((x) => !!x),
           map((d) => d.data),
           map((prog: ProgramDtoApi) => {
-            this.isEdit ? (this.editedProgram = prog) : (this.createdProgram = prog);
+            this.editedProgram = prog;
+            this.isEdit = true;
           }),
           tap(() => (this.programStore.programs.value = [])),
           untilDestroyed(this),
@@ -143,7 +147,8 @@ export class CreateProgramsComponent implements OnInit {
     this.questionRestService
       .getQuestionsPaginated({
         tagIds: this.selectedTags.join(','),
-        sortByProgramId: this.editedProgram.id,
+
+        sortByProgramId: this.editedProgram?.id ?? undefined,
         itemsPerPage: this.questionPageSize,
         page: this.questionPage,
         search: this.questionSearch,
@@ -152,7 +157,6 @@ export class CreateProgramsComponent implements OnInit {
         tap((questions) => {
           const { data = [], meta } = questions;
           this.setquestionsDisplay(this.mapQuestionsToDisplay(data));
-          this.associatedQuestionsCount = this.questionsDisplay.filter((q) => q.isChecked).length;
           this.questionsCount = meta.totalItems;
         }),
         untilDestroyed(this),
@@ -195,11 +199,18 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   addOrRemoveQuestion(questionId: string, toDelete: any) {
-    if (this.isEdit) {
+    if (this.isEdit && this.editedProgram) {
       this.programRestService
         .addOrRemoveQuestion(this.editedProgram.id, questionId, toDelete)
         .pipe(
-          tap(() => this.getQuestions()),
+          tap(() => {
+            if (toDelete) {
+              this.associatedQuestionsCount--;
+            } else {
+              this.associatedQuestionsCount++;
+            }
+            this.getQuestions();
+          }),
           untilDestroyed(this),
         )
         .subscribe();
@@ -248,7 +259,10 @@ export class CreateProgramsComponent implements OnInit {
     return questions.map((q) => ({
       id: q.id,
       title: q.title,
-      isChecked: (this.isEdit ? q.programs?.some((p) => p.id === this.editedProgram.id) : false) ?? false,
+      isChecked:
+        (this.isEdit && this.editedProgram
+          ? q.programs?.some((p) => p.id === this.editedProgram?.id)
+          : false) ?? false,
     }));
   }
 
@@ -261,10 +275,6 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   getquestionsCount(): number {
-    if (this.isEdit) {
-      return this.associatedQuestionsCount;
-    } else {
-      return this.questionList.length;
-    }
+    this.editedProgram?.questionsCount;
   }
 }
