@@ -5,6 +5,6 @@ export interface ProgramForm {
   description: string;
   expectation: number;
   priority: ProgramDtoApiPriorityEnumApi;
-  tags: string[];
+  tags?: string[];
   teams: string[];
 }

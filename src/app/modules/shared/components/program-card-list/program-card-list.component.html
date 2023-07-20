@@ -21,6 +21,7 @@
   <div class="row mb-4" *ngSwitchCase="'program'">
     <div class="col-7">
       <alto-dropdown-filter
+        data-cy="programTeamFilter"
         [data]="teamStore.teams.value"
         [displayLabel]="'shortName'"
         [placeholder]="I18ns.programs.programs.filters.team"
