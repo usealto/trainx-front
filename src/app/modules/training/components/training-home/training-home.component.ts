@@ -52,6 +52,7 @@ export class TrainingHomeComponent implements OnInit {
   allPrograms?: TrainingCardData[];
   allProgramsFiltered?: TrainingCardData[];
   user = this.userStore.user.value;
+  selectedItems: any[] = [];
 
   constructor(
     private readonly programRunsRestService: ProgramRunsRestService,
@@ -172,6 +173,7 @@ export class TrainingHomeComponent implements OnInit {
 
   resetFilters() {
     this.allProgramsFilter((this.allProgramsFilters = {}));
+    this.selectedItems = [];
   }
 
   @memoize()
