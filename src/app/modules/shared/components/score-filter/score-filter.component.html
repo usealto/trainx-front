@@ -5,5 +5,6 @@
   [data]="scoreFilters"
   [multiple]="false"
   [placeholder]="I18ns.leadTeam.members.filters.score"
+  [selectedItems]="selectedItems"
   (selectChange)="selectChange.emit($event)"
 ></alto-dropdown-filter>

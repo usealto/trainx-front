@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ScoreFilter } from '../../models/score.model';
 
@@ -12,4 +12,5 @@ export class ScoreFilterComponent {
   scoreFilters = Object.values(ScoreFilter).map((c) => ({ name: c }));
 
   @Output() selectChange = new EventEmitter<string>();
+  @Input() selectedItems: any[] = [];
 }
