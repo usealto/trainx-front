@@ -91,7 +91,7 @@ Merge `develop` branch into `admin`
 - To get variation between numbers: We use this formula: ( A - B) / A (exemple: (20 - 10) / 10 that give us +100% of variation).
 - We try to put maximum of calculations in the backend to provide any errors of "manual" calculations.
 - During testing, make sure all cases are tested and sounds good.
-- As much as you can, use given math library to help you.
+- As much as you can, use score/stats services to help you.
 
 ## Hotfix
 
