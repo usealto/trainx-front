@@ -90,8 +90,8 @@ export class UserEditFormComponent implements OnInit {
         .patchUser(this.user?.id, params)
         .pipe(
           tap((user) => {
-            this.editedUser.emit(user);
             this.userService.resetUsers();
+            this.editedUser.emit(user);
             this.activeOffcanvas.close();
           }),
         )
