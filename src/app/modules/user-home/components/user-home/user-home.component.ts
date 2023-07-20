@@ -117,7 +117,7 @@ export class UserHomeComponent implements OnInit {
                 previousScoredUser.score !== 0 &&
                 scoredUser.score &&
                 scoredUser.score !== 0
-                  ? ( scoredUser.score - previousScoredUser.score) / previousScoredUser.score
+                  ? scoredUser.score - previousScoredUser.score
                   : 0;
               return {
                 position: index + 1,

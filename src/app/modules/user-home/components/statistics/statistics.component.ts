@@ -66,9 +66,7 @@ export class StatisticsComponent implements OnInit {
           this.userScore = curr[0]?.score ?? 0;
           const previousScore = prev[0]?.score ?? 0;
           this.userScoreProgression =
-            previousScore !== 0 && this.userScore !== 0
-              ? (this.userScore - previousScore) / previousScore
-              : 0;
+            previousScore !== 0 && this.userScore !== 0 ? this.userScore - previousScore : 0;
         }),
       )
       .subscribe();
@@ -91,22 +89,28 @@ export class StatisticsComponent implements OnInit {
         tap(([currentPrograms, previousPrograms, currentProgramRuns]) => {
           //TODO: refacto when backend will bring latest program run with programs
           this.programsCount = currentPrograms.data?.length ?? 0;
+
           const finishedPrograms =
             currentPrograms.data?.filter((p) =>
               currentProgramRuns.some((pr) => pr.programId === p.id && !!pr.finishedAt),
             ) ?? [];
+
           const previousFinishedPrograms =
             previousPrograms.data?.filter((p) =>
               currentProgramRuns.some((pr) => pr.programId === p.id && !!pr.finishedAt),
             ) ?? [];
+
           this.finishedProgramsCount = finishedPrograms.length;
+
           this.averageFinishedPrograms =
             finishedPrograms.length > 0 ? finishedPrograms.length / (currentPrograms.data?.length ?? 1) : 0;
-          this.finishedProgramsCountProgression =
+
+          const avgPreviousFinishedPrograms =
             previousFinishedPrograms.length > 0
-              ? this.averageFinishedPrograms -
-                previousFinishedPrograms?.length / (previousPrograms.data?.length ?? 1)
+              ? previousFinishedPrograms.length / (previousPrograms.data?.length ?? 1)
               : 0;
+
+          this.finishedProgramsCountProgression = this.averageFinishedPrograms - avgPreviousFinishedPrograms;
         }),
       )
       .subscribe();
