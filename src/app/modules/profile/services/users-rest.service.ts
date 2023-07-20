@@ -34,6 +34,10 @@ export class UsersRestService {
     }
   }
 
+  resetUsers() {
+    this.userStore.users.value = [];
+  }
+
   getUsersFiltered(req: GetUsersRequestParams): Observable<UserDtoApi[]> {
     return this.userApi.getUsers({ ...req }).pipe(map((r) => r.data ?? []));
   }
