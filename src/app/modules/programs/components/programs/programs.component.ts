@@ -348,7 +348,7 @@ export class ProgramsComponent implements OnInit {
 
     let output = this.tagsService.filterTags(this.tags, { programs, contributors, search }) as TagDisplay[];
 
-    output.map((tag) => (tag.score = this.getTagScore(tag.id)));
+    output.forEach((tag) => (tag.score = this.getTagScore(tag.id)));
 
     if (score) {
       output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
