@@ -215,19 +215,6 @@
             </div>
           </div>
           <div class="row mb-4">
-            <div class="col-5">{{ I18ns.programs.forms.step1.tags }}</div>
-            <div class="col-6 p-0 text-end">
-              <span *ngFor="let id of programForm.controls.tags.value" class="alto-badge ms-1">
-                {{ findTagName(id) }}
-              </span>
-            </div>
-            <div class="col-1">
-              <span class="ms-1 alto-badge cursor-pointer" (click)="changeTab(1)">
-                <i class="bi bi-plus-lg"></i>
-              </span>
-            </div>
-          </div>
-          <div class="row mb-4">
             <div class="col-5">{{ I18ns.programs.forms.step1.expectation }}</div>
             <div class="col-6 p-0 text-end">
               <span class="alto-score" [class]="programForm.controls.expectation.value || 0 | pillColor">

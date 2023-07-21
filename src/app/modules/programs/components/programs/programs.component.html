@@ -85,7 +85,7 @@
       ></alto-search>
     </div>
   </div>
-  <ng-container *ngIf="questionsCount > 0; else noQuestions">
+  <ng-container *ngIf="questionsCount! > 0; else noQuestions">
     <div class="table-panel">
       <table class="table">
         <thead>
@@ -147,7 +147,7 @@
 
       <alto-pagination
         class="mx-4 d-block"
-        [collectionSize]="collectionSize"
+        [collectionSize]="questionsCount ?? 0"
         [(page)]="questionsPage"
         (pageChange)="changeQuestionsPage($event)"
         [pageSize]="questionsPageSize"
@@ -157,7 +157,7 @@
     </div>
   </ng-container>
   <ng-template #noQuestions>
-    <div *ngIf="questionsCount === null">
+    <div *ngIf="questionsCount === undefined">
       <div class="panel text-center p-6 mb-4">
         <i class="alto-badge-big fs-5 alto-badge-blue bi bi-chat"></i>
         <h2 class="my-4">{{ I18ns.programs.questions.placeholder.noQuestion }}</h2>

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-  ProgramDtoApi,
   QuestionDtoApi,
   QuestionDtoPaginatedResponseApi,
   QuestionSubmittedDtoApi,
@@ -52,8 +51,7 @@ export class ProgramsComponent implements OnInit {
   //
   questions: QuestionDtoApi[] = [];
   questionsPage = 1;
-  questionsCount: any;
-  collectionSize = 0;
+  questionsCount?: number;
   questionsPageSize = 10;
   isQuestionsLoading = true;
   questionsScore = new Map<string, number>();
@@ -205,7 +203,6 @@ export class ProgramsComponent implements OnInit {
         tap((questions) => {
           this.questions = questions.data ?? [];
           this.questionsCount = questions.meta.totalItems;
-          this.collectionSize = questions.meta.totalItems;
         }),
         switchMap((questions) => this.getScoresfromQuestions(questions)),
         map(() => this.questions?.map((q) => q.createdBy) ?? []),
