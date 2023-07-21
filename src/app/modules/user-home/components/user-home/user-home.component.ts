@@ -112,11 +112,7 @@ export class UserHomeComponent implements OnInit {
               const user = users.find((user) => user.id === scoredUser.id);
               const previousScoredUser = previousScoredUsers.find((user) => user.id === scoredUser.id);
               const progression =
-                previousScoredUser &&
-                previousScoredUser.score &&
-                previousScoredUser.score !== 0 &&
-                scoredUser.score &&
-                scoredUser.score !== 0
+                previousScoredUser && previousScoredUser.score && scoredUser.score
                   ? scoredUser.score - previousScoredUser.score
                   : 0;
               return {

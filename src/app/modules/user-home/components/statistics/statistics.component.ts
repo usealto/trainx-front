@@ -66,7 +66,7 @@ export class StatisticsComponent implements OnInit {
           this.userScore = curr[0]?.score ?? 0;
           const previousScore = prev[0]?.score ?? 0;
           this.userScoreProgression =
-            previousScore !== 0 && this.userScore !== 0 ? this.userScore - previousScore : 0;
+            previousScore && this.userScore ? this.userScore - previousScore : 0;
         }),
       )
       .subscribe();
