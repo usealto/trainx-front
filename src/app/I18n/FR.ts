@@ -154,6 +154,7 @@ export const FR = {
       scoreToolTip: 'Score moyen du programme depuis sa création',
       filters: {
         team: 'Équipe',
+        teams: 'Équipes',
       },
     },
     questions: {
