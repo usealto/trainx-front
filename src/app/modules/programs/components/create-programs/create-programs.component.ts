@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PriorityEnumApi, ProgramDtoApi, QuestionDtoApi, TeamApi } from '@usealto/sdk-ts-angular';
-import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, filter, first, forkJoin, map, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -149,15 +149,35 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   openQuestionForm(question?: QuestionDisplay) {
+    let isQuestionEdit = false;
     const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
     });
     if (question) {
       canvasRef.componentInstance.question = this.questions.find((q) => q.id === question?.id);
+      isQuestionEdit = true;
     }
-    canvasRef.componentInstance.program = this.isEdit ? this.editedProgram : this.createdProgram;
-    canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
+    if (this.isEdit && this.editedProgram) {
+      canvasRef.componentInstance.program = this.editedProgram;
+    }
+    canvasRef.componentInstance.createdQuestion
+      .pipe(
+        tap((newQuestion: QuestionDtoApi) => {
+          //if it's a new question, add it to the list
+          if (!isQuestionEdit) {
+            this.questionList = this.questionList.filter((q) => q.id !== newQuestion.id);
+            this.questionList.push({ id: newQuestion.id, delete: false });
+          }
+
+          // refresh the program
+          this.refreshProgram();
+
+          // refresh the questions list
+          this.getQuestions();
+        }),
+      )
+      .subscribe();
   }
 
   getQuestions() {
@@ -228,6 +248,7 @@ export class CreateProgramsComponent implements OnInit {
               this.associatedQuestionsCount++;
             }
             this.getQuestions();
+            this.refreshProgram();
           }),
           untilDestroyed(this),
         )
@@ -292,5 +313,13 @@ export class CreateProgramsComponent implements OnInit {
 
   findTeamName(id: string) {
     return this.teamStore.teams.value.find((t) => t.id === id)?.shortName;
+  }
+
+  refreshProgram() {
+    if (this.editedProgram) {
+      this.programRestService.getProgram(this.editedProgram.id).subscribe((p) => {
+        this.editedProgram = p;
+      });
+    }
   }
 }
