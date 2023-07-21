@@ -54,8 +54,8 @@
     <alto-programs-form [isEdit]="isEdit" [form]="programForm"></alto-programs-form>
     <div class="row">
       <div class="col-6">
-        <a class="cursor-pointer" [ngClass]="{ invisible: true }" (click)="delete()">
-          <i class="bi bi-trash"></i> {{ I18ns.shared.delete }}
+        <a data-cy="deleteProgram" class="cursor-pointer" *ngIf="isEdit" (click)="delete()">
+          <i class="bi bi-trash"></i> {{ I18ns.programs.delete.btn }}
         </a>
       </div>
       <div class="col-6 text-end">
