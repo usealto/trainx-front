@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PriorityEnumApi, ProgramDtoApi, QuestionDtoApi, TeamApi } from '@usealto/sdk-ts-angular';
-import { Observable, combineLatest, filter, first, forkJoin, map, of, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -31,7 +31,6 @@ export class CreateProgramsComponent implements OnInit {
 
   programForm!: IFormGroup<ProgramForm>;
   currentStep = 1;
-  createdProgram: ProgramDtoApi | undefined;
   editedProgram?: ProgramDtoApi;
   isEdit = false;
 
@@ -41,7 +40,6 @@ export class CreateProgramsComponent implements OnInit {
   questionPage = 1;
   questionPageSize = 10;
   questionsCount = 0;
-  associatedQuestionsCount = 0;
 
   selectedTags: string[] = [];
   questionSearch = '';
@@ -77,7 +75,6 @@ export class CreateProgramsComponent implements OnInit {
         switchMap((id) => this.programRestService.getProgram(id)),
         tap((p) => {
           this.editedProgram = p;
-          this.associatedQuestionsCount = p.questionsCount; // store the questions count
         }),
         tap((p) => this.initForm(p)),
         untilDestroyed(this),
@@ -242,11 +239,6 @@ export class CreateProgramsComponent implements OnInit {
         .addOrRemoveQuestion(this.editedProgram.id, questionId, toDelete)
         .pipe(
           tap(() => {
-            if (toDelete) {
-              this.associatedQuestionsCount--;
-            } else {
-              this.associatedQuestionsCount++;
-            }
             this.getQuestions();
             this.refreshProgram();
           }),
@@ -262,20 +254,25 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   delete() {
+    if (!this.editedProgram) {
+      return;
+    }
+    const { id, name, teams } = this.editedProgram;
+
     const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
 
     const componentInstance = modalRef.componentInstance as DeleteModalComponent;
     componentInstance.data = {
-      title: this.replaceInTranslationPipe.transform(I18ns.programs.delete.title, this.editedProgram.name),
+      title: this.replaceInTranslationPipe.transform(I18ns.programs.delete.title, name),
       subtitle: this.replaceInTranslationPipe.transform(
         I18ns.programs.delete.subtitle,
-        this.editedProgram.teams.length.toString(),
+        teams.length.toString(),
       ),
     };
 
     componentInstance.objectDeleted
       .pipe(
-        switchMap(() => this.programRestService.deleteProgram(this.editedProgram.id)),
+        switchMap(() => this.programRestService.deleteProgram(id)),
         tap(() => {
           this.programRestService.resetCache();
           modalRef.close();
