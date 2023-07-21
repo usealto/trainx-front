@@ -40,7 +40,8 @@
               ></i>
             </th>
             <th scope="col" class="text-center">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
-            <th class="w-5"></th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -67,17 +68,11 @@
             <td class="text-center">
               {{ team.createdAt | date : 'shortDate' }}
             </td>
-            <td>
-              <i
-                data-cy="editTeam"
-                class="fs-5 bi bi-pencil cursor-pointer float-end me-4"
-                (click)="openTeamForm(team)"
-              ></i>
-              <i
-                [attr.data-cy]="'deleteTeam' + team.shortName"
-                class="fs-5 bi bi-trash cursor-pointer float-end me-4"
-                (click)="deleteTeam(team)"
-              ></i>
+            <td class="cursor-pointer px-3" (click)="deleteTeam(team)">
+              <i [attr.data-cy]="'deleteTeam' + team.shortName" class="fs-5 bi bi-trash3 float-end"></i>
+            </td>
+            <td class="cursor-pointer px-3" (click)="openTeamForm(team)">
+              <i data-cy="editTeam" class="fs-5 bi bi-pen float-end me-4"></i>
             </td>
           </tr>
         </tbody>
@@ -226,7 +221,7 @@
             <td>
               <i
                 data-cy="editCompanyMember"
-                class="fs-5 bi bi-pencil cursor-pointer float-end me-4"
+                class="fs-5 bi bi-pen cursor-pointer float-end me-4"
                 (click)="openUserEditionForm(user)"
               ></i>
             </td>
