@@ -61,4 +61,12 @@ export class TagsRestService {
       }),
     );
   }
+
+  deleteTag(id: string) {
+    return this.tagApi.deleteTag({ id });
+  }
+  
+  resetTags(){
+    this.programStore.tags.reset();
+  }
 }

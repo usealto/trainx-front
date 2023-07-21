@@ -209,6 +209,27 @@ describe('Lead Team', () => {
         });
     });
   });
+
+  it('Create and delete a team', () => {
+    // Create a new Team
+    cy.get('[data-cy="createTeam"]').click();
+    cy.get('[data-cy="editLongnameInput"]').click().wait(3000).clear().type('ABCDETEAM');
+    cy.get('[data-cy="editShortnameInput"]').click().wait(3000).clear().type('ABCD');
+    cy.get('[data-cy="btnSave"]').click();
+
+    cy.wait(5000);
+
+    // Delete the newly created team
+    cy.visit('/l/teams');
+    cy.get('[data-cy="deleteTeamABCD"]').should('be.visible').click();
+    cy.get('.row > :nth-child(2) > .btn').should('be.visible').click();
+
+    cy.wait(5000);
+
+    // check that the deleted team no longer exists.
+    cy.visit('/l/teams');
+    cy.get('[data-cy="deleteTeamABCD"]').should('not.exist');
+  });
 });
 
 describe('User Team', () => {
