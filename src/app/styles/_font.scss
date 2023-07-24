@@ -1,4 +1,23 @@
 @font-face {
+  font-family: 'PlusJakartaSans';
+  font-style: normal;
+  font-weight: normal;
+  src: url('../../assets/fonts/PlusJakartaSans-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'PlusJakartaSans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('../../assets/fonts/PlusJakartaSans-SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'PlusJakartaSans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../../assets/fonts/PlusJakartaSans-Bold.ttf') format('truetype');
+}
+
+@font-face {
   font-family: 'Inter';
   font-style: normal;
   font-weight: normal;

@@ -210,6 +210,8 @@ export const FR = {
         scoreToolTip: 'Score moyen sur ce tag depuis sa création',
         author: 'Créé par',
         associatedPrograms: 'Programmes associés',
+        associatedQuestions: 'Questions associées',
+        questions: 'questions',
       },
       filters: {
         programs: 'Programmes',
@@ -258,6 +260,12 @@ export const FR = {
         summary: 'Récapitulatif',
         summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
       },
+    },
+    delete: {
+      btn: 'Supprimer le programme',
+      title: 'Supprimer le programme "{{}}"',
+      subtitle:
+        'Ce programme est assigné à {{}} équipes, êtes-vous sûrs de vouloir le supprimer ? Cette action est irreversible.',
     },
   },
   statistics: {
@@ -397,6 +405,11 @@ export const FR = {
       questionsPlaceholder: 'Rechercher dans vos questions',
       description: 'Description',
     },
+    deleteModal: {
+      title: 'Supprimer le tag "{{}}"',
+      subtitle:
+        'Ce tag est associé à {{}} questions. Êtes-vous sûrs de vouloir le supprimer ? Cette action est irreversible.',
+    },
   },
   leadTeam: {
     title: 'Équipes',
@@ -477,6 +490,11 @@ export const FR = {
         Programs: 'Programmes',
         programsPlaceholder: 'Rechercher dans vos programmes',
         ProgramsSubtitle: 'Sélectionner les programmes auxquels cette équipe doit être assignée.',
+      },
+      deleteModal: {
+        title: 'Supprimer l\'équipe "{{}}"',
+        subtitle:
+          'Cette équipe contient {{}} membres, êtes-vous sûr de vouloir la supprimer ? Cette action est irréversible.',
       },
     },
   },
