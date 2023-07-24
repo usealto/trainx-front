@@ -64,7 +64,7 @@ export class UsersRestService {
     if (this.userStore.user.value) {
       return this.userStore.user.value$;
     } else {
-      return this.userApi.getMe({}).pipe(
+      return this.userApi.getMe().pipe(
         map((u) => u.data || ({} as UserDtoApi)),
         tap((u) => (this.userStore.user.value = u)),
       );

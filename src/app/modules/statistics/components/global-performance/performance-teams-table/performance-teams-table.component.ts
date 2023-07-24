@@ -72,12 +72,12 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
     this.teamFilters.search = search;
 
     let output: TeamStatsDtoApi[] = this.teams;
-    // if (programs && programs.length > 0) {
-    //   output = output.filter((t) => t.programs?.some((p) => programs.some((pr) => pr === p.id)));
-    // }
-    // if (tags && tags.length > 0) {
-    //   output = output.filter((t) => t.tags?.some((p) => tags.some((pr) => pr === p.id)));
-    // }
+    if (programs && programs.length > 0) {
+      output = output.filter((t) => t.programs?.some((p) => programs.some((pr) => pr === p.id)));
+    }
+    if (tags && tags.length > 0) {
+      output = output.filter((t) => t.tags?.some((p) => tags.some((pr) => pr === p.id)));
+    }
     if (teams && teams.length > 0) {
       output = output.filter((t) => teams.some((pr) => pr === t.id));
     }
@@ -95,8 +95,6 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
         tap((t) => {
           this.teams = t;
           this.teamsDisplay = t;
-          // this.programs = t.map((te) => te.programs || []).flat();
-          // this.tags = t.map((te) => te.tags || []).flat();
           this.changeTeamsPage(1);
         }),
         switchMap(() => this.scoreRestService.getTeamsStats(this.duration, true)),

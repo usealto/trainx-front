@@ -77,6 +77,7 @@ export class ScoresRestService {
 
     return this.statsApi
       .getTeamsStats({
+        page: 1,
         itemsPerPage: 400,
         from: dateAfter,
         to: dateBefore,
