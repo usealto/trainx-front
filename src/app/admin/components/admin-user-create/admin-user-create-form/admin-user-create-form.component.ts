@@ -12,7 +12,6 @@ import {
   UserDtoApi,
   UserDtoApiRolesEnumApi,
   UsersApiService,
-  DefaultApiService,
 } from '@usealto/sdk-ts-angular';
 import { UserForm } from './models/user.form';
 import { AuthUserGet } from '../../admin-users/models/authuser.get';
@@ -52,7 +51,6 @@ export class AdminUserCreateFormComponent implements OnInit {
     private readonly companiesRestService: CompaniesRestService,
     private readonly slackApiService: SlackApiService,
     private readonly msg: MsgService,
-    private readonly defaultApiService: DefaultApiService,
     private modalService: NgbModal,
   ) {
     this.fb = fob;

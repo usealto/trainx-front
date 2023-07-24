@@ -128,10 +128,6 @@ export class AdminCompanyUsersComponent implements OnInit {
     return this.selectedUsers.some((existingUser) => existingUser.email === user.email);
   }
 
-  isSelectedUsersSatus(activeValue: boolean) {
-    return this.selectedUsers.every((user) => user.isActive === activeValue);
-  }
-
   selectUser(user: UserDtoApi) {
     if (this.selectedUsers.some((existingUser) => existingUser.email === user.email)) {
       this.selectedUsers = this.selectedUsers.filter((existingUser) => existingUser.email !== user.email);
