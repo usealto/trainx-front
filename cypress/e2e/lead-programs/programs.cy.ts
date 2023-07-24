@@ -56,7 +56,7 @@ describe('Lead Programs', () => {
       ':nth-child(1) > alto-program-card > :nth-child(1) > .panel > .card-bottom > alto-colored-pill-list > span',
     ).contains('ABD');
   });
-  
+
   it('filter programs by team', function () {
     cy.get('[ng-reflect-router-link="l/programs"]').click();
     cy.wait(500);
@@ -73,43 +73,44 @@ describe('Lead Programs', () => {
       cy.get('[data-cy="coloredTeams"]').first().contains(teamShortname);
     });
 
-  it('create and delete a program', function () {
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
-    cy.wait(500);
-    cy.get('[data-cy="createNewProgram"]').click();
+    it('create and delete a program', function () {
+      cy.get('[ng-reflect-router-link="l/programs"]').click();
+      cy.wait(500);
+      cy.get('[data-cy="createNewProgram"]').click();
 
-    // Create a new program
-    cy.get(':nth-child(1) > .col-6 > .form-control').clear('A');
-    cy.get(':nth-child(1) > .col-6 > .form-control').type('ABCDTEST');
+      // Create a new program
+      cy.get(':nth-child(1) > .col-6 > .form-control').clear();
+      cy.get(':nth-child(1) > .col-6 > .form-control').type('ABCDTEST');
 
-    cy.get(':nth-child(5) > .col-6 > .alto-form > .ng-select-container > .ng-arrow-wrapper').click();
-    cy.get('.ng-dropdown-panel-items .ng-option').first().click();
+      cy.get(':nth-child(5) > .col-6 > .alto-form > .ng-select-container > .ng-arrow-wrapper').click();
+      cy.get('.ng-dropdown-panel-items .ng-option').first().click();
 
-    cy.get(
-      ':nth-child(9) > .col-6 > .alto-form > .ng-select-container > .ng-value-container > .ng-input > input',
-    ).click();
-    cy.get('.ng-dropdown-panel-items .ng-option').first().click();
-    cy.get(':nth-child(3) > .text-end > .btn-primary').click();
-    cy.get('.my-3 > .btn-primary').click();
+      cy.get(
+        ':nth-child(9) > .col-6 > .alto-form > .ng-select-container > .ng-value-container > .ng-input > input',
+      ).click();
+      cy.get('.ng-dropdown-panel-items .ng-option').first().click();
+      cy.get(':nth-child(3) > .text-end > .btn-primary').click();
+      cy.get('.my-3 > .btn-primary').click();
 
-    // Delete the program
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
+      // Delete the program
+      cy.get('[ng-reflect-router-link="l/programs"]').click();
 
-    cy.get('.d-inline-block > .search-group > .form-control').clear('A');
-    cy.get('.d-inline-block > .search-group > .form-control').type('ABCDTEST');
-    cy.get('[data-cy="programABCDTEST"]').click();
+      cy.get('.d-inline-block > .search-group > .form-control').clear();
+      cy.get('.d-inline-block > .search-group > .form-control').type('ABCDTEST');
+      cy.get('[data-cy="programABCDTEST"]').click();
 
-    cy.get('[data-cy="deleteProgram"]').click();
+      cy.get('[data-cy="deleteProgram"]').click();
 
-    cy.get('.modal-body > .row > :nth-child(2) > .btn').click();
+      cy.get('.modal-body > .row > :nth-child(2) > .btn').click();
 
-    // Check if the program is deleted
-    cy.wait(500);
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
+      // Check if the program is deleted
+      cy.wait(500);
+      cy.get('[ng-reflect-router-link="l/programs"]').click();
 
-    cy.get('.d-inline-block > .search-group > .form-control').clear('A');
-    cy.get('.d-inline-block > .search-group > .form-control').type('ABCDTEST');
+      cy.get('.d-inline-block > .search-group > .form-control').clear();
+      cy.get('.d-inline-block > .search-group > .form-control').type('ABCDTEST');
 
-    cy.get('[data-cy="programABCDTEST"]').should('not.exist');
+      cy.get('[data-cy="programABCDTEST"]').should('not.exist');
+    });
   });
 });
