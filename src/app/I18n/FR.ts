@@ -146,7 +146,7 @@ export const FR = {
       title: 'Programmes',
       subtitle: "Retrouvez l'ensemble des programmes assignés à vos équipes",
       createProgram: 'Créer',
-      involvement: 'Participation',
+      involvement: 'Taux de participation',
       involvementToolTip: 'Nombre de membres ayant commencé le programme sur le nombre de membres assignés',
       progress: 'Avancement',
       progressToolTip: 'Nombre de questions répondues par tout les membres sur le nombre total de questions',
@@ -154,6 +154,7 @@ export const FR = {
       scoreToolTip: 'Score moyen du programme depuis sa création',
       filters: {
         team: 'Équipe',
+        teams: 'Équipes',
       },
     },
     questions: {

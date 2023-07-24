@@ -23,20 +23,20 @@
   border-radius: 25px;
   padding: 0 0.5rem;
   text-align: center;
-  font-weight: 500;
+  font-weight: 600;
 }
 .alto-score {
   @extend .alto-badge-no-size;
-  height: 1.571rem;
-  min-width: 3.5rem;
-  line-height: 1.571rem;
+  min-height: 1.66rem;
+  min-width: 3.75rem;
+  line-height: 1.66rem;
 }
 .alto-badge {
   @extend .alto-badge-no-size;
-  min-height: 1.58rem;
+  min-height: 1.66rem;
   min-width: 1.58rem;
-  line-height: 1.6rem;
-  font-size: 0.857rem;
+  line-height: 1.66rem;
+  font-size: 0.833rem;
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
 }
@@ -67,9 +67,9 @@
 
 .panel {
   background-color: white;
-  border-radius: 1.143rem;
-  border: 1px solid var(--alto-border);
-  padding: 1.4rem 1.7rem;
+  border-radius: 0.667rem;
+  border: 1px solid var(--gray-200);
+  padding: 1.667rem;
 }
 
 // Block used while loading content
