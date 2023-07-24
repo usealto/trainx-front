@@ -52,7 +52,7 @@ export class TrainingHomeComponent implements OnInit {
   allPrograms?: TrainingCardData[];
   allProgramsFiltered?: TrainingCardData[];
   user = this.userStore.user.value;
-  selectedItems: any[] = [];
+  selectedItems: TrainingCardData[] = [];
   disabledCountScore?: number;
   disabledCountProgress?: number;
 

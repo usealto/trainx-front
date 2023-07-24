@@ -57,7 +57,7 @@ export class ProgramsComponent implements OnInit {
   questionsScore = new Map<string, number>();
   questionFilters: QuestionFilters = { programs: [], tags: [], contributors: [], search: '' };
   contributors: { id: string; fullname: string }[] = [];
-  selectedItems: any[] = [];
+  selectedItems: QuestionDtoApi[] = [];
   //
   userCache = new Map<string, UserDtoApi>();
   pillsRowDisplayLimit = 3;
