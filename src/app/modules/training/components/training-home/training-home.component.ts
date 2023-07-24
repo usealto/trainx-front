@@ -11,7 +11,6 @@ import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { TrainingCardData } from '../../models/training.model';
-import { number } from 'echarts';
 
 enum OngoingFilter {
   All = 'All',
@@ -70,7 +69,6 @@ export class TrainingHomeComponent implements OnInit {
       .pipe(
         tap((a) => {
           this.allPrograms = this.allProgramsFiltered = a;
-          console.log(a);
           this.disabledCountScore = a.filter((r) => !r.isProgress).length;
           this.disabledCountProgress = a.filter((r) => r.isProgress).length;
           this.onGoingPrograms = this.onGoingProgramsDisplay = a.filter((r) => r.isProgress && r.duration);
