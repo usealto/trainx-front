@@ -4,8 +4,7 @@
   position: fixed;
   color: #f2f4f7;
   left: 0;
-
-  width: 20rem;
+  width: 5rem;
   @media (max-width: 1300px) {
     width: 230px;
   }
@@ -24,18 +23,18 @@
 .menu {
   a.module {
     display: block;
-    border-radius: 6px;
-    margin: 0 1.143rem 0.286rem 1.143rem;
+    border-radius: 0.3333rem;
     height: 2.429rem;
-    padding: 0.357rem 0.857rem;
+    margin: 1.25rem;
+    padding: 0.3333rem;
     color: #f2f4f7;
     font-weight: 500;
     font-size: 1.143rem;
 
     svg {
       fill: #667085;
-      margin-right: 1.1rem;
-      width: 23px;
+      width: 1.6667rem;
+      height: 1.6667rem;
     }
 
     &.menu-selected,

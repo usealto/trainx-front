@@ -1,6 +1,6 @@
 <div class="logo">
   <a [routerLink]="['/', displayAdmin ? AltoRoutes.lead : AltoRoutes.user, AltoRoutes.leadHome]">
-    <img height="22" src="assets/img/logo-white.png" alt="Alto Logo" />
+    <img height="22" src="assets/img/favicon.png" alt="Alto Logo" />
   </a>
 </div>
 
@@ -19,7 +19,7 @@
           fill-rule="evenodd"
         />
       </svg>
-      {{ I18ns.menu.home }}
+      <!-- {{ I18ns.menu.home }} -->
     </a>
     <a
       class="module"
@@ -32,7 +32,7 @@
           fill-rule="evenodd"
         />
       </svg>
-      {{ I18ns.menu.training }}
+      <!-- {{ I18ns.menu.training }} -->
     </a>
 
     <!-- Team tab hidden -->
@@ -67,7 +67,7 @@
         />
       </svg>
 
-      {{ I18ns.menu.home }}
+      <!-- {{ I18ns.menu.home }} -->
     </a>
     <a
       class="module"
@@ -81,7 +81,7 @@
         />
       </svg>
 
-      {{ I18ns.menu.programs }}
+      <!-- {{ I18ns.menu.programs }} -->
     </a>
     <a
       class="module"
@@ -95,7 +95,7 @@
         />
       </svg>
 
-      {{ I18ns.menu.statistics }}
+      <!-- {{ I18ns.menu.statistics }} -->
     </a>
     <a
       class="module"
@@ -109,7 +109,7 @@
         />
       </svg>
 
-      {{ I18ns.menu.team }}
+      <!-- {{ I18ns.menu.team }} -->
     </a>
     <!-- <a
       class="module"
@@ -139,7 +139,7 @@
             fill-rule="evenodd"
           />
         </svg>
-        {{ I18ns.menu.settings }}
+        <!-- {{ I18ns.menu.settings }} -->
       </a>
     </div>
     <div *ngIf="isAdmin" class="form-check form-switch ms-5">
@@ -152,7 +152,7 @@
         (change)="switchToAdmin(adminSwitch.checked)"
       />
       <label class="form-check-label cursor-pointer" style="margin-top: 0.1rem" for="adminSwitch">
-        {{ I18ns.menu.adminMode }}
+        <!-- {{ I18ns.menu.adminMode }} -->
       </label>
     </div>
 
