@@ -145,8 +145,9 @@ export const FR = {
     },
   },
   programs: {
+    titleIcon: '🎯',
     title: 'Programmes',
-    subtitle: "Retrouvez l'ensemble des trainings de vos équipes.",
+    subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
     programs: {
       title: 'Programmes',
       subtitle: "Retrouvez l'ensemble des programmes assignés à vos équipes",
