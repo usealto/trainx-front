@@ -68,19 +68,14 @@ export const FR = {
   },
   leadHome: {
     title: 'Bonjour ',
-    subtitle: "Retrouvez une vue d'ensemble sur votre training.",
-    comments: ['Aucun commentaire', '{{}} commentaire', '{{}} commentaires'],
-    awaiting: 'en attente',
+    subtitle: "Découvrez une vue d'ensemble sur l'avancée de vos équipes.",
+    comments: ['{{}} commentaire', '{{}} commentaires'],
     subtitleComment: [
-      'Vous avez traité toutes les questions suggérées par vos collaborateurs. ',
-      'Consultez les commentaires écrits par vos collaborateurs.',
+      'Vos utilisateurs ont laissé {{}} nouveau commentaire.',
+      'Vos utilisateurs ont laissé {{}} nouveaux commentaires.',
     ],
-    question: ['Aucune question suggérée', '{{}} question suggérée', '{{}} questions suggérées'],
-    subtitleQuestion: [
-      'Vous avez traité toutes les questions suggérées par vos collaborateurs. ',
-      'Vous avez {{}} question en attente.',
-      'Vous avez {{}} questions en attente.',
-    ],
+    question: ['{{}} question suggérée', '{{}} questions suggérées'],
+    subtitleQuestion: ['Vous avez {{}} question en attente.', 'Vous avez {{}} questions en attente.'],
     statistics: {
       title: 'Statistiques',
       globalScore: 'Score global',
@@ -151,7 +146,7 @@ export const FR = {
       title: 'Programmes',
       subtitle: "Retrouvez l'ensemble des programmes assignés à vos équipes",
       createProgram: 'Créer',
-      involvement: 'Taux de participation',
+      involvement: 'Participation',
       involvementToolTip: 'Nombre de membres ayant commencé le programme sur le nombre de membres assignés',
       progress: 'Avancement',
       progressToolTip: 'Nombre de questions répondues par tout les membres sur le nombre total de questions',
@@ -159,7 +154,6 @@ export const FR = {
       scoreToolTip: 'Score moyen du programme depuis sa création',
       filters: {
         team: 'Équipe',
-        teams: 'Équipes',
       },
     },
     questions: {

@@ -6,7 +6,6 @@
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "lucono.karma-test-explorer",
-    "ms-vsliveshare.vsliveshare",
-    "sainoba.px-to-rem"
+    "ms-vsliveshare.vsliveshare"
   ]
 }

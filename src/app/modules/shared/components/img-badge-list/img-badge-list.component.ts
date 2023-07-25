@@ -1,9 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { UserDtoApi, UserLightDtoApi } from '@usealto/sdk-ts-angular';
 
-/**
- * !DEPRECATED To delete after V3.2
- */
 @Component({
   selector: 'alto-img-badge-list',
   templateUrl: './img-badge-list.component.html',

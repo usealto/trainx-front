@@ -1,4 +1,4 @@
-<span class="alto-badge" [class]="score | pillProgression">
+<span class="alto-badge" style="width: 5.1rem" [class]="score | pillProgression">
   <i *ngIf="arrow === true" class="fs-4 align-middle" [class]="score | progressionPillArrow"></i>
-  <span class="fw-bold">{{ scoreDisplay(score) | percent }}</span>
+  <span class="fw-bold">{{ score | percent }}</span>
 </span>

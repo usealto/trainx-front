@@ -1,5 +1,5 @@
 <ng-container *ngFor="let d of data | slice : 0 : limit || 50">
-  <span *ngIf="d" class="alto-badge me-2 mb-2" [style]="hasDynamicColor ? (d.id | teamColor) : ''">{{
+  <span *ngIf="d" class="alto-badge me-1 mb-1" [style]="hasDynamicColor ? (d.id | teamColor) : ''">{{
     d.shortName || d.name || d.title || d.label || d
   }}</span>
 </ng-container>
