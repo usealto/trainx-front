@@ -115,6 +115,6 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   @memoize()
   getTeamPreviousScore(team: TeamStatsDtoApi) {
     const prevScore = this.teamsPreviousPeriod.filter((t) => t.id === team.id)[0]?.score || 0;
-    return prevScore === 0 ? 0 : ((team.score || 0) - prevScore) / prevScore;
+    return prevScore && team.score ? team.score - prevScore : 0;
   }
 }

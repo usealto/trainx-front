@@ -106,7 +106,8 @@ export class LeadHomeComponent implements OnInit {
       .pipe(
         tap(([comments, questions, challenges]) => {
           this.commentsCount = comments.length;
-          this.questionsCount = questions.length;
+          // this.questionsCount = questions.length;
+          this.questionsCount = 0;
           this.challengesByTeam = challenges
             .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByTeam)
             .slice(0, 5);
@@ -277,9 +278,9 @@ export class LeadHomeComponent implements OnInit {
           const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;
 
           this.globalScore = current.reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
-          this.globalScoreProgression = previousScore
-            ? (this.globalScore - previousScore) / previousScore
-            : 0;
+
+          this.globalScoreProgression =
+            previousScore && this.globalScore ? this.globalScore - previousScore : 0;
 
           //Active/inactive members
           this.activeMembers = usersStats.filter((u) => u.respondsRegularly).length;
@@ -287,11 +288,10 @@ export class LeadHomeComponent implements OnInit {
 
           const prevU = previousUsersStats.filter((u) => u.respondsRegularly).length;
           this.activeMembersProgression =
-            prevU > 0 && this.activeMembers ? (this.activeMembers - prevU) / this.activeMembers : 0;
-
+            prevU > 0 && this.activeMembers ? (this.activeMembers - prevU) / prevU : 0;
           const prevI = previousUsersStats.length - prevU;
           this.inactiveMembersProgression =
-            prevI > 0 && this.inactiveMembers ? (this.inactiveMembers - prevI) / this.inactiveMembers : 0;
+            prevI > 0 && this.inactiveMembers ? (this.inactiveMembers - prevI) / prevI : 0;
         }),
         switchMap(() => this.getAverageCompletion(this.globalFilters)),
         untilDestroyed(this),
@@ -312,8 +312,9 @@ export class LeadHomeComponent implements OnInit {
         const avgCompletion = currentAvg[1] === 0 ? 0 : currentAvg[0] / currentAvg[1];
         this.averageCompletion = avgCompletion;
         const previousAvgCompletion = previousAvg[1] === 0 ? 0 : previousAvg[0] / previousAvg[1];
+
         this.completionProgression =
-          avgCompletion && previousAvgCompletion ? previousAvgCompletion - avgCompletion / avgCompletion : 0;
+          previousAvgCompletion && avgCompletion ? previousAvgCompletion - avgCompletion : 0;
       }),
     );
   }
