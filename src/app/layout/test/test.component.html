@@ -3,6 +3,13 @@
     <span class="fs-4">{{ I18ns.shared.smiley }}</span>
     <a [routerLink]="['/', AltoRoutes.notFound]">404 page</a>
     <br />
+    <alto-anchor-navigator>
+      <button type="button" class="btn btn-outline-secondary me-4 ps-3">
+        {{ I18ns.leadTeam.teams.shortTitle }}
+        <span class="alto-badge">12</span>
+      </button>
+    </alto-anchor-navigator>
+    <br />
     <br />
     <alto-colored-pill-list
       [hasDynamicColor]="true"
@@ -16,36 +23,38 @@
     ></alto-colored-pill-list>
     <br />
     <br />
-    <!-- <alto-status-pill [status]="ChallengeDtoApiStatusEnumApi.InProgress"></alto-status-pill>&nbsp;
+    <alto-status-pill [status]="ChallengeDtoApiStatusEnumApi.InProgress"></alto-status-pill>&nbsp;
     <alto-status-pill [status]="ChallengeDtoApiStatusEnumApi.Ended"></alto-status-pill>
     <br />
-    <br /> -->
+    <br />
     <alto-colored-pill-list [data]="['test', 'alpha', 'beta', 'gamma']" [limit]="3"></alto-colored-pill-list>
     <br />
     <br />
-    <div class="border">
-      <alto-dropdown-filter
-        class="text-start"
-        [data]="teamStore.teams.value"
-        [displayLabel]="'shortName'"
-        [returnValue]="'id'"
-        [placeholder]="I18ns.programs.programs.filters.teams"
-        [isColored]="true"
-        [multiple]="true"
-      ></alto-dropdown-filter>
 
-      <alto-dropdown-filter
-        class="text-start"
-        [data]="teamStore.teams.value"
-        [displayLabel]="'shortName'"
-        [returnValue]="'id'"
-        [placeholder]="I18ns.programs.programs.filters.team"
-        [isColored]="false"
-        [multiple]="false"
-      ></alto-dropdown-filter>
-
-      <alto-time-picker></alto-time-picker>
-    </div>
+    <alto-dropdown-filter
+      class="text-start"
+      [data]="teamStore.teams.value"
+      [displayLabel]="'shortName'"
+      [returnValue]="'id'"
+      [placeholder]="I18ns.programs.programs.filters.team"
+      [isColored]="true"
+      [multiple]="true"
+    ></alto-dropdown-filter>
+    <br />
+    <br />
+    <alto-dropdown-filter
+      class="text-start"
+      [data]="teamStore.teams.value"
+      [displayLabel]="'shortName'"
+      [returnValue]="'id'"
+      [placeholder]="I18ns.programs.programs.filters.team"
+      [isColored]="false"
+      [multiple]="false"
+    ></alto-dropdown-filter>
+    <br />
+    <br />
+    <!-- <alto-period-filter></alto-period-filter> -->
+    <alto-time-picker></alto-time-picker>
     <br />
     <br />
 

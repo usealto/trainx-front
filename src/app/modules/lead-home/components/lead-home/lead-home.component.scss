@@ -2,26 +2,6 @@
   display: block;
   padding: var(--alto-page-padding);
 }
-
-.warning-panel {
-  background-color: var(--orange--25);
-  border-radius: 0.67rem;
-  padding: 1.14rem 1.7rem;
-}
-
-.success-panel {
-  background-color: white;
-  border-radius: 0.67rem;
-  padding: 1.14rem 1.7rem;
-  .icon-bg1 {
-    background-color: var(--success--50);
-  }
-}
-
-.welcome-icon {
-  font-size: 3rem;
-}
-
 .row {
   position: relative;
 }
