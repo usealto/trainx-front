@@ -43,22 +43,6 @@ describe('Lead Programs', () => {
 
   it('filter programs by team', function () {
     cy.get('[ng-reflect-router-link="l/programs"]').click();
-    cy.wait(3000);
-
-    cy.get(
-      '.col-7 > alto-dropdown-filter > .ng-select-multiple > .ng-select-container > .ng-arrow-wrapper',
-    ).click();
-    cy.get('.ng-dropdown-panel-items .ng-option').contains('ABD').click();
-    cy.get(
-      '.col-7 > alto-dropdown-filter > .ng-select-multiple > .ng-select-container > .ng-arrow-wrapper',
-    ).click();
-    cy.get(
-      ':nth-child(1) > alto-program-card > :nth-child(1) > .panel > .card-bottom > alto-colored-pill-list > span',
-    ).contains('ABD');
-  });
-
-  it('filter programs by team', function () {
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
     cy.wait(500);
 
     cy.get(
@@ -73,7 +57,7 @@ describe('Lead Programs', () => {
       cy.get('[data-cy="coloredTeams"]').first().contains(teamShortname);
     });
 
-    it('create and delete a program', function () {
+    it('Creates and delete a program', function () {
       cy.get('[ng-reflect-router-link="l/programs"]').click();
       cy.wait(500);
       cy.get('[data-cy="createNewProgram"]').click();
