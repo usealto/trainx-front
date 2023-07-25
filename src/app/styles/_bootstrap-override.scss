@@ -1,22 +1,15 @@
-.container-gl,
-.container-xxxl,
-.container-xxl,
-.container-xl,
-.container-lg,
-.container-md,
-.container-sm {
-  padding: 0;
-  margin-left: 0;
-}
-
 .btn {
   --bs-btn-border-radius: 24px;
-  height: 2.572rem;
-  padding-left: 0.929rem !important;
-  padding-right: 0.929rem !important;
+  height: 2.667rem;
+  padding-left: 1.167rem !important;
+  padding-right: 1.167rem !important;
+  line-height: 1rem;
+
   i {
-    font-size: 1.25rem;
-    vertical-align: middle;
+    font-size: 1.35rem;
+    vertical-align: text-top;
+    line-height: 1.25rem;
+    margin: 0 0.2rem;
   }
 }
 .offcanvas {
@@ -112,12 +105,21 @@
 .ng-select {
   display: inline-block !important;
   min-width: 12rem;
-  &.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
-    background-color: transparent;
+  &.ng-select-single .ng-select-container {
+    height: 2.667rem;
   }
+  &.ng-select-multiple .ng-select-container .ng-value-container {
+    .ng-placeholder {
+      top: 8px;
+    }
+    .ng-value {
+      background-color: transparent;
+    }
+  }
+
   .ng-arrow-wrapper {
     width: 30px;
-    height: 24px;
+    height: 1.333rem;
     transition: transform 0.3s;
     cursor: pointer;
     .ng-arrow {
@@ -127,7 +129,7 @@
       width: 8px !important;
       top: -2px;
       transform: rotate(135deg);
-      color: #00000040;
+      color: var(--alto-text-color2);
       border-color: grey;
     }
   }
@@ -135,7 +137,7 @@
     .ng-arrow {
       border-color: grey;
       border-width: 0 0 0.1rem 0.1rem;
-      margin: 0.9rem 0 0 0;
+      margin: 0.6rem 0 0 0;
     }
   }
   &.ng-select-opened.ng-select-bottom > .ng-select-container,
@@ -145,10 +147,12 @@
   .ng-select-container {
     border-radius: 28px;
     font-weight: 600;
-    color: var(--alto-blue-second);
+    font-size: 0.833rem;
+    min-height: 2.667rem;
+    color: var(--alto-text-color2);
     padding-inline-start: 0.5rem;
     .ng-value-container .ng-placeholder {
-      color: var(--alto-blue-second);
+      color: var(--alto-text-color2);
     }
   }
   .ng-dropdown-panel {

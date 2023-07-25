@@ -3,6 +3,9 @@ import { AfterViewInit, Component, HostListener, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
+/**
+ * !DEPRECATED To delete
+ */
 @UntilDestroy()
 @Component({
   selector: 'alto-anchor-navigator',

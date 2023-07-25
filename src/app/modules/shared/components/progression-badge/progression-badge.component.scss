@@ -1,21 +1,22 @@
 .alto-badge {
   color: white;
   padding: 0 0.5rem 0 0;
+  width: 5rem;
 }
 
 .progression-pill-green {
-  background-color: #ecfdf3;
-  color: #027a48 !important;
+  background-color: var(--success-50);
+  color: var(--success-600) !important;
 }
 
 .progression-pill-red {
-  background-color: #fef3f2;
-  color: #b42318 !important;
+  background-color: var(--error-50);
+  color: var(--error-600) !important;
 }
 
 .progression-pill-neutral {
   background-color: #f2f4f7;
-  color: var(--alto-text-color2) !important;
+  color: var(--alto-grey) !important;
 }
 
 .progression-pill-undefined {
