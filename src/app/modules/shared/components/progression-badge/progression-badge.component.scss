@@ -1,7 +1,14 @@
 .alto-badge {
-  color: white;
-  padding: 0 0.5rem 0 0;
   width: 5rem;
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: center;
+
+  svg {
+    height: 1.66rem;
+  }
 }
 
 .progression-pill-green {
