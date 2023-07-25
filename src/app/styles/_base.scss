@@ -1,34 +1,34 @@
 :root {
-  --bs-body-font-size: 12px;
+  --bs-body-font-size: 14px;
   --alto-panel-padding-x: 1.7rem;
   --alto-panel-padding-y: 1.4rem;
-  --font-family: 'PlusJakartaSans';
+  --font-family: 'Inter';
   --alto-page-padding: 2.286rem;
 }
 body,
 html {
-  --bs-body-font-size: 12px;
+  --bs-body-font-size: 14px;
   font-family: var(--font-family);
   color: var(--alto-text-color);
 }
 
-@media screen and (min-width: 1900px) {
+@media screen and (max-width: 1400px) {
   :root,
   body,
   html {
-    // --bs-body-font-size: 14px;
+    --bs-body-font-size: 14px;
   }
-  // table,
-  // .header-item {
-  //   font-size: 13px;
-  // }
+  table,
+  .header-item {
+    font-size: 13px;
+  }
 }
 
 @media screen and (max-width: 700px) {
-  // table,
-  // .header-item {
-  //   font-size: 12px;
-  // }
+  table,
+  .header-item {
+    font-size: 12px;
+  }
 }
 
 html,
@@ -50,17 +50,20 @@ p {
 }
 h1 {
   font-family: var(--font-family);
-  font-size: 1.333rem;
-  font-weight: 700;
+  font-size: 1.714rem;
+  font-weight: 500;
+  // @media screen and (max-width: 700px) {
+  //   font-size: 1.8rem;
+  // }
 }
 h2 {
   font-family: var(--font-family);
-  font-size: 1.167rem;
-  font-weight: 600;
+  font-size: 1.286rem;
+  font-weight: 500;
 }
 h3 {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
 }
 hr {
   border-top: 1px solid var(--alto-grey);
@@ -77,18 +80,18 @@ hr {
 .cursor-pointer {
   cursor: pointer;
 }
-// .fs-6b {
-//   font-size: 1.143rem !important;
-// }
-.fs-7 {
-  font-size: 0.833rem;
+.fs-6b {
+  font-size: 1.143rem !important;
 }
-// .fs-8 {
-//   font-size: 0.75rem;
-// }
+.fs-7 {
+  font-size: 0.85rem;
+}
+.fs-8 {
+  font-size: 0.75rem;
+}
 
 .fw-medium {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .bg-orange {
