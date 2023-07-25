@@ -1,11 +1,20 @@
 .btn {
   --bs-btn-border-radius: 24px;
   height: 2.667rem;
-  padding-left: 0.929rem !important;
-  padding-right: 0.929rem !important;
+  padding: 0 1.167rem;
+  line-height: 2.567rem;
+  display: inline-flex;
+  font-size: 0.833rem;
+
   i {
-    font-size: 1.25rem;
-    vertical-align: middle;
+    font-size: 1.15rem;
+  }
+
+  & :first-child:is(i) {
+    padding-right: 0.667rem;
+  }
+  & :last-child:is(i) {
+    padding-left: 0.667rem;
   }
 }
 .offcanvas {

@@ -3,6 +3,9 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { ChallengeDtoApiStatusEnumApi } from '@usealto/sdk-ts-angular';
 
+/**
+ * !DEPRECATED To Remove
+ */
 @Component({
   selector: 'alto-status-pill',
   templateUrl: './status-pill.component.html',
