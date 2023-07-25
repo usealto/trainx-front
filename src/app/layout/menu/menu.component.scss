@@ -6,6 +6,11 @@
   left: 0;
   width: 5rem;
 }
+:host ::ng-deep {
+  .menu-tooltip-class {
+    margin-left: 1rem;
+  }
+}
 .logo {
   margin: 2.286rem 0 2rem 1.714rem;
 
@@ -31,11 +36,6 @@
       font-size: 1.6667rem;
       padding: 0.3333rem;
       color: #667085;
-    }
-
-    svg {
-      width: 1.6667rem;
-      height: 1.6667rem;
     }
 
     &.menu-selected,
