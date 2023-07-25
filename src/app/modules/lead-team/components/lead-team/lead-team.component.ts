@@ -221,18 +221,8 @@ export class LeadTeamComponent implements OnInit {
   }
 
   getPercentageQuestions(): number {
-    let totalUsers = 0;
-    let totalPercentage = 0;
-
-    this.usersQuestionCount.forEach((values) => {
-      if (values && values.length > 1 && values[1]) {
-        totalPercentage += values[1];
-        totalUsers += 1;
-      }
-    });
-    const percentage = (totalPercentage * 100) / totalUsers;
-
-    return percentage;
+    // TODO
+    return 0;
   }
 
   airtableRedirect() {

@@ -25,7 +25,7 @@
   top: 1.2rem;
   bottom: 1.2rem;
   width: 1px;
-  background-color: var(--alto-border);
+  background-color: #EAECF0;
 }
 
 .double-badge {
@@ -40,11 +40,16 @@
 }
 
 .info-wrapper {
-  flex-grow: 1; // make this element take up any remaining space
+  flex-grow: 1;
 }
 
 .info-stats {
   display: flex;
-  align-items: center; // align the badge and the h1 tag vertically
-  justify-content: space-between; // space the h1 and the badge equally
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card {
+  --bs-card-border-radius: 0.5rem;
+  --bs-card-border-color: #EAECF0;
 }
