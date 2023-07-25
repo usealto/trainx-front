@@ -26,10 +26,14 @@
     border-radius: 0.3333rem;
     height: 2.429rem;
     margin: 1.25rem;
-    padding: 0.3333rem;
     color: #f2f4f7;
     font-weight: 500;
     font-size: 1.143rem;
+
+    i {
+      font-size: 1.6667rem;
+      padding: 0.3333rem;
+    }
 
     svg {
       fill: #667085;
