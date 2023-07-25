@@ -30,10 +30,10 @@
     i {
       font-size: 1.6667rem;
       padding: 0.3333rem;
+      color: #667085;
     }
 
     svg {
-      fill: #667085;
       width: 1.6667rem;
       height: 1.6667rem;
     }
@@ -41,8 +41,8 @@
     &.menu-selected,
     &:hover {
       background-color: var(--alto-blue-second);
-      svg {
-        fill: #f2f4f7;
+      i {
+        color: #f2f4f7;
       }
     }
   }
