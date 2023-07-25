@@ -28,11 +28,6 @@ export class ProgramCardListComponent implements OnInit {
   @Output() programTotal = new EventEmitter<number>();
   @Input() place: 'home' | 'program' = 'home';
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.setPageSize(event.target?.innerWidth);
-  }
-
   programs: ProgramDtoApi[] = [];
   programsDisplay: ProgramDtoApi[] = [];
 
@@ -42,7 +37,6 @@ export class ProgramCardListComponent implements OnInit {
   page = 1;
   count = 0;
   pageSize = 3;
-  width = 0;
 
   programFilters: ProgramFilters = { teams: [], search: '' };
 
@@ -65,7 +59,7 @@ export class ProgramCardListComponent implements OnInit {
       this.displayToggle = true;
     }
     this.getPrograms();
-    this.setPageSize(window.innerWidth);
+    this.setPageSize();
   }
 
   loadScores(index?: number) {
@@ -175,18 +169,12 @@ export class ProgramCardListComponent implements OnInit {
       .subscribe();
   }
 
-  setPageSize(width: number) {
-    this.width = width;
-    const cardsByLine = width < 1700 ? 3 : width < 2000 ? 4 : 5;
+  setPageSize() {
+    const cardsByLine = 3;
     if (this.place === 'home') {
       this.pageSize = cardsByLine;
     } else if (this.place === 'program') {
       this.pageSize = cardsByLine * 3;
     }
-  }
-
-  @memoize()
-  getCardWidth(width: number) {
-    return width < 1700 ? 'col-4' : width < 2000 ? 'col-3' : 'w-20';
   }
 }

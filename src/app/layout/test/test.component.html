@@ -109,13 +109,17 @@
     <button class="btn btn-primary ms-3">
       {{ I18ns.shared.save }}
     </button>
-    <button class="btn btn-primary ms-3"><i class="bi bi-plus-lg"></i> {{ I18ns.shared.save }}</button>
+    <button class="btn btn-primary ms-3">
+      <i class="bi bi-plus-lg"></i><span>{{ I18ns.shared.save }}</span>
+    </button>
+
     <br />
     <br />
-    <alto-pagination></alto-pagination>
+    <alto-pagination [collectionSize]="100" [pageSize]="10" [page]="1"></alto-pagination>
 
     <input type="range" min="1" max="100" class="form-range" />
 
+    <br />
     <input type="radio" id="type2" name="rad1" class="form-check-input" checked />
     <br />
     <input type="radio" id="type3" name="rad1" class="form-check-input" />
