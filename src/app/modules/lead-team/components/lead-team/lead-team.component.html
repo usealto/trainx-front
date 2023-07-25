@@ -1,5 +1,6 @@
 <div class="welcome-panel">
-  <h1 data-cy="leadTeamTitle">{{ I18ns.leadTeam.titleIcon }} {{ I18ns.leadTeam.title }}</h1>
+  <h1>{{ I18ns.leadTeam.titleIcon }}</h1>
+  <h1 data-cy="leadTeamTitle">{{ I18ns.leadTeam.title }}</h1>
 </div>
 
 <div class="gap"></div>
@@ -15,10 +16,10 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col" class="w-30">{{ I18ns.leadTeam.teams.table.name }}</th>
-            <th scope="col" class="w-20 text-center">{{ I18ns.leadTeam.teams.table.globalScore }}</th>
-            <th scope="col" class="w-20 text-center">{{ I18ns.leadTeam.teams.table.usersCount }}</th>
-            <th scope="col" class="w-25 text-center">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
+            <th scope="col" class="w-40">{{ I18ns.leadTeam.teams.table.name }}</th>
+            <th scope="col" class="w-15 text-center">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
+            <th scope="col" class="w-15 text-center">{{ I18ns.leadTeam.teams.table.usersCount }}</th>
+            <th scope="col" class="w-25 text-center">{{ I18ns.leadTeam.teams.table.ativity }}</th>
             <th scope="col" class="text-center">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
             <th class="w-5"></th>
           </tr>
@@ -29,7 +30,10 @@
               {{ team.longName }}
             </td>
             <td>
-
+              <div *ngIf="team.score" class="text-center"> {{ team.score | percent }}</div>
+              <div class="text-center" *ngIf="!team.score">
+                {{ I18ns.leadTeam.teams.table.noScore }}
+              </div>
             </td>
             <td class="w-20 text-center">
               <div *ngIf="getTeamUsersCount(team.id) !== 0">
@@ -40,17 +44,14 @@
               </div>
             </td>
             <td>
-              <div class="progress" *ngIf="team.score">
+              <!-- <div class="progress" *ngIf="team.score">
                 <div
                   class="progress-bar d-inline-block"
                   role="progressbar"
                   [style]="'width:' + team.score * 100 + '%'"
                 ></div>
-              </div>
-              <ng-container *ngIf="team.score"> {{ team.score | percent }}</ng-container>
-              <div class="text-center" *ngIf="!team.score">
-                {{ I18ns.leadTeam.teams.table.noScore }}
-              </div>
+              </div> -->
+              
             </td>
             <td class="text-center">
               {{ team.createdAt | date : 'shortDate' }}
@@ -86,47 +87,50 @@
 
 <!-- MEMBERS -->
 
-<div>
-  <button
-    type="button"
-    class="btn btn-primary float-end d-flex align-items-center"
-    (click)="airtableRedirect()"
-  >
-    <i class="bi bi-person-plus me-2 fs-5"></i>
-    <span>{{ I18ns.leadTeam.members.invite }}</span>
-  </button>
-  <h2 data-cy="companyMembersSection" id="membersAnchor">{{ I18ns.leadTeam.members.titleIcon }} {{ I18ns.leadTeam.members.title }}</h2>
-  <p class="mb-3 alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
+<div class="member-section">
+  <div>
+    <button
+      type="button"
+      class="btn btn-primary float-end d-flex align-items-center"
+      (click)="airtableRedirect()"
+    >
+      <i class="bi bi-person-plus me-2 fs-5"></i>
+      <span>{{ I18ns.leadTeam.members.invite }}</span>
+    </button>
+    <h2 data-cy="companyMembersSection" id="membersAnchor">{{ I18ns.leadTeam.members.titleIcon }} {{ I18ns.leadTeam.members.title }}</h2>
+    <p class="alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
+  </div>
 
-  <div class="row py-4">
-  <div class="col-12">
-    <div class="card">
-      <div class="row">
-        <div class="col-6 position-relative short-border-end">
-          <div class="panel d-flex align-items-center">
-            <div class="double-badge me-4">
-              <i class="alto-badge-blue bi bi-bar-chart-fill"></i>
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="row">
+          <div class="col-6 position-relative short-border-end">
+            <div class="panel d-flex align-items-center">
+              <div class="double-badge me-4">
+                <i class="alto-badge-blue bi bi-bar-chart-fill"></i>
+              </div>
+              <div>
+                <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.total }}</p>
+                <h1>{{ absoluteUsersCount }}</h1>
+              </div>
             </div>
-            <div>
-              <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.total }}</p>
-              <h1>{{ absoluteUsersCount }}</h1>
-            </div>
+
           </div>
-
-        </div>
-        <div class="col-6 ">
-          <div class="panel d-flex align-items-center">
-            <div class="double-badge me-4">
-              <i class="alto-badge-big alto-badge-blue bi bi-reply-all-fill"></i>
-            </div>
-            <div class="info-wrapper">
-              <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
-              <div class="info-stats">
-                <h1>{{ getTotalQuestions() }}</h1>
-                <alto-progression-badge
-                  class="d-inline-block ms-3"
-                  [score]="getPercentageQuestions()"
-                ></alto-progression-badge>
+          <div class="col-6 ">
+            <div class="panel d-flex align-items-center">
+              <div class="double-badge me-4">
+                <i class="alto-badge-big alto-badge-blue bi bi-reply-all-fill"></i>
+              </div>
+              <div class="info-wrapper">
+                <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
+                <div class="info-stats">
+                  <h1>{{ getTotalQuestions() }}</h1>
+                  <alto-progression-badge
+                    class="d-inline-block ms-3"
+                    [score]="getPercentageQuestions()"
+                  ></alto-progression-badge>
+                </div>
               </div>
             </div>
           </div>
@@ -134,10 +138,9 @@
       </div>
     </div>
   </div>
-</div>
 
 
-  <div class="mb-4 d-flex justify-content-between">
+  <div class="d-flex justify-content-between">
     <alto-search
       data-cy="filterBySearch"
       class="float-start"
@@ -167,8 +170,8 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col" class="w-35">{{ I18ns.leadTeam.members.table.name }}</th>
-            <th scope="col" class="w-5">{{ I18ns.leadTeam.members.table.team }}</th>
+            <th scope="col" class="w-25">{{ I18ns.leadTeam.members.table.name }}</th>
+            <th scope="col" class="w-25">{{ I18ns.leadTeam.members.table.team }}</th>
             <th scope="col">
               {{ I18ns.leadTeam.members.table.averageScore }}
               <i

@@ -8,9 +8,19 @@
 }
 
 .welcome-panel {
-  background-color: var(--primary--50);
+  background-color: var(--primary-50);
   border-radius: 0.67rem;
   padding: 1.14rem 1.7rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.welcome-panel .h1 {
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.25rem;
 }
 
 .gap {
@@ -29,14 +39,13 @@
 }
 
 .double-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  background-color: var(--primary--50);
-  color: var(--primary);
+  border-radius: 6.25rem;
+  border: 8px solid var(--primary-50, #EFF8FF);
+}
+
+.panel {
+  border: 0;
+  border-radius: 0.5rem;
 }
 
 .info-wrapper {
@@ -52,4 +61,14 @@
 .card {
   --bs-card-border-radius: 0.5rem;
   --bs-card-border-color: #EAECF0;
+}
+
+.member-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.tab-panel {
+  border-color: var(--gray-200);
 }

@@ -108,7 +108,7 @@ export class LeadTeamComponent implements OnInit {
         tap(([users]) => {
           users.forEach((user) => {
             const member = this.teams.find((team) => team.id === user.teamId);
-            this.usersMap.set(user.id, member ? member.shortName : '');
+            this.usersMap.set(user.id, member ? member.longName + ' - ' + member.shortName : '');
           });
         }),
         switchMap(() => this.scoreRestService.getTeamsStats(ScoreDuration.Month)),
