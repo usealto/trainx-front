@@ -69,7 +69,6 @@
   @extend .alto-badge-big;
   color: var(--success--600);
   background: radial-gradient(circle, var(--success--100) 50%, var(--success--50) 50%);
-
 }
 
 .subtitles {
@@ -105,6 +104,8 @@
     margin: 0;
   }
   .table {
+    --bs-table-bg: transparent;
+
     th {
       font-weight: 500;
       font-size: 0.857rem;

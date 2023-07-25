@@ -12,24 +12,13 @@ html {
   color: var(--alto-text-color);
 }
 
-@media screen and (min-width: 1900px) {
-  :root,
-  body,
-  html {
-    // --bs-body-font-size: 14px;
-  }
-  // table,
-  // .header-item {
-  //   font-size: 13px;
-  // }
-}
-
-@media screen and (max-width: 700px) {
-  // table,
-  // .header-item {
-  //   font-size: 12px;
-  // }
-}
+// @media screen and (min-width: 1900px) {
+//   :root,
+//   body,
+//   html {
+// --bs-body-font-size: 14px;
+//   }
+// }
 
 html,
 input,
@@ -77,18 +66,12 @@ hr {
 .cursor-pointer {
   cursor: pointer;
 }
-// .fs-6b {
-//   font-size: 1.143rem !important;
-// }
 .fs-7 {
   font-size: 0.833rem;
 }
-// .fs-8 {
-//   font-size: 0.75rem;
-// }
 
 .fw-medium {
-  font-weight: 600;
+  font-weight: 600 !important;
 }
 
 .bg-orange {
