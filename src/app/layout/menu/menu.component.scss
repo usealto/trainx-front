@@ -10,6 +10,17 @@
   .menu-tooltip-class {
     margin-left: 1rem;
   }
+  .menu-popover {
+    width: 13.5rem;
+    height: 10rem;
+    margin-left: 2rem;
+    background-color: var(--gray-900);
+    font-size: var(--bs-body-font-size);
+  }
+
+  .menu-popover .arrow::after {
+    border-top-color: var(--gray-900);
+  }
 }
 .logo {
   width: 1.6666rem;
@@ -64,11 +75,22 @@
     margin: 1.3333rem;
   }
 
+  .imgBadgeMenu {
+    padding: 1rem;
+  }
+
+  .popoverProfile {
+    i {
+      color: var(--white);
+    }
+  }
+
   .logout {
-    position: absolute;
-    right: 0;
-    bottom: 3.8rem;
+    color: var(--error-500);
     cursor: pointer;
+    i {
+      color: var(--error-500);
+    }
   }
   .profile {
     display: block;
