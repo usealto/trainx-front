@@ -7,7 +7,7 @@
 >
   <ng-template ngbPaginationPrevious let-disabled="disabled">
     <button [disabled]="disabled" class="btn btn-outline-secondary">
-      <i class="bi bi-arrow-left"></i> {{ I18ns.shared.previous }}
+      <i class="bi bi-arrow-left"></i><span>{{ I18ns.shared.previous }}</span>
     </button>
   </ng-template>
 
@@ -29,7 +29,8 @@
   </ng-template>
   <ng-template ngbPaginationNext let-disabled="disabled">
     <button [disabled]="disabled" class="btn btn-outline-secondary">
-      {{ I18ns.shared.next }} <i class="bi bi-arrow-right"></i>
+      <span>{{ I18ns.shared.next }}</span
+      ><i class="bi bi-arrow-right"></i>
     </button>
   </ng-template>
 </ngb-pagination>
