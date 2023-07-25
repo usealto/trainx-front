@@ -1,4 +1,4 @@
-<div *ngIf="program">
+<ng-container *ngIf="program">
   <div class="form-check form-switch" style="z-index: 100" [ngClass]="{ invisible: !displayToggle }">
     <input
       #activate
@@ -13,9 +13,7 @@
     class="panel cursor-pointer"
     [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, program.id]"
   >
-    <div class="d-flex justify-content-between">
-      <p class="title" [ngClass]="{ 'w-100': !displayToggle }">{{ program.name }}</p>
-    </div>
+    <p class="title" [ngClass]="{ 'w-100': !displayToggle }">{{ program.name }}</p>
     <div class="card-bottom">
       <ng-container *ngIf="program.teams.length > 0; else elseTeams">
         <alto-colored-pill-list
@@ -26,36 +24,36 @@
         ></alto-colored-pill-list>
       </ng-container>
       <ng-template #elseTeams>
-        <span class="alto-badge">{{ I18ns.shared.noTeam }}</span>
+        <div class="alto-badge">{{ I18ns.shared.noTeam }}</div>
       </ng-template>
       <hr />
       <p class="score">
         <span>
           {{ I18ns.programs.programs.involvement }}
         </span>
-        <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.involvementToolTip }}"></i>
+        <!-- <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.involvementToolTip }}"></i> -->
         <span class="float-end alto-score" [class]="(participation ? participation * 100 : '') | pillColor">{{
-          participation ? (participation | percent) : 'N/A'
+          participation ? (participation | percent) : '-'
         }}</span>
       </p>
       <p class="score">
         <span>
           {{ I18ns.programs.programs.progress }}
         </span>
-        <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.progressToolTip }}"></i>
+        <!-- <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.progressToolTip }}"></i> -->
         <span class="float-end alto-score" [class]="(progress ? progress * 100 : '') | pillColor">
-          {{ progress ? (progress | percent) : 'N/A' }}
+          {{ progress ? (progress | percent) : '-' }}
         </span>
       </p>
       <p class="score">
         <span>
           {{ I18ns.programs.programs.score }}
         </span>
-        <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.scoreToolTip }}"></i>
+        <!-- <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.scoreToolTip }}"></i> -->
         <span class="float-end alto-score" [class]="(score ? score * 100 : '') | pillColor">
-          {{ score ? (score | percent) : 'N/A' }}
+          {{ score ? (score | percent) : '-' }}
         </span>
       </p>
     </div>
   </div>
-</div>
+</ng-container>

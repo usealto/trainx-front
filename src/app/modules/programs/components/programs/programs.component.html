@@ -62,6 +62,7 @@
         [displayLabel]="'name'"
         [returnValue]="'id'"
         [placeholder]="I18ns.programs.questions.filters.programs"
+        [selectedItems]="selectedItems"
         (selectChange)="getQuestions({ programs: $event })"
       ></alto-dropdown-filter>
       <alto-dropdown-filter
@@ -71,6 +72,7 @@
         [returnValue]="'id'"
         [displayLabel]="'name'"
         [placeholder]="I18ns.programs.questions.filters.tags"
+        [selectedItems]="selectedItems"
         (selectChange)="getQuestions({ tags: $event })"
       ></alto-dropdown-filter>
       <alto-dropdown-filter
@@ -80,6 +82,7 @@
         [returnValue]="'id'"
         [displayLabel]="'fullname'"
         [placeholder]="I18ns.programs.questions.filters.contributors"
+        [selectedItems]="selectedItems"
         (selectChange)="getQuestions({ contributors: $event })"
       ></alto-dropdown-filter>
     </div>
