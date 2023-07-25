@@ -1,28 +1,14 @@
-<h1 data-cy="leadTeamTitle">{{ I18ns.leadTeam.title }}</h1>
-<p class="mb-4 alto-grey">{{ I18ns.leadTeam.subtitle }}</p>
-<div>
-  <alto-anchor-navigator fragment="teamsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-4">
-      {{ I18ns.leadTeam.teams.shortTitle }}
-      <span class="alto-badge">{{ teams.length }}</span>
-    </button>
-  </alto-anchor-navigator>
-  <alto-anchor-navigator fragment="membersAnchor">
-    <button type="button" class="btn btn-outline-secondary me-4">
-      {{ I18ns.leadTeam.members.shortTitle }}
-      <span class="alto-badge">{{ absoluteUsersCount }}</span>
-    </button>
-  </alto-anchor-navigator>
+<div class="welcome-panel">
+  <h1 data-cy="leadTeamTitle">{{ I18ns.leadTeam.titleIcon }} {{ I18ns.leadTeam.title }}</h1>
 </div>
 
-<hr class="my-6" />
-
+<div class="gap"></div>
 <!-- TEAMS -->
 <div>
   <button type="button" class="btn btn-primary float-end" (click)="openTeamForm()">
     <i class="bi bi-plus-lg"></i> {{ I18ns.leadTeam.createTeam }}
   </button>
-  <h2 id="teamsAnchor">{{ I18ns.leadTeam.teams.title }}</h2>
+  <h2 id="teamsAnchor">{{ I18ns.leadTeam.teams.titleIcon }} {{ I18ns.leadTeam.teams.title }}</h2>
   <p class="mb-4 alto-grey">{{ I18ns.leadTeam.teams.subtitle }}</p>
   <ng-container *ngIf="paginatedTeams.length > 0; else noTeams">
     <div class="table-panel">
@@ -30,15 +16,10 @@
         <thead>
           <tr>
             <th scope="col" class="w-30">{{ I18ns.leadTeam.teams.table.name }}</th>
-            <th scope="col" class="w-10 text-center">{{ I18ns.leadTeam.teams.table.initials }}</th>
+            <!-- <th scope="col" class="w-10 text-center">{{ I18ns.leadTeam.teams.table.initials }}</th> -->
+            <th scope="col" class="w-20 text-center">{{ I18ns.leadTeam.teams.table.globalScore }}</th>
             <th scope="col" class="w-20 text-center">{{ I18ns.leadTeam.teams.table.usersCount }}</th>
-            <th scope="col" class="w-25">
-              {{ I18ns.leadTeam.teams.table.averageScore }}
-              <i
-                class="ms-2 alto-grey bi bi-question-circle"
-                ngbTooltip="{{ I18ns.leadTeam.teams.table.averageScoreTooltip }}"
-              ></i>
-            </th>
+            <th scope="col" class="w-25 text-center">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
             <th scope="col" class="text-center">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
             <th class="w-5"></th>
           </tr>
@@ -48,21 +29,32 @@
             <td data-cy="teamLongname" class="fw-medium">
               {{ team.longName }}
             </td>
-            <td data-cy="teamShortname" class="text-center">
+            <!-- <td data-cy="teamShortname" class="text-center">
               <span class="alto-badge" [style]="team.id | teamColor">{{ team.shortName }}</span>
+            </td> -->
+            <td>
+
             </td>
             <td class="w-20 text-center">
-              {{ I18ns.leadTeam.teams.table.users | plural : getTeamUsersCount(team.id) }}
+              <div *ngIf="getTeamUsersCount(team.id) !== 0">
+                {{ I18ns.leadTeam.teams.table.users | plural : getTeamUsersCount(team.id) }} membres
+              </div>
+              <div *ngIf="getTeamUsersCount(team.id) === 0">
+                {{ I18ns.leadTeam.teams.table.noUsers }}
+              </div>
             </td>
             <td>
-              <div class="progress">
+              <div class="progress" *ngIf="team.score">
                 <div
                   class="progress-bar d-inline-block"
                   role="progressbar"
-                  [style]="'width:' + (team.score ?? 0) * 100 + '%'"
+                  [style]="'width:' + team.score * 100 + '%'"
                 ></div>
               </div>
               <ng-container *ngIf="team.score"> {{ team.score | percent }}</ng-container>
+              <div class="text-center" *ngIf="!team.score">
+                {{ I18ns.leadTeam.teams.table.noScore }}
+              </div>
             </td>
             <td class="text-center">
               {{ team.createdAt | date : 'shortDate' }}
@@ -94,76 +86,84 @@
   </ng-template>
 </div>
 
-<hr class="my-6" />
+<div class="gap"></div>
 
 <!-- MEMBERS -->
 
 <div>
   <button
     type="button"
-    class="btn btn-outline-secondary float-end d-flex align-items-center"
+    class="btn btn-primary float-end d-flex align-items-center"
     (click)="airtableRedirect()"
   >
     <i class="bi bi-person-plus me-2 fs-5"></i>
     <span>{{ I18ns.leadTeam.members.invite }}</span>
   </button>
-  <h2 data-cy="companyMembersSection" id="membersAnchor">{{ I18ns.leadTeam.members.title }}</h2>
+  <h2 data-cy="companyMembersSection" id="membersAnchor">{{ I18ns.leadTeam.members.titleIcon }} {{ I18ns.leadTeam.members.title }}</h2>
   <p class="mb-3 alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
 
   <div class="row py-4">
-    <div class="col-4">
-      <div class="panel">
-        <i
-          class="alto-grey bi bi-question-circle float-end"
-          ngbTooltip="{{ I18ns.leadTeam.members.statistics.totalTooltip }}"
-        ></i>
-        <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.total }}</p>
-        <h1>{{ absoluteUsersCount }}</h1>
-      </div>
-    </div>
-    <div class="col-4">
-      <div class="panel">
-        <i
-          class="alto-grey bi bi-question-circle float-end"
-          ngbTooltip="{{ I18ns.leadTeam.members.statistics.regularMembersTooltip }}"
-        ></i>
-        <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.active }}</p>
-        <h1>{{ activeUsersCount }}</h1>
-      </div>
-    </div>
-    <div class="col-4">
-      <div class="panel">
-        <i
-          class="alto-grey bi bi-question-circle float-end"
-          ngbTooltip="{{ I18ns.leadTeam.members.statistics.iregularMembersTooltip }}"
-        ></i>
-        <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.inactive }}</p>
-        <h1>{{ absoluteUsersCount - activeUsersCount }}</h1>
+  <div class="col-12">
+    <div class="card">
+      <div class="row">
+        <div class="col-6 position-relative short-border-end">
+          <div class="panel d-flex align-items-center">
+            <div class="double-badge me-4">
+              <i class="alto-badge-blue bi bi-bar-chart-fill"></i>
+            </div>
+            <div>
+              <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.total }}</p>
+              <h1>{{ absoluteUsersCount }}</h1>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-6 ">
+          <div class="panel d-flex align-items-center">
+            <div class="double-badge me-4">
+              <i class="alto-badge-big alto-badge-blue bi bi-reply-all-fill"></i>
+            </div>
+            <div class="info-wrapper">
+              <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
+              <div class="info-stats">
+                <h1>{{ getTotalQuestions() }}</h1>
+                <alto-progression-badge
+                  class="d-inline-block ms-3"
+                  [score]="getPercentageQuestions()"
+                ></alto-progression-badge>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="mb-4">
+
+  <div class="mb-4 d-flex justify-content-between">
     <alto-search
       data-cy="filterBySearch"
-      class="float-end d-inline-block"
+      class="float-start"
       (searchChange)="filterUsers({ search: $event })"
     ></alto-search>
 
-    <alto-dropdown-filter
-      data-cy="filterByTeam"
-      class="d-inline-block me-3"
-      [data]="teams"
-      [displayLabel]="'shortName'"
-      [isColored]="true"
-      [placeholder]="I18ns.leadTeam.members.filters.teams"
-      (selectChange)="filterUsers({ teams: $event })"
-    ></alto-dropdown-filter>
-
-    <alto-score-filter
-      data-cy="filterByScore"
-      (selectChange)="filterUsers({ score: $event })"
-    ></alto-score-filter>
+    <div>
+      <alto-dropdown-filter
+        data-cy="filterByTeam"
+        class="d-inline-block me-3"
+        [data]="teams"
+        [displayLabel]="'shortName'"
+        [isColored]="true"
+        [placeholder]="I18ns.leadTeam.members.filters.teams"
+        (selectChange)="filterUsers({ teams: $event })"
+      ></alto-dropdown-filter>
+  
+      <alto-score-filter
+        data-cy="filterByScore"
+        (selectChange)="filterUsers({ score: $event })"
+      ></alto-score-filter>
+    </div>
   </div>
 
   <ng-container *ngIf="paginatedUsers.length > 0; else noUsers">
@@ -201,7 +201,7 @@
               </span>
             </td>
             <td>
-              <div class="progress">
+              <div class="progress" *ngIf="user.score">
                 <div
                   data-cy="scoreProgressBar"
                   class="progress-bar d-inline-block"
@@ -210,6 +210,9 @@
                 ></div>
               </div>
               <ng-container *ngIf="user.score">{{ user.score | percent }}</ng-container>
+              <div class="text-center" *ngIf="!user.score">
+                {{ I18ns.leadTeam.members.table.noScore }}
+              </div>
             </td>
             <td class="text-center">
               {{ getQuestionsByUser(user.id)[0] }}

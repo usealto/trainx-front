@@ -208,6 +208,33 @@ export class LeadTeamComponent implements OnInit {
     return this.usersQuestionCount.get(id) || [0, 0];
   }
 
+  getTotalQuestions(): number {
+    let totalQuestions = 0;
+
+    this.usersQuestionCount.forEach((values) => {
+      if (values && values.length > 0) {
+        totalQuestions += values[0];
+      }
+    });
+
+    return totalQuestions;
+  }
+
+  getPercentageQuestions(): number {
+    let totalUsers = 0;
+    let totalPercentage = 0;
+
+    this.usersQuestionCount.forEach((values) => {
+      if (values && values.length > 1 && values[1]) {
+        totalPercentage += values[1];
+        totalUsers += 1;
+      }
+    });
+    const percentage = (totalPercentage * 100) / totalUsers;
+
+    return percentage;
+  }
+
   airtableRedirect() {
     window.open(environment.airtableURL + this.profileStore.user.value.email, '_blank');
   }
