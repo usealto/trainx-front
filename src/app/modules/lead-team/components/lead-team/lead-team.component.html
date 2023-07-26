@@ -51,7 +51,7 @@
                   [style]="'width:' + team.score * 100 + '%'"
                 ></div>
               </div> -->
-              
+              <!-- Todo -->
             </td>
             <td class="text-center">
               {{ team.createdAt | date : 'shortDate' }}
@@ -233,7 +233,7 @@
 
       <alto-pagination
         class="mx-4 d-block"
-        [collectionSize]="usersCount"
+        [collectionSize]="absoluteUsersCount"
         (pageChange)="changeUsersPage(usersScores, $event)"
         [pageSize]="usersPageSize"
         [page]="usersPage"
