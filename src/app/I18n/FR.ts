@@ -552,9 +552,11 @@ export const FR = {
     team: 'Équipes',
     challenges: 'Challenges',
     settings: 'Paramètres',
-    profile: 'Profil',
+    profile: 'Mon profil',
     training: 'Programmes',
     adminMode: 'Mode Administrateur',
+    disconnect: 'Se déconnecter',
+    feedback: 'Envoyer un feedback',
   },
   settings: {
     title: 'Paramètres',
