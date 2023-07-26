@@ -25,7 +25,10 @@
     height: 10rem;
     margin-left: 2rem;
     background-color: var(--gray-900);
-    border-color: var(--gray-900);
+    border: none;
+    .popover-arrow::before {
+      border: none;
+    }
     .popover-arrow:after {
       border-right-color: var(--gray-900);
     }
@@ -75,9 +78,8 @@
   a.module {
     display: block;
     border-radius: 0.3333rem;
-    height: 2.429rem;
-    margin: 1.25rem;
-    color: var(--gray-100);
+    margin: 1.25rem 1.3333rem;
+    color: var(--gray-700);
     font-weight: 500;
     font-size: 1.143rem;
 
