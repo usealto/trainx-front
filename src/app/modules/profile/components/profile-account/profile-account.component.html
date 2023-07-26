@@ -1,8 +1,7 @@
-<div class="header-panel mb-4 row align-items-center">
-  <p class="welcome-icon col-1 fs-1">⚙️</p>
-  <div class="col">
-    <h1 class="m-0">{{ I18ns.profile.profile.title }}</h1>
-  </div>
+<div class="header-panel d-flex mb-4">
+  <img class="emoji me-4" [src]="EmojiName.Gear | emoji" />
+
+  <h1 class="m-0 d-inline-block">{{ I18ns.profile.profile.title }}</h1>
 </div>
 
 <form [formGroup]="userForm">
