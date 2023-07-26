@@ -8,17 +8,54 @@
 }
 :host ::ng-deep {
   .menu-tooltip-class {
-    margin-left: 1rem;
+    .tooltip-inner {
+      background-color: var(--gray-900);
+      margin: 0 0 0 0.3rem;
+    }
+    .tooltip-arrow {
+      margin: 0 0 0 0.3rem;
+    }
+    .tooltip-arrow::before {
+      border-right-color: var(--gray-900);
+    }
   }
+
   .menu-popover {
-    width: 13.5rem;
+    width: 14rem;
     height: 10rem;
     margin-left: 2rem;
     background-color: var(--gray-900);
-    font-size: var(--bs-body-font-size);
+    border-color: var(--gray-900);
+    .popover-arrow:after {
+      border-right-color: var(--gray-900);
+    }
+    .popover-body {
+      padding: 0.6667rem;
+      font-size: 0.8333rem;
+      color: var(--white);
+      i {
+        font-size: 1rem;
+        margin: 0 0.6667rem 0 1rem;
+      }
+      input {
+        width: 1.6667rem;
+        height: 0.8333rem;
+      }
+      a {
+        color: var(--white);
+      }
+      div {
+        cursor: pointer;
+        padding: 0.3333rem 0.5833rem 0.3333rem 0;
+      }
+      div:hover {
+        background-color: var(--gray-700);
+        border-radius: 0.3333rem;
+      }
+    }
   }
 
-  .menu-popover .arrow::after {
+  .popover-arrow ::after {
     border-top-color: var(--gray-900);
   }
 }
@@ -76,18 +113,19 @@
   }
 
   .imgBadgeMenu {
-    padding: 1rem;
+    padding: 0.8333rem;
   }
 
-  .popoverProfile {
-    i {
-      color: var(--white);
-    }
+  .form-check-input {
+    margin: 0.3rem 0.3333rem 0.2083rem 0.6667rem;
+  }
+
+  .form-check {
+    margin-bottom: 0;
   }
 
   .logout {
     color: var(--error-500);
-    cursor: pointer;
     i {
       color: var(--error-500);
     }
