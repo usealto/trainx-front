@@ -96,7 +96,7 @@ You can access all names with the `enum EmojiName`
 ```
 Figma => fluent-emoji:waving-hand
 
-EmojiName =>
+EmojiName => EmojiName.WavingHand
 ```
 
 You can use the `emoji` pipe to to transform the Enum to an SVG
