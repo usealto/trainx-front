@@ -560,9 +560,11 @@ export const FR = {
     team: 'Équipes',
     challenges: 'Challenges',
     settings: 'Paramètres',
-    profile: 'Profil',
+    profile: 'Mon profil',
     training: 'Programmes',
     adminMode: 'Mode Administrateur',
+    disconnect: 'Se déconnecter',
+    feedback: 'Envoyer un feedback',
   },
   settings: {
     title: 'Paramètres',
@@ -595,7 +597,7 @@ export const FR = {
   profile: {
     title: 'Compte',
     profile: {
-      title: 'Informations personnelles',
+      title: 'Votre compte',
       shortTitle: 'Profil',
       subtitle: 'Modifiez votre photo de profil et vos informations.',
       name: 'Nom',
@@ -604,7 +606,7 @@ export const FR = {
       profilePicture: 'Photo de profil',
       downloadPicture: 'Cliquez pour télécharger ou faites glisser et déposez',
       company: 'Entreprise',
-      team: 'Equipe',
+      team: 'Équipe',
       roles: 'Rôles',
     },
     password: {

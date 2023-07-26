@@ -6,8 +6,25 @@
   left: 0;
   width: 5rem;
 }
+:host ::ng-deep {
+  .menu-tooltip-class {
+    margin-left: 1rem;
+  }
+  .menu-popover {
+    width: 13.5rem;
+    height: 10rem;
+    margin-left: 2rem;
+    background-color: var(--gray-900);
+    font-size: var(--bs-body-font-size);
+  }
+
+  .menu-popover .arrow::after {
+    border-top-color: var(--gray-900);
+  }
+}
 .logo {
-  margin: 2.286rem 0 2rem 1.714rem;
+  width: 1.6666rem;
+  margin: 1.3333rem 0 2rem 1.6666rem;
 
   .company-name {
     margin-left: 0.5rem;
@@ -23,26 +40,21 @@
     border-radius: 0.3333rem;
     height: 2.429rem;
     margin: 1.25rem;
-    color: #f2f4f7;
+    color: var(--gray-100);
     font-weight: 500;
     font-size: 1.143rem;
 
     i {
       font-size: 1.6667rem;
       padding: 0.3333rem;
-    }
-
-    svg {
-      fill: #667085;
-      width: 1.6667rem;
-      height: 1.6667rem;
+      color: var(--alto-grey);
     }
 
     &.menu-selected,
     &:hover {
       background-color: var(--alto-blue-second);
-      svg {
-        fill: #f2f4f7;
+      i {
+        color: var(--gray-100);
       }
     }
   }
@@ -58,11 +70,27 @@
       }
     }
   }
+
+  hr {
+    margin: 1.3333rem;
+  }
+
+  .imgBadgeMenu {
+    padding: 1rem;
+  }
+
+  .popoverProfile {
+    i {
+      color: var(--white);
+    }
+  }
+
   .logout {
-    position: absolute;
-    right: 0;
-    bottom: 3.8rem;
+    color: var(--error-500);
     cursor: pointer;
+    i {
+      color: var(--error-500);
+    }
   }
   .profile {
     display: block;
