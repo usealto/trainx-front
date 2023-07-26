@@ -34,8 +34,6 @@ export class UsersRestService {
     }
   }
 
-  getUserStats(): Observable<UsersStatsDtoApi[]> {
-
   resetUsers() {
     this.userStore.users.value = [];
   }
