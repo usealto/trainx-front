@@ -6,7 +6,7 @@
   </div>
 </div>
 <div class="pb-6 border-bottom">
-  <alto-anchor-navigator fragment="programsAnchor">
+  <!-- <alto-anchor-navigator fragment="programsAnchor">
     <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
       {{ I18ns.programs.programs.title }}<span class="alto-badge ms-3">{{ programsCount }}</span>
     </button>
@@ -26,11 +26,12 @@
     <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
       {{ I18ns.programs.tags.title }}<span class="alto-badge ms-3">{{ tagsCount }}</span>
     </button>
-  </alto-anchor-navigator>
+  </alto-anchor-navigator> -->
+  <alto-tabs [data]="tabData" (tabChanged)="handleTabChange($event)"></alto-tabs>
 </div>
 
 <!-- PROGRAMS -->
-<div class="border-bottom">
+<div *ngIf="activeTab === 'programs'" class="border-bottom">
   <div>
     <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
       <i class="bi bi-plus-lg"></i> {{ I18ns.programs.programs.createProgram }}
@@ -46,7 +47,7 @@
 </div>
 
 <!-- QUESTIONS -->
-<div class="py-4 border-bottom questions">
+<div *ngIf="activeTab === 'questions'" class="py-4 border-bottom questions">
   <button type="button" class="btn btn-primary float-end" (click)="openQuestionForm()">
     <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.createQuestion }}
   </button>
@@ -194,7 +195,7 @@
 </div>
 
 <!-- SUBMITTED QUESTIONS -->
-<div class="py-4 border-bottom">
+<div *ngIf="activeTab === 'questions'" class="py-4 border-bottom">
   <div>
     <h2 id="submittedQuestionsAnchor">{{ I18ns.programs.awaitQuestions.title }}</h2>
     <p class="mb-4 alto-grey">{{ I18ns.programs.awaitQuestions.subtitle }}</p>
@@ -243,7 +244,7 @@
 </div>
 
 <!-- TAGS -->
-<div class="py-4 border-bottom">
+<div *ngIf="activeTab === 'tags'" class="py-4 border-bottom">
   <button type="button" class="btn btn-primary float-end" (click)="openTagForm()">
     <i class="bi bi-plus-lg"></i> {{ I18ns.programs.tags.createTag }}
   </button>

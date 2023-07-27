@@ -68,7 +68,14 @@ export class ProgramsComponent implements OnInit {
   isTagsLoading = true;
   tagFilters: TagFilters = { programs: [], contributors: [], search: '' };
   tagsScore = new Map<string, number>();
-  //
+
+  //tabs
+  tabData = [
+    { label: 'Programmes', value: 'programs' },
+    { label: 'Questions', value: 'questions' },
+    { label: 'Tags', value: 'tags' },
+  ];
+  activeTab = this.tabData[0].value;
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -93,6 +100,10 @@ export class ProgramsComponent implements OnInit {
       id: u.id,
       fullname: u.firstname + ' ' + u.lastname,
     }));
+  }
+
+  handleTabChange(value: any) {
+    this.activeTab = value;
   }
 
   deleteQuestion(question?: QuestionDtoApi) {
