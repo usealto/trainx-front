@@ -43,9 +43,9 @@
 
 .alto-badge-big {
   @extend .alto-badge-no-size;
-  height: 4rem;
-  min-width: 4rem;
-  line-height: 3.4rem;
+  height: 2.667rem;
+  width: 2.667rem;
+  line-height: 2.667rem;
   font-size: 2rem;
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
@@ -97,7 +97,7 @@
 
 .table-panel {
   background-color: white;
-  border-radius: 1.143rem;
+  border-radius: 0.667rem;
   border: 1px solid var(--alto-border);
   h2 {
     padding: 1.4rem 1.7rem;

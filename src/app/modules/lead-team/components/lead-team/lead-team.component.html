@@ -30,7 +30,7 @@
               {{ team.longName }}
             </td>
             <td>
-              <div *ngIf="team.score" class="text-center"> {{ team.score | percent }}</div>
+              <div *ngIf="team.score" class="text-center">{{ team.score | percent }}</div>
               <div class="text-center" *ngIf="!team.score">
                 {{ I18ns.leadTeam.teams.table.noScore }}
               </div>
@@ -51,7 +51,6 @@
                   [style]="'width:' + team.score * 100 + '%'"
                 ></div>
               </div> -->
-              
             </td>
             <td class="text-center">
               {{ team.createdAt | date : 'shortDate' }}
@@ -97,48 +96,38 @@
       <i class="bi bi-person-plus me-2 fs-5"></i>
       <span>{{ I18ns.leadTeam.members.invite }}</span>
     </button>
-    <h2 data-cy="companyMembersSection" id="membersAnchor">{{ I18ns.leadTeam.members.titleIcon }} {{ I18ns.leadTeam.members.title }}</h2>
+    <h2 data-cy="companyMembersSection" id="membersAnchor">
+      {{ I18ns.leadTeam.members.titleIcon }} {{ I18ns.leadTeam.members.title }}
+    </h2>
     <p class="alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
   </div>
 
-  <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="row">
-          <div class="col-6 position-relative short-border-end">
-            <div class="panel d-flex align-items-center">
-              <div class="double-badge me-4">
-                <i class="alto-badge-blue bi bi-bar-chart-fill"></i>
-              </div>
-              <div>
-                <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.total }}</p>
-                <h1>{{ absoluteUsersCount }}</h1>
-              </div>
-            </div>
-
-          </div>
-          <div class="col-6 ">
-            <div class="panel d-flex align-items-center">
-              <div class="double-badge me-4">
-                <i class="alto-badge-big alto-badge-blue bi bi-reply-all-fill"></i>
-              </div>
-              <div class="info-wrapper">
-                <p class="alto-grey mb-3">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
-                <div class="info-stats">
-                  <h1>{{ getTotalQuestions() }}</h1>
-                  <alto-progression-badge
-                    class="d-inline-block ms-3"
-                    [score]="getPercentageQuestions()"
-                  ></alto-progression-badge>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="panel">
+    <div class="row align-items-start">
+      <div class="col border-end d-flex">
+        <div class="double-badge me-4 d-inline-block">
+          <i class="fs-4 alto-badge-blue bi bi-bar-chart-fill"></i>
+        </div>
+        <div class="d-inline-block">
+          <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.total }}</p>
+          <h1 class="mb-0">{{ absoluteUsersCount }}</h1>
+        </div>
+      </div>
+      <div class="col d-flex second-col">
+        <div class="double-badge me-4 d-inline-block">
+          <i class="fs-4 alto-badge-big alto-badge-blue bi bi-reply-all-fill"></i>
+        </div>
+        <div class="d-inline-block flex-grow-1">
+          <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
+          <h1 class="mb-0 d-inline-block">{{ getTotalQuestions() }}</h1>
+          <alto-progression-badge
+            class="float-end"
+            [score]="getPercentageQuestions()"
+          ></alto-progression-badge>
         </div>
       </div>
     </div>
   </div>
-
 
   <div class="d-flex justify-content-between">
     <alto-search
@@ -157,7 +146,7 @@
         [placeholder]="I18ns.leadTeam.members.filters.teams"
         (selectChange)="filterUsers({ teams: $event })"
       ></alto-dropdown-filter>
-  
+
       <alto-score-filter
         data-cy="filterByScore"
         (selectChange)="filterUsers({ score: $event })"
