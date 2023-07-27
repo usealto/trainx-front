@@ -6,3 +6,69 @@
   width: calc(100% - 3.6rem);
   margin-right: 0.571rem;
 }
+
+.welcome-panel {
+  background-color: var(--primary-50);
+  border-radius: 0.67rem;
+  padding: 1.14rem 1.7rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.welcome-panel .h1 {
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.25rem;
+}
+
+.gap {
+  height: 2.5rem;
+}
+
+.short-border-end::after {
+  content: "";
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 1.2rem;
+  bottom: 1.2rem;
+  width: 1px;
+  background-color: #EAECF0;
+}
+
+.double-badge {
+  border-radius: 6.25rem;
+  border: 8px solid var(--primary-50, #EFF8FF);
+}
+
+.panel {
+  border: 0;
+  border-radius: 0.5rem;
+}
+
+.info-wrapper {
+  flex-grow: 1;
+}
+
+.info-stats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card {
+  --bs-card-border-radius: 0.5rem;
+  --bs-card-border-color: #EAECF0;
+}
+
+.member-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.tab-panel {
+  border-color: var(--gray-200);
+}
