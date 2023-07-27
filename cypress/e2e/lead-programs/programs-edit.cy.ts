@@ -4,29 +4,32 @@ describe('Lead Programs', () => {
     cy.visit('/');
   });
   it('create and edit a program while testing all cases of question creation', function () {
+    const newProg = 'ABCDTEST';
+    const newQuestion = 'testqst';
+    const goodAnswer = 'goodAnswer';
+    const badAnswer = 'badAnswer';
     cy.get('[ng-reflect-router-link="l/programs"]').click();
     cy.wait(500);
     cy.get('[data-cy="createNewProgram"]').click();
 
     // Create a new program
-    cy.get(':nth-child(1) > .col-6 > .form-control').clear();
-    cy.get(':nth-child(1) > .col-6 > .form-control').type('ABCDETEST');
+    cy.get('[data-cy="programName"]').clear();
+    cy.get('[data-cy="programName"]').type(newProg);
 
-    cy.get(':nth-child(5) > .col-6 > .alto-form > .ng-select-container > .ng-arrow-wrapper').click();
+    cy.get('[data-cy="programTags"]').click();
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
 
-    cy.get(
-      ':nth-child(9) > .col-6 > .alto-form > .ng-select-container > .ng-value-container > .ng-input > input',
-    ).click();
+    cy.get('[data-cy="programPriority"]').click();
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
-    cy.get(':nth-child(3) > .text-end > .btn-primary').click();
+
+    cy.get('[data-cy="programCreateNext"]').click();
 
     cy.get('input[type="checkbox"]').eq(1).click();
     // Create a new question
     cy.get('[data-cy="createNewQuestion"]').click();
-    cy.get('[ng-reflect-placeholder="Intitulé de la question"] > .form-control').type('testqst');
-    cy.get(':nth-child(4) > .flex-grow-1 > .form-control').type('bonjout');
-    cy.get(':nth-child(8) > .flex-grow-1 > .form-control').type('aurevoir');
+    cy.get('[data-cy="questionCreateTitle"]').type(newQuestion);
+    cy.get(':nth-child(4) > .flex-grow-1 > .form-control').type(goodAnswer);
+    cy.get(':nth-child(8) > .flex-grow-1 > .form-control').type(badAnswer);
     cy.get('.ng-invalid > .ng-select-container > .ng-value-container > .ng-input > input').click();
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
     cy.get('.button-container > .btn-primary').click();
