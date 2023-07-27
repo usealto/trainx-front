@@ -30,6 +30,7 @@ import { TagsRestService } from '../../services/tags-rest.service';
 import { TagsServiceService } from '../../services/tags-service.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 
 @UntilDestroy()
 @Component({
@@ -38,6 +39,7 @@ import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
   styleUrls: ['./programs.component.scss'],
 })
 export class ProgramsComponent implements OnInit {
+  EmojiName = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   //

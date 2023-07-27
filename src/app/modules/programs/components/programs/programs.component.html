@@ -1,5 +1,5 @@
 <div class="welcome-panel">
-  <h1 class="welcome-icon">{{ I18ns.programs.titleIcon }}</h1>
+  <img class="emoji-title me-4" [src]="EmojiName.Bullseye | emoji" />
   <div class="welcome-content">
     <h1>{{ I18ns.programs.title }}</h1>
     <p class="alto-grey fs-6b">{{ I18ns.programs.subtitle }}</p>
@@ -33,8 +33,11 @@
 <!-- PROGRAMS -->
 <div *ngIf="activeTab === 'programs'" class="active-programs">
   <div>
-    <h2 id="programsAnchor">{{ I18ns.programs.activePrograms.title }}</h2>
-    <p class="mt-2 mb-4 alto-grey">{{ I18ns.programs.activePrograms.subtitle }}</p>
+    <div class="d-flex align-items-center">
+      <img class="emoji me-3" [src]="EmojiName.Bullseye | emoji" />
+      <h2>{{ I18ns.programs.activePrograms.title }}</h2>
+    </div>
+    <p class="subtitle alto-grey">{{ I18ns.programs.activePrograms.subtitle }}</p>
   </div>
 
   <alto-program-card-list
@@ -45,9 +48,15 @@
 <div *ngIf="activeTab === 'programs'">
   <div>
     <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
-      <i class="bi bi-plus-lg"></i> {{ I18ns.programs.programs.createProgram }}
+      <i class="bi bi-plus-lg"></i> 
+      <div>
+        {{ I18ns.programs.programs.createProgram }}
+      </div>
     </a>
-    <h2 id="programsAnchor">{{ I18ns.programs.programs.title }}</h2>
+     <div class="d-flex align-items-center">
+      <img class="emoji me-3" [src]="EmojiName.BustsInSilhouette | emoji" />
+      <h2 id="programsAnchor">{{ I18ns.programs.programs.title }}</h2>
+    </div>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
   </div>
 

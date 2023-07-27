@@ -9,6 +9,19 @@
   }
 }
 
+.emoji-title {
+  height: 2.67rem;
+}
+
+.emoji {
+  height: 1.67rem;
+}
+
+.subtitle {
+  margin-top: 0.67rem;
+  margin-bottom: 2rem;
+}
+
 .programs-tabs {
   margin-bottom: 3.33rem;
 }
@@ -43,4 +56,12 @@
 .welcome-content h1,
 .welcome-content p {
   margin: 0;
+}
+
+.welcome-content p {
+  font-size: 1.167rem;
+}
+
+h2 {
+  margin-bottom: 0;
 }
