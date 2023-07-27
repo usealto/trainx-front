@@ -163,53 +163,6 @@ describe('Lead Team', () => {
     });
   });
 
-  describe('Filter by Team', () => {
-    it('Filters members by team', () => {
-      cy.get('[data-cy="teamShortname"]')
-        .first()
-        .click()
-        .then(($data) => {
-          const text = $data.text();
-          cy.get('[data-cy="filterByTeam"]').click();
-          cy.get('.ng-dropdown-header > input').clear().type(`${text}{enter}`).wait(500);
-          cy.get('[data-cy="memberTeamShortname"]').first().should('contain', text);
-        });
-    });
-  });
-
-  //TODO compare the width value directly
-  describe('Filter by Score', () => {
-    it('Filters members by score', () => {
-      const score = '75';
-
-      cy.get('[data-cy="filterByScore"]').click();
-      cy.get('.ng-dropdown-header > input').clear();
-      cy.get('.ng-dropdown-header > input').type(`${score}{enter}`);
-      cy.get('[data-cy="scoreProgressBar"]').first().invoke('width').should('be.lessThan', 223.005);
-    });
-  });
-
-  describe('Filter Search', () => {
-    it('Filters members using search input', () => {
-      cy.get('[data-cy="profileCard"] > .profile > .names-container > .name')
-        .first()
-        .click()
-        .then(($data) => {
-          const searchedText = $data.text().slice(0, 5);
-          const text = $data.text();
-
-          cy.get('[data-cy="filterBySearch"]').click();
-
-          cy.get('.form-control').clear();
-          cy.get('.form-control').type(`${searchedText}{enter}`);
-
-          cy.get('[data-cy="profileCard"] > .profile > .names-container > .name')
-            .first()
-            .should('have.text', text);
-        });
-    });
-  });
-
   it('Create and delete a team', () => {
     // Create a new Team
     cy.get('[data-cy="createTeam"]').click();

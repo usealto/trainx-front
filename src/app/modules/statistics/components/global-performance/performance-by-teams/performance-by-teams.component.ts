@@ -1,15 +1,20 @@
-import { Component, Input, OnChanges, Output } from '@angular/core';
-import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
+import { Component, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import {
+  ScoreDtoApi,
+  ScoreTimeframeEnumApi,
+  ScoreTypeEnumApi,
+  TeamStatsDtoApi,
+} from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
 import { combineLatest, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
-import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
+import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -19,7 +24,6 @@ import { StatisticsService } from '../../../services/statistics.service';
 export class PerformanceByTeamsComponent implements OnChanges {
   I18ns = I18ns;
   teams: ScoreDtoApi[] = [];
-  previousTeams: ScoreDtoApi[] = [];
   selectedTeams: ScoreDtoApi[] = [];
   scoredTeams: { label: string; score: number | null; progression: number | null }[] = [];
   scoreEvolutionChart?: Chart;
@@ -33,47 +37,44 @@ export class PerformanceByTeamsComponent implements OnChanges {
     private readonly statisticsServices: StatisticsService,
   ) {}
 
-  ngOnChanges(): void {
-    const params = {
-      timeframe: ScoreTimeframeEnumApi.Day,
-      duration: this.duration ?? ScoreDuration.Year,
-      type: ScoreTypeEnumApi.Team,
-    } as ChartFilters;
-    combineLatest([this.scoresRestService.getScores(params), this.scoresRestService.getScores(params, true)])
-      .pipe(
-        tap(([current]) => {
-          this.teams = current.scores;
-          if (!this.selectedTeams.length) {
-            this.selectedTeams = current.scores.slice(0, 3);
-          }
-        }),
-        tap(([current, previous]) => {
-          this.previousTeams = previous.scores;
-          this.getTeamsScores(current.scores);
-        }),
-      )
-      .subscribe();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['duration']) {
+      const params = {
+        timeframe: ScoreTimeframeEnumApi.Day,
+        duration: this.duration,
+        type: ScoreTypeEnumApi.Team,
+      } as ChartFilters;
+
+      combineLatest([
+        this.scoresRestService.getScores(params),
+        this.scoresRestService.getTeamsStats(this.duration),
+        this.scoresRestService.getTeamsStats(this.duration, true),
+      ])
+        .pipe(
+          tap(([scores, current, previous]) => {
+            this.teams = scores.scores;
+            this.selectedTeams = scores.scores.slice(0, 3);
+            this.createScoreEvolutionChart(
+              this.selectedTeams.length
+                ? scores.scores.filter((score) => this.selectedTeams.some((team) => team.id === score.id))
+                : scores.scores,
+              this.duration,
+            );
+
+            this.getTeamsScores(current, previous);
+          }),
+        )
+        .subscribe();
+    }
   }
 
-  getTeamsScores(scores: ScoreDtoApi[]) {
-    this.createScoreEvolutionChart(
-      this.selectedTeams.length
-        ? scores.filter((score) => this.selectedTeams.some((team) => team.id === score.id))
-        : scores,
-      this.duration ?? ScoreDuration.Year,
-    ),
-      (this.scoredTeams = scores
-        .map((score) => {
-          const average = this.scoresServices.reduceWithoutNull(score.averages);
-          const index = this.previousTeams.findIndex((s) => s.id === score.id);
-          let progression = null;
-          if (index !== -1) {
-            const previousAvg = this.scoresServices.reduceWithoutNull(this.previousTeams[index].averages);
-            progression = previousAvg && average ? (average - previousAvg) / previousAvg : null;
-          }
-          return { label: score.label, score: average, progression: progression };
-        })
-        .sort((a, b) => (a.score && b.score ? b.score - a.score : 0)));
+  getTeamsScores(current: TeamStatsDtoApi[], previous: TeamStatsDtoApi[]) {
+    this.scoredTeams = current
+      .map((team) => {
+        const progression = previous.find((t) => t.id === team.id)?.score ?? null;
+        return { label: team.label, score: team.score ?? 0, progression: progression };
+      })
+      .sort((a, b) => (a.score && b.score ? b.score - a.score : 0));
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
@@ -125,6 +126,11 @@ export class PerformanceByTeamsComponent implements OnChanges {
 
   filterTeams(event: ScoreDtoApi[]) {
     this.selectedTeams = event;
-    this.getTeamsScores(this.teams);
+    this.createScoreEvolutionChart(
+      this.selectedTeams.length
+        ? this.teams.filter((score) => this.selectedTeams.some((team) => team.id === score.id))
+        : this.teams,
+      this.duration,
+    );
   }
 }
