@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { UntypedFormBuilder } from '@angular/forms';
+import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { UserForm } from '../../models/user.form';
-import { UntypedFormBuilder } from '@angular/forms';
 import { ProfileStore } from '../../profile.store';
-import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { UsersRestService } from '../../services/users-rest.service';
-
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { tap } from 'rxjs';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 
 @UntilDestroy()
 @Component({
@@ -17,6 +17,8 @@ import { tap } from 'rxjs';
   styleUrls: ['./profile-account.component.scss'],
 })
 export class ProfileAccountComponent implements OnInit {
+  EmojiName = EmojiName;
+
   I18ns = I18ns;
   private fb: IFormBuilder;
 
@@ -33,6 +35,10 @@ export class ProfileAccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initForm();
+  }
+
+  initForm() {
     this.userForm = this.fb.group<UserForm>({
       firstname: [this.user.firstname ?? ''],
       lastname: [this.user.lastname ?? ''],
@@ -52,5 +58,9 @@ export class ProfileAccountComponent implements OnInit {
         untilDestroyed(this),
       )
       .subscribe();
+  }
+
+  reset() {
+    this.initForm();
   }
 }
