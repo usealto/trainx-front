@@ -20,14 +20,14 @@ describe('Lead Programs', () => {
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
 
     cy.get('[data-cy="programCreateNext"]').click();
-    cy.get('[data-cy="programCreateSave"]').click();
+    cy.get('.btn-primary').first().click();
 
     // Delete the program
 
     cy.get('[ng-reflect-router-link="l/programs"]').click();
 
-    cy.get('.d-inline-block > .search-group > .form-control').clear();
-    cy.get('.d-inline-block > .search-group > .form-control').type(newProg);
+    cy.get('[data-cy="programSearch"]').clear();
+    cy.get('[data-cy="programSearch"]').type(newProg);
     cy.get('[data-cy="programABCDTEST"]').click();
 
     cy.wait(500);
@@ -36,14 +36,14 @@ describe('Lead Programs', () => {
 
     cy.wait(500);
 
-    cy.get('.modal-body > .row > :nth-child(2) > .btn').click();
+    cy.get('[data-cy="deleteButton"]').click();
 
     // Check if the program is deleted
     cy.wait(500);
     cy.get('[ng-reflect-router-link="l/programs"]').click();
 
-    cy.get('.d-inline-block > .search-group > .form-control').clear();
-    cy.get('.d-inline-block > .search-group > .form-control').type('ABCDTEST');
+    cy.get('[data-cy="programSearch"]').clear();
+    cy.get('[data-cy="programSearch"]').type(newProg);
 
     cy.get('[data-cy="programABCDTEST"]').should('not.exist');
   });

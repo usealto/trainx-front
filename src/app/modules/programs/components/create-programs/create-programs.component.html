@@ -63,11 +63,7 @@
           {{ I18ns.shared.cancel }}
         </button>
         <button
-          isEdit
-          ?
           data-cy="programCreateNext"
-          :
-          data-cy="programCreateSave"
           class="btn btn-primary"
           (click)="goNext()"
           [disabled]="programForm && !programForm.valid"
