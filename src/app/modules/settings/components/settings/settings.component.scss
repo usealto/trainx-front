@@ -2,3 +2,27 @@
   display: block;
   padding: var(--alto-page-padding);
 }
+
+.div-title {
+  border-radius: 8px;
+  background: var(--primary-50, #eff8ff);
+  padding: 16px 32px 16px 24px;
+}
+
+.settings-icon {
+  font-size: 24px;
+  font-style: normal;
+}
+
+.settings-title {
+  font-size: 16px;
+  font-family: 'PlusJakartaSans';
+  font-style: normal;
+  font-weight: 700;
+  line-height: 20px;
+  color: #101828;
+}
+
+.alto-tabs {
+  margin-bottom: 48px;
+}
