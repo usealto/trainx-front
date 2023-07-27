@@ -1,0 +1,45 @@
+input[type='text'],
+input[type='email'] {
+  max-width: 42.667rem;
+  height: 3.167rem;
+}
+.emoji {
+  height: 2rem;
+}
+hr {
+  margin: 2rem 0;
+  border-top-color: var(--gray-300);
+  &:last-child {
+    border-top-color: var(--gray-400);
+  }
+}
+h3 {
+  margin-bottom: 0;
+  img {
+    height: 1.667rem;
+    margin-bottom: 0.167rem;
+  }
+}
+.btn-primary {
+  span {
+    font-size: 1.167rem;
+    font-weight: 600;
+  }
+  i {
+    font-size: 1.75rem;
+  }
+  height: 3rem;
+  line-height: 2.8rem;
+  margin-top: -1rem;
+}
+.row {
+  align-items: center;
+}
+
+.form-control {
+  color: var(--gray-900);
+}
+.form-control:disabled {
+  background-color: var(--gray-50);
+  color: var(--gray-400);
+}
