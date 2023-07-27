@@ -150,11 +150,11 @@
       placement="right"
       [ngbPopover]="popContent"
       popoverClass="menu-popover"
+      placement="right-bottom"
       [user]="userStore.user.value$ | async"
       [size]="40"
     >
     </alto-img-badge>
-
-    <p class="build-time fs-8" title="Build Time">Version: {{ buildTime | date : 'medium' }}</p>
+    <!-- <p class="build-time fs-8" title="Build Time">Version: {{ buildTime | date : 'medium' }}</p> -->
   </div>
 </div>
