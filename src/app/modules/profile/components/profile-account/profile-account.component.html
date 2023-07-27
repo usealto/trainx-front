@@ -87,6 +87,11 @@
   </div>
   <hr />
 </form>
-<button type="button" class="btn btn-primary float-end" (click)="save()" data-cy="save-button">
-  <i class="bi bi-check-lg"></i><span>{{ I18ns.shared.save }}</span>
-</button>
+<div>
+  <a class="cancel-btn" *ngIf="userForm.touched" (click)="reset()">
+    {{ I18ns.shared.cancel }}
+  </a>
+  <button type="button" class="btn btn-primary float-end" (click)="save()" data-cy="save-button">
+    <i class="bi bi-check-lg"></i><span>{{ I18ns.shared.save }}</span>
+  </button>
+</div>

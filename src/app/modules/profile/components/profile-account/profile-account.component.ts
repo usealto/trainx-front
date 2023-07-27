@@ -35,6 +35,10 @@ export class ProfileAccountComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initForm();
+  }
+
+  initForm() {
     this.userForm = this.fb.group<UserForm>({
       firstname: [this.user.firstname ?? ''],
       lastname: [this.user.lastname ?? ''],
@@ -54,5 +58,9 @@ export class ProfileAccountComponent implements OnInit {
         untilDestroyed(this),
       )
       .subscribe();
+  }
+
+  reset() {
+    this.initForm();
   }
 }

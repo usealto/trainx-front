@@ -43,3 +43,9 @@ h3 {
   background-color: var(--gray-50);
   color: var(--gray-400);
 }
+.cancel-btn {
+  color: var(--gray-500, #667085);
+  font-size: 1.167rem;
+  font-weight: 600;
+  cursor: pointer;
+}
