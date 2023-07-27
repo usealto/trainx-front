@@ -26,7 +26,7 @@ export class ProgramCardListComponent implements OnInit {
   AltoRoutes = AltoRoutes;
 
   @Output() programTotal = new EventEmitter<number>();
-  @Input() place: 'home' | 'program' = 'home';
+  @Input() place: 'home' | 'program' | 'active' = 'home';
 
   programs: ProgramDtoApi[] = [];
   programsDisplay: ProgramDtoApi[] = [];
@@ -53,7 +53,7 @@ export class ProgramCardListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (this.place === 'home') {
+    if (this.place === 'home' || this.place === 'active') {
       this.displayToggle = false;
     } else if (this.place === 'program') {
       this.displayToggle = true;
@@ -156,7 +156,13 @@ export class ProgramCardListComponent implements OnInit {
         sortBy: 'updatedAt:desc',
       })
       .pipe(
-        map(({ meta, data }) => ({ meta, data: data?.sort((a) => (a.isActive ? -1 : 1)) })),
+        map(({ meta, data }) => {
+          // If the place is 'active', filter out programs that are not active
+          if (this.place === 'active') {
+            data = data?.filter((program) => program.isActive) ?? [];
+          }
+          return { meta, data: data?.sort((a) => (a.isActive ? -1 : 1)) };
+        }),
         tap((p) => {
           this.programs = p.data ?? [];
           this.programTotal.emit(p.meta.totalItems);
@@ -171,7 +177,7 @@ export class ProgramCardListComponent implements OnInit {
 
   setPageSize() {
     const cardsByLine = 3;
-    if (this.place === 'home') {
+    if (this.place === 'home' || this.place === 'active') {
       this.pageSize = cardsByLine;
     } else if (this.place === 'program') {
       this.pageSize = cardsByLine * 3;

@@ -148,9 +148,14 @@ export const FR = {
     titleIcon: '🎯',
     title: 'Programmes',
     subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
+    activePrograms: {
+      titleIcon: '🎯',
+      title: 'Programmes en cours',
+      subtitle: 'Retrouvez les programmes que vos équipes sont en train de réaliser.',
+    },
     programs: {
-      title: 'Programmes',
-      subtitle: "Retrouvez l'ensemble des programmes assignés à vos équipes",
+      title: 'Programmes de vos équipes',
+      subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
       createProgram: 'Créer',
       involvement: 'Taux de participation',
       involvementToolTip: 'Nombre de membres ayant commencé le programme sur le nombre de membres assignés',

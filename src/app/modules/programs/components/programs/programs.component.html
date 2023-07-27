@@ -2,10 +2,10 @@
   <h1 class="welcome-icon">{{ I18ns.programs.titleIcon }}</h1>
   <div class="welcome-content">
     <h1>{{ I18ns.programs.title }}</h1>
-    <p class="mt-2 mb-4 alto-grey fs-6b">{{ I18ns.programs.subtitle }}</p>
+    <p class="alto-grey fs-6b">{{ I18ns.programs.subtitle }}</p>
   </div>
 </div>
-<div class="pb-6 border-bottom">
+<div class="programs-tabs">
   <!-- <alto-anchor-navigator fragment="programsAnchor">
     <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
       {{ I18ns.programs.programs.title }}<span class="alto-badge ms-3">{{ programsCount }}</span>
@@ -31,12 +31,23 @@
 </div>
 
 <!-- PROGRAMS -->
-<div *ngIf="activeTab === 'programs'" class="border-bottom">
+<div *ngIf="activeTab === 'programs'" class="active-programs">
+  <div>
+    <h2 id="programsAnchor">{{ I18ns.programs.activePrograms.title }}</h2>
+    <p class="mt-2 mb-4 alto-grey">{{ I18ns.programs.activePrograms.subtitle }}</p>
+  </div>
+
+  <alto-program-card-list
+    (programTotal)="null"
+    [place]="'active'"
+  ></alto-program-card-list>
+</div>
+<div *ngIf="activeTab === 'programs'">
   <div>
     <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
       <i class="bi bi-plus-lg"></i> {{ I18ns.programs.programs.createProgram }}
     </a>
-    <h2 id="programsAnchor" class="mt-6">{{ I18ns.programs.programs.title }}</h2>
+    <h2 id="programsAnchor">{{ I18ns.programs.programs.title }}</h2>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
   </div>
 
