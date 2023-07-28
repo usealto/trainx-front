@@ -43,9 +43,9 @@
 
 .alto-badge-big {
   @extend .alto-badge-no-size;
-  height: 4rem;
-  min-width: 4rem;
-  line-height: 3.4rem;
+  height: 2.667rem;
+  width: 2.667rem;
+  line-height: 2.667rem;
   font-size: 2rem;
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
@@ -60,15 +60,21 @@
   color: #d92d20;
   background-color: #fee4e2;
 }
+.alto-badge-primary {
+  @extend .alto-badge-big;
+  color: var(--primary-600);
+  background: radial-gradient(circle, var(--primary-100) 50%, var(--primary-50) 50%);
+}
 .alto-badge-warning {
   @extend .alto-badge-big;
-  color: var(--orange--600);
-  background: radial-gradient(circle, var(--orange--100) 50%, var(--orange--50) 50%);
+  color: var(--orange-600);
+  background: radial-gradient(circle, var(--orange-100) 50%, var(--orange-50) 50%);
 }
 .alto-badge-success {
   @extend .alto-badge-big;
-  color: var(--success--600);
-  background: radial-gradient(circle, var(--success--100) 50%, var(--success--50) 50%);
+  color: var(--success-600);
+  background: radial-gradient(circle, var(--success-100) 50%, var(--success-50) 50%);
+
 }
 
 .subtitles {
@@ -97,7 +103,7 @@
 
 .table-panel {
   background-color: white;
-  border-radius: 1.143rem;
+  border-radius: 0.667rem;
   border: 1px solid var(--alto-border);
   h2 {
     padding: 1.4rem 1.7rem;

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   GetProgramRunsRequestParams,
+  GetProgramsStatsRequestParams,
   GetScoresRequestParams,
   GetTeamsStatsRequestParams,
   GetUsersStatsRequestParams,
@@ -76,33 +77,50 @@ export class ScoresRestService {
 
     return this.statsApi
       .getTeamsStats({
+        itemsPerPage: 400,
         from: dateAfter,
         to: dateBefore,
       } as GetTeamsStatsRequestParams)
       .pipe(map((r) => r.data || []));
   }
 
-  // getProgramsStats(duration: ScoreDuration, isProgression = false): Observable<ProgramDtoApi[]> {
-  //   let dateAfter: Date;
-  //   let dateBefore: Date;
+  getProgramsStats(duration: ScoreDuration, isProgression = false) {
+    let dateAfter: Date;
+    let dateBefore: Date;
 
-  //   if (isProgression) {
-  //     const [start, end] = this.service.getPreviousPeriod(duration);
+    if (isProgression) {
+      const [start, end] = this.service.getPreviousPeriod(duration);
 
-  //     dateAfter = start;
-  //     dateBefore = end;
-  //   } else {
-  //     dateAfter = this.service.getStartDate(duration);
-  //     dateBefore = new Date();
-  //   }
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration);
+      dateBefore = new Date();
+    }
 
-  //   return this.statsApi
-  //     .getProgramsStats({
-  //       from: dateAfter,
-  //       to: dateBefore,
-  //     } as GetProgramsStatsRequestParams)
-  //     .pipe(map((r) => r.data || []));
-  // }
+    return this.statsApi
+      .getProgramsStats({ itemsPerPage: 400, from: dateAfter, to: dateBefore })
+      .pipe(map((r) => r.data || []));
+  }
+
+  getTagsStats(duration: ScoreDuration, isProgression = false) {
+    let dateAfter: Date;
+    let dateBefore: Date;
+
+    if (isProgression) {
+      const [start, end] = this.service.getPreviousPeriod(duration);
+
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration);
+      dateBefore = new Date();
+    }
+
+    return this.statsApi
+      .getTagsStats({ itemsPerPage: 400, from: dateAfter, to: dateBefore })
+      .pipe(map((r) => r.data || []));
+  }
 
   getScores(
     { duration, type, team, timeframe, sortBy, user, ids }: ChartFilters,

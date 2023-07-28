@@ -12,13 +12,17 @@ html {
   color: var(--alto-text-color);
 }
 
-// @media screen and (min-width: 1900px) {
-//   :root,
-//   body,
-//   html {
-// --bs-body-font-size: 14px;
-//   }
-// }
+@media screen and (min-width: 1900px) {
+  :root,
+  body,
+  html {
+    // --bs-body-font-size: 14px;
+  }
+  // table,
+  // .header-item {
+  //   font-size: 13px;
+  // }
+}
 
 html,
 input,

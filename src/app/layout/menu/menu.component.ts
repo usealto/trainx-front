@@ -19,6 +19,7 @@ export class MenuComponent implements OnInit {
   AltoRoutes = AltoRoutes;
   I18ns = I18ns;
   buildTime = buildTime;
+  toggleTooltip = false;
 
   isAdmin = false;
   displayAdmin = false;

@@ -11,6 +11,7 @@ import {
   ScoreTypeEnumApi,
   ScoresResponseDtoApi,
   TeamDtoApi,
+  TeamStatsDtoApi,
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { environment } from 'src/environments/environment';
@@ -25,6 +26,8 @@ import { UserFilters } from 'src/app/modules/profile/models/user.model';
 
 interface TeamDisplay extends TeamDtoApi {
   score?: number;
+  totalGuessesCount?: number;
+  validGuessesCount?: number;
 }
 interface UserDisplay extends UserDtoApi {
   score?: number;
@@ -40,12 +43,12 @@ export class LeadTeamComponent implements OnInit {
   I18ns = I18ns;
   // Teams
   teams: TeamDtoApi[] = [];
+  teamsStats: TeamStatsDtoApi[] = [];
   paginatedTeams: TeamDisplay[] = [];
   teamsPage = 1;
   teamsPageSize = 7;
   teamsScores: TeamDisplay[] = [];
   // Users
-  activeUsersCount = 0;
   absoluteUsersCount = 0;
   usersCount = 0;
   usersMap = new Map<string, string>();
@@ -73,19 +76,23 @@ export class LeadTeamComponent implements OnInit {
 
   loadData() {
     combineLatest([
-      this.usersRestService.getUsers(),
-      this.teamsRestService.getTeams(),
+      this.scoreRestService.getTeamsStats(ScoreDuration.Month),
       this.scoreRestService.getUsersStats(ScoreDuration.Month),
       this.scoreRestService.getUsersStats(ScoreDuration.Month, true),
     ])
       .pipe(
-        tap(([users, teams, usersStats, previousUsersStats]) => {
-          this.teams = teams;
-          this.teamsScores = this.teams;
+        tap(([teamsStats, usersStats, previousUsersStats]) => {
+          this.teams = teamsStats.map((teamStat) => teamStat.team);
+          this.teamsStats = teamsStats;
+          this.teamsScores = this.teamsStats.map((teamStat) => ({
+            ...teamStat.team,
+            score: teamStat.score,
+            totalGuessesCount: teamStat.totalGuessesCount,
+            validGuessesCount: teamStat.validGuessesCount,
+          }));
 
-          this.users = users;
-          this.absoluteUsersCount = users.length;
-          this.activeUsersCount = usersStats.filter((u) => u.respondsRegularly).length;
+          this.users = usersStats.map((userStat) => userStat.user);
+          this.absoluteUsersCount = this.users.length;
 
           usersStats.forEach((u) => {
             this.usersQuestionCount.set(u.id, [u.totalGuessesCount || 0]);
@@ -97,31 +104,18 @@ export class LeadTeamComponent implements OnInit {
                 if (data[0] === 0) {
                   data.push(0);
                 } else {
-                  data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount);
+                  u.totalGuessesCount
+                  ? data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount)
+                  : data.push(0);
                 }
                 this.usersQuestionCount.set(u.id, data);
               }
             }
           });
-        }),
-        tap(([users]) => (this.usersCount = users.length)),
-        tap(([users]) => {
-          users.forEach((user) => {
+          this.users.forEach((user) => {
             const member = this.teams.find((team) => team.id === user.teamId);
-            this.usersMap.set(user.id, member ? member.shortName : '');
+            this.usersMap.set(user.id, member ? member.longName + ' - ' + member.shortName : '');
           });
-        }),
-        switchMap(() => this.scoreRestService.getTeamsStats(ScoreDuration.Month)),
-        tap((scores) => {
-          this.teamsScores = this.teams.map((t) => {
-            const score = scores.find((s) => s.id === t.id);
-            if (score) {
-              return { ...t, score: score.score };
-            } else {
-              return t;
-            }
-          });
-          this.teamsScores.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
         }),
         switchMap(() => {
           return this.scoreRestService.getScores({
@@ -206,6 +200,23 @@ export class LeadTeamComponent implements OnInit {
   @memoize()
   getQuestionsByUser(id: string): number[] {
     return this.usersQuestionCount.get(id) || [0, 0];
+  }
+
+  getTotalQuestions(): number {
+    let totalQuestions = 0;
+
+    this.usersQuestionCount.forEach((values) => {
+      if (values && values.length > 0) {
+        totalQuestions += values[0];
+      }
+    });
+
+    return totalQuestions;
+  }
+
+  getPercentageQuestions(): number {
+    // TODO
+    return 0;
   }
 
   airtableRedirect() {
