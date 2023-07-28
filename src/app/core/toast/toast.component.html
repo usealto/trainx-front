@@ -1,0 +1,26 @@
+<ngb-toast
+  *ngFor="let toast of toastService.toasts"
+  [class]="(toast.className ?? '') + ' ' + toast.type"
+  [autohide]="false"
+  [delay]="toast.delay || 5000"
+  (hidden)="toastService.remove(toast)"
+>
+  <a aria-label="Close" class="float-end cursor-pointer" (click)="toastService.remove(toast)">
+    <i class="bi bi-x-lg"></i>
+  </a>
+
+  <ng-template [ngIf]="toast.template" [ngIfElse]="text">
+    <ng-template [ngTemplateOutlet]="toast.template"></ng-template>
+  </ng-template>
+
+  <ng-template #text>
+    <ng-container [ngSwitch]="toast.type">
+      <span *ngSwitchCase="'success'">
+        <i class="bi bi-check-circle-fill me-3"></i>
+      </span>
+      <span *ngSwitchCase="'danger'"> </span>
+      <span *ngSwitchDefault> </span>
+    </ng-container>
+    {{ toast.text }}
+  </ng-template>
+</ngb-toast>

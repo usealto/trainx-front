@@ -5,8 +5,11 @@ import { TeamsRestService } from './modules/lead-team/services/teams-rest.servic
 import { UsersRestService } from './modules/profile/services/users-rest.service';
 import { ProgramsRestService } from './modules/programs/services/programs-rest.service';
 import { TagsRestService } from './modules/programs/services/tags-rest.service';
+import { EmojiMap, emojiData } from './core/utils/emoji/data';
 
 export const appResolver: ResolveFn<any> = () => {
+  emojiData.forEach((d) => EmojiMap.set(d.id, d));
+
   return combineLatest([
     inject(TagsRestService).getTags(),
     inject(TeamsRestService).getTeams(),

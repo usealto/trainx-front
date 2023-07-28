@@ -7,6 +7,8 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { EChartsOption } from 'echarts';
 import { combineLatest, tap } from 'rxjs';
+import { ToastService } from 'src/app/core/toast/toast.service';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
@@ -27,6 +29,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./test.component.scss'],
 })
 export class TestComponent {
+  EmojiName = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   isDev = !environment.production;
@@ -83,10 +86,16 @@ export class TestComponent {
     private readonly statisticsService: StatisticsService,
     programRestService: ProgramsRestService,
     userRestService: UsersRestService,
+    private readonly toastService: ToastService,
   ) {
     programRestService.getPrograms().subscribe();
     userRestService.getUsers().subscribe();
     this.createUserProgressionChart();
+
+    this.toastService.show({
+      text: 'Le collaborateur [nom du collaborateur] a bien été modifié',
+      type: 'success',
+    });
   }
 
   createUserProgressionChart() {

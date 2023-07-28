@@ -2,8 +2,8 @@
   --bs-body-font-size: 14px;
   --alto-panel-padding-x: 1.7rem;
   --alto-panel-padding-y: 1.4rem;
-  --font-family: 'Inter';
-  --alto-page-padding: 2.286rem;
+  --font-family: 'PlusJakartaSans';
+  --alto-page-padding: 3.333rem 3.5rem;
 }
 body,
 html {
@@ -21,13 +21,6 @@ html {
   table,
   .header-item {
     font-size: 13px;
-  }
-}
-
-@media screen and (max-width: 700px) {
-  table,
-  .header-item {
-    font-size: 12px;
   }
 }
 
@@ -80,8 +73,9 @@ hr {
 .cursor-pointer {
   cursor: pointer;
 }
-.fs-6b {
-  font-size: 1.143rem !important;
+
+.fs-6 {
+  font-size: 1rem;
 }
 .fs-7 {
   font-size: 0.85rem;
@@ -91,7 +85,7 @@ hr {
 }
 
 .fw-medium {
-  font-weight: 500;
+  font-weight: 600 !important;
 }
 
 .bg-orange {

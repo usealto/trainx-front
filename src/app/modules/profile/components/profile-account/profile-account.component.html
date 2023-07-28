@@ -1,63 +1,97 @@
-<div class="py-4 border-bottom page-max-width">
-  <button type="button" class="btn btn-primary float-end" (click)="save()" data-cy="save-button">
-    {{ I18ns.shared.save }}
-  </button>
-  <h1>{{ I18ns.profile.profile.title }}</h1>
-  <p class="alto-grey">{{ I18ns.profile.profile.subtitle }}</p>
+<div class="header-panel d-flex mb-8">
+  <img class="emoji me-4" [src]="EmojiName.Gear | emoji" />
+
+  <h1 class="m-0 d-inline-block">{{ I18ns.profile.profile.title }}</h1>
 </div>
-<div class="page-max-width">
-  <form [formGroup]="userForm">
-    <div class="row py-4 border-bottom">
-      <h3 class="col-5 mb-2">{{ I18ns.profile.profile.name }}</h3>
-      <div class="col input-group">
-        <input
-          type="text"
-          formControlName="firstname"
-          class="form-control me-4"
-          placeholder="{{ I18ns.profile.profile.firstName }}"
-          data-cy="firstname"
-        />
-        <input
-          type="text"
-          formControlName="lastname"
-          class="form-control"
-          placeholder="{{ I18ns.profile.profile.name }}"
-          data-cy="lastname"
-        />
+
+<form [formGroup]="userForm">
+  <div class="row py-4name">
+    <h3 class="col-4">
+      <img class="me-3" [src]="EmojiName.PageFacingUp | emoji" /> {{ I18ns.profile.profile.name }}
+    </h3>
+    <div class="col">
+      <input
+        type="text"
+        formControlName="lastname"
+        class="form-control"
+        placeholder="{{ I18ns.profile.profile.name }}"
+        data-cy="lastname"
+      />
+    </div>
+  </div>
+  <hr />
+
+  <div class="row py-4name">
+    <h3 class="col-4">
+      <img class="me-3" [src]="EmojiName.PageFacingUp | emoji" /> {{ I18ns.profile.profile.firstName }}
+    </h3>
+    <div class="col">
+      <input
+        type="text"
+        formControlName="firstname"
+        class="form-control me-4"
+        placeholder="{{ I18ns.profile.profile.firstName }}"
+        data-cy="firstname"
+      />
+    </div>
+  </div>
+  <hr />
+
+  <div class="row py-4name" *ngIf="false">
+    <h3 class="col-4">{{ I18ns.profile.profile.profilePicture }}</h3>
+    <div class="col row">
+      <span class="col-1 me-4 badge badge-circle bg-primary rounded-pill align-middle">AB</span>
+      <div class="col input-group mb-3">
+        <input type="file" class="form-control" placeholder="{{ I18ns.profile.profile.email }}" />
       </div>
     </div>
-    <div class="row py-4 border-bottom" *ngIf="false">
-      <h3 class="col-5 mb-2">{{ I18ns.profile.profile.profilePicture }}</h3>
-      <div class="col row">
-        <span class="col-1 me-4 badge badge-circle bg-primary rounded-pill align-middle">AB</span>
-        <div class="col input-group mb-3">
-          <input type="file" class="form-control" placeholder="{{ I18ns.profile.profile.email }}" />
-        </div>
-      </div>
+  </div>
+
+  <div class="row py-4name">
+    <h3 class="col-4">
+      <img class="me-3" [src]="EmojiName.LoveLetter | emoji" />{{ I18ns.profile.profile.email }}
+    </h3>
+    <div class="col-7 form-group">
+      <input type="email" disabled class="form-control" [value]="this.user.email" readonly />
     </div>
-    <div class="row py-4 border-bottom">
-      <h3 class="col-5 mb-2">{{ I18ns.profile.profile.email }}</h3>
-      <div class="col-7 form-group">
-        <input type="email" disabled class="form-control" [value]="this.user.email" readonly />
-      </div>
+  </div>
+  <hr />
+
+  <div class="row py-4name">
+    <h3 class="col-4">
+      <img class="me-3" [src]="EmojiName.OfficeBuilding | emoji" />{{ I18ns.profile.profile.company }}
+    </h3>
+    <div class="col-7 form-group">
+      <input type="text" class="form-control" [value]="user.company.name" disabled readonly />
     </div>
-    <div class="row py-4 border-bottom">
-      <h3 class="col-5 mb-2">{{ I18ns.profile.profile.company }}</h3>
-      <div class="col-7 form-group">
-        <input type="text" class="form-control" [value]="user.company.name" disabled readonly />
-      </div>
+  </div>
+  <hr />
+
+  <div class="row py-4name">
+    <h3 class="col-4">
+      <img class="me-3" [src]="EmojiName.BustsInSilhouette | emoji" />{{ I18ns.profile.profile.team }}
+    </h3>
+    <div class="col-7 form-group">
+      <input type="text" class="form-control" [value]="user.team?.longName" disabled readonly />
     </div>
-    <div class="row py-4 border-bottom">
-      <h3 class="col-5 mb-2">{{ I18ns.profile.profile.team }}</h3>
-      <div class="col-7 form-group">
-        <input type="text" class="form-control" [value]="user.team?.longName" disabled readonly />
-      </div>
+  </div>
+  <hr />
+
+  <div class="row py-4name">
+    <h3 class="col-4">
+      <img class="me-3" [src]="EmojiName.Label | emoji" />{{ I18ns.profile.profile.roles }}
+    </h3>
+    <div class="col-7 form-group">
+      <input type="text" class="form-control" [value]="user.roles.join(' | ')" disabled readonly />
     </div>
-    <div class="row py-4 border-bottom">
-      <h3 class="col-5 mb-2">{{ I18ns.profile.profile.roles }}</h3>
-      <div class="col-7 form-group">
-        <input type="text" class="form-control" [value]="user.roles.join(' | ')" disabled readonly />
-      </div>
-    </div>
-  </form>
+  </div>
+  <hr />
+</form>
+<div>
+  <a class="cancel-btn" *ngIf="userForm.touched" (click)="reset()">
+    {{ I18ns.shared.cancel }}
+  </a>
+  <button type="button" class="btn btn-primary float-end" (click)="save()" data-cy="save-button">
+    <i class="bi bi-check-lg"></i><span>{{ I18ns.shared.save }}</span>
+  </button>
 </div>

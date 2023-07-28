@@ -39,7 +39,7 @@ import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe'
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
 import { QuestionDeleteModalComponent } from './components/question-delete-modal/question-delete-modal.component';
-import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
+import { EmojiPipe } from 'src/app/core/utils/emoji/emoji.pipe';
 
 @NgModule({
   declarations: [
@@ -85,6 +85,7 @@ import { DeleteModalComponent } from './components/delete-modal/delete-modal.com
     NgVar,
     NgbProgressbarModule,
     AutoResizeTextareaDirective,
+    EmojiPipe,
   ],
   exports: [
     TranslationModule,
@@ -124,7 +125,7 @@ import { DeleteModalComponent } from './components/delete-modal/delete-modal.com
     ButtonGroupComponent,
     TextCounterComponent,
     QuestionDeleteModalComponent,
-    DeleteModalComponent,
+    EmojiPipe,
   ],
 })
 export class SharedModule {}

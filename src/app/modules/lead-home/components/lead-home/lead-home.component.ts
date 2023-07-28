@@ -5,20 +5,20 @@ import {
   ChallengeDtoApiTypeEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
-  TeamStatsDtoApi,
   UserDtoApi,
-  UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
-import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, filter, map, of, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { ChallengesRestService } from 'src/app/modules/challenges/services/challenges-rest.service';
+import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
+import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
@@ -32,6 +32,7 @@ import {
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
+import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
 
 @UntilDestroy()
 @Component({
@@ -58,20 +59,25 @@ export class LeadHomeComponent implements OnInit {
     team: '',
     tags: [],
   };
+
   scoreCount = 0;
+
+  averageScore = 0;
+  averageScoreProgression = 0;
+
+  programsCount = 0;
+  finishedProgramsCount = 0;
+  averageFinishedPrograms = 0;
+  averageFinishedProgramsProgression = 0;
+
+  guessCount = 0;
+  totalGuessCount = 0;
+  guessCountProgression = 0;
 
   commentsCount = 0;
   questionsCount = 0;
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
   evolutionChart?: Chart;
-  globalScore = 0;
-  globalScoreProgression = 0;
-  averageCompletion = 0;
-  completionProgression = 0;
-  activeMembers = 0;
-  activeMembersProgression = 0;
-  inactiveMembers = 0;
-  inactiveMembersProgression = 0;
   //
   challengesByTeam: ChallengeDtoApi[] = [];
   challengesByUser: ChallengeDtoApi[] = [];
@@ -95,6 +101,9 @@ export class LeadHomeComponent implements OnInit {
     public readonly teamStore: TeamStore,
     public readonly profileStore: ProfileStore,
     public readonly programsStore: ProgramsStore,
+    public readonly programsRestService: ProgramsRestService,
+    public readonly guessesRestService: GuessesRestService,
+    public readonly companiesRestService: CompaniesRestService,
   ) {}
 
   ngOnInit(): void {
@@ -114,7 +123,9 @@ export class LeadHomeComponent implements OnInit {
             .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByUser)
             .slice(0, 5);
         }),
-        tap(() => this.getGlobalScore(this.globalFilters)),
+        tap(() => this.getAverageScore(this.globalFilters.duration as ScoreDuration)),
+        tap(() => this.getProgramsStats(this.globalFilters)),
+        tap(() => this.getGuessesCount(this.globalFilters.duration as ScoreDuration)),
         untilDestroyed(this),
       )
       .subscribe();
@@ -242,80 +253,77 @@ export class LeadHomeComponent implements OnInit {
       .subscribe();
   }
 
-  getGlobalScore({
-    duration = this.globalFilters.duration,
-    type = this.globalFilters.type ?? ScoreTypeEnumApi.Team,
-    teams = this.globalFilters.teams,
-  }: ScoreFilters) {
-    this.globalFilters.duration = duration;
-    this.globalFilters.type = type;
-    this.globalFilters.teams = teams;
-    this.globalFilters.timeframe = ScoreTimeframeEnumApi.Day;
+  updateStatisticsDuration(duration: string) {
+    this.globalFilters.duration = duration as ScoreDuration;
+    this.getAverageScore(duration as ScoreDuration);
+    this.getProgramsStats(this.globalFilters);
+    this.getGuessesCount(duration as ScoreDuration);
+  }
 
+  getAverageScore(duration: ScoreDuration) {
     return combineLatest([
-      this.scoresRestService.getTeamsStats(this.globalFilters.duration as ScoreDuration),
-      this.scoresRestService.getTeamsStats(this.globalFilters.duration as ScoreDuration, true),
-      this.scoresRestService.getUsersStats(this.globalFilters.duration as ScoreDuration),
-      this.scoresRestService.getUsersStats(this.globalFilters.duration as ScoreDuration, true),
+      this.scoresRestService.getTeamsStats(duration),
+      this.scoresRestService.getTeamsStats(duration, true),
     ])
       .pipe(
-        map(
-          ([current, previous, usersStats, previousUsersStats]) =>
-            [
-              this.globalFilters.teams && this.globalFilters.teams.length > 0
-                ? current.filter((team) => this.globalFilters.teams?.some((teamId) => teamId === team.id))
-                : current,
-              this.globalFilters.teams && this.globalFilters.teams.length > 0
-                ? previous.filter((team) => this.globalFilters.teams?.some((teamId) => teamId === team.id))
-                : previous,
-              usersStats,
-              previousUsersStats,
-            ] as [TeamStatsDtoApi[], TeamStatsDtoApi[], UserStatsDtoApi[], UserStatsDtoApi[]],
-        ),
-        tap(([current, previous, usersStats, previousUsersStats]) => {
-          //global score
+        tap(([current, previous]) => {
           const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;
-
-          this.globalScore = current.reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
-
-          this.globalScoreProgression =
-            previousScore && this.globalScore ? this.globalScore - previousScore : 0;
-
-          //Active/inactive members
-          this.activeMembers = usersStats.filter((u) => u.respondsRegularly).length;
-          this.inactiveMembers = usersStats.length - this.activeMembers;
-
-          const prevU = previousUsersStats.filter((u) => u.respondsRegularly).length;
-          this.activeMembersProgression =
-            prevU > 0 && this.activeMembers ? (this.activeMembers - prevU) / prevU : 0;
-          const prevI = previousUsersStats.length - prevU;
-          this.inactiveMembersProgression =
-            prevI > 0 && this.inactiveMembers ? (this.inactiveMembers - prevI) / prevI : 0;
+          this.averageScore = current.reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
+          this.averageScoreProgression = previousScore
+            ? (this.averageScore - previousScore) / previousScore
+            : 0;
         }),
-        switchMap(() => this.getAverageCompletion(this.globalFilters)),
-        untilDestroyed(this),
       )
       .subscribe();
   }
 
-  getAverageCompletion(filt: ScoreFilters) {
-    return combineLatest([
-      this.scoresRestService.getCompletion(filt, false),
-      this.scoresRestService.getCompletion(filt, true),
-    ]).pipe(
-      map(([current, last]) => [
-        [current.filter((p) => p.finishedAt !== null).length, current.length],
-        [last.filter((p) => p.finishedAt !== null).length, last.length],
-      ]),
-      tap(([currentAvg, previousAvg]) => {
-        const avgCompletion = currentAvg[1] === 0 ? 0 : currentAvg[0] / currentAvg[1];
-        this.averageCompletion = avgCompletion;
-        const previousAvgCompletion = previousAvg[1] === 0 ? 0 : previousAvg[0] / previousAvg[1];
+  getProgramsStats(filters: ScoreFilters) {
+    combineLatest([
+      this.scoresRestService.getCompletion(filters, false),
+      this.scoresRestService.getCompletion(filters, true),
+      this.scoresRestService.getProgramsStats(filters.duration as ScoreDuration)
+    ])
+      .pipe(
+        tap(([currentCompletion, lastCompletion, programsStats]) => {
+          this.finishedProgramsCount = currentCompletion.filter((p) => p.finishedAt).length;
+          this.programsCount = currentCompletion.length;
+          this.averageFinishedPrograms = this.finishedProgramsCount / this.programsCount;
+          const lastFinishedProgramsCount = lastCompletion.filter((p) => p.finishedAt).length;
+          const lastProgramsCount = lastCompletion.length;
+          const lastAverageFinishedPrograms = lastFinishedProgramsCount / lastProgramsCount;
+          this.averageFinishedProgramsProgression =
+            this.averageFinishedPrograms - lastAverageFinishedPrograms;
 
-        this.completionProgression =
-          previousAvgCompletion && avgCompletion ? previousAvgCompletion - avgCompletion : 0;
-      }),
-    );
+          console.log(programsStats)
+          this.programsCount = programsStats.length
+          this.finishedProgramsCount = programsStats.filter((p) => p.participation === 1).length
+          this.averageFinishedPrograms = this.finishedProgramsCount / this.programsCount;
+          // programsStats.forEach((p) => {
+          //   if (p.program.deletedAt)
+          // })
+          // console.log(programsStats);
+        }),
+      )
+      .subscribe();
+  }
+
+  getGuessesCount(duration: ScoreDuration) {
+    combineLatest([
+      this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration),
+      this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration, true),
+      this.companiesRestService.getMyCompany()
+    ])
+      .pipe(
+        tap(([guesses, previousGuesses, company]) => {
+          this.guessCount = guesses.meta.totalItems;
+          this.guessCountProgression =
+            previousGuesses.meta.totalItems && guesses.meta.totalItems
+              ? (guesses.meta.totalItems - previousGuesses.meta.totalItems) / previousGuesses.meta.totalItems
+              : 0;
+          // console.log(company);
+        }),
+      )
+      .subscribe();
   }
 
   @memoize()

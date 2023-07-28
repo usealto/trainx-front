@@ -6,12 +6,14 @@ import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ApiModule, BASE_PATH } from '@usealto/sdk-ts-angular';
+import { NgxEchartsModule } from 'ngx-echarts';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { ApiErrorInterceptor } from './core/interceptors/api-error.interceptor';
 import { ApiInterceptor } from './core/interceptors/api.interceptor';
 import { AppErrorHandler } from './core/interceptors/app-error.handler';
 import { MsgModule } from './core/message/msg.module';
+import { ToastComponent } from './core/toast/toast.component';
 import { LocaleService, localeIdFactory, localeInitializer } from './core/utils/i18n/locale.service';
 import { TranslationModule } from './core/utils/i18n/translation.module';
 import { LoadingModule } from './core/utils/loading/loading.module';
@@ -23,7 +25,6 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { SharedModule } from './modules/shared/shared.module';
-import { NgxEchartsModule } from 'ngx-echarts';
 @NgModule({
   declarations: [
     AppComponent,
@@ -64,6 +65,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts'),
     }),
+    ToastComponent,
   ],
   providers: [
     {

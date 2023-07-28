@@ -43,10 +43,10 @@
 
 .alto-badge-big {
   @extend .alto-badge-no-size;
-  height: 2.857rem;
-  min-width: 2.857rem;
-  line-height: 2.86rem;
-  font-size: 1.5rem;
+  height: 2.667rem;
+  width: 2.667rem;
+  line-height: 2.667rem;
+  font-size: 2rem;
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
 }
@@ -61,15 +61,38 @@
   background-color: #fee4e2;
 }
 
+.alto-badge-primary {
+  @extend .alto-badge-big;
+  color: var(--primary-600);
+  background: radial-gradient(circle, var(--primary-100) 50%, var(--primary-50) 50%);
+}
+.alto-badge-warning {
+  @extend .alto-badge-big;
+  color: var(--orange-600);
+  background: radial-gradient(circle, var(--orange-100) 50%, var(--orange-50) 50%);
+}
+.alto-badge-success {
+  @extend .alto-badge-big;
+  color: var(--success-600);
+  background: radial-gradient(circle, var(--success-100) 50%, var(--success-50) 50%);
+
+}
+
 .subtitles {
   color: var(--alto-text-second-color);
 }
 
 .panel {
   background-color: white;
-  border-radius: 1.143rem;
-  border: 1px solid var(--alto-border);
-  padding: 1.4rem 1.7rem;
+  border-radius: 0.667rem;
+  border: 1px solid var(--gray-200);
+  padding: 1.667rem;
+}
+
+.header-panel {
+  background-color: var(--primary-50);
+  border-radius: 0.67rem;
+  padding: 1.14rem 1.7rem;
 }
 
 // Block used while loading content
@@ -81,13 +104,15 @@
 
 .table-panel {
   background-color: white;
-  border-radius: 1.143rem;
+  border-radius: 0.667rem;
   border: 1px solid var(--alto-border);
   h2 {
     padding: 1.4rem 1.7rem;
     margin: 0;
   }
   .table {
+    --bs-table-bg: transparent;
+
     th {
       font-weight: 500;
       font-size: 0.857rem;

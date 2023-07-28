@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TeamStatsDtoApi, TeamStatsProgramDtoApi, TeamStatsTagDtoApi } from '@usealto/sdk-ts-angular';
+import { ProgramDtoApi, TagDtoApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -35,8 +35,8 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   paginatedTeams: TeamStatsDtoApi[] = [];
   teamsPage = 1;
   teamsPageSize = 10;
-  programs: TeamStatsProgramDtoApi[] = [];
-  tags: TeamStatsTagDtoApi[] = [];
+  programs: ProgramDtoApi[] = [];
+  tags: TagDtoApi[] = [];
   scoreIsLoading = false;
 
   constructor(
@@ -72,12 +72,12 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
     this.teamFilters.search = search;
 
     let output: TeamStatsDtoApi[] = this.teams;
-    if (programs && programs.length > 0) {
-      output = output.filter((t) => t.programs?.some((p) => programs.some((pr) => pr === p.id)));
-    }
-    if (tags && tags.length > 0) {
-      output = output.filter((t) => t.tags?.some((p) => tags.some((pr) => pr === p.id)));
-    }
+    // if (programs && programs.length > 0) {
+    //   output = output.filter((t) => t.programs?.some((p) => programs.some((pr) => pr === p.id)));
+    // }
+    // if (tags && tags.length > 0) {
+    //   output = output.filter((t) => t.tags?.some((p) => tags.some((pr) => pr === p.id)));
+    // }
     if (teams && teams.length > 0) {
       output = output.filter((t) => teams.some((pr) => pr === t.id));
     }
@@ -95,8 +95,8 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
         tap((t) => {
           this.teams = t;
           this.teamsDisplay = t;
-          this.programs = t.map((te) => te.programs || []).flat();
-          this.tags = t.map((te) => te.tags || []).flat();
+          // this.programs = t.map((te) => te.programs || []).flat();
+          // this.tags = t.map((te) => te.tags || []).flat();
           this.changeTeamsPage(1);
         }),
         switchMap(() => this.scoreRestService.getTeamsStats(this.duration, true)),

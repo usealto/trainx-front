@@ -67,7 +67,7 @@
           ></alto-progression-badge>
         </td>
         <td>
-          <ng-template #programsTooltip>
+          <!-- <ng-template #programsTooltip>
             <ng-container *ngFor="let prog of team.programs">{{ prog.label }}<br /></ng-container>
           </ng-template>
 
@@ -75,10 +75,10 @@
             <alto-colored-pill-list
               [data]="team.programs | sort : 'asc' : 'score' | slice : 0 : 3"
             ></alto-colored-pill-list>
-          </ng-container>
+          </ng-container> -->
         </td>
         <td>
-          <ng-template #tagsTooltip>
+          <!-- <ng-template #tagsTooltip>
             <ng-container *ngFor="let tag of team.tags">{{ tag.label }}<br /></ng-container>
           </ng-template>
 
@@ -86,7 +86,7 @@
             <alto-colored-pill-list
               [data]="team.tags | sort : 'asc' : 'score' | slice : 0 : 3"
             ></alto-colored-pill-list>
-          </ng-container>
+          </ng-container> -->
         </td>
       </tr>
     </tbody>
