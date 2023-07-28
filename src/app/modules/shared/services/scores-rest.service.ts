@@ -84,7 +84,11 @@ export class ScoresRestService {
       .pipe(map((r) => r.data || []));
   }
 
-  getProgramsStats(duration: ScoreDuration, isProgression = false) {
+  getProgramsStats(
+    duration: ScoreDuration,
+    isProgression = false,
+    reqParams: GetProgramsStatsRequestParams = {},
+  ) {
     let dateAfter: Date;
     let dateBefore: Date;
 
@@ -99,7 +103,7 @@ export class ScoresRestService {
     }
 
     return this.statsApi
-      .getProgramsStats({ itemsPerPage: 400, from: dateAfter, to: dateBefore })
+      .getProgramsStats({ ...reqParams, itemsPerPage: 400, from: dateAfter, to: dateBefore })
       .pipe(map((r) => r.data || []));
   }
 
