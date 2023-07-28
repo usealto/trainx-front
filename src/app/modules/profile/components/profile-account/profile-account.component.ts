@@ -9,6 +9,7 @@ import { UsersRestService } from '../../services/users-rest.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { ToastService } from 'src/app/core/toast/toast.service';
 
 @UntilDestroy()
 @Component({
@@ -29,6 +30,7 @@ export class ProfileAccountComponent implements OnInit {
     readonly fob: UntypedFormBuilder,
     private readonly userStore: ProfileStore,
     private readonly userRestService: UsersRestService,
+    private readonly toastService: ToastService,
   ) {
     this.fb = fob;
     this.user = this.userStore.user.value;
@@ -55,6 +57,14 @@ export class ProfileAccountComponent implements OnInit {
       })
       .pipe(
         tap((u) => (this.userStore.user.value = u)),
+        tap((u) => (this.user = u)),
+        tap(() => {
+          this.toastService.show({
+            text: I18ns.profile.profile.form.success,
+            type: 'success',
+          });
+          this.userForm.markAsUntouched();
+        }),
         untilDestroyed(this),
       )
       .subscribe();

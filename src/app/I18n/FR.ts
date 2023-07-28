@@ -603,6 +603,9 @@ export const FR = {
       company: 'Entreprise',
       team: 'Équipe',
       roles: 'Rôles',
+      form: {
+        success: 'Votre compte a bien été modifié',
+      },
     },
     password: {
       title: 'Mot de passe',
