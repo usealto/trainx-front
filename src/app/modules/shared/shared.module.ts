@@ -40,6 +40,7 @@ import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
 import { QuestionDeleteModalComponent } from './components/question-delete-modal/question-delete-modal.component';
 import { EmojiPipe } from 'src/app/core/utils/emoji/emoji.pipe';
+import { TopFlopComponent } from './components/top-flop/top-flop.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { EmojiPipe } from 'src/app/core/utils/emoji/emoji.pipe';
     ButtonGroupComponent,
     TextCounterComponent,
     QuestionDeleteModalComponent,
+    TopFlopComponent,
   ],
   imports: [
     CommonModule,
@@ -125,6 +127,7 @@ import { EmojiPipe } from 'src/app/core/utils/emoji/emoji.pipe';
     TextCounterComponent,
     QuestionDeleteModalComponent,
     EmojiPipe,
+    TopFlopComponent,
   ],
 })
 export class SharedModule {}

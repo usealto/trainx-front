@@ -29,6 +29,8 @@ export const FR = {
     programs: 'programmes',
     teams: 'équipes',
     members: 'membres',
+    top: 'Top',
+    flop: 'Flop',
     days: ['jour', 'jours'],
     imageBadge: {
       userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],
@@ -104,9 +106,16 @@ export const FR = {
         team: 'Équipe',
         member: 'Membre',
       },
-      top: 'Top',
-      flop: 'Flop',
-      topFlopTooltip: 'Classement des {{}} en fonction du score',
+    },
+    topFlop: {
+      teams: {
+        title: 'Niveau de connaissance de vos équipes',
+        subtitle: 'Aperçu du niveau de maîtrise de vos équipes par thématiques.',
+      },
+      users: {
+        title: 'Niveau de connaissance de vos collaborateurs',
+        subtitle: 'Aperçu du niveau de maîtrise de vos collaborateurs.',
+      },
     },
     ongoingPrograms: {
       title: 'Programmes en cours',
