@@ -97,7 +97,9 @@ export class LeadTeamComponent implements OnInit {
                 if (data[0] === 0) {
                   data.push(0);
                 } else {
-                  data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount);
+                  u.totalGuessesCount
+                  ? data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount)
+                  : data.push(0);
                 }
                 this.usersQuestionCount.set(u.id, data);
               }

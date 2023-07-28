@@ -28,10 +28,12 @@ export class StatisticsComponent implements OnInit {
   userScoreProgression = 0;
   guessCount = 0;
   guessCountProgression = 0;
-  averageFinishedPrograms = 0;
-  finishedProgramsCount = 0;
+
   programsCount = 0;
+  finishedProgramsCount = 0;
+  averageFinishedPrograms = 0;
   finishedProgramsCountProgression = 0;
+
   userProgressionChart?: Chart;
   hasData = true;
 
