@@ -62,7 +62,12 @@
         <button class="btn btn-outline-secondary me-2" (click)="cancel()">
           {{ I18ns.shared.cancel }}
         </button>
-        <button class="btn btn-primary" (click)="goNext()" [disabled]="programForm && !programForm.valid">
+        <button
+          data-cy="programCreateNext"
+          class="btn btn-primary"
+          (click)="goNext()"
+          [disabled]="programForm && !programForm.valid"
+        >
           {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
         </button>
       </div>
