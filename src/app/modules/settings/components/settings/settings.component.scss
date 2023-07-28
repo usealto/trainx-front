@@ -4,25 +4,24 @@
 }
 
 .div-title {
-  border-radius: 8px;
+  border-radius: 0.5rem;
   background: var(--primary-50, #eff8ff);
-  padding: 16px 32px 16px 24px;
+  padding: 1rem 2rem 1rem 1.5rem;
 }
 
 .settings-icon {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-style: normal;
 }
 
 .settings-title {
-  font-size: 16px;
-  font-family: 'PlusJakartaSans';
+  font-size: 1rem;
   font-style: normal;
   font-weight: 700;
-  line-height: 20px;
+  line-height: 1.25rem;
   color: #101828;
 }
 
 .alto-tabs {
-  margin-bottom: 48px;
+  margin-bottom: 3rem;
 }

@@ -24,7 +24,10 @@ export class SettingsUsersComponent implements OnInit {
   usersPageSize = 5;
   usersPage = 1;
   usersCount = 0;
-  adminDisplay: UserDtoApi[] = [];
+  adminsDisplay: UserDtoApi[] = [];
+  adminsPageSize = 5;
+  adminsPage = 1;
+  adminsCount = 0;
 
   constructor(
     private readonly userRestService: UsersRestService,
@@ -39,9 +42,10 @@ export class SettingsUsersComponent implements OnInit {
 
   getAdmins() {
     this.userRestService
-      .getUsersPaginated({ isCompanyAdmin: true })
+      .getUsersPaginated({ isCompanyAdmin: true, page: this.adminsPage, itemsPerPage: this.adminsPageSize })
       .pipe(
-        tap((users) => (this.adminDisplay = users.data ?? [])),
+        tap((users) => (this.adminsDisplay = users.data ?? [])),
+        tap((users) => (this.adminsCount = users.meta.totalItems)),
         untilDestroyed(this),
       )
       .subscribe();
@@ -61,7 +65,7 @@ export class SettingsUsersComponent implements OnInit {
   filterAdmins({ search = this.userFilters.search }: UserFilters = this.userFilters) {
     this.userRestService
       .getUsersFiltered({ isCompanyAdmin: true })
-      .pipe(tap((users) => (this.adminDisplay = this.usersService.filterUsers(users, { search }))))
+      .pipe(tap((users) => (this.adminsDisplay = this.usersService.filterUsers(users, { search }))))
       .subscribe();
   }
 
@@ -74,6 +78,11 @@ export class SettingsUsersComponent implements OnInit {
 
   changeUsersPage(page: number): void {
     this.getUsers();
+    return;
+  }
+
+  changeAdminsPage(page: number): void {
+    this.getAdmins();
     return;
   }
 
