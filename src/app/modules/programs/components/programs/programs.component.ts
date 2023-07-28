@@ -116,6 +116,8 @@ export class ProgramsComponent implements OnInit {
         tap(() => {
           modalRef.close();
           this.getQuestions();
+          this.tagRestService.resetTags();
+          this.getTags();
         }),
         untilDestroyed(this),
       )
@@ -140,6 +142,7 @@ export class ProgramsComponent implements OnInit {
           modalRef.close();
           this.tagRestService.resetTags();
           this.getTags();
+          this.getQuestions();
         }),
         untilDestroyed(this),
       )
@@ -152,7 +155,15 @@ export class ProgramsComponent implements OnInit {
       panelClass: 'overflow-auto',
     });
     canvasRef.componentInstance.question = question;
-    canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
+    canvasRef.componentInstance.createdQuestion
+      .pipe(
+        tap(() => {
+          this.getQuestions();
+          this.tagRestService.resetTags();
+          this.getTags();
+        }),
+      )
+      .subscribe();
   }
 
   openSubmittedQuestionForm(question?: QuestionSubmittedDtoApi) {
