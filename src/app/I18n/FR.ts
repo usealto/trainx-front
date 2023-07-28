@@ -70,6 +70,7 @@ export const FR = {
     title: 'Bonjour ',
     subtitle: "Découvrez une vue d'ensemble sur l'avancée de vos équipes.",
     comments: ['{{}} commentaire', '{{}} commentaires'],
+    awaiting: 'en attente',
     subtitleComment: [
       'Vous avez traité toutes les commentaires écrits par vos collaborateurs.',
       'Consultez les commentaires écrits par vos collaborateurs.',
@@ -81,8 +82,6 @@ export const FR = {
       'Consultez les questions suggérées écrites par vos collaborateurs.',
       'Consultez les questions suggérées écrites par vos collaborateurs.',
     ],
-    question: ['{{}} question suggérée', '{{}} questions suggérées'],
-    subtitleQuestion: ['Vous avez {{}} question en attente.', 'Vous avez {{}} questions en attente.'],
     statistics: {
       title: 'Les statistiques de vos équipes',
       subtitle: 'Découvrez un aperçu des performances de vos équipes.',
@@ -594,7 +593,7 @@ export const FR = {
         name: 'Nom/Prénom',
         createdAt: "Date d'ajout",
         lastConnection: 'Dernière activité',
-        connexion: 'Connexion',
+        integration: 'Intégration',
       },
       enable: 'Active',
       disable: 'Inactive',

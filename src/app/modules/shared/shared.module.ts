@@ -67,7 +67,6 @@ import { EmojiPipe } from 'src/app/core/utils/emoji/emoji.pipe';
     ButtonGroupComponent,
     TextCounterComponent,
     QuestionDeleteModalComponent,
-    DeleteModalComponent,
   ],
   imports: [
     CommonModule,
