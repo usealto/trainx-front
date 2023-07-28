@@ -16,7 +16,7 @@
     <div class="card-bottom">
       <div class="d-flex align-items-center">
         <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
-        <p>{{ I18ns.programs.programs.teams }}</p>
+        <span class="me-3 span-text">{{ I18ns.programs.programs.teams }}</span>
         <alto-colored-pill-list
             data-cy="coloredTeams"
             [limit]="1"
@@ -38,7 +38,7 @@
       <hr />
       <p class="score">
         <img class="emoji" [src]="EmojiName.PlayButton | emoji" />
-        <span>
+        <span class="span-text">
           {{ I18ns.programs.programs.involvement }}
         </span>
         <!-- <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.involvementToolTip }}"></i> -->
@@ -48,7 +48,7 @@
       </p>
       <p class="score">
         <img class="emoji" [src]="EmojiName.RollerCoaster | emoji" />
-        <span>
+        <span class="span-text">
           {{ I18ns.programs.programs.progress }}
         </span>
         <!-- <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.progressToolTip }}"></i> -->
@@ -58,7 +58,7 @@
       </p>
       <p class="score">
         <img class="emoji" [src]="EmojiName.SportsMedal | emoji" />
-        <span>
+        <span class="span-text">
           {{ I18ns.programs.programs.score }}
         </span>
         <!-- <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.scoreToolTip }}"></i> -->

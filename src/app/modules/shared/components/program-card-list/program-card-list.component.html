@@ -18,15 +18,16 @@
       </button>
     </div>
   </div>
-  <div class="row mb-4" *ngSwitchCase="'program'">
+  <div class="row mb-5" *ngSwitchCase="'program'">
     <div class="col-5">
       <alto-search
-      class="d-inline-block ms-3"
+      class="d-inline-block program-search"
       (searchChange)="filterPrograms({ search: $event })"
       ></alto-search>
     </div>
     <div class="col-7 text-end">
       <alto-dropdown-filter
+        class="me-3"
         data-cy="programTeamFilter"
         [data]="teamStore.teams.value"
         [displayLabel]="'shortName'"
@@ -35,6 +36,7 @@
         [isColored]="true"
       ></alto-dropdown-filter>
       <alto-score-filter
+      class="me-3"
       data-cy="filterByScore"
       (selectChange)="filterPrograms({ score: $event })"
       ></alto-score-filter>

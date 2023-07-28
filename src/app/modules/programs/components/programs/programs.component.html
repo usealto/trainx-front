@@ -46,19 +46,23 @@
   ></alto-program-card-list>
 </div>
 <div *ngIf="activeTab === 'programs'">
-  <div>
-    <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
-      <i class="bi bi-plus-lg"></i> 
-      <div>
-        {{ I18ns.programs.programs.createProgram }}
-      </div>
-    </a>
-     <div class="d-flex align-items-center">
-      <img class="emoji me-3" [src]="EmojiName.BustsInSilhouette | emoji" />
-      <h2 id="programsAnchor">{{ I18ns.programs.programs.title }}</h2>
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+        <div class="d-flex align-items-center mb-3">
+          <img class="emoji me-3" [src]="EmojiName.BustsInSilhouette | emoji" />
+          <h2 id="programsAnchor">{{ I18ns.programs.programs.title }}</h2>
+        </div>
+        <p class="mt-2 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
     </div>
-    <p class="mt-2 mb-4 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
+      <a type="button" class="btn btn-primary" [routerLink]="AltoRoutes.programsCreate">
+        <i class="bi bi-plus-lg"></i> 
+        <div>
+          {{ I18ns.programs.programs.createProgram }}
+        </div>
+      </a>
   </div>
+
+
 
   <alto-program-card-list
     (programTotal)="programsCount = $event"
