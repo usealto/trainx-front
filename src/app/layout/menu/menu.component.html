@@ -98,6 +98,7 @@
           class="module mb-4"
           [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.settings"
           routerLinkActive="menu-selected"
+          tooltipClass="menu-tooltip-class"
         >
           <i class="bi bi-gear"></i>
         </a>
@@ -106,17 +107,18 @@
 
     <hr />
     <ng-template #popContent>
-      <a
-        data-cy="profile"
-        class="popoverProfile cursor-pointer"
-        [routerLink]="
-          displayAdmin
-            ? AltoRoutes.lead + '/' + AltoRoutes.profile
-            : AltoRoutes.user + '/' + AltoRoutes.profile
-        "
-        ><i class="bi bi-person"></i>{{ I18ns.menu.profile }}
-      </a>
-      <div *ngIf="isAdmin" class="popoverProfile cursor-pointer">
+      <div>
+        <a
+          data-cy="profile"
+          [routerLink]="
+            displayAdmin
+              ? AltoRoutes.lead + '/' + AltoRoutes.profile
+              : AltoRoutes.user + '/' + AltoRoutes.profile
+          "
+          ><i class="bi bi-person"></i>{{ I18ns.menu.profile }}
+        </a>
+      </div>
+      <div *ngIf="isAdmin" class="form-check form-switch">
         <input
           class="form-check-input"
           type="checkbox"
@@ -125,28 +127,33 @@
           [checked]="displayAdmin"
           (change)="switchToAdmin(adminSwitch.checked)"
         />
-        <label class="form-check-label cursor-pointer" for="adminSwitch">
+        <label class="form-check-label" for="adminSwitch">
           {{ I18ns.menu.adminMode }}
         </label>
       </div>
-      <a href="" class="popoverProfile cursor-pointer"
-        ><i class="bi bi-chat-text"></i>{{ I18ns.menu.feedback }}</a
-      >
-      <a class="logout cursor-pointer" (click)="logOut()">
-        <i class="bi bi-box-arrow-right"></i> {{ I18ns.menu.disconnect }}
-      </a>
+      <div>
+        <a href="https://airtable.com/appIyNNDxAgaqKMAJ/shr4vWMugZ5uEc5a4"
+          ><i class="bi bi-chat-text"></i>{{ I18ns.menu.feedback }}</a
+        >
+      </div>
+      <div>
+        <a class="logout" (click)="logOut()">
+          <i class="bi bi-box-arrow-right"></i>{{ I18ns.menu.disconnect }}</a
+        >
+      </div>
     </ng-template>
     <alto-img-badge
-      class="imgBadgeMenu"
+      [toggleTooltip]="toggleTooltip"
+      class="img-badge-menu"
       type="button"
       placement="right"
       [ngbPopover]="popContent"
       popoverClass="menu-popover"
+      placement="right-bottom"
       [user]="userStore.user.value$ | async"
       [size]="40"
     >
     </alto-img-badge>
-
-    <p class="build-time fs-8" title="Build Time">Version: {{ buildTime | date : 'medium' }}</p>
+    <!-- <p class="build-time fs-8" title="Build Time">Version: {{ buildTime | date : 'medium' }}</p> -->
   </div>
 </div>

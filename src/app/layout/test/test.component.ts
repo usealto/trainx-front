@@ -7,6 +7,7 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { EChartsOption } from 'echarts';
 import { combineLatest, tap } from 'rxjs';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
@@ -27,6 +28,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./test.component.scss'],
 })
 export class TestComponent {
+  EmojiName = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   isDev = !environment.production;
