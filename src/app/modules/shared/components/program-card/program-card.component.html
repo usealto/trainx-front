@@ -14,19 +14,30 @@
   >
     <p class="title" [ngClass]="{ 'w-100': !displayToggle }">{{ program.name }}</p>
     <div class="card-bottom">
-      <ng-container *ngIf="program.teams.length > 0; else elseTeams">
+      <div class="d-flex align-items-center">
+        <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
+        <p>{{ I18ns.programs.programs.teams }}</p>
         <alto-colored-pill-list
-          data-cy="coloredTeams"
-          [limit]="5"
-          [hasDynamicColor]="true"
-          [data]="program.teams"
-        ></alto-colored-pill-list>
-      </ng-container>
-      <ng-template #elseTeams>
-        <div class="alto-badge">{{ I18ns.shared.noTeam }}</div>
-      </ng-template>
+            data-cy="coloredTeams"
+            [limit]="1"
+            [hasDynamicColor]="false"
+            [data]="[program.teams.length + '/' + allTeamsCount + ' équipes']"
+          ></alto-colored-pill-list>
+        <!-- <ng-container *ngIf="program.teams.length > 0; else elseTeams">
+          <alto-colored-pill-list
+            data-cy="coloredTeams"
+            [limit]="5"
+            [hasDynamicColor]="true"
+            [data]="program.teams"
+          ></alto-colored-pill-list>
+        </ng-container> -->
+        <!-- <ng-template #elseTeams>
+          <div class="alto-badge">{{ I18ns.shared.noTeam }}</div>
+        </ng-template> -->
+      </div>
       <hr />
       <p class="score">
+        <img class="emoji" [src]="EmojiName.PlayButton | emoji" />
         <span>
           {{ I18ns.programs.programs.involvement }}
         </span>
@@ -36,6 +47,7 @@
         }}</span>
       </p>
       <p class="score">
+        <img class="emoji" [src]="EmojiName.RollerCoaster | emoji" />
         <span>
           {{ I18ns.programs.programs.progress }}
         </span>
@@ -45,6 +57,7 @@
         </span>
       </p>
       <p class="score">
+        <img class="emoji" [src]="EmojiName.SportsMedal | emoji" />
         <span>
           {{ I18ns.programs.programs.score }}
         </span>

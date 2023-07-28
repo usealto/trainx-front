@@ -158,6 +158,7 @@ export const FR = {
       progressToolTip: 'Nombre de questions répondues par tout les membres sur le nombre total de questions',
       score: 'Score',
       scoreToolTip: 'Score moyen du programme depuis sa création',
+      teams: 'Équipes:',
       filters: {
         team: 'Équipe',
         teams: 'Équipes',
