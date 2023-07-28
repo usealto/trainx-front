@@ -141,9 +141,16 @@ export class ProgramCardListComponent implements OnInit {
       .subscribe();
   }
 
-  filterPrograms({ teams = this.programFilters.teams, search = this.programFilters.search }: ProgramFilters) {
+  filterPrograms({
+    teams = this.programFilters.teams,
+    search = this.programFilters.search,
+    score = this.programFilters.score,
+    progress = this.programFilters.progress,
+  }: ProgramFilters) {
     this.programFilters.search = search;
     this.programFilters.teams = teams;
+    this.programFilters.score = score;
+    this.programFilters.progress = progress;
 
     this.programsDisplay = this.programService.filterPrograms(this.programs, this.programFilters);
     this.count = this.programsDisplay.length;

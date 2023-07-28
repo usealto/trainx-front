@@ -82,6 +82,28 @@ export class ScoresRestService {
       .pipe(map((r) => r.data || []));
   }
 
+  // getProgramsStats(duration: ScoreDuration, isProgression = false): Observable<ProgramDtoApi[]> {
+  //   let dateAfter: Date;
+  //   let dateBefore: Date;
+
+  //   if (isProgression) {
+  //     const [start, end] = this.service.getPreviousPeriod(duration);
+
+  //     dateAfter = start;
+  //     dateBefore = end;
+  //   } else {
+  //     dateAfter = this.service.getStartDate(duration);
+  //     dateBefore = new Date();
+  //   }
+
+  //   return this.statsApi
+  //     .getProgramsStats({
+  //       from: dateAfter,
+  //       to: dateBefore,
+  //     } as GetProgramsStatsRequestParams)
+  //     .pipe(map((r) => r.data || []));
+  // }
+
   getScores(
     { duration, type, team, timeframe, sortBy, user, ids }: ChartFilters,
     isProgression = false,
