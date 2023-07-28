@@ -60,15 +60,21 @@
   color: #d92d20;
   background-color: #fee4e2;
 }
+.alto-badge-primary {
+  @extend .alto-badge-big;
+  color: var(--primary-600);
+  background: radial-gradient(circle, var(--primary-100) 50%, var(--primary-50) 50%);
+}
 .alto-badge-warning {
   @extend .alto-badge-big;
-  color: var(--orange--600);
-  background: radial-gradient(circle, var(--orange--100) 50%, var(--orange--50) 50%);
+  color: var(--orange-600);
+  background: radial-gradient(circle, var(--orange-100) 50%, var(--orange-50) 50%);
 }
 .alto-badge-success {
   @extend .alto-badge-big;
-  color: var(--success--600);
-  background: radial-gradient(circle, var(--success--100) 50%, var(--success--50) 50%);
+  color: var(--success-600);
+  background: radial-gradient(circle, var(--success-100) 50%, var(--success-50) 50%);
+
 }
 
 .subtitles {
