@@ -11,6 +11,10 @@
   .menu-tooltip-class {
     .tooltip-inner {
       background-color: var(--gray-900);
+      margin: 0 0 0 0.3rem;
+    }
+    .tooltip-arrow {
+      margin: 0 0 0 0.3rem;
     }
     .tooltip-arrow::before {
       border-right-color: var(--gray-900);
@@ -78,14 +82,13 @@
   a.module {
     display: block;
     border-radius: 0.3333rem;
-    margin: 1.25rem 1.3333rem;
+    margin: 0.67rem 1.3333rem;
     color: var(--gray-700);
     font-weight: 500;
     font-size: 1.143rem;
-
     i {
-      font-size: 1.6667rem;
-      padding: 0.3333rem;
+      padding: 0.3rem;
+      font-size: 1.666rem;
       color: var(--alto-grey);
     }
 
@@ -111,7 +114,7 @@
   }
 
   hr {
-    margin: 0 1.3333rem;
+    margin: 0 1.5rem;
   }
 
   .img-badge-menu {
