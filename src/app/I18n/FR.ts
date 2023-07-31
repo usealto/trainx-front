@@ -65,6 +65,11 @@ export const FR = {
         "Comme souhaité par vos collaborateurs, vous profiterez bientôt d'Alto directement dans vos outils préférés tels Slack ou Teams 💜",
       subdescription: '🙏🏻',
     },
+    noCompany: {
+      title: "Oops ! Nous n'avons pas trouvé votre entreprise.",
+      subtitle:
+        'Une erreur s’est produite, et pour y remédier, il faudrait vous rapprocher de votre entreprise. Vous pouvez aussi nous en faire la demande directement via ce formulaire.',
+    },
   },
   leadHome: {
     title: 'Bonjour ',

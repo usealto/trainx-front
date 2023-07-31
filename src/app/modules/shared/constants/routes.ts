@@ -26,6 +26,7 @@ export const AltoRoutes = {
   training: 'training',
   trainingSession: 'session',
 
+  noCompany: 'no_company',
   noAccess: 'no_access',
   notFound: '404',
   // ADMIN
