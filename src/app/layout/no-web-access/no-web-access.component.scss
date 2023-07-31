@@ -1,6 +1,16 @@
-.container {
-  margin-top: 8rem;
-  img {
-    width: 7rem;
-  }
+.panel-full {
+  background-color: white;
+  border-radius: 1.333rem;
+  border: 1px solid var(--gray-300);
+  margin: 2.667rem;
+  height: 93vh;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+p {
+  width: 44.8rem;
+  font-size: 1.16667rem;
 }
