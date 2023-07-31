@@ -566,14 +566,21 @@ export const FR = {
       admins: 'Administrateurs',
       adminsDesc:
         'Les administrateurs peuvent créer des programmes, des challenges et ont accès à des statistiques détaillées sur les résultats des équipes.',
-      users: 'Utilisateurs',
+      users: 'Utilisateurs standards',
       usersDesc:
         'Les utilisateurs peuvent participer aux programmes, suggérer des questions et ont accès à des statistiques détaillées sur leurs résultats seulement.',
       table: {
-        name: 'Nom',
+        name: 'Nom/Prénom',
         createdAt: "Date d'ajout",
         lastConnection: 'Dernière activité',
         connexion: 'Connexion',
+        integration: 'Intégration',
+      },
+      enable: 'Active',
+      disable: 'Inactive',
+      deleteModal: {
+        title: 'Supprimer l\'utilisateur "{{}}"',
+        subtitle: 'Êtes-vous sûr(e) de vouloir supprimer ce collaborateur ? Cette action est irréversible.',
       },
     },
     integrations: {

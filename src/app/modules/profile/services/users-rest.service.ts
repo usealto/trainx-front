@@ -87,4 +87,8 @@ export class UsersRestService {
     } as GetNextQuestionsForUserRequestParams;
     return this.userApi.getNextQuestionsForUser(params).pipe();
   }
+
+  deleteUser(id: string) {
+    return this.userApi.deleteUser({ id });
+  }
 }
