@@ -49,6 +49,13 @@
   font-size: 2rem;
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
+  i {
+    line-height: 2.667rem;
+    height: 2.667rem;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 1rem;
+  }
 }
 .alto-badge-blue {
   @extend .alto-badge-big;
