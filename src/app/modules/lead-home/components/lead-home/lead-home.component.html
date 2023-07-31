@@ -53,16 +53,14 @@
 
 <!-- STATISTICS -->
 <div class="mt-6 mb-4">
-  <div class="d-inline-block">
-    <h2>
-      <img class="pe-3" [src]="Emoji.ChartIncreasing | emoji" height="14" />
-      {{ I18ns.leadHome.statistics.title }}
-    </h2>
-    <p class="subtitle fs-6b">{{ I18ns.leadHome.statistics.subtitle }}</p>
-  </div>
-  <div class="d-inline-block float-end pe-0">
+  <div class="float-end">
     <alto-time-picker (durationSelected)="updateStatisticsDuration($event)"></alto-time-picker>
   </div>
+  <h2 class="d-inline-block">
+    <img class="me-3 emoji" [src]="Emoji.ChartIncreasing | emoji" height="20" />
+    {{ I18ns.leadHome.statistics.title }}
+  </h2>
+  <p class="subtitle fs-6b">{{ I18ns.leadHome.statistics.subtitle }}</p>
 </div>
 
 <div class="panel px-0 py-4">
@@ -117,7 +115,7 @@
 <div class="panel h-100 mt-5 mb-5">
   <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
   <p class="alto-grey mb-4">{{ I18ns.leadHome.globalEvolution.chartSubtitle }}</p>
-  <div [hidden]="!scoreCount" class="chart-container pt-6">
+  <div [hidden]="!scoreCount" class="chart-container">
     <canvas id="programScoreEvol"></canvas>
   </div>
   <div [hidden]="scoreCount > 0" class="text-center pt-6">
@@ -145,8 +143,20 @@
 </div>
 
 <!-- ONGOING PROGRAMS -->
-<div class="mt-6 ongoing-programs">
-  <h2 class="title">{{ I18ns.leadHome.ongoingPrograms.title }}</h2>
+<div class="mt-6 mb-5">
+  <button
+    [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
+    class="float-end btn btn-outline-secondary align-bottom"
+  >
+    {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
+  </button>
+  <div class="align-items-center">
+    <h2 class="d-inline-block">
+      <img class="me-3 emoji" [src]="Emoji.Bullseye | emoji" height="20" />
+      {{ I18ns.leadHome.ongoingPrograms.title }}
+    </h2>
+    <p class="subtitle fs-6b">{{ I18ns.leadHome.ongoingPrograms.subtitle }}</p>
+  </div>
 </div>
 
 <alto-program-card-list [place]="'home'"></alto-program-card-list>

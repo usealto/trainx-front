@@ -1,19 +1,22 @@
 <div class="panel">
   <div class="pb-3">
     <h2>{{ title }}</h2>
-    <p>{{ subtitle }}</p>
+    <p class="alto-grey">{{ subtitle }}</p>
   </div>
   <div class="row">
-    <div class="col border-end">
-      <div class="topFlop-header-success align-items-center mb-3">
+    <!-- TOP -->
+    <div class="col border-end px-0">
+      <div class="topFlop-header-success align-items-center mb-3 me-5">
         <img class="me-2" [src]="Emoji.Rocket | emoji" height="16" />
         <h4 class="d-inline-block">{{ I18ns.shared.top }}</h4>
       </div>
-      <div *ngFor="let item of data.top; let itemIndex = index" class="topFlop-item">
-        <span class="float-end alto-score text-white bg-warning">{{ item.avg | percent }}</span>
+      <div *ngFor="let item of data.top; let itemIndex = index" class="topFlop-item me-5">
+        <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">{{
+          item.avg | percent
+        }}</span>
         <img
           *ngIf="itemIndex < 3"
-          class="me-2"
+          class="me-2 my-1"
           [src]="
             (itemIndex === 0
               ? Emoji._1stPlaceMedal
@@ -29,18 +32,29 @@
         </p>
         <p class="d-inline-block">{{ item.label }}</p>
       </div>
+      <div *ngIf="data.top.length === 1" class="border-top text-center pt-4 mt-4 me-5">
+        <img class="" [src]="Emoji.BeachWithUmbrella | emoji" height="20" />
+        <p class="fw-medium alto-grey">{{ I18ns.shared.waitingForNewResults }}</p>
+      </div>
     </div>
-    <div class="col">
-      <div class="topFlop-header-error align-items-center mb-3">
+    <!-- FLOP -->
+    <div class="col px-0">
+      <div class="topFlop-header-error align-items-center mb-3 ms-5">
         <img class="me-2" [src]="Emoji.Snail | emoji" height="16" />
         <h4 class="d-inline-block">{{ I18ns.shared.flop }}</h4>
       </div>
-      <div *ngFor="let item of data.flop" class="topFlop-item">
-        <span class="float-end alto-score text-white bg-warning">{{ item.avg | percent }}</span>
+      <div *ngFor="let item of data.flop" class="topFlop-item ms-5">
+        <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">{{
+          item.avg | percent
+        }}</span>
         <p class="d-inline-block me-2 topFlop-position-error">
           {{ getPosition(item.label) + '/' + rawLeaderboard.length }}
         </p>
         <p class="d-inline-block">{{ item.label }}</p>
+      </div>
+      <div *ngIf="data.flop.length === 1" class="border-top text-center pt-4 mt-4 ms-5">
+        <img class="" [src]="Emoji.BeachWithUmbrella | emoji" height="20" />
+        <p class="fw-medium alto-grey">{{ I18ns.shared.waitingForNewResults }}</p>
       </div>
     </div>
   </div>

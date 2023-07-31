@@ -31,6 +31,7 @@ export const FR = {
     members: 'membres',
     top: 'Top',
     flop: 'Flop',
+    waitingForNewResults: "Dans l'attente de nouveaux résultats.",
     days: ['jour', 'jours'],
     imageBadge: {
       userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],
@@ -119,15 +120,13 @@ export const FR = {
     },
     ongoingPrograms: {
       title: 'Programmes en cours',
+      subtitle: 'Retrouvez les programmes que vos équipes sont en train de réaliser.',
       involvement: 'Participation',
       progress: 'Avancement',
       noData: 'Aucun programme en cours',
       noDataSubtitle:
         'Créez votre premier programme et assignez le à vos équipes en quelques minutes seulement',
       score: 'Score',
-      filters: {
-        team: 'Équipe',
-      },
     },
     ongoingChallenges: {
       title: 'Challenges en cours',
