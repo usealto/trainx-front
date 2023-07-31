@@ -1,6 +1,6 @@
-<div class="welcome-panel">
-  <h1>{{ I18ns.leadTeam.titleIcon }}</h1>
-  <h1 data-cy="leadTeamTitle">{{ I18ns.leadTeam.title }}</h1>
+<div class="header-panel">
+  <img class="emoji me-4" [src]="EmojiName.BustsInSilhouette | emoji" />
+  <h1 data-cy="leadTeamTitle" class="d-inline-block">{{ I18ns.leadTeam.title }}</h1>
 </div>
 
 <div class="gap"></div>
@@ -9,7 +9,9 @@
   <button type="button" class="btn btn-primary float-end" (click)="openTeamForm()">
     <i class="bi bi-plus-lg"></i> {{ I18ns.leadTeam.createTeam }}
   </button>
-  <h2 id="teamsAnchor">{{ I18ns.leadTeam.teams.titleIcon }} {{ I18ns.leadTeam.teams.title }}</h2>
+  <h2 id="teamsAnchor">
+    <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" /> {{ I18ns.leadTeam.teams.title }}
+  </h2>
   <p class="mb-4 alto-grey">{{ I18ns.leadTeam.teams.subtitle }}</p>
   <ng-container *ngIf="paginatedTeams.length > 0; else noTeams">
     <div class="table-panel">
@@ -97,7 +99,8 @@
       <span>{{ I18ns.leadTeam.members.invite }}</span>
     </button>
     <h2 data-cy="companyMembersSection" id="membersAnchor">
-      {{ I18ns.leadTeam.members.titleIcon }} {{ I18ns.leadTeam.members.title }}
+      <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
+      {{ I18ns.leadTeam.members.title }}
     </h2>
     <p class="alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
   </div>

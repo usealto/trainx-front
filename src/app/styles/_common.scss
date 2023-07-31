@@ -91,6 +91,12 @@
   background-color: var(--primary-50);
   border-radius: 0.67rem;
   padding: 1.14rem 1.7rem;
+  h1 {
+    margin: 0;
+  }
+  .emoji {
+    height: 2rem;
+  }
 }
 
 // Block used while loading content
