@@ -29,7 +29,8 @@
               <th scope="col" class="title-columns">
                 {{ I18ns.settings.users.table.integration }}
               </th>
-              <th scope="col" class="title-columns"></th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -60,6 +61,9 @@
                     <span *ngIf="!user.slackId">{{ I18ns.settings.users.disable }}</span>
                   </div>
                 </div>
+              </td>
+              <td class="cursor-pointer px-3">
+                <i class="fs-5 bi bi-trash3 float-end disabled-icon"></i>
               </td>
               <td class="px-3 cursor-pointer">
                 <i class="fs-5 bi bi-pen" (click)="openUserEditionForm(user)"></i>
@@ -107,7 +111,8 @@
                 <th scope="col" class="title-columns">{{ I18ns.settings.users.table.createdAt }}</th>
                 <th scope="col" class="title-columns">{{ I18ns.settings.users.table.lastConnection }}</th>
                 <th scope="col" class="title-columns">{{ I18ns.settings.users.table.integration }}</th>
-                <th scope="col" class="title-columns"></th>
+                <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -142,6 +147,9 @@
                       <span *ngIf="!user.slackId">{{ I18ns.settings.users.disable }}</span>
                     </div>
                   </div>
+                </td>
+                <td class="cursor-pointer px-3">
+                  <i class="fs-5 bi bi-trash3 float-end" (click)="deleteUser(user)"></i>
                 </td>
                 <td class="cursor-pointer">
                   <i class="fs-5 bi bi-pen" (click)="openUserEditionForm(user)"></i>

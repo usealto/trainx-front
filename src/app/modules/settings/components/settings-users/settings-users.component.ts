@@ -4,16 +4,19 @@ import { UsersRestService } from 'src/app/modules/profile/services/users-rest.se
 import { TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { UserEditFormComponent } from 'src/app/modules/lead-team/components/user-edit-form/user-edit-form.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { tap } from 'rxjs';
-import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { switchMap, tap } from 'rxjs';
+import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UserFilters } from 'src/app/modules/profile/models/user.model';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
+import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
+import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 
 @UntilDestroy()
 @Component({
   selector: 'alto-settings-users',
   templateUrl: './settings-users.component.html',
   styleUrls: ['./settings-users.component.scss'],
+  providers: [ReplaceInTranslationPipe],
 })
 export class SettingsUsersComponent implements OnInit {
   userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
@@ -33,6 +36,8 @@ export class SettingsUsersComponent implements OnInit {
     private readonly userRestService: UsersRestService,
     private readonly offcanvasService: NgbOffcanvas,
     private readonly usersService: UsersService,
+    private modalService: NgbModal,
+    private replaceInTranslationPipe: ReplaceInTranslationPipe,
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +78,32 @@ export class SettingsUsersComponent implements OnInit {
     this.userRestService
       .getUsersFiltered({ isCompanyAdmin: false })
       .pipe(tap((users) => (this.usersDisplay = this.usersService.filterUsers(users, { search }))))
+      .subscribe();
+  }
+
+  deleteUser(user: UserDtoApi) {
+    const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
+
+    const componentInstance = modalRef.componentInstance as DeleteModalComponent;
+
+    componentInstance.data = {
+      title: this.replaceInTranslationPipe.transform(
+        I18ns.settings.users.deleteModal.title,
+        user.firstname + ' ' + user.lastname,
+      ),
+      subtitle: this.replaceInTranslationPipe.transform(I18ns.settings.users.deleteModal.subtitle),
+    };
+
+    componentInstance.objectDeleted
+      .pipe(
+        switchMap(() => this.userRestService.deleteUser(user?.id ?? '')),
+        tap(() => {
+          modalRef.close();
+          this.userRestService.resetUsers();
+          this.getUsers();
+        }),
+        untilDestroyed(this),
+      )
       .subscribe();
   }
 

@@ -597,6 +597,10 @@ export const FR = {
       },
       enable: 'Active',
       disable: 'Inactive',
+      deleteModal: {
+        title: 'Supprimer l\'utilisateur "{{}}"',
+        subtitle: 'Êtes-vous sûr(e) de vouloir supprimer ce collaborateur ? Cette action est irréversible.',
+      },
     },
     integrations: {
       title: 'Intégrations',
