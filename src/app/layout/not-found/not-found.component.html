@@ -1,15 +1,22 @@
-<div class="container">
-  <h1 class="mt-4">{{ I18ns.errors.NotFound404.title }}</h1>
-  <div class="row p-6">
-    <div class="col-3"></div>
-    <div class="col-6 text-center">
-      <i class="bi bi-compass"></i>
-      <h2>{{ I18ns.errors.NotFound404.subtitle }}</h2>
-      <p>{{ I18ns.errors.NotFound404.message }}</p>
-      <a type="button" class="btn btn-primary float m-6" [routerLink]="route">
-        <i class="bi bi-arrow-left"></i>
-        {{ I18ns.errors.NotFound404.return }}
-      </a>
-    </div>
+<div class="panel-full d-flex justify-content-center align-items-center">
+  <div class="position-absolute top-0 end-0">
+    <img
+      class="background-img m-7"
+      src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Confused%20face/Color/confused_face_color.svg"
+      height="716"
+    />
+  </div>
+  <div class="text-center text-404">
+    <img
+      class="emoji"
+      src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Confused%20face/Color/confused_face_color.svg"
+      height="48"
+    />
+    <h1 class="my-5">{{ I18ns.errors.NotFound404.title }}</h1>
+    <p>{{ I18ns.errors.NotFound404.subtitle }}</p>
+    <a type="button" class="btn btn-primary mt-6" [routerLink]="route">
+      <i class="bi bi-arrow-left-short ps-0 pe-3"></i>
+      {{ I18ns.errors.NotFound404.return }}
+    </a>
   </div>
 </div>

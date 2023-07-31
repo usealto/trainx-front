@@ -691,11 +691,10 @@ export const FR = {
       },
     },
     NotFound404: {
-      title: 'Erreur 404',
-      subtitle: "Désolé, nous n'avons pas trouvé cette page.",
-      message:
-        "Cela peut être dû à une erreur de saisie de l'adresse URL, à un lien rompu ou à une suppression de la page. Nous vous invitons à vérifier l'URL, à retourner à la page d'accueil pour trouver ce que vous cherchez.",
-      return: 'Revenir à l’accueil',
+      title: "Désolé, nous n'avons pas trouvé cette page.",
+      subtitle:
+        "Cela peut être dû à une erreur de saisie de l'adresse URL, à un lien rompu ou à une suppression de la page. Nous vous invitons à vérifier l'URL ou à retourner à la page d'accueil pour trouver ce que vous cherchez. ",
+      return: "Revenir à l'accueil",
     },
   },
   test: 'test',
