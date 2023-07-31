@@ -49,6 +49,13 @@
   font-size: 2rem;
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
+  i {
+    line-height: 2.667rem;
+    height: 2.667rem;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 1rem;
+  }
 }
 .alto-badge-blue {
   @extend .alto-badge-big;
@@ -76,7 +83,6 @@
   @extend .alto-badge-big;
   color: var(--success-600);
   background: radial-gradient(circle, var(--success-100) 50%, var(--success-50) 50%);
-
 }
 
 .subtitles {
@@ -94,6 +100,20 @@
   background-color: var(--primary-50);
   border-radius: 0.67rem;
   padding: 1.14rem 1.7rem;
+  h1 {
+    margin: 0;
+  }
+  .emoji {
+    height: 2rem;
+  }
+}
+
+h2 {
+  .emoji {
+    height: 1.667rem;
+    margin-right: 0.667rem;
+    vertical-align: bottom;
+  }
 }
 
 // Block used while loading content

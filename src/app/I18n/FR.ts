@@ -412,12 +412,10 @@ export const FR = {
     },
   },
   leadTeam: {
-    titleIcon: '👥',
     title: 'Équipes et membres',
     subtitle: "Retrouvez une vue d'ensemble sur vos membres.",
     createTeam: 'Créer une équipe',
     members: {
-      titleIcon: '👥',
       title: 'Vos membres',
       shortTitle: 'Membres',
       subtitle: 'Retrouvez l’ensemble des utilisateurs de votre entreprise.',
@@ -463,7 +461,6 @@ export const FR = {
       },
     },
     teams: {
-      titleIcon: '👥',
       title: 'Vos équipes',
       shortTitle: 'Équipes',
       subtitle: "Retrouvez l'ensemble des équipes de votre entreprise.",

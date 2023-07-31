@@ -2,33 +2,25 @@
   display: block;
   padding: var(--alto-page-padding);
 }
+
+h1 {
+  line-height: 2rem;
+  vertical-align: bottom;
+}
+h2 {
+  .emoji {
+    height: 1.667rem;
+    margin-right: 0.667rem;
+    vertical-align: bottom;
+  }
+}
 .progress {
   width: calc(100% - 3.6rem);
   margin-right: 0.571rem;
 }
 
-.welcome-panel {
-  background-color: var(--primary-50);
-  border-radius: 0.67rem;
-  padding: 1.14rem 1.7rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
 .gap {
   height: 2.5rem;
-}
-
-.short-border-end::after {
-  content: '';
-  display: block;
-  position: absolute;
-  right: 0;
-  top: 1.2rem;
-  bottom: 1.2rem;
-  width: 1px;
-  background-color: #eaecf0;
 }
 
 .double-badge {
@@ -48,8 +40,4 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-}
-
-.tab-panel {
-  border-color: var(--gray-200);
 }

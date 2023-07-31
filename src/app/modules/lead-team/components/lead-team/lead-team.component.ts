@@ -23,9 +23,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { UserFilters } from 'src/app/modules/profile/models/user.model';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
-import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 
 interface TeamDisplay extends TeamDtoApi {
   score?: number;
@@ -44,6 +42,7 @@ interface UserDisplay extends UserDtoApi {
   providers: [ReplaceInTranslationPipe],
 })
 export class LeadTeamComponent implements OnInit {
+  EmojiName = EmojiName;
   I18ns = I18ns;
   // Teams
   teams: TeamDtoApi[] = [];
@@ -111,8 +110,8 @@ export class LeadTeamComponent implements OnInit {
                   data.push(0);
                 } else {
                   u.totalGuessesCount
-                  ? data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount)
-                  : data.push(0);
+                    ? data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount)
+                    : data.push(0);
                 }
                 this.usersQuestionCount.set(u.id, data);
               }
