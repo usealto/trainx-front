@@ -1,4 +1,4 @@
-<div class="header-panel d-flex mb-8">
+<div class="header-panel mb-8">
   <img class="emoji me-4" [src]="EmojiName.Gear | emoji" />
 
   <h1 class="m-0 d-inline-block">{{ I18ns.profile.profile.title }}</h1>
@@ -7,7 +7,8 @@
 <form [formGroup]="userForm">
   <div class="row py-4name">
     <h3 class="col-4">
-      <img class="me-3" [src]="EmojiName.PageFacingUp | emoji" /> {{ I18ns.profile.profile.name }}
+      <img class="me-3" [src]="EmojiName.PageFacingUp | emoji" />
+      {{ I18ns.profile.profile.name }}
     </h3>
     <div class="col">
       <input
