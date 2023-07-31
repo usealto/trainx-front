@@ -7,6 +7,13 @@ h1 {
   line-height: 2rem;
   vertical-align: bottom;
 }
+h2 {
+  .emoji {
+    height: 1.667rem;
+    margin-right: 0.667rem;
+    vertical-align: bottom;
+  }
+}
 .progress {
   width: calc(100% - 3.6rem);
   margin-right: 0.571rem;
