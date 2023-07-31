@@ -27,7 +27,7 @@
     </div>
     <div class="col-7 text-end">
       <alto-dropdown-filter
-        class="me-3"
+        class="me-3 text-start"
         data-cy="programTeamFilter"
         [data]="teamStore.teams.value"
         [displayLabel]="'shortName'"
@@ -36,11 +36,12 @@
         [isColored]="true"
       ></alto-dropdown-filter>
       <alto-score-filter
-      class="me-3"
+      class="me-3 text-start"
       data-cy="filterByScore"
       (selectChange)="filterPrograms({ score: $event })"
       ></alto-score-filter>
       <alto-progression-filter
+          class="text-start"
           [disabled]="programs.length === 0"
           [selectedItems]="[]"
           (selectChange)="filterPrograms({ progress: $event })"
