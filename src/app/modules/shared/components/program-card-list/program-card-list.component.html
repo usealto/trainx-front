@@ -18,7 +18,7 @@
       </button>
     </div>
   </div>
-  <div class="row mb-5" *ngSwitchCase="'program'">
+  <div class="row mb-5" *ngSwitchCase="'program'" ngIf="!this.isActive">
     <div class="col-5">
       <alto-search
       class="d-inline-block program-search"
@@ -80,7 +80,6 @@
 
 <alto-pagination
   [collectionSize]="count"
-  (pageChange)="null"
   [(page)]="page"
   [pageSize]="pageSize"
   [maxSize]="10"

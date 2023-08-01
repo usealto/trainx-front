@@ -6,27 +6,6 @@
   </div>
 </div>
 <div class="programs-tabs">
-  <!-- <alto-anchor-navigator fragment="programsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
-      {{ I18ns.programs.programs.title }}<span class="alto-badge ms-3">{{ programsCount }}</span>
-    </button>
-  </alto-anchor-navigator>
-  <alto-anchor-navigator fragment="questionsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
-      {{ I18ns.programs.questions.title }}<span class="alto-badge ms-3">{{ questionsCount }}</span>
-    </button>
-  </alto-anchor-navigator>
-  <alto-anchor-navigator fragment="submittedQuestionsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
-      {{ I18ns.programs.awaitQuestions.title
-      }}<span class="alto-badge ms-3">{{ submittedQuestions.length }}</span>
-    </button>
-  </alto-anchor-navigator>
-  <alto-anchor-navigator fragment="tagsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
-      {{ I18ns.programs.tags.title }}<span class="alto-badge ms-3">{{ tagsCount }}</span>
-    </button>
-  </alto-anchor-navigator> -->
   <alto-tabs [data]="tabData" (tabChanged)="handleTabChange($event)"></alto-tabs>
 </div>
 
@@ -42,7 +21,8 @@
 
   <alto-program-card-list
     (programTotal)="null"
-    [place]="'active'"
+    [place]="'program'"
+    [isActive]="true"
   ></alto-program-card-list>
 </div>
 <div *ngIf="activeTab === 'programs'">
@@ -277,14 +257,6 @@
 
   <div class="row mb-4">
     <div class="col-8">
-      <!-- <alto-dropdown-filter
-        class="me-3"
-        [data]="programsStore.programs.value"
-        [displayLabel]="'name'"
-        [returnValue]="'id'"
-        [placeholder]="I18ns.programs.tags.filters.programs"
-        (selectChange)="filterTags({ programs: $event })"
-      ></alto-dropdown-filter> -->
     </div>
     <div class="col-4 text-end">
       <alto-search (searchChange)="filterTags({ search: $event })"></alto-search>
