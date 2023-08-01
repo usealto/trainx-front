@@ -1,9 +1,67 @@
 :host {
   display: block;
   padding: var(--alto-page-padding);
+  padding-top: 3.33rem;
 }
 .questions {
   .table {
     height: 72;
   }
+}
+
+.emoji-title {
+  height: 2.67rem;
+}
+
+.emoji {
+  height: 1.67rem;
+}
+
+.subtitle {
+  margin-top: 0.67rem;
+  margin-bottom: 2rem;
+}
+
+.programs-tabs {
+  margin-bottom: 3.33rem;
+}
+
+.active-programs {
+  margin-bottom: 3.33rem;
+}
+
+.welcome-panel {
+  display: flex;
+  align-items: center;
+  background-color: var(--primary-50);
+  border-radius: 0.67rem;
+  padding: 1.34rem 2rem;
+  height: 6.67rem;
+  margin-bottom: 2rem;
+}
+
+.welcome-icon {
+  margin-right: 20px;
+  font-size: 2rem;
+}
+
+.welcome-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.welcome-content h1,
+.welcome-content p {
+  margin: 0;
+}
+
+.welcome-content p {
+  font-size: 1.167rem;
+}
+
+h2 {
+  margin-bottom: 0;
 }

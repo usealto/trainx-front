@@ -16,13 +16,22 @@
   top: 1.429rem;
 }
 .title {
-  line-height: 2rem;
   font-weight: 600;
   padding-bottom: 1rem;
+  font-style: normal;
+  line-height: 1.66667rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   width: 86%;
+}
+
+.span-text {
+  font-size: 0.83333rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.33333rem;
+  color: var(--gray-500);
 }
 
 hr {
@@ -38,6 +47,11 @@ h2 {
 
 .score {
   padding-bottom: 1rem;
+  span {
+    font-size: 0.83333rem;
+    font-style: normal;
+    font-weight: 600;
+  }
   .badge {
     font-size: 0.857rem;
   }
@@ -47,6 +61,10 @@ h2 {
   }
 }
 
+.emoji {
+  height: 1rem;
+  margin-right: 0.33rem;
+}
 .teams {
   color: var(--blue-gray-600);
   background-color: var(--blue-gray-50);

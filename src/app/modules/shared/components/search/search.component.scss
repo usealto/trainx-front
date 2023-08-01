@@ -1,15 +1,15 @@
 :host {
   display: inline-block;
   vertical-align: bottom;
+
 }
 .search-group {
   position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
-  max-width: 23rem;
   height: 2.667rem;
-  background-color: white;
+  background-color: transparent;
   .input-group-text {
     display: flex;
     align-items: center;
@@ -22,7 +22,7 @@
     border-radius: 28px 0 0 28px;
     border: 1px solid #ced4da;
     border-right-width: 0;
-    background-color: transparent;
+    background-color: white;
   }
   & > .form-control {
     position: relative;

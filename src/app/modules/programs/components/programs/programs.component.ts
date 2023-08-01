@@ -30,6 +30,7 @@ import { TagsRestService } from '../../services/tags-rest.service';
 import { TagsServiceService } from '../../services/tags-service.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 
 @UntilDestroy()
 @Component({
@@ -38,6 +39,7 @@ import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
   styleUrls: ['./programs.component.scss'],
 })
 export class ProgramsComponent implements OnInit {
+  EmojiName = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   //
@@ -68,7 +70,14 @@ export class ProgramsComponent implements OnInit {
   isTagsLoading = true;
   tagFilters: TagFilters = { programs: [], contributors: [], search: '' };
   tagsScore = new Map<string, number>();
-  //
+
+  //tabs
+  tabData = [
+    { label: 'Programmes', value: 'programs' },
+    { label: 'Questions', value: 'questions' },
+    { label: 'Tags', value: 'tags' },
+  ];
+  activeTab = this.tabData[0].value;
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -93,6 +102,10 @@ export class ProgramsComponent implements OnInit {
       id: u.id,
       fullname: u.firstname + ' ' + u.lastname,
     }));
+  }
+
+  handleTabChange(value: any) {
+    this.activeTab = value;
   }
 
   deleteQuestion(question?: QuestionDtoApi) {

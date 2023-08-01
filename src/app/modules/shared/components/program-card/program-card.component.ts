@@ -1,11 +1,11 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { combineLatest, tap } from 'rxjs';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { ProgramDtoApi, ProgramRunApi } from '@usealto/sdk-ts-angular';
-import { AltoRoutes } from '../../constants/routes';
+import { tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
+import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
+import { AltoRoutes } from '../../constants/routes';
 
 @Component({
   selector: 'alto-program-card',
@@ -19,10 +19,12 @@ export class ProgramCardComponent implements OnInit, OnChanges {
   @Input() score: number | undefined;
   @Input() progress: number | undefined;
   @Input() participation: number | undefined;
+  @Input() allTeamsCount: number | undefined;
 
   Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+  EmojiName = EmojiName;
 
   teamsCount = 0;
 
@@ -42,7 +44,6 @@ export class ProgramCardComponent implements OnInit, OnChanges {
     if (changes['programRun']?.firstChange) {
       this.programRestService
         .getProgram(this.programRun.programId)
-
         .pipe(tap((prog) => (this.program = prog)))
         .subscribe();
     }

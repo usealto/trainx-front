@@ -1,5 +1,6 @@
 :host {
   display: inline-block;
+  height: 2.5rem;
 }
 
 .btn-check:checked + .alto-tab-btn {
@@ -9,9 +10,10 @@
 }
 
 .alto-tab-btn {
-  margin-right: 1rem;
+  margin-right: 1.33rem;
   cursor: pointer;
   padding-bottom: 0.75rem;
   font-weight: 400;
+  font-size: 1rem;
   color: var(--alto-grey);
 }

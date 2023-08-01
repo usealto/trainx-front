@@ -1,38 +1,48 @@
-<h1>{{ I18ns.programs.title }}</h1>
-<p class="mt-2 mb-4 alto-grey fs-6b">{{ I18ns.programs.subtitle }}</p>
-<div class="pb-6 border-bottom">
-  <alto-anchor-navigator fragment="programsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
-      {{ I18ns.programs.programs.title }}<span class="alto-badge ms-3">{{ programsCount }}</span>
-    </button>
-  </alto-anchor-navigator>
-  <alto-anchor-navigator fragment="questionsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
-      {{ I18ns.programs.questions.title }}<span class="alto-badge ms-3">{{ questionsCount }}</span>
-    </button>
-  </alto-anchor-navigator>
-  <alto-anchor-navigator fragment="submittedQuestionsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
-      {{ I18ns.programs.awaitQuestions.title
-      }}<span class="alto-badge ms-3">{{ submittedQuestions.length }}</span>
-    </button>
-  </alto-anchor-navigator>
-  <alto-anchor-navigator fragment="tagsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
-      {{ I18ns.programs.tags.title }}<span class="alto-badge ms-3">{{ tagsCount }}</span>
-    </button>
-  </alto-anchor-navigator>
+<div class="welcome-panel">
+  <img class="emoji-title me-4" [src]="EmojiName.Bullseye | emoji" />
+  <div class="welcome-content">
+    <h1>{{ I18ns.programs.title }}</h1>
+    <p class="alto-grey fs-6b">{{ I18ns.programs.subtitle }}</p>
+  </div>
+</div>
+<div class="programs-tabs">
+  <alto-tabs [data]="tabData" (tabChanged)="handleTabChange($event)"></alto-tabs>
 </div>
 
 <!-- PROGRAMS -->
-<div class="border-bottom">
+<div *ngIf="activeTab === 'programs'" class="active-programs">
   <div>
-    <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
-      <i class="bi bi-plus-lg"></i> {{ I18ns.programs.programs.createProgram }}
-    </a>
-    <h2 id="programsAnchor" class="mt-6">{{ I18ns.programs.programs.title }}</h2>
-    <p class="mt-2 mb-4 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
+    <div class="d-flex align-items-center">
+      <img class="emoji me-3" [src]="EmojiName.Bullseye | emoji" />
+      <h2>{{ I18ns.programs.activePrograms.title }}</h2>
+    </div>
+    <p class="subtitle alto-grey">{{ I18ns.programs.activePrograms.subtitle }}</p>
   </div>
+
+  <alto-program-card-list
+    (programTotal)="null"
+    [place]="'program'"
+    [isActive]="true"
+  ></alto-program-card-list>
+</div>
+<div *ngIf="activeTab === 'programs'">
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+        <div class="d-flex align-items-center mb-3">
+          <img class="emoji me-3" [src]="EmojiName.BustsInSilhouette | emoji" />
+          <h2 id="programsAnchor">{{ I18ns.programs.programs.title }}</h2>
+        </div>
+        <p class="mt-2 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
+    </div>
+      <a type="button" class="btn btn-primary" [routerLink]="AltoRoutes.programsCreate">
+        <i class="bi bi-plus-lg"></i> 
+        <div>
+          {{ I18ns.programs.programs.createProgram }}
+        </div>
+      </a>
+  </div>
+
+
 
   <alto-program-card-list
     (programTotal)="programsCount = $event"
@@ -41,7 +51,7 @@
 </div>
 
 <!-- QUESTIONS -->
-<div class="py-4 border-bottom questions">
+<div *ngIf="activeTab === 'questions'" class="py-4 border-bottom questions">
   <button type="button" class="btn btn-primary float-end" (click)="openQuestionForm()">
     <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.createQuestion }}
   </button>
@@ -189,7 +199,7 @@
 </div>
 
 <!-- SUBMITTED QUESTIONS -->
-<div class="py-4 border-bottom">
+<div *ngIf="activeTab === 'questions'" class="py-4 border-bottom">
   <div>
     <h2 id="submittedQuestionsAnchor">{{ I18ns.programs.awaitQuestions.title }}</h2>
     <p class="mb-4 alto-grey">{{ I18ns.programs.awaitQuestions.subtitle }}</p>
@@ -238,7 +248,7 @@
 </div>
 
 <!-- TAGS -->
-<div class="py-4 border-bottom">
+<div *ngIf="activeTab === 'tags'" class="py-4 border-bottom">
   <button type="button" class="btn btn-primary float-end" (click)="openTagForm()">
     <i class="bi bi-plus-lg"></i> {{ I18ns.programs.tags.createTag }}
   </button>
@@ -247,14 +257,6 @@
 
   <div class="row mb-4">
     <div class="col-8">
-      <!-- <alto-dropdown-filter
-        class="me-3"
-        [data]="programsStore.programs.value"
-        [displayLabel]="'name'"
-        [returnValue]="'id'"
-        [placeholder]="I18ns.programs.tags.filters.programs"
-        (selectChange)="filterTags({ programs: $event })"
-      ></alto-dropdown-filter> -->
     </div>
     <div class="col-4 text-end">
       <alto-search (searchChange)="filterTags({ search: $event })"></alto-search>
