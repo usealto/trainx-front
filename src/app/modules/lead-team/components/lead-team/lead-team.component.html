@@ -27,10 +27,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let team of paginatedTeams" class="align-middle">
-            <td data-cy="teamLongname" class="fw-medium">
-              {{ team.longName }}
-            </td>
+          <tr *ngFor="let team of paginatedTeams" class="align-middle fs-7">
+            <td data-cy="teamLongname">{{ team.longName }}</td>
             <td>
               <div *ngIf="team.score" class="text-center">{{ team.score | percent }}</div>
               <div class="text-center" *ngIf="!team.score">
@@ -126,7 +124,7 @@
   </div>
 </div>
 
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between mb-5">
   <alto-search
     data-cy="filterBySearch"
     class="float-start"
@@ -136,7 +134,7 @@
   <div>
     <alto-dropdown-filter
       data-cy="filterByTeam"
-      class="d-inline-block me-3"
+      class="me-3"
       [data]="teams"
       [displayLabel]="'shortName'"
       [isColored]="true"
