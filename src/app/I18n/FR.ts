@@ -67,6 +67,16 @@ export const FR = {
         "Comme souhaité par vos collaborateurs, vous profiterez bientôt d'Alto directement dans vos outils préférés tels que Slack ou Teams",
       goodbye: 'À bientôt !',
     },
+    noCompany: {
+      title: "Oops ! Nous n'avons pas trouvé votre entreprise.",
+      subtitle:
+        'Une erreur s’est produite, et pour y remédier, il faudrait vous rapprocher de votre entreprise.',
+    },
+    noTeams: {
+      title: "Oops ! Nous n'avons pas trouvé votre équipe.",
+      subtitle:
+        'Une erreur s’est produite, et pour y remédier, il faudrait vous rapprocher de votre entreprise.',
+    },
   },
   leadHome: {
     title: 'Bonjour ',
