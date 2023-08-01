@@ -453,15 +453,18 @@ export const FR = {
       },
       forms: {
         edition: {
-          title: 'Modifier un membre',
-          subtitle: 'Modifiez le rôle de vos membres et assignez leur une équipe.',
-          teams: 'Équipes',
+          editAdmin: 'Modifier un administrateur',
+          editUser: 'Modifier un utilisateur',
+          team: 'Équipe',
           teamsPlaceholder: 'Rechercher dans vos équipes',
           type: "Type d'utilisateur",
-          standardType: 'Standard',
+          standardType: 'Utilisateur standard',
           adminType: 'Administrateur',
-          typeSubtitle:
-            'Les utilisateurs de type "Administrateur" peuvent créer des programmes, des challenges et ont accès à plus de statistiques détaillées sur les résultats de leurs équipes.',
+          adminSubtitle:
+            'Les administrateurs peuvent créer des programmes, des challenges et ont accès à des statistiques détaillées sur les résultats des équipes.',
+          userSubtitle:
+            'Les utilisateurs standards peuvent participer aux programmes, suggérer des questions et ont accès à des statistiques détaillées sur leurs résultats seulement.',
+          validate: 'Valider',
         },
       },
     },
@@ -599,6 +602,7 @@ export const FR = {
         title: 'Supprimer l\'utilisateur "{{}}"',
         subtitle: 'Êtes-vous sûr(e) de vouloir supprimer ce collaborateur ? Cette action est irréversible.',
       },
+      successEdit: 'Le collaborateur {{}} a bien été modifié',
     },
     integrations: {
       title: 'Intégrations',

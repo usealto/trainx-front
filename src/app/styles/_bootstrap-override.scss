@@ -153,13 +153,13 @@
   }
   &.ng-select-opened.ng-select-bottom > .ng-select-container,
   &.ng-select-opened.ng-select-top > .ng-select-container {
-    border-radius: 28px;
+    // border-radius: 28px;
     color: var(--gray-700);
     border-color: var(--gray-200);
     background-color: transparent;
   }
   .ng-select-container {
-    border-radius: 28px;
+    // border-radius: 28px;
     font-weight: 600;
     font-size: 0.833rem;
     min-height: 2.667rem;
@@ -170,7 +170,7 @@
     }
   }
   .ng-dropdown-panel {
-    width: auto;
+    // width: auto;
     &.ng-select-bottom,
     &.ng-select-top {
       margin: 0.25rem 0;

@@ -13,3 +13,38 @@ label {
     padding: 1.143rem 2.286rem;
   }
 }
+
+.ng-select-container >>> .label {
+  background-color: red !important;
+}
+
+.people-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.3333rem;
+  height: 3.3333rem;
+}
+
+.separator {
+  margin-top: 1rem;
+}
+
+.label {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.form-select {
+  color: var(--gray-900, #101828);
+  border-radius: 0 !important;
+  font-size: 0.8333rem;
+  font-weight: 400;
+  line-height: 1.6667rem;
+}
+
+.subtitles {
+  color: var(--gray-500, #667085);
+  font-size: 0.8333rem;
+  line-height: 1.6667rem;
+}
