@@ -1,29 +1,19 @@
-.users-icon {
-  font-size: 1.6667rem;
-  margin-right: 0.6667rem;
-  position: relative;
-  bottom: 0.5rem;
-}
-
-.titles {
-  font-size: 1.1667rem;
-  font-weight: 600;
-}
-
-.descriptions {
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.title-columns {
-  padding-left: 0.5rem !important;
-}
-
 .alto-pagination {
   padding: 0.75rem;
+}
+
+.table tbody tr {
+  height: 4.667rem;
 }
 
 .disabled-icon {
   opacity: 0.2;
   pointer-events: none;
+}
+h2 {
+  .emoji {
+    height: 1.667rem;
+    margin-right: 0.667rem;
+    vertical-align: bottom;
+  }
 }

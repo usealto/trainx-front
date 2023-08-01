@@ -1,10 +1,11 @@
-<div class="d-flex align-items-center div-title mb-5">
-  <i class="settings-icon me-4">⚙️</i>
-  <h1 class="settings-title mb-0">{{ I18ns.settings.title }}</h1>
+<div class="header-panel mb-5">
+  <img class="emoji me-4" [src]="EmojiName.Gear | emoji" />
+
+  <h1 class="m-0 d-inline-block">{{ I18ns.settings.title }}</h1>
 </div>
 
 <alto-tabs
-  class="d-block border-bottom fw-bold alto-tabs"
+  class="alto-tabs"
   *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
   (tabChanged)="tabChange($event)"
   [data]="[

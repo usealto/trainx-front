@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
-import { UserEditFormComponent } from 'src/app/modules/lead-team/components/user-edit-form/user-edit-form.component';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { tap } from 'rxjs';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
+import { tap } from 'rxjs';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { UserEditFormComponent } from 'src/app/modules/lead-team/components/user-edit-form/user-edit-form.component';
 import { UserFilters } from 'src/app/modules/profile/models/user.model';
+import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
 // import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
 
 @UntilDestroy()
@@ -22,6 +23,7 @@ export class SettingsUsersComponent implements OnInit {
   userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
 
   I18ns = I18ns;
+  EmojiName = EmojiName;
 
   usersDisplay: UserDtoApi[] = [];
   usersPageSize = 5;
