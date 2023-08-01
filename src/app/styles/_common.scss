@@ -27,9 +27,11 @@
 }
 .alto-score {
   @extend .alto-badge-no-size;
-  min-height: 1.66rem;
-  min-width: 3.75rem;
-  line-height: 1.66rem;
+  min-height: 1.4286rem;
+  min-width: 3.2143rem;
+  line-height: 1.41667rem;
+  font-weight: 600;
+  font-size: 10px;
 }
 .alto-badge {
   @extend .alto-badge-no-size;
@@ -49,13 +51,6 @@
   font-size: 2rem;
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
-  i {
-    line-height: 2.667rem;
-    height: 2.667rem;
-    display: inline-block;
-    vertical-align: top;
-    font-size: 1rem;
-  }
 }
 .alto-badge-blue {
   @extend .alto-badge-big;
@@ -67,21 +62,21 @@
   color: #d92d20;
   background-color: #fee4e2;
 }
-.alto-badge-primary {
-  @extend .alto-badge-big;
-  color: var(--primary-600);
-  background: radial-gradient(circle, var(--primary-100) 50%, var(--primary-50) 50%);
-}
-.alto-badge-warning {
-  @extend .alto-badge-big;
-  color: var(--orange-600);
-  background: radial-gradient(circle, var(--orange-100) 50%, var(--orange-50) 50%);
-}
-.alto-badge-success {
-  @extend .alto-badge-big;
-  color: var(--success-600);
-  background: radial-gradient(circle, var(--success-100) 50%, var(--success-50) 50%);
-}
+// .alto-badge-primary {
+//   @extend .alto-badge-big;
+//   color: var(--primary-600);
+//   background: radial-gradient(circle, var(--primary-100) 50%, var(--primary-50) 50%);
+// }
+// .alto-badge-warning {
+//   @extend .alto-badge-big;
+//   color: var(--orange-600);
+//   background: radial-gradient(circle, var(--orange-100) 50%, var(--orange-50) 50%);
+// }
+// .alto-badge-success {
+//   @extend .alto-badge-big;
+//   color: var(--success-600);
+//   background: radial-gradient(circle, var(--success-100) 50%, var(--success-50) 50%);
+// }
 
 .subtitles {
   color: var(--alto-text-second-color);
@@ -133,12 +128,15 @@ h2 {
     --bs-table-bg: transparent;
 
     th {
-      font-weight: 500;
+      font-weight: 600;
       font-size: 0.857rem;
-      padding: 0.929rem;
+      padding: 0;
+    }
+    thead tr {
+      height: 2.667rem;
     }
     tbody tr {
-      height: 5.144rem;
+      min-height: 3.333rem;
     }
     tr {
       & * {

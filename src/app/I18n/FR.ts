@@ -29,6 +29,9 @@ export const FR = {
     programs: 'programmes',
     teams: 'équipes',
     members: 'membres',
+    top: 'Top',
+    flop: 'Flop',
+    waitingForNewResults: "Dans l'attente de nouveaux résultats.",
     days: ['jour', 'jours'],
     imageBadge: {
       userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],
@@ -59,11 +62,10 @@ export const FR = {
       month: '1 mois',
     },
     noWebAccess: {
-      title: 'Bravo !',
-      subtitle: 'Félicitations ! Votre compte est actif 🚀.',
-      description:
-        "Comme souhaité par vos collaborateurs, vous profiterez bientôt d'Alto directement dans vos outils préférés tels Slack ou Teams 💜",
-      subdescription: '🙏🏻',
+      title: 'Félicitations ! Votre compte Alto est actif',
+      subtitle:
+        "Comme souhaité par vos collaborateurs, vous profiterez bientôt d'Alto directement dans vos outils préférés tels que Slack ou Teams",
+      goodbye: 'À bientôt !',
     },
     noCompany: {
       title: "Oops ! Nous n'avons pas trouvé votre entreprise.",
@@ -114,21 +116,26 @@ export const FR = {
         team: 'Équipe',
         member: 'Membre',
       },
-      top: 'Top',
-      flop: 'Flop',
-      topFlopTooltip: 'Classement des {{}} en fonction du score',
+    },
+    topFlop: {
+      teams: {
+        title: 'Niveau de connaissance de vos équipes',
+        subtitle: 'Aperçu du niveau de maîtrise de vos équipes par thématiques.',
+      },
+      users: {
+        title: 'Niveau de connaissance de vos collaborateurs',
+        subtitle: 'Aperçu du niveau de maîtrise de vos collaborateurs.',
+      },
     },
     ongoingPrograms: {
       title: 'Programmes en cours',
+      subtitle: 'Retrouvez les programmes que vos équipes sont en train de réaliser.',
       involvement: 'Participation',
       progress: 'Avancement',
       noData: 'Aucun programme en cours',
       noDataSubtitle:
         'Créez votre premier programme et assignez le à vos équipes en quelques minutes seulement',
       score: 'Score',
-      filters: {
-        team: 'Équipe',
-      },
     },
     ongoingChallenges: {
       title: 'Challenges en cours',
@@ -576,14 +583,21 @@ export const FR = {
       admins: 'Administrateurs',
       adminsDesc:
         'Les administrateurs peuvent créer des programmes, des challenges et ont accès à des statistiques détaillées sur les résultats des équipes.',
-      users: 'Utilisateurs',
+      users: 'Utilisateurs standards',
       usersDesc:
         'Les utilisateurs peuvent participer aux programmes, suggérer des questions et ont accès à des statistiques détaillées sur leurs résultats seulement.',
       table: {
-        name: 'Nom',
+        name: 'Nom/Prénom',
         createdAt: "Date d'ajout",
         lastConnection: 'Dernière activité',
         connexion: 'Connexion',
+        integration: 'Intégration',
+      },
+      enable: 'Active',
+      disable: 'Inactive',
+      deleteModal: {
+        title: 'Supprimer l\'utilisateur "{{}}"',
+        subtitle: 'Êtes-vous sûr(e) de vouloir supprimer ce collaborateur ? Cette action est irréversible.',
       },
     },
     integrations: {
@@ -611,7 +625,7 @@ export const FR = {
       team: 'Équipe',
       roles: 'Rôles',
       form: {
-        success: 'Votre compte a bien été modifié',
+        success: 'Vos informations ont bien été modifiées',
       },
     },
     password: {
@@ -701,11 +715,10 @@ export const FR = {
       },
     },
     NotFound404: {
-      title: 'Erreur 404',
-      subtitle: "Désolé, nous n'avons pas trouvé cette page.",
-      message:
-        "Cela peut être dû à une erreur de saisie de l'adresse URL, à un lien rompu ou à une suppression de la page. Nous vous invitons à vérifier l'URL, à retourner à la page d'accueil pour trouver ce que vous cherchez.",
-      return: 'Revenir à l’accueil',
+      title: "Désolé, nous n'avons pas trouvé cette page.",
+      subtitle:
+        "Cela peut être dû à une erreur de saisie de l'adresse URL, à un lien rompu ou à une suppression de la page. Nous vous invitons à vérifier l'URL ou à retourner à la page d'accueil pour trouver ce que vous cherchez. ",
+      return: "Revenir à l'accueil",
     },
   },
   test: 'test',

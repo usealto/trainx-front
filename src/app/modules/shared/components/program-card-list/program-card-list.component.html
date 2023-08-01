@@ -1,23 +1,4 @@
 <span [ngSwitch]="place">
-  <div class="row mb-4" *ngSwitchCase="'home'">
-    <div class="col-5"></div>
-    <div class="col-7 text-end">
-      <alto-dropdown-filter
-        class="text-start me-3"
-        [data]="teamStore.teams.value"
-        [displayLabel]="'shortName'"
-        [placeholder]="I18ns.programs.programs.filters.team"
-        (selectChange)="filterPrograms({ teams: $event })"
-        [isColored]="true"
-      ></alto-dropdown-filter>
-      <button
-        [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
-        class="btn btn-outline-secondary align-bottom"
-      >
-        {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
-      </button>
-    </div>
-  </div>
   <div class="row mb-4" *ngSwitchCase="'program'">
     <div class="col-7">
       <alto-dropdown-filter
