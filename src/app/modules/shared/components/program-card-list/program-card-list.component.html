@@ -18,36 +18,38 @@
       </button>
     </div>
   </div>
-  <div class="row mb-5" *ngSwitchCase="'program'" ngIf="!this.isActive">
-    <div class="col-5">
-      <alto-search
-      class="d-inline-block program-search"
-      (searchChange)="filterPrograms({ search: $event })"
-      ></alto-search>
-    </div>
-    <div class="col-7 text-end">
-      <alto-dropdown-filter
+  <ng-container *ngIf="!this.isActive">
+  <div class="row mb-5" *ngSwitchCase="'program'">
+      <div class="col-5">
+        <alto-search
+        class="d-inline-block program-search"
+        (searchChange)="filterPrograms({ search: $event })"
+        ></alto-search>
+      </div>
+      <div class="col-7 text-end">
+        <alto-dropdown-filter
+          class="me-3 text-start"
+          data-cy="programTeamFilter"
+          [data]="teamStore.teams.value"
+          [displayLabel]="'shortName'"
+          [placeholder]="I18ns.programs.programs.filters.teams"
+          (selectChange)="filterPrograms({ teams: $event })"
+          [isColored]="true"
+        ></alto-dropdown-filter>
+        <alto-score-filter
         class="me-3 text-start"
-        data-cy="programTeamFilter"
-        [data]="teamStore.teams.value"
-        [displayLabel]="'shortName'"
-        [placeholder]="I18ns.programs.programs.filters.teams"
-        (selectChange)="filterPrograms({ teams: $event })"
-        [isColored]="true"
-      ></alto-dropdown-filter>
-      <alto-score-filter
-      class="me-3 text-start"
-      data-cy="filterByScore"
-      (selectChange)="filterPrograms({ score: $event })"
-      ></alto-score-filter>
-      <alto-progression-filter
-          class="text-start"
-          [disabled]="programs.length === 0"
-          [selectedItems]="[]"
-          (selectChange)="filterPrograms({ progress: $event })"
-        ></alto-progression-filter>
+        data-cy="filterByScore"
+        (selectChange)="filterPrograms({ score: $event })"
+        ></alto-score-filter>
+        <alto-progression-filter
+            class="text-start"
+            [disabled]="programs.length === 0"
+            [selectedItems]="[]"
+            (selectChange)="filterPrograms({ progress: $event })"
+          ></alto-progression-filter>
+      </div>
     </div>
-  </div>
+  </ng-container>
   <div *ngSwitchDefault></div>
 </span>
 <ng-container *ngIf="programsDisplay.length > 0; else noPrograms">
