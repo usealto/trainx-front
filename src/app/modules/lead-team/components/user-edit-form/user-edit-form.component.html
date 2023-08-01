@@ -2,9 +2,7 @@
   <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
 </div>
 <div class="row px-6 g-0 align-items-center">
-  <div class="col-2" style="width: 2.857rem">
-    <i class="alto-badge-blue me-4 bi bi-people people-icon"></i>
-  </div>
+  <alto-icon-badge size="3.3333rem" icon="bi-people" color="badge-double-primary"></alto-icon-badge>
   <div class="col ms-4">
     <h2 *ngIf="user && user.roles.length > 1" class="mb-0">
       {{ I18ns.leadTeam.members.forms.edition.editAdmin }}
