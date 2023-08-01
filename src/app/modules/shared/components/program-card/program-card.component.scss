@@ -44,10 +44,7 @@ h2 {
 .description-box {
   height: 2.6rem;
 }
-alto-colored-pill-list {
-  display: block;
-  min-height: 1.8rem;
-}
+
 .score {
   padding-bottom: 1rem;
   span {
@@ -67,4 +64,8 @@ alto-colored-pill-list {
 .emoji {
   height: 1rem;
   margin-right: 0.33rem;
+}
+.teams {
+  color: var(--blue-gray-600);
+  background-color: var(--blue-gray-50);
 }

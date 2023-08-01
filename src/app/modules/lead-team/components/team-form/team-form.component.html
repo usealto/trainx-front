@@ -7,16 +7,12 @@
     (click)="activeOffcanvas.dismiss()"
   ></button>
 </div>
-<div class="row m-5 g-0">
-  <div class="col-2" style="width: 2.857rem">
-    <i class="alto-badge-big alto-badge-blue me-4 bi bi-people"></i>
-  </div>
-  <div class="col ms-4">
-    <h2>
-      {{ isEdit ? I18ns.leadTeam.teams.form.title.edit : I18ns.leadTeam.teams.form.title.create }}
-    </h2>
-    <p class="alto-grey">{{ I18ns.leadTeam.teams.form.subtitle }}</p>
-  </div>
+<div class="mx-5 my-4">
+  <alto-icon-badge size="4rem" icon="bi-people"></alto-icon-badge>
+
+  <h2 class="d-inline-block">
+    {{ isEdit ? I18ns.leadTeam.teams.form.title.edit : I18ns.leadTeam.teams.form.title.create }}
+  </h2>
 </div>
 
 <hr class="mb-0" />
@@ -86,13 +82,27 @@
     >
       {{ I18ns.shared.cancel }}
     </button>
-    <input
-      data-cy="btnSave"
-      type="submit"
-      class="btn btn-primary float-end"
-      [disabled]="!teamForm.valid"
-      [value]="I18ns.shared.save"
-      (click)="createTeam()"
-    />
+    <ng-container *ngIf="isEdit; else elseTemplate">
+      <input
+        data-cy="btnSave"
+        type="submit"
+        class="btn btn-primary float-end"
+        [disabled]="!teamForm.valid"
+        [value]="I18ns.shared.save"
+        (click)="createTeam()"
+      />
+    </ng-container>
+    <ng-template #elseTemplate>
+      <button
+        data-cy="btnSave"
+        type="submit"
+        class="btn btn-primary float-end"
+        [disabled]="!teamForm.valid"
+        [value]="I18ns.shared.save"
+        (click)="createTeam()"
+      >
+        <i class="bi bi-plus-lg"></i><span>{{ I18ns.shared.create }}</span>
+      </button>
+    </ng-template>
   </div>
 </div>

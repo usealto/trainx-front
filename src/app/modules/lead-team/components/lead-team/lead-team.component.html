@@ -1,15 +1,17 @@
-<div class="welcome-panel">
-  <h1>{{ I18ns.leadTeam.titleIcon }}</h1>
-  <h1 data-cy="leadTeamTitle">{{ I18ns.leadTeam.title }}</h1>
+<div class="header-panel">
+  <img class="emoji me-4" [src]="EmojiName.BustsInSilhouette | emoji" />
+  <h1 data-cy="leadTeamTitle" class="d-inline-block">{{ I18ns.leadTeam.title }}</h1>
 </div>
 
 <div class="gap"></div>
 <!-- TEAMS -->
 <div>
   <button type="button" class="btn btn-primary float-end" (click)="openTeamForm()">
-    <i class="bi bi-plus-lg"></i> {{ I18ns.leadTeam.createTeam }}
+    <i class="bi bi-plus-lg"></i><span>{{ I18ns.leadTeam.createTeam }}</span>
   </button>
-  <h2 id="teamsAnchor">{{ I18ns.leadTeam.teams.titleIcon }} {{ I18ns.leadTeam.teams.title }}</h2>
+  <h2 id="teamsAnchor">
+    <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" /> {{ I18ns.leadTeam.teams.title }}
+  </h2>
   <p class="mb-4 alto-grey">{{ I18ns.leadTeam.teams.subtitle }}</p>
   <ng-container *ngIf="paginatedTeams.length > 0; else noTeams">
     <div class="table-panel">
@@ -25,10 +27,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let team of paginatedTeams" class="align-middle">
-            <td data-cy="teamLongname" class="fw-medium">
-              {{ team.longName }}
-            </td>
+          <tr *ngFor="let team of paginatedTeams" class="align-middle fs-7">
+            <td data-cy="teamLongname">{{ team.longName }}</td>
             <td>
               <div *ngIf="team.score" class="text-center">{{ team.score | percent }}</div>
               <div class="text-center" *ngIf="!team.score">
@@ -86,153 +86,147 @@
 
 <!-- MEMBERS -->
 
-<div class="member-section">
-  <div>
-    <button
-      type="button"
-      class="btn btn-primary float-end d-flex align-items-center"
-      (click)="airtableRedirect()"
-    >
-      <i class="bi bi-person-plus me-2 fs-5"></i>
-      <span>{{ I18ns.leadTeam.members.invite }}</span>
-    </button>
-    <h2 data-cy="companyMembersSection" id="membersAnchor">
-      {{ I18ns.leadTeam.members.titleIcon }} {{ I18ns.leadTeam.members.title }}
-    </h2>
-    <p class="alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
-  </div>
-
-  <div class="panel">
-    <div class="row align-items-start">
-      <div class="col border-end d-flex">
-        <div class="double-badge me-4 d-inline-block">
-          <i class="fs-4 alto-badge-blue bi bi-bar-chart-fill"></i>
-        </div>
-        <div class="d-inline-block">
-          <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.total }}</p>
-          <h1 class="mb-0">{{ absoluteUsersCount }}</h1>
-        </div>
-      </div>
-      <div class="col d-flex second-col">
-        <div class="double-badge me-4 d-inline-block">
-          <i class="fs-4 alto-badge-big alto-badge-blue bi bi-reply-all-fill"></i>
-        </div>
-        <div class="d-inline-block flex-grow-1">
-          <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
-          <h1 class="mb-0 d-inline-block">{{ getTotalQuestions() }}</h1>
-          <alto-progression-badge
-            class="float-end"
-            [score]="getPercentageQuestions()"
-          ></alto-progression-badge>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="d-flex justify-content-between">
-    <alto-search
-      data-cy="filterBySearch"
-      class="float-start"
-      (searchChange)="filterUsers({ search: $event })"
-    ></alto-search>
-
-    <div>
-      <alto-dropdown-filter
-        data-cy="filterByTeam"
-        class="d-inline-block me-3"
-        [data]="teams"
-        [displayLabel]="'shortName'"
-        [isColored]="true"
-        [placeholder]="I18ns.leadTeam.members.filters.teams"
-        (selectChange)="filterUsers({ teams: $event })"
-      ></alto-dropdown-filter>
-
-      <alto-score-filter
-        data-cy="filterByScore"
-        (selectChange)="filterUsers({ score: $event })"
-      ></alto-score-filter>
-    </div>
-  </div>
-
-  <ng-container *ngIf="paginatedUsers.length > 0; else noUsers">
-    <div class="table-panel">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col" class="w-25">{{ I18ns.leadTeam.members.table.name }}</th>
-            <th scope="col" class="w-25">{{ I18ns.leadTeam.members.table.team }}</th>
-            <th scope="col">
-              {{ I18ns.leadTeam.members.table.averageScore }}
-              <i
-                class="ms-2 alto-grey bi bi-question-circle"
-                ngbTooltip="{{ I18ns.leadTeam.members.table.averageScoreTooltip }}"
-              ></i>
-            </th>
-            <th scope="col" class="text-center w-20">
-              {{ I18ns.leadTeam.members.table.questionsPerMonth }}
-              <i
-                class="ms-2 alto-grey bi bi-question-circle"
-                ngbTooltip="{{ I18ns.leadTeam.members.table.questionsPerMonthTooltip }}"
-              ></i>
-            </th>
-            <th class="w-5"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let user of paginatedUsers" class="align-middle">
-            <td>
-              <alto-profile-card data-cy="profileCard" [user]="user"></alto-profile-card>
-            </td>
-            <td>
-              <span data-cy="memberTeamShortname" class="alto-badge" [style]="user.teamId || '' | teamColor">
-                {{ usersMap.get(user.id) }}
-              </span>
-            </td>
-            <td>
-              <div class="progress" *ngIf="user.score">
-                <div
-                  data-cy="scoreProgressBar"
-                  class="progress-bar d-inline-block"
-                  role="progressbar"
-                  [style]="user.score && 'width:' + (user.score | percent : '1.0-0' : 'en-US')"
-                ></div>
-              </div>
-              <ng-container *ngIf="user.score">{{ user.score | percent }}</ng-container>
-              <div class="text-center" *ngIf="!user.score">
-                {{ I18ns.leadTeam.members.table.noScore }}
-              </div>
-            </td>
-            <td class="text-center">
-              {{ getQuestionsByUser(user.id)[0] }}
-              <alto-progression-badge
-                class="d-inline-block ms-3"
-                [score]="getQuestionsByUser(user.id)[1]"
-              ></alto-progression-badge>
-            </td>
-            <td>
-              <i
-                data-cy="editCompanyMember"
-                class="fs-5 bi bi-pencil cursor-pointer float-end me-4"
-                (click)="openUserEditionForm(user)"
-              ></i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <alto-pagination
-        class="mx-4 d-block"
-        [collectionSize]="absoluteUsersCount"
-        (pageChange)="changeUsersPage(usersScores, $event)"
-        [pageSize]="usersPageSize"
-        [page]="usersPage"
-      ></alto-pagination>
-    </div>
-  </ng-container>
-  <ng-template #noUsers>
-    <div class="panel text-center">
-      <h2>{{ I18ns.shared.noData }}</h2>
-      <p>{{ I18ns.shared.noDataSubtitle }}</p>
-    </div>
-  </ng-template>
+<div class="mb-5">
+  <button
+    type="button"
+    class="btn btn-primary float-end d-flex align-items-center"
+    (click)="airtableRedirect()"
+  >
+    <i class="bi bi-person-plus me-2 fs-5"></i>
+    <span>{{ I18ns.leadTeam.members.invite }}</span>
+  </button>
+  <h2 data-cy="companyMembersSection" id="membersAnchor">
+    <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
+    {{ I18ns.leadTeam.members.title }}
+  </h2>
+  <p class="alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
 </div>
+
+<div class="panel mb-5">
+  <div class="row align-items-start">
+    <div class="col border-end d-flex">
+      <alto-icon-badge size="4rem" class="me-4"></alto-icon-badge>
+
+      <div class="d-inline-block">
+        <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.total }}</p>
+        <h1 class="mb-0">{{ absoluteUsersCount }}</h1>
+      </div>
+    </div>
+    <div class="col d-flex second-col">
+      <alto-icon-badge size="4rem" class="me-4" icon="bi-reply-all-fill"></alto-icon-badge>
+
+      <div class="d-inline-block flex-grow-1">
+        <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
+        <h1 class="mb-0 d-inline-block">{{ getTotalQuestions() }}</h1>
+        <alto-progression-badge class="float-end" [score]="getPercentageQuestions()"></alto-progression-badge>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex justify-content-between mb-5">
+  <alto-search
+    data-cy="filterBySearch"
+    class="float-start"
+    (searchChange)="filterUsers({ search: $event })"
+  ></alto-search>
+
+  <div>
+    <alto-dropdown-filter
+      data-cy="filterByTeam"
+      class="me-3"
+      [data]="teams"
+      [displayLabel]="'shortName'"
+      [isColored]="true"
+      [placeholder]="I18ns.leadTeam.members.filters.teams"
+      (selectChange)="filterUsers({ teams: $event })"
+    ></alto-dropdown-filter>
+
+    <alto-score-filter
+      data-cy="filterByScore"
+      (selectChange)="filterUsers({ score: $event })"
+    ></alto-score-filter>
+  </div>
+</div>
+
+<ng-container *ngIf="paginatedUsers.length > 0; else noUsers">
+  <div class="table-panel">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" class="w-25">{{ I18ns.leadTeam.members.table.name }}</th>
+          <th scope="col" class="w-25">{{ I18ns.leadTeam.members.table.team }}</th>
+          <th scope="col">
+            {{ I18ns.leadTeam.members.table.averageScore }}
+            <i
+              class="ms-2 alto-grey bi bi-question-circle"
+              ngbTooltip="{{ I18ns.leadTeam.members.table.averageScoreTooltip }}"
+            ></i>
+          </th>
+          <th scope="col" class="text-center w-20">
+            {{ I18ns.leadTeam.members.table.questionsPerMonth }}
+            <i
+              class="ms-2 alto-grey bi bi-question-circle"
+              ngbTooltip="{{ I18ns.leadTeam.members.table.questionsPerMonthTooltip }}"
+            ></i>
+          </th>
+          <th class="w-5"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of paginatedUsers" class="align-middle">
+          <td>
+            <alto-profile-card data-cy="profileCard" [user]="user"></alto-profile-card>
+          </td>
+          <td>
+            <span data-cy="memberTeamShortname" class="alto-badge" [style]="user.teamId || '' | teamColor">
+              {{ usersMap.get(user.id) }}
+            </span>
+          </td>
+          <td>
+            <div class="progress" *ngIf="user.score">
+              <div
+                data-cy="scoreProgressBar"
+                class="progress-bar d-inline-block"
+                role="progressbar"
+                [style]="user.score && 'width:' + (user.score | percent : '1.0-0' : 'en-US')"
+              ></div>
+            </div>
+            <ng-container *ngIf="user.score">{{ user.score | percent }}</ng-container>
+            <div class="text-center" *ngIf="!user.score">
+              {{ I18ns.leadTeam.members.table.noScore }}
+            </div>
+          </td>
+          <td class="text-center">
+            {{ getQuestionsByUser(user.id)[0] }}
+            <alto-progression-badge
+              class="d-inline-block ms-3"
+              [score]="getQuestionsByUser(user.id)[1]"
+            ></alto-progression-badge>
+          </td>
+          <td>
+            <i
+              data-cy="editCompanyMember"
+              class="fs-5 bi bi-pencil cursor-pointer float-end me-4"
+              (click)="openUserEditionForm(user)"
+            ></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <alto-pagination
+      class="mx-4 d-block"
+      [collectionSize]="absoluteUsersCount"
+      (pageChange)="changeUsersPage(usersScores, $event)"
+      [pageSize]="usersPageSize"
+      [page]="usersPage"
+    ></alto-pagination>
+  </div>
+</ng-container>
+<ng-template #noUsers>
+  <div class="panel text-center">
+    <h2>{{ I18ns.shared.noData }}</h2>
+    <p>{{ I18ns.shared.noDataSubtitle }}</p>
+  </div>
+</ng-template>

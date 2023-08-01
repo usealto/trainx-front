@@ -14,31 +14,30 @@
   >
     <p class="title" [ngClass]="{ 'w-100': !displayToggle }">{{ program.name }}</p>
     <div class="card-bottom">
-      <div class="d-flex align-items-center">
-        <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
-        <span class="me-3 span-text">{{ I18ns.programs.programs.teams }}</span>
-        <alto-colored-pill-list
-            data-cy="coloredTeams"
-            [limit]="1"
-            [hasDynamicColor]="false"
-            [data]="[program.teams.length + '/' + allTeamsCount + ' équipes']"
-          ></alto-colored-pill-list>
-        <!-- <ng-container *ngIf="program.teams.length > 0; else elseTeams">
-          <alto-colored-pill-list
-            data-cy="coloredTeams"
-            [limit]="5"
-            [hasDynamicColor]="true"
-            [data]="program.teams"
-          ></alto-colored-pill-list>
-        </ng-container> -->
-        <!-- <ng-template #elseTeams>
-          <div class="alto-badge">{{ I18ns.shared.noTeam }}</div>
-        </ng-template> -->
-      </div>
+      <ng-container *ngIf="program.teams.length > 0; else elseTeams">
+        <!-- <alto-colored-pill-list
+          data-cy="coloredTeams"
+          [limit]="5"
+          [hasDynamicColor]="true"
+          [data]="program.teams"
+        ></alto-colored-pill-list> -->
+        <div class="d-inline-flex flex-nowrap">
+          <p class="subtitle me-3">
+            <img class="pe-1 mb-3" [src]="Emoji.BustsInSilhouette | emoji" height="16" />
+            {{ (I18ns.shared.teams | titlecase) + ': ' }}
+          </p>
+          <span class="alto-badge teams">{{
+            program.teams.length + '/' + teamsCount + ' ' + I18ns.shared.teams
+          }}</span>
+        </div>
+      </ng-container>
+      <ng-template #elseTeams>
+        <div class="alto-badge">{{ I18ns.shared.noTeam }}</div>
+      </ng-template>
       <hr />
       <p class="score">
-        <img class="emoji" [src]="EmojiName.PlayButton | emoji" />
-        <span class="span-text">
+        <span>
+          <img class="pe-1 mb-3" [src]="Emoji.PlayButton | emoji" height="14" />
           {{ I18ns.programs.programs.involvement }}
         </span>
         <!-- <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.involvementToolTip }}"></i> -->
@@ -47,8 +46,8 @@
         }}</span>
       </p>
       <p class="score">
-        <img class="emoji" [src]="EmojiName.RollerCoaster | emoji" />
-        <span class="span-text">
+        <span>
+          <img class="pe-1 mb-3" [src]="Emoji.RollerCoaster | emoji" height="14" />
           {{ I18ns.programs.programs.progress }}
         </span>
         <!-- <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.progressToolTip }}"></i> -->
@@ -57,8 +56,8 @@
         </span>
       </p>
       <p class="score">
-        <img class="emoji" [src]="EmojiName.SportsMedal | emoji" />
-        <span class="span-text">
+        <span>
+          <img class="pe-1 mb-3" [src]="Emoji.SportsMedal | emoji" height="14" />
           {{ I18ns.programs.programs.score }}
         </span>
         <!-- <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.scoreToolTip }}"></i> -->

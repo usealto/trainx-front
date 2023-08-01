@@ -27,7 +27,9 @@ export class ProgressionPillArrowPipe implements PipeTransform {
         </svg>`,
       );
     } else {
-      return `<i *ngIf="arrow === true" class="fs-4 align-middle bi-dash alto-neutral"/>`;
+      return this.sanitizer.bypassSecurityTrustHtml(
+        `<i *ngIf="arrow === true" class="fs-4 align-middle bi-dash alto-neutral"/>`,
+      );
     }
   }
 }
