@@ -609,7 +609,7 @@ export const FR = {
       team: 'Équipe',
       roles: 'Rôles',
       form: {
-        success: 'Votre compte a bien été modifié',
+        success: 'Vos informations ont bien été modifiées',
       },
     },
     password: {

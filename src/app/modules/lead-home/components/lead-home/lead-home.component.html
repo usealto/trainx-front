@@ -8,12 +8,12 @@
 <div class="row">
   <div class="col-6 ps-0">
     <div [class]="commentsCount ? 'warning-panel' : 'success-panel'">
-      <div
-        class="d-inline-block align-top"
-        [class]="commentsCount ? 'alto-badge-warning' : 'alto-badge-success'"
-      >
-        <i class="bi bi-chat"></i>
-      </div>
+      <alto-icon-badge
+        size="4.5rem"
+        icon="bi-chat"
+        [color]="commentsCount ? 'badge-double-warning' : 'badge-double-success'"
+      ></alto-icon-badge>
+
       <div class="d-inline-block ms-4">
         <p class="fw-bold fs-6b mb-1" [style]="commentsCount ? 'color: var(--orange-600)' : ''">
           {{ I18ns.leadHome.comments | plural : commentsCount }}
@@ -32,12 +32,12 @@
       [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
       fragment="submittedQuestionsAnchor"
     >
-      <div
-        class="d-inline-block align-top"
-        [class]="questionsCount ? 'alto-badge-warning' : 'alto-badge-success'"
-      >
-        <i class="bi bi-question-circle"></i>
-      </div>
+      <alto-icon-badge
+        size="4.5rem"
+        icon="bi-question-circle"
+        [color]="questionsCount ? 'badge-double-warning' : 'badge-double-success'"
+      ></alto-icon-badge>
+
       <div class="d-inline-block ms-4">
         <p class="fw-bold fs-6b mb-1" [style]="questionsCount ? 'color: var(--orange-600)' : ''">
           {{ I18ns.leadHome.question | plural : questionsCount }}
@@ -66,9 +66,8 @@
 <div class="panel px-0 py-4">
   <div class="row">
     <div class="col border-end d-flex flex-row align-items-center px-4">
-      <div class="col-1 d-inline-block alto-badge-primary">
-        <i class="bi bi-bar-chart-fill"></i>
-      </div>
+      <alto-icon-badge size="4rem" icon="bi-bar-chart-fill"></alto-icon-badge>
+
       <div class="col ps-4">
         <p class="stats-title">{{ I18ns.leadHome.statistics.averageScore }}</p>
         <div class="mt-2 row">
@@ -78,9 +77,8 @@
       </div>
     </div>
     <div class="col border-end d-flex flex-row align-items-center px-4">
-      <div class="col-1 d-inline-block alto-badge-primary">
-        <i class="bi bi-check-square-fill"></i>
-      </div>
+      <alto-icon-badge size="4rem" icon="bi-check-square-fill"></alto-icon-badge>
+
       <div class="col ps-4">
         <p class="stats-title">{{ I18ns.leadHome.statistics.terminatedPrograms }}</p>
         <div class="mt-2 row">
@@ -97,9 +95,8 @@
       </div>
     </div>
     <div class="col d-flex flex-row align-items-center px-4">
-      <div class="col-1 d-inline-block alto-badge-primary">
-        <i class="bi bi-reply-all-fill"></i>
-      </div>
+      <alto-icon-badge size="4rem" icon="bi-reply-all-fill"></alto-icon-badge>
+
       <div class="col ps-4">
         <p class="stats-title">{{ I18ns.leadHome.statistics.guessesCount }}</p>
         <div class="mt-2 row">
