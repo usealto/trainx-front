@@ -281,7 +281,7 @@ export class LeadHomeComponent implements OnInit {
     combineLatest([
       this.scoresRestService.getCompletion(filters, false),
       this.scoresRestService.getCompletion(filters, true),
-      this.scoresRestService.getProgramsStats(filters.duration as ScoreDuration)
+      this.scoresRestService.getProgramsStats(filters.duration as ScoreDuration),
     ])
       .pipe(
         tap(([currentCompletion, lastCompletion, programsStats]) => {
@@ -294,14 +294,9 @@ export class LeadHomeComponent implements OnInit {
           this.averageFinishedProgramsProgression =
             this.averageFinishedPrograms - lastAverageFinishedPrograms;
 
-          console.log(programsStats)
-          this.programsCount = programsStats.length
-          this.finishedProgramsCount = programsStats.filter((p) => p.participation === 1).length
+          this.programsCount = programsStats.length;
+          this.finishedProgramsCount = programsStats.filter((p) => p.participation === 1).length;
           this.averageFinishedPrograms = this.finishedProgramsCount / this.programsCount;
-          // programsStats.forEach((p) => {
-          //   if (p.program.deletedAt)
-          // })
-          // console.log(programsStats);
         }),
       )
       .subscribe();
@@ -311,7 +306,7 @@ export class LeadHomeComponent implements OnInit {
     combineLatest([
       this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration),
       this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration, true),
-      this.companiesRestService.getMyCompany()
+      this.companiesRestService.getMyCompany(),
     ])
       .pipe(
         tap(([guesses, previousGuesses, company]) => {
