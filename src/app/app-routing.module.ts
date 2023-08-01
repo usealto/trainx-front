@@ -12,6 +12,7 @@ import { canHaveWebAccess } from './web-access.guard';
 import { JwtComponent } from './layout/jwt/jwt.component';
 import { haveTeam } from './no-team.guard';
 import { NoCompanyComponent } from './layout/no-company/no-company.component';
+import { NoTeamComponent } from './layout/no-team/no-team.component';
 import { haveCompany } from './no-company.guard';
 
 const routes: Routes = [
@@ -54,7 +55,7 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.lead,
-        canActivate: [canActivateLead],
+        canActivate: [canActivateLead, haveTeam, haveCompany],
         resolve: {
           appData: leadResolver,
         },
@@ -127,6 +128,10 @@ const routes: Routes = [
   {
     path: AltoRoutes.noCompany,
     component: NoCompanyComponent,
+  },
+  {
+    path: AltoRoutes.noTeam,
+    component: NoTeamComponent,
   },
   {
     path: '**',

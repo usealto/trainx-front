@@ -68,7 +68,12 @@ export const FR = {
     noCompany: {
       title: "Oops ! Nous n'avons pas trouvé votre entreprise.",
       subtitle:
-        'Une erreur s’est produite, et pour y remédier, il faudrait vous rapprocher de votre entreprise. Vous pouvez aussi nous en faire la demande directement via ce formulaire.',
+        'Une erreur s’est produite, et pour y remédier, il faudrait vous rapprocher de votre entreprise.',
+    },
+    noTeams: {
+      title: "Oops ! Nous n'avons pas trouvé votre équipe.",
+      subtitle:
+        'Une erreur s’est produite, et pour y remédier, il faudrait vous rapprocher de votre entreprise.',
     },
   },
   leadHome: {

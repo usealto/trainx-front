@@ -13,7 +13,7 @@ export const haveTeam: CanActivateFn = () => {
       filter((x) => !!x),
       map((user) => {
         if (!user.team || !user.team.id) {
-          router.navigate(['/', AltoRoutes.noCompany]);
+          router.navigate(['/', AltoRoutes.noTeam]);
           return false;
         }
         return true;
