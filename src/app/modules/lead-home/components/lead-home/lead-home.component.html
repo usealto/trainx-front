@@ -1,5 +1,5 @@
 <div class="header-panel mb-4 row align-items-center">
-  <p class="welcome-icon col-1">👋</p>
+  <img class="col-1" [src]="Emoji.WavingHand | emoji" height="48" />
   <div class="col">
     <h1>{{ I18ns.leadHome.title + (profileStore.user.value.firstname | titlecase) + '!' }}</h1>
     <p class="alto-grey fs-6b">{{ I18ns.leadHome.subtitle }}</p>
@@ -8,12 +8,12 @@
 <div class="row">
   <div class="col-6 ps-0">
     <div [class]="commentsCount ? 'warning-panel' : 'success-panel'">
-      <div
-        class="d-inline-block align-top"
-        [class]="commentsCount ? 'alto-badge-warning' : 'alto-badge-success'"
-      >
-        <i class="bi bi-chat"></i>
-      </div>
+      <alto-icon-badge
+        size="4.5rem"
+        icon="bi-chat"
+        [color]="commentsCount ? 'badge-double-warning' : 'badge-double-success'"
+      ></alto-icon-badge>
+
       <div class="d-inline-block ms-4">
         <p class="fw-bold fs-6b mb-1" [style]="commentsCount ? 'color: var(--orange-600)' : ''">
           {{ I18ns.leadHome.comments | plural : commentsCount }}
@@ -32,12 +32,12 @@
       [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
       fragment="submittedQuestionsAnchor"
     >
-      <div
-        class="d-inline-block align-top"
-        [class]="questionsCount ? 'alto-badge-warning' : 'alto-badge-success'"
-      >
-        <i class="bi bi-question-circle"></i>
-      </div>
+      <alto-icon-badge
+        size="4.5rem"
+        icon="bi-question-circle"
+        [color]="questionsCount ? 'badge-double-warning' : 'badge-double-success'"
+      ></alto-icon-badge>
+
       <div class="d-inline-block ms-4">
         <p class="fw-bold fs-6b mb-1" [style]="questionsCount ? 'color: var(--orange-600)' : ''">
           {{ I18ns.leadHome.question | plural : questionsCount }}
@@ -53,24 +53,21 @@
 
 <!-- STATISTICS -->
 <div class="mt-6 mb-4">
-  <div class="d-inline-block">
-    <h2>
-      <span class="pe-3">📈</span>
-      {{ I18ns.leadHome.statistics.title }}
-    </h2>
-    <p class="subtitle fs-6b">{{ I18ns.leadHome.statistics.subtitle }}</p>
-  </div>
-  <div class="d-inline-block float-end pe-0">
+  <div class="float-end">
     <alto-time-picker (durationSelected)="updateStatisticsDuration($event)"></alto-time-picker>
   </div>
+  <h2 class="d-inline-block">
+    <img class="me-3 emoji" [src]="Emoji.ChartIncreasing | emoji" height="20" />
+    {{ I18ns.leadHome.statistics.title }}
+  </h2>
+  <p class="subtitle fs-6b">{{ I18ns.leadHome.statistics.subtitle }}</p>
 </div>
 
 <div class="panel px-0 py-4">
   <div class="row">
     <div class="col border-end d-flex flex-row align-items-center px-4">
-      <div class="col-1 d-inline-block alto-badge-primary">
-        <i class="bi bi-bar-chart-fill"></i>
-      </div>
+      <alto-icon-badge size="4rem" icon="bi-bar-chart-fill"></alto-icon-badge>
+
       <div class="col ps-4">
         <p class="stats-title">{{ I18ns.leadHome.statistics.averageScore }}</p>
         <div class="mt-2 row">
@@ -80,9 +77,8 @@
       </div>
     </div>
     <div class="col border-end d-flex flex-row align-items-center px-4">
-      <div class="col-1 d-inline-block alto-badge-primary">
-        <i class="bi bi-check-square-fill"></i>
-      </div>
+      <alto-icon-badge size="4rem" icon="bi-check-square-fill"></alto-icon-badge>
+
       <div class="col ps-4">
         <p class="stats-title">{{ I18ns.leadHome.statistics.terminatedPrograms }}</p>
         <div class="mt-2 row">
@@ -99,9 +95,8 @@
       </div>
     </div>
     <div class="col d-flex flex-row align-items-center px-4">
-      <div class="col-1 d-inline-block alto-badge-primary">
-        <i class="bi bi-reply-all-fill"></i>
-      </div>
+      <alto-icon-badge size="4rem" icon="bi-reply-all-fill"></alto-icon-badge>
+
       <div class="col ps-4">
         <p class="stats-title">{{ I18ns.leadHome.statistics.guessesCount }}</p>
         <div class="mt-2 row">
@@ -114,10 +109,10 @@
 </div>
 
 <!-- CHARTS -->
-<div class="panel h-100 mt-5">
+<div class="panel h-100 mt-5 mb-5">
   <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
   <p class="alto-grey mb-4">{{ I18ns.leadHome.globalEvolution.chartSubtitle }}</p>
-  <div [hidden]="!scoreCount" class="chart-container pt-6">
+  <div [hidden]="!scoreCount" class="chart-container">
     <canvas id="programScoreEvol"></canvas>
   </div>
   <div [hidden]="scoreCount > 0" class="text-center pt-6">
@@ -125,109 +120,40 @@
   </div>
 </div>
 <!-- TOP / FLOP -->
-<!-- PROGRAMS & TAGS -->
-<div class="panel mb-4">
-  <i
-    class="fs-5 alto-grey bi bi-question-circle float-end"
-    ngbTooltip="{{
-      I18ns.leadHome.globalEvolution.topFlopTooltip
-        | replaceInTranslation : (topFlopProgramTab === 'program' ? I18ns.shared.programs : I18ns.shared.tags)
-    }}"
-  ></i>
-  <alto-tabs
-    class="mb-4"
-    *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
-    (tabChanged)="topFlop($event)"
-    [data]="[
-      { label: trads.program, value: ScoreTypeEnum.Program },
-      { label: trads.tag, value: ScoreTypeEnum.Tag }
-    ]"
-  ></alto-tabs>
-  <div class="row">
-    <div class="col-6 border-end pe-0">
-      <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
-      <div class="height-100">
-        <ng-container *ngIf="topFlopData?.programs?.top?.length; else tfProgramTemplate">
-          <p *ngFor="let item of topFlopData?.programs?.top | slice : 0 : 3" class="mb-3">
-            <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
-            <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
-              {{ item.avg | percent }}
-            </span>
-          </p>
-        </ng-container>
-      </div>
-    </div>
-    <div class="col-6 ps-4 pe-0">
-      <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
-      <div class="height-100">
-        <ng-container *ngIf="topFlopData?.programs?.flop?.length; else tfProgramTemplate">
-          <p *ngFor="let item of topFlopData?.programs?.flop | slice : 0 : 3" class="mb-3">
-            <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
-            <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
-              {{ item.avg | percent }}
-            </span>
-          </p>
-        </ng-container>
-      </div>
-    </div>
+<div class="row h-100">
+  <div class="col pe-4">
+    <alto-top-flop
+      *ngIf="topflopLoaded"
+      [title]="I18ns.leadHome.topFlop.teams.title"
+      [subtitle]="I18ns.leadHome.topFlop.teams.subtitle"
+      [leaderboard]="teamsLeaderboard"
+    ></alto-top-flop>
   </div>
-</div>
-<!-- TEAMS & USERS -->
-<div class="panel">
-  <i
-    class="fs-5 alto-grey bi bi-question-circle float-end"
-    ngbTooltip="{{
-      I18ns.leadHome.globalEvolution.topFlopTooltip
-        | replaceInTranslation : (topFlopTeamTab === 'team' ? I18ns.shared.teams : I18ns.shared.members)
-    }}"
-  ></i>
-  <alto-tabs
-    class="mb-4"
-    *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
-    (tabChanged)="topFlop($event)"
-    [data]="[
-      { label: trads.team, value: ScoreTypeEnum.Team },
-      { label: trads.member, value: ScoreTypeEnum.User }
-    ]"
-  ></alto-tabs>
-  <div class="row">
-    <div class="col-6 border-end pe-0">
-      <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
-      <div class="height-100">
-        <ng-container *ngIf="topFlopData?.teams?.top?.length; else tfProgramTemplate">
-          <p *ngFor="let item of topFlopData?.teams?.top | slice : 0 : 3" class="mb-3">
-            <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
-            <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
-              {{ item.avg | percent }}
-            </span>
-          </p>
-        </ng-container>
-      </div>
-    </div>
-    <div class="col-6 ps-4 pe-0">
-      <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
-      <div class="height-100">
-        <ng-container *ngIf="topFlopData?.teams?.flop?.length; else tfProgramTemplate">
-          <p *ngFor="let item of topFlopData?.teams?.flop" class="mb-3">
-            <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
-            <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
-              {{ item.avg | percent }}
-            </span>
-          </p>
-        </ng-container>
-      </div>
-    </div>
-    <ng-template #tfProgramTemplate>
-      <div class="text-center py-3">
-        {{ I18ns.shared.noData }}
-      </div>
-    </ng-template>
+  <div class="col ps-0">
+    <alto-top-flop
+      *ngIf="topflopLoaded"
+      [title]="I18ns.leadHome.topFlop.users.title"
+      [subtitle]="I18ns.leadHome.topFlop.users.subtitle"
+      [leaderboard]="usersLeaderboard"
+    ></alto-top-flop>
   </div>
 </div>
 
 <!-- ONGOING PROGRAMS -->
-<div class="mt-6 ongoing-programs">
-  <h2 class="title">{{ I18ns.leadHome.ongoingPrograms.title }}</h2>
+<div class="mt-6 mb-5">
+  <button
+    [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
+    class="float-end btn btn-outline-secondary align-bottom"
+  >
+    {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
+  </button>
+  <div class="align-items-center">
+    <h2 class="d-inline-block">
+      <img class="me-3 emoji" [src]="Emoji.Bullseye | emoji" height="20" />
+      {{ I18ns.leadHome.ongoingPrograms.title }}
+    </h2>
+    <p class="subtitle fs-6b">{{ I18ns.leadHome.ongoingPrograms.subtitle }}</p>
+  </div>
 </div>
 
 <alto-program-card-list [place]="'home'"></alto-program-card-list>

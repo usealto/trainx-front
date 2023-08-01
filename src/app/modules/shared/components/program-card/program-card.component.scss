@@ -35,15 +35,9 @@ h2 {
 .description-box {
   height: 2.6rem;
 }
-alto-colored-pill-list {
-  display: block;
-  min-height: 1.8rem;
-}
+
 .score {
   padding-bottom: 1rem;
-  span {
-    font-weight: 500;
-  }
   .badge {
     font-size: 0.857rem;
   }
@@ -51,4 +45,9 @@ alto-colored-pill-list {
     font-size: 0.85rem;
     color: var(--bs-gray-400);
   }
+}
+
+.teams {
+  color: var(--blue-gray-600);
+  background-color: var(--blue-gray-50);
 }

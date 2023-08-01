@@ -212,13 +212,20 @@
 }
 
 .pill-green {
-  background-color: #32d583;
+  background-color: var(--success-50);
+  color: var(--success-600);
 }
 .pill-neutral {
-  background-color: #98a2b3;
+  background-color: var(--gray-50);
+  color: var(--gray-600);
+}
+.pill-orange {
+  background-color: var(--warning-50);
+  color: var(--warning-600);
 }
 .pill-red {
-  background-color: #f04438;
+  background-color: var(--error-50);
+  color: var(--error-600);
 }
 
 .alto-green {

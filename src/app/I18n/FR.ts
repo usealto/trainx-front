@@ -29,6 +29,9 @@ export const FR = {
     programs: 'programmes',
     teams: 'équipes',
     members: 'membres',
+    top: 'Top',
+    flop: 'Flop',
+    waitingForNewResults: "Dans l'attente de nouveaux résultats.",
     days: ['jour', 'jours'],
     imageBadge: {
       userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],
@@ -104,21 +107,26 @@ export const FR = {
         team: 'Équipe',
         member: 'Membre',
       },
-      top: 'Top',
-      flop: 'Flop',
-      topFlopTooltip: 'Classement des {{}} en fonction du score',
+    },
+    topFlop: {
+      teams: {
+        title: 'Niveau de connaissance de vos équipes',
+        subtitle: 'Aperçu du niveau de maîtrise de vos équipes par thématiques.',
+      },
+      users: {
+        title: 'Niveau de connaissance de vos collaborateurs',
+        subtitle: 'Aperçu du niveau de maîtrise de vos collaborateurs.',
+      },
     },
     ongoingPrograms: {
       title: 'Programmes en cours',
+      subtitle: 'Retrouvez les programmes que vos équipes sont en train de réaliser.',
       involvement: 'Participation',
       progress: 'Avancement',
       noData: 'Aucun programme en cours',
       noDataSubtitle:
         'Créez votre premier programme et assignez le à vos équipes en quelques minutes seulement',
       score: 'Score',
-      filters: {
-        team: 'Équipe',
-      },
     },
     ongoingChallenges: {
       title: 'Challenges en cours',
@@ -601,7 +609,7 @@ export const FR = {
       team: 'Équipe',
       roles: 'Rôles',
       form: {
-        success: 'Votre compte a bien été modifié',
+        success: 'Vos informations ont bien été modifiées',
       },
     },
     password: {
