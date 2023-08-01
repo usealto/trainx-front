@@ -12,16 +12,48 @@
   </div>
 </div> -->
 <div class="panel-full d-flex justify-content-center align-items-center">
+  <div class="position-absolute top-0 end-0">
+    <img
+      class="background-img m-7"
+      src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Rocket/Color/rocket_color.svg"
+      height="716"
+    />
+  </div>
   <div class="text-center text-404">
     <img class="mb-8" width="182" src="assets/img/logo.png" alt="Alto Logo" />
     <h1 class="mb-6">
       {{ I18ns.shared.noWebAccess.title }}
-      <img
-        class="emoji ms-2"
-        src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Rocket/Color/rocket_color.svg"
-        height="36"
-      />
     </h1>
     <p>{{ I18ns.shared.noWebAccess.subtitle }}</p>
+    <p class="mt-5">
+      {{ I18ns.shared.noWebAccess.goodbye }}
+      <img
+        class="emoji ms-2"
+        src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Waving%20hand/Default/Color/waving_hand_color_default.svg"
+        height="36"
+      />
+    </p>
   </div>
 </div>
+<!-- <div class="panel-full d-flex justify-content-center align-items-center">
+  <div class="position-absolute top-0 end-0">
+    <img
+      class="background-img m-7"
+      src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Confused%20face/Color/confused_face_color.svg"
+      height="716"
+    />
+  </div>
+  <div class="text-center text-404">
+    <img
+      class="emoji"
+      src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Confused%20face/Color/confused_face_color.svg"
+      height="48"
+    />
+    <h1 class="my-5">{{ I18ns.errors.NotFound404.title }}</h1>
+    <p>{{ I18ns.errors.NotFound404.subtitle }}</p>
+    <a type="button" class="btn btn-primary mt-6" [routerLink]="route">
+      <i class="bi bi-arrow-left-short ps-0 pe-3"></i>
+      {{ I18ns.errors.NotFound404.return }}
+    </a>
+  </div>
+</div> -->

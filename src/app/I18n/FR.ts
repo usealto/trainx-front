@@ -62,6 +62,7 @@ export const FR = {
       title: 'Félicitations ! Votre compte Alto est actif',
       subtitle:
         "Comme souhaité par vos collaborateurs, vous profiterez bientôt d'Alto directement dans vos outils préférés tels que Slack ou Teams",
+      goodbye: 'À bientôt !',
     },
   },
   leadHome: {
