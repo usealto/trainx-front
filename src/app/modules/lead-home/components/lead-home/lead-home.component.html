@@ -1,7 +1,7 @@
 <div class="header-panel mb-4 row align-items-center">
   <img class="col-1" [src]="Emoji.WavingHand | emoji" height="48" />
   <div class="col">
-    <h1>{{ I18ns.leadHome.title + (profileStore.user.value.firstname | titlecase) + '!' }}</h1>
+    <h1 class="mb-3">{{ I18ns.leadHome.title + (profileStore.user.value.firstname | titlecase) + '!' }}</h1>
     <p class="alto-grey fs-6b">{{ I18ns.leadHome.subtitle }}</p>
   </div>
 </div>
@@ -15,7 +15,7 @@
       ></alto-icon-badge>
 
       <div class="d-inline-block ms-4">
-        <p class="fw-bold fs-6b mb-1" [style]="commentsCount ? 'color: var(--orange-600)' : ''">
+        <p class="fw-bold fs-6b mb-3" [style]="commentsCount ? 'color: var(--orange-600)' : ''">
           {{ I18ns.leadHome.comments | plural : commentsCount }}
           <span *ngIf="questionsCount > 0" class="text-black">{{ I18ns.leadHome.awaiting }}</span>
         </p>
@@ -39,7 +39,7 @@
       ></alto-icon-badge>
 
       <div class="d-inline-block ms-4">
-        <p class="fw-bold fs-6b mb-1" [style]="questionsCount ? 'color: var(--orange-600)' : ''">
+        <p class="fw-bold fs-6b mb-3" [style]="questionsCount ? 'color: var(--orange-600)' : ''">
           {{ I18ns.leadHome.question | plural : questionsCount }}
           <span *ngIf="questionsCount > 0" class="text-black">{{ I18ns.leadHome.awaiting }}</span>
         </p>
