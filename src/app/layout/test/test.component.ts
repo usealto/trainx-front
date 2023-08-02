@@ -21,6 +21,7 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
+import { buildTime } from 'src/build-time';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -31,6 +32,7 @@ import { environment } from 'src/environments/environment';
 export class TestComponent {
   EmojiName = EmojiName;
   I18ns = I18ns;
+  buildTime = buildTime;
   AltoRoutes = AltoRoutes;
   isDev = !environment.production;
   ChallengeDtoApiStatusEnumApi = ChallengeDtoApiStatusEnumApi;
