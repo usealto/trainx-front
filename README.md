@@ -33,7 +33,8 @@ Files will be placed in _dist/alto_
 
 ### Components
 
-The component demo page is here (http://localhost:4200/test)
+If you need to contribute, or simply check out some of our component, please refer to our Storybook. Follow this [link to our storybook](https://app-doc.usealto.com/)  
+Another way is to check out our (old) component demo page is here (http://localhost:4200/test)
 
 ### Packages
 
