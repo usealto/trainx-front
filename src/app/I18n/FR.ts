@@ -613,13 +613,19 @@ export const FR = {
       },
       successEdit: 'Le collaborateur {{}} a bien été modifié',
     },
-    integrations: {
-      title: 'Intégrations',
-      subtitle: 'Gérez les connexions avec vos applications',
-      learnMore: 'En savoir plus',
-      slack: {
-        title: 'Slack',
-        subtitle: 'Envoyez des notifications aux canaux et créez des projets à partir de messages.',
+    continuousSession: {
+      title: 'Session continue',
+      subtitle: 'Canaux de communication',
+      description: 'Choisissez par quel(s) moyen(s) vous souhaitez communiquer avec vos collaborateurs.',
+      integrations: {
+        title: 'Intégrations',
+        subtitle: 'Partagez directement les quizz dans vos canaux.',
+        slack: 'Slack',
+        teams: 'Teams',
+      },
+      webApp: {
+        title: 'Web app',
+        subtitle: 'Partagez directement les quizz dans vos canaux.',
       },
     },
   },

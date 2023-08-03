@@ -26,4 +26,8 @@
     color: var(--success-600);
     background: radial-gradient(circle, var(--success-100) 50%, var(--success-50) 50%);
   }
+  &.badge-double-gray {
+    color: var(--gray-600);
+    background: radial-gradient(circle, var(--gray-100) 50%, var(--gray-50) 50%);
+  }
 }

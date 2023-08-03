@@ -12,7 +12,8 @@ export class IconBadgeComponent {
 
   @HostBinding('class')
   @Input()
-  color: 'badge-double-primary' | 'badge-double-warning' | 'badge-double-success' = 'badge-double-primary';
+  color: 'badge-double-primary' | 'badge-double-warning' | 'badge-double-success' | 'badge-double-gray' =
+    'badge-double-primary';
 
   @Input() icon = 'bi-question-circle';
 }
