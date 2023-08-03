@@ -40,8 +40,6 @@ import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
 import { QuestionDeleteModalComponent } from './components/question-delete-modal/question-delete-modal.component';
 import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
-import { ChartBasiclineComponent } from './components/chart-basicline/chart-basicline.component';
-import { NgxEchartsModule } from 'ngx-echarts';
 
 @NgModule({
   declarations: [
@@ -70,7 +68,6 @@ import { NgxEchartsModule } from 'ngx-echarts';
     TextCounterComponent,
     QuestionDeleteModalComponent,
     DeleteModalComponent,
-    ChartBasiclineComponent,
   ],
   imports: [
     CommonModule,
@@ -88,7 +85,6 @@ import { NgxEchartsModule } from 'ngx-echarts';
     NgVar,
     NgbProgressbarModule,
     AutoResizeTextareaDirective,
-    NgxEchartsModule.forChild(),
   ],
   exports: [
     TranslationModule,
@@ -129,7 +125,6 @@ import { NgxEchartsModule } from 'ngx-echarts';
     TextCounterComponent,
     QuestionDeleteModalComponent,
     DeleteModalComponent,
-    ChartBasiclineComponent,
   ],
 })
 export class SharedModule {}
