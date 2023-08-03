@@ -243,12 +243,12 @@ export const FR = {
       },
     },
     forms: {
-      create: 'Création de programme',
-      edit: 'Éditeur de programme',
+      create: 'Créer un programme',
+      edit: 'Éditer un programme',
       questionCount: 'Nombre de questions',
       step1: {
         title: 'Informations',
-        subtitle: 'Renseignez les informations générales à propos de ce programme',
+        subtitle: 'Informations générales du programme.',
         name: 'Nom du programme',
         nameSubtitle: 'Visible par tout le monde',
         namePlaceholder: 'Onboarding',
@@ -279,7 +279,7 @@ export const FR = {
         existingSubtitle: 'Ajouter des questions déjà créées sur les tags associés.',
       },
       step3: {
-        title: 'Partage',
+        title: 'Récapitulatif',
         title2: 'Partager votre programme',
         subtitle: 'Retrouvez les options de partage à vos équipes.',
         summary: 'Récapitulatif',
