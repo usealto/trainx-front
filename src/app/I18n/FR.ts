@@ -227,17 +227,13 @@ export const FR = {
     },
     tags: {
       title: 'Tags',
-      subtitle: "Retrouvez l'ensemble des tags présents dans vos programmes et questions.",
-      createTag: 'Créer',
+      subtitle: "Retrouvez l'ensemble des tags de votre organisation.",
+      createTag: 'Créer un tag',
       table: {
-        name: 'Nom',
-        score: 'Score',
-        scoreToolTip: 'Score moyen sur ce tag depuis sa création',
-        author: 'Créé par',
-        associatedPrograms: 'Programmes associés',
-      },
-      filters: {
-        programs: 'Programmes',
+        name: 'Nom du tag',
+        score: 'Score moyen de vos équipes',
+        associatedQuestions: 'Nombre de questions associées',
+        questions: ' questions',
       },
     },
     forms: {

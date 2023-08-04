@@ -76,7 +76,7 @@ export class ProgramsComponent implements OnInit {
     { label: 'Questions', value: 'questions' },
     { label: 'Tags', value: 'tags' },
   ];
-  activeTab = this.tabData[0].value;
+  activeTab = this.tabData[2].value;
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
