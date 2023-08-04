@@ -34,7 +34,12 @@
       </div>
       <p class="mt-2 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
     </div>
-    <a type="button" class="btn btn-primary" [routerLink]="AltoRoutes.programsCreate">
+    <a
+      type="button"
+      class="btn btn-primary"
+      data-cy="createNewProgram"
+      [routerLink]="AltoRoutes.programsCreate"
+    >
       <i class="bi bi-plus-lg"></i>
       <div>
         {{ I18ns.programs.programs.createProgram }}
@@ -68,6 +73,7 @@
         [displayLabel]="'name'"
         [returnValue]="'id'"
         [placeholder]="I18ns.programs.questions.filters.programs"
+        [selectedItems]="selectedItems"
         (selectChange)="getQuestions({ programs: $event })"
       ></alto-dropdown-filter>
       <alto-dropdown-filter
@@ -77,6 +83,7 @@
         [returnValue]="'id'"
         [displayLabel]="'name'"
         [placeholder]="I18ns.programs.questions.filters.tags"
+        [selectedItems]="selectedItems"
         (selectChange)="getQuestions({ tags: $event })"
       ></alto-dropdown-filter>
       <alto-score-filter (selectChange)="getQuestions({ score: $event })"></alto-score-filter>
@@ -221,7 +228,7 @@
             </td>
             <td>{{ tag.questionsCount + I18ns.programs.tags.table.questions }}</td>
             <td class="text-end px-4">
-              <i class="fs-4 bi bi-trash3 cursor-pointer me-4"></i>
+              <i class="fs-4 bi bi-trash3 cursor-pointer me-4" (click)="deleteTag(tag)"></i>
               <i class="fs-4 bi bi-pencil cursor-pointer" (click)="openTagForm(tag)"></i>
             </td>
           </tr>

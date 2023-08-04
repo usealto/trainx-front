@@ -23,7 +23,7 @@
   border-radius: 25px;
   padding: 0 0.5rem;
   text-align: center;
-  font-weight: 600;
+  font-weight: 500;
 }
 .alto-score {
   @extend .alto-badge-no-size;
@@ -31,14 +31,14 @@
   min-width: 3.2143rem;
   line-height: 1.41667rem;
   font-weight: 600;
-  font-size: 10px;
+  font-size: 0.833rem;
 }
 .alto-badge {
   @extend .alto-badge-no-size;
-  min-height: 1.66rem;
+  min-height: 1.58rem;
   min-width: 1.58rem;
-  line-height: 1.66rem;
-  font-size: 0.833rem;
+  line-height: 1.6rem;
+  font-size: 0.857rem;
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
 }
@@ -62,21 +62,6 @@
   color: #d92d20;
   background-color: #fee4e2;
 }
-// .alto-badge-primary {
-//   @extend .alto-badge-big;
-//   color: var(--primary-600);
-//   background: radial-gradient(circle, var(--primary-100) 50%, var(--primary-50) 50%);
-// }
-// .alto-badge-warning {
-//   @extend .alto-badge-big;
-//   color: var(--orange-600);
-//   background: radial-gradient(circle, var(--orange-100) 50%, var(--orange-50) 50%);
-// }
-// .alto-badge-success {
-//   @extend .alto-badge-big;
-//   color: var(--success-600);
-//   background: radial-gradient(circle, var(--success-100) 50%, var(--success-50) 50%);
-// }
 
 .subtitles {
   color: var(--alto-text-second-color);
@@ -163,6 +148,13 @@ h2 {
   border-left: 2px solid var(--alto-medium-grey);
   min-height: 2rem;
   vertical-align: middle;
+}
+
+.cancel-btn {
+  color: var(--gray-500, #667085);
+  font-size: 1.167rem;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 // Used in modals

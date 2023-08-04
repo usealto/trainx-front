@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 import {
   CreateTeamDtoApi,
+  DeleteResponseApi,
   GetTeamsRequestParams,
   PatchTeamRequestParams,
   TeamDtoApi,
@@ -39,6 +40,10 @@ export class TeamsRestService {
 
   updateTeam(patchTeamRequestParams: PatchTeamRequestParams): Observable<TeamDtoApi | undefined> {
     return this.teamApi.patchTeam(patchTeamRequestParams).pipe(map((r) => r.data));
+  }
+
+  deleteTeam(id: string): Observable<DeleteResponseApi | undefined> {
+    return this.teamApi.deleteTeam({ id });
   }
 
   resetCache() {

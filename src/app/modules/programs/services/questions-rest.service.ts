@@ -25,6 +25,10 @@ export class QuestionsRestService {
     return this.questionApi.getQuestions(par).pipe(map((r) => r.data ?? []));
   }
 
+  getQuestionById(id: string): Observable<QuestionDtoApi | null> {
+    return this.questionApi.getQuestionById({ id }).pipe(map((r) => r.data ?? null));
+  }
+
   getQuestionsPaginated(req?: GetQuestionsRequestParams): Observable<QuestionDtoPaginatedResponseApi> {
     const par = {
       ...req,

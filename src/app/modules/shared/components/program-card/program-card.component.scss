@@ -1,10 +1,12 @@
 :host {
-  display: block;
   position: relative;
+  & > div {
+    position: relative;
+  }
 }
 
 .panel {
-  height: 16rem;
+  height: 16.5rem;
   position: relative;
   &:hover {
     border-color: #84caff;
@@ -46,7 +48,7 @@ h2 {
 }
 
 .score {
-  padding-bottom: 1rem;
+  padding-bottom: 0.5rem;
   span {
     font-size: 0.83333rem;
     font-style: normal;

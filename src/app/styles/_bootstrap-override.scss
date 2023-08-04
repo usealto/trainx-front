@@ -2,6 +2,10 @@
   padding: 0;
 }
 
+.form-control {
+  background: #fff;
+}
+
 .btn {
   --bs-btn-border-radius: 24px;
   height: 2.667rem;
@@ -111,27 +115,18 @@
 }
 .ng-select .ng-select-container {
   color: var(--gray-700);
-  border-color: var(--gray-200);
-  background-color: transparent;
+  border-color: var(--bs-border-color);
+  border-radius: 2.333rem;
 }
 .ng-select {
   display: inline-block !important;
   min-width: 12rem;
-  &.ng-select-single .ng-select-container {
-    height: 2.667rem;
+  &.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+    background-color: transparent;
   }
-  &.ng-select-multiple .ng-select-container .ng-value-container {
-    .ng-placeholder {
-      top: 8px;
-    }
-    .ng-value {
-      background-color: transparent;
-    }
-  }
-
   .ng-arrow-wrapper {
     width: 30px;
-    height: 1.333rem;
+    height: 24px;
     transition: transform 0.3s;
     cursor: pointer;
     .ng-arrow {
@@ -148,25 +143,23 @@
     .ng-arrow {
       border-color: var(--alto-text-color2);
       border-width: 0 0 0.1rem 0.1rem;
-      margin: 0.6rem 0 0 0;
+      margin: 0.9rem 0 0 0;
     }
   }
   &.ng-select-opened.ng-select-bottom > .ng-select-container,
   &.ng-select-opened.ng-select-top > .ng-select-container {
-    border-radius: 28px;
-    color: var(--gray-700);
-    border-color: var(--gray-200);
-    background-color: transparent;
+    border-color: var(--bs-border-color);
+    border-radius: 3rem;
   }
   .ng-select-container {
     border-radius: 28px;
-    font-weight: 600;
-    font-size: 0.833rem;
-    min-height: 2.667rem;
+    font-weight: 400;
+    font-size: 1rem;
+    min-height: 2.833rem;
     color: var(--alto-text-color2);
     padding-inline-start: 0.5rem;
     .ng-value-container .ng-placeholder {
-      color: var(--alto-text-color2);
+      color: var(--alto-blue-second);
     }
   }
   .ng-dropdown-panel {

@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { combineLatest, switchMap, tap } from 'rxjs';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UsersService } from 'src/app/modules/profile/services/users.service';
+import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
@@ -14,16 +9,23 @@ import {
   TeamStatsDtoApi,
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { environment } from 'src/environments/environment';
-import { TeamFormComponent } from '../team-form/team-form.component';
-import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
+import { combineLatest, switchMap, tap } from 'rxjs';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
+import { UserFilters } from 'src/app/modules/profile/models/user.model';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
+import { UsersService } from 'src/app/modules/profile/services/users.service';
+import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
 import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { UserFilters } from 'src/app/modules/profile/models/user.model';
-import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { environment } from 'src/environments/environment';
+import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
+import { TeamFormComponent } from '../team-form/team-form.component';
+import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
 
 interface TeamDisplay extends TeamDtoApi {
   score?: number;
@@ -39,6 +41,7 @@ interface UserDisplay extends UserDtoApi {
   selector: 'alto-lead-team',
   templateUrl: './lead-team.component.html',
   styleUrls: ['./lead-team.component.scss'],
+  providers: [ReplaceInTranslationPipe],
 })
 export class LeadTeamComponent implements OnInit {
   EmojiName = EmojiName;
@@ -70,6 +73,8 @@ export class LeadTeamComponent implements OnInit {
     private readonly profileStore: ProfileStore,
     private readonly scoreRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
+    private modalService: NgbModal,
+    private replaceInTranslationPipe: ReplaceInTranslationPipe,
   ) {}
 
   ngOnInit(): void {
@@ -182,6 +187,31 @@ export class LeadTeamComponent implements OnInit {
 
     canvasRef.componentInstance.team = team;
     canvasRef.componentInstance.teamChanged.pipe(tap(() => this.loadData())).subscribe();
+  }
+
+  deleteTeam(team: TeamDtoApi) {
+    const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
+
+    const componentInstance = modalRef.componentInstance as DeleteModalComponent;
+    componentInstance.data = {
+      title: this.replaceInTranslationPipe.transform(I18ns.leadTeam.teams.deleteModal.title, team.longName),
+      subtitle: this.replaceInTranslationPipe.transform(
+        I18ns.leadTeam.teams.deleteModal.subtitle,
+        this.getTeamUsersCount(team.id),
+      ),
+    };
+
+    componentInstance.objectDeleted
+      .pipe(
+        switchMap(() => this.teamsRestService.deleteTeam(team.id)),
+        tap(() => {
+          this.teamsRestService.resetCache();
+          this.loadData();
+          modalRef.close();
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
   }
 
   openUserEditionForm(user: UserDtoApi) {

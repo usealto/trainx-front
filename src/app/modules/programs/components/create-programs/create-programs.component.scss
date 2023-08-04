@@ -19,6 +19,44 @@ h1 {
   margin-bottom: 4rem;
 }
 
+.questions-panel {
+  padding: 0;
+  & > div {
+    padding: 1.333rem 2rem;
+    margin: 0;
+  }
+  & .row {
+    border-top: 1px solid var(--gray-200);
+  }
+  .form-switch {
+    margin: 0;
+  }
+}
+
+.recap-panel-header {
+  padding: 1.333rem 2rem;
+  background-color: var(--gray-50);
+  border-radius: 0.667rem 0.667rem 0 0;
+  h2 {
+    margin: 0;
+  }
+}
+.recap-panel {
+  border-radius: 0 0 0.667rem 0.667rem;
+  border-top: 0;
+  padding: 2rem;
+  font-weight: 600;
+
+  .emoji {
+    height: 1.667rem;
+    margin-right: 0.667rem;
+  }
+
+  .bi {
+    color: var(--gray-900);
+  }
+}
+
 .form-nav {
   border-bottom: 1px solid var(--gray-200);
   .step {

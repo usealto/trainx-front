@@ -80,8 +80,8 @@ export const FR = {
   },
   leadHome: {
     title: 'Bonjour ',
-    subtitle: "Retrouvez une vue d'ensemble sur votre training.",
-    comments: ['Aucun commentaire', '{{}} commentaire', '{{}} commentaires'],
+    subtitle: "Découvrez une vue d'ensemble sur l'avancée de vos équipes.",
+    comments: ['{{}} commentaire', '{{}} commentaires'],
     awaiting: 'en attente',
     subtitleComment: [
       'Vous avez traité toutes les commentaires écrits par vos collaborateurs.',
@@ -251,34 +251,40 @@ export const FR = {
         descriptionPlaceholder:
           "Le programme d'onboarding vise à entraîner les nouveaux arrivants avec les notions fondamentales à connaître au sein de l'entreprise.",
         tags: 'Tags',
-        tagsSubtitle: 'Les sujets abordés dans le programme',
+        tagsSubtitle: 'Ciblez les sujets abordés dans le programme.',
         tagsPlaceholder: 'Rechercher dans vos tags',
         teams: 'Équipes',
-        teamsSubtitle: 'Les utilisateurs qui seront assignés à ce programme',
+        teamsSubtitle: 'Assignez les équipes concernées par ce programme.',
         teamsPlaceholder: 'Rechercher dans vos équipes',
         priority: 'Priorité',
-        prioritySubtitle: '',
+        prioritySubtitle: "Déterminez l'importance du programme en associant un niveau de priorité.",
         priorityPlaceholder: 'Choisir un niveau',
         expectation: 'Score attendu',
-        expectationSubtitle: '',
+        expectationSubtitle: 'Déterminez le score que vos équipes sont censées atteindre à ce programme.',
       },
       step2: {
         title: 'Questions',
-        subtitle: 'Renseignez les informations de ce programme',
-        new: 'Nouvelle question',
-        newSubtitle: 'Créer une nouvelle question qui sera automatiquement associée à ce programme.',
-        newText: 'Cliquer ici pour créer une nouvelle question.',
-        newText2: 'Elle sera automatiquement associée à ce programme.',
-        existing: 'Questions existantes',
-        existingSubtitle: 'Ajouter des questions déjà créées sur les tags associés.',
+        subtitle:
+          'Questions qui seront présentes dans le programme et auxquelles vos collaborateurs devront répondre.',
+        new: 'Créer une nouvelle question',
+        newSubtitle: "Aucune question n'a été ajoutée pour l'instant. Vous pouvez :",
+        or: 'OU',
+        existing: 'Choisir des questions à associer à ce programme :',
       },
       step3: {
         title: 'Récapitulatif',
-        title2: 'Partager votre programme',
-        subtitle: 'Retrouvez les options de partage à vos équipes.',
+        title2: 'Récapitulatif du programme',
+        subtitle:
+          'Récapitulatif des informations essentielles du programme avant de le partager à vos équipes.',
         summary: 'Récapitulatif',
         summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
       },
+    },
+    delete: {
+      btn: 'Supprimer le programme',
+      title: 'Supprimer le programme "{{}}"',
+      subtitle:
+        'Ce programme est assigné à {{}} équipes, êtes-vous sûrs de vouloir le supprimer ? Cette action est irreversible.',
     },
   },
   statistics: {
@@ -418,6 +424,11 @@ export const FR = {
       questionsPlaceholder: 'Rechercher dans vos questions',
       description: 'Description',
     },
+    deleteModal: {
+      title: 'Supprimer le tag "{{}}"',
+      subtitle:
+        'Ce tag est associé à {{}} questions. Êtes-vous sûrs de vouloir le supprimer ? Cette action est irreversible.',
+    },
   },
   leadTeam: {
     title: 'Équipes et membres',
@@ -506,6 +517,11 @@ export const FR = {
         Programs: 'Programmes',
         programsPlaceholder: 'Rechercher dans vos programmes',
         ProgramsSubtitle: 'Sélectionner les programmes auxquels cette équipe doit être assignée.',
+      },
+      deleteModal: {
+        title: 'Supprimer l\'équipe "{{}}"',
+        subtitle:
+          'Cette équipe contient {{}} membres, êtes-vous sûr de vouloir la supprimer ? Cette action est irréversible.',
       },
     },
   },
