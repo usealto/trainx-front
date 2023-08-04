@@ -106,7 +106,8 @@ export class LeadHomeComponent implements OnInit {
       .pipe(
         tap(([comments, questions, challenges]) => {
           this.commentsCount = comments.length;
-          this.questionsCount = questions.length;
+          // this.questionsCount = questions.length;
+          this.questionsCount = 0;
           this.challengesByTeam = challenges
             .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByTeam)
             .slice(0, 5);
