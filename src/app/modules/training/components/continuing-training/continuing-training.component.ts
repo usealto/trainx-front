@@ -22,9 +22,9 @@ export class ContinuingTrainingComponent implements OnInit {
   //
   guessesCount = 0;
   avgScore = 0;
-  previousAvgScore = 0;
+  avgScoreProgression = 0;
   regularity = 0;
-  previousRegularity = 0;
+  regularityProgression = 0;
   streak = 0;
   longestStreak = 0;
 
@@ -53,12 +53,14 @@ export class ContinuingTrainingComponent implements OnInit {
       .pipe(
         tap(([userScore, previousSCore, guesses, previousGuesses]) => {
           this.regularity = this.getParticipationDays(guesses.data) / (this.daysInPeriod * this.threshold);
-          this.previousRegularity =
+          const previousRegularity =
             this.getParticipationDays(previousGuesses.data) / (this.daysInPeriod * this.threshold);
+          this.regularityProgression = this.regularity - previousRegularity;
 
           this.avgScore = userScore.find((u) => u.id === this.profileStore.user.value.id)?.score ?? 0;
-          this.previousAvgScore =
+          const previousAvgScore =
             previousSCore.find((u) => u.id === this.profileStore.user.value.id)?.score ?? 0;
+          this.avgScoreProgression = this.avgScore - previousAvgScore;
 
           this.streak = this.profileStore.user.value.currentStreak.count;
           this.longestStreak = this.profileStore.user.value.longestStreak.count;

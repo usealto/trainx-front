@@ -3,6 +3,7 @@ describe('Lead Programs', () => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
     cy.visit('/');
   });
+
   it('Access Lead Programs Page', function () {
     cy.get('[ng-reflect-router-link="l/programs"]').click();
     cy.get('h1').should('have.text', 'Programmes');
@@ -22,23 +23,23 @@ describe('Lead Programs', () => {
         text,
       );
     });
+  });
 
-    it('Search Programs by description', function () {
-      cy.get('[ng-reflect-router-link="l/programs"]').click();
-      cy.wait(500);
-      cy.get(':nth-child(2) > alto-program-card > :nth-child(1) > .panel').click();
-      cy.wait(500);
+  it('Search Programs by description', function () {
+    cy.get('[ng-reflect-router-link="l/programs"]').click();
+    cy.wait(500);
+    cy.get(':nth-child(2) > alto-program-card > :nth-child(1) > .panel').click();
+    cy.wait(500);
 
-      cy.get('[data-cy="descriptionField"]')
-        .invoke('val')
-        .then((data) => {
-          const text = (data as string).slice(0, 10);
-          cy.get('.mb-6 > .text-end > .btn-outline-secondary').click();
-          cy.get('.d-inline-block > .search-group > .form-control').type(text).wait(500);
-          cy.get(':nth-child(1) > alto-program-card > :nth-child(1) > .panel').click();
-          cy.get('[data-cy="descriptionField"]').should('contain.value', text);
-        });
-    });
+    cy.get('[data-cy="descriptionField"]')
+      .invoke('val')
+      .then((data) => {
+        const text = (data as string).slice(0, 10);
+        cy.get('.mb-6 > .text-end > .btn-outline-secondary').click();
+        cy.get('.d-inline-block > .search-group > .form-control').type(text).wait(500);
+        cy.get(':nth-child(1) > alto-program-card > :nth-child(1) > .panel').click();
+        cy.get('[data-cy="descriptionField"]').should('contain.value', text);
+      });
   });
 
   it('filter programs by team', function () {

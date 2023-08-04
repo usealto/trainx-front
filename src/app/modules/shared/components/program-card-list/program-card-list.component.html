@@ -22,6 +22,7 @@
     <div class="row mb-5" *ngSwitchCase="'program'">
       <div class="col-5">
         <alto-search
+          data-cy="programSearch"
           class="d-inline-block program-search"
           (searchChange)="filterPrograms({ search: $event })"
         ></alto-search>
