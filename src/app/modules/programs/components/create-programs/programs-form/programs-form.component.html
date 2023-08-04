@@ -9,6 +9,7 @@
     </div>
     <div class="col-right">
       <input
+        data-cy="programName"
         type="text"
         class="form-control"
         formControlName="name"
@@ -27,6 +28,7 @@
     </div>
     <div class="col-right">
       <ng-select
+        data-cy="programTags"
         class="alto-form"
         required
         [items]="tags"
@@ -98,6 +100,7 @@
     </div>
     <div class="col-right">
       <ng-select
+        data-cy="programPriority"
         class="alto-form"
         [items]="priorities"
         bindLabel="value"

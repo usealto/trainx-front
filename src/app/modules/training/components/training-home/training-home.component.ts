@@ -52,7 +52,9 @@ export class TrainingHomeComponent implements OnInit {
   allPrograms?: TrainingCardData[];
   allProgramsFiltered?: TrainingCardData[];
   user = this.userStore.user.value;
-  selectedItems: any[] = [];
+  selectedItems: TrainingCardData[] = [];
+  disabledCountScore?: number;
+  disabledCountProgress?: number;
 
   constructor(
     private readonly programRunsRestService: ProgramRunsRestService,
@@ -67,6 +69,8 @@ export class TrainingHomeComponent implements OnInit {
       .pipe(
         tap((a) => {
           this.allPrograms = this.allProgramsFiltered = a;
+          this.disabledCountScore = a.filter((r) => !r.isProgress).length;
+          this.disabledCountProgress = a.filter((r) => r.isProgress).length;
           this.onGoingPrograms = this.onGoingProgramsDisplay = a.filter((r) => r.isProgress && r.duration);
           this.startedProgramsCount = this.onGoingPrograms.filter((p) => !!p.programRunId).length;
           this.improveScorePrograms = a.filter((r) => !r.isProgress && r.score < r.expectation);

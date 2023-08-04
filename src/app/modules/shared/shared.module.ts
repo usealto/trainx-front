@@ -19,6 +19,7 @@ import { UtilsPipeModule } from 'src/app/core/utils/pipe/utils-pipe.module';
 import { AnchorNavigatorComponent } from './components/anchor-navigator/anchor-navigator.component';
 import { ButtonGroupComponent } from './components/button-group/button-group.component';
 import { ColoredPillListComponent } from './components/colored-pill/colored-pill.component';
+import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
 import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-filter.component';
 import { IconBadgeComponent } from './components/icon-badge/icon-badge.component';
 import { ImgBadgeListComponent } from './components/img-badge-list/img-badge-list.component';
@@ -71,6 +72,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     QuestionDeleteModalComponent,
     TopFlopComponent,
     IconBadgeComponent,
+    DeleteModalComponent,
   ],
   imports: [
     CommonModule,
@@ -131,6 +133,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     QuestionDeleteModalComponent,
     EmojiPipe,
     TopFlopComponent,
+    DeleteModalComponent,
   ],
 })
 export class SharedModule {}

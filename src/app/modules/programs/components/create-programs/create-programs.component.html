@@ -50,14 +50,15 @@
         <a class="cancel-btn" (click)="cancel()">
           {{ I18ns.shared.cancel }}
         </a>
-        <a class="cursor-pointer" [ngClass]="{ invisible: true }" (click)="delete()">
-          <i class="bi bi-trash"></i> {{ I18ns.shared.delete }}
+        <a data-cy="deleteProgram" class="cursor-pointer" *ngIf="isEdit" (click)="delete()">
+          <i class="bi bi-trash"></i> {{ I18ns.programs.delete.btn }}
         </a>
       </div>
       <div class="col-6 text-end">
         <button
           class="btn btn-primary fs-5"
           (click)="goNext()"
+          data-cy="programCreateNext"
           [disabled]="programForm && !programForm.valid"
         >
           {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
@@ -204,8 +205,7 @@
           {{ I18ns.programs.forms.questionCount }}
         </div>
         <div class="col-7 p-0 text-end">
-          <span class="alto-badge">{{ getquestionsCount() }}</span>
-
+          <span data-cy="questionCount" class="alto-badge">{{ this.editedProgram?.questionsCount }}</span>
           <span class="ms-3 alto-badge cursor-pointer" (click)="changeTab(2)">
             <i class="bi bi-pen"></i>
           </span>

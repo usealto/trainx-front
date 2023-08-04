@@ -54,7 +54,6 @@ describe('Lead Questions', () => {
     cy.get('.ng-dropdown-header > input').type('romain{enter}');
 
     cy.get('[data-cy="questionsTableContributorCol"]').should('have.text', 'Ajoutée par');
-    /* ==== Generated with Cypress Studio ==== */
     cy.get(
       '.questions > .table-panel > .table > tbody > :nth-child(1) > .text-center > alto-img-badge > img',
     ).should(
@@ -62,7 +61,6 @@ describe('Lead Questions', () => {
       'src',
       'https://s.gravatar.com/avatar/0989ee1d5d2827fad81a7082283ed8b6?s=32&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fro.png',
     );
-    /* ==== End Cypress Studio ==== */
   });
 
   it('search questions by word', () => {
