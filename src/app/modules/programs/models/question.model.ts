@@ -6,6 +6,6 @@ export interface QuestionDisplay {
 export interface QuestionFilters {
   programs?: string[];
   tags?: string[];
-  contributors?: string[];
+  score?: string;
   search?: string;
 }

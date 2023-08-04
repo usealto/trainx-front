@@ -51,8 +51,7 @@ export class ProgramsComponent implements OnInit {
   questionsPageSize = 10;
   isQuestionsLoading = true;
   questionsScore = new Map<string, number>();
-  questionFilters: QuestionFilters = { programs: [], tags: [], contributors: [], search: '' };
-  contributors: { id: string; fullname: string }[] = [];
+  questionFilters: QuestionFilters = { programs: [], tags: [], score: '', search: '' };
   //
   userCache = new Map<string, UserDtoApi>();
   pillsRowDisplayLimit = 3;
@@ -98,10 +97,6 @@ export class ProgramsComponent implements OnInit {
     this.getQuestions();
     this.getSubmittedQuestions();
     this.getTags();
-    this.contributors = this.profileStore.users.value.map((u) => ({
-      id: u.id,
-      fullname: u.firstname + ' ' + u.lastname,
-    }));
   }
 
   handleTabChange(value: any) {
@@ -158,7 +153,7 @@ export class ProgramsComponent implements OnInit {
     {
       programs = this.questionFilters.programs,
       tags = this.questionFilters.tags,
-      contributors = this.questionFilters.contributors,
+      score = this.questionFilters.score,
       search = this.questionFilters.search,
     }: QuestionFilters = this.questionFilters,
   ) {
@@ -166,7 +161,7 @@ export class ProgramsComponent implements OnInit {
 
     this.questionFilters.programs = programs;
     this.questionFilters.tags = tags;
-    this.questionFilters.contributors = contributors;
+    this.questionFilters.score = score;
     this.questionFilters.search = search;
 
     this.questionsService
@@ -175,7 +170,6 @@ export class ProgramsComponent implements OnInit {
         itemsPerPage: this.questionsPageSize,
         programIds: programs?.join(','),
         tagIds: tags?.join(','),
-        createdBy: contributors?.length ? contributors?.join(',') : undefined,
         search,
       })
       .pipe(
@@ -188,10 +182,23 @@ export class ProgramsComponent implements OnInit {
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
         map((ids) => this.getUsersfromIds(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
-        tap(() => (this.isQuestionsLoading = false)),
+        tap(() => {
+          if (this.questionFilters.score) {
+            this.filterByScore();
+          }
+          this.isQuestionsLoading = false;
+        }),
         untilDestroyed(this),
       )
       .subscribe();
+  }
+
+  filterByScore() {
+    this.questions.forEach((q) => {
+      const score = this.getQuestionScore(q.id);
+      // TODO WHEN FILTERS ARE AVAILABLE ON STATS ROUTES
+    })
+    return;
   }
 
   getUsersfromIds(ids: string[]): UserDtoApi[] {
