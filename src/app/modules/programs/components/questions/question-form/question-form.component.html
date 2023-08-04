@@ -1,22 +1,17 @@
-<div class="text-end pt-3 px-4">
-  <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
-</div>
-<div class="row m-6 g-0">
-  <div class="col-2" style="width: 2.857rem">
-    <i class="alto-badge-big alto-badge-blue me-4 bi bi-question-circle"></i>
-  </div>
+<button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
+<div class="mx-6 my-4 g-0">
+  <alto-icon-badge size="4rem" class="me-4"></alto-icon-badge>
 
-  <div class="col ms-4">
-    <h2>
-      {{
-        isSubmitted
-          ? I18ns.questions.form.title.submitted
-          : isEdit
-          ? I18ns.questions.form.title.edit
-          : I18ns.questions.form.title.create
-      }}
-    </h2>
-    <p class="alto-grey">
+  <h2 class="d-inline-block">
+    {{
+      isSubmitted
+        ? I18ns.questions.form.title.submitted
+        : isEdit
+        ? I18ns.questions.form.title.edit
+        : I18ns.questions.form.title.create
+    }}
+  </h2>
+  <!-- <p class="alto-grey">
       {{
         isSubmitted
           ? question?.createdByUser?.firstname +
@@ -25,8 +20,7 @@
             I18ns.questions.form.subtitle.submitted
           : I18ns.questions.form.subtitle.question
       }}
-    </p>
-  </div>
+    </p> -->
 </div>
 <hr class="mb-0" />
 
