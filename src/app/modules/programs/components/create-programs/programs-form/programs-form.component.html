@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-left">
       <img class="emoji" [src]="EmojiName.PageFacingUp | emoji" />
-      <div class="d-inline-block">
+      <div>
         <label class="form-label required">{{ I18ns.programs.forms.step1.name }}</label>
         <p class="">{{ I18ns.programs.forms.step1.nameSubtitle }}</p>
       </div>
@@ -20,7 +20,7 @@
   <div *ngIf="!isEdit" class="row">
     <div class="col-left">
       <img class="emoji" [src]="EmojiName.Label | emoji" />
-      <div class="d-inline-block">
+      <div>
         <label class="form-label required">{{ I18ns.programs.forms.step1.tags }}</label>
         <p>{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
       </div>
@@ -54,11 +54,14 @@
   </div>
   <hr />
   <div class="row">
-    <div class="col-4">
-      <label class="form-label">{{ I18ns.programs.forms.step1.teams }}</label>
-      <p>{{ I18ns.programs.forms.step1.teamsSubtitle }}</p>
+    <div class="col-left">
+      <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
+      <div>
+        <label class="form-label">{{ I18ns.programs.forms.step1.teams }}</label>
+        <p>{{ I18ns.programs.forms.step1.teamsSubtitle }}</p>
+      </div>
     </div>
-    <div class="col-6">
+    <div class="col-right">
       <ng-select
         class="alto-form"
         [items]="teams"
@@ -86,11 +89,14 @@
   </div>
   <hr />
   <div class="row">
-    <div class="col-4">
-      <label class="form-label required">{{ I18ns.programs.forms.step1.priority }}</label>
-      <p>{{ I18ns.programs.forms.step1.prioritySubtitle }}</p>
+    <div class="col-left">
+      <img class="emoji" [src]="EmojiName.Warning | emoji" />
+      <div>
+        <label class="form-label required">{{ I18ns.programs.forms.step1.priority }}</label>
+        <p>{{ I18ns.programs.forms.step1.prioritySubtitle }}</p>
+      </div>
     </div>
-    <div class="col-6">
+    <div class="col-right">
       <ng-select
         class="alto-form"
         [items]="priorities"
@@ -106,11 +112,15 @@
   </div>
   <hr />
   <div class="row">
-    <div class="col-4">
-      <label class="form-label required">{{ I18ns.programs.forms.step1.expectation }}</label>
-      <p>{{ I18ns.programs.forms.step1.expectationSubtitle }}</p>
+    <div class="col-left">
+      <img class="emoji" [src]="EmojiName.SportsMedal | emoji" />
+
+      <div>
+        <label class="form-label required">{{ I18ns.programs.forms.step1.expectation }}</label>
+        <p>{{ I18ns.programs.forms.step1.expectationSubtitle }}</p>
+      </div>
     </div>
-    <div class="col-6">
+    <div class="col-right">
       <input type="range" class="form-range" min="1" max="100" formControlName="expectation" />
       <p class="text-center">{{ form.controls.expectation.value }}%</p>
     </div>

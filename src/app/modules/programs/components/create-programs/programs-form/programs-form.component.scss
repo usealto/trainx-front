@@ -17,6 +17,10 @@ hr {
 }
 .col-left {
   width: 25.667rem;
+  & div {
+    width: 22rem;
+    display: inline-block;
+  }
 }
 .col-right {
   max-width: 42.667rem;
@@ -24,4 +28,5 @@ hr {
 
 input[type='text'] {
   height: 3.167rem;
+  padding: 0.667rem 1rem;
 }

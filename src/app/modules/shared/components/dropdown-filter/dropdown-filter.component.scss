@@ -8,6 +8,11 @@
     right: 0;
     left: auto;
   }
+  .ng-select .ng-select-container {
+    background-color: transparent;
+    font-weight: 600;
+    font-size: 0.833rem;
+  }
 }
 .alto-badge {
   background-color: var(--bs-primary);
