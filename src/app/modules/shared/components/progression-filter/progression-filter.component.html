@@ -1,9 +1,11 @@
 <alto-dropdown-filter
+  [disabled]="disabled"
   class="d-inline-block me-3"
   displayLabel="name"
   returnValue="name"
   [data]="progressionFilters"
   [multiple]="false"
   [placeholder]="I18ns.leadHome.ongoingPrograms.progress"
+  [selectedItems]="selectedItems"
   (selectChange)="selectChange.emit($event)"
 ></alto-dropdown-filter>

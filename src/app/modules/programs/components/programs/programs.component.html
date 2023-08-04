@@ -27,7 +27,12 @@
 <!-- PROGRAMS -->
 <div class="border-bottom">
   <div>
-    <a type="button" class="btn btn-primary float-end" [routerLink]="AltoRoutes.programsCreate">
+    <a
+      data-cy="createNewProgram"
+      type="button"
+      class="btn btn-primary float-end"
+      [routerLink]="AltoRoutes.programsCreate"
+    >
       <i class="bi bi-plus-lg"></i> {{ I18ns.programs.programs.createProgram }}
     </a>
     <h2 id="programsAnchor" class="mt-6">{{ I18ns.programs.programs.title }}</h2>
@@ -57,6 +62,7 @@
         [displayLabel]="'name'"
         [returnValue]="'id'"
         [placeholder]="I18ns.programs.questions.filters.programs"
+        [selectedItems]="selectedItems"
         (selectChange)="getQuestions({ programs: $event })"
       ></alto-dropdown-filter>
       <alto-dropdown-filter
@@ -66,6 +72,7 @@
         [returnValue]="'id'"
         [displayLabel]="'name'"
         [placeholder]="I18ns.programs.questions.filters.tags"
+        [selectedItems]="selectedItems"
         (selectChange)="getQuestions({ tags: $event })"
       ></alto-dropdown-filter>
       <alto-dropdown-filter
@@ -75,6 +82,7 @@
         [returnValue]="'id'"
         [displayLabel]="'fullname'"
         [placeholder]="I18ns.programs.questions.filters.contributors"
+        [selectedItems]="selectedItems"
         (selectChange)="getQuestions({ contributors: $event })"
       ></alto-dropdown-filter>
     </div>
@@ -85,21 +93,7 @@
       ></alto-search>
     </div>
   </div>
-  <!-- <div *ngIf="!questionsCount">
-    <div class="panel text-center p-6 mb-4">
-      <i class="alto-badge-big fs-5 alto-badge-blue bi bi-chat"></i>
-      <h2 class="my-4">{{ I18ns.programs.questions.placeholder.noQuestion }}</h2>
-      <p class="alto-grey mb-4">{{ I18ns.programs.questions.placeholder.noQuestionSubtitle }}</p>
-      <button class="btn btn-outline-secondary me-2">
-        <i class="bi bi-cloud-upload"></i>
-        {{ I18ns.programs.questions.placeholder.importQuestionPlaceholder }}
-      </button>
-      <button type="button" class="btn btn-primary ms-2" (click)="openQuestionForm()">
-        <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.placeholder.createQuestionPlaceholder }}
-      </button>
-    </div>
-  </div> -->
-  <ng-container *ngIf="questionsCount > 0; else noQuestions">
+  <ng-container *ngIf="questionsCount! > 0; else noQuestions">
     <div class="table-panel">
       <table class="table">
         <thead>
@@ -159,29 +153,45 @@
         </tbody>
       </table>
 
-      <!-- <alto-pagination
+      <alto-pagination
         class="mx-4 d-block"
-        [collectionSize]="questionsCount"
+        [collectionSize]="questionsCount ?? 0"
         [(page)]="questionsPage"
         (pageChange)="changeQuestionsPage($event)"
         [pageSize]="questionsPageSize"
         [maxSize]="10"
         aria-label="Default pagination"
-      ></alto-pagination> -->
+      ></alto-pagination>
     </div>
   </ng-container>
   <ng-template #noQuestions>
-    <div class="panel text-center p-6 mb-4">
-      <i class="alto-badge-big fs-5 bi bi-search"></i>
-      <h2 class="my-4">{{ I18ns.programs.questions.placeholder.noData }}</h2>
-      <p class="alto-grey mb-4">{{ I18ns.programs.questions.placeholder.noDataSubtitle }}</p>
-      <button class="btn btn-outline-secondary me-2" (click)="resetFilters()">
-        <i class="bi bi-arrow-repeat"></i>
-        {{ I18ns.training.donePrograms.resetFilters }}
-      </button>
-      <button type="button" class="btn btn-primary ms-2" (click)="openQuestionForm()">
-        <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.placeholder.createQuestionPlaceholder }}
-      </button>
+    <div *ngIf="questionsCount === undefined">
+      <div class="panel text-center p-6 mb-4">
+        <i class="alto-badge-big fs-5 alto-badge-blue bi bi-chat"></i>
+        <h2 class="my-4">{{ I18ns.programs.questions.placeholder.noQuestion }}</h2>
+        <p class="alto-grey mb-4">{{ I18ns.programs.questions.placeholder.noQuestionSubtitle }}</p>
+        <button class="btn btn-outline-secondary me-2">
+          <i class="bi bi-cloud-upload"></i>
+          {{ I18ns.programs.questions.placeholder.importQuestionPlaceholder }}
+        </button>
+        <button type="button" class="btn btn-primary ms-2" (click)="openQuestionForm()">
+          <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.placeholder.createQuestionPlaceholder }}
+        </button>
+      </div>
+    </div>
+    <div *ngIf="questionsCount === 0">
+      <div class="panel text-center p-6 mb-4">
+        <i class="alto-badge-big fs-5 bi bi-search"></i>
+        <h2 class="my-4">{{ I18ns.programs.questions.placeholder.noData }}</h2>
+        <p class="alto-grey mb-4">{{ I18ns.programs.questions.placeholder.noDataSubtitle }}</p>
+        <button class="btn btn-outline-secondary me-2" (click)="resetFilters()">
+          <i class="bi bi-arrow-repeat"></i>
+          {{ I18ns.training.donePrograms.resetFilters }}
+        </button>
+        <button type="button" class="btn btn-primary ms-2" (click)="openQuestionForm()">
+          <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.placeholder.createQuestionPlaceholder }}
+        </button>
+      </div>
     </div>
   </ng-template>
 </div>
@@ -245,14 +255,20 @@
 
   <div class="row mb-4">
     <div class="col-8">
-      <!-- <alto-dropdown-filter
+      <alto-dropdown-filter
         class="me-3"
-        [data]="programsStore.programs.value"
-        [displayLabel]="'name'"
+        data-cy="tagsContributorFilter"
+        [data]="contributors"
         [returnValue]="'id'"
-        [placeholder]="I18ns.programs.tags.filters.programs"
-        (selectChange)="filterTags({ programs: $event })"
-      ></alto-dropdown-filter> -->
+        [displayLabel]="'fullname'"
+        [placeholder]="I18ns.programs.questions.filters.contributors"
+        (selectChange)="filterTags({ contributors: $event })"
+      ></alto-dropdown-filter>
+
+      <alto-score-filter
+        data-cy="filterByScore"
+        (selectChange)="filterTags({ score: $event })"
+      ></alto-score-filter>
     </div>
     <div class="col-4 text-end">
       <alto-search (searchChange)="filterTags({ search: $event })"></alto-search>
@@ -264,15 +280,11 @@
         <thead>
           <tr>
             <th scope="col" class="w-30">{{ I18ns.programs.tags.table.name }}</th>
-            <th scope="col" class="w-25">
-              {{ I18ns.programs.tags.table.score
-              }}<i
-                class="bi bi-question-circle ms-2"
-                ngbTooltip="{{ I18ns.programs.tags.table.scoreToolTip }}"
-              ></i>
-            </th>
+            <th scope="col" class="w-25">{{ I18ns.programs.tags.table.score }}</th>
+            <th scope="col" class="w-30">{{ I18ns.programs.tags.table.associatedQuestions }}</th>
             <th class="text-center" scope="col">{{ I18ns.programs.tags.table.author }}</th>
-            <th class="w-5"></th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody *ngIf="!isTagsLoading">
@@ -283,8 +295,16 @@
                 {{ getTagScore(tag.id) | percent }}
               </span>
             </td>
+            <td>
+              <span class="alto-badge">
+                {{ tag.questionsCount }} {{ I18ns.programs.tags.table.questions }}
+              </span>
+            </td>
             <td class="w-10 text-center">
               <alto-img-badge [user]="getUser(tag.createdBy)"></alto-img-badge>
+            </td>
+            <td class="cursor-pointer px-3" (click)="deleteTag(tag)">
+              <i class="fs-5 bi bi-trash3 float-end"></i>
             </td>
             <td class="cursor-pointer px-3" (click)="openTagForm(tag)">
               <i class="fs-5 bi bi-pen cursor-pointer float-end me-4"></i>

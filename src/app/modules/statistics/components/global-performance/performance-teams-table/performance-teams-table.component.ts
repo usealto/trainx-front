@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { StatsDtoApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
+import { TeamStatsDtoApi, TeamStatsProgramDtoApi, TeamStatsTagDtoApi } from '@usealto/sdk-ts-angular';
 import { switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -35,8 +35,8 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   paginatedTeams: TeamStatsDtoApi[] = [];
   teamsPage = 1;
   teamsPageSize = 10;
-  programs: StatsDtoApi[] = [];
-  tags: StatsDtoApi[] = [];
+  programs: TeamStatsProgramDtoApi[] = [];
+  tags: TeamStatsTagDtoApi[] = [];
   scoreIsLoading = false;
 
   constructor(
@@ -115,6 +115,6 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   @memoize()
   getTeamPreviousScore(team: TeamStatsDtoApi) {
     const prevScore = this.teamsPreviousPeriod.filter((t) => t.id === team.id)[0]?.score || 0;
-    return prevScore === 0 ? 0 : ((team.score || 0) - prevScore) / prevScore;
+    return prevScore && team.score ? team.score - prevScore : 0;
   }
 }

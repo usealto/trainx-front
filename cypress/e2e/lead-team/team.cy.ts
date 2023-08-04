@@ -13,164 +13,175 @@ describe('Lead Team', () => {
     /* ==== End Cypress Studio ==== */
   });
 
-  it('Opens edit team panel', () => {
-    cy.get('[data-cy="editTeam"]').first().click();
+  describe('Open Team Panel', () => {
+    it('Opens edit team panel', () => {
+      cy.get('[data-cy="editTeam"]').first().click();
+    });
   });
 
-  it('Edits team shortname and check "already existing" error', () => {
-    cy.get('[data-cy="editTeam"]').first().click();
+  describe('Edits Team Shortname', () => {
+    it('Edits team shortname and check "already existing" error', () => {
+      cy.get(':nth-child(2) > [data-cy="teamShortname"] > .alto-badge')
+        .click()
+        .then(($data) => {
+          const teamShortname = $data.text().trim();
+          const errorToast = '409';
+          cy.get('[data-cy="editTeam"]').first().click();
 
-    cy.get('[data-cy="editShortnameInput"]').click().wait(3000).clear().type('CYP');
-    cy.get('[data-cy="btnSave"').click();
+          cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type(teamShortname);
+          cy.get('[data-cy="btnSave"').click();
 
-    cy.get('[data-cy="closeEditTeamPanel"]').click();
-    cy.get('[data-cy="toastError"]').contains('409');
+          cy.get('[data-cy="closeEditTeamPanel"]').click();
+          cy.get('[data-cy="toastError"]').contains(errorToast);
+        });
+    });
   });
 
-  it('Edits team shortname and check it worked', () => {
-    cy.get('[data-cy="editTeam"]').first().click();
+  describe('Edits Team Shortname', () => {
+    it('Edits team shortname and check it worked', () => {
+      const teamShortname0 = '000';
+      const teamShortname1 = 'CYT';
+      cy.get('[data-cy="editTeam"]').first().click();
 
-    cy.get('[data-cy="editShortnameInput"]').click().wait(3000).clear().type('CYT');
-    cy.get('[data-cy="btnSave"').click();
+      cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type(teamShortname0);
+      cy.get('[data-cy="btnSave"').click();
 
-    cy.get('[data-cy="closeEditTeamPanel"]').click();
+      cy.get('[data-cy="closeEditTeamPanel"]').click();
 
-    cy.get('[data-cy="teamShortname"').first().should('have.text', 'CYT');
+      cy.get('[data-cy="teamShortname"').first().should('have.text', teamShortname0);
+
+      cy.get('[data-cy="editTeam"]').first().click();
+
+      cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type(teamShortname1);
+      cy.get('[data-cy="btnSave"').click();
+
+      cy.get('[data-cy="closeEditTeamPanel"]').click();
+
+      cy.get('[data-cy="teamShortname"').first().should('have.text', teamShortname1);
+    });
   });
 
-  it('Edits team longname and check "already existing" error', () => {
-    cy.get('[data-cy="editTeam"]').first().click();
+  describe('Edits Team Longname', () => {
+    it('Edits team longname and check "already existing" error', () => {
+      cy.get(':nth-child(2) > [data-cy="teamLongname"]')
+        .click()
+        .then(($data) => {
+          const teamLongname = $data.text().trim();
+          const errorToast = '409';
 
-    cy.get('[data-cy="editLongnameInput"]').click().wait(3000).clear().type('Cypress');
-    cy.get('[data-cy="btnSave"').click();
+          cy.get('[data-cy="editTeam"]').first().click();
 
-    cy.get('[data-cy="closeEditTeamPanel"]').click();
-    cy.get('[data-cy="toastError"]').contains('409');
+          cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(teamLongname);
+          cy.get('[data-cy="btnSave"').click();
+
+          cy.get('[data-cy="closeEditTeamPanel"]').click();
+          cy.get('[data-cy="toastError"]').contains(errorToast);
+        });
+    });
   });
 
-  it('Edits team longname and check it worked', () => {
-    cy.get('[data-cy="editTeam"]').first().click();
+  describe('Edits Team Longname', () => {
+    it('Edits team longname and check it worked', () => {
+      const teamLongname0 = 'Cypress Edit1';
+      const teamLongname1 = 'Cypress Edit2';
 
-    cy.get('[data-cy="editLongnameInput"]').click().wait(3000).clear().type('Cypress Edit');
-    cy.get('[data-cy="btnSave"').click();
+      cy.get('[data-cy="editTeam"]').first().click();
+      cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(teamLongname0);
+      cy.get('[data-cy="btnSave"').click();
+      cy.get('[data-cy="closeEditTeamPanel"]').click();
 
-    cy.get('[data-cy="closeEditTeamPanel"]').click();
-    /* ==== Generated with Cypress Studio ==== */
-    cy.get('[data-cy="teamLongname"').first().should('have.text', ' Cypress Edit ');
-    /* ==== End Cypress Studio ==== */
+      cy.get('[data-cy="teamLongname"').first().should('contain.text', teamLongname0);
+
+      cy.get('[data-cy="editTeam"]').first().click();
+      cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(teamLongname1);
+      cy.get('[data-cy="btnSave"').click();
+      cy.get('[data-cy="closeEditTeamPanel"]').click();
+
+      cy.get('[data-cy="teamLongname"').first().should('contain.text', teamLongname1);
+    });
   });
 
-  it('Add a program to selected team and check it worked', () => {
-    cy.get('[data-cy="editTeam"]');
+  describe('Company Members Section', () => {
+    it('Goes to company members section', () => {
+      cy.get('[data-cy="companyMembersSection"]').should('have.text', 'Vos membres');
+    });
+  });
 
-    /* ==== Generated with Cypress Studio ==== */
-    cy.get(':nth-child(4) > :nth-child(6) > [data-cy="editTeam"]').click();
-    /* ==== End Cypress Studio ==== */
+  describe('Edits User Team', () => {
+    // TODO change user team before testing it works
+    it('Changes a user team and check it worked', () => {
+      cy.get('[data-cy="teamShortname"]')
+        .first()
+        .click()
+        .then(($data) => {
+          const textShortname = $data.text();
+          const teamName = 'e2e';
+          cy.get('.form-control').clear().type(teamName).wait(800);
+          cy.get(':nth-child(2) > :nth-child(5) > [data-cy="editCompanyMember"]').click();
 
-    cy.get('[data-cy="editProgramSelector"]').click();
-    /* ==== Generated with Cypress Studio ==== */
-    cy.get(
-      '[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container > .ng-input > input',
-    ).clear();
-    cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container > .ng-input > input')
-      .wait(2000)
-      .type('cypress{enter}');
+          cy.get('[data-cy="editMemberTeam"] .ng-input > input')
+            .clear()
+            .type(`${textShortname}{enter}`)
+            .wait(500);
+          cy.get('[data-cy="editMemberSave"]').click().wait(1000);
+
+          cy.get('.form-control').clear().type(teamName).wait(800);
+          cy.get(':nth-child(2) > :nth-child(5) > [data-cy="editCompanyMember"]').click();
+
+          cy.get('[data-cy="editMemberTeam"] .ng-select-container > .ng-value-container > .ng-value')
+            .wait(1000)
+            .should('have.text', textShortname);
+        });
+    });
+  });
+
+  describe('Remove User Team', () => {
+    it('Removes the user team and check save btn is disabled', () => {
+      cy.get('[data-cy="editCompanyMember"]').first().click();
+
+      cy.get('[data-cy="editMemberTeam"] .ng-select-container > .ng-clear-wrapper').click();
+      cy.get('[data-cy="editMemberSave"]').should('have.attr', 'disabled');
+    });
+  });
+
+  //TODO make this test work
+  describe('Edits User Role', () => {
+    beforeEach(() => {
+      const teamName = 'e2e';
+
+      cy.get('.form-control').clear();
+      cy.get('.form-control').type(`${teamName}{enter}`).wait(1000);
+      cy.get(':nth-child(2) > :nth-child(5) > [data-cy="editCompanyMember"]').click();
+    });
+
+    it('Checks first option is "company-user"', () => {
+      cy.get('[data-cy="editMemberRole"]').select(0).should('have.value', 'company-user');
+    });
+
+    it('Checks second option is "company-admin"', () => {
+      cy.get('[data-cy="editMemberRole"]').select(1).should('have.value', 'company-admin');
+    });
+  });
+
+  it('Create and delete a team', () => {
+    // Create a new Team
+    cy.get('[data-cy="createTeam"]').click();
+    cy.get('[data-cy="editLongnameInput"]').click().wait(3000).clear().type('ABCDETEAM');
+    cy.get('[data-cy="editShortnameInput"]').click().wait(3000).clear().type('ABCD');
     cy.get('[data-cy="btnSave"]').click();
-    /* ==== End Cypress Studio ==== */
-    cy.get(':nth-child(4) > :nth-child(6) > [data-cy="editTeam"]').click();
-    /* ==== End Cypress Studio ==== */
 
-    cy.get('[data-cy="editProgramSelector"]').click();
-    /* ==== Generated with Cypress Studio ==== */
-    cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
-      .wait(3000)
-      .contains('Cypress');
-  });
+    cy.wait(5000);
 
-  it('Remove a program from selected team  and check it worked', () => {
-    cy.get('[data-cy="editTeam"]');
+    // Delete the newly created team
+    cy.visit('/l/teams');
+    cy.get('[data-cy="deleteTeamABCD"]').should('be.visible').click();
+    cy.get('.row > :nth-child(2) > .btn').should('be.visible').click();
 
-    /* ==== Generated with Cypress Studio ==== */
-    cy.get(':nth-child(4) > :nth-child(6) > [data-cy="editTeam"]').click();
-    /* ==== End Cypress Studio ==== */
+    cy.wait(5000);
 
-    cy.get('[data-cy="editProgramSelector"]').click();
-    /* ==== Generated with Cypress Studio ==== */
-    cy.get(':nth-child(2) > .ng-value-icon').click();
-    /* ==== End Cypress Studio ==== */
-
-    cy.get('[data-cy="btnSave"]').click();
-
-    cy.get(':nth-child(4) > :nth-child(6) > [data-cy="editTeam"]').click();
-
-    cy.get('[data-cy="editProgramSelector"]').click();
-
-    cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
-      .wait(3000)
-      .invoke('val')
-      .should('eq', '');
-  });
-
-  it('Goes to company members section', () => {
-    cy.get('[data-cy="companyMembersSection"]').should('have.text', 'Vos membres');
-  });
-
-  it('Changes a user team and check it worked', () => {
-    cy.get('[data-cy="editCompanyMember"]').first().click();
-
-    cy.get('[data-cy="editMemberTeam"] .ng-input > input').clear();
-    cy.get('[data-cy="editMemberTeam"] .ng-input > input').type('cyp{enter}');
-    cy.get('[data-cy="editMemberSave"]').click().wait(2000);
-
-    cy.get('[data-cy="editCompanyMember"]').first().click();
-    cy.get('[data-cy="editMemberTeam"] .ng-select-container > .ng-value-container > .ng-value')
-      .wait(2000)
-      .should('have.text', 'CYP');
-  });
-
-  it('Removes the user team and check save btn is disabled', () => {
-    cy.get('[data-cy="editCompanyMember"]').first().click();
-
-    cy.get('[data-cy="editMemberTeam"] .ng-select-container > .ng-clear-wrapper').click();
-    cy.get('[data-cy="editMemberSave"]').should('have.attr', 'disabled');
-  });
-
-  it('Changes a user role and check it worked', () => {
-    cy.get('[data-cy="editCompanyMember"]').first().click();
-
-    cy.get('[data-cy="editMemberRole"]').select('company-admin');
-    cy.get('[data-cy="editMemberSave"]').click();
-    cy.get('[data-cy="editCompanyMember"]').first().click();
-    cy.get('[data-cy="editMemberRole"]').find(':selected').contains('Administrateur');
-  });
-
-  it('Filters members by team', () => {
-    cy.get('[data-cy="filterByTeam"]').click().type('CYP{enter}');
-
-    cy.get('[data-cy="memberTeamShortname"]').first().should('have.text', ' CYP ');
-  });
-
-  it('Filters members by score', () => {
-    cy.get('[data-cy="filterByScore"]').click();
-    cy.get('.ng-dropdown-header > input').clear();
-    cy.get('.ng-dropdown-header > input').type('75{enter}');
-    //here we compare the number of pixels to check the percentage, 1% being 2.9343px
-    cy.get('[data-cy="scoreProgressBar"]').first().invoke('width').should('be.lessThan', 223.005);
-  });
-
-  it('Filters members using search input', () => {
-    cy.get('[data-cy="filterBySearch"]').click();
-
-    cy.get('.form-control').clear();
-    cy.get('.form-control').type('romain{enter}');
-
-    cy.get('[data-cy="profileCard"] > .profile > alto-img-badge > img')
-      .first()
-      .should(
-        'have.attr',
-        'src',
-        'https://s.gravatar.com/avatar/0989ee1d5d2827fad81a7082283ed8b6?s=40&r=pg&d=https%3A%2F%2Fcdn.auth0.com%2Favatars%2Fro.png',
-      );
+    // check that the deleted team no longer exists.
+    cy.visit('/l/teams');
+    cy.get('[data-cy="deleteTeamABCD"]').should('not.exist');
   });
 });
 

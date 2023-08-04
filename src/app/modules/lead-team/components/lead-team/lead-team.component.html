@@ -20,7 +20,7 @@
 <!-- TEAMS -->
 <div>
   <button type="button" class="btn btn-primary float-end" (click)="openTeamForm()">
-    <i class="bi bi-plus-lg"></i> {{ I18ns.leadTeam.createTeam }}
+    <i data-cy="createTeam" class="bi bi-plus-lg"></i> {{ I18ns.leadTeam.createTeam }}
   </button>
   <h2 id="teamsAnchor">{{ I18ns.leadTeam.teams.title }}</h2>
   <p class="mb-4 alto-grey">{{ I18ns.leadTeam.teams.subtitle }}</p>
@@ -40,7 +40,8 @@
               ></i>
             </th>
             <th scope="col" class="text-center">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
-            <th class="w-5"></th>
+            <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -62,17 +63,16 @@
                   [style]="'width:' + (team.score ?? 0) * 100 + '%'"
                 ></div>
               </div>
-              <ng-container *ngIf="team.score"> {{ team.score | percent }} </ng-container>
+              <ng-container *ngIf="team.score"> {{ team.score | percent }}</ng-container>
             </td>
             <td class="text-center">
               {{ team.createdAt | date : 'shortDate' }}
             </td>
-            <td>
-              <i
-                data-cy="editTeam"
-                class="fs-5 bi bi-pencil cursor-pointer float-end me-4"
-                (click)="openTeamForm(team)"
-              ></i>
+            <td class="cursor-pointer px-3" (click)="deleteTeam(team)">
+              <i [attr.data-cy]="'deleteTeam' + team.shortName" class="fs-5 bi bi-trash3 float-end"></i>
+            </td>
+            <td class="cursor-pointer px-3" (click)="openTeamForm(team)">
+              <i data-cy="editTeam" class="fs-5 bi bi-pen float-end me-4"></i>
             </td>
           </tr>
         </tbody>
@@ -99,7 +99,11 @@
 <!-- MEMBERS -->
 
 <div>
-  <button type="button" class="btn btn-outline-secondary float-end d-flex align-items-center" (click)="airtableRedirect()">
+  <button
+    type="button"
+    class="btn btn-outline-secondary float-end d-flex align-items-center"
+    (click)="airtableRedirect()"
+  >
     <i class="bi bi-person-plus me-2 fs-5"></i>
     <span>{{ I18ns.leadTeam.members.invite }}</span>
   </button>
@@ -217,7 +221,7 @@
             <td>
               <i
                 data-cy="editCompanyMember"
-                class="fs-5 bi bi-pencil cursor-pointer float-end me-4"
+                class="fs-5 bi bi-pen cursor-pointer float-end me-4"
                 (click)="openUserEditionForm(user)"
               ></i>
             </td>

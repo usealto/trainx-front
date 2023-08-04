@@ -54,15 +54,20 @@
     <alto-programs-form [isEdit]="isEdit" [form]="programForm"></alto-programs-form>
     <div class="row">
       <div class="col-6">
-        <a class="cursor-pointer" [ngClass]="{ invisible: true }" (click)="delete()">
-          <i class="bi bi-trash"></i> {{ I18ns.shared.delete }}
+        <a data-cy="deleteProgram" class="cursor-pointer" *ngIf="isEdit" (click)="delete()">
+          <i class="bi bi-trash"></i> {{ I18ns.programs.delete.btn }}
         </a>
       </div>
       <div class="col-6 text-end">
         <button class="btn btn-outline-secondary me-2" (click)="cancel()">
           {{ I18ns.shared.cancel }}
         </button>
-        <button class="btn btn-primary" (click)="goNext()" [disabled]="programForm && !programForm.valid">
+        <button
+          data-cy="programCreateNext"
+          class="btn btn-primary"
+          (click)="goNext()"
+          [disabled]="programForm && !programForm.valid"
+        >
           {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
         </button>
       </div>
@@ -93,7 +98,7 @@
       </div>
       <div class="col-8 text-center">
         <div class="panel">
-          <button class="btn btn-primary" (click)="openQuestionForm()">+</button>
+          <button data-cy="createNewQuestion" class="btn btn-primary" (click)="openQuestionForm()">+</button>
           <p class="fs-7 mt-2">{{ I18ns.programs.forms.step2.newText }}</p>
           <p class="fs-7 mt-2">{{ I18ns.programs.forms.step2.newText2 }}</p>
         </div>
@@ -215,19 +220,6 @@
             </div>
           </div>
           <div class="row mb-4">
-            <div class="col-5">{{ I18ns.programs.forms.step1.tags }}</div>
-            <div class="col-6 p-0 text-end">
-              <span *ngFor="let id of programForm.controls.tags.value" class="alto-badge ms-1">
-                {{ findTagName(id) }}
-              </span>
-            </div>
-            <div class="col-1">
-              <span class="ms-1 alto-badge cursor-pointer" (click)="changeTab(1)">
-                <i class="bi bi-plus-lg"></i>
-              </span>
-            </div>
-          </div>
-          <div class="row mb-4">
             <div class="col-5">{{ I18ns.programs.forms.step1.expectation }}</div>
             <div class="col-6 p-0 text-end">
               <span class="alto-score" [class]="programForm.controls.expectation.value || 0 | pillColor">
@@ -243,7 +235,7 @@
           <div class="row mb-4">
             <div class="col-5">{{ I18ns.programs.forms.questionCount }}</div>
             <div class="col-6 p-0 text-end">
-              <span class="alto-badge">{{ getquestionsCount() }}</span>
+              <span data-cy="questionCount" class="alto-badge">{{ this.editedProgram?.questionsCount }}</span>
             </div>
 
             <div class="col-1">

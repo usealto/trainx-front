@@ -43,6 +43,7 @@
     <label class="form-label required">{{ I18ns.questions.form.name }}</label>
 
     <alto-text-counter
+      data-cy="questionCreateTitle"
       [control]="questionForm.controls.title"
       [placeholder]="I18ns.questions.form.namePlaceholder"
       [limit]="questionHardLimit"
@@ -63,7 +64,11 @@
             [softLimit]="answerSoftLimit"
           >
           </alto-text-counter>
-          <div *ngIf="answersAccepted.controls.length > 1" class="remove-field flex-grow-2 ms-3 mb-4" (click)="removeAnswer('good', i)">
+          <div
+            *ngIf="answersAccepted.controls.length > 1"
+            class="remove-field flex-grow-2 ms-3 mb-4"
+            (click)="removeAnswer('good', i)"
+          >
             <i class="bi bi-trash3"></i>
           </div>
         </div>
@@ -88,7 +93,11 @@
             [softLimit]="answerSoftLimit"
           >
           </alto-text-counter>
-          <div *ngIf="answersWrong.controls.length > 1" class="remove-field flex-grow-2 ms-3 mb-4" (click)="removeAnswer('bad', i)">
+          <div
+            *ngIf="answersWrong.controls.length > 1"
+            class="remove-field flex-grow-2 ms-3 mb-4"
+            (click)="removeAnswer('bad', i)"
+          >
             <i class="bi bi-trash3"></i>
           </div>
         </div>

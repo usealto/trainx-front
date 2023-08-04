@@ -6,6 +6,7 @@
     </div>
     <div class="col-6">
       <input
+        data-cy="programName"
         type="text"
         class="form-control"
         formControlName="name"
@@ -23,6 +24,7 @@
       <textarea
         class="form-control"
         rows="5"
+        data-cy="descriptionField"
         formControlName="description"
         placeholder="{{ I18ns.programs.forms.step1.descriptionPlaceholder }}"
       ></textarea>
@@ -36,6 +38,7 @@
     </div>
     <div class="col-6">
       <ng-select
+        data-cy="programTags"
         class="alto-form"
         required
         [items]="tags"
@@ -101,6 +104,7 @@
     </div>
     <div class="col-6">
       <ng-select
+        data-cy="programPriority"
         class="alto-form"
         [items]="priorities"
         bindLabel="value"

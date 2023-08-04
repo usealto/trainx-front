@@ -81,7 +81,7 @@ export class ProgramsRestService {
     } else {
       return this.getPrograms().pipe(
         map((ps: ProgramDtoApi[]) =>
-          ps.filter((p) => p.teams.some((t) => t.id === this.profileStore.user.value.teamId)),
+          ps.filter((p) => p.teams.some((t) => t && t.id === this.profileStore.user.value.teamId)),
         ),
         tap((p) => (this.profileStore.myPrograms.value = p)),
       );

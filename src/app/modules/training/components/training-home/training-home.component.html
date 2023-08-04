@@ -147,8 +147,14 @@
 
     <div class="row mb-4">
       <div class="col-7">
-        <alto-score-filter (selectChange)="allProgramsFilter({ score: $event })"></alto-score-filter>
+        <alto-score-filter
+          [disabled]="disabledCountScore! < 1"
+          [selectedItems]="selectedItems"
+          (selectChange)="allProgramsFilter({ score: $event })"
+        ></alto-score-filter>
         <alto-progression-filter
+          [disabled]="disabledCountProgress! < 1"
+          [selectedItems]="selectedItems"
           (selectChange)="allProgramsFilter({ progress: $event })"
         ></alto-progression-filter>
       </div>
