@@ -82,6 +82,7 @@ export const FR = {
     title: 'Bonjour ',
     subtitle: "Découvrez une vue d'ensemble sur l'avancée de vos équipes.",
     comments: ['{{}} commentaire', '{{}} commentaires'],
+    awaiting: 'en attente',
     subtitleComment: [
       'Vous avez traité toutes les commentaires écrits par vos collaborateurs.',
       'Consultez les commentaires écrits par vos collaborateurs.',
