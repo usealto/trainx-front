@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import {
+  NgbActiveModal,
   NgbDatepickerModule,
   NgbNavModule,
   NgbPaginationModule,
@@ -126,5 +127,6 @@ import { DeleteModalComponent } from './components/delete-modal/delete-modal.com
     QuestionDeleteModalComponent,
     DeleteModalComponent,
   ],
+  providers: [NgbActiveModal],
 })
 export class SharedModule {}
