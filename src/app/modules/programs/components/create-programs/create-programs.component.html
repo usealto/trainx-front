@@ -1,56 +1,49 @@
-<h1>{{ isEdit ? I18ns.programs.forms.edit : I18ns.programs.forms.create }}</h1>
-<div class="row mt-4">
+<div class="header-panel mb-8">
+  <img class="emoji-title me-4" [src]="EmojiName.Bullseye | emoji" />
+  <h1>{{ isEdit ? I18ns.programs.forms.edit : I18ns.programs.forms.create }}</h1>
+</div>
+
+<div class="mt-4 form-nav">
   <div
-    class="col-4 step"
+    class="step"
     [ngClass]="{
       'cursor-pointer': isEdit,
-      'highlight-step': currentStep === 1,
-      'passed-step': currentStep > 1
+      'highlight-step': currentStep === 1
     }"
     (click)="isEdit && changeTab(1)"
   >
-    <i class="alto-badge-big fs-5 tab-icon me-4 bi bi-file-text"></i>
-    <span class="fs-6b">{{ I18ns.programs.forms.step1.title }}</span>
+    <i class="fs-5 tab-icon me-3 bi bi-file-text"></i>
+    <span>{{ I18ns.programs.forms.step1.title }}</span>
   </div>
   <div
-    class="col-4 step"
+    class="step"
     [ngClass]="{
       'cursor-pointer': isEdit,
-      'highlight-step': currentStep === 2,
-      'passed-step': currentStep > 2
+      'highlight-step': currentStep === 2
     }"
     (click)="isEdit && changeTab(2)"
   >
-    <i class="alto-badge-big fs-5 tab-icon me-4 bi bi-question-circle"></i>
-    <span class="fs-6b">{{ I18ns.programs.forms.step2.title }}</span>
+    <i class="fs-5 tab-icon me-3 bi bi-question-circle"></i>
+    <span>{{ I18ns.programs.forms.step2.title }}</span>
   </div>
   <div
-    class="col-4 step"
+    class="step"
     [ngClass]="{ 'cursor-pointer': isEdit, 'highlight-step': currentStep === 3 }"
     (click)="isEdit && changeTab(3)"
   >
-    <i class="alto-badge-big fs-5 tab-icon me-4 bi bi-share"></i>
-    <span class="fs-6b">{{ I18ns.programs.forms.step3.title }}</span>
+    <i class="fs-5 tab-icon me-3 bi bi-share"></i>
+    <span>{{ I18ns.programs.forms.step3.title }}</span>
   </div>
 </div>
 
 <div [ngSwitch]="currentStep" class="mt-6">
   <!-- INFORMATIONS -->
-  <div *ngSwitchCase="1" class="page-max-width">
-    <div class="mb-6 row">
-      <div class="col-6">
-        <h2>{{ I18ns.programs.forms.step1.title }}</h2>
-        <p class="">{{ I18ns.programs.forms.step1.subtitle }}</p>
-      </div>
-      <div class="text-end col-6">
-        <button class="btn btn-outline-secondary me-2" (click)="cancel()">
-          {{ I18ns.shared.cancel }}
-        </button>
-        <button class="btn btn-primary" (click)="goNext()" [disabled]="programForm && !programForm.valid">
-          {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
-        </button>
-      </div>
+  <div *ngSwitchCase="1">
+    <div class="infos">
+      <i class="me-3 bi bi-info-circle"></i>
+      <span class="">{{ I18ns.programs.forms.step1.subtitle }}</span>
     </div>
+
     <alto-programs-form [isEdit]="isEdit" [form]="programForm"></alto-programs-form>
     <div class="row">
       <div class="col-6">
@@ -175,7 +168,7 @@
     </div>
   </div>
   <!-- SHARE -->
-  <div *ngSwitchCase="3" class="page-max-width-lg">
+  <div *ngSwitchCase="3">
     <div class="mb-6 row">
       <div class="col-6">
         <h2>{{ I18ns.programs.forms.step3.title2 }}</h2>

@@ -15,6 +15,7 @@ import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 
 @UntilDestroy()
 @Component({
@@ -24,6 +25,7 @@ import { QuestionFormComponent } from '../questions/question-form/question-form.
 })
 export class CreateProgramsComponent implements OnInit {
   I18ns = I18ns;
+  EmojiName = EmojiName;
   private fb: IFormBuilder;
 
   programForm!: IFormGroup<ProgramForm>;

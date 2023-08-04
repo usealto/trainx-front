@@ -1,3 +1,27 @@
 label {
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 1rem;
+  & + p {
+    color: var(--gray-500);
+    font-size: 0.833rem;
+  }
+}
+hr {
+  margin: 2rem 0;
+  border-color: var(--gray-300);
+}
+.emoji {
+  height: 1.7rem;
+  vertical-align: top;
+  margin-right: 0.667rem;
+}
+.col-left {
+  width: 25.667rem;
+}
+.col-right {
+  max-width: 42.667rem;
+}
+
+input[type='text'] {
+  height: 3.167rem;
 }
