@@ -2,7 +2,7 @@ import { moduleMetadata, type Meta, type StoryObj } from '@storybook/angular';
 import { ChartBasiclineComponent } from './chart-basicline.component';
 import { ChartsModule } from '../charts.module';
 const meta: Meta<ChartBasiclineComponent> = {
-  title: 'Shared/ChartBasiclineComponent',
+  title: 'Charts/ChartBasiclineComponent',
   component: ChartBasiclineComponent,
   tags: ['autodocs'],
   decorators: [
