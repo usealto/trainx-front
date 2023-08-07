@@ -21,6 +21,7 @@ import { UsersApiService as SlackApiService } from 'src/app/sdk/api/users.servic
 import { MsgService } from 'src/app/core/message/msg.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ShowRawDataModalComponent } from './show-raw-data-modal/show-raw-data-modal.component';
+import { N8nService } from 'src/app/admin/services/n8n.service';
 
 @Component({
   selector: 'alto-admin-user-create-form',
@@ -52,6 +53,7 @@ export class AdminUserCreateFormComponent implements OnInit {
     private readonly slackApiService: SlackApiService,
     private readonly msg: MsgService,
     private modalService: NgbModal,
+    private readonly n8nRestService: N8nService,
   ) {
     this.fb = fob;
   }
@@ -86,7 +88,7 @@ export class AdminUserCreateFormComponent implements OnInit {
                 email: [this.user.email || '', [Validators.required, Validators.email]],
                 teamId: [this.user.teamId || '', []],
                 roles: [this.user.roles as unknown as Array<RoleEnumApi>, []],
-                slackId: [this.user.slackId || '', []],
+                slackId: [{ value: this.user.slackId || '', disabled: true }, []],
               });
             } else {
               throw new Error('User not found');
@@ -183,12 +185,15 @@ export class AdminUserCreateFormComponent implements OnInit {
   }
 
   resetSlackId() {
-    this.slackApiService
-      .updateSlackid({
-        companyId: this.companyId,
-        userId: this.userId,
-        slackAdmin: this.company.slackAdmin,
-      })
-      .subscribe((res) => console.log(res));
+    if (this.company.slackAdmin) {
+      this.n8nRestService
+        .updateSlackId({
+          email: this.user.email,
+          userId: this.user.id,
+          companyId: this.companyId,
+          slackAdmin: this.company.slackAdmin,
+        })
+        .subscribe();
+    }
   }
 }
