@@ -9,6 +9,10 @@ label {
   margin-bottom: 0.667rem;
 }
 
+.input-group {
+  height: 3.167rem;
+}
+
 .sidebar-body {
   height: calc(100vh - 236px);
   overflow: auto;
@@ -21,7 +25,11 @@ label {
   bottom: 0;
   z-index: 100;
   .button-container {
-    padding: 1.143rem 2.286rem;
+    padding: 1.333rem 2.667rem;
+    height: 6.083rem;
+    & > * {
+      font-size: 1.167rem;
+    }
   }
 }
 .add-field {

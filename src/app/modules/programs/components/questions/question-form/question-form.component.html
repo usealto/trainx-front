@@ -105,15 +105,22 @@
       </ng-template>
     </ng-select>
 
-    <label class="form-label">{{ I18ns.questions.form.link }}</label>
-    <input
-      type="text"
-      class="form-control mb-5"
-      formControlName="link"
-      placeholder="{{ I18ns.questions.form.linkPlaceholder }}"
-    />
+    <label class="form-label" for="basic-url">{{ I18ns.questions.form.link }}</label>
+
+    <div class="input-group mb-5">
+      <span class="input-group-text" id="basic-addon3">https://</span>
+      <input
+        id="basic-url"
+        type="text"
+        class="form-control mb-0"
+        formControlName="link"
+        placeholder="{{ I18ns.questions.form.linkPlaceholder }}"
+      />
+    </div>
 
     <hr class="m-0" />
+
+    <!-- ANSWERS -->
 
     <label class="form-label required mt-5">{{ I18ns.questions.form.goodAnswer }}</label>
 
@@ -178,14 +185,9 @@
   <hr class="m-0" />
 
   <div class="button-container">
-    <button
-      type="button"
-      class="btn btn-outline-secondary me-3"
-      aria-label="Close"
-      (click)="activeOffcanvas.dismiss()"
-    >
+    <a type="button" class="cancel-btn" aria-label="Close" (click)="activeOffcanvas.dismiss()">
       {{ I18ns.shared.cancel }}
-    </button>
+    </a>
     <ng-container *ngIf="isSubmitted; else elseTemplate">
       <input
         type="submit"
