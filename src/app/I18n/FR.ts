@@ -184,10 +184,9 @@ export const FR = {
       },
     },
     questions: {
-      title: 'Questions',
-      subtitle: "Retrouvez l'ensemble des questions présentes dans vos programmes.",
-      createQuestion: 'Créer',
-      remainingCharacters: 'caractères restants',
+      title: 'Questions de vos programmes',
+      subtitle: "Retrouvez l'ensemble des questions de votre organisation.",
+      createQuestion: 'Créer une question',
 
       placeholder: {
         noData: 'Aucun résultat correspondant',
@@ -200,9 +199,8 @@ export const FR = {
         importQuestionPlaceholder: 'Importer des questions',
       },
       table: {
-        question: 'Question',
-        score: 'Score',
-        scoreToolTip: 'Score moyen sur cette question depuis sa création',
+        question: 'Intitulé',
+        score: 'Score moyen',
         author: 'Ajoutée par',
         tags: 'Tags',
         programs: 'Programmes',
@@ -229,19 +227,13 @@ export const FR = {
     },
     tags: {
       title: 'Tags',
-      subtitle: "Retrouvez l'ensemble des tags présents dans vos programmes et questions.",
-      createTag: 'Créer',
+      subtitle: "Retrouvez l'ensemble des tags de votre organisation.",
+      createTag: 'Créer un tag',
       table: {
-        name: 'Nom',
-        score: 'Score',
-        scoreToolTip: 'Score moyen sur ce tag depuis sa création',
-        author: 'Créé par',
-        associatedPrograms: 'Programmes associés',
-        associatedQuestions: 'Questions associées',
-        questions: 'questions',
-      },
-      filters: {
-        programs: 'Programmes',
+        name: 'Nom du tag',
+        score: 'Score moyen de vos équipes',
+        associatedQuestions: 'Nombre de questions associées',
+        questions: ' questions',
       },
     },
     forms: {
