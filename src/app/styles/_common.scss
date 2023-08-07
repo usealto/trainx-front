@@ -23,7 +23,7 @@
   border-radius: 25px;
   padding: 0 0.5rem;
   text-align: center;
-  font-weight: 500;
+  font-weight: 600;
 }
 .alto-score {
   @extend .alto-badge-no-size;
@@ -31,14 +31,14 @@
   min-width: 3.2143rem;
   line-height: 1.41667rem;
   font-weight: 600;
-  font-size: 0.833rem;
+  font-size: 0.833em;
 }
 .alto-badge {
   @extend .alto-badge-no-size;
-  min-height: 1.58rem;
+  min-height: 1.66rem;
   min-width: 1.58rem;
-  line-height: 1.6rem;
-  font-size: 0.857rem;
+  line-height: 1.66rem;
+  font-size: 0.833rem;
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
 }

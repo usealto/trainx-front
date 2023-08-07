@@ -35,9 +35,9 @@
       <p class="mt-2 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
     </div>
     <a
+      data-cy="createNewProgram"
       type="button"
       class="btn btn-primary"
-      data-cy="createNewProgram"
       [routerLink]="AltoRoutes.programsCreate"
     >
       <i class="bi bi-plus-lg"></i>
@@ -56,7 +56,7 @@
 <!-- QUESTIONS -->
 <div *ngIf="activeTab === 'questions'" class="questions">
   <button type="button" class="btn btn-primary float-end" (click)="openQuestionForm()">
-    <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.createQuestion }}
+    <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.questions.createQuestion }}</span>
   </button>
   <h2 id="questionsAnchor">
     <img class="me-3 emoji" [src]="EmojiName.RedQuestionMark | emoji" height="20" width="20" />

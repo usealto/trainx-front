@@ -30,6 +30,7 @@
   --bs-offcanvas-width: 520px;
   --bs-offcanvas-border-width: 0;
   --bs-offcanvas-color: var(--alto-text-color);
+  --bs-offcanvas-bg: white;
 }
 
 .progress {
@@ -121,12 +122,21 @@
 .ng-select {
   display: inline-block !important;
   min-width: 12rem;
-  &.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
-    background-color: transparent;
+  &.ng-select-single .ng-select-container {
+    height: 2.667rem;
   }
+  &.ng-select-multiple .ng-select-container .ng-value-container {
+    .ng-placeholder {
+      top: 8px;
+    }
+    .ng-value {
+      background-color: transparent;
+    }
+  }
+
   .ng-arrow-wrapper {
     width: 30px;
-    height: 24px;
+    height: 1.333rem;
     transition: transform 0.3s;
     cursor: pointer;
     .ng-arrow {
@@ -143,7 +153,7 @@
     .ng-arrow {
       border-color: var(--alto-text-color2);
       border-width: 0 0 0.1rem 0.1rem;
-      margin: 0.9rem 0 0 0;
+      margin: 0.6rem 0 0 0;
     }
   }
   &.ng-select-opened.ng-select-bottom > .ng-select-container,
@@ -159,7 +169,7 @@
     color: var(--alto-text-color2);
     padding-inline-start: 0.5rem;
     .ng-value-container .ng-placeholder {
-      color: var(--alto-blue-second);
+      color: var(--alto-text-color2);
     }
   }
   .ng-dropdown-panel {

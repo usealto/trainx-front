@@ -183,7 +183,6 @@ export class CreateProgramsComponent implements OnInit {
     this.questionRestService
       .getQuestionsPaginated({
         tagIds: this.selectedTags.join(','),
-
         sortByProgramId: this.editedProgram?.id ?? undefined,
         itemsPerPage: this.questionPageSize,
         page: this.questionPage,

@@ -25,9 +25,10 @@
       </div>
     </div>
   </div>
-  <div class="col-6">
+  <div class="col-6 pe-0">
     <div
-      class="panel cursor-pointer"
+      [class]="questionsCount ? 'warning-panel' : 'success-panel'"
+      class="cursor-pointer"
       [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
       fragment="submittedQuestionsAnchor"
     >
