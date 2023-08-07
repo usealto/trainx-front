@@ -46,12 +46,17 @@
 
     <alto-programs-form [isEdit]="isEdit" [form]="programForm"></alto-programs-form>
     <div class="row">
+      <ng-container *ngIf="isEdit">
+        <div class="col-12 text-center mb-4">
+          <a data-cy="deleteProgram" class="btn btn-danger" (click)="delete()">
+            <i class="bi bi-trash"></i><span>{{ I18ns.programs.delete.btn }}</span>
+          </a>
+        </div>
+        <hr />
+      </ng-container>
       <div class="col-6">
         <a class="cancel-btn" (click)="cancel()">
           {{ I18ns.shared.cancel }}
-        </a>
-        <a data-cy="deleteProgram" class="cursor-pointer" *ngIf="isEdit" (click)="delete()">
-          <i class="bi bi-trash"></i> {{ I18ns.programs.delete.btn }}
         </a>
       </div>
       <div class="col-6 text-end">

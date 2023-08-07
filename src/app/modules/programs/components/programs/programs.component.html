@@ -56,7 +56,7 @@
 <!-- QUESTIONS -->
 <div *ngIf="activeTab === 'questions'" class="py-4 border-bottom questions">
   <button type="button" class="btn btn-primary float-end" (click)="openQuestionForm()">
-    <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.createQuestion }}
+    <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.questions.createQuestion }}</span>
   </button>
   <h2 id="questionsAnchor">{{ I18ns.programs.questions.title }}</h2>
   <p class="mb-4 alto-grey">{{ I18ns.programs.questions.subtitle }}</p>
