@@ -1,38 +1,40 @@
-$grid-breakpoints: (
-  xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px,
-  xxl: 1400px,
-  xxxl: 1900px,
-  gl: 2540px,
-);
-$container-max-widths: (
-  sm: 540px,
-  md: 720px,
-  lg: 960px,
-  xl: 1140px,
-  xxl: 1320px,
-  xxxl: 1860px,
-  gl: 2500px,
-);
+// $grid-breakpoints: (
+//   xs: 0,
+//   sm: 576px,
+//   md: 768px,
+//   lg: 1100px,
+//   xl: 1200px,
+//   xxl: 1400px,
+//   // xxxl: 1900px,
+//   // gl: 2540px,,
+// );
+// $container-max-widths: (
+//   sm: 540px,
+//   md: 720px,
+//   lg: 1060px,
+//   xl: 1140px,
+//   xxl: 1320px,
+//   // xxxl: 1860px,
+//   // gl: 2500px,,
+// );
 $enable-rounded: true;
 
 $spacers: (
   0: 0,
   // 2px
-  1: 0.143rem,
+  1: 0.167rem,
   // 4px
-  2: 0.286rem,
+  2: 0.333rem,
   // 8px
-  3: 0.571rem,
+  3: 0.667rem,
   // 16px
-  4: 1.143rem,
+  4: 1.333rem,
   // 24px
-  5: 1.714rem,
+  5: 2rem,
   // 32px
-  6: 2.286rem,
+  6: 2.667rem,
+  // 40px
+  7: 3.333rem,
 );
 
 $grid-gutter-width: 1.143rem;
