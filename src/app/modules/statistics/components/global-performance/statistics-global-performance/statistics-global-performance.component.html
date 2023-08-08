@@ -1,25 +1,41 @@
-<div class="mb-4 position-relative">
-  <alto-time-picker
-    class="time-picker"
-    [duration]="duration"
-    (durationSelected)="updateTimePicker($event)"
-  ></alto-time-picker>
-  <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.title }}</h2>
-  <p class="alto-grey pb-3">{{ I18ns.statistics.globalPerformance.perTeamPerformance.subtitle }}</p>
+<div class="mb-5 position-relative">
+  <div class="col-6">
+    <h2 class>
+      <img class="emoji" [src]="EmojiName.FlexedBiceps | emoji" />
+      {{ I18ns.statistics.globalPerformance.perTeamPerformance.title }}
+    </h2>
+    <p class="mb-4 alto-grey">{{ I18ns.statistics.globalPerformance.perTeamPerformance.subtitle }}</p>
+  </div>
+  <div class="col-6 text-end">
+    <alto-time-picker
+      class="time-picker"
+      [duration]="duration"
+      (durationSelected)="updateTimePicker($event)"
+    ></alto-time-picker>
+  </div>
 </div>
+
 <alto-performance-by-teams [duration]="duration"></alto-performance-by-teams>
 
 <hr />
 
-<div class="mb-4 position-relative">
-  <alto-time-picker
-    class="time-picker2"
-    [duration]="duration"
-    (durationSelected)="updateTimePicker($event)"
-  ></alto-time-picker>
-  <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.title }}</h2>
-  <p class="alto-grey pb-3">{{ I18ns.statistics.globalPerformance.perThemePerformance.subtitle }}</p>
+<div class="mb-5 position-relative">
+  <div class="col-6">
+    <h2 class>
+      <img class="emoji" [src]="EmojiName.Label | emoji" />
+      {{ I18ns.statistics.globalPerformance.perThemePerformance.title }}
+    </h2>
+    <p class="mb-4 alto-grey">{{ I18ns.statistics.globalPerformance.perThemePerformance.subtitle }}</p>
+  </div>
+  <div class="col-6 text-end">
+    <alto-time-picker
+      class="time-picker2"
+      [duration]="duration"
+      (durationSelected)="updateTimePicker($event)"
+    ></alto-time-picker>
+  </div>
 </div>
+
 <alto-performance-by-themes [duration]="duration"></alto-performance-by-themes>
 
 <hr />

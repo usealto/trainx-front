@@ -308,7 +308,7 @@ export const FR = {
       navbarTitle: 'Performance globale',
       perTeamPerformance: {
         title: 'Performance par équipes',
-        subtitle: 'Retrouvez les performances globales de vos équipes.',
+        subtitle: "Retrouvez une vue d' ensemble sur les résultats de vos équipes.",
         teamFilter: 'Équipes',
         scoreEvolution: {
           title: 'Évolution du score',
@@ -316,17 +316,16 @@ export const FR = {
         },
         leaderboard: {
           title: 'Leaderboard',
+          subtitle: 'Aperçu du niveau de maîtrise de vos équipes.',
           top: 'Top',
           flop: 'Flop',
         },
       },
       perThemePerformance: {
         title: 'Performance par thèmatiques',
-        subtitle: 'Retrouvez les performances globales de vos équipes.',
+        subtitle: "Retrouvez une vue d'ensemble sur les résultats de vos équipes selon leurs thématiques.",
         filters: {
-          teams: 'Équipes',
           tags: 'Tags',
-          programs: 'Programmes',
         },
         scoreEvolutionChart: {
           title: 'Évolution du score',

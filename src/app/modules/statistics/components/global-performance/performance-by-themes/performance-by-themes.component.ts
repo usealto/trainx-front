@@ -275,11 +275,11 @@ export class PerformanceByThemesComponent implements OnChanges {
     });
   }
 
-  changeTabs() {
-    this.activeTab = this.activeTab === 1 ? 2 : 1;
-    this.init = true;
-    this.getScores().subscribe();
-  }
+  // changeTabs() {
+  //   this.activeTab = this.activeTab === 1 ? 2 : 1;
+  //   this.init = true;
+  //   this.getScores().subscribe();
+  // }
 
   filterTeams(teams: { label: string; id: string }[]) {
     this.selectedTeams = teams;
