@@ -183,18 +183,20 @@
             </span>
           </td>
           <td>
-            <div class="progress" *ngIf="user.score">
-              <div
-                data-cy="scoreProgressBar"
-                class="progress-bar d-inline-block"
-                role="progressbar"
-                [style]="user.score && 'width:' + (user.score | percent : '1.0-0' : 'en-US')"
-              ></div>
-            </div>
-            <ng-container *ngIf="user.score">{{ user.score | percent }}</ng-container>
-            <div *ngIf="!user.score">
+            <ng-container *ngIf="user.score; else elseTemplate">
+              <div class="progress">
+                <div
+                  data-cy="scoreProgressBar"
+                  class="progress-bar d-inline-block"
+                  role="progressbar"
+                  [style]="user.score && 'width:' + (user.score | percent : '1.0-0' : 'en-US')"
+                ></div>
+              </div>
+              {{ user.score | percent }}
+            </ng-container>
+            <ng-template #elseTemplate>
               {{ I18ns.leadTeam.members.table.noScore }}
-            </div>
+            </ng-template>
           </td>
           <td class="text-center">
             {{ getQuestionsByUser(user.id)[0] }}

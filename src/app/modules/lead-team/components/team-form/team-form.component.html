@@ -27,7 +27,6 @@
       formControlName="longName"
       placeholder="{{ I18ns.leadTeam.teams.form.longNamePlaceholder }}"
     />
-    <p class="alto-grey mt-2">{{ I18ns.leadTeam.teams.form.longNameExemple }}</p>
 
     <label class="mt-4 form-label required">{{ I18ns.leadTeam.teams.form.shortName }}</label>
     <input
@@ -37,7 +36,6 @@
       formControlName="shortName"
       placeholder="{{ I18ns.leadTeam.teams.form.shortNamePlaceholder }}"
     />
-    <p class="alto-grey mt-2">{{ I18ns.leadTeam.teams.form.shortNameExemple }}</p>
 
     <!-- <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.invitationEmails }}</label>
     <ng-select class="alto-form"
@@ -52,9 +50,7 @@
     </ng-select>
     <p>{{ I18ns.leadTeam.teams.form.invitationEmailsSubtitle }}</p> -->
 
-    <label class="mt-4 form-label"
-      >{{ I18ns.leadTeam.teams.form.Programs }} {{ I18ns.shared.optional }}</label
-    >
+    <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.Programs }}</label>
     <ng-select
       data-cy="editProgramSelector"
       class="alto-form"
@@ -67,19 +63,12 @@
       formControlName="programs"
     >
     </ng-select>
-
-    <p class="alto-grey mt-2">{{ I18ns.leadTeam.teams.form.ProgramsSubtitle }}</p>
   </form>
 </div>
 <div class="footer">
   <hr class="m-0" />
   <div class="button-container">
-    <button
-      type="button"
-      class="btn btn-outline-secondary"
-      aria-label="Close"
-      (click)="activeOffcanvas.dismiss()"
-    >
+    <button type="button" class="btn cancel-btn" aria-label="Close" (click)="activeOffcanvas.dismiss()">
       {{ I18ns.shared.cancel }}
     </button>
     <ng-container *ngIf="isEdit; else elseTemplate">
