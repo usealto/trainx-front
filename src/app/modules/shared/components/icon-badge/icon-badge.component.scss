@@ -2,16 +2,16 @@
   display: inline-block;
   border-radius: 50%;
   text-align: center;
-  height: var(--size);
-  width: var(--size);
-  line-height: var(--size);
+  height: var(--rawSize);
+  width: var(--rawSize);
+  line-height: var(--rawSize);
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
   i {
-    font-size: calc(var(--size) / 2.5);
+    font-size: calc(var(--rawSize) / 2.5);
   }
   .bi::before {
-    line-height: var(--size);
+    line-height: var(--rawSize);
     vertical-align: unset;
   }
   &.badge-double-primary {

@@ -9,7 +9,7 @@
   <div class="col-6 ps-0">
     <div [class]="commentsCount ? 'warning-panel' : 'success-panel'">
       <alto-icon-badge
-        size="4.5rem"
+        [size]="5"
         icon="bi-chat"
         [color]="commentsCount ? 'badge-double-warning' : 'badge-double-success'"
       ></alto-icon-badge>
@@ -33,7 +33,7 @@
       fragment="submittedQuestionsAnchor"
     >
       <alto-icon-badge
-        size="4.5rem"
+        [size]="5"
         icon="bi-question-circle"
         [color]="questionsCount ? 'badge-double-warning' : 'badge-double-success'"
       ></alto-icon-badge>
@@ -66,7 +66,7 @@
 <div class="panel px-0 py-4">
   <div class="row">
     <div class="col border-end d-flex flex-row align-items-center px-4">
-      <alto-icon-badge size="4rem" icon="bi-bar-chart-fill"></alto-icon-badge>
+      <alto-icon-badge [size]="4" icon="bi-bar-chart-fill"></alto-icon-badge>
 
       <div class="col ps-4">
         <p class="stats-title">{{ I18ns.leadHome.statistics.averageScore }}</p>
@@ -77,7 +77,7 @@
       </div>
     </div>
     <div class="col border-end d-flex flex-row align-items-center px-4">
-      <alto-icon-badge size="4rem" icon="bi-check-square-fill"></alto-icon-badge>
+      <alto-icon-badge [size]="4" icon="bi-check-square-fill"></alto-icon-badge>
 
       <div class="col ps-4">
         <p class="stats-title">{{ I18ns.leadHome.statistics.terminatedPrograms }}</p>
@@ -95,7 +95,7 @@
       </div>
     </div>
     <div class="col d-flex flex-row align-items-center px-4">
-      <alto-icon-badge size="4rem" icon="bi-reply-all-fill"></alto-icon-badge>
+      <alto-icon-badge [size]="4" icon="bi-reply-all-fill"></alto-icon-badge>
 
       <div class="col ps-4">
         <p class="stats-title">{{ I18ns.leadHome.statistics.guessesCount }}</p>
