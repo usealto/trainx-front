@@ -1,27 +1,40 @@
-<h1 id="welcome">{{ I18ns.leadHome.title + profileStore.user.value.firstname | titlecase }}</h1>
-<p class="mb-4 alto-grey fs-6b">{{ I18ns.leadHome.subtitle }}</p>
+<div class="header-panel mb-4 row align-items-center">
+  <p class="welcome-icon col-1">👋</p>
+  <div class="col">
+    <h1>{{ I18ns.leadHome.title + (profileStore.user.value.firstname | titlecase) + '!' }}</h1>
+    <p class="alto-grey fs-6b">{{ I18ns.leadHome.subtitle }}</p>
+  </div>
+</div>
 <div class="row">
-  <div class="col-6">
-    <div class="panel">
-      <div class="d-inline-block alto-badge-big"><i class="fs-4 bi bi-chat-text"></i></div>
+  <div class="col-6 ps-0">
+    <div [class]="commentsCount ? 'warning-panel' : 'success-panel'">
+      <div class="d-inline-block" [class]="commentsCount ? 'alto-badge-warning' : 'alto-badge-success'">
+        <i class="fs-4 bi bi-chat"></i>
+      </div>
       <div class="d-inline-block align-bottom ms-4">
-        <p class="fw-bold fs-6b mb-1">
+        <p
+          class="fw-bold fs-6b mb-1"
+          [style]="commentsCount ? 'color: var(--orange--600)' : 'color: var(--success--600);'"
+        >
           {{ I18ns.leadHome.comments | plural : commentsCount }}
-          <span class="fst-italic alto-grey">({{ I18ns.shared.soon }})</span>
+          <span class="text-black">{{ I18ns.leadHome.awaiting }}</span>
         </p>
         <p class="alto-grey">
-          {{ I18ns.leadHome.subtitleComment | plural : commentsCount }}
+          {{ I18ns.leadHome.subtitleComment | plural: commentsCount }}
         </p>
       </div>
     </div>
   </div>
-  <div class="col-6">
+  <div class="col-6 pe-0">
     <div
-      class="panel cursor-pointer"
+      [class]="questionsCount ? 'warning-panel' : 'success-panel'"
+      class="cursor-pointer"
       [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
       fragment="submittedQuestionsAnchor"
     >
-      <div class="d-inline-block alto-badge-big"><i class="fs-4 bi bi-question-circle"></i></div>
+      <div class="d-inline-block" [class]="questionsCount ? 'alto-badge-warning' : 'alto-badge-success'">
+        <i class="fs-4 bi bi-question-circle"></i>
+      </div>
       <div class="d-inline-block align-bottom ms-4">
         <p class="fw-bold fs-6b mb-1">
           {{ I18ns.leadHome.question | plural : questionsCount }}
