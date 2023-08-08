@@ -16,15 +16,9 @@
     <p class="title" [ngClass]="{ 'w-100': !displayToggle }">{{ program.name }}</p>
     <div class="card-bottom">
       <ng-container *ngIf="program.teams.length > 0; else elseTeams">
-        <!-- <alto-colored-pill-list
-          data-cy="coloredTeams"
-          [limit]="5"
-          [hasDynamicColor]="true"
-          [data]="program.teams"
-        ></alto-colored-pill-list> -->
         <div class="d-inline-flex flex-nowrap">
           <p class="subtitle me-3">
-            <img class="pe-1 mb-3" [src]="Emoji.BustsInSilhouette | emoji" height="16" />
+            <img class="pe-2 mb-3" [src]="Emoji.BustsInSilhouette | emoji" height="16" />
             {{ (I18ns.shared.teams | titlecase) + ': ' }}
           </p>
           <span class="alto-badge teams">{{
@@ -41,7 +35,6 @@
           <img class="pe-1 mb-3" [src]="Emoji.PlayButton | emoji" height="14" />
           {{ I18ns.programs.programs.involvement }}
         </span>
-        <!-- <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.involvementToolTip }}"></i> -->
         <span class="float-end alto-score" [class]="(participation ? participation * 100 : '') | pillColor">{{
           participation ? (participation | percent) : '-'
         }}</span>
@@ -51,7 +44,6 @@
           <img class="pe-1 mb-3" [src]="Emoji.RollerCoaster | emoji" height="14" />
           {{ I18ns.programs.programs.progress }}
         </span>
-        <!-- <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.progressToolTip }}"></i> -->
         <span class="float-end alto-score" [class]="(progress ? progress * 100 : '') | pillColor">
           {{ progress ? (progress | percent) : '-' }}
         </span>
@@ -61,7 +53,6 @@
           <img class="pe-1 mb-3" [src]="Emoji.SportsMedal | emoji" height="14" />
           {{ I18ns.programs.programs.score }}
         </span>
-        <!-- <i class="bi bi-question-circle" ngbTooltip="{{ I18ns.programs.programs.scoreToolTip }}"></i> -->
         <span class="float-end alto-score" [class]="(score ? score * 100 : '') | pillColor">
           {{ score ? (score | percent) : '-' }}
         </span>
