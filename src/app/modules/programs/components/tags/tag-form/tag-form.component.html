@@ -2,16 +2,11 @@
   <button type="button" class="btn-close" aria-label="Close" (click)="activeOffcanvas.dismiss()"></button>
 </div>
 
-<div class="row m-6 g-0">
-  <div class="col-2" style="width: 2.857rem">
-    <i class="alto-badge-big alto-badge-blue me-4 bi bi-tag"></i>
-  </div>
-  <div class="col ms-4">
-    <h2>
-      {{ isEdit ? I18ns.tags.form.title.edit : I18ns.tags.form.title.create }}
-    </h2>
-    <p class="fs-7">{{ I18ns.tags.form.subtitle }}</p>
-  </div>
+<div class="mx-6 my-4">
+  <alto-icon-badge size="4rem" class="me-4"></alto-icon-badge>
+  <h2 class="d-inline-block">
+    {{ isEdit ? I18ns.tags.form.title.edit : I18ns.tags.form.title.create }}
+  </h2>
 </div>
 
 <hr class="mb-0" />
@@ -52,8 +47,8 @@
     >
     </ng-select> -->
 
-    <label class="form-label mt-3">{{ I18ns.tags.form.description + ' ' + I18ns.shared.optional }}</label>
-    <textarea formControlName="description" class="form-control" cols="30" rows="10"></textarea>
+    <!-- <label class="form-label mt-3">{{ I18ns.tags.form.description + ' ' + I18ns.shared.optional }}</label>
+    <textarea formControlName="description" class="form-control" cols="30" rows="10"></textarea> -->
   </form>
 </div>
 
@@ -61,20 +56,31 @@
   <hr class="m-0" />
 
   <div class="button-container">
-    <button
-      type="button"
-      class="btn btn-outline-secondary me-3"
-      aria-label="Close"
-      (click)="activeOffcanvas.dismiss()"
-    >
+    <button type="button" class="btn cancel-btn" aria-label="Close" (click)="activeOffcanvas.dismiss()">
       {{ I18ns.shared.cancel }}
     </button>
-    <input
-      type="submit"
-      [disabled]="!tagForm.valid"
-      class="btn btn-primary float-end"
-      [value]="I18ns.shared.save"
-      (click)="createTag()"
-    />
+
+    <ng-container *ngIf="isEdit; else elseTemplate">
+      <input
+        type="submit"
+        [disabled]="!tagForm.valid"
+        class="btn btn-primary float-end fs-5"
+        [value]="I18ns.shared.submit"
+        (click)="createTag()"
+      />
+    </ng-container>
+    <ng-template #elseTemplate>
+      <button
+        class="btn btn-primary float-end"
+        aria-label="Close"
+        (click)="createTag()"
+        [disabled]="!tagForm.valid"
+      >
+        <i class="bi bi-plus-lg"></i>
+        <span class="fs-5">
+          {{ I18ns.shared.create }}
+        </span>
+      </button>
+    </ng-template>
   </div>
 </div>
