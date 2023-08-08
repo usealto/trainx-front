@@ -3,6 +3,7 @@ export const FR = {
     smiley: '👍',
     edit: 'Modifier',
     save: 'Enregistrer',
+    submit: 'Valider',
     next: 'Suivant',
     previous: 'Précédent',
     cancel: 'Annuler',
