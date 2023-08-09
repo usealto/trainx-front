@@ -10,12 +10,13 @@ export class IconBadgeComponent implements OnInit {
   size = 3;
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    console.log(event.target.innerWidth);
     this.rawSize = this.size + 'rem';
-    if (event.target.innerWidth < 1160) {
-      this.rawSize = this.size / 1.33 + 'rem';
-    } else if (event.target.innerWidth < 1260) {
+
+    if (event.target.innerWidth < 840) {
+      this.rawSize = this.size / 2 + 'rem';
+    } else if (event.target.innerWidth < 1160) {
       this.rawSize = this.size / 1.5 + 'rem';
+    } else if (event.target.innerWidth < 1260) {
     }
   }
   @HostBinding('class')
