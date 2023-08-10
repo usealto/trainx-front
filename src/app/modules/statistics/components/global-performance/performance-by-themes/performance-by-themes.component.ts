@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-  ProgramStatsDtoApi,
   ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
@@ -27,7 +26,7 @@ import { StatisticsService } from '../../../services/statistics.service';
 export class PerformanceByThemesComponent implements OnChanges {
   @Input() duration: ScoreDuration = ScoreDuration.Year;
   I18ns = I18ns;
-  activeTab = 1;
+  // activeTab = 1;
   init = true;
 
   teams: { label: string; id: string }[] = [];
@@ -63,9 +62,6 @@ export class PerformanceByThemesComponent implements OnChanges {
               }));
             this.selectedTeams = this.teams.splice(0, 5);
           }),
-          tap(() => {
-            this.createPerformanceChart(this.selectedTeams);
-          }),
           untilDestroyed(this),
         )
         .subscribe();
@@ -77,7 +73,7 @@ export class PerformanceByThemesComponent implements OnChanges {
       .getScores({
         timeframe: ScoreTimeframeEnumApi.Day,
         duration: this.duration ?? ScoreDuration.Year,
-        type: this.activeTab === 1 ? ScoreTypeEnumApi.Tag : ScoreTypeEnumApi.Program,
+        type: ScoreTypeEnumApi.Tag,
       } as ChartFilters)
       .pipe(
         tap((res) => {
@@ -91,7 +87,6 @@ export class PerformanceByThemesComponent implements OnChanges {
           }
           this.getScoredItems(this.items);
           this.createScoreEvolutionChart(filteredItems, this.duration);
-          this.createPerformanceChart(this.selectedTeams);
         }),
         tap(() => (this.init = false)),
       );
@@ -108,75 +103,11 @@ export class PerformanceByThemesComponent implements OnChanges {
     this.scoredItems.flop = this.scoresServices.getFlop(scoredItems).slice(0, 3);
   }
 
-  createPerformanceChart(selectedTeams: { label: string; id: string }[]) {
-    let obs$: any;
-    this.activeTab === 1
-      ? (obs$ = this.scoresRestService.getTagsStats(this.duration))
-      : (obs$ = this.scoresRestService.getProgramsStats(this.duration));
-
-    obs$
-      .pipe(
-        tap((res: TagStatsDtoApi[] | ProgramStatsDtoApi[]) => {
-          // const labels = this.getThemesLabel(res);
-        }),
-      )
-      .subscribe();
+  getThemesLabel(stats: TagStatsDtoApi[]): string[] {
+    return (stats as TagStatsDtoApi[]).map((s) => s.tag.name);
   }
-
-  getThemesLabel(stats: ProgramStatsDtoApi[] | TagStatsDtoApi[]): string[] {
-    return this.activeTab === 1
-      ? (stats as TagStatsDtoApi[]).map((s) => s.tag.name)
-      : (stats as ProgramStatsDtoApi[]).map((s) => s.program.name);
-  }
-
-  // createChart(stats: ProgramStatsDtoApi[] | TagStatsDtoApi[], labels: string[], type: 'tags' | 'programs') {
-  //   const dataset = stats.map((s) => {
-  //   const res = { label: s.team.longName, data: [] as number[], fill: true };
-  //   s[type]?.forEach((item) => {
-  //     if (!this.selectedItems.length || this.selectedItems.some((i) => i.id === item.id)) {
-  //       res.data.push(item.score ? Math.round(item.score) : NaN);
-  //     }
-  //   });
-  //   return res;
-  //   });
-  //   const dataset = [{ label: '', data: [] as number[], fill: true }];
-
-  //   const data: ChartData = {
-  //     labels: labels,
-  //     datasets: dataset,
-  //   };
-
-  //   if (this.performanceChart) {
-  //     this.performanceChart.destroy();
-  //   }
-  //   const customChartOptions = {
-  //     ...chartDefaultOptions,
-  //     plugins: {
-  //       tooltip: {
-  //         callbacks: {
-  //           label: function (tooltipItem: any) {
-  //             let labelType = 'tag';
-  //             if (type === 'programs') {
-  //               labelType = 'programme';
-  //             }
-  //             return `${labelType} ${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
-  //           },
-  //         },
-  //       },
-  //       legend: {
-  //         display: false,
-  //       },
-  //     },
-  //   };
-  //   this.performanceChart = new Chart('themePerformance', {
-  //     type: 'radar',
-  //     data: data,
-  //     options: { ...customChartOptions, scales: undefined },
-  //   });
-  // }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
-    const type = this.activeTab === 1 ? 'tags' : 'programs';
     scores = this.scoresServices.reduceChartData(scores);
     const labels = this.statisticsServices.formatLabel(
       this.statisticsServices.aggregateDataForScores(scores[0], duration).map((d) => d.x),
@@ -248,10 +179,7 @@ export class PerformanceByThemesComponent implements OnChanges {
         tooltip: {
           callbacks: {
             label: function (tooltipItem: any) {
-              let labelType = 'tag';
-              if (type === 'programs') {
-                labelType = 'programme';
-              }
+              const labelType = 'tag';
               return `${labelType} ${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
             },
           },
@@ -275,15 +203,8 @@ export class PerformanceByThemesComponent implements OnChanges {
     });
   }
 
-  // changeTabs() {
-  //   this.activeTab = this.activeTab === 1 ? 2 : 1;
-  //   this.init = true;
-  //   this.getScores().subscribe();
-  // }
-
   filterTeams(teams: { label: string; id: string }[]) {
     this.selectedTeams = teams;
-    this.createPerformanceChart(this.selectedTeams);
     return;
   }
 

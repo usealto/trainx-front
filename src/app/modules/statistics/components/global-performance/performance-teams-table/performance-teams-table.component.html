@@ -1,5 +1,8 @@
 <div class="row mb-4">
-  <div class="col-8">
+  <div class="col-4">
+    <alto-search (searchChange)="getTeamsFiltered({ search: $event })"></alto-search>
+  </div>
+  <div class="col-8 text-end">
     <alto-dropdown-filter
       class="text-start"
       [data]="teams"
@@ -26,9 +29,6 @@
       [placeholder]="I18ns.programs.questions.filters.tags"
       (selectChange)="getTeamsFiltered({ tags: $event })"
     ></alto-dropdown-filter>
-  </div>
-  <div class="col-4 text-end">
-    <!-- <alto-search (searchChange)="getTeamsFiltered({ search: $event })"></alto-search> -->
   </div>
 </div>
 
@@ -96,7 +96,6 @@
     [collectionSize]="teams.length"
     (pageChange)="changeTeamsPage($event)"
     [pageSize]="teamsPageSize"
-    [maxSize]="5"
     [page]="teamsPage"
   ></alto-pagination>
 </div>

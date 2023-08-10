@@ -328,27 +328,12 @@ export const FR = {
           tags: 'Tags',
         },
         scoreEvolutionChart: {
-          title: 'Évolution du score',
-          subtitle: 'Evolution du niveau de maitrise des connaissances de vos équipes par tags/programmes',
-        },
-        performanceChart: {
-          title: {
-            tags: 'Performance par tag',
-            programs: 'Performance par programme',
-          },
-          subtitle: {
-            tags: 'Niveau de maitrise (des connaissances) de vos équipes par tags',
-            programs: 'Niveau de maitrise (des connaissances) de vos équipes par programmes',
-          },
+          title: 'Évolution du niveau de maîtrise',
+          subtitle: 'Évolution du score moyen de vos équipes par tag.',
         },
         control: {
-          title: 'Maitrise par thématiques',
-          subtitle: {
-            tags: 'Panel des tags les mieux et moins bien maitrisés par vos équipes',
-            programs: 'Panel des programmes les mieux et moins bien maitrisés par vos équipes',
-          },
-          top: 'Top',
-          flop: 'Flop',
+          title: 'Niveau de maîtrise des thématiques',
+          subtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
         },
         nav: {
           tags: 'Tags',
@@ -356,8 +341,8 @@ export const FR = {
         },
       },
       teamsTable: {
-        title: 'Équipes',
-        subtitle: "Découvrez les scores moyens et axes d'amélioration par équipe.",
+        title: 'Vos équipes',
+        subtitle: "Découvrez les scores moyens et les axes d'amélioration par équipe.",
         columns: {
           team: 'Équipe',
           globalScore: 'Score global',

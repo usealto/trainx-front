@@ -1,12 +1,4 @@
-<!-- <alto-tabs
-  (tabChanged)="changeTabs()"
-  [data]="[
-    { label: I18ns.statistics.globalPerformance.perThemePerformance.nav.tags, value: 1 },
-    { label: I18ns.statistics.globalPerformance.perThemePerformance.nav.programs, value: 2 }
-  ]"
-></alto-tabs> -->
-
-<div class="score-evolution-chart panel">
+<div class="score-evolution-chart panel mb-5">
   <alto-dropdown-filter
     *ngIf="items.length >= 7"
     class="float-end mx-2"
@@ -26,60 +18,11 @@
   <div class="chart-container">
     <canvas id="themeScoreEvolution"></canvas>
   </div>
-  <!-- <div class="col-5">
-    <div class="panel mb-4">
-      <h2>
-        {{
-          activeTab === 1
-            ? I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.title.tags
-            : I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.title.programs
-        }}
-      </h2>
-      <p class="alto-grey mb-4">
-        {{
-          activeTab === 1
-            ? I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.subtitle.tags
-            : I18ns.statistics.globalPerformance.perThemePerformance.performanceChart.subtitle.programs
-        }}
-      </p>
-      <div class="chart-container2">
-        <canvas id="themePerformance"></canvas>
-      </div>
-    </div>
-    <div class="panel">
-      <h2>{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
-      <p class="alto-grey mb-4">
-        {{
-          activeTab === 1
-            ? I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle.tags
-            : I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle.programs
-        }}
-      </p>
-      <div class="row">
-        <div class="col-6 border-end pe-0">
-          <h1 class="mb-4">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.top }}</h1>
-          <div class="height-100">
-            <p *ngFor="let team of scoredItems.top" class="mb-3">
-              <span class="top-flop-label">{{ team.label }}</span>
-              <span class="float-end alto-score me-4" [class]="team.avg * 100 | pillColor">
-                {{ team.avg | percent }}
-              </span>
-            </p>
-          </div>
-        </div>
-        <div class="col-6 ps-4 pe-0">
-          <h1 class="mb-4">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.flop }}</h1>
-          <div class="height-100">
-            <p *ngFor="let team of scoredItems.flop" class="mb-3">
-              <span class="top-flop-label">{{ team.label }}</span>
-              <span class="float-end alto-score" [class]="team.avg * 100 | pillColor">
-                {{ team.avg | percent }}
-              </span>
-            </p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div> -->
 </div>
+
+<alto-top-flop
+  [title]="I18ns.statistics.globalPerformance.perThemePerformance.control.title"
+  [subtitle]="I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle"
+  [leaderboard]="[]"
+>
+</alto-top-flop>
