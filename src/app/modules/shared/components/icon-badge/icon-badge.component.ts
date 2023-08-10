@@ -16,7 +16,6 @@ export class IconBadgeComponent implements OnInit {
       this.rawSize = this.size / 2 + 'rem';
     } else if (event.target.innerWidth < 1160) {
       this.rawSize = this.size / 1.5 + 'rem';
-    } else if (event.target.innerWidth < 1260) {
     }
   }
   @HostBinding('class')

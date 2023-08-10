@@ -17,7 +17,7 @@
     <div class="card-bottom">
       <ng-container *ngIf="program.teams.length > 0; else elseTeams">
         <div class="d-inline-flex flex-nowrap">
-          <p class="subtitle me-3">
+          <p class="subtitle me-3 fs-7">
             <img class="pe-2 mb-3" [src]="Emoji.BustsInSilhouette | emoji" height="16" />
             {{ (I18ns.shared.teams | titlecase) + ': ' }}
           </p>

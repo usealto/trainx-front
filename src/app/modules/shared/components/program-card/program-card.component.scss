@@ -26,6 +26,10 @@
   width: 86%;
 }
 
+.subtitle {
+  color: var(--gray-500);
+}
+
 .span-text {
   font-size: 0.83333rem;
   font-style: normal;
@@ -51,6 +55,7 @@ h2 {
     font-size: 0.83333rem;
     font-style: normal;
     font-weight: 600;
+    color: var(--gray-500);
   }
   .badge {
     font-size: 0.857rem;

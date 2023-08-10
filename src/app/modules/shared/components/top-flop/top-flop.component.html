@@ -43,7 +43,7 @@
         <img class="me-2" [src]="Emoji.Snail | emoji" height="16" />
         <h4 class="d-inline-block">{{ I18ns.shared.flop }}</h4>
       </div>
-      <div *ngFor="let item of data.flop" class="topFlop-item ms-5">
+      <div *ngFor="let item of data.flop" class="topFlop-item ms-5" [style]="data.flop.length === 2 ? 'margin-top: 2rem' : '' ">
         <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">{{
           item.avg | percent
         }}</span>

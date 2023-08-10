@@ -15,16 +15,22 @@
 
 .warning-panel {
   background-color: var(--orange-25);
+  .title {
+    font-weight: 600;
+  }
 }
 
 .header-panel {
-  padding: 1.6667rem 2.6667rem
+  padding: 1.6667rem 2.6667rem;
 }
 
 .success-panel {
   background-color: white;
   .icon-bg1 {
     background-color: var(--success-50);
+  }
+  .title {
+    font-weight: 600;
   }
 }
 
@@ -34,6 +40,13 @@
 
 .stats-title {
   font-size: 0.83333rem;
+  color: var(--gray-500);
+}
+.stats-content {
+  font-weight: 600;
+}
+.subtitle {
+  color: var(--gray-500);
 }
 
 .chart-container {
