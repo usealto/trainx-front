@@ -308,7 +308,7 @@ export const FR = {
       navbarTitle: 'Performance globale',
       perTeamPerformance: {
         title: 'Performance par équipes',
-        subtitle: 'Retrouvez les performances globales de vos équipes.',
+        subtitle: "Retrouvez une vue d' ensemble sur les résultats de vos équipes.",
         teamFilter: 'Équipes',
         scoreEvolution: {
           title: 'Évolution du score',
@@ -316,40 +316,24 @@ export const FR = {
         },
         leaderboard: {
           title: 'Leaderboard',
+          subtitle: 'Aperçu du niveau de maîtrise de vos équipes.',
           top: 'Top',
           flop: 'Flop',
         },
       },
       perThemePerformance: {
         title: 'Performance par thèmatiques',
-        subtitle: 'Retrouvez les performances globales de vos équipes.',
+        subtitle: "Retrouvez une vue d'ensemble sur les résultats de vos équipes selon leurs thématiques.",
         filters: {
-          teams: 'Équipes',
           tags: 'Tags',
-          programs: 'Programmes',
         },
         scoreEvolutionChart: {
-          title: 'Évolution du score',
-          subtitle: 'Evolution du niveau de maitrise des connaissances de vos équipes par tags/programmes',
-        },
-        performanceChart: {
-          title: {
-            tags: 'Performance par tag',
-            programs: 'Performance par programme',
-          },
-          subtitle: {
-            tags: 'Niveau de maitrise (des connaissances) de vos équipes par tags',
-            programs: 'Niveau de maitrise (des connaissances) de vos équipes par programmes',
-          },
+          title: 'Évolution du niveau de maîtrise',
+          subtitle: 'Évolution du score moyen de vos équipes par tag.',
         },
         control: {
-          title: 'Maitrise par thématiques',
-          subtitle: {
-            tags: 'Panel des tags les mieux et moins bien maitrisés par vos équipes',
-            programs: 'Panel des programmes les mieux et moins bien maitrisés par vos équipes',
-          },
-          top: 'Top',
-          flop: 'Flop',
+          title: 'Niveau de maîtrise des thématiques',
+          subtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
         },
         nav: {
           tags: 'Tags',
@@ -357,8 +341,8 @@ export const FR = {
         },
       },
       teamsTable: {
-        title: 'Équipes',
-        subtitle: "Découvrez les scores moyens et axes d'amélioration par équipe.",
+        title: 'Vos équipes',
+        subtitle: "Découvrez les scores moyens et les axes d'amélioration par équipe.",
         columns: {
           team: 'Équipe',
           globalScore: 'Score global',
@@ -508,18 +492,15 @@ export const FR = {
         },
         subtitle: 'Donner un nom à votre équipe',
         longName: 'Nom (version longue)',
-        longNamePlaceholder: "Nom complet de l'équipe",
-        longNameExemple: 'Exemple : Sales Development Representative',
+        longNamePlaceholder: 'Exemple : Sales Development Representative',
         shortName: 'Nom (version abrégée)',
-        shortNamePlaceholder: "Nom de l'équipe",
-        shortNameExemple: 'Exemple : SDR',
+        shortNamePlaceholder: 'Exemple : SDR',
         invitationEmails: 'Invitation par mail',
         invitationEmailsPlaceholder: 'Séparer les emails par une virgule',
         invitationEmailsSubtitle:
           "Vos collaborateurs recevront une invitation par mail pour s'inscrire à Alto.",
         Programs: 'Programmes',
-        programsPlaceholder: 'Rechercher dans vos programmes',
-        ProgramsSubtitle: 'Sélectionner les programmes auxquels cette équipe doit être assignée.',
+        programsPlaceholder: 'Sélectionner les programmes assignés à cette équipe',
       },
       deleteModal: {
         title: 'Supprimer l\'équipe "{{}}"',

@@ -1,5 +1,8 @@
 <div class="row mb-4">
-  <div class="col-8">
+  <div class="col-4">
+    <alto-search (searchChange)="getTeamsFiltered({ search: $event })"></alto-search>
+  </div>
+  <div class="col-8 text-end">
     <alto-dropdown-filter
       class="text-start"
       [data]="teams"
@@ -27,9 +30,6 @@
       (selectChange)="getTeamsFiltered({ tags: $event })"
     ></alto-dropdown-filter>
   </div>
-  <div class="col-4 text-end">
-    <!-- <alto-search (searchChange)="getTeamsFiltered({ search: $event })"></alto-search> -->
-  </div>
 </div>
 
 <div class="table-panel">
@@ -37,7 +37,7 @@
     <thead>
       <tr>
         <th scope="col" class="w-20">{{ I18ns.statistics.globalPerformance.teamsTable.columns.team }}</th>
-        <th scope="col" class="w-15 text-center">
+        <th scope="col" class="w-10 text-center">
           {{ I18ns.statistics.globalPerformance.teamsTable.columns.globalScore }}
         </th>
         <th scope="col" class="w-15 text-center">
@@ -54,7 +54,7 @@
     <tbody>
       <tr *ngFor="let team of paginatedTeams" class="align-middle">
         <td class="fw-medium alto-text-color">
-          {{ team.label }}
+          {{ team.team.longName }}
         </td>
         <td class="text-center">
           {{ team.score | percent }}
@@ -69,24 +69,24 @@
         <td>
           <!-- <ng-template #programsTooltip>
             <ng-container *ngFor="let prog of team.programs">{{ prog.label }}<br /></ng-container>
-          </ng-template>
+          </ng-template>-->
 
           <ng-container *ngIf="team.programs">
             <alto-colored-pill-list
-              [data]="team.programs | sort : 'asc' : 'score' | slice : 0 : 3"
+              [data]="team.programs || [] | sort : 'asc' : 'score' | slice : 0 : 3"
             ></alto-colored-pill-list>
-          </ng-container> -->
+          </ng-container>
         </td>
         <td>
           <!-- <ng-template #tagsTooltip>
             <ng-container *ngFor="let tag of team.tags">{{ tag.label }}<br /></ng-container>
-          </ng-template>
+          </ng-template>-->
 
           <ng-container *ngIf="team.tags">
             <alto-colored-pill-list
               [data]="team.tags | sort : 'asc' : 'score' | slice : 0 : 3"
             ></alto-colored-pill-list>
-          </ng-container> -->
+          </ng-container>
         </td>
       </tr>
     </tbody>
@@ -96,7 +96,6 @@
     [collectionSize]="teams.length"
     (pageChange)="changeTeamsPage($event)"
     [pageSize]="teamsPageSize"
-    [maxSize]="5"
     [page]="teamsPage"
   ></alto-pagination>
 </div>
