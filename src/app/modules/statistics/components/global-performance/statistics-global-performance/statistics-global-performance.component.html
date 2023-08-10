@@ -56,3 +56,18 @@
 <alto-performance-teams-table [duration]="duration"></alto-performance-teams-table>
 
 <hr />
+
+<div class="mb-4 position-relative">
+  <alto-time-picker
+    class="time-picker2"
+    [duration]="duration"
+    (durationSelected)="updateTimePicker($event)"
+  ></alto-time-picker>
+  <h2 class>
+    <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" />
+    {{ I18ns.statistics.globalPerformance.questionsTable.title }}
+  </h2>
+  <p class="mb-4 alto-grey">{{ I18ns.statistics.globalPerformance.questionsTable.subtitle }}</p>
+</div>
+
+<alto-performance-questions-table [duration]="duration"></alto-performance-questions-table>
