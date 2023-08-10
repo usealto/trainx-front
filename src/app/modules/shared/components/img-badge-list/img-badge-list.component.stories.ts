@@ -1,7 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 import { ImgBadgeListComponent } from './img-badge-list.component';
-import { SharedModule } from '../../shared.module';
 
 const meta: Meta<ImgBadgeListComponent> = {
   title: 'Shared/ImgBadgeList',

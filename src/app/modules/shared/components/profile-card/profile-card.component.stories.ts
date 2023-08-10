@@ -1,7 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 import { ProfileCardComponent } from './profile-card.component';
-import { SharedModule } from '../../shared.module';
 
 const meta: Meta<ProfileCardComponent> = {
   title: 'Shared/ProfileCard',

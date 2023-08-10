@@ -1,7 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 import { QuestionDeleteModalComponent } from './question-delete-modal.component';
-import { SharedModule } from '../../shared.module';
 import { QuestionDtoApiAnswerTypeEnumApi, QuestionDtoApiTypeEnumApi } from '@usealto/sdk-ts-angular';
 
 const meta: Meta<QuestionDeleteModalComponent> = {

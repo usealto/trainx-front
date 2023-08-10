@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { ButtonGroupComponent } from './button-group.component';
+
 const meta: Meta<ButtonGroupComponent> = {
   title: 'Shared/ButtonGroup',
   component: ButtonGroupComponent,

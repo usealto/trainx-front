@@ -1,7 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 import { ColoredPillListComponent } from './colored-pill.component';
-import { SharedModule } from '../../shared.module';
 
 const meta: Meta<ColoredPillListComponent> = {
   title: 'Shared/ColoredPill',

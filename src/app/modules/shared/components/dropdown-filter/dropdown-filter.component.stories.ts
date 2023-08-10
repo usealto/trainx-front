@@ -1,7 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 import { DropdownFilterComponent } from './dropdown-filter.component';
-import { SharedModule } from '../../shared.module';
 
 const meta: Meta<DropdownFilterComponent> = {
   title: 'Shared/DropdownFilter',

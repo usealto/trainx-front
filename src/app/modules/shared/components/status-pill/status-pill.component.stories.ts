@@ -1,7 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/angular';
-import { moduleMetadata } from '@storybook/angular';
 import { StatusPillComponent } from './status-pill.component';
-import { SharedModule } from '../../shared.module';
 import { ChallengeDtoApiStatusEnumApi } from '@usealto/sdk-ts-angular';
 
 const meta: Meta<StatusPillComponent> = {
