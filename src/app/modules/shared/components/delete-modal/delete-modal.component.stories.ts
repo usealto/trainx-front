@@ -7,11 +7,6 @@ const meta: Meta<DeleteModalComponent> = {
   title: 'Shared/DeleteModal',
   component: DeleteModalComponent,
   tags: ['autodocs'],
-  decorators: [
-    moduleMetadata({
-      imports: [SharedModule],
-    }),
-  ],
   render: (args: DeleteModalComponent) => ({
     props: {
       ...args,

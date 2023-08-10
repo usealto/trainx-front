@@ -7,11 +7,6 @@ const meta: Meta<ScoreFilterComponent> = {
   title: 'Shared/ScoreFilter',
   component: ScoreFilterComponent,
   tags: ['autodocs'],
-  decorators: [
-    moduleMetadata({
-      imports: [SharedModule],
-    }),
-  ],
   render: (args: ScoreFilterComponent) => ({
     props: {
       ...args,

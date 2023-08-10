@@ -8,11 +8,6 @@ const meta: Meta<QuestionDeleteModalComponent> = {
   title: 'Shared/QuestionDeleteModal',
   component: QuestionDeleteModalComponent,
   tags: ['autodocs'],
-  decorators: [
-    moduleMetadata({
-      imports: [SharedModule],
-    }),
-  ],
   render: (args: QuestionDeleteModalComponent) => ({
     props: {
       ...args,

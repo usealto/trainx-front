@@ -7,11 +7,6 @@ const meta: Meta<ProgressionBadgeComponent> = {
   title: 'Shared/ProgressionBadge',
   component: ProgressionBadgeComponent,
   tags: ['autodocs'],
-  decorators: [
-    moduleMetadata({
-      imports: [SharedModule],
-    }),
-  ],
   render: (args: ProgressionBadgeComponent) => ({
     props: {
       ...args,

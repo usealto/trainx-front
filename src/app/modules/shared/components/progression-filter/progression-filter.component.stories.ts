@@ -7,11 +7,6 @@ const meta: Meta<ProgressionFilterComponent> = {
   title: 'Shared/ProgressionFilter',
   component: ProgressionFilterComponent,
   tags: ['autodocs'],
-  decorators: [
-    moduleMetadata({
-      imports: [SharedModule],
-    }),
-  ],
   render: (args: ProgressionFilterComponent) => ({
     props: {
       ...args,

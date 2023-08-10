@@ -7,11 +7,6 @@ const meta: Meta<ImgBadgeListComponent> = {
   title: 'Shared/ImgBadgeList',
   component: ImgBadgeListComponent,
   tags: ['autodocs'],
-  decorators: [
-    moduleMetadata({
-      imports: [SharedModule],
-    }),
-  ],
   render: (args: ImgBadgeListComponent) => ({
     props: {
       ...args,

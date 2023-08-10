@@ -7,11 +7,6 @@ const meta: Meta<PeriodFilterComponent> = {
   title: 'Shared/PeriodFilter',
   component: PeriodFilterComponent,
   tags: ['autodocs'],
-  decorators: [
-    moduleMetadata({
-      imports: [SharedModule],
-    }),
-  ],
   render: (args: PeriodFilterComponent) => ({
     props: {
       ...args,

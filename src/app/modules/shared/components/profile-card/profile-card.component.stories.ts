@@ -7,11 +7,6 @@ const meta: Meta<ProfileCardComponent> = {
   title: 'Shared/ProfileCard',
   component: ProfileCardComponent,
   tags: ['autodocs'],
-  decorators: [
-    moduleMetadata({
-      imports: [SharedModule],
-    }),
-  ],
   render: (args: ProfileCardComponent) => ({
     props: {
       ...args,

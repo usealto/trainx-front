@@ -7,11 +7,6 @@ const meta: Meta<DropdownFilterComponent> = {
   title: 'Shared/DropdownFilter',
   component: DropdownFilterComponent,
   tags: ['autodocs'],
-  decorators: [
-    moduleMetadata({
-      imports: [SharedModule],
-    }),
-  ],
   render: (args: DropdownFilterComponent) => ({
     props: {
       ...args,

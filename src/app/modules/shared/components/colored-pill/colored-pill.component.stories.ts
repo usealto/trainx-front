@@ -7,11 +7,6 @@ const meta: Meta<ColoredPillListComponent> = {
   title: 'Shared/ColoredPill',
   component: ColoredPillListComponent,
   tags: ['autodocs'],
-  decorators: [
-    moduleMetadata({
-      imports: [SharedModule],
-    }),
-  ],
   render: (args: ColoredPillListComponent) => ({
     props: {
       ...args,

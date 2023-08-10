@@ -8,11 +8,6 @@ const meta: Meta<StatusPillComponent> = {
   title: 'Shared/StatusPill',
   component: StatusPillComponent,
   tags: ['autodocs'],
-  decorators: [
-    moduleMetadata({
-      imports: [SharedModule],
-    }),
-  ],
   render: (args: StatusPillComponent) => ({
     props: {
       ...args,

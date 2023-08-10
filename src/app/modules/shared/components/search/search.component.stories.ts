@@ -7,11 +7,6 @@ const meta: Meta<SearchComponent> = {
   title: 'Shared/Search',
   component: SearchComponent,
   tags: ['autodocs'],
-  decorators: [
-    moduleMetadata({
-      imports: [SharedModule],
-    }),
-  ],
   render: (args: SearchComponent) => ({
     props: {
       ...args,
