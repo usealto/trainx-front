@@ -3,29 +3,29 @@
     <alto-search (searchChange)="getTeamsFiltered({ search: $event })"></alto-search>
   </div>
   <div class="col-8 text-end">
-    <alto-dropdown-filter
+    <!-- <alto-dropdown-filter
       class="text-start"
-      [data]="teams"
-      [displayLabel]="'label'"
+      [data]="getTeamsDropdown(teamsDisplay.length)"
+      [displayLabel]="'longName'"
       [returnValue]="'id'"
       [placeholder]="I18ns.programs.programs.filters.team"
       [isColored]="true"
       (selectChange)="getTeamsFiltered({ teams: $event })"
       class="me-3"
-    ></alto-dropdown-filter>
+    ></alto-dropdown-filter> -->
     <alto-dropdown-filter
-      class="me-3"
+      class="me-3 text-start"
       [data]="programs"
-      [displayLabel]="'label'"
+      [displayLabel]="'name'"
       [returnValue]="'id'"
       [placeholder]="I18ns.programs.questions.filters.programs"
       (selectChange)="getTeamsFiltered({ programs: $event })"
     ></alto-dropdown-filter>
     <alto-dropdown-filter
-      class="me-3"
+      class="text-start"
       [data]="tags"
       [returnValue]="'id'"
-      [displayLabel]="'label'"
+      [displayLabel]="'name'"
       [placeholder]="I18ns.programs.questions.filters.tags"
       (selectChange)="getTeamsFiltered({ tags: $event })"
     ></alto-dropdown-filter>
@@ -93,7 +93,7 @@
   </table>
   <alto-pagination
     class="mx-4 d-block"
-    [collectionSize]="teams.length"
+    [collectionSize]="teamsDisplay.length"
     (pageChange)="changeTeamsPage($event)"
     [pageSize]="teamsPageSize"
     [page]="teamsPage"
