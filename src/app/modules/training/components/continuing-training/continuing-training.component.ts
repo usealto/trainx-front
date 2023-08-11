@@ -62,8 +62,8 @@ export class ContinuingTrainingComponent implements OnInit {
             previousSCore.find((u) => u.id === this.profileStore.user.value.id)?.score ?? 0;
           this.avgScoreProgression = this.avgScore - previousAvgScore;
 
-          this.streak = this.profileStore.user.value.currentStreak.count;
-          this.longestStreak = this.profileStore.user.value.longestStreak.count;
+          this.streak = this.profileStore.user.value.currentStreak?.count;
+          this.longestStreak = this.profileStore.user.value.longestStreak?.count;
         }),
       )
       .subscribe();

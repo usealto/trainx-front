@@ -107,17 +107,16 @@
 
     <hr />
     <ng-template #popContent>
-      <div>
-        <a
-          data-cy="profile"
-          [routerLink]="
-            displayAdmin
-              ? AltoRoutes.lead + '/' + AltoRoutes.profile
-              : AltoRoutes.user + '/' + AltoRoutes.profile
-          "
-          ><i class="bi bi-person"></i>{{ I18ns.menu.profile }}
-        </a>
-      </div>
+      <a
+        data-cy="profile"
+        [routerLink]="
+          displayAdmin
+            ? AltoRoutes.lead + '/' + AltoRoutes.profile
+            : AltoRoutes.user + '/' + AltoRoutes.profile
+        "
+      >
+        <div><i class="bi bi-person"></i>{{ I18ns.menu.profile }}</div>
+      </a>
       <div *ngIf="isAdmin" class="form-check form-switch">
         <input
           class="form-check-input"
@@ -131,16 +130,12 @@
           {{ I18ns.menu.adminMode }}
         </label>
       </div>
-      <div>
-        <a href="https://airtable.com/appIyNNDxAgaqKMAJ/shr4vWMugZ5uEc5a4"
-          ><i class="bi bi-chat-text"></i>{{ I18ns.menu.feedback }}</a
-        >
-      </div>
-      <div>
-        <a class="logout" (click)="logOut()">
-          <i class="bi bi-box-arrow-right"></i>{{ I18ns.menu.disconnect }}</a
-        >
-      </div>
+      <a href="https://airtable.com/appIyNNDxAgaqKMAJ/shr4vWMugZ5uEc5a4" target="_blank">
+        <div><i class="bi bi-chat-text"></i>{{ I18ns.menu.feedback }}</div>
+      </a>
+      <a class="logout" (click)="logOut()">
+        <div><i class="bi bi-box-arrow-right"></i>{{ I18ns.menu.disconnect }}</div>
+      </a>
     </ng-template>
     <alto-img-badge
       [toggleTooltip]="toggleTooltip"
