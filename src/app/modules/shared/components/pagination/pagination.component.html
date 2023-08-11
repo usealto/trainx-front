@@ -1,6 +1,5 @@
 <ngb-pagination
   (pageChange)="paginate($event)"
-  [maxSize]="maxSize"
   [page]="page"
   [pageSize]="pageSize"
   [collectionSize]="collectionSize"
@@ -14,16 +13,7 @@
   <ng-template ngbPaginationPages let-page let-pages="pages">
     <div class="ngb-custom-pages-item mt-3" *ngIf="collectionSize > pageSize">
       <span id="paginationDescription" class="col-form-label text-nowrap numbers">
-        {{
-          (page - 1) * pageSize +
-            1 +
-            ' - ' +
-            (pageSize * page < collectionSize ? pageSize * page : collectionSize) +
-            ' ' +
-            I18ns.shared.pagination.on +
-            ' ' +
-            collectionSize
-        }}
+        {{ page + ' ' + I18ns.shared.pagination.on + ' ' + lastPage }}
       </span>
     </div>
   </ng-template>
