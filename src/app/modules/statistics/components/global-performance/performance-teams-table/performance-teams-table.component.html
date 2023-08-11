@@ -40,7 +40,7 @@
         <th scope="col" class="w-10 text-center">
           {{ I18ns.statistics.globalPerformance.teamsTable.columns.globalScore }}
         </th>
-        <th scope="col" class="w-15 text-center">
+        <th scope="col" class="w-15">
           {{ I18ns.statistics.globalPerformance.teamsTable.columns.scoreEvolution }}
         </th>
         <th scope="col" class="w-35">
@@ -53,7 +53,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let team of paginatedTeams" class="align-middle">
-        <td class="fw-medium alto-text-color">
+        <td>
           {{ team.team.longName }}
         </td>
         <td class="text-center">

@@ -4,8 +4,10 @@ export interface QuestionDisplay {
   isChecked: boolean;
 }
 export interface QuestionFilters {
+  duration?: string;
   programs?: string[];
   tags?: string[];
+  teams?: string[];
   score?: string;
   search?: string;
 }

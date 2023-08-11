@@ -6,13 +6,16 @@
     <alto-dropdown-filter
       class="text-start me-3"
       [data]="teamStore.teams.value"
-      [displayLabel]="'name'"
+      [displayLabel]="'longName'"
       [returnValue]="'id'"
       [placeholder]="I18ns.programs.programs.filters.team"
       [isColored]="true"
       (selectChange)="getQuestionsFiltered({ teams: $event })"
     ></alto-dropdown-filter>
-    <alto-score-filter class="text-start"></alto-score-filter>
+    <alto-score-filter
+      (selectChange)="getQuestionsFiltered({ score: $event })"
+      class="text-start"
+    ></alto-score-filter>
   </div>
 </div>
 
@@ -20,50 +23,48 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col" class="w-20">{{ I18ns.statistics.globalPerformance.teamsTable.columns.team }}</th>
+        <th scope="col" class="w-35">
+          {{ I18ns.statistics.globalPerformance.questionsTable.columns.question }}
+        </th>
         <th scope="col" class="w-10 text-center">
           {{ I18ns.statistics.globalPerformance.questionsTable.columns.globalScore }}
         </th>
-        <th scope="col" class="w-15 text-center">
+        <th scope="col" class="w-10">
           {{ I18ns.statistics.globalPerformance.questionsTable.columns.scoreEvolution }}
         </th>
-        <th scope="col" class="w-35">
+        <th scope="col" class="w-20">
           {{ I18ns.statistics.globalPerformance.questionsTable.columns.usersNumber }}
         </th>
-        <th scope="col" class="w-30">
+        <th scope="col" class="w-25">
           {{ I18ns.statistics.globalPerformance.questionsTable.columns.badTeams }}
         </th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let quest of paginatedQuestions" class="align-middle">
-        <td class="fw-medium alto-text-color">
+        <td>
           {{ quest.question.title }}
         </td>
         <td class="text-center">
           {{ quest.score | percent }}
         </td>
-        <!--<td class="text-center">
+        <td>
           <alto-progression-badge
             class="d-inline-block ms-3"
-            [score]="getTeamPreviousScore(quest)"
+            [score]="getQuestionPreviousScore(quest)"
             *ngIf="!scoreIsLoading"
           ></alto-progression-badge>
-        </td> -->
-        <!-- <td>
-          <ng-container *ngIf="quest.programs">
+        </td>
+        <td>{{ quest.usersCount }}</td>
+        <td>
+          <ng-container *ngIf="quest.teams">
             <alto-colored-pill-list
-              [data]="quest.programs || [] | sort : 'asc' : 'score' | slice : 0 : 3"
+              [hasDynamicColor]="true"
+              [limit]="3"
+              [data]="quest.teams | sort : 'asc' : 'score' | slice : 0 : 6"
             ></alto-colored-pill-list>
           </ng-container>
         </td>
-        <td>
-          <ng-container *ngIf="team.tags">
-            <alto-colored-pill-list
-              [data]="team.tags | sort : 'asc' : 'score' | slice : 0 : 3"
-            ></alto-colored-pill-list>
-          </ng-container>
-        </td> -->
       </tr>
     </tbody>
   </table>
