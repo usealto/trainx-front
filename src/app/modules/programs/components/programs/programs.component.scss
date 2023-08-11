@@ -4,12 +4,11 @@
   padding-top: 3.33rem;
 }
 
-.emoji-title {
-  height: 2.67rem;
-}
-
-.emoji {
-  height: 1.67rem;
+.header-panel {
+  .emoji {
+    height: 2.6667rem;
+    vertical-align: sub;
+  }
 }
 .subtitle {
   margin-top: 0.67rem;
@@ -22,28 +21,6 @@
 
 .active-programs {
   margin-bottom: 3.33rem;
-}
-
-.welcome-icon {
-  margin-right: 20px;
-  font-size: 2rem;
-}
-
-.welcome-content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  height: 100%;
-}
-
-.welcome-content h1,
-.welcome-content p {
-  margin: 0;
-}
-
-.welcome-content p {
-  font-size: 1.167rem;
 }
 
 h2 {

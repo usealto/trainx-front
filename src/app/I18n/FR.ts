@@ -16,7 +16,7 @@ export const FR = {
     showAll: 'Tout voir',
     minutes: 'minutes',
     seconds: 'secondes',
-    noTeam: 'No teams',
+    noTeam: "Pas d'équipes pour l'instant.",
     optional: '(facultatif)',
     noData: 'Aucune donnée à afficher',
     noDataSubtitle: 'Aucun résultat ne correspond à votre recherche',
