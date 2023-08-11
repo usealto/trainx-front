@@ -55,7 +55,16 @@
             *ngIf="!scoreIsLoading"
           ></alto-progression-badge>
         </td>
-        <td>{{ quest.usersCount }}</td>
+        <td>
+          <div class="progress">
+            <div
+              class="progress-bar d-inline-block"
+              role="progressbar"
+              [style]="'width:' + (quest.usersCount / quest.totalUsersCount | percent : '1.0-0' : 'en-US')"
+            ></div>
+          </div>
+          {{ quest.usersCount }}/{{ quest.totalUsersCount }}
+        </td>
         <td>
           <ng-container *ngIf="quest.teams">
             <alto-colored-pill-list

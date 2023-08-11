@@ -39,7 +39,7 @@
     "@ngneat/until-destroy": "^9.2.3",
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.3.0",
-    "@usealto/sdk-ts-angular": "1.0.202308100939-dev",
+    "@usealto/sdk-ts-angular": "1.0.202308111525-dev",
     "bootstrap-icons": "^1.10.5",
     "chart.js": "^4.2.1",
     "date-fns": "^2.29.3",
