@@ -8,8 +8,8 @@ import {
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
-import { Observable, combineLatest, filter, map, of, tap } from 'rxjs';
-import { EmojiMap, EmojiName } from 'src/app/core/utils/emoji/data';
+import { Observable, combineLatest, map, of, tap } from 'rxjs';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { ChallengesRestService } from 'src/app/modules/challenges/services/challenges-rest.service';
@@ -23,13 +23,7 @@ import { ProgramsRestService } from 'src/app/modules/programs/services/programs-
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import {
-  ScoreDuration,
-  ScoreFilters,
-  TopFlop,
-  TopFlopDisplay,
-} from 'src/app/modules/shared/models/score.model';
+import { ScoreDuration, ScoreFilters } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';

@@ -10,11 +10,11 @@ import { combineLatest, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
+import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
-import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -22,13 +22,16 @@ import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
   styleUrls: ['./performance-by-teams.component.scss'],
 })
 export class PerformanceByTeamsComponent implements OnChanges {
+  @Input() duration: ScoreDuration = ScoreDuration.Year;
+  @Output() selecedDuration = this.duration;
+
   I18ns = I18ns;
   teams: ScoreDtoApi[] = [];
   selectedTeams: ScoreDtoApi[] = [];
   scoredTeams: { label: string; score: number | null; progression: number | null }[] = [];
   scoreEvolutionChart?: Chart;
-  @Input() duration: ScoreDuration = ScoreDuration.Year;
-  @Output() selecedDuration = this.duration;
+
+  teamsLeaderboard: { name: string; score: number }[] = [];
 
   constructor(
     public readonly teamStore: TeamStore,
@@ -51,6 +54,10 @@ export class PerformanceByTeamsComponent implements OnChanges {
         this.scoresRestService.getTeamsStats(this.duration, true),
       ])
         .pipe(
+          tap(([, teams]) => {
+            teams = teams.filter((t) => t.score && t.score >= 0);
+            this.teamsLeaderboard = teams.map((t) => ({ name: t.team.longName, score: t.score ?? 0 }));
+          }),
           tap(([scores, current, previous]) => {
             this.teams = scores.scores;
             this.selectedTeams = scores.scores.slice(0, 3);

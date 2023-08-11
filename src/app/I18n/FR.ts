@@ -351,6 +351,17 @@ export const FR = {
           scoreEvolution: 'Évolution du score',
         },
       },
+      questionsTable: {
+        title: 'Questions',
+        subtitle: 'Découvrez les scores moyens de vos équipes par question.',
+        columns: {
+          question: 'Intitulé de la question',
+          globalScore: 'Score global',
+          scoreEvolution: 'Évolution du score',
+          usersNumber: "Nombre d'utilisateurs ayant répondu",
+          badTeams: 'Équipes en difficulté',
+        },
+      },
     },
     perTeams: {
       title: 'Par équipe',

@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import {
   GetProgramRunsRequestParams,
   GetProgramsStatsRequestParams,
+  GetQuestionsStatsRequestParams,
   GetScoresRequestParams,
   GetTeamsStatsRequestParams,
   GetUsersStatsRequestParams,
   ProgramRunApi,
   ProgramRunsApiService,
+  QuestionStatsDtoApi,
   ScoreByTypeEnumApi,
   ScoreFillValuesEnumApi,
   ScoreTimeframeEnumApi,
@@ -58,6 +60,36 @@ export class ScoresRestService {
         respondsRegularlyThreshold: 0.42,
         userId: id,
       } as GetUsersStatsRequestParams)
+      .pipe(map((r) => r.data || []));
+  }
+
+  getQuestionsStats(
+    duration: ScoreDuration,
+    isProgression?: boolean,
+    id?: string,
+  ): Observable<QuestionStatsDtoApi[]> {
+    let dateAfter: Date;
+    let dateBefore: Date;
+
+    if (isProgression) {
+      const [start, end] = this.service.getPreviousPeriod(duration);
+
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration);
+      dateBefore = new Date();
+    }
+
+    return this.statsApi
+      .getQuestionsStats({
+        page: 1,
+        itemsPerPage: 400,
+        from: dateAfter,
+        to: dateBefore,
+        respondsRegularlyThreshold: 0.42,
+        userId: id,
+      } as GetQuestionsStatsRequestParams)
       .pipe(map((r) => r.data || []));
   }
 

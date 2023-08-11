@@ -6,17 +6,17 @@ import {
   ScoreTypeEnumApi,
   ScoresResponseDtoApi,
   TagStatsDtoApi,
-  TeamStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
 import { Observable, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { ScoreDuration, TopFlop } from 'src/app/modules/shared/models/score.model';
+import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
+import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 @UntilDestroy()
 @Component({
   selector: 'alto-performance-by-themes',
@@ -26,41 +26,42 @@ import { StatisticsService } from '../../../services/statistics.service';
 export class PerformanceByThemesComponent implements OnChanges {
   @Input() duration: ScoreDuration = ScoreDuration.Year;
   I18ns = I18ns;
-  // activeTab = 1;
   init = true;
 
   teams: { label: string; id: string }[] = [];
   selectedTeams: { label: string; id: string }[] = [];
-  teamsStats: TeamStatsDtoApi[] = [];
 
-  // Tags or Programs
   items: ScoreDtoApi[] = [];
-  scoredItems: TopFlop = { top: [], flop: [] };
   selectedItems: ScoreDtoApi[] = [];
+  tagsLeaderboard: { name: string; score: number }[] = [];
 
   scoreEvolutionChart?: Chart;
-  performanceChart?: Chart;
 
   constructor(
     private readonly scoresRestService: ScoresRestService,
     private readonly statisticsServices: StatisticsService,
     private readonly scoresServices: ScoresService,
+    private readonly teamRestService: TeamsRestService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['duration']) {
       this.getScores()
         .pipe(
-          switchMap(() => this.scoresRestService.getTeamsStats(this.duration)),
+          switchMap(() => this.teamRestService.getTeams()),
           tap((res) => {
-            this.teamsStats = res;
             this.teams = res
-              .sort((a, b) => a.team.longName.localeCompare(b.team.longName))
+              .sort((a, b) => a.longName.localeCompare(b.longName))
               .map((t) => ({
-                label: t.team.longName,
-                id: t.team.id,
+                label: t.longName,
+                id: t.id,
               }));
             this.selectedTeams = this.teams.splice(0, 5);
+          }),
+          switchMap(() => this.scoresRestService.getTagsStats(this.duration)),
+          tap((res) => {
+            const output = res.filter((t) => t.score && t.score >= 0);
+            this.tagsLeaderboard = output.map((t) => ({ name: t.tag.name, score: t.score ?? 0 }));
           }),
           untilDestroyed(this),
         )
@@ -85,22 +86,10 @@ export class PerformanceByThemesComponent implements OnChanges {
           if (this.selectedItems.length) {
             filteredItems = res.scores.filter((s) => this.selectedItems.some((si) => si.id === s.id));
           }
-          this.getScoredItems(this.items);
           this.createScoreEvolutionChart(filteredItems, this.duration);
         }),
         tap(() => (this.init = false)),
       );
-  }
-
-  getScoredItems(scores: ScoreDtoApi[]) {
-    const scoredItems = scores
-      .map((score) => {
-        const average = this.scoresServices.reduceWithoutNull(score.averages);
-        return { label: score.label, avg: average ?? 0 };
-      })
-      .sort((a, b) => b.avg - a.avg);
-    this.scoredItems.top = this.scoresServices.getTop(scoredItems).slice(0, 3);
-    this.scoredItems.flop = this.scoresServices.getFlop(scoredItems).slice(0, 3);
   }
 
   getThemesLabel(stats: TagStatsDtoApi[]): string[] {

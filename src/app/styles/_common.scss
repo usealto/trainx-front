@@ -31,9 +31,9 @@ input[type='text'].form-control {
 }
 .alto-score {
   @extend .alto-badge-no-size;
-  min-height: 1.4286rem;
+  min-height: 1.75rem;
   min-width: 3.2143rem;
-  line-height: 1.41667rem;
+  line-height: 1.75rem;
   font-weight: 600;
   font-size: 0.833em;
 }

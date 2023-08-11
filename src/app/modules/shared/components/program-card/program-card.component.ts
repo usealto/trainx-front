@@ -50,6 +50,9 @@ export class ProgramCardComponent implements OnInit, OnChanges {
   }
 
   changeIsActive(id: string, checked: boolean) {
-    this.programRestService.activate(id, checked).pipe().subscribe();
+    this.programRestService
+      .activate(id, checked)
+      .pipe(tap(() => (this.program.isActive = checked)))
+      .subscribe();
   }
 }
