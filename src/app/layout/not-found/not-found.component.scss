@@ -1,3 +1,9 @@
+:host {
+  position: absolute;
+  width: calc(100% - 5rem);
+  left: 5rem;
+}
+
 .panel-full {
   background-color: white;
   border-radius: 1.333rem;

@@ -96,6 +96,10 @@ const routes: Routes = [
           },
         ],
       },
+      {
+        path: AltoRoutes.notFound,
+        component: NotFoundComponent,
+      },
     ],
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
@@ -116,11 +120,6 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
   },
-
-  {
-    path: AltoRoutes.notFound,
-    component: NotFoundComponent,
-  },
   {
     path: AltoRoutes.noAccess,
     component: NoWebAccessComponent,
@@ -135,7 +134,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: NotFoundComponent,
+    redirectTo: AltoRoutes.notFound,
   },
 ];
 
