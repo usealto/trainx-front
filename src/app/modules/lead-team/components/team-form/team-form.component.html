@@ -15,11 +15,11 @@
   </h2>
 </div>
 
-<hr class="mb-0" />
+<hr />
 
-<div class="p-6 sidebar-body">
+<div class="px-6 sidebar-body">
   <form *ngIf="teamForm" [formGroup]="teamForm">
-    <label class="mt-4 form-label required">{{ I18ns.leadTeam.teams.form.longName }}</label>
+    <label class="form-label required">{{ I18ns.leadTeam.teams.form.longName }}</label>
     <input
       data-cy="editLongnameInput"
       type="text"
