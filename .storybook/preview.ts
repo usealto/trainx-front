@@ -3,6 +3,7 @@ import { importProvidersFrom } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { applicationConfig, moduleMetadata, type Preview } from '@storybook/angular';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
+import '@angular/localize/init';
 
 const decorators = [
   moduleMetadata({
