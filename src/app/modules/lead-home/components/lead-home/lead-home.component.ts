@@ -240,8 +240,11 @@ export class LeadHomeComponent implements OnInit {
     ])
       .pipe(
         tap(([current, previous]) => {
+          current = current.filter((t) => t.score);
+          previous = previous.filter((t) => t.score);
           const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;
-          this.averageScore = current.reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
+          this.averageScore =
+            current.filter((t) => t.score).reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
           this.averageScoreProgression = previousScore
             ? (this.averageScore - previousScore) / previousScore
             : 0;

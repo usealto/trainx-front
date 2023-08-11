@@ -102,15 +102,14 @@
 <div class="panel mb-5">
   <div class="row align-items-start">
     <div class="col border-end d-flex">
-      <alto-icon-badge size="4rem" icon="bi bi-bar-chart-fill" class="me-4"></alto-icon-badge>
-
+      <alto-icon-badge [size]="4" icon="bi bi-bar-chart-fill" class="me-4"></alto-icon-badge>
       <div class="d-inline-block">
         <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.total }}</p>
         <h1 class="mb-0">{{ absoluteUsersCount }}</h1>
       </div>
     </div>
     <div class="col d-flex second-col">
-      <alto-icon-badge size="4rem" class="me-4" icon="bi-reply-all-fill"></alto-icon-badge>
+      <alto-icon-badge [size]="4" class="me-4" icon="bi-reply-all-fill"></alto-icon-badge>
 
       <div class="d-inline-block flex-grow-1">
         <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
