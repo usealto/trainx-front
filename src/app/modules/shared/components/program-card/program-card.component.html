@@ -16,15 +16,13 @@
     <p class="title" [ngClass]="{ 'w-100': !displayToggle }">{{ program.name }}</p>
     <div class="card-bottom">
       <ng-container *ngIf="program.teams.length > 0; else elseTeams">
-        <div class="d-inline-flex flex-nowrap">
-          <p class="subtitle me-3">
-            <img class="pe-2 mb-3" [src]="Emoji.BustsInSilhouette | emoji" height="16" />
-            {{ (I18ns.shared.teams | titlecase) + ': ' }}
-          </p>
-          <span class="alto-badge teams">{{
-            program.teams.length + '/' + teamsCount + ' ' + I18ns.shared.teams
-          }}</span>
-        </div>
+        <p class="d-inline-block me-3">
+          <img class="pe-2 mb-2" [src]="Emoji.BustsInSilhouette | emoji" height="16" />
+          {{ (I18ns.shared.teams | titlecase) + ': ' }}
+        </p>
+        <span class="alto-badge teams">{{
+          program.teams.length + '/' + teamsCount + ' ' + I18ns.shared.teams
+        }}</span>
       </ng-container>
       <ng-template #elseTeams>
         <div class="alto-badge">{{ I18ns.shared.noTeam }}</div>
@@ -32,7 +30,7 @@
       <hr />
       <p class="score">
         <span>
-          <img class="pe-1 mb-3" [src]="Emoji.PlayButton | emoji" height="14" />
+          <img class="pe-1 mb-2" [src]="Emoji.PlayButton | emoji" height="14" />
           {{ I18ns.programs.programs.involvement }}
         </span>
         <span class="float-end alto-score" [class]="(participation ? participation * 100 : '') | pillColor">{{
@@ -41,7 +39,7 @@
       </p>
       <p class="score">
         <span>
-          <img class="pe-1 mb-3" [src]="Emoji.RollerCoaster | emoji" height="14" />
+          <img class="pe-1 mb-2" [src]="Emoji.RollerCoaster | emoji" height="14" />
           {{ I18ns.programs.programs.progress }}
         </span>
         <span class="float-end alto-score" [class]="(progress ? progress * 100 : '') | pillColor">
@@ -50,7 +48,7 @@
       </p>
       <p class="score">
         <span>
-          <img class="pe-1 mb-3" [src]="Emoji.SportsMedal | emoji" height="14" />
+          <img class="pe-1 mb-2" [src]="Emoji.SportsMedal | emoji" height="14" />
           {{ I18ns.programs.programs.score }}
         </span>
         <span class="float-end alto-score" [class]="(score ? score * 100 : '') | pillColor">
@@ -59,4 +57,5 @@
       </p>
     </div>
   </div>
+  <div class="panel inactive" *ngIf="!program.isActive"></div>
 </ng-container>
