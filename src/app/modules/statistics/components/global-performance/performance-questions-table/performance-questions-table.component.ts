@@ -1,15 +1,15 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { QuestionStatsDtoApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
+import { QuestionStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { QuestionFilters } from 'src/app/modules/programs/models/question.model';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
-import { TeamsStatsFilters } from 'src/app/modules/shared/models/stats.model';
+import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 
 @UntilDestroy()
 @Component({
@@ -22,7 +22,7 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
 
   @Input() duration: ScoreDuration = ScoreDuration.Year;
 
-  questionFilters: TeamsStatsFilters = {
+  questionFilters: QuestionFilters = {
     programs: [],
     tags: [],
     teams: [],
@@ -42,6 +42,7 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
     public readonly teamStore: TeamStore,
     public readonly programsStore: ProgramsStore,
     private readonly scoreRestService: ScoresRestService,
+    private readonly scoreService: ScoresService,
   ) {}
 
   ngOnInit(): void {
@@ -58,11 +59,13 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
     {
       duration = this.questionFilters.duration,
       teams = this.questionFilters.teams,
+      score = this.questionFilters.score,
       search = this.questionFilters.search,
-    }: TeamsStatsFilters = this.questionFilters,
+    }: QuestionFilters = this.questionFilters,
   ) {
     this.questionFilters.duration = duration;
-    // this.teamFilters.teams = teams;
+    this.questionFilters.teams = teams;
+    this.questionFilters.score = score;
     this.questionFilters.search = search;
 
     let output: QuestionStatsDtoApi[] = this.questions;
@@ -70,9 +73,12 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
     if (search) {
       output = output.filter((t) => t.question.title.includes(search));
     }
-    // if (teams && teams.length > 0) {
-    //   output = output.filter((t) => teams.some((pr) => pr === t.id));
-    // }
+    if (teams && teams.length > 0) {
+      output = output.filter((q) => q.teams?.some((t) => teams.some((te) => te === t.id)));
+    }
+    if (score) {
+      output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
+    }
 
     this.questionsDisplay = output;
 
@@ -107,8 +113,8 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
   }
 
   @memoize()
-  getTeamPreviousScore(team: TeamStatsDtoApi) {
-    const prevScore = this.questionsPreviousPeriod.filter((t) => t.id === team.id)[0]?.score || 0;
-    return prevScore && team.score ? team.score - prevScore : 0;
+  getQuestionPreviousScore(quest: QuestionStatsDtoApi) {
+    const prevScore = this.questionsPreviousPeriod.filter((t) => t.id === quest.id)[0]?.score || 0;
+    return prevScore && quest.score ? quest.score - prevScore : 0;
   }
 }

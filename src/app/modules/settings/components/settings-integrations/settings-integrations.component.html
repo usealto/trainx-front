@@ -14,7 +14,7 @@
     />
   </div>
   <alto-icon-badge
-    size="3.3333rem"
+    [size]="3.3333"
     icon="bi-people"
     [color]="slackCheck.checked ? 'badge-double-primary' : 'badge-double-gray'"
     class="badge"
@@ -60,7 +60,7 @@
   <div class="form-check form-switch d-inline-block align-middle me-5">
     <input #appWebCheck type="checkbox" class="form-check-input" disabled />
   </div>
-  <alto-icon-badge size="3.3333rem" icon="bi bi-wifi-2" color="badge-double-gray" class="badge">
+  <alto-icon-badge [size]="3.3333" icon="bi bi-wifi-2" color="badge-double-gray" class="badge">
   </alto-icon-badge>
   <div class="d-grid disabled-text">
     <span class="integration-titles">{{ I18ns.settings.continuousSession.webApp.title }}</span>
