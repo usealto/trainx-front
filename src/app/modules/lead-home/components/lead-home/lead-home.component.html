@@ -7,7 +7,7 @@
 </div>
 <div class="row">
   <div class="col-6 ps-0">
-    <div [class]="commentsCount ? 'warning-panel' : 'success-panel'">
+    <div *ngIf="commentsCount" [class]="commentsCount ? 'warning-panel' : 'success-panel'">
       <alto-icon-badge
         [size]="5"
         icon="bi-chat"
@@ -27,6 +27,7 @@
   </div>
   <div class="col-6 pe-0">
     <div
+      *ngIf="questionsCount"
       [class]="questionsCount ? 'warning-panel' : 'success-panel'"
       class="cursor-pointer"
       [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
@@ -85,8 +86,7 @@
               <span class="fs-5 stats-content">
                 {{ finishedProgramsCount + '/' + programsCount }}
               </span>
-              <span class="fs-6 stats-content"
-              >{{ ' (' + (averageFinishedPrograms | percent) + ')' }}</span>
+              <span class="fs-6 stats-content">{{ ' (' + (averageFinishedPrograms | percent) + ')' }}</span>
             </div>
             <alto-progression-badge
               class="col-3"
