@@ -2,22 +2,80 @@
   display: block;
   padding: var(--alto-page-padding);
 }
-.step {
-  padding-bottom: 1rem;
-  border-bottom: 2px #eaecf0 solid;
-  font-weight: bold;
+.emoji-title {
+  height: 2rem;
 }
-.highlight-step {
-  border-bottom: 2px var(--bs-primary) solid;
-  .tab-icon {
-    background-color: var(--bs-primary);
-    color: white;
+h1 {
+  line-height: 2rem;
+  vertical-align: bottom;
+  display: inline-block;
+}
+.infos {
+  height: 4.333rem;
+  background-color: var(--primary-25);
+  border-radius: 0.67rem;
+  padding: 1.14rem 1.7rem;
+  color: var(--primary-600);
+  margin-bottom: 4rem;
+}
+
+.questions-panel {
+  padding: 0;
+  & > div {
+    padding: 1.333rem 2rem;
+    margin: 0;
+  }
+  & .row {
+    border-top: 1px solid var(--gray-200);
+  }
+  .form-switch {
+    margin: 0;
   }
 }
-.passed-step {
-  border-bottom: 2px var(--alto-blue) solid;
-  .tab-icon {
-    background-color: var(--alto-blue);
+
+.recap-panel-header {
+  padding: 1.333rem 2rem;
+  background-color: var(--gray-50);
+  border-radius: 0.667rem 0.667rem 0 0;
+  h2 {
+    margin: 0;
+  }
+}
+.recap-panel {
+  border-radius: 0 0 0.667rem 0.667rem;
+  border-top: 0;
+  padding: 2rem;
+  font-weight: 600;
+
+  .emoji {
+    height: 1.667rem;
+    margin-right: 0.667rem;
+  }
+
+  .bi {
+    color: var(--gray-900);
+  }
+}
+
+.form-nav {
+  border-bottom: 1px solid var(--gray-200);
+  .step {
+    display: inline-block;
+    padding-bottom: 1rem;
+    font-size: 1.167rem;
+    height: 3rem;
+    line-height: 3rem;
+    padding: 0 1.333rem;
+    border-radius: 0.667rem 0.667rem 0 0;
+    margin-right: 3rem;
+  }
+  .highlight-step {
+    background-color: var(--bs-primary);
     color: white;
+    font-weight: 600;
+
+    .tab-icon {
+      color: white;
+    }
   }
 }

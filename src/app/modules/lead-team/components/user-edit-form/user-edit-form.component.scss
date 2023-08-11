@@ -1,6 +1,14 @@
+:host ::ng-deep {
+  .ng-select.ng-select-opened.ng-select-bottom > .ng-select-container,
+  .ng-select.ng-select-opened.ng-select-top > .ng-select-container,
+  .ng-select .ng-select-container {
+    border-radius: 0.333rem;
+  }
+}
 label {
-  font-weight: 500;
+  font-weight: 600;
   display: block;
+  margin-bottom: 0.667rem;
 }
 .footer {
   background-color: white;
@@ -12,4 +20,14 @@ label {
   .button-container {
     padding: 1.143rem 2.286rem;
   }
+}
+
+.subtitles {
+  color: var(--gray-500, #667085);
+  font-size: 0.8333rem;
+}
+
+hr {
+  border-color: var(--gray-300);
+  margin: 1.333rem;
 }

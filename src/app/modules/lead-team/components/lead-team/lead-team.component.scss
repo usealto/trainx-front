@@ -2,7 +2,45 @@
   display: block;
   padding: var(--alto-page-padding);
 }
+
+.header-panel {
+  margin-bottom: 3.333rem;
+}
+
+.team-table tbody tr {
+  height: 3.333rem;
+}
+.members {
+  margin-top: 3.333rem;
+}
+alto-search {
+  width: 26.667rem;
+}
+h1 {
+  line-height: 2rem;
+  vertical-align: bottom;
+}
+h2 {
+  .emoji {
+    height: 1.667rem;
+    margin-right: 0.667rem;
+    vertical-align: bottom;
+  }
+}
 .progress {
   width: calc(100% - 3.6rem);
   margin-right: 0.571rem;
+}
+
+.double-badge {
+  border-radius: 8.33333rem;
+  border: 8px solid var(--primary-50, #eff8ff);
+  margin-top: -4px;
+}
+
+.panel {
+  height: 6.833rem;
+  .second-col {
+    padding-left: 1.667rem;
+  }
 }

@@ -8,6 +8,6 @@
   (focus)="focusText(true)"
   (blur)="focusText(false)"
 ></textarea>
-<p class="text-end" [ngClass]="{ 'text-danger': wordCount >= softLimit, invisible: !isFocused }">
+<p class="text-end mt-2" [ngClass]="{ 'text-danger': wordCount >= softLimit, invisible: !isFocused }">
   {{ limit - wordCount + ' ' + I18ns.questions.form.remainingCharacters }}
 </p>
