@@ -6,7 +6,7 @@
 
 <form [formGroup]="userForm">
   <div class="row py-4name">
-    <h3 class="col-4">
+    <h3 class="col-4 required">
       <img class="me-3" [src]="EmojiName.PageFacingUp | emoji" />
       {{ I18ns.profile.profile.name }}
     </h3>
@@ -23,7 +23,7 @@
   <hr />
 
   <div class="row py-4name">
-    <h3 class="col-4">
+    <h3 class="col-4 required">
       <img class="me-3" [src]="EmojiName.PageFacingUp | emoji" /> {{ I18ns.profile.profile.firstName }}
     </h3>
     <div class="col">
