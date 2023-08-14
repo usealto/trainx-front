@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
-import { tap } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { UserEditFormComponent } from 'src/app/modules/lead-team/components/user-edit-form/user-edit-form.component';
 import { UserFilters } from 'src/app/modules/profile/models/user.model';
@@ -11,6 +11,7 @@ import { UsersService } from 'src/app/modules/profile/services/users.service';
 // import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
+import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
 
 @UntilDestroy()
 @Component({
@@ -84,27 +85,26 @@ export class SettingsUsersComponent implements OnInit {
   }
 
   deleteUser(user: UserDtoApi) {
-    // TODO: Remove comments when the "DeleteModalComponent" is retrieved from the develop branch.
-    // const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
-    // const componentInstance = modalRef.componentInstance as DeleteModalComponent;
-    // componentInstance.data = {
-    //   title: this.replaceInTranslationPipe.transform(
-    //     I18ns.settings.users.deleteModal.title,
-    //     user.firstname + ' ' + user.lastname,
-    //   ),
-    //   subtitle: this.replaceInTranslationPipe.transform(I18ns.settings.users.deleteModal.subtitle),
-    // };
-    // componentInstance.objectDeleted
-    //   .pipe(
-    //     switchMap(() => this.userRestService.deleteUser(user?.id ?? '')),
-    //     tap(() => {
-    //       modalRef.close();
-    //       this.userRestService.resetUsers();
-    //       this.getUsers();
-    //     }),
-    //     untilDestroyed(this),
-    //   )
-    //   .subscribe();
+    const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
+    const componentInstance = modalRef.componentInstance as DeleteModalComponent;
+    componentInstance.data = {
+      title: this.replaceInTranslationPipe.transform(
+        I18ns.settings.users.deleteModal.title,
+        user.firstname + ' ' + user.lastname,
+      ),
+      subtitle: this.replaceInTranslationPipe.transform(I18ns.settings.users.deleteModal.subtitle),
+    };
+    componentInstance.objectDeleted
+      .pipe(
+        switchMap(() => this.userRestService.deleteUser(user?.id ?? '')),
+        tap(() => {
+          modalRef.close();
+          this.userRestService.resetUsers();
+          this.getUsers();
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
   }
 
   changeUsersPage(page: number): void {
