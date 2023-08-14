@@ -49,7 +49,11 @@ export class SettingsUsersComponent implements OnInit {
 
   getAdmins() {
     this.userRestService
-      .getUsersPaginated({ isCompanyAdmin: true, page: this.adminsPage, itemsPerPage: this.adminsPageSize })
+      .getUsersPaginated({
+        isCompanyAdmin: true,
+        page: this.adminsPage,
+        itemsPerPage: this.adminsPageSize,
+      })
       .pipe(
         tap((users) => (this.adminsDisplay = users.data ?? [])),
         tap((users) => (this.adminsCount = users.meta.totalItems)),
@@ -70,17 +74,30 @@ export class SettingsUsersComponent implements OnInit {
   }
 
   filterAdmins({ search = this.userFilters.search }: UserFilters = this.userFilters) {
-    this.userRestService
-      .getUsersFiltered({ isCompanyAdmin: true })
-      .pipe(tap((users) => (this.adminsDisplay = this.usersService.filterUsers(users, { search }))))
-      .subscribe();
+    if (search) {
+      this.userRestService
+        .getUsersFiltered({ isCompanyAdmin: true })
+        .pipe(
+          tap((users) => (this.adminsDisplay = this.usersService.filterUsers(users, { search }))),
+          tap(() => (this.adminsCount = this.adminsDisplay.length)),
+        )
+        .subscribe();
+    } else {
+      this.getAdmins();
+    }
   }
 
   filterUsers({ search = this.userFilters.search }: UserFilters = this.userFilters) {
-    this.userRestService
-      .getUsersFiltered({ isCompanyAdmin: false })
-      .pipe(tap((users) => (this.usersDisplay = this.usersService.filterUsers(users, { search }))))
-      .subscribe();
+    if (search) {
+      this.userRestService
+        .getUsersFiltered({ isCompanyAdmin: false })
+        .pipe(
+          tap((users) => (this.usersDisplay = this.usersService.filterUsers(users, { search }))),
+          tap(() => (this.usersCount = this.usersDisplay.length)),
+        )
+        .subscribe();
+    }
+    this.getUsers();
   }
 
   deleteUser(user: UserDtoApi) {
