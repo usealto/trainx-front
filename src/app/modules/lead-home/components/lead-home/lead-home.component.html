@@ -29,8 +29,6 @@
     <div
       *ngIf="questionsCount"
       [class]="questionsCount ? 'warning-panel' : 'success-panel'"
-      class="cursor-pointer"
-      [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
       fragment="submittedQuestionsAnchor"
     >
       <alto-icon-badge
