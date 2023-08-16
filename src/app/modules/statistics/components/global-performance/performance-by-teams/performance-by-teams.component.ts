@@ -44,7 +44,36 @@ export class PerformanceByTeamsComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['duration']) {
-      this.getScores().subscribe();
+      const params = {
+        timeframe: ScoreTimeframeEnumApi.Day,
+        duration: this.duration,
+        type: ScoreTypeEnumApi.Team,
+      } as ChartFilters;
+
+      combineLatest([
+        this.scoresRestService.getScores(params),
+        this.scoresRestService.getTeamsStats(this.duration),
+        this.scoresRestService.getTeamsStats(this.duration, true),
+      ])
+        .pipe(
+          tap(([, teams]) => {
+            teams = teams.filter((t) => t.score && t.score >= 0);
+            this.teamsLeaderboard = teams.map((t) => ({ name: t.team.longName, score: t.score ?? 0 }));
+          }),
+          tap(([scores, current, previous]) => {
+            this.teams = scores.scores;
+            this.selectedTeams = scores.scores.slice(0, 3);
+            this.createScoreEvolutionChart(
+              this.selectedTeams.length
+                ? scores.scores.filter((score) => this.selectedTeams.some((team) => team.id === score.id))
+                : scores.scores,
+              this.duration,
+            );
+
+            this.getTeamsScores(current, previous);
+          }),
+        )
+        .subscribe();
     }
   }
 
