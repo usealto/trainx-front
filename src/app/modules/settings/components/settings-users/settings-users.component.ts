@@ -97,8 +97,9 @@ export class SettingsUsersComponent implements OnInit {
           tap(() => (this.usersCount = this.usersDisplay.length)),
         )
         .subscribe();
+    } else {
+      this.getUsers();
     }
-    this.getUsers();
   }
 
   deleteUser(user: UserDtoApi) {
