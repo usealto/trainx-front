@@ -1,45 +1,48 @@
 <div class="header-panel mb-4 row align-items-center">
-  <p class="welcome-icon col-1">👋</p>
+  <img class="col-1" [src]="Emoji.WavingHand | emoji" height="48" />
   <div class="col">
-    <h1>{{ I18ns.leadHome.title + (profileStore.user.value.firstname | titlecase) + '!' }}</h1>
+    <h1 class="mb-3">{{ I18ns.leadHome.title + (profileStore.user.value.firstname | titlecase) + '!' }}</h1>
     <p class="alto-grey fs-6b">{{ I18ns.leadHome.subtitle }}</p>
   </div>
 </div>
 <div class="row">
   <div class="col-6 ps-0">
-    <div [class]="commentsCount ? 'warning-panel' : 'success-panel'">
-      <div class="d-inline-block" [class]="commentsCount ? 'alto-badge-warning' : 'alto-badge-success'">
-        <i class="fs-4 bi bi-chat"></i>
-      </div>
-      <div class="d-inline-block align-bottom ms-4">
-        <p
-          class="fw-bold fs-6b mb-1"
-          [style]="commentsCount ? 'color: var(--orange--600)' : 'color: var(--success--600);'"
-        >
+    <div *ngIf="commentsCount" [class]="commentsCount ? 'warning-panel' : 'success-panel'">
+      <alto-icon-badge
+        [size]="5"
+        icon="bi-chat"
+        [color]="commentsCount ? 'badge-double-warning' : 'badge-double-success'"
+      ></alto-icon-badge>
+
+      <div class="d-inline-block ms-4">
+        <p class="title fs-5 mb-3" [style]="commentsCount ? 'color: var(--orange-600)' : ''">
           {{ I18ns.leadHome.comments | plural : commentsCount }}
-          <span class="text-black">{{ I18ns.leadHome.awaiting }}</span>
+          <span *ngIf="questionsCount > 0" class="text-black">{{ I18ns.leadHome.awaiting }}</span>
         </p>
-        <p class="alto-grey">
-          {{ I18ns.leadHome.subtitleComment | plural: commentsCount }}
+        <p class="alto-grey fs-6">
+          {{ I18ns.leadHome.subtitleComment | plural : commentsCount }}
         </p>
       </div>
     </div>
   </div>
   <div class="col-6 pe-0">
     <div
+      *ngIf="questionsCount"
       [class]="questionsCount ? 'warning-panel' : 'success-panel'"
-      class="cursor-pointer"
-      [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
       fragment="submittedQuestionsAnchor"
     >
-      <div class="d-inline-block" [class]="questionsCount ? 'alto-badge-warning' : 'alto-badge-success'">
-        <i class="fs-4 bi bi-question-circle"></i>
-      </div>
-      <div class="d-inline-block align-bottom ms-4">
-        <p class="fw-bold fs-6b mb-1">
+      <alto-icon-badge
+        [size]="5"
+        icon="bi-question-circle"
+        [color]="questionsCount ? 'badge-double-warning' : 'badge-double-success'"
+      ></alto-icon-badge>
+
+      <div class="d-inline-block ms-4">
+        <p class="title fs-5 mb-3" [style]="questionsCount ? 'color: var(--orange-600)' : ''">
           {{ I18ns.leadHome.question | plural : questionsCount }}
+          <span *ngIf="questionsCount > 0" class="text-black">{{ I18ns.leadHome.awaiting }}</span>
         </p>
-        <p class="alto-grey">
+        <p class="alto-grey fs-6">
           {{ I18ns.leadHome.subtitleQuestion | plural : questionsCount }}
         </p>
       </div>
@@ -48,427 +51,243 @@
 </div>
 
 <!-- STATISTICS -->
-<div class="row mt-6 mb-4">
-  <div class="col-5">
-    <h2 class="title">{{ I18ns.leadHome.statistics.title }}</h2>
+<div class="mt-6 mb-4">
+  <div class="float-end">
+    <alto-time-picker (durationSelected)="updateStatisticsDuration($event)"></alto-time-picker>
   </div>
-  <div class="col-7 text-end">
-    <alto-time-picker
-      class="text-start me-3"
-      (durationSelected)="getGlobalScore({ duration: $event })"
-    ></alto-time-picker>
-    <alto-dropdown-filter
-      class="text-start"
-      [data]="teamStore.teams.value"
-      [displayLabel]="'shortName'"
-      [returnValue]="'id'"
-      [placeholder]="I18ns.programs.programs.filters.team"
-      [isColored]="true"
-      [multiple]="true"
-      (selectChange)="getGlobalScore({ teams: $event })"
-    ></alto-dropdown-filter>
-  </div>
-</div>
+  <h2 class="d-inline-block mb-3">
+    <img class="me-3 emoji" [src]="Emoji.ChartIncreasing | emoji" height="20" />
+    {{ I18ns.leadHome.statistics.title }}
+  </h2>
+  <p class="subtitle">{{ I18ns.leadHome.statistics.subtitle }}</p>
 
-<div class="row stats">
-  <div class="col-3">
-    <div class="panel">
-      <p class="mb-3">
-        <span class="alto-grey">
-          {{ I18ns.leadHome.statistics.globalScore }}
-        </span>
-        <i
-          class="alto-grey bi bi-question-circle float-end"
-          ngbTooltip="{{ I18ns.leadHome.statistics.globalScoreToolTip }}"
-        ></i>
-      </p>
-      <ng-container *ngIf="globalScore; else noGlobalScore">
-        <h1 class="d-inline-block">
-          {{ globalScore | percent }}
-        </h1>
-      </ng-container>
-      <ng-template #noGlobalScore>
-        <h1 class="d-inline-block">
-          {{ I18ns.leadHome.statistics.globalScorePlaceholder }}
-        </h1>
-      </ng-template>
-      <alto-progression-badge
-        class="float-end mt-2"
-        [score]="globalScoreProgression"
-      ></alto-progression-badge>
-    </div>
-  </div>
-  <div class="col-3">
-    <div class="panel">
-      <p class="mb-3">
-        <span class="alto-grey">
-          {{ I18ns.leadHome.statistics.averageCompletion }}
-        </span>
-        <i
-          class="alto-grey bi bi-question-circle float-end"
-          ngbTooltip="{{ I18ns.leadHome.statistics.averageCompletionToolTip }}"
-        ></i>
-      </p>
-      <div>
-        <h1 class="d-inline-block">{{ averageCompletion | percent }}</h1>
-        <alto-progression-badge
-          class="float-end mt-2"
-          [score]="completionProgression"
-        ></alto-progression-badge>
+  <div class="panel px-0 py-4 mt-5">
+    <div class="row">
+      <div class="col border-end d-flex flex-row align-items-center px-4">
+        <alto-icon-badge [size]="4" icon="bi-bar-chart-fill"></alto-icon-badge>
+
+        <div class="col ps-4">
+          <p class="stats-title">{{ I18ns.leadHome.statistics.averageScore }}</p>
+          <div class="mt-2 row">
+            <h2 class="mb-0 col">{{ averageScore | percent }}</h2>
+            <alto-progression-badge class="col-3" [score]="averageScoreProgression"></alto-progression-badge>
+          </div>
+        </div>
+      </div>
+      <div class="col border-end d-flex flex-row align-items-center px-4">
+        <alto-icon-badge [size]="4" icon="bi-check-square-fill"></alto-icon-badge>
+
+        <div class="col ps-4">
+          <p class="stats-title">{{ I18ns.leadHome.statistics.terminatedPrograms }}</p>
+          <div class="mt-2 row">
+            <div class="mb-0 col">
+              <span class="fs-5 stats-content">
+                {{ finishedProgramsCount + '/' + programsCount }}
+              </span>
+              <span class="fs-6 stats-content">{{ ' (' + (averageFinishedPrograms | percent) + ')' }}</span>
+            </div>
+            <alto-progression-badge
+              class="col-3"
+              [score]="averageFinishedProgramsProgression"
+            ></alto-progression-badge>
+          </div>
+        </div>
+      </div>
+      <div class="col d-flex flex-row align-items-center px-4">
+        <alto-icon-badge [size]="4" icon="bi-reply-all-fill"></alto-icon-badge>
+
+        <div class="col ps-4">
+          <p class="stats-title">{{ I18ns.leadHome.statistics.guessesCount }}</p>
+          <div class="mt-2 row g-0">
+            <h2 class="mb-0 col">{{ guessCount + '/' + totalGuessCount }}</h2>
+            <alto-progression-badge class="col-3" [score]="guessCountProgression"></alto-progression-badge>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="col-3">
-    <div class="panel">
-      <p class="mb-3">
-        <span class="alto-grey">
-          {{ I18ns.leadHome.statistics.activeMembers }}
-        </span>
-        <i
-          class="alto-grey bi bi-question-circle float-end"
-          ngbTooltip="{{ I18ns.leadHome.statistics.activeMembersToolTip }}"
-        ></i>
-      </p>
-      <div>
-        <h1 class="d-inline-block">{{ activeMembers }}</h1>
-        <alto-progression-badge
-          class="float-end mt-2"
-          [score]="activeMembersProgression"
-        ></alto-progression-badge>
-      </div>
-    </div>
-  </div>
-  <div class="col-3">
-    <div class="panel">
-      <p class="mb-3">
-        <span class="alto-grey">
-          {{ I18ns.leadHome.statistics.inactiveMembers }}
-        </span>
-        <i
-          class="alto-grey bi bi-question-circle float-end"
-          ngbTooltip="{{ I18ns.leadHome.statistics.inactiveMembersToolTip }}"
-        ></i>
-      </p>
-      <div>
-        <h1 class="d-inline-block">{{ inactiveMembers }}</h1>
-        <alto-progression-badge
-          class="float-end mt-2"
-          [score]="inactiveMembersProgression"
-        ></alto-progression-badge>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- GLOBAL EVOLUTION -->
-
-<div class="row mt-6 mb-4">
-  <div class="col-5">
-    <h2 class="title">{{ I18ns.leadHome.globalEvolution.title }}</h2>
-  </div>
-  <div class="col-7 text-end">
-    <alto-time-picker
-      class="text-start me-3"
-      (durationSelected)="createCharts({ duration: $event })"
-    ></alto-time-picker>
-    <alto-dropdown-filter
-      class="text-start"
-      [data]="teamStore.teams.value"
-      [displayLabel]="'shortName'"
-      [returnValue]="'id'"
-      [placeholder]="I18ns.programs.programs.filters.team"
-      (selectChange)="createCharts({ team: $event })"
-      [isColored]="true"
-      [multiple]="false"
-    ></alto-dropdown-filter>
-  </div>
-</div>
-
-<div class="row">
   <!-- CHARTS -->
-  <div class="col-6">
-    <div class="panel h-100">
-      <!-- <i
-        class="fs-5 alto-grey bi bi-question-circle float-end"
-        ngbTooltip="{{
-          I18ns.leadHome.globalEvolution.chartToolTip
-            | replaceInTranslation
-              : (chartFilters.type === 'program' ? I18ns.shared.program : I18ns.shared.tag)
-        }}"
-      ></i> -->
-      <alto-dropdown-filter
-        class="float-end mx-2 float-end me-2 mt-2"
-        [data]="programsStore.tags.value"
-        [displayLabel]="'name'"
-        [placeholder]="I18ns.leadHome.graph.tagFilter"
-        [returnValue]="'id'"
-        [selectedItems]="chartFilters.tags!"
-        (selectChange)="createCharts({ tags: $event })"
-      ></alto-dropdown-filter>
-      <!-- temporarily hidden tabs since data are not relevant -->
-
-      <!-- <alto-tabs
-        class="mb-3"
-        *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
-        (tabChanged)="createCharts({ type: $event })"
-        [data]="[
-          { label: trads.tag, value: ScoreTypeEnum.Tag },
-          { label: trads.program, value: ScoreTypeEnum.Program }
-        ]"
-      ></alto-tabs> -->
-
-      <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
-      <p class="alto-grey mb-4">{{ I18ns.leadHome.globalEvolution.chartSubtitle }}</p>
-      <div [hidden]="!scoreCount" class="chart-container pt-6">
-        <canvas id="programScoreEvol"></canvas>
-      </div>
-      <div [hidden]="scoreCount > 0" class="text-center pt-6">
-        {{ I18ns.shared.noData }}
-      </div>
+  <div class="panel h-100 mt-5 mb-5">
+    <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
+    <p class="alto-grey mb-4">{{ I18ns.leadHome.globalEvolution.chartSubtitle }}</p>
+    <div [hidden]="!scoreCount" class="chart-container">
+      <canvas id="programScoreEvol"></canvas>
+    </div>
+    <div [hidden]="scoreCount > 0" class="text-center pt-6">
+      {{ I18ns.shared.noData }}
     </div>
   </div>
   <!-- TOP / FLOP -->
-  <div class="col-6 top-flop">
-    <!-- PROGRAMS & TAGS -->
-    <div class="panel mb-4">
-      <i
-        class="fs-5 alto-grey bi bi-question-circle float-end"
-        ngbTooltip="{{
-          I18ns.leadHome.globalEvolution.topFlopTooltip
-            | replaceInTranslation
-              : (topFlopProgramTab === 'program' ? I18ns.shared.programs : I18ns.shared.tags)
-        }}"
-      ></i>
-      <alto-tabs
-        class="mb-4"
-        *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
-        (tabChanged)="topFlop($event)"
-        [data]="[
-          { label: trads.program, value: ScoreTypeEnum.Program },
-          { label: trads.tag, value: ScoreTypeEnum.Tag }
-        ]"
-      ></alto-tabs>
-      <div class="row">
-        <div class="col-6 border-end pe-0">
-          <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
-          <div class="height-100">
-            <ng-container *ngIf="topFlopData?.programs?.top?.length; else tfProgramTemplate">
-              <p *ngFor="let item of topFlopData?.programs?.top | slice : 0 : 3" class="mb-3">
-                <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
-                <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
-                  {{ item.avg | percent }}
-                </span>
-              </p>
-            </ng-container>
-          </div>
-        </div>
-        <div class="col-6 ps-4 pe-0">
-          <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
-          <div class="height-100">
-            <ng-container *ngIf="topFlopData?.programs?.flop?.length; else tfProgramTemplate">
-              <p *ngFor="let item of topFlopData?.programs?.flop | slice : 0 : 3" class="mb-3">
-                <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
-                <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
-                  {{ item.avg | percent }}
-                </span>
-              </p>
-            </ng-container>
-          </div>
-        </div>
-      </div>
+  <div class="row h-100">
+    <div class="col pe-4">
+      <alto-top-flop
+        *ngIf="topflopLoaded"
+        [title]="I18ns.leadHome.topFlop.teams.title"
+        [subtitle]="I18ns.leadHome.topFlop.teams.subtitle"
+        [leaderboard]="teamsLeaderboard"
+      ></alto-top-flop>
     </div>
-    <!-- TEAMS & USERS -->
-    <div class="panel">
-      <i
-        class="fs-5 alto-grey bi bi-question-circle float-end"
-        ngbTooltip="{{
-          I18ns.leadHome.globalEvolution.topFlopTooltip
-            | replaceInTranslation : (topFlopTeamTab === 'team' ? I18ns.shared.teams : I18ns.shared.members)
-        }}"
-      ></i>
-      <alto-tabs
-        class="mb-4"
-        *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
-        (tabChanged)="topFlop($event)"
-        [data]="[
-          { label: trads.team, value: ScoreTypeEnum.Team },
-          { label: trads.member, value: ScoreTypeEnum.User }
-        ]"
-      ></alto-tabs>
-      <div class="row">
-        <div class="col-6 border-end pe-0">
-          <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.top }}</h1>
-          <div class="height-100">
-            <ng-container *ngIf="topFlopData?.teams?.top?.length; else tfProgramTemplate">
-              <p *ngFor="let item of topFlopData?.teams?.top | slice : 0 : 3" class="mb-3">
-                <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
-                <span class="float-end alto-score me-4" [class]="item.avg * 100 | pillColor">
-                  {{ item.avg | percent }}
-                </span>
-              </p>
-            </ng-container>
-          </div>
-        </div>
-        <div class="col-6 ps-4 pe-0">
-          <h1 class="mb-4">{{ I18ns.leadHome.globalEvolution.flop }}</h1>
-          <div class="height-100">
-            <ng-container *ngIf="topFlopData?.teams?.flop?.length; else tfProgramTemplate">
-              <p *ngFor="let item of topFlopData?.teams?.flop" class="mb-3">
-                <span class="d-inline-block text-truncate topflop-label">{{ item.label }}</span>
-                <span class="float-end alto-score" [class]="item.avg * 100 | pillColor">
-                  {{ item.avg | percent }}
-                </span>
-              </p>
-            </ng-container>
-          </div>
-        </div>
-        <ng-template #tfProgramTemplate>
-          <div class="text-center py-3">
-            {{ I18ns.shared.noData }}
-          </div>
-        </ng-template>
-      </div>
+    <div class="col ps-0">
+      <alto-top-flop
+        *ngIf="topflopLoaded"
+        [title]="I18ns.leadHome.topFlop.users.title"
+        [subtitle]="I18ns.leadHome.topFlop.users.subtitle"
+        [leaderboard]="usersLeaderboard"
+      ></alto-top-flop>
     </div>
   </div>
-</div>
 
-<!-- ONGOING PROGRAMS -->
-<div class="mt-6 ongoing-programs">
-  <h2 class="title">{{ I18ns.leadHome.ongoingPrograms.title }}</h2>
-</div>
-
-<alto-program-card-list [place]="'home'"></alto-program-card-list>
-
-<!-- CHALLENGES -->
-<div class="row mt-6 mb-4" hidden>
-  <div class="col-5">
-    <h2 class="title">{{ I18ns.leadHome.ongoingChallenges.title }}</h2>
-  </div>
-  <div class="col-7 text-end">
-    <button [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]" class="btn btn-outline-secondary">
+  <!-- ONGOING PROGRAMS -->
+  <div class="mt-6 mb-5">
+    <button
+      [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
+      class="float-end btn btn-outline-secondary align-bottom"
+    >
       {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
     </button>
-  </div>
-</div>
-<div class="row" hidden>
-  <div class="col-6">
-    <div class="table-panel">
-      <h2>{{ I18ns.leadHome.ongoingChallenges.byTeam }}</h2>
-      <hr class="m-0" />
-
-      <ng-container *ngIf="challengesByTeam.length > 0; else noChallenges">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
-              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
-              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
-              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let chal of challengesByTeam"
-              [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
-              class="cursor-pointer"
-            >
-              <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
-              <td>
-                <span
-                  *ngIf="chal.leadTeam"
-                  class="alto-badge"
-                  [style.backgroundColor]="chal.leadTeam.id | uuid2color"
-                  [style.color]="'white'"
-                >
-                  {{ chal.leadTeam.shortName }}
-                </span>
-              </td>
-              <td>
-                <alto-colored-pill-list
-                  [hasDynamicColor]="true"
-                  [data]="chal.teams || []"
-                  [limit]="2"
-                ></alto-colored-pill-list>
-              </td>
-              <td>{{ chal.endDate | date : 'shortDate' }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </ng-container>
-      <ng-template #noChallenges>
-        <div class="panel text-center">
-          <i class="bi bi-controller fs-5"></i>
-          <h2>{{ I18ns.leadHome.ongoingChallenges.noTeamChallenges }}</h2>
-          <p>{{ I18ns.leadHome.ongoingChallenges.noTeamChallengesSubtitle }}</p>
-        </div>
-      </ng-template>
-
-      <p class="text-end">
-        <a
-          [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
-          [fragment]="'byTeamAnchor'"
-          class="fw-medium mb-4 me-4 d-block"
-        >
-          {{ I18ns.shared.showMore }}
-        </a>
-      </p>
+    <div class="align-items-center">
+      <h2 class="d-inline-block">
+        <img class="me-3 emoji" [src]="Emoji.Bullseye | emoji" height="20" />
+        {{ I18ns.leadHome.ongoingPrograms.title }}
+      </h2>
+      <p class="subtitle fs-6b">{{ I18ns.leadHome.ongoingPrograms.subtitle }}</p>
     </div>
   </div>
 
-  <div class="col-6">
-    <div class="table-panel">
-      <h2>{{ I18ns.leadHome.ongoingChallenges.individual }}</h2>
-      <hr class="m-0" />
+  <alto-program-card-list [place]="'home'"></alto-program-card-list>
 
-      <ng-container *ngIf="challengesByUser.length > 0; else noChallenges">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
-              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
-              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
-              <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let chal of challengesByUser"
-              [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
-              class="cursor-pointer"
-            >
-              <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
-              <td>
-                <alto-img-badge [user]="getUser(chal.createdBy) | async"></alto-img-badge>
-              </td>
-              <td>
-                <alto-colored-pill-list
-                  [hasDynamicColor]="true"
-                  [data]="chal.teams || []"
-                  [limit]="2"
-                ></alto-colored-pill-list>
-              </td>
-              <td>{{ chal.endDate | date : 'shortDate' }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </ng-container>
-      <ng-template #noChallenges>
-        <div class="panel text-center">
-          <i class="bi bi-controller fs-5"></i>
-          <h2>{{ I18ns.leadHome.ongoingChallenges.noTeamChallenges }}</h2>
-          <p>{{ I18ns.leadHome.ongoingChallenges.noTeamChallengesSubtitle }}</p>
-        </div>
-      </ng-template>
+  <!-- CHALLENGES -->
+  <div class="row mt-6 mb-4" hidden>
+    <div class="col-5">
+      <h2 class="title">{{ I18ns.leadHome.ongoingChallenges.title }}</h2>
+    </div>
+    <div class="col-7 text-end">
+      <button [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]" class="btn btn-outline-secondary">
+        {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+  <div class="row" hidden>
+    <div class="col-6">
+      <div class="table-panel">
+        <h2>{{ I18ns.leadHome.ongoingChallenges.byTeam }}</h2>
+        <hr class="m-0" />
 
-      <p class="text-end">
-        <a
-          [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
-          [fragment]="'byUserAnchor'"
-          class="fw-medium mb-4 me-4 d-block"
-        >
-          {{ I18ns.shared.showMore }}
-        </a>
-      </p>
+        <ng-container *ngIf="challengesByTeam.length > 0; else noChallenges">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
+                <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
+                <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
+                <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let chal of challengesByTeam"
+                [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
+                class="cursor-pointer"
+              >
+                <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
+                <td>
+                  <span
+                    *ngIf="chal.leadTeam"
+                    class="alto-badge"
+                    [style.backgroundColor]="chal.leadTeam.id | uuid2color"
+                    [style.color]="'white'"
+                  >
+                    {{ chal.leadTeam.shortName }}
+                  </span>
+                </td>
+                <td>
+                  <alto-colored-pill-list
+                    [hasDynamicColor]="true"
+                    [data]="chal.teams || []"
+                    [limit]="2"
+                  ></alto-colored-pill-list>
+                </td>
+                <td>{{ chal.endDate | date : 'shortDate' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
+        <ng-template #noChallenges>
+          <div class="panel text-center">
+            <i class="bi bi-controller fs-5"></i>
+            <h2>{{ I18ns.leadHome.ongoingChallenges.noTeamChallenges }}</h2>
+            <p>{{ I18ns.leadHome.ongoingChallenges.noTeamChallengesSubtitle }}</p>
+          </div>
+        </ng-template>
+
+        <p class="text-end">
+          <a
+            [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
+            [fragment]="'byTeamAnchor'"
+            class="fw-medium mb-4 me-4 d-block"
+          >
+            {{ I18ns.shared.showMore }}
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="table-panel">
+        <h2>{{ I18ns.leadHome.ongoingChallenges.individual }}</h2>
+        <hr class="m-0" />
+
+        <ng-container *ngIf="challengesByUser.length > 0; else noChallenges">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
+                <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
+                <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
+                <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let chal of challengesByUser"
+                [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
+                class="cursor-pointer"
+              >
+                <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
+                <td>
+                  <alto-img-badge [user]="getUser(chal.createdBy) | async"></alto-img-badge>
+                </td>
+                <td>
+                  <alto-colored-pill-list
+                    [hasDynamicColor]="true"
+                    [data]="chal.teams || []"
+                    [limit]="2"
+                  ></alto-colored-pill-list>
+                </td>
+                <td>{{ chal.endDate | date : 'shortDate' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </ng-container>
+        <ng-template #noChallenges>
+          <div class="panel text-center">
+            <i class="bi bi-controller fs-5"></i>
+            <h2>{{ I18ns.leadHome.ongoingChallenges.noTeamChallenges }}</h2>
+            <p>{{ I18ns.leadHome.ongoingChallenges.noTeamChallengesSubtitle }}</p>
+          </div>
+        </ng-template>
+
+        <p class="text-end">
+          <a
+            [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
+            [fragment]="'byUserAnchor'"
+            class="fw-medium mb-4 me-4 d-block"
+          >
+            {{ I18ns.shared.showMore }}
+          </a>
+        </p>
+      </div>
     </div>
   </div>
 </div>

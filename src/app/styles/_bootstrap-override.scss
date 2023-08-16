@@ -1,17 +1,36 @@
+.container-xxl {
+  padding: 0;
+}
+
+.form-control {
+  background: #fff;
+}
+
 .btn {
   --bs-btn-border-radius: 24px;
   height: 2.667rem;
-  padding-left: 0.929rem !important;
-  padding-right: 0.929rem !important;
+  padding: 0 1.167rem;
+  line-height: 2.567rem;
+  display: inline-flex;
+  font-size: 0.833rem;
+
   i {
-    font-size: 1.25rem;
-    vertical-align: middle;
+    font-size: 1.15rem;
+    line-height: 2.567rem;
+  }
+
+  & :first-child:is(i) {
+    padding-right: 0.667rem;
+  }
+  & :last-child:is(i) {
+    padding-left: 0.667rem;
   }
 }
 .offcanvas {
   --bs-offcanvas-width: 520px;
   --bs-offcanvas-border-width: 0;
   --bs-offcanvas-color: var(--alto-text-color);
+  --bs-offcanvas-bg: white;
 }
 
 .progress {
@@ -21,9 +40,9 @@
 }
 
 .btn-outline-secondary {
-  --bs-btn-bg: white;
+  --bs-btn-bg: transparent;
   --bs-btn-color: var(--alto-text-color2);
-  --bs-btn-border-color: #ccc;
+  --bs-btn-border-color: var(--gray-200);
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #6c757d;
   --bs-btn-hover-border-color: #6c757d;
@@ -34,7 +53,7 @@
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   --bs-btn-disabled-color: #6c757d;
   --bs-btn-disabled-bg: transparent;
-  --bs-btn-disabled-border-color: #6c757d;
+  --bs-btn-disabled-border-color: var(--gray-200);
   --bs-gradient: none;
   font-weight: 600;
 }
@@ -96,7 +115,9 @@
   }
 }
 .ng-select .ng-select-container {
-  color: #344054;
+  color: var(--gray-700);
+  border-color: var(--bs-border-color);
+  border-radius: 2.333rem;
 }
 .ng-select {
   display: inline-block !important;
@@ -125,26 +146,26 @@
       width: 8px !important;
       top: -2px;
       transform: rotate(135deg);
-      color: var(--alto-text-color2);
-      border-color: grey;
+      border-color: var(--alto-text-color2);
     }
   }
   &.ng-select-opened > .ng-select-container .ng-arrow-wrapper {
     .ng-arrow {
-      border-color: grey;
+      border-color: var(--alto-text-color2);
       border-width: 0 0 0.1rem 0.1rem;
       margin: 0.6rem 0 0 0;
     }
   }
   &.ng-select-opened.ng-select-bottom > .ng-select-container,
   &.ng-select-opened.ng-select-top > .ng-select-container {
-    border-radius: 28px;
+    border-color: var(--bs-border-color);
+    border-radius: 3rem;
   }
   .ng-select-container {
     border-radius: 28px;
-    font-weight: 600;
-    font-size: 0.833rem;
-    min-height: 2.667rem;
+    font-weight: 400;
+    font-size: 1rem;
+    min-height: 2.833rem;
     color: var(--alto-text-color2);
     padding-inline-start: 0.5rem;
     .ng-value-container .ng-placeholder {

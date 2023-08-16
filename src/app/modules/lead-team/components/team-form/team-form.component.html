@@ -7,23 +7,19 @@
     (click)="activeOffcanvas.dismiss()"
   ></button>
 </div>
-<div class="row m-5 g-0">
-  <div class="col-2" style="width: 2.857rem">
-    <i class="alto-badge-big alto-badge-blue me-4 bi bi-people"></i>
-  </div>
-  <div class="col ms-4">
-    <h2>
-      {{ isEdit ? I18ns.leadTeam.teams.form.title.edit : I18ns.leadTeam.teams.form.title.create }}
-    </h2>
-    <p class="alto-grey">{{ I18ns.leadTeam.teams.form.subtitle }}</p>
-  </div>
+<div class="mx-5 my-4">
+  <alto-icon-badge [size]="4" icon="bi-people"></alto-icon-badge>
+
+  <h2 class="d-inline-block">
+    {{ isEdit ? I18ns.leadTeam.teams.form.title.edit : I18ns.leadTeam.teams.form.title.create }}
+  </h2>
 </div>
 
-<hr class="mb-0" />
+<hr />
 
-<div class="p-6 sidebar-body">
+<div class="px-6 sidebar-body">
   <form *ngIf="teamForm" [formGroup]="teamForm">
-    <label class="mt-4 form-label required">{{ I18ns.leadTeam.teams.form.longName }}</label>
+    <label class="form-label required">{{ I18ns.leadTeam.teams.form.longName }}</label>
     <input
       data-cy="editLongnameInput"
       type="text"
@@ -31,7 +27,6 @@
       formControlName="longName"
       placeholder="{{ I18ns.leadTeam.teams.form.longNamePlaceholder }}"
     />
-    <p class="alto-grey mt-2">{{ I18ns.leadTeam.teams.form.longNameExemple }}</p>
 
     <label class="mt-4 form-label required">{{ I18ns.leadTeam.teams.form.shortName }}</label>
     <input
@@ -41,7 +36,6 @@
       formControlName="shortName"
       placeholder="{{ I18ns.leadTeam.teams.form.shortNamePlaceholder }}"
     />
-    <p class="alto-grey mt-2">{{ I18ns.leadTeam.teams.form.shortNameExemple }}</p>
 
     <!-- <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.invitationEmails }}</label>
     <ng-select class="alto-form"
@@ -56,9 +50,7 @@
     </ng-select>
     <p>{{ I18ns.leadTeam.teams.form.invitationEmailsSubtitle }}</p> -->
 
-    <label class="mt-4 form-label"
-      >{{ I18ns.leadTeam.teams.form.Programs }} {{ I18ns.shared.optional }}</label
-    >
+    <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.Programs }}</label>
     <ng-select
       data-cy="editProgramSelector"
       class="alto-form"
@@ -71,28 +63,35 @@
       formControlName="programs"
     >
     </ng-select>
-
-    <p class="alto-grey mt-2">{{ I18ns.leadTeam.teams.form.ProgramsSubtitle }}</p>
   </form>
 </div>
 <div class="footer">
   <hr class="m-0" />
   <div class="button-container">
-    <button
-      type="button"
-      class="btn btn-outline-secondary"
-      aria-label="Close"
-      (click)="activeOffcanvas.dismiss()"
-    >
+    <button type="button" class="btn cancel-btn" aria-label="Close" (click)="activeOffcanvas.dismiss()">
       {{ I18ns.shared.cancel }}
     </button>
-    <input
-      data-cy="btnSave"
-      type="submit"
-      class="btn btn-primary float-end"
-      [disabled]="!teamForm.valid"
-      [value]="I18ns.shared.save"
-      (click)="createTeam()"
-    />
+    <ng-container *ngIf="isEdit; else elseTemplate">
+      <input
+        data-cy="btnSave"
+        type="submit"
+        class="btn btn-primary float-end"
+        [disabled]="!teamForm.valid"
+        [value]="I18ns.shared.save"
+        (click)="createTeam()"
+      />
+    </ng-container>
+    <ng-template #elseTemplate>
+      <button
+        data-cy="btnSave"
+        type="submit"
+        class="btn btn-primary float-end"
+        [disabled]="!teamForm.valid"
+        [value]="I18ns.shared.save"
+        (click)="createTeam()"
+      >
+        <i class="bi bi-plus-lg"></i><span>{{ I18ns.shared.create }}</span>
+      </button>
+    </ng-template>
   </div>
 </div>

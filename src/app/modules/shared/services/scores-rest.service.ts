@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import {
   GetProgramRunsRequestParams,
+  GetProgramsStatsRequestParams,
+  GetQuestionsStatsRequestParams,
   GetScoresRequestParams,
   GetTeamsStatsRequestParams,
   GetUsersStatsRequestParams,
   ProgramRunApi,
   ProgramRunsApiService,
+  QuestionStatsDtoApi,
   ScoreByTypeEnumApi,
   ScoreFillValuesEnumApi,
   ScoreTimeframeEnumApi,
@@ -60,6 +63,36 @@ export class ScoresRestService {
       .pipe(map((r) => r.data || []));
   }
 
+  getQuestionsStats(
+    duration: ScoreDuration,
+    isProgression?: boolean,
+    id?: string,
+  ): Observable<QuestionStatsDtoApi[]> {
+    let dateAfter: Date;
+    let dateBefore: Date;
+
+    if (isProgression) {
+      const [start, end] = this.service.getPreviousPeriod(duration);
+
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration);
+      dateBefore = new Date();
+    }
+
+    return this.statsApi
+      .getQuestionsStats({
+        page: 1,
+        itemsPerPage: 400,
+        from: dateAfter,
+        to: dateBefore,
+        respondsRegularlyThreshold: 0.42,
+        userId: id,
+      } as GetQuestionsStatsRequestParams)
+      .pipe(map((r) => r.data || []));
+  }
+
   getTeamsStats(duration: ScoreDuration, isProgression = false): Observable<TeamStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
@@ -76,9 +109,53 @@ export class ScoresRestService {
 
     return this.statsApi
       .getTeamsStats({
+        page: 1,
+        itemsPerPage: 400,
         from: dateAfter,
         to: dateBefore,
       } as GetTeamsStatsRequestParams)
+      .pipe(map((r) => r.data || []));
+  }
+
+  getProgramsStats(
+    duration: ScoreDuration,
+    isProgression = false,
+    reqParams: GetProgramsStatsRequestParams = {},
+  ) {
+    let dateAfter: Date;
+    let dateBefore: Date;
+
+    if (isProgression) {
+      const [start, end] = this.service.getPreviousPeriod(duration);
+
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration);
+      dateBefore = new Date();
+    }
+
+    return this.statsApi
+      .getProgramsStats({ ...reqParams, itemsPerPage: 400, from: dateAfter, to: dateBefore })
+      .pipe(map((r) => r.data || []));
+  }
+
+  getTagsStats(duration: ScoreDuration, isProgression = false) {
+    let dateAfter: Date;
+    let dateBefore: Date;
+
+    if (isProgression) {
+      const [start, end] = this.service.getPreviousPeriod(duration);
+
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration);
+      dateBefore = new Date();
+    }
+
+    return this.statsApi
+      .getTagsStats({ itemsPerPage: 400, from: dateAfter, to: dateBefore })
       .pipe(map((r) => r.data || []));
   }
 

@@ -1,13 +1,21 @@
-<div class="container">
-  <div class="row">
-    <div class="col-3"></div>
-    <div class="col-6 text-center">
-      <img src="./assets/img/logo.png" alt="Alto Logo" />
-      <h1 class="mt-4">{{ I18ns.shared.noWebAccess.title }}</h1>
-      <h2>{{ I18ns.shared.noWebAccess.subtitle }}</h2>
-      {{ I18ns.shared.noWebAccess.description }}
-      <p>{{ I18ns.shared.noWebAccess.subdescription }}</p>
-    </div>
-    <div class="col-3"></div>
+<img
+  class="position-absolute top-0 end-0 background-img w-40 m-7"
+  src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Rocket/Color/rocket_color.svg"
+/>
+<div class="panel-full d-flex justify-content-center align-items-center">
+  <div class="text-center text-404">
+    <img class="mb-8" width="182" src="assets/img/logo.png" alt="Alto Logo" />
+    <h1 class="mb-6">
+      {{ I18ns.shared.noWebAccess.title }}
+    </h1>
+    <p>{{ I18ns.shared.noWebAccess.subtitle }}</p>
+    <p class="mt-5">
+      {{ I18ns.shared.noWebAccess.goodbye }}
+      <img
+        class="emoji ms-2"
+        src="https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/Waving%20hand/Default/Color/waving_hand_color_default.svg"
+        height="21"
+      />
+    </p>
   </div>
 </div>

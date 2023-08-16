@@ -1,5 +1,38 @@
-.row {
-  margin-top: 8rem;
-  border: 1px solid #d0d5dd;
-  border-radius: 1rem;
+:host {
+  position: absolute;
+  width: calc(100% - 5rem);
+  left: 5rem;
+}
+
+.panel-full {
+  background-color: white;
+  border-radius: 1.333rem;
+  border: 1px solid var(--gray-300);
+  margin: 2.667rem;
+  height: 93vh;
+}
+
+.text-404 {
+  h1 {
+    font-size: 1.66667rem;
+  }
+  p {
+    width: 53.3rem;
+    font-size: 1.16667rem;
+  }
+  a {
+    font-size: 1.16667rem;
+  }
+  i {
+    font-size: 1.66667rem;
+  }
+}
+
+.btn {
+  padding: 0.83333rem 1.5rem;
+  align-items: center;
+}
+
+.background-img {
+  opacity: 0.1;
 }

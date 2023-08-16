@@ -3,18 +3,34 @@
   padding: var(--alto-page-padding);
 }
 
-.warning-panel {
-  background-color: var(--orange--25);
+.warning-panel,
+.success-panel {
+  height: 7.333rem;
   border-radius: 0.67rem;
-  padding: 1.14rem 1.7rem;
+  padding: 1.667rem;
+  alto-icon-badge {
+    vertical-align: top;
+  }
+}
+
+.warning-panel {
+  background-color: var(--orange-25);
+  .title {
+    font-weight: 600;
+  }
+}
+
+.header-panel {
+  padding: 1.6667rem 2.6667rem;
 }
 
 .success-panel {
   background-color: white;
-  border-radius: 0.67rem;
-  padding: 1.14rem 1.7rem;
   .icon-bg1 {
-    background-color: var(--success--50);
+    background-color: var(--success-50);
+  }
+  .title {
+    font-weight: 600;
   }
 }
 
@@ -22,39 +38,17 @@
   font-size: 3rem;
 }
 
-.row {
-  position: relative;
+.stats-title {
+  font-size: 0.83333rem;
+  color: var(--gray-500);
 }
-.ongoing-programs {
-  position: relative;
-  .title {
-    bottom: -2.5rem;
-  }
+.stats-content {
+  font-weight: 600;
 }
-.title {
-  position: absolute;
-  bottom: 0;
-  margin: 0;
-}
-.height-100 {
-  min-height: 100px;
-}
-.alto-badge-big {
-  margin: 0.3em 0;
+.subtitle {
+  color: var(--gray-500);
 }
 
 .chart-container {
-  height: 344px;
-}
-.stats {
-  h1 {
-    margin: 0;
-  }
-  i {
-    font-size: 1.143rem;
-  }
-}
-
-.topflop-label {
-  width: calc(100% - 5rem);
+  height: 465px;
 }

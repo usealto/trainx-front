@@ -11,27 +11,27 @@ import {
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { Observable, map, switchMap, tap } from 'rxjs';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { QuestionDeleteModalComponent } from 'src/app/modules/shared/components/question-delete-modal/question-delete-modal.component';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
+import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
 import { ScoreDuration, ScoreFilter } from '../../../shared/models/score.model';
 import { QuestionFilters } from '../../models/question.model';
 import { TagFilters } from '../../models/tag.model';
 import { ProgramsStore } from '../../programs.store';
-import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 import { TagsServiceService } from '../../services/tags-service.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
-import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
-import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 
 interface TagDisplay extends TagDtoApi {
   score?: number;
@@ -44,6 +44,7 @@ interface TagDisplay extends TagDtoApi {
   providers: [ReplaceInTranslationPipe],
 })
 export class ProgramsComponent implements OnInit {
+  EmojiName = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   //
@@ -55,7 +56,7 @@ export class ProgramsComponent implements OnInit {
   questionsPageSize = 10;
   isQuestionsLoading = true;
   questionsScore = new Map<string, number>();
-  questionFilters: QuestionFilters = { programs: [], tags: [], contributors: [], search: '' };
+  questionFilters: QuestionFilters = { programs: [], tags: [], search: '' };
   contributors: { id: string; fullname: string }[] = [];
   selectedItems: QuestionDtoApi[] = [];
   //
@@ -77,11 +78,17 @@ export class ProgramsComponent implements OnInit {
   isTagProgramsLoading = true;
   tagFilters: TagFilters = { programs: [], contributors: [], search: '', score: '' };
   tagsScore = new Map<string, number>();
-  //
+
+  //tabs
+  tabData = [
+    { label: 'Programmes', value: 'programs' },
+    { label: 'Questions', value: 'questions' },
+    { label: 'Tags', value: 'tags' },
+  ];
+  activeTab = this.tabData[0].value;
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
-    private readonly programRestService: ProgramsRestService,
     private readonly questionsService: QuestionsRestService,
     private readonly scoresRestServices: ScoresRestService,
     private readonly scoresServices: ScoresService,
@@ -100,10 +107,10 @@ export class ProgramsComponent implements OnInit {
     this.getQuestions();
     this.getSubmittedQuestions();
     this.getTags();
-    this.contributors = this.profileStore.users.value.map((u) => ({
-      id: u.id,
-      fullname: u.firstname + ' ' + u.lastname,
-    }));
+  }
+
+  handleTabChange(value: any) {
+    this.activeTab = value;
   }
 
   deleteQuestion(question?: QuestionDtoApi) {
@@ -191,7 +198,7 @@ export class ProgramsComponent implements OnInit {
     {
       programs = this.questionFilters.programs,
       tags = this.questionFilters.tags,
-      contributors = this.questionFilters.contributors,
+      score = this.questionFilters.score,
       search = this.questionFilters.search,
     }: QuestionFilters = this.questionFilters,
   ) {
@@ -199,7 +206,7 @@ export class ProgramsComponent implements OnInit {
 
     this.questionFilters.programs = programs;
     this.questionFilters.tags = tags;
-    this.questionFilters.contributors = contributors;
+    this.questionFilters.score = score;
     this.questionFilters.search = search;
 
     this.questionsService
@@ -208,7 +215,6 @@ export class ProgramsComponent implements OnInit {
         itemsPerPage: this.questionsPageSize,
         programIds: programs?.join(','),
         tagIds: tags?.join(','),
-        createdBy: contributors?.length ? contributors?.join(',') : undefined,
         search,
       })
       .pipe(
@@ -221,10 +227,23 @@ export class ProgramsComponent implements OnInit {
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
         map((ids) => this.getUsersfromIds(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
-        tap(() => (this.isQuestionsLoading = false)),
+        tap(() => {
+          if (this.questionFilters.score) {
+            this.filterByScore();
+          }
+          this.isQuestionsLoading = false;
+        }),
         untilDestroyed(this),
       )
       .subscribe();
+  }
+
+  filterByScore() {
+    this.questions.forEach((q) => {
+      const score = this.getQuestionScore(q.id);
+      // TODO WHEN FILTERS ARE AVAILABLE ON STATS ROUTES
+    });
+    return;
   }
 
   getUsersfromIds(ids: string[]): UserDtoApi[] {

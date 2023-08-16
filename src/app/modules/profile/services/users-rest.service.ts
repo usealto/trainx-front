@@ -64,7 +64,7 @@ export class UsersRestService {
     if (this.userStore.user.value) {
       return this.userStore.user.value$;
     } else {
-      return this.userApi.getMe({}).pipe(
+      return this.userApi.getMe().pipe(
         map((u) => u.data || ({} as UserDtoApi)),
         tap((u) => (this.userStore.user.value = u)),
       );
@@ -86,5 +86,9 @@ export class UsersRestService {
       itemsPerPage: req?.itemsPerPage ?? 25,
     } as GetNextQuestionsForUserRequestParams;
     return this.userApi.getNextQuestionsForUser(params).pipe();
+  }
+
+  deleteUser(id: string) {
+    return this.userApi.deleteUser({ id });
   }
 }

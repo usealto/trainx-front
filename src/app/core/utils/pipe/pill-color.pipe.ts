@@ -6,14 +6,14 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class PillColorPipe implements PipeTransform {
   transform(num: number | string, ...args: unknown[]): string {
     if (typeof num === 'string') {
-      return 'pill-neutral text-white';
-    } else if (num > 65) {
-      return 'pill-green text-white';
-    } else if (num > 30) {
-      return 'bg-warning text-white';
+      return 'pill-neutral';
+    } else if (num > 70) {
+      return 'pill-green';
+    } else if (num > 40) {
+      return 'pill-orange';
     } else if (num > 0) {
-      return 'pill-red text-white';
+      return 'pill-red';
     }
-    return 'pill-neutral text-white';
+    return 'pill-neutral';
   }
 }

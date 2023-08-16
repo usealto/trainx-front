@@ -18,6 +18,10 @@
   color: red;
 }
 
+input[type='text'].form-control {
+  height: 3.167rem;
+}
+
 .alto-badge-no-size {
   display: inline-block;
   border-radius: 25px;
@@ -27,9 +31,11 @@
 }
 .alto-score {
   @extend .alto-badge-no-size;
-  min-height: 1.66rem;
-  min-width: 3.75rem;
-  line-height: 1.66rem;
+  min-height: 1.75rem;
+  min-width: 3.2143rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  font-size: 0.833em;
 }
 .alto-badge {
   @extend .alto-badge-no-size;
@@ -43,9 +49,9 @@
 
 .alto-badge-big {
   @extend .alto-badge-no-size;
-  height: 4rem;
-  min-width: 4rem;
-  line-height: 3.4rem;
+  height: 2.667rem;
+  width: 2.667rem;
+  line-height: 2.667rem;
   font-size: 2rem;
   color: var(--alto-blue);
   background-color: var(--alto-medium-grey);
@@ -60,17 +66,6 @@
   color: #d92d20;
   background-color: #fee4e2;
 }
-.alto-badge-warning {
-  @extend .alto-badge-big;
-  color: var(--orange--600);
-  background: radial-gradient(circle, var(--orange--100) 50%, var(--orange--50) 50%);
-}
-.alto-badge-success {
-  @extend .alto-badge-big;
-  color: var(--success--600);
-  background: radial-gradient(circle, var(--success--100) 50%, var(--success--50) 50%);
-
-}
 
 .subtitles {
   color: var(--alto-text-second-color);
@@ -84,9 +79,26 @@
 }
 
 .header-panel {
-  background-color: var(--primary--50);
+  background-color: var(--primary-50);
   border-radius: 0.67rem;
   padding: 1.14rem 1.7rem;
+  h1 {
+    margin: 0;
+  }
+  .emoji {
+    height: 2rem;
+  }
+  p {
+    font-size: 1.1667rem;
+  }
+}
+
+h2 {
+  .emoji {
+    height: 1.667rem;
+    margin-right: 0.667rem;
+    vertical-align: bottom;
+  }
 }
 
 // Block used while loading content
@@ -98,20 +110,25 @@
 
 .table-panel {
   background-color: white;
-  border-radius: 1.143rem;
+  border-radius: 0.667rem;
   border: 1px solid var(--alto-border);
   h2 {
     padding: 1.4rem 1.7rem;
     margin: 0;
   }
   .table {
+    --bs-table-bg: transparent;
+
     th {
-      font-weight: 500;
+      font-weight: 600;
       font-size: 0.857rem;
-      padding: 0.929rem;
+      padding: 0;
+    }
+    thead tr {
+      height: 2.667rem;
     }
     tbody tr {
-      height: 5.144rem;
+      min-height: 3.333rem;
     }
     tr {
       & * {
@@ -138,6 +155,13 @@
   border-left: 2px solid var(--alto-medium-grey);
   min-height: 2rem;
   vertical-align: middle;
+}
+
+.cancel-btn {
+  color: var(--gray-500, #667085);
+  font-size: 1.167rem;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 // Used in modals
