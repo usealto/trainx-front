@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -42,8 +42,8 @@ export class ProfileAccountComponent implements OnInit {
 
   initForm() {
     this.userForm = this.fb.group<UserForm>({
-      firstname: [this.user.firstname ?? ''],
-      lastname: [this.user.lastname ?? ''],
+      firstname: [this.user.firstname ?? '', [Validators.required]],
+      lastname: [this.user.lastname ?? '', [Validators.required]],
       // timezone: [''],
       // country: [''],
     });
