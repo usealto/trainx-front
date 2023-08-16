@@ -21,7 +21,6 @@ export const PaginationWithInfos: Story = {
   args: {
     collectionSize: 100,
     pageSize: 10,
-    maxSize: 10,
     page: 3,
   },
 };
