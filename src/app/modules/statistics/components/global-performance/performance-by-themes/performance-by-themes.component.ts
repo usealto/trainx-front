@@ -98,8 +98,9 @@ export class PerformanceByThemesComponent implements OnChanges {
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
     scores = this.scoresServices.reduceChartData(scores);
+    const aggregateData = this.statisticsServices.aggregateDataForScores(scores[0], duration);
     const labels = this.statisticsServices.formatLabel(
-      this.statisticsServices.aggregateDataForScores(scores[0], duration).map((d) => d.x),
+      aggregateData.map((d) => d.x),
       duration,
     );
 
@@ -157,10 +158,6 @@ export class PerformanceByThemesComponent implements OnChanges {
       labels: labels,
       datasets: dataSet,
     };
-
-    if (this.scoreEvolutionChart) {
-      this.scoreEvolutionChart.destroy();
-    }
 
     const customChartOptions = {
       ...chartDefaultOptions,
