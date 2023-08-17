@@ -27,6 +27,15 @@ textarea.form-control {
   color: var(--gray-900);
 }
 
+input[type='text'].form-control:focus {
+  height: 3.167rem;
+  color: var(--gray-900);
+}
+
+textarea.form-control:focus {
+  color: var(--gray-900);
+}
+
 .alto-badge-no-size {
   display: inline-block;
   border-radius: 25px;
@@ -127,7 +136,7 @@ h2 {
     th {
       font-weight: 600;
       font-size: 0.857rem;
-      padding: 0;
+      padding: 0.5rem;
     }
     thead tr {
       height: 2.667rem;
