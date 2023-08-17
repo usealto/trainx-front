@@ -79,8 +79,7 @@ export class SettingsUsersComponent implements OnInit {
       this.userRestService
         .getUsersFiltered({ isCompanyAdmin: true })
         .pipe(
-          tap((users) => (this.adminsDisplay = this.usersService.filterUsers(users, { search }))),
-          tap(() => (this.adminsCount = this.adminsDisplay.length)),
+          tap((users) => (this.adminsDisplay = this.usersService.filterUsers(users, { search }).slice(0, 5))),
         )
         .subscribe();
     } else {
@@ -93,8 +92,7 @@ export class SettingsUsersComponent implements OnInit {
       this.userRestService
         .getUsersFiltered({ isCompanyAdmin: false })
         .pipe(
-          tap((users) => (this.usersDisplay = this.usersService.filterUsers(users, { search }))),
-          tap(() => (this.usersCount = this.usersDisplay.length)),
+          tap((users) => (this.usersDisplay = this.usersService.filterUsers(users, { search }).slice(0, 5))),
         )
         .subscribe();
     } else {
