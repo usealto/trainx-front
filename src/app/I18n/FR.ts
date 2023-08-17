@@ -41,9 +41,9 @@ export const FR = {
       on: 'sur',
     },
     priorities: {
-      high: 'High',
-      medium: 'Medium',
-      low: 'Low',
+      high: 'Haute',
+      medium: 'Moyenne',
+      low: 'Basse',
     },
     status: {
       title: 'Status',
@@ -245,8 +245,8 @@ export const FR = {
         title: 'Informations',
         subtitle: 'Informations générales du programme.',
         name: 'Nom du programme',
-        nameSubtitle: 'Visible par tout le monde',
-        namePlaceholder: 'Onboarding',
+        nameSubtitle: 'Visible par tout le monde.',
+        namePlaceholder: 'Exemple: Onboarding',
         description: 'Description',
         descriptionSubtitle: 'Ecrivez une brève description du contenu du programme',
         descriptionPlaceholder:

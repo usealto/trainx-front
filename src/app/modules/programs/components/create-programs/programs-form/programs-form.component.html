@@ -22,7 +22,7 @@
     <div class="col-left">
       <img class="emoji" [src]="EmojiName.Label | emoji" />
       <div>
-        <label class="form-label required">{{ I18ns.programs.forms.step1.tags }}</label>
+        <label class="form-label">{{ I18ns.programs.forms.step1.tags }}</label>
         <p>{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
       </div>
     </div>
@@ -30,7 +30,6 @@
       <ng-select
         data-cy="programTags"
         class="alto-form"
-        required
         [items]="tags"
         [multiple]="true"
         bindValue="id"
