@@ -44,13 +44,19 @@
               </div>
             </td>
             <td>
-              <!-- <div class="progress" *ngIf="team.score">
-                <div
-                  class="progress-bar d-inline-block"
-                  role="progressbar"
-                  [style]="'width:' + team.score * 100 + '%'"
-                ></div>
-              </div> -->
+              <div *ngIf="team.totalGuessesCount && team.questionsPushedCount">
+                <div class="progress">
+                  <div
+                    class="progress-bar d-inline-block"
+                    role="progressbar"
+                    [style]="'width:' + (team.totalGuessesCount/team.questionsPushedCount) * 100 + '%'"
+                  ></div>
+                </div>
+                {{ team.totalGuessesCount }} / {{ team.questionsPushedCount }}
+              </div>
+              <div class="text-center" *ngIf="!team.totalGuessesCount || !team.questionsPushedCount">
+                {{ I18ns.leadTeam.teams.table.noActivity }}
+              </div>
             </td>
             <td class="text-center">
               {{ team.createdAt | date : 'shortDate' }}

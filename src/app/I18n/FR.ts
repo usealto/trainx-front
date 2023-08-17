@@ -490,11 +490,12 @@ export const FR = {
         usersCount: 'Nombre de membres',
         noUsers: 'Aucun membre',
         users: ['Aucun', '{{}}', '{{}}'],
-        averageScore: 'Score moyen',
+        averageScore: 'Score moyen (30 derniers jours)',
         ativity: 'Activité  moyenne (30 derniers jours)',
         noScore: 'Aucun score',
         averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         creationDate: 'Date de création',
+        noActivity: 'Aucune activité',
       },
       form: {
         title: {
