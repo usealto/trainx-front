@@ -485,7 +485,7 @@ export const FR = {
       shortTitle: 'Équipes',
       subtitle: "Retrouvez l'ensemble des équipes de votre entreprise.",
       table: {
-        name: 'Nom',
+        name: "Nom de l'équipe",
         initials: '',
         usersCount: 'Nombre de membres',
         noUsers: 'Aucun membre',
