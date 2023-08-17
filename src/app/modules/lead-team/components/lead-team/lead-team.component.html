@@ -17,11 +17,11 @@
       <table class="table team-table">
         <thead>
           <tr>
-            <th scope="col" class="w-40">{{ I18ns.leadTeam.teams.table.name }}</th>
-            <th scope="col" class="w-15 text-center">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
-            <th scope="col" class="w-15 text-center">{{ I18ns.leadTeam.teams.table.usersCount }}</th>
-            <th scope="col" class="w-25 text-center">{{ I18ns.leadTeam.teams.table.ativity }}</th>
-            <th scope="col" class="text-center">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
+            <th scope="col" class="w-25">{{ I18ns.leadTeam.teams.table.name }}</th>
+            <th scope="col" class="w-20 text-center">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
+            <th scope="col" class="w-20 text-start">{{ I18ns.leadTeam.teams.table.usersCount }}</th>
+            <th scope="col" class="w-25 text-start">{{ I18ns.leadTeam.teams.table.ativity }}</th>
+            <th scope="col" class="w-10 text-start">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
             <th></th>
             <th></th>
           </tr>
@@ -35,7 +35,7 @@
                 {{ I18ns.leadTeam.teams.table.noScore }}
               </div>
             </td>
-            <td class="w-20 text-center">
+            <td class="w-20 text-start">
               <div *ngIf="getTeamUsersCount(team.id) !== 0">
                 {{ I18ns.leadTeam.teams.table.users | plural : getTeamUsersCount(team.id) }} membres
               </div>
@@ -44,15 +44,21 @@
               </div>
             </td>
             <td>
-              <!-- <div class="progress" *ngIf="team.score">
-                <div
-                  class="progress-bar d-inline-block"
-                  role="progressbar"
-                  [style]="'width:' + team.score * 100 + '%'"
-                ></div>
-              </div> -->
+              <div *ngIf="team.totalGuessesCount && team.questionsPushedCount">
+                <div class="progress">
+                  <div
+                    class="progress-bar d-inline-block"
+                    role="progressbar"
+                    [style]="'width:' + (team.totalGuessesCount/team.questionsPushedCount) * 100 + '%'"
+                  ></div>
+                </div>
+                {{ team.totalGuessesCount }} / {{ team.questionsPushedCount }}
+              </div>
+              <div class="text-start" *ngIf="!team.totalGuessesCount || !team.questionsPushedCount">
+                {{ I18ns.leadTeam.teams.table.noActivity }}
+              </div>
             </td>
-            <td class="text-center">
+            <td class="text-start">
               {{ team.createdAt | date : 'shortDate' }}
             </td>
             <td class="cursor-pointer px-3" (click)="deleteTeam(team)">
