@@ -223,8 +223,8 @@
 
     <alto-pagination
       class="mx-4 d-block"
-      [collectionSize]="absoluteUsersCount"
-      (pageChange)="changeUsersPage(usersScores, $event)"
+      [collectionSize]="usersCount"
+      (pageChange)="changeUsersPage(filteredUsers, $event)"
       [pageSize]="usersPageSize"
       [page]="usersPage"
     ></alto-pagination>
