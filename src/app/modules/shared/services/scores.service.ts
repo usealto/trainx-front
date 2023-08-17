@@ -166,6 +166,7 @@ export class ScoresService {
 
   getPreviousPeriod(duration: string | ScoreDuration | undefined): Date[] {
     let date = new Date();
+    date = addDays(date, 1); //! TEMPORARY FIX to get data from actual day
     switch (duration) {
       case 'week':
         date = addDays(date, -14);
