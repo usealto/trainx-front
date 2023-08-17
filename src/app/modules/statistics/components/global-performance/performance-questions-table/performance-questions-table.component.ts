@@ -71,7 +71,7 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
     let output: QuestionStatsDtoApi[] = this.questions;
 
     if (search) {
-      output = output.filter((t) => t.question.title.includes(search));
+      output = output.filter((t) => t.question.title.toLowerCase().includes(search.toLowerCase()));
     }
     if (teams && teams.length > 0) {
       output = output.filter((q) => q.teams?.some((t) => teams.some((te) => te === t.id)));
