@@ -75,11 +75,17 @@ export class SettingsUsersComponent implements OnInit {
   }
 
   filterAdmins({ search = this.userFilters.search }: UserFilters = this.userFilters) {
+    this.adminsPage = 1;
+
     if (search) {
       this.userRestService
         .getUsersFiltered({ isCompanyAdmin: true })
         .pipe(
-          tap((users) => (this.adminsDisplay = this.usersService.filterUsers(users, { search }).slice(0, 5))),
+          tap((users) => {
+            const filteredUsers = this.usersService.filterUsers(users, { search });
+            this.adminsCount = filteredUsers.length;
+            this.adminsDisplay = filteredUsers.slice(0, this.adminsPageSize);
+          }),
         )
         .subscribe();
     } else {
@@ -88,11 +94,17 @@ export class SettingsUsersComponent implements OnInit {
   }
 
   filterUsers({ search = this.userFilters.search }: UserFilters = this.userFilters) {
+    this.usersPage = 1;
+
     if (search) {
       this.userRestService
         .getUsersFiltered({ isCompanyAdmin: false })
         .pipe(
-          tap((users) => (this.usersDisplay = this.usersService.filterUsers(users, { search }).slice(0, 5))),
+          tap((users) => {
+            const filteredUsers = this.usersService.filterUsers(users, { search });
+            this.usersCount = filteredUsers.length;
+            this.usersDisplay = filteredUsers.slice(0, this.usersPageSize);
+          }),
         )
         .subscribe();
     } else {
