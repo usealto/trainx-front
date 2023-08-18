@@ -74,7 +74,7 @@
         [returnValue]="'id'"
         [placeholder]="I18ns.programs.questions.filters.programs"
         [selectedItems]="selectedItems"
-        (selectChange)="getQuestions({ programs: $event })"
+        (selectChange)="getQuestions({ programs: $event }, true)"
       ></alto-dropdown-filter>
       <alto-dropdown-filter
         class="me-3"
@@ -84,15 +84,15 @@
         [displayLabel]="'name'"
         [placeholder]="I18ns.programs.questions.filters.tags"
         [selectedItems]="selectedItems"
-        (selectChange)="getQuestions({ tags: $event })"
+        (selectChange)="getQuestions({ tags: $event }, true)"
       ></alto-dropdown-filter>
-      <alto-score-filter (selectChange)="getQuestions({ score: $event })"></alto-score-filter>
+      <alto-score-filter (selectChange)="getQuestions({ score: $event }, true)"></alto-score-filter>
     </div>
     <div class="d-inline-block">
       <alto-search
         class="search"
         data-cy="questionsSearchFilter"
-        (searchChange)="getQuestions({ search: $event })"
+        (searchChange)="getQuestions({ search: $event }, true)"
       ></alto-search>
     </div>
   </div>

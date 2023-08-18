@@ -204,8 +204,9 @@ export class ProgramsComponent implements OnInit {
       score = this.questionFilters.score,
       search = this.questionFilters.search,
     }: QuestionFilters = this.questionFilters,
+    refreshPagination = false,
   ) {
-    // this.isQuestionsLoading = true;
+    this.isQuestionsLoading = true;
 
     this.questionFilters.programs = programs;
     this.questionFilters.tags = tags;
@@ -222,6 +223,9 @@ export class ProgramsComponent implements OnInit {
         tap((questions) => {
           this.questions = questions;
           this.questionsCount = questions.length;
+          if (refreshPagination) {
+            this.questionsPage = 1;
+          }
           this.changeQuestionsPage(questions);
         }),
         switchMap((questions) => this.getScoresfromQuestions(questions.map((q) => q.id))),
