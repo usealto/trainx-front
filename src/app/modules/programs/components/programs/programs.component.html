@@ -74,7 +74,7 @@
         [returnValue]="'id'"
         [placeholder]="I18ns.programs.questions.filters.programs"
         [selectedItems]="selectedItems"
-        (selectChange)="getQuestions({ programs: $event })"
+        (selectChange)="getQuestions({ programs: $event }, true)"
       ></alto-dropdown-filter>
       <alto-dropdown-filter
         class="me-3"
@@ -84,19 +84,19 @@
         [displayLabel]="'name'"
         [placeholder]="I18ns.programs.questions.filters.tags"
         [selectedItems]="selectedItems"
-        (selectChange)="getQuestions({ tags: $event })"
+        (selectChange)="getQuestions({ tags: $event }, true)"
       ></alto-dropdown-filter>
-      <alto-score-filter (selectChange)="getQuestions({ score: $event })"></alto-score-filter>
+      <alto-score-filter (selectChange)="getQuestions({ score: $event }, true)"></alto-score-filter>
     </div>
     <div class="d-inline-block">
       <alto-search
         class="search"
         data-cy="questionsSearchFilter"
-        (searchChange)="getQuestions({ search: $event })"
+        (searchChange)="getQuestions({ search: $event }, true)"
       ></alto-search>
     </div>
   </div>
-  <ng-container *ngIf="questionsCount! > 0; else noQuestions">
+  <ng-container *ngIf="paginatedQuestions.length > 0; else noQuestions">
     <div class="table-panel">
       <table class="table">
         <thead>
@@ -110,9 +110,9 @@
             <th class="w-20"></th>
           </tr>
         </thead>
-        <tbody [style.height]="53 * questions.length + 'px'">
+        <tbody [style.height]="53 * paginatedQuestions.length + 'px'">
           <ng-container *ngIf="!isQuestionsLoading">
-            <tr *ngFor="let question of questions">
+            <tr *ngFor="let question of paginatedQuestions">
               <td class="text-black">
                 {{ question.title }}
               </td>
@@ -145,9 +145,9 @@
 
       <alto-pagination
         class="mx-4 d-block"
-        [collectionSize]="questionsCount ?? 0"
+        [collectionSize]="questionsCount"
         [(page)]="questionsPage"
-        (pageChange)="changeQuestionsPage($event)"
+        (pageChange)="getQuestions()"
         [pageSize]="questionsPageSize"
         aria-label="Default pagination"
       ></alto-pagination>
