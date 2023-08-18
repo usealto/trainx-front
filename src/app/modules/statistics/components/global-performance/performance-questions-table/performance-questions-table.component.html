@@ -32,7 +32,7 @@
         <th scope="col" class="w-10">
           {{ I18ns.statistics.globalPerformance.questionsTable.columns.scoreEvolution }}
         </th>
-        <th scope="col" class="w-20">
+        <th scope="col" class="w-20 text-center">
           {{ I18ns.statistics.globalPerformance.questionsTable.columns.usersNumber }}
         </th>
         <th scope="col" class="w-25">
@@ -55,15 +55,17 @@
             *ngIf="!scoreIsLoading"
           ></alto-progression-badge>
         </td>
-        <td>
-          <div class="progress">
+        <td class="text-center">
+          <!-- todo when api is ready -->
+          <!-- <div class="progress">
             <div
               class="progress-bar d-inline-block"
               role="progressbar"
               [style]="'width:' + (quest.usersCount / quest.totalUsersCount | percent : '1.0-0' : 'en-US')"
             ></div>
-          </div>
-          {{ quest.usersCount }}/{{ quest.totalUsersCount }}
+          </div> -->
+          <!-- {{ quest.usersCount }}/{{ quest.totalUsersCount }} -->
+          {{ quest.usersCount }}
         </td>
         <td>
           <ng-container *ngIf="quest.teams">
