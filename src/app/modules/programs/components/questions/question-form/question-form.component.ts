@@ -33,6 +33,7 @@ export class QuestionFormComponent implements OnInit {
   @Input() program: ProgramDtoApi | undefined;
   @Input() question?: QuestionDtoApi;
   @Input() isSubmitted = false;
+  @Input() isNewProgram = false;
   @Output() createdQuestion = new EventEmitter<QuestionDtoApi>();
   @Output() dismissedQuestion = new EventEmitter<any>();
   private fb: IFormBuilder;
