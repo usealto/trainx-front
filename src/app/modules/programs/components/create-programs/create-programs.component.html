@@ -1,261 +1,235 @@
-<h1>{{ isEdit ? I18ns.programs.forms.edit : I18ns.programs.forms.create }}</h1>
-<div class="row mt-4">
+<div class="header-panel mb-8">
+  <img class="emoji-title me-4" [src]="EmojiName.Bullseye | emoji" />
+  <h1>{{ isEdit ? I18ns.programs.forms.edit : I18ns.programs.forms.create }}</h1>
+</div>
+
+<div class="mt-4 form-nav">
   <div
-    class="col-4 step"
+    class="step"
     [ngClass]="{
       'cursor-pointer': isEdit,
-      'highlight-step': currentStep === 1,
-      'passed-step': currentStep > 1
+      'highlight-step': currentStep === 1
     }"
     (click)="isEdit && changeTab(1)"
   >
-    <i class="alto-badge-big fs-5 tab-icon me-4 bi bi-file-text"></i>
-    <span class="fs-6b">{{ I18ns.programs.forms.step1.title }}</span>
+    <i class="fs-5 tab-icon me-3 bi bi-file-text"></i>
+    <span>{{ I18ns.programs.forms.step1.title }}</span>
   </div>
   <div
-    class="col-4 step"
+    class="step"
     [ngClass]="{
       'cursor-pointer': isEdit,
-      'highlight-step': currentStep === 2,
-      'passed-step': currentStep > 2
+      'highlight-step': currentStep === 2
     }"
     (click)="isEdit && changeTab(2)"
   >
-    <i class="alto-badge-big fs-5 tab-icon me-4 bi bi-question-circle"></i>
-    <span class="fs-6b">{{ I18ns.programs.forms.step2.title }}</span>
+    <i class="fs-5 tab-icon me-3 bi bi-question-circle"></i>
+    <span>{{ I18ns.programs.forms.step2.title }}</span>
   </div>
   <div
-    class="col-4 step"
+    class="step"
     [ngClass]="{ 'cursor-pointer': isEdit, 'highlight-step': currentStep === 3 }"
     (click)="isEdit && changeTab(3)"
   >
-    <i class="alto-badge-big fs-5 tab-icon me-4 bi bi-share"></i>
-    <span class="fs-6b">{{ I18ns.programs.forms.step3.title }}</span>
+    <i class="fs-5 tab-icon me-3 bi bi-share"></i>
+    <span>{{ I18ns.programs.forms.step3.title }}</span>
   </div>
 </div>
 
 <div [ngSwitch]="currentStep" class="mt-6">
   <!-- INFORMATIONS -->
-  <div *ngSwitchCase="1" class="page-max-width">
-    <div class="mb-6 row">
-      <div class="col-6">
-        <h2>{{ I18ns.programs.forms.step1.title }}</h2>
-        <p class="">{{ I18ns.programs.forms.step1.subtitle }}</p>
-      </div>
-      <div class="text-end col-6">
-        <button class="btn btn-outline-secondary me-2" (click)="cancel()">
-          {{ I18ns.shared.cancel }}
-        </button>
-        <button class="btn btn-primary" (click)="goNext()" [disabled]="programForm && !programForm.valid">
-          {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
-        </button>
-      </div>
+  <div *ngSwitchCase="1">
+    <div class="infos">
+      <i class="me-3 bi bi-info-circle"></i>
+      <span class="">{{ I18ns.programs.forms.step1.subtitle }}</span>
     </div>
+
     <alto-programs-form [isEdit]="isEdit" [form]="programForm"></alto-programs-form>
     <div class="row">
+      <ng-container *ngIf="isEdit">
+        <div class="col-12 text-center mb-4">
+          <a data-cy="deleteProgram" class="btn btn-danger" (click)="delete()">
+            <i class="bi bi-trash"></i><span>{{ I18ns.programs.delete.btn }}</span>
+          </a>
+        </div>
+        <hr />
+      </ng-container>
       <div class="col-6">
-        <a data-cy="deleteProgram" class="cursor-pointer" *ngIf="isEdit" (click)="delete()">
-          <i class="bi bi-trash"></i> {{ I18ns.programs.delete.btn }}
+        <a class="cancel-btn" (click)="cancel()">
+          {{ I18ns.shared.cancel }}
         </a>
       </div>
       <div class="col-6 text-end">
-        <button class="btn btn-outline-secondary me-2" (click)="cancel()">
-          {{ I18ns.shared.cancel }}
-        </button>
         <button
-          data-cy="programCreateNext"
-          class="btn btn-primary"
+          class="btn btn-primary fs-5"
           (click)="goNext()"
+          data-cy="programCreateNext"
           [disabled]="programForm && !programForm.valid"
         >
-          {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
+          <div>
+            {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
+          </div>
+          <i class="bi bi-arrow-right-short fs-2"></i>
         </button>
       </div>
     </div>
   </div>
   <!-- QUESTIONS -->
   <div *ngSwitchCase="2">
+    <div class="infos">
+      <i class="me-3 bi bi-info-circle"></i>
+      <span class="">{{ I18ns.programs.forms.step2.subtitle }}</span>
+    </div>
+
+    <div class="text-center">
+      <!-- <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.newSubtitle }}</p> -->
+      <button class="btn btn-primary mb-8" (click)="openQuestionForm()">
+        <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
+      </button>
+      <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.or }}</p>
+    </div>
+
+    <p class="fw-medium mb-5">{{ I18ns.programs.forms.step2.existing }}</p>
+    <div class="panel questions-panel">
+      <div>
+        <ng-select
+          class="me-4 w-35"
+          [items]="programStore.tags.value$ | async"
+          [multiple]="true"
+          bindValue="id"
+          bindLabel="name"
+          [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder"
+          [closeOnSelect]="false"
+          [(ngModel)]="selectedTags"
+          (ngModelChange)="getQuestions()"
+        >
+          <ng-template ng-label-tmp let-item="item" let-clear="clear">
+            <div class="alto-badge">
+              <span class="cursor-pointer me-2 align-middle" (click)="clear(item)" aria-hidden="true">
+                <i class="bi bi-x-lg"></i>
+              </span>
+              <span>{{ item.name }}</span>
+            </div>
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+            <span class="alto-badge">{{ item.name }}</span>
+            <i class="bi bi-check-circle-fill"></i>
+          </ng-template>
+        </ng-select>
+        <alto-search (searchChange)="searchQuestions($event)"></alto-search>
+      </div>
+
+      <!-- QUESTION LIST -->
+      <ng-container *ngFor="let quest of questionsDisplay">
+        <div class="row">
+          <div class="form-check form-switch col-1">
+            <input
+              class="form-check-input cursor-pointer"
+              #switchQuestion
+              type="checkbox"
+              [checked]="quest.isChecked"
+              (change)="addOrRemoveQuestion(quest.id, !switchQuestion.checked)"
+            />
+          </div>
+          <div class="col-9 fs-7 fw-medium lh-lg">{{ quest.title }}</div>
+          <div class="col-2 text-end cursor-pointer" (click)="openQuestionForm(quest)">
+            <i class="bi bi-pen"></i>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <alto-pagination
+      class="mt-4"
+      [(page)]="questionPage"
+      [pageSize]="questionPageSize"
+      [collectionSize]="questionsCount"
+      (pageChange)="questionPageChange($event)"
+    ></alto-pagination>
+    <hr />
     <div class="row">
       <div class="col-6">
-        <h2>{{ I18ns.programs.forms.step2.title }}</h2>
+        <a class="cancel-btn" (click)="cancel()">
+          {{ I18ns.shared.cancel }}
+        </a>
       </div>
       <div class="col-6 text-end">
-        <button class="btn btn-outline-secondary me-2" (click)="isEdit ? cancel() : changeTab(1)">
-          {{ I18ns.shared.cancel }}
-        </button>
-        <button class="btn btn-primary" (click)="goNext()">
+        <button class="btn btn-primary fs-5" (click)="goNext()">
           {{ I18ns.shared.save }}
         </button>
       </div>
     </div>
-
-    <p class="fs-7">{{ I18ns.programs.forms.step2.subtitle }}</p>
-    <hr />
-    <div class="row">
-      <div class="col-4">
-        <p>{{ I18ns.programs.forms.step2.new }}</p>
-        <p class="fs-7">{{ I18ns.programs.forms.step2.newSubtitle }}</p>
-      </div>
-      <div class="col-8 text-center">
-        <div class="panel">
-          <button data-cy="createNewQuestion" class="btn btn-primary" (click)="openQuestionForm()">+</button>
-          <p class="fs-7 mt-2">{{ I18ns.programs.forms.step2.newText }}</p>
-          <p class="fs-7 mt-2">{{ I18ns.programs.forms.step2.newText2 }}</p>
-        </div>
-      </div>
-    </div>
-    <hr />
-    <div class="row">
-      <div class="col-4">
-        <p>{{ I18ns.programs.forms.step2.existing }}</p>
-        <p class="fs-7">{{ I18ns.programs.forms.step2.existingSubtitle }}</p>
-      </div>
-      <div class="col-8">
-        <div class="panel">
-          <div class="row mb-3">
-            <p class="col-4">{{ I18ns.programs.forms.step2.title }}</p>
-            <ng-select
-              class="col-4"
-              [items]="programStore.tags.value$ | async"
-              [multiple]="true"
-              bindValue="id"
-              bindLabel="name"
-              [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder"
-              [closeOnSelect]="false"
-              [(ngModel)]="selectedTags"
-              (ngModelChange)="getQuestions()"
-            >
-              <ng-template ng-label-tmp let-item="item" let-clear="clear">
-                <div class="alto-badge">
-                  <span class="cursor-pointer me-2 align-middle" (click)="clear(item)" aria-hidden="true">
-                    <i class="bi bi-x-lg"></i>
-                  </span>
-                  <span>{{ item.name }}</span>
-                </div>
-              </ng-template>
-              <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                <span class="alto-badge">{{ item.name }}</span>
-                <i class="bi bi-check-circle-fill"></i>
-              </ng-template>
-            </ng-select>
-            <div class="col-4"><alto-search (searchChange)="searchQuestions($event)"></alto-search></div>
-          </div>
-          <hr />
-          <!-- QUESTION LIST -->
-          <ng-container *ngFor="let quest of questionsDisplay">
-            <div class="row px-3">
-              <div class="form-check form-switch col-1">
-                <input
-                  class="form-check-input cursor-pointer"
-                  #switchQuestion
-                  type="checkbox"
-                  [checked]="quest.isChecked"
-                  (change)="addOrRemoveQuestion(quest.id, !switchQuestion.checked)"
-                />
-              </div>
-              <div class="col-9">{{ quest.title }}</div>
-              <div class="col-2 text-end cursor-pointer" (click)="openQuestionForm(quest)">
-                <i class="bi bi-pen"></i>
-              </div>
-            </div>
-            <hr />
-          </ng-container>
-          <alto-pagination
-            [(page)]="questionPage"
-            [pageSize]="questionPageSize"
-            [collectionSize]="questionsCount"
-            (pageChange)="questionPageChange($event)"
-          ></alto-pagination>
-        </div>
-      </div>
-    </div>
-
-    <div class="my-3 text-end">
-      <button class="btn btn-outline-secondary me-2" (click)="cancel()">
-        {{ I18ns.shared.cancel }}
-      </button>
-      <button class="btn btn-primary" (click)="goNext()">
-        {{ I18ns.shared.save }}
-      </button>
-    </div>
   </div>
-  <!-- SHARE -->
-  <div *ngSwitchCase="3" class="page-max-width-lg">
-    <div class="mb-6 row">
-      <div class="col-6">
-        <h2>{{ I18ns.programs.forms.step3.title2 }}</h2>
-        <p class="fs-7">{{ I18ns.programs.forms.step3.subtitle }}</p>
-      </div>
-      <div class="text-end col-6" hidden>
-        <button class="btn btn-primary" disabled (click)="copyToClipBoard()" [title]="I18ns.shared.clipboard">
-          {{ I18ns.shared.share }} ({{ I18ns.shared.soon }})
-        </button>
-      </div>
+  <!-- SUMMARY  -->
+  <div *ngSwitchCase="3">
+    <div class="infos">
+      <i class="me-3 bi bi-info-circle"></i>
+      <span class="">{{ I18ns.programs.forms.step3.subtitle }}</span>
     </div>
-    <hr />
-    <div class="row">
-      <div class="col-4">
-        <p class="mb-3 alto-blue fw-medium">{{ I18ns.programs.forms.step3.summary }}</p>
-        <p class="fs-7">{{ I18ns.programs.forms.step3.summarySubtitle }}</p>
+    <h2 class="mb-5">
+      <img class="emoji" [src]="EmojiName.PageFacingUp | emoji" />
+      {{ I18ns.programs.forms.step3.title2 }}
+    </h2>
+
+    <div class="panel recap-panel-header">
+      <h2>{{ programForm.controls.name.value }}</h2>
+    </div>
+    <div class="panel recap-panel">
+      <div class="row mb-4">
+        <div class="col-5">
+          <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
+          {{ I18ns.programs.forms.step1.teams }}
+        </div>
+        <div class="col-7 p-0 text-end">
+          <span
+            *ngFor="let id of programForm.controls.teams.value"
+            class="alto-badge ms-1"
+            [style]="id | teamColor"
+          >
+            {{ findTeamName(id) }}
+          </span>
+          <span class="ms-3 alto-badge cursor-pointer" (click)="changeTab(1)">
+            <i class="bi bi-plus-lg"></i>
+          </span>
+        </div>
       </div>
-      <div class="col-6">
-        <div class="panel">
-          <h2 class="mb-3">{{ programForm.controls.name.value }}</h2>
-          <p class="mb-4 alto-grey">{{ programForm.controls.description.value }}</p>
-          <div class="row mb-4">
-            <div class="col-5">{{ I18ns.programs.forms.step1.teams }}</div>
-            <div class="col-6 p-0 text-end">
-              <span
-                *ngFor="let id of programForm.controls.teams.value"
-                class="alto-badge ms-1"
-                [style]="id | teamColor"
-              >
-                {{ findTeamName(id) }}
-              </span>
-            </div>
-            <div class="col-1">
-              <span class="ms-1 alto-badge cursor-pointer" (click)="changeTab(1)">
-                <i class="bi bi-plus-lg"></i>
-              </span>
-            </div>
-          </div>
-          <div class="row mb-4">
-            <div class="col-5">{{ I18ns.programs.forms.step1.expectation }}</div>
-            <div class="col-6 p-0 text-end">
-              <span class="alto-score" [class]="programForm.controls.expectation.value || 0 | pillColor">
-                {{ programForm.controls.expectation.value }}%
-              </span>
-            </div>
-            <div class="col-1">
-              <span class="ms-1 alto-badge cursor-pointer" (click)="changeTab(1)">
-                <i class="bi bi-pen"></i>
-              </span>
-            </div>
-          </div>
-          <div class="row mb-4">
-            <div class="col-5">{{ I18ns.programs.forms.questionCount }}</div>
-            <div class="col-6 p-0 text-end">
-              <span data-cy="questionCount" class="alto-badge">{{ this.editedProgram?.questionsCount }}</span>
-            </div>
+      <div class="row mb-4">
+        <div class="col-5">
+          <img class="emoji" [src]="EmojiName.SportsMedal | emoji" />
+          {{ I18ns.programs.forms.step1.expectation }}
+        </div>
+        <div class="col-7 p-0 text-end">
+          <span class="alto-score" [class]="programForm.controls.expectation.value || 0 | pillColor">
+            {{ programForm.controls.expectation.value }}%
+          </span>
+          <span class="ms-3 alto-badge cursor-pointer" (click)="changeTab(1)">
+            <i class="bi bi-pen"></i>
+          </span>
+        </div>
+      </div>
+      <div class="row mb-4">
+        <div class="col-5">
+          <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" />
+          {{ I18ns.programs.forms.questionCount }}
+        </div>
+        <div class="col-7 p-0 text-end">
+          <span data-cy="questionCount" class="alto-badge">{{ this.editedProgram?.questionsCount }}</span>
+          <span class="ms-3 alto-badge cursor-pointer" (click)="changeTab(2)">
+            <i class="bi bi-pen"></i>
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-5">
+          <img class="emoji" [src]="EmojiName.Warning | emoji" />
 
-            <div class="col-1">
-              <span class="ms-1 alto-badge cursor-pointer" (click)="changeTab(2)">
-                <i class="bi bi-pen"></i>
-              </span>
-            </div>
-          </div>
-          <div class="row mb-4">
-            <div class="col-5">{{ I18ns.programs.forms.step1.priority }}</div>
-            <div class="col-6 p-0 text-end">
-              {{ programForm.controls.priority.value }}
-            </div>
-
-            <div class="col-1">
-              <span class="ms-1 alto-badge cursor-pointer" (click)="changeTab(1)">
-                <i class="bi bi-pen"></i>
-              </span>
-            </div>
-          </div>
+          {{ I18ns.programs.forms.step1.priority }}
+        </div>
+        <div class="col-7 p-0 text-end">
+          {{ programForm.controls.priority.value }}
+          <span class="ms-3 alto-badge cursor-pointer" (click)="changeTab(1)">
+            <i class="bi bi-pen"></i>
+          </span>
         </div>
       </div>
     </div>

@@ -1,55 +1,71 @@
-<div class="py-4">
-  <h2>{{ I18ns.settings.integrations.title }}</h2>
-  <p class="mb-4 alto-grey">{{ I18ns.settings.integrations.subtitle }}</p>
+<div>
+  <h2>{{ I18ns.settings.continuousSession.subtitle }}</h2>
+  <p class="mb-4 alto-grey">{{ I18ns.settings.continuousSession.description }}</p>
 </div>
-<hr />
-<div class="row">
-  <div class="col-8">
-    <svg
-      class="d-inline-block mx-4"
-      width="30"
-      height="30"
-      enable-background="new 0 0 2447.6 2452.5"
-      viewBox="0 0 2447.6 2452.5"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <g clip-rule="evenodd" fill-rule="evenodd">
-        <path
-          d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z"
-          fill="#36c5f0"
-        />
-        <path
-          d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z"
-          fill="#2eb67d"
-        />
-        <path
-          d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z"
-          fill="#ecb22e"
-        />
-        <path
-          d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0"
-          fill="#e01e5a"
-        />
-      </g>
-    </svg>
-    <div class="mt-1 d-inline-block align-middle">
-      <p class="fw-bold fs-6b">{{ I18ns.settings.integrations.slack.title }}</p>
-      <p class="alto-grey">{{ I18ns.settings.integrations.slack.subtitle }}</p>
-    </div>
+<hr class="my-4" />
+<div class="d-flex align-items-center">
+  <div class="form-check form-switch d-inline-block align-middle me-5">
+    <input
+      #slackCheck
+      (click)="slackActivate(slackCheck.checked)"
+      type="checkbox"
+      class="form-check-input"
+      [checked]="company?.isSlackActive"
+    />
   </div>
-  <div class="col-4 text-end">
-    <div class="py-3">
-      <!-- <a class="me-2">{{ I18ns.settings.integrations.learnMore }}</a> -->
-      <div class="form-check form-switch d-inline-block align-middle">
-        <input
-          #slackCheck
-          (click)="slackActivate(slackCheck.checked)"
-          type="checkbox"
-          class="form-check-input"
-          [checked]="company?.isSlackActive"
-        />
-      </div>
-    </div>
+  <alto-icon-badge
+    [size]="3.3333"
+    icon="bi-people"
+    [color]="slackCheck.checked ? 'badge-double-primary' : 'badge-double-gray'"
+    class="badge"
+  ></alto-icon-badge>
+  <div class="d-grid">
+    <span class="integration-titles" [ngStyle]="{ color: slackCheck.checked ? '#101828' : '#D0D5DD' }">
+      {{ I18ns.settings.continuousSession.integrations.title }}
+    </span>
+    <span class="integration-subtitles" [ngStyle]="{ color: slackCheck.checked ? '#667085' : '#D0D5DD' }">
+      {{ I18ns.settings.continuousSession.integrations.subtitle }}
+    </span>
   </div>
 </div>
-<hr />
+<div *ngIf="slackCheck.checked" class="d-flex align-items-center mt-5 slack-teams-div">
+  <div class="slack-div py-3 me-5">
+    <div class="form-check">
+      <input class="form-check-input me-3" type="radio" id="exampleRadios1" value="option1" checked />
+      <label class="form-check-label" for="inlineCheckbox1">
+        <img src="assets/img/slack-logo.svg" width="16" height="16" alt="Slack Logo" class="me-2" />
+        <span>{{ I18ns.settings.continuousSession.integrations.slack }}</span>
+      </label>
+    </div>
+  </div>
+  <div class="py-3" style="border-radius: 4px; padding-left: 1rem; padding-right: 1rem">
+    <div class="form-check">
+      <input
+        class="form-check-input me-3"
+        type="radio"
+        name="exampleRadios"
+        id="exampleRadios2"
+        value="option2"
+        disabled
+      />
+      <label class="form-check-label" for="exampleRadios3">
+        <img src="assets/img/teams-logo.svg" width="16" height="16" alt="Slack Logo" class="me-2" />
+        <span>{{ I18ns.settings.continuousSession.integrations.teams }}</span>
+      </label>
+    </div>
+  </div>
+</div>
+<hr class="mb-4 mt-5" />
+<div class="d-flex align-items-center">
+  <div class="form-check form-switch d-inline-block align-middle me-5">
+    <input #appWebCheck type="checkbox" class="form-check-input" disabled />
+  </div>
+  <alto-icon-badge [size]="3.3333" icon="bi bi-wifi-2" color="badge-double-gray" class="badge">
+  </alto-icon-badge>
+  <div class="d-grid disabled-text">
+    <span class="integration-titles">{{ I18ns.settings.continuousSession.webApp.title }}</span>
+    <span class="integration-subtitles">
+      {{ I18ns.settings.continuousSession.webApp.subtitle }}
+    </span>
+  </div>
+</div>

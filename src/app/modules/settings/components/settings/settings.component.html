@@ -1,12 +1,16 @@
-<h1 class="mb-4">{{ I18ns.settings.title }}</h1>
+<div class="header-panel mb-5">
+  <img class="emoji me-4" [src]="EmojiName.Gear | emoji" />
+
+  <h1 class="m-0 d-inline-block">{{ I18ns.settings.title }}</h1>
+</div>
 
 <alto-tabs
-  class="mb-3 d-block border-bottom fw-bold"
+  class="alto-tabs"
   *ngVar="I18ns.leadHome.globalEvolution.tabs as trads"
   (tabChanged)="tabChange($event)"
   [data]="[
     { label: I18ns.settings.users.title, value: 1 },
-    { label: I18ns.settings.integrations.title, value: 2 }
+    { label: I18ns.settings.continuousSession.title, value: 2 }
   ]"
 ></alto-tabs>
 <span [ngSwitch]="activeTab">

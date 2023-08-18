@@ -1,17 +1,18 @@
 :host {
   vertical-align: bottom;
 }
+
+.btn-group {
+  height: 2.667rem;
+  background-color: white;
+}
 .btn-check:checked + .btn {
   color: #1d2939;
-  background-color: #f1f1f1;
+  background-color: var(--gray-50);
   border-color: var(--bs-btn-border-color);
 }
 .btn-group label {
-  line-height: 1.714rem;
-}
-.btn-group label:first-of-type {
-  padding-left: 1.143rem;
-}
-.btn-group label:last-of-type {
-  padding-right: 1.143rem;
+  padding: 0 1.333rem;
+  line-height: 2.567rem;
+  font-size: 0.833rem;
 }

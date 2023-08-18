@@ -1,0 +1,28 @@
+.badge {
+  margin-right: 12px;
+}
+
+.integration-titles {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.integration-subtitles {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.disabled-text {
+  color: var(--gray-300, #d0d5dd);
+}
+
+.slack-teams-div {
+  padding-left: 54px;
+}
+
+.slack-div {
+  border-radius: 4px;
+  border: 1px solid var(--primary-600, #1570ef);
+  padding-left: 1rem;
+  padding-right: 1rem;
+}

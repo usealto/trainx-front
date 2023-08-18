@@ -9,6 +9,7 @@ import {
 import { Observable, map } from 'rxjs';
 import { ScoreDuration } from '../../shared/models/score.model';
 import { ScoresService } from '../../shared/services/scores.service';
+import { addDays } from 'date-fns';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +26,7 @@ export class GuessesRestService {
       const createdAfter = isProgression
         ? this.scoreService.getPreviousPeriod(duration)[0]
         : this.scoreService.getStartDate(duration);
-      const createdBefore = isProgression ? this.scoreService.getPreviousPeriod(duration)[1] : new Date();
+      const createdBefore = isProgression ? this.scoreService.getPreviousPeriod(duration)[1] : addDays(new Date(), 1); //! TEMPORARY FIX to get data from actual day
 
       params = {
         ...params,

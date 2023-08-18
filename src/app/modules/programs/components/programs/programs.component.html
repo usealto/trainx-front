@@ -1,42 +1,50 @@
-<h1>{{ I18ns.programs.title }}</h1>
-<p class="mt-2 mb-4 alto-grey fs-6b">{{ I18ns.programs.subtitle }}</p>
-<div class="pb-6 border-bottom">
-  <alto-anchor-navigator fragment="programsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
-      {{ I18ns.programs.programs.title }}<span class="alto-badge ms-3">{{ programsCount }}</span>
-    </button>
-  </alto-anchor-navigator>
-  <alto-anchor-navigator fragment="questionsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
-      {{ I18ns.programs.questions.title }}<span class="alto-badge ms-3">{{ questionsCount }}</span>
-    </button>
-  </alto-anchor-navigator>
-  <alto-anchor-navigator fragment="submittedQuestionsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
-      {{ I18ns.programs.awaitQuestions.title
-      }}<span class="alto-badge ms-3">{{ submittedQuestions.length }}</span>
-    </button>
-  </alto-anchor-navigator>
-  <alto-anchor-navigator fragment="tagsAnchor">
-    <button type="button" class="btn btn-outline-secondary me-3 fw-medium">
-      {{ I18ns.programs.tags.title }}<span class="alto-badge ms-3">{{ tagsCount }}</span>
-    </button>
-  </alto-anchor-navigator>
+<div class="header-panel mb-5">
+  <img class="emoji me-4" [src]="EmojiName.Bullseye | emoji" />
+  <div class="d-inline-block">
+    <h1>{{ I18ns.programs.title }}</h1>
+    <p class="alto-grey fs-6">{{ I18ns.programs.subtitle }}</p>
+  </div>
+</div>
+<div class="programs-tabs">
+  <alto-tabs [data]="tabData" (tabChanged)="handleTabChange($event)"></alto-tabs>
 </div>
 
 <!-- PROGRAMS -->
-<div class="border-bottom">
+<div *ngIf="activeTab === 'programs'" class="active-programs">
   <div>
+    <h2>
+      <img class="emoji" [src]="EmojiName.Bullseye | emoji" />
+      {{ I18ns.programs.activePrograms.title }}
+    </h2>
+    <p class="subtitle alto-grey">{{ I18ns.programs.activePrograms.subtitle }}</p>
+  </div>
+
+  <alto-program-card-list
+    (programTotal)="(null)"
+    [place]="'program'"
+    [isActive]="true"
+  ></alto-program-card-list>
+</div>
+<div *ngIf="activeTab === 'programs'">
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+      <h2 id="programsAnchor">
+        <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
+        {{ I18ns.programs.programs.title }}
+      </h2>
+      <p class="mt-2 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
+    </div>
     <a
       data-cy="createNewProgram"
       type="button"
-      class="btn btn-primary float-end"
+      class="btn btn-primary"
       [routerLink]="AltoRoutes.programsCreate"
     >
-      <i class="bi bi-plus-lg"></i> {{ I18ns.programs.programs.createProgram }}
+      <i class="bi bi-plus-lg"></i>
+      <div>
+        {{ I18ns.programs.programs.createProgram }}
+      </div>
     </a>
-    <h2 id="programsAnchor" class="mt-6">{{ I18ns.programs.programs.title }}</h2>
-    <p class="mt-2 mb-4 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
   </div>
 
   <alto-program-card-list
@@ -46,15 +54,18 @@
 </div>
 
 <!-- QUESTIONS -->
-<div class="py-4 border-bottom questions">
+<div *ngIf="activeTab === 'questions'" class="questions">
   <button type="button" class="btn btn-primary float-end" (click)="openQuestionForm()">
-    <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.createQuestion }}
+    <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.questions.createQuestion }}</span>
   </button>
-  <h2 id="questionsAnchor">{{ I18ns.programs.questions.title }}</h2>
-  <p class="mb-4 alto-grey">{{ I18ns.programs.questions.subtitle }}</p>
+  <h2 id="questionsAnchor">
+    <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" />
+    {{ I18ns.programs.questions.title }}
+  </h2>
+  <p class="mt-3 mb-5 alto-grey">{{ I18ns.programs.questions.subtitle }}</p>
 
-  <div class="row mb-4">
-    <div class="col-8">
+  <div class="mb-5">
+    <div class="d-inline-block float-end">
       <alto-dropdown-filter
         class="me-3"
         data-cy="questionsProgramFilter"
@@ -63,7 +74,7 @@
         [returnValue]="'id'"
         [placeholder]="I18ns.programs.questions.filters.programs"
         [selectedItems]="selectedItems"
-        (selectChange)="getQuestions({ programs: $event })"
+        (selectChange)="getQuestions({ programs: $event }, true)"
       ></alto-dropdown-filter>
       <alto-dropdown-filter
         class="me-3"
@@ -73,54 +84,39 @@
         [displayLabel]="'name'"
         [placeholder]="I18ns.programs.questions.filters.tags"
         [selectedItems]="selectedItems"
-        (selectChange)="getQuestions({ tags: $event })"
+        (selectChange)="getQuestions({ tags: $event }, true)"
       ></alto-dropdown-filter>
-      <alto-dropdown-filter
-        class="me-3"
-        data-cy="questionsContributorFilter"
-        [data]="contributors"
-        [returnValue]="'id'"
-        [displayLabel]="'fullname'"
-        [placeholder]="I18ns.programs.questions.filters.contributors"
-        [selectedItems]="selectedItems"
-        (selectChange)="getQuestions({ contributors: $event })"
-      ></alto-dropdown-filter>
+      <alto-score-filter (selectChange)="getQuestions({ score: $event }, true)"></alto-score-filter>
     </div>
-    <div class="col-4 text-end">
+    <div class="d-inline-block">
       <alto-search
+        class="search"
         data-cy="questionsSearchFilter"
-        (searchChange)="getQuestions({ search: $event })"
+        (searchChange)="getQuestions({ search: $event }, true)"
       ></alto-search>
     </div>
   </div>
-  <ng-container *ngIf="questionsCount! > 0; else noQuestions">
+  <ng-container *ngIf="paginatedQuestions.length > 0; else noQuestions">
     <div class="table-panel">
       <table class="table">
         <thead>
           <tr *ngVar="I18ns.programs.questions.table as headers">
-            <th scope="col">{{ headers.question }}</th>
-            <th scope="col" class="w-10">
-              {{ headers.score
-              }}<i
-                class="bi bi-question-circle ms-2"
-                ngbTooltip="{{ I18ns.programs.questions.table.scoreToolTip }}"
-              ></i>
+            <th scope="col" class="w-20">{{ headers.question }}</th>
+            <th scope="col" class="w-10 text-center">
+              {{ headers.score }}
             </th>
-            <th data-cy="questionsTableTagCol">{{ headers.tags }}</th>
-            <th data-cy="questionsTableProgramCol">{{ headers.programs }}</th>
-            <th data-cy="questionsTableContributorCol" class="text-center w-10">{{ headers.author }}</th>
-            <th></th>
-            <th></th>
+            <th scope="col" class="w-30" data-cy="questionsTableTagCol">{{ headers.tags }}</th>
+            <th scope="col" class="w-30" data-cy="questionsTableProgramCol">{{ headers.programs }}</th>
+            <th class="w-20"></th>
           </tr>
         </thead>
-
-        <tbody [style.height]="72 * questions.length + 'px'">
+        <tbody [style.height]="53 * paginatedQuestions.length + 'px'">
           <ng-container *ngIf="!isQuestionsLoading">
-            <tr *ngFor="let question of questions">
-              <td class="w-40">
+            <tr *ngFor="let question of paginatedQuestions">
+              <td class="text-black">
                 {{ question.title }}
               </td>
-              <td class="w-5">
+              <td class="w-10 text-center">
                 <span class="alto-score" [class]="(getQuestionScore(question.id) || 0) * 100 | pillColor">
                   {{ getQuestionScore(question.id) | percent }}
                 </span>
@@ -138,15 +134,9 @@
                 <alto-colored-pill-list [data]="question.programs" [limit]="2"></alto-colored-pill-list>
               </td>
               <td *ngIf="!question.programs || question.programs.length < 1">-</td>
-
-              <td class="text-center">
-                <alto-img-badge [user]="getUser(question.createdBy)"></alto-img-badge>
-              </td>
-              <td class="cursor-pointer px-3" (click)="deleteQuestion(question)">
-                <i class="fs-5 bi bi-trash3 float-end"></i>
-              </td>
-              <td class="cursor-pointer px-3" (click)="openQuestionForm(question)">
-                <i class="fs-5 bi bi-pen float-end me-4"></i>
+              <td class="px-4 text-end">
+                <i class="cursor-pointer fs-4 bi bi-trash3 me-4" (click)="deleteQuestion(question)"></i>
+                <i class="cursor-pointer fs-4 bi bi-pencil" (click)="openQuestionForm(question)"></i>
               </td>
             </tr>
           </ng-container>
@@ -155,11 +145,10 @@
 
       <alto-pagination
         class="mx-4 d-block"
-        [collectionSize]="questionsCount ?? 0"
+        [collectionSize]="questionsCount"
         [(page)]="questionsPage"
-        (pageChange)="changeQuestionsPage($event)"
+        (pageChange)="getQuestions()"
         [pageSize]="questionsPageSize"
-        [maxSize]="10"
         aria-label="Default pagination"
       ></alto-pagination>
     </div>
@@ -196,82 +185,23 @@
   </ng-template>
 </div>
 
-<!-- SUBMITTED QUESTIONS -->
-<div class="py-4 border-bottom">
-  <div>
-    <h2 id="submittedQuestionsAnchor">{{ I18ns.programs.awaitQuestions.title }}</h2>
-    <p class="mb-4 alto-grey">{{ I18ns.programs.awaitQuestions.subtitle }}</p>
-  </div>
-  <ng-container *ngIf="submittedQuestions.length > 0; else noSubmittedQuestions">
-    <div class="table-panel">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">{{ I18ns.programs.awaitQuestions.table.question }}</th>
-            <th scope="col">{{ I18ns.programs.awaitQuestions.table.author }}</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody *ngIf="!isSubmittedQuestionsLoading">
-          <tr *ngFor="let question of submittedQuestions">
-            <th scope="row">{{ question.title }}</th>
-            <td>
-              <alto-img-badge [user]="getUser(question.createdBy)"></alto-img-badge>
-            </td>
-            <td>
-              <i
-                class="fs-5 bi bi-pen cursor-pointer float-end me-4"
-                (click)="openSubmittedQuestionForm(question)"
-              ></i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <alto-pagination
-        class="mx-4 d-block"
-        [collectionSize]="submittedQuestionsCount"
-        [(page)]="submittedQuestionsPage"
-        (pageChange)="changeSubmittedQuestionsPage()"
-        [pageSize]="submittedQuestionsPageSize"
-        [maxSize]="10"
-        aria-label="Default pagination"
-      ></alto-pagination>
-    </div>
-  </ng-container>
-  <ng-template #noSubmittedQuestions>
-    <div class="panel text-center">
-      <h2>{{ I18ns.shared.noData }}</h2>
-    </div>
-  </ng-template>
-</div>
-
 <!-- TAGS -->
-<div class="py-4 border-bottom">
+<div *ngIf="activeTab === 'tags'" class="">
   <button type="button" class="btn btn-primary float-end" (click)="openTagForm()">
-    <i class="bi bi-plus-lg"></i> {{ I18ns.programs.tags.createTag }}
+    <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.tags.createTag }}</span>
   </button>
-  <h2 id="tagsAnchor">{{ I18ns.programs.tags.title }}</h2>
-  <p class="mb-4 alto-grey">{{ I18ns.programs.tags.subtitle }}</p>
+  <h2 id="tagsAnchor">
+    <img class="emoji" [src]="EmojiName.Label | emoji" />
+    {{ I18ns.programs.tags.title }}
+  </h2>
+  <p class="mt-3 mb-5 alto-grey">{{ I18ns.programs.tags.subtitle }}</p>
 
-  <div class="row mb-4">
-    <div class="col-8">
-      <alto-dropdown-filter
-        class="me-3"
-        data-cy="tagsContributorFilter"
-        [data]="contributors"
-        [returnValue]="'id'"
-        [displayLabel]="'fullname'"
-        [placeholder]="I18ns.programs.questions.filters.contributors"
-        (selectChange)="filterTags({ contributors: $event })"
-      ></alto-dropdown-filter>
-
-      <alto-score-filter
-        data-cy="filterByScore"
-        (selectChange)="filterTags({ score: $event })"
-      ></alto-score-filter>
+  <div class="mb-5">
+    <div class="d-inline-block float-end">
+      <alto-score-filter (selectChange)="filterTags({ score: $event })"></alto-score-filter>
     </div>
-    <div class="col-4 text-end">
-      <alto-search (searchChange)="filterTags({ search: $event })"></alto-search>
+    <div class="d-inline-block">
+      <alto-search class="search" (searchChange)="filterTags({ search: $event })"></alto-search>
     </div>
   </div>
   <ng-container *ngIf="paginatedTags.length > 0; else noTags">
@@ -279,35 +209,26 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col" class="w-30">{{ I18ns.programs.tags.table.name }}</th>
-            <th scope="col" class="w-25">{{ I18ns.programs.tags.table.score }}</th>
-            <th scope="col" class="w-30">{{ I18ns.programs.tags.table.associatedQuestions }}</th>
-            <th class="text-center" scope="col">{{ I18ns.programs.tags.table.author }}</th>
-            <th></th>
-            <th></th>
+            <th scope="col" class="w-20">{{ I18ns.programs.tags.table.name }}</th>
+            <th scope="col" class="text-center">
+              {{ I18ns.programs.tags.table.score }}
+            </th>
+            <th class="w-20" scope="col">{{ I18ns.programs.tags.table.associatedQuestions }}</th>
+            <th class="w-15"></th>
           </tr>
         </thead>
-        <tbody *ngIf="!isTagsLoading">
+        <tbody [style.height]="53 * paginatedTags.length + 'px'" *ngIf="!isTagsLoading">
           <tr *ngFor="let tag of paginatedTags">
-            <td class="w-15">{{ tag.name }}</td>
-            <td class="w-5">
+            <td class="text-black">{{ tag.name }}</td>
+            <td class="text-center">
               <span class="alto-score" [class]="(getTagScore(tag.id) || 0) * 100 | pillColor">
                 {{ getTagScore(tag.id) | percent }}
               </span>
             </td>
-            <td>
-              <span class="alto-badge">
-                {{ tag.questionsCount }} {{ I18ns.programs.tags.table.questions }}
-              </span>
-            </td>
-            <td class="w-10 text-center">
-              <alto-img-badge [user]="getUser(tag.createdBy)"></alto-img-badge>
-            </td>
-            <td class="cursor-pointer px-3" (click)="deleteTag(tag)">
-              <i class="fs-5 bi bi-trash3 float-end"></i>
-            </td>
-            <td class="cursor-pointer px-3" (click)="openTagForm(tag)">
-              <i class="fs-5 bi bi-pen cursor-pointer float-end me-4"></i>
+            <td>{{ tag.questionsCount + I18ns.programs.tags.table.questions }}</td>
+            <td class="text-end px-4">
+              <i class="fs-4 bi bi-trash3 cursor-pointer me-4" (click)="deleteTag(tag)"></i>
+              <i class="fs-4 bi bi-pencil cursor-pointer" (click)="openTagForm(tag)"></i>
             </td>
           </tr>
         </tbody>

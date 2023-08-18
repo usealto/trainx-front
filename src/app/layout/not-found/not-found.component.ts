@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 @Component({
   selector: 'alto-not-found',
   templateUrl: './not-found.component.html',
@@ -12,6 +13,7 @@ import { ProfileStore } from 'src/app/modules/profile/profile.store';
 export class NotFoundComponent implements OnInit {
   AltoRoutes = AltoRoutes;
   I18ns = I18ns;
+  Emoji = EmojiName;
   route: string[] = [];
 
   constructor(public readonly userStore: ProfileStore, private readonly router: Router) {}

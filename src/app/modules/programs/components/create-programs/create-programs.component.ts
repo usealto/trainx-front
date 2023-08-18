@@ -7,16 +7,17 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PriorityEnumApi, ProgramDtoApi, QuestionDtoApi, TeamApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
+import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
 import { ProgramForm } from '../../models/programs.form';
 import { QuestionDisplay } from '../../models/question.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
-import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
-import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 
 @UntilDestroy()
 @Component({
@@ -27,6 +28,7 @@ import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in
 })
 export class CreateProgramsComponent implements OnInit {
   I18ns = I18ns;
+  EmojiName = EmojiName;
   private fb: IFormBuilder;
 
   programForm!: IFormGroup<ProgramForm>;
@@ -36,7 +38,7 @@ export class CreateProgramsComponent implements OnInit {
 
   questions!: QuestionDtoApi[];
   questionsDisplay: QuestionDisplay[] = [];
-  questionList: { id: string; delete: boolean }[] = [];
+  questionList: { id: string; delete: boolean; isNewQuestion: boolean }[] = [];
   questionPage = 1;
   questionPageSize = 10;
   questionsCount = 0;
@@ -157,6 +159,8 @@ export class CreateProgramsComponent implements OnInit {
     }
     if (this.isEdit && this.editedProgram) {
       canvasRef.componentInstance.program = this.editedProgram;
+    } else {
+      canvasRef.componentInstance.isNewProgram = true;
     }
     canvasRef.componentInstance.createdQuestion
       .pipe(
@@ -164,7 +168,7 @@ export class CreateProgramsComponent implements OnInit {
           //if it's a new question, add it to the list
           if (!isQuestionEdit) {
             this.questionList = this.questionList.filter((q) => q.id !== newQuestion.id);
-            this.questionList.push({ id: newQuestion.id, delete: false });
+            this.questionList.push({ id: newQuestion.id, delete: false, isNewQuestion: true });
           }
 
           // refresh the program
@@ -181,7 +185,6 @@ export class CreateProgramsComponent implements OnInit {
     this.questionRestService
       .getQuestionsPaginated({
         tagIds: this.selectedTags.join(','),
-
         sortByProgramId: this.editedProgram?.id ?? undefined,
         itemsPerPage: this.questionPageSize,
         page: this.questionPage,
@@ -234,6 +237,10 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   addOrRemoveQuestion(questionId: string, toDelete: any) {
+    this.questionList = this.questionList.filter((q) => q.id !== questionId);
+    if (!toDelete) {
+      this.questionList.push({ id: questionId, delete: toDelete, isNewQuestion: false });
+    }
     if (this.isEdit && this.editedProgram) {
       this.programRestService
         .addOrRemoveQuestion(this.editedProgram.id, questionId, toDelete)
@@ -245,11 +252,6 @@ export class CreateProgramsComponent implements OnInit {
           untilDestroyed(this),
         )
         .subscribe();
-    } else {
-      this.questionList = this.questionList.filter((q) => q.id !== questionId);
-      if (!toDelete) {
-        this.questionList.push({ id: questionId, delete: toDelete });
-      }
     }
   }
 

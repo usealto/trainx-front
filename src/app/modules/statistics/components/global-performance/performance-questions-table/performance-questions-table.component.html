@@ -1,0 +1,89 @@
+<div class="row mb-4">
+  <div class="col-4">
+    <alto-search (searchChange)="getQuestionsFiltered({ search: $event })"></alto-search>
+  </div>
+  <div class="col-8 text-end">
+    <alto-dropdown-filter
+      class="text-start me-3"
+      [data]="teamStore.teams.value"
+      [displayLabel]="'longName'"
+      [returnValue]="'id'"
+      [placeholder]="I18ns.programs.programs.filters.team"
+      [isColored]="true"
+      (selectChange)="getQuestionsFiltered({ teams: $event })"
+    ></alto-dropdown-filter>
+    <alto-score-filter
+      (selectChange)="getQuestionsFiltered({ score: $event })"
+      class="text-start"
+    ></alto-score-filter>
+  </div>
+</div>
+
+<div class="table-panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col" class="w-35">
+          {{ I18ns.statistics.globalPerformance.questionsTable.columns.question }}
+        </th>
+        <th scope="col" class="w-10 text-center">
+          {{ I18ns.statistics.globalPerformance.questionsTable.columns.globalScore }}
+        </th>
+        <th scope="col" class="w-10">
+          {{ I18ns.statistics.globalPerformance.questionsTable.columns.scoreEvolution }}
+        </th>
+        <th scope="col" class="w-20 text-center">
+          {{ I18ns.statistics.globalPerformance.questionsTable.columns.usersNumber }}
+        </th>
+        <th scope="col" class="w-25">
+          {{ I18ns.statistics.globalPerformance.questionsTable.columns.badTeams }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let quest of paginatedQuestions" class="align-middle">
+        <td>
+          {{ quest.question.title }}
+        </td>
+        <td class="text-center">
+          {{ quest.score | percent }}
+        </td>
+        <td>
+          <alto-progression-badge
+            class="d-inline-block ms-3"
+            [score]="getQuestionPreviousScore(quest)"
+            *ngIf="!scoreIsLoading"
+          ></alto-progression-badge>
+        </td>
+        <td class="text-center">
+          <!-- todo when api is ready -->
+          <!-- <div class="progress">
+            <div
+              class="progress-bar d-inline-block"
+              role="progressbar"
+              [style]="'width:' + (quest.usersCount / quest.totalUsersCount | percent : '1.0-0' : 'en-US')"
+            ></div>
+          </div> -->
+          <!-- {{ quest.usersCount }}/{{ quest.totalUsersCount }} -->
+          {{ quest.usersCount }}
+        </td>
+        <td>
+          <ng-container *ngIf="quest.teams">
+            <alto-colored-pill-list
+              [hasDynamicColor]="true"
+              [limit]="3"
+              [data]="quest.teams | sort : 'asc' : 'score' | slice : 0 : 6"
+            ></alto-colored-pill-list>
+          </ng-container>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <alto-pagination
+    class="mx-4 d-block"
+    [collectionSize]="questionsDisplay.length"
+    (pageChange)="changeQuestionsPage($event)"
+    [pageSize]="questionsPageSize"
+    [page]="questionsPage"
+  ></alto-pagination>
+</div>

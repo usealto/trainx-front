@@ -1,16 +1,74 @@
 :host {
+  z-index: 400;
   background-color: #101828;
   height: 100vh;
   position: fixed;
   color: #f2f4f7;
+  left: 0;
+  width: 5rem;
+}
+:host ::ng-deep {
+  .menu-tooltip-class {
+    .tooltip-inner {
+      background-color: var(--gray-900);
+      margin: 0 0 0 0.3rem;
+    }
+    .tooltip-arrow {
+      margin: 0 0 0 0.3rem;
+    }
+    .tooltip-arrow::before {
+      border-right-color: var(--gray-900);
+    }
+  }
 
-  width: 20rem;
-  @media (max-width: 1300px) {
-    width: 230px;
+  .menu-popover {
+    width: 14rem;
+    height: 10rem;
+    background-color: var(--gray-900);
+    border: none;
+    opacity: 0.9;
+    bottom: 0.4167rem !important;
+
+    .popover-arrow::before {
+      border: none;
+    }
+    .popover-arrow:after {
+      border-right-color: var(--gray-900);
+    }
+    .popover-body {
+      padding: 0.6667rem;
+      font-size: 0.8333rem;
+      color: var(--white);
+      i {
+        vertical-align: middle;
+        font-size: 1rem;
+        margin: 0 0.6667rem 0 1rem;
+      }
+      input {
+        width: 1.6667rem;
+        height: 0.8333rem;
+      }
+      a {
+        color: var(--white);
+      }
+      div {
+        cursor: pointer;
+        padding: 0.3333rem 0.5833rem 0.3333rem 0;
+      }
+      div:hover {
+        background-color: var(--gray-700);
+        border-radius: 0.3333rem;
+      }
+    }
+  }
+
+  .popover-arrow ::after {
+    border-top-color: var(--gray-900);
   }
 }
 .logo {
-  margin: 2.286rem 0 2rem 1.714rem;
+  width: 1.6666rem;
+  margin: 1.3333rem 0 2rem 1.6666rem;
 
   .company-name {
     margin-left: 0.5rem;
@@ -23,25 +81,22 @@
 .menu {
   a.module {
     display: block;
-    border-radius: 6px;
-    margin: 0 1.143rem 0.286rem 1.143rem;
-    height: 2.429rem;
-    padding: 0.357rem 0.857rem;
-    color: #f2f4f7;
+    border-radius: 0.3333rem;
+    margin: 0.67rem 1.3333rem;
+    color: var(--gray-700);
     font-weight: 500;
     font-size: 1.143rem;
-
-    svg {
-      fill: #667085;
-      margin-right: 1.1rem;
-      width: 23px;
+    i {
+      padding: 0.3rem;
+      font-size: 1.666rem;
+      color: var(--alto-grey);
     }
 
     &.menu-selected,
     &:hover {
       background-color: var(--alto-blue-second);
-      svg {
-        fill: #f2f4f7;
+      i {
+        color: var(--gray-100);
       }
     }
   }
@@ -57,11 +112,29 @@
       }
     }
   }
+
+  hr {
+    margin: 0 1.5rem;
+  }
+
+  .img-badge-menu {
+    padding: 1.3333rem 0.8333rem;
+  }
+
+  .form-check-input {
+    margin: 0.3rem 0.3333rem 0.2083rem 0.6667rem;
+  }
+
+  .form-check {
+    margin-bottom: 0;
+    height: 2.167rem;
+  }
+
   .logout {
-    position: absolute;
-    right: 0;
-    bottom: 3.8rem;
-    cursor: pointer;
+    color: var(--error-500);
+    i {
+      color: var(--error-500);
+    }
   }
   .profile {
     display: block;

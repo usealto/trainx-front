@@ -47,6 +47,12 @@ export class ScoresService {
         break;
     }
     return data.filter((d) => {
+      if (
+        (score === ScoreFilter.Under25 || score === ScoreFilter.Under50 || score === ScoreFilter.Under75) &&
+        d.score === 0
+      )
+        return true;
+
       if (!d.score) return false;
       const sc = isDecimal ? d.score * 100 : d.score;
       return isUnder ? sc < scoreCap : sc > scoreCap;
@@ -160,6 +166,7 @@ export class ScoresService {
 
   getPreviousPeriod(duration: string | ScoreDuration | undefined): Date[] {
     let date = new Date();
+    date = addDays(date, 1); //! TEMPORARY FIX to get data from actual day
     switch (duration) {
       case 'week':
         date = addDays(date, -14);

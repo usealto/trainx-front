@@ -98,3 +98,23 @@ Merge `develop` branch into `admin`
 
 - Create a commit on `main` with the hotfix
 - Make a 'git cherry pick' to bring the hot fix on `develop`
+
+## EMOJIS
+
+Demo page https://fluentemoji.com/
+
+You can access all names with the `enum EmojiName`
+
+```
+Figma => fluent-emoji:waving-hand
+
+EmojiName => EmojiName.WavingHand
+```
+
+You can use the `emoji` pipe to to transform the Enum to an SVG
+
+You then, have to set the height and width with CSS
+
+```
+  <img [src]="EmojiName.Gear | emoji" loading="lazy" />
+```

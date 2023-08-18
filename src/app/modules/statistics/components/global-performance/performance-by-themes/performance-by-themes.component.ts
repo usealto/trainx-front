@@ -5,17 +5,18 @@ import {
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   ScoresResponseDtoApi,
-  TeamStatsDtoApi,
+  TagStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
 import { Observable, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { ScoreDuration, TopFlop } from 'src/app/modules/shared/models/score.model';
+import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
+import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 @UntilDestroy()
 @Component({
   selector: 'alto-performance-by-themes',
@@ -25,44 +26,42 @@ import { StatisticsService } from '../../../services/statistics.service';
 export class PerformanceByThemesComponent implements OnChanges {
   @Input() duration: ScoreDuration = ScoreDuration.Year;
   I18ns = I18ns;
-  activeTab = 1;
   init = true;
 
   teams: { label: string; id: string }[] = [];
   selectedTeams: { label: string; id: string }[] = [];
-  teamsStats: TeamStatsDtoApi[] = [];
 
-  // Tags or Programs
   items: ScoreDtoApi[] = [];
-  scoredItems: TopFlop = { top: [], flop: [] };
   selectedItems: ScoreDtoApi[] = [];
+  tagsLeaderboard: { name: string; score: number }[] = [];
 
   scoreEvolutionChart?: Chart;
-  performanceChart?: Chart;
 
   constructor(
     private readonly scoresRestService: ScoresRestService,
     private readonly statisticsServices: StatisticsService,
     private readonly scoresServices: ScoresService,
+    private readonly teamRestService: TeamsRestService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['duration']) {
       this.getScores()
         .pipe(
-          switchMap(() => this.scoresRestService.getTeamsStats(this.duration)),
+          switchMap(() => this.teamRestService.getTeams()),
           tap((res) => {
-            this.teamsStats = res;
             this.teams = res
-              .sort((a, b) => a.label.localeCompare(b.label))
+              .sort((a, b) => a.longName.localeCompare(b.longName))
               .map((t) => ({
-                label: t.label,
+                label: t.longName,
                 id: t.id,
               }));
             this.selectedTeams = this.teams.splice(0, 5);
           }),
-          tap(() => {
-            this.createPerformanceChart(this.selectedTeams);
+          switchMap(() => this.scoresRestService.getTagsStats(this.duration)),
+          tap((res) => {
+            const output = res.filter((t) => t.score && t.score >= 0);
+            this.tagsLeaderboard = output.map((t) => ({ name: t.tag.name, score: t.score ?? 0 }));
           }),
           untilDestroyed(this),
         )
@@ -75,7 +74,7 @@ export class PerformanceByThemesComponent implements OnChanges {
       .getScores({
         timeframe: ScoreTimeframeEnumApi.Day,
         duration: this.duration ?? ScoreDuration.Year,
-        type: this.activeTab === 1 ? ScoreTypeEnumApi.Tag : ScoreTypeEnumApi.Program,
+        type: ScoreTypeEnumApi.Tag,
       } as ChartFilters)
       .pipe(
         tap((res) => {
@@ -87,98 +86,21 @@ export class PerformanceByThemesComponent implements OnChanges {
           if (this.selectedItems.length) {
             filteredItems = res.scores.filter((s) => this.selectedItems.some((si) => si.id === s.id));
           }
-          this.getScoredItems(this.items);
           this.createScoreEvolutionChart(filteredItems, this.duration);
-          this.createPerformanceChart(this.selectedTeams);
         }),
         tap(() => (this.init = false)),
       );
   }
 
-  getScoredItems(scores: ScoreDtoApi[]) {
-    const scoredItems = scores
-      .map((score) => {
-        const average = this.scoresServices.reduceWithoutNull(score.averages);
-        return { label: score.label, avg: average ?? 0 };
-      })
-      .sort((a, b) => b.avg - a.avg);
-    this.scoredItems.top = this.scoresServices.getTop(scoredItems).slice(0, 3);
-    this.scoredItems.flop = this.scoresServices.getFlop(scoredItems).slice(0, 3);
-  }
-
-  getThemesLabel(stats: TeamStatsDtoApi[]): string[] {
-    const labels: string[] = [];
-    const type = this.activeTab === 1 ? 'tags' : 'programs';
-
-    stats.forEach((s) => {
-      s[type]?.forEach((t) => {
-        if (
-          (!this.selectedItems.length || this.selectedItems.some((item) => item.id === t.id)) &&
-          !labels.includes(t.label)
-        ) {
-          labels.push(t.label);
-        }
-      });
-    });
-
-    return labels;
-  }
-
-  createPerformanceChart(selectedTeams: { label: string; id: string }[]) {
-    const type = this.activeTab === 1 ? 'tags' : 'programs';
-    const stats = selectedTeams.length
-      ? this.teamsStats.filter((t) => selectedTeams.some((st) => st.id === t.id))
-      : this.teamsStats;
-    const labels = this.getThemesLabel(stats);
-    const dataset = stats.map((s) => {
-      const res = { label: s.label, data: [] as number[], fill: true };
-      s[type]?.forEach((item) => {
-        if (!this.selectedItems.length || this.selectedItems.some((i) => i.id === item.id)) {
-          res.data.push(item.score ? Math.round(item.score) : NaN);
-        }
-      });
-      return res;
-    });
-
-    const data: ChartData = {
-      labels: labels,
-      datasets: dataset,
-    };
-
-    if (this.performanceChart) {
-      this.performanceChart.destroy();
-    }
-    const customChartOptions = {
-      ...chartDefaultOptions,
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label: function (tooltipItem: any) {
-              let labelType = 'tag';
-              if (type === 'programs') {
-                labelType = 'programme';
-              }
-              return `${labelType} ${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
-            },
-          },
-        },
-        legend: {
-          display: false,
-        },
-      },
-    };
-    this.performanceChart = new Chart('themePerformance', {
-      type: 'radar',
-      data: data,
-      options: { ...customChartOptions, scales: undefined },
-    });
+  getThemesLabel(stats: TagStatsDtoApi[]): string[] {
+    return (stats as TagStatsDtoApi[]).map((s) => s.tag.name);
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
-    const type = this.activeTab === 1 ? 'tags' : 'programs';
     scores = this.scoresServices.reduceChartData(scores);
+    const aggregateData = this.statisticsServices.aggregateDataForScores(scores[0], duration);
     const labels = this.statisticsServices.formatLabel(
-      this.statisticsServices.aggregateDataForScores(scores[0], duration).map((d) => d.x),
+      aggregateData.map((d) => d.x),
       duration,
     );
 
@@ -237,20 +159,13 @@ export class PerformanceByThemesComponent implements OnChanges {
       datasets: dataSet,
     };
 
-    if (this.scoreEvolutionChart) {
-      this.scoreEvolutionChart.destroy();
-    }
-
     const customChartOptions = {
       ...chartDefaultOptions,
       plugins: {
         tooltip: {
           callbacks: {
             label: function (tooltipItem: any) {
-              let labelType = 'tag';
-              if (type === 'programs') {
-                labelType = 'programme';
-              }
+              const labelType = 'tag';
               return `${labelType} ${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
             },
           },
@@ -274,15 +189,8 @@ export class PerformanceByThemesComponent implements OnChanges {
     });
   }
 
-  changeTabs() {
-    this.activeTab = this.activeTab === 1 ? 2 : 1;
-    this.init = true;
-    this.getScores().subscribe();
-  }
-
   filterTeams(teams: { label: string; id: string }[]) {
     this.selectedTeams = teams;
-    this.createPerformanceChart(this.selectedTeams);
     return;
   }
 

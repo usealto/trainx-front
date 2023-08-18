@@ -1,0 +1,33 @@
+:host {
+  display: inline-block;
+  border-radius: 50%;
+  text-align: center;
+  height: var(--rawSize);
+  width: var(--rawSize);
+  line-height: var(--rawSize);
+  color: var(--alto-blue);
+  background-color: var(--alto-medium-grey);
+  i {
+    font-size: calc(var(--rawSize) / 2.5);
+  }
+  .bi::before {
+    line-height: var(--rawSize);
+    vertical-align: unset;
+  }
+  &.badge-double-primary {
+    color: var(--primary-600);
+    background: radial-gradient(circle, var(--primary-100) 49%, var(--primary-50) 49%);
+  }
+  &.badge-double-warning {
+    color: var(--orange-600);
+    background: radial-gradient(circle, var(--orange-100) 50%, var(--orange-50) 50%);
+  }
+  &.badge-double-success {
+    color: var(--success-600);
+    background: radial-gradient(circle, var(--success-100) 50%, var(--success-50) 50%);
+  }
+  &.badge-double-gray {
+    color: var(--gray-600);
+    background: radial-gradient(circle, var(--gray-100) 50%, var(--gray-50) 50%);
+  }
+}

@@ -1,12 +1,19 @@
 label {
-  font-weight: 500;
+  font-weight: 600;
 }
 .form-control {
   margin-bottom: 1.143rem;
 }
 
+.form-label {
+  margin-bottom: 0.667rem;
+}
+
+.input-group {
+  height: 3.167rem;
+}
+
 .sidebar-body {
-  height: calc(100vh - 236px);
   overflow: auto;
 }
 .footer {
@@ -17,11 +24,18 @@ label {
   bottom: 0;
   z-index: 100;
   .button-container {
-    padding: 1.143rem 2.286rem;
+    padding: 1.333rem 2.667rem;
+    height: 6.083rem;
+    & > * {
+      font-size: 1.167rem;
+    }
   }
 }
 .add-field {
   cursor: pointer;
+  color: var(--primary-600);
+  font-weight: 600;
+  margin-bottom: 1.333rem;
   i {
     font-size: 2rem;
     line-height: 1rem;
@@ -36,4 +50,9 @@ label {
     vertical-align: top;
     color: var(--alto-grey);
   }
+}
+.btn-close {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
 }

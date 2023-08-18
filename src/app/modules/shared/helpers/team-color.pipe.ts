@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @Pipe({
   name: 'teamColor',
@@ -18,9 +19,11 @@ export class TeamColorPipe implements PipeTransform {
     { color: '#c01574', bg: '#fdf2fa' },
     { color: '#c01048', bg: '#fff1f3' },
     { color: '#c4320a', bg: '#fff6ed' },
+    { color: '#344054', bg: '#f2f4f7' },
   ];
 
-  transform(id: string, ...args: unknown[]): unknown {
+  @memoize()
+  transform(id: string): string {
     const num = this.extractNumber(id);
     return `background-color: ${this.colorCodes[num].bg}; color: ${this.colorCodes[num].color}`;
   }
@@ -34,6 +37,7 @@ export class TeamColorPipe implements PipeTransform {
     for (let index = 0; index < str.length; index++) {
       output += str[index].charCodeAt(0);
     }
+
     return output % this.colorCodes.length;
   }
 }

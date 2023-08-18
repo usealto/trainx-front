@@ -5,33 +5,29 @@ import {
   ChallengeDtoApiTypeEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
-  TeamStatsDtoApi,
   UserDtoApi,
-  UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
-import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, map, of, tap } from 'rxjs';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { ChallengesRestService } from 'src/app/modules/challenges/services/challenges-rest.service';
+import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
+import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import {
-  ScoreDuration,
-  ScoreFilters,
-  TopFlop,
-  TopFlopDisplay,
-} from 'src/app/modules/shared/models/score.model';
+import { ScoreDuration, ScoreFilters } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
+import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
 
 @UntilDestroy()
 @Component({
@@ -40,6 +36,7 @@ import { StatisticsService } from 'src/app/modules/statistics/services/statistic
   styleUrls: ['./lead-home.component.scss'],
 })
 export class LeadHomeComponent implements OnInit {
+  Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   ScoreDuration = ScoreDuration;
@@ -52,37 +49,32 @@ export class LeadHomeComponent implements OnInit {
     type: ScoreTypeEnumApi.Team,
     teams: [],
   };
-  chartFilters: ChartFilters = {
-    duration: ScoreDuration.Trimester,
-    type: ScoreTypeEnumApi.Tag,
-    team: '',
-    tags: [],
-  };
+
   scoreCount = 0;
+
+  averageScore = 0;
+  averageScoreProgression = 0;
+
+  programsCount = 0;
+  finishedProgramsCount = 0;
+  averageFinishedPrograms = 0;
+  averageFinishedProgramsProgression = 0;
+
+  guessCount = 0;
+  expectedGuessCount = 0;
+  guessCountProgression = 0;
 
   commentsCount = 0;
   questionsCount = 0;
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
   evolutionChart?: Chart;
-  globalScore = 0;
-  globalScoreProgression = 0;
-  averageCompletion = 0;
-  completionProgression = 0;
-  activeMembers = 0;
-  activeMembersProgression = 0;
-  inactiveMembers = 0;
-  inactiveMembersProgression = 0;
   //
   challengesByTeam: ChallengeDtoApi[] = [];
   challengesByUser: ChallengeDtoApi[] = [];
 
-  topFlopData: {
-    programs: TopFlop;
-    teams: TopFlop;
-  } = { programs: { top: [], flop: [] }, teams: { top: [], flop: [] } };
-
-  topFlopProgramTab: ScoreTypeEnumApi = ScoreTypeEnumApi.Program;
-  topFlopTeamTab: ScoreTypeEnumApi = ScoreTypeEnumApi.Team;
+  teamsLeaderboard: { name: string; score: number }[] = [];
+  usersLeaderboard: { name: string; score: number }[] = [];
+  topflopLoaded = false;
 
   constructor(
     private readonly commentsRestService: CommentsRestService,
@@ -95,6 +87,9 @@ export class LeadHomeComponent implements OnInit {
     public readonly teamStore: TeamStore,
     public readonly profileStore: ProfileStore,
     public readonly programsStore: ProgramsStore,
+    public readonly programsRestService: ProgramsRestService,
+    public readonly guessesRestService: GuessesRestService,
+    public readonly companiesRestService: CompaniesRestService,
   ) {}
 
   ngOnInit(): void {
@@ -114,81 +109,82 @@ export class LeadHomeComponent implements OnInit {
             .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByUser)
             .slice(0, 5);
         }),
-        tap(() => this.getGlobalScore(this.globalFilters)),
+        tap(() => this.getAverageScore(this.globalFilters.duration as ScoreDuration)),
+        tap(() => this.getProgramsStats(this.globalFilters)),
+        tap(() => this.getGuessesCount(this.globalFilters.duration as ScoreDuration)),
+        tap(() => this.getTopFlop(this.globalFilters.duration as ScoreDuration)),
         untilDestroyed(this),
       )
       .subscribe();
-    this.chartFilters.tags = this.programsStore.tags.value.slice(0, 3).map((tag) => tag.id);
-    this.createCharts(this.chartFilters);
+    this.createChart(this.globalFilters.duration as ScoreDuration);
   }
 
-  createCharts({
-    duration = this.chartFilters.duration,
-    type = this.chartFilters.type ?? ScoreTypeEnumApi.Program,
-    team = this.chartFilters.team,
-    tags = this.chartFilters.tags,
-  }: ChartFilters) {
-    this.chartFilters.duration = duration;
-    this.chartFilters.type = type;
-    this.chartFilters.team = team;
-    this.chartFilters.tags = tags;
-    this.topFlop(this.topFlopProgramTab);
-    this.topFlop(this.topFlopTeamTab);
-
+  createChart(duration: ScoreDuration) {
     if (this.evolutionChart) {
       this.evolutionChart.destroy();
     }
-    this.scoresRestService
-      .getScores(this.chartFilters)
-      .pipe(
-        tap(({ scores }) => (this.scoreCount = scores.length)),
-        filter(() => !!this.scoreCount),
-        tap(({ scores }) => {
-          //temp: manual filter chart by tags until backend updates
-          if (tags && tags.length > 0) {
-            scores = scores.filter((s) => tags.some((t) => s.id.includes(t)));
-          }
 
-          scores = this.scoreService.reduceChartData(scores);
-          const aggregateData = this.statisticsServices.aggregateDataForScores(
-            scores[0],
-            duration as ScoreDuration,
-          );
+    const params = {
+      duration: duration,
+      type: ScoreTypeEnumApi.Team,
+    };
+
+    this.scoresRestService
+      .getScores(params)
+      .pipe(
+        tap((res) => {
+          this.scoreCount = res.scores.length;
+          const scores = this.scoreService.reduceChartData(res.scores);
 
           const labels = this.statisticsServices.formatLabel(
-            aggregateData.map((d) => d.x),
-            duration as ScoreDuration,
+            this.statisticsServices
+              .aggregateDataForScores(scores[0], duration as ScoreDuration)
+              .map((d) => d.x),
+            duration,
           );
+
+          const total = scores.map((s) =>
+            this.statisticsServices.aggregateDataForScores(s, duration as ScoreDuration),
+          );
+
+          const globalScore: { x: Date; y: number | null; z: number }[] = [];
+          total.forEach((teamData) => {
+            teamData.forEach((point) => {
+              const element = globalScore.filter((pt) => pt.x.getTime() === point.x.getTime());
+              if (element.length === 1) {
+                if (!element[0].y) {
+                  element[0].y = point.y;
+                } else {
+                  element[0].y += point.y || 0;
+                }
+                element[0].z += point.y ? 1 : 0;
+              } else {
+                globalScore.push({ ...point, z: point.y ? 1 : 0 });
+              }
+            });
+          });
+          globalScore.forEach((pt) => {
+            if (pt.y && pt.z > 0) {
+              pt.y = pt.y / pt.z;
+            }
+          });
+
+          const dataset = {
+            label: 'Global',
+            data: globalScore.map((u) => (u.y ? Math.round((u.y * 10000) / 100) : u.y)),
+            fill: false,
+            tension: 0.2,
+            spanGaps: true,
+          };
 
           const data: ChartData = {
             labels: labels,
-            datasets: scores.map((s) => {
-              const d = this.statisticsServices.aggregateDataForScores(s, duration as ScoreDuration);
-
-              return {
-                label: s.label,
-                data: d.map((u) => (u.y ? Math.round((u.y * 10000) / 100) : u.y)),
-                fill: false,
-                tension: 0.2,
-                spanGaps: true,
-              };
-            }),
+            datasets: [dataset],
           };
 
           const customChartOptions = {
             ...chartDefaultOptions,
             plugins: {
-              tooltip: {
-                callbacks: {
-                  label: function (tooltipItem: any) {
-                    let labelType = 'tag';
-                    if (type === 'program') {
-                      labelType = 'programme';
-                    }
-                    return `${labelType} ${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
-                  },
-                },
-              },
               legend: {
                 display: false,
               },
@@ -206,116 +202,103 @@ export class LeadHomeComponent implements OnInit {
       .subscribe();
   }
 
-  topFlop(val: ScoreTypeEnumApi) {
-    this.scoresRestService
-      .getScores({
-        ...this.chartFilters,
-        timeframe: ScoreTimeframeEnumApi.Day,
-        type: val,
-        sortBy: 'lastAverage:desc',
-      })
-      .pipe(
-        tap(({ scores }) => {
-          const output: TopFlopDisplay[] = scores
-            .map((s) => ({
-              label: s.label,
-              avg: this.scoreService.reduceWithoutNull(s.averages) ?? 0,
-            }))
-            .filter((x) => !!x.avg);
-          if (val === ScoreTypeEnumApi.Program || val === ScoreTypeEnumApi.Tag) {
-            this.topFlopProgramTab = val;
-            this.topFlopData.programs = {
-              top: this.scoreService.getTop(output),
-              flop: this.scoreService.getFlop(output),
-            };
-          }
-          if (val === ScoreTypeEnumApi.Team || val === ScoreTypeEnumApi.User) {
-            this.topFlopTeamTab = val;
-            this.topFlopData.teams = {
-              top: this.scoreService.getTop(output),
-              flop: this.scoreService.getFlop(output),
-            };
-          }
-        }),
-        untilDestroyed(this),
-      )
-      .subscribe();
-  }
-
-  getGlobalScore({
-    duration = this.globalFilters.duration,
-    type = this.globalFilters.type ?? ScoreTypeEnumApi.Team,
-    teams = this.globalFilters.teams,
-  }: ScoreFilters) {
-    this.globalFilters.duration = duration;
-    this.globalFilters.type = type;
-    this.globalFilters.teams = teams;
-    this.globalFilters.timeframe = ScoreTimeframeEnumApi.Day;
-
-    return combineLatest([
-      this.scoresRestService.getTeamsStats(this.globalFilters.duration as ScoreDuration),
-      this.scoresRestService.getTeamsStats(this.globalFilters.duration as ScoreDuration, true),
-      this.scoresRestService.getUsersStats(this.globalFilters.duration as ScoreDuration),
-      this.scoresRestService.getUsersStats(this.globalFilters.duration as ScoreDuration, true),
+  getTopFlop(duration: ScoreDuration) {
+    combineLatest([
+      this.scoresRestService.getTeamsStats(duration),
+      this.scoresRestService.getUsersStats(duration),
     ])
       .pipe(
-        map(
-          ([current, previous, usersStats, previousUsersStats]) =>
-            [
-              this.globalFilters.teams && this.globalFilters.teams.length > 0
-                ? current.filter((team) => this.globalFilters.teams?.some((teamId) => teamId === team.id))
-                : current,
-              this.globalFilters.teams && this.globalFilters.teams.length > 0
-                ? previous.filter((team) => this.globalFilters.teams?.some((teamId) => teamId === team.id))
-                : previous,
-              usersStats,
-              previousUsersStats,
-            ] as [TeamStatsDtoApi[], TeamStatsDtoApi[], UserStatsDtoApi[], UserStatsDtoApi[]],
-        ),
-        tap(([current, previous, usersStats, previousUsersStats]) => {
-          //global score
-          const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;
-
-          this.globalScore = current.reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
-
-          this.globalScoreProgression =
-            previousScore && this.globalScore ? this.globalScore - previousScore : 0;
-
-          //Active/inactive members
-          this.activeMembers = usersStats.filter((u) => u.respondsRegularly).length;
-          this.inactiveMembers = usersStats.length - this.activeMembers;
-
-          const prevU = previousUsersStats.filter((u) => u.respondsRegularly).length;
-          this.activeMembersProgression =
-            prevU > 0 && this.activeMembers ? (this.activeMembers - prevU) / prevU : 0;
-          const prevI = previousUsersStats.length - prevU;
-          this.inactiveMembersProgression =
-            prevI > 0 && this.inactiveMembers ? (this.inactiveMembers - prevI) / prevI : 0;
+        tap(([teams, users]) => {
+          teams = teams.filter((t) => t.score && t.score >= 0);
+          users = users.filter((u) => u.score && u.score >= 0);
+          teams.forEach((t) => this.teamsLeaderboard.push({ name: t.team.longName, score: t.score ?? 0 }));
+          users.forEach((u) =>
+            this.usersLeaderboard.push({
+              name: u.user.firstname + ' ' + u.user.lastname,
+              score: u.score ?? 0,
+            }),
+          );
+          this.topflopLoaded = true;
         }),
-        switchMap(() => this.getAverageCompletion(this.globalFilters)),
         untilDestroyed(this),
       )
       .subscribe();
   }
 
-  getAverageCompletion(filt: ScoreFilters) {
-    return combineLatest([
-      this.scoresRestService.getCompletion(filt, false),
-      this.scoresRestService.getCompletion(filt, true),
-    ]).pipe(
-      map(([current, last]) => [
-        [current.filter((p) => p.finishedAt !== null).length, current.length],
-        [last.filter((p) => p.finishedAt !== null).length, last.length],
-      ]),
-      tap(([currentAvg, previousAvg]) => {
-        const avgCompletion = currentAvg[1] === 0 ? 0 : currentAvg[0] / currentAvg[1];
-        this.averageCompletion = avgCompletion;
-        const previousAvgCompletion = previousAvg[1] === 0 ? 0 : previousAvg[0] / previousAvg[1];
+  updateStatisticsDuration(duration: string) {
+    this.globalFilters.duration = duration as ScoreDuration;
+    this.getAverageScore(duration as ScoreDuration);
+    this.getProgramsStats(this.globalFilters);
+    this.getGuessesCount(duration as ScoreDuration);
+    this.createChart(duration as ScoreDuration);
+  }
 
-        this.completionProgression =
-          previousAvgCompletion && avgCompletion ? previousAvgCompletion - avgCompletion : 0;
-      }),
-    );
+  getAverageScore(duration: ScoreDuration) {
+    return combineLatest([
+      this.scoresRestService.getTeamsStats(duration),
+      this.scoresRestService.getTeamsStats(duration, true),
+    ])
+      .pipe(
+        tap(([current, previous]) => {
+          current = current.filter((t) => t.score);
+          previous = previous.filter((t) => t.score);
+          const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;
+          this.averageScore =
+            current.filter((t) => t.score).reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
+          this.averageScoreProgression = previousScore
+            ? (this.averageScore - previousScore) / previousScore
+            : 0;
+        }),
+      )
+      .subscribe();
+  }
+
+  getProgramsStats(filters: ScoreFilters) {
+    combineLatest([
+      this.scoresRestService.getProgramsStats(filters.duration as ScoreDuration),
+      this.scoresRestService.getProgramsStats(filters.duration as ScoreDuration, true),
+    ])
+      .pipe(
+        tap(([programsStats, lastProgramsStats]) => {
+          this.programsCount = programsStats.length;
+          this.finishedProgramsCount = programsStats.filter((p) => p.participation === 1).length;
+          this.averageFinishedPrograms =
+            this.finishedProgramsCount && this.programsCount
+              ? this.finishedProgramsCount / this.programsCount
+              : 0;
+          const lastProgramsCount = lastProgramsStats.length;
+          const lastFinishedProgramsCount = lastProgramsStats.filter((p) => p.participation === 1).length;
+          const lastAverageFinishedPrograms =
+            lastFinishedProgramsCount && lastProgramsCount
+              ? lastFinishedProgramsCount / lastProgramsCount
+              : 0;
+          this.averageFinishedProgramsProgression =
+            this.averageFinishedPrograms - lastAverageFinishedPrograms;
+        }),
+      )
+      .subscribe();
+  }
+
+  getGuessesCount(duration: ScoreDuration) {
+    combineLatest([
+      this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration),
+      this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration, true),
+      this.scoresRestService.getTeamsStats(duration),
+    ])
+      .pipe(
+        tap(([guesses, previousGuesses, teamsStats]) => {
+          this.guessCount = guesses.meta.totalItems;
+          this.guessCountProgression =
+            previousGuesses.meta.totalItems && guesses.meta.totalItems
+              ? (guesses.meta.totalItems - previousGuesses.meta.totalItems) / previousGuesses.meta.totalItems
+              : 0;
+          this.expectedGuessCount = teamsStats.reduce(
+            (acc, team) => acc + (team.questionsPushedCount ?? 0),
+            0,
+          );
+        }),
+      )
+      .subscribe();
   }
 
   @memoize()

@@ -1,15 +1,22 @@
 :host {
+  display: block;
   position: relative;
-  & > div {
-    position: relative;
-  }
 }
 
 .panel {
-  height: 16.5rem;
+  height: 16rem;
   position: relative;
-  &:hover {
+  &:not(.inactive):hover {
     border-color: #84caff;
+  }
+  &.inactive {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    background-color: #f5f5f5a1;
+  }
+  p {
+    color: var(--gray-500);
   }
 }
 .form-switch {
@@ -18,20 +25,28 @@
   top: 1.429rem;
 }
 .title {
-  font-size: 1.429rem;
-  line-height: 2rem;
-  font-weight: 500;
+  font-weight: 600;
+  padding-bottom: 1rem;
+  font-style: normal;
+  line-height: 1.66667rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   width: 86%;
 }
 
-.card-bottom {
-  bottom: 1.4rem;
-  position: absolute;
-  width: calc(100% - var(--alto-panel-padding-x) * 2);
+.subtitle {
+  color: var(--gray-500);
 }
+
+.span-text {
+  font-size: 0.83333rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.33333rem;
+  color: var(--gray-500);
+}
+
 hr {
   border-color: var(--bs-gray-500);
 }
@@ -42,20 +57,27 @@ h2 {
 .description-box {
   height: 2.6rem;
 }
-alto-colored-pill-list {
-  display: block;
-  min-height: 1.8rem;
-}
+
 .score {
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.667rem;
   span {
-    font-weight: 500;
+    font-size: 0.833rem;
+    font-style: normal;
+    font-weight: 600;
+    &:not(.alto-score) {
+      color: var(--gray-500);
+    }
   }
   .badge {
     font-size: 0.857rem;
   }
-  i {
-    font-size: 0.85rem;
-    color: var(--bs-gray-400);
-  }
+}
+
+.emoji {
+  height: 1rem;
+  margin-right: 0.33rem;
+}
+.teams {
+  color: var(--blue-gray-600);
+  background-color: var(--blue-gray-50);
 }

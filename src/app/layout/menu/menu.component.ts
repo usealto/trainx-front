@@ -18,9 +18,7 @@ import { buildTime } from 'src/build-time';
 export class MenuComponent implements OnInit {
   AltoRoutes = AltoRoutes;
   I18ns = I18ns;
-  buildTime = buildTime;
-  impersonatedUser =
-    localStorage.getItem('impersonatedUser') !== '' && localStorage.getItem('impersonatedUser');
+  toggleTooltip = false;
 
   isAdmin = false;
   displayAdmin = false;
