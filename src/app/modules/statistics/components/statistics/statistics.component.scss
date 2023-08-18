@@ -2,3 +2,9 @@
   display: block;
   padding: var(--alto-page-padding);
 }
+.header-panel {
+  margin-bottom: 3.333rem;
+  .emoji {
+    height: 1.75rem;
+  }
+}

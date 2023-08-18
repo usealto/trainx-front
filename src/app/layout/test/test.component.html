@@ -1,14 +1,9 @@
+<p class="build-time fs-8" title="Build Time">Version: {{ buildTime | date : 'medium' }}</p>
+
 <div class="row" *ngIf="isDev">
   <div class="col-6">
     <span class="fs-4">{{ I18ns.shared.smiley }}</span>
     <a [routerLink]="['/', AltoRoutes.notFound]">404 page</a>
-    <br />
-    <alto-anchor-navigator>
-      <button type="button" class="btn btn-outline-secondary me-4 ps-3">
-        {{ I18ns.leadTeam.teams.shortTitle }}
-        <span class="alto-badge">12</span>
-      </button>
-    </alto-anchor-navigator>
     <br />
     <br />
     <alto-colored-pill-list
@@ -23,38 +18,36 @@
     ></alto-colored-pill-list>
     <br />
     <br />
-    <alto-status-pill [status]="ChallengeDtoApiStatusEnumApi.InProgress"></alto-status-pill>&nbsp;
+    <!-- <alto-status-pill [status]="ChallengeDtoApiStatusEnumApi.InProgress"></alto-status-pill>&nbsp;
     <alto-status-pill [status]="ChallengeDtoApiStatusEnumApi.Ended"></alto-status-pill>
     <br />
-    <br />
+    <br /> -->
     <alto-colored-pill-list [data]="['test', 'alpha', 'beta', 'gamma']" [limit]="3"></alto-colored-pill-list>
     <br />
     <br />
+    <div class="border">
+      <alto-dropdown-filter
+        class="text-start"
+        [data]="teamStore.teams.value"
+        [displayLabel]="'shortName'"
+        [returnValue]="'id'"
+        [placeholder]="I18ns.programs.programs.filters.teams"
+        [isColored]="true"
+        [multiple]="true"
+      ></alto-dropdown-filter>
 
-    <alto-dropdown-filter
-      class="text-start"
-      [data]="teamStore.teams.value"
-      [displayLabel]="'shortName'"
-      [returnValue]="'id'"
-      [placeholder]="I18ns.programs.programs.filters.team"
-      [isColored]="true"
-      [multiple]="true"
-    ></alto-dropdown-filter>
-    <br />
-    <br />
-    <alto-dropdown-filter
-      class="text-start"
-      [data]="teamStore.teams.value"
-      [displayLabel]="'shortName'"
-      [returnValue]="'id'"
-      [placeholder]="I18ns.programs.programs.filters.team"
-      [isColored]="false"
-      [multiple]="false"
-    ></alto-dropdown-filter>
-    <br />
-    <br />
-    <!-- <alto-period-filter></alto-period-filter> -->
-    <alto-time-picker></alto-time-picker>
+      <alto-dropdown-filter
+        class="text-start"
+        [data]="teamStore.teams.value"
+        [displayLabel]="'shortName'"
+        [returnValue]="'id'"
+        [placeholder]="I18ns.programs.programs.filters.team"
+        [isColored]="false"
+        [multiple]="false"
+      ></alto-dropdown-filter>
+
+      <alto-time-picker></alto-time-picker>
+    </div>
     <br />
     <br />
 
@@ -64,7 +57,7 @@
     ></alto-img-badge>
     <br />
     <br />
-    <alto-img-badge-list [users]="userStore.users.value" [limit]="10"></alto-img-badge-list>
+    <!-- <alto-img-badge-list [users]="userStore.users.value" [limit]="10"></alto-img-badge-list> -->
 
     <br />
     <br />
@@ -80,7 +73,7 @@
     <alto-program-card [displayToggle]="true" [program]="programStore.programs.value[0]"></alto-program-card>
     <br />
     <br />
-    <alto-progression-badge class="me-2"></alto-progression-badge> rien
+    <alto-progression-badge class="me-2" [score]="null"></alto-progression-badge>
     <alto-progression-badge class="me-2" [score]="0"></alto-progression-badge>
     <alto-progression-badge class="me-2" [score]="0.05"></alto-progression-badge>
     <alto-progression-badge class="me-2" [score]="-0.5"></alto-progression-badge>
@@ -118,15 +111,17 @@
     <button class="btn btn-primary ms-3">
       {{ I18ns.shared.save }}
     </button>
-    <button class="btn btn-secondary ms-3">
-      <i class="bi bi-pen"></i>
+    <button class="btn btn-primary ms-3">
+      <i class="bi bi-plus-lg"></i><span>{{ I18ns.shared.save }}</span>
     </button>
+
     <br />
     <br />
-    <alto-pagination></alto-pagination>
+    <alto-pagination [collectionSize]="100" [pageSize]="10" [page]="1"></alto-pagination>
 
     <input type="range" min="1" max="100" class="form-range" />
 
+    <br />
     <input type="radio" id="type2" name="rad1" class="form-check-input" checked />
     <br />
     <input type="radio" id="type3" name="rad1" class="form-check-input" />
@@ -159,6 +154,13 @@
       <div class="progress-bar d-inline-block" role="progressbar" style="width: 50%"></div>
     </div>
     50%
+    <br />
+    <br />
+    <img class="emoji" [src]="EmojiName.Bullseye | emoji" />
+    <br />
+    <br />
+
+    <p class="fs-5">Test Font Size</p>
   </div>
 </div>
 <hr />

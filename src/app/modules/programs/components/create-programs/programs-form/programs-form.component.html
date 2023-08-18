@@ -1,11 +1,15 @@
 <form *ngIf="form" [formGroup]="form">
   <div class="row">
-    <div class="col-4">
-      <label class="form-label required">{{ I18ns.programs.forms.step1.name }}</label>
-      <p class="">{{ I18ns.programs.forms.step1.nameSubtitle }}</p>
+    <div class="col-left">
+      <img class="emoji" [src]="EmojiName.PageFacingUp | emoji" />
+      <div>
+        <label class="form-label required">{{ I18ns.programs.forms.step1.name }}</label>
+        <p class="">{{ I18ns.programs.forms.step1.nameSubtitle }}</p>
+      </div>
     </div>
-    <div class="col-6">
+    <div class="col-right">
       <input
+        data-cy="programName"
         type="text"
         class="form-control"
         formControlName="name"
@@ -13,32 +17,19 @@
       />
     </div>
   </div>
-  <hr />
-  <div class="row">
-    <div class="col-4">
-      <label class="form-label">{{ I18ns.programs.forms.step1.description }}</label>
-      <p>{{ I18ns.programs.forms.step1.descriptionSubtitle }}</p>
-    </div>
-    <div class="col-6">
-      <textarea
-        class="form-control"
-        rows="5"
-        data-cy="descriptionField"
-        formControlName="description"
-        placeholder="{{ I18ns.programs.forms.step1.descriptionPlaceholder }}"
-      ></textarea>
-    </div>
-  </div>
   <hr *ngIf="!isEdit" />
   <div *ngIf="!isEdit" class="row">
-    <div class="col-4">
-      <label class="form-label required">{{ I18ns.programs.forms.step1.tags }}</label>
-      <p>{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
+    <div class="col-left">
+      <img class="emoji" [src]="EmojiName.Label | emoji" />
+      <div>
+        <label class="form-label">{{ I18ns.programs.forms.step1.tags }}</label>
+        <p>{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
+      </div>
     </div>
-    <div class="col-6">
+    <div class="col-right">
       <ng-select
+        data-cy="programTags"
         class="alto-form"
-        required
         [items]="tags"
         [multiple]="true"
         bindValue="id"
@@ -64,11 +55,14 @@
   </div>
   <hr />
   <div class="row">
-    <div class="col-4">
-      <label class="form-label">{{ I18ns.programs.forms.step1.teams }}</label>
-      <p>{{ I18ns.programs.forms.step1.teamsSubtitle }}</p>
+    <div class="col-left">
+      <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
+      <div>
+        <label class="form-label">{{ I18ns.programs.forms.step1.teams }}</label>
+        <p>{{ I18ns.programs.forms.step1.teamsSubtitle }}</p>
+      </div>
     </div>
-    <div class="col-6">
+    <div class="col-right">
       <ng-select
         class="alto-form"
         [items]="teams"
@@ -96,12 +90,16 @@
   </div>
   <hr />
   <div class="row">
-    <div class="col-4">
-      <label class="form-label required">{{ I18ns.programs.forms.step1.priority }}</label>
-      <p>{{ I18ns.programs.forms.step1.prioritySubtitle }}</p>
+    <div class="col-left">
+      <img class="emoji" [src]="EmojiName.Warning | emoji" />
+      <div>
+        <label class="form-label required">{{ I18ns.programs.forms.step1.priority }}</label>
+        <p>{{ I18ns.programs.forms.step1.prioritySubtitle }}</p>
+      </div>
     </div>
-    <div class="col-6">
+    <div class="col-right">
       <ng-select
+        data-cy="programPriority"
         class="alto-form"
         [items]="priorities"
         bindLabel="value"
@@ -116,11 +114,15 @@
   </div>
   <hr />
   <div class="row">
-    <div class="col-4">
-      <label class="form-label required">{{ I18ns.programs.forms.step1.expectation }}</label>
-      <p>{{ I18ns.programs.forms.step1.expectationSubtitle }}</p>
+    <div class="col-left">
+      <img class="emoji" [src]="EmojiName.SportsMedal | emoji" />
+
+      <div>
+        <label class="form-label required">{{ I18ns.programs.forms.step1.expectation }}</label>
+        <p>{{ I18ns.programs.forms.step1.expectationSubtitle }}</p>
+      </div>
     </div>
-    <div class="col-6">
+    <div class="col-right">
       <input type="range" class="form-range" min="1" max="100" formControlName="expectation" />
       <p class="text-center">{{ form.controls.expectation.value }}%</p>
     </div>

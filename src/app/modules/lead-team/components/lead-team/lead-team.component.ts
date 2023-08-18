@@ -1,30 +1,37 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { combineLatest, switchMap, tap } from 'rxjs';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UsersService } from 'src/app/modules/profile/services/users.service';
+import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   ScoresResponseDtoApi,
   TeamDtoApi,
+  TeamStatsDtoApi,
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { environment } from 'src/environments/environment';
-import { TeamFormComponent } from '../team-form/team-form.component';
-import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
+import { combineLatest, switchMap, tap } from 'rxjs';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
+import { UserFilters } from 'src/app/modules/profile/models/user.model';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
+import { UsersService } from 'src/app/modules/profile/services/users.service';
+import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
 import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { UserFilters } from 'src/app/modules/profile/models/user.model';
+import { environment } from 'src/environments/environment';
+import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
+import { TeamFormComponent } from '../team-form/team-form.component';
+import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
 
 interface TeamDisplay extends TeamDtoApi {
   score?: number;
+  totalGuessesCount?: number;
+  validGuessesCount?: number;
+  questionsPushedCount?: number;
 }
 interface UserDisplay extends UserDtoApi {
   score?: number;
@@ -35,17 +42,19 @@ interface UserDisplay extends UserDtoApi {
   selector: 'alto-lead-team',
   templateUrl: './lead-team.component.html',
   styleUrls: ['./lead-team.component.scss'],
+  providers: [ReplaceInTranslationPipe],
 })
 export class LeadTeamComponent implements OnInit {
+  EmojiName = EmojiName;
   I18ns = I18ns;
   // Teams
   teams: TeamDtoApi[] = [];
+  teamsStats: TeamStatsDtoApi[] = [];
   paginatedTeams: TeamDisplay[] = [];
   teamsPage = 1;
   teamsPageSize = 7;
   teamsScores: TeamDisplay[] = [];
   // Users
-  activeUsersCount = 0;
   absoluteUsersCount = 0;
   usersCount = 0;
   usersMap = new Map<string, string>();
@@ -65,6 +74,8 @@ export class LeadTeamComponent implements OnInit {
     private readonly profileStore: ProfileStore,
     private readonly scoreRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
+    private modalService: NgbModal,
+    private replaceInTranslationPipe: ReplaceInTranslationPipe,
   ) {}
 
   ngOnInit(): void {
@@ -73,19 +84,24 @@ export class LeadTeamComponent implements OnInit {
 
   loadData() {
     combineLatest([
-      this.usersRestService.getUsers(),
-      this.teamsRestService.getTeams(),
+      this.scoreRestService.getTeamsStats(ScoreDuration.Month),
       this.scoreRestService.getUsersStats(ScoreDuration.Month),
       this.scoreRestService.getUsersStats(ScoreDuration.Month, true),
     ])
       .pipe(
-        tap(([users, teams, usersStats, previousUsersStats]) => {
-          this.teams = teams;
-          this.teamsScores = this.teams;
+        tap(([teamsStats, usersStats, previousUsersStats]) => {
+          this.teams = teamsStats.map((teamStat) => teamStat.team);
+          this.teamsStats = teamsStats;
+          this.teamsScores = this.teamsStats.map((teamStat) => ({
+            ...teamStat.team,
+            score: teamStat.score,
+            totalGuessesCount: teamStat.totalGuessesCount,
+            validGuessesCount: teamStat.validGuessesCount,
+            questionsPushedCount: teamStat.questionsPushedCount,
+          }));
 
-          this.users = users;
-          this.absoluteUsersCount = users.length;
-          this.activeUsersCount = usersStats.filter((u) => u.respondsRegularly).length;
+          this.users = usersStats.map((userStat) => userStat.user);
+          this.absoluteUsersCount = this.users.length;
 
           usersStats.forEach((u) => {
             this.usersQuestionCount.set(u.id, [u.totalGuessesCount || 0]);
@@ -97,31 +113,18 @@ export class LeadTeamComponent implements OnInit {
                 if (data[0] === 0) {
                   data.push(0);
                 } else {
-                  data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount);
+                  u.totalGuessesCount
+                    ? data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount)
+                    : data.push(0);
                 }
                 this.usersQuestionCount.set(u.id, data);
               }
             }
           });
-        }),
-        tap(([users]) => (this.usersCount = users.length)),
-        tap(([users]) => {
-          users.forEach((user) => {
+          this.users.forEach((user) => {
             const member = this.teams.find((team) => team.id === user.teamId);
-            this.usersMap.set(user.id, member ? member.shortName : '');
+            this.usersMap.set(user.id, member ? member.longName + ' - ' + member.shortName : '');
           });
-        }),
-        switchMap(() => this.scoreRestService.getTeamsStats(ScoreDuration.Month)),
-        tap((scores) => {
-          this.teamsScores = this.teams.map((t) => {
-            const score = scores.find((s) => s.id === t.id);
-            if (score) {
-              return { ...t, score: score.score };
-            } else {
-              return t;
-            }
-          });
-          this.teamsScores.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
         }),
         switchMap(() => {
           return this.scoreRestService.getScores({
@@ -188,6 +191,31 @@ export class LeadTeamComponent implements OnInit {
     canvasRef.componentInstance.teamChanged.pipe(tap(() => this.loadData())).subscribe();
   }
 
+  deleteTeam(team: TeamDtoApi) {
+    const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
+
+    const componentInstance = modalRef.componentInstance as DeleteModalComponent;
+    componentInstance.data = {
+      title: this.replaceInTranslationPipe.transform(I18ns.leadTeam.teams.deleteModal.title, team.longName),
+      subtitle: this.replaceInTranslationPipe.transform(
+        I18ns.leadTeam.teams.deleteModal.subtitle,
+        this.getTeamUsersCount(team.id),
+      ),
+    };
+
+    componentInstance.objectDeleted
+      .pipe(
+        switchMap(() => this.teamsRestService.deleteTeam(team.id)),
+        tap(() => {
+          this.teamsRestService.resetCache();
+          this.loadData();
+          modalRef.close();
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
+  }
+
   openUserEditionForm(user: UserDtoApi) {
     const canvasRef = this.offcanvasService.open(UserEditFormComponent, {
       position: 'end',
@@ -206,6 +234,23 @@ export class LeadTeamComponent implements OnInit {
   @memoize()
   getQuestionsByUser(id: string): number[] {
     return this.usersQuestionCount.get(id) || [0, 0];
+  }
+
+  getTotalQuestions(): number {
+    let totalQuestions = 0;
+
+    this.usersQuestionCount.forEach((values) => {
+      if (values && values.length > 0) {
+        totalQuestions += values[0];
+      }
+    });
+
+    return totalQuestions;
+  }
+
+  getPercentageQuestions(): number {
+    // TODO
+    return 0;
   }
 
   airtableRedirect() {

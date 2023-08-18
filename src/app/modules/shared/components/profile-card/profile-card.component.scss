@@ -6,16 +6,21 @@
 alto-img-badge {
   width: 2.857rem;
   display: inline-block;
+  vertical-align: middle;
 }
 .name {
   font-weight: 600;
+  margin-bottom: 0.3rem;
 }
 .email {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 0.833rem;
 }
 .names-container {
   width: calc(100% - 5rem);
-  vertical-align: text-bottom;
+  vertical-align: middle;
+  line-height: 1rem;
+  margin-left: 1rem;
 }

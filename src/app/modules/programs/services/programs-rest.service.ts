@@ -15,6 +15,7 @@ import { ProgramsStore } from '../programs.store';
 import { ProfileStore } from '../../profile/profile.store';
 import { ScoreDuration } from '../../shared/models/score.model';
 import { ScoresService } from '../../shared/services/scores.service';
+import { addDays } from 'date-fns';
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +43,7 @@ export class ProgramsRestService {
       par.createdAfter = isProgression
         ? this.scoresService.getPreviousPeriod(duration)[0]
         : this.scoresService.getStartDate(duration);
-      par.createdBefore = isProgression ? this.scoresService.getPreviousPeriod(duration)[1] : new Date();
+      par.createdBefore = isProgression ? this.scoresService.getPreviousPeriod(duration)[1] : addDays(new Date(), 1); //! TEMPORARY FIX to get data from actual day
     }
 
     return this.programApi.getPrograms(par);
@@ -81,7 +82,7 @@ export class ProgramsRestService {
     } else {
       return this.getPrograms().pipe(
         map((ps: ProgramDtoApi[]) =>
-          ps.filter((p) => p.teams.some((t) => t.id === this.profileStore.user.value.teamId)),
+          ps.filter((p) => p.teams.some((t) => t && t.id === this.profileStore.user.value.teamId)),
         ),
         tap((p) => (this.profileStore.myPrograms.value = p)),
       );

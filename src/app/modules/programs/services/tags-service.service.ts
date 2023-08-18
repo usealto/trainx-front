@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TagApi, ProgramDtoApi, TagDtoApi } from '@usealto/sdk-ts-angular';
+import { TagDtoApi } from '@usealto/sdk-ts-angular';
 import { TagFilters } from '../models/tag.model';
 
 @Injectable({
@@ -16,11 +16,7 @@ export class TagsServiceService {
       output = output.filter((t: TagDtoApi) => contributors.includes(t.createdBy));
     }
     if (search) {
-      output = output.filter(
-        (p: any) =>
-          p.name.toLowerCase().includes(search.toLowerCase()) ||
-          p.description.toLowerCase()?.includes(search.toLowerCase()),
-      );
+      output = output.filter((p: any) => p.name.toLowerCase().includes(search.toLowerCase()));
     }
     return output;
   }

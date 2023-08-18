@@ -1,15 +1,21 @@
 :host {
   display: inline-block;
   min-width: 12rem;
+  vertical-align: bottom;
 }
 :host ::ng-deep {
   .ng-select.right .ng-dropdown-panel {
     right: 0;
     left: auto;
   }
+  .ng-select .ng-select-container {
+    background-color: transparent;
+    font-weight: 600;
+    font-size: 0.833rem;
+  }
 }
 .alto-badge {
-  background-color: var(--alto-blue);
+  background-color: var(--bs-primary);
   color: white;
   &.badge-option {
     font-size: 1.143rem;

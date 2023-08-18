@@ -1,9 +1,32 @@
 :host {
   display: block;
   padding: var(--alto-page-padding);
+  padding-top: 3.33rem;
 }
-.questions {
-  .table {
-    height: 72;
+
+.header-panel {
+  .emoji {
+    height: 2.6667rem;
+    vertical-align: sub;
   }
+}
+.subtitle {
+  margin-top: 0.67rem;
+  margin-bottom: 2rem;
+}
+
+.programs-tabs {
+  margin-bottom: 3.33rem;
+}
+
+.active-programs {
+  margin-bottom: 3.33rem;
+}
+
+h2 {
+  margin-bottom: 0;
+}
+
+.search {
+  width: 319.9994px
 }

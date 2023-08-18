@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-  ProgramDtoApi,
   QuestionDtoApi,
-  QuestionDtoPaginatedResponseApi,
   QuestionSubmittedDtoApi,
   ScoreTypeEnumApi,
   ScoresResponseDtoApi,
@@ -12,6 +10,7 @@ import {
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { Observable, map, switchMap, tap } from 'rxjs';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -20,11 +19,12 @@ import { QuestionDeleteModalComponent } from 'src/app/modules/shared/components/
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { ScoreDuration } from '../../../shared/models/score.model';
+import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
+import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
+import { ScoreDuration, ScoreFilter } from '../../../shared/models/score.model';
 import { QuestionFilters } from '../../models/question.model';
 import { TagFilters } from '../../models/tag.model';
 import { ProgramsStore } from '../../programs.store';
-import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
@@ -32,26 +32,36 @@ import { TagsServiceService } from '../../services/tags-service.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
 
+interface TagDisplay extends TagDtoApi {
+  score?: number;
+}
+interface QuestionDisplay extends QuestionDtoApi {
+  score?: number;
+}
 @UntilDestroy()
 @Component({
   selector: 'alto-programs',
   templateUrl: './programs.component.html',
   styleUrls: ['./programs.component.scss'],
+  providers: [ReplaceInTranslationPipe],
 })
 export class ProgramsComponent implements OnInit {
+  EmojiName = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   //
   programsCount = 0;
   //
   questions: QuestionDtoApi[] = [];
+  paginatedQuestions!: QuestionDtoApi[];
   questionsPage = 1;
   questionsCount = 0;
   questionsPageSize = 10;
   isQuestionsLoading = true;
   questionsScore = new Map<string, number>();
-  questionFilters: QuestionFilters = { programs: [], tags: [], contributors: [], search: '' };
+  questionFilters: QuestionFilters = { programs: [], tags: [], search: '' };
   contributors: { id: string; fullname: string }[] = [];
+  selectedItems: QuestionDtoApi[] = [];
   //
   userCache = new Map<string, UserDtoApi>();
   pillsRowDisplayLimit = 3;
@@ -67,13 +77,21 @@ export class ProgramsComponent implements OnInit {
   tagsCount = 0;
   tagsPageSize = 10;
   isTagsLoading = true;
-  tagFilters: TagFilters = { programs: [], contributors: [], search: '' };
+  tagPrograms = new Map<string, string[]>();
+  isTagProgramsLoading = true;
+  tagFilters: TagFilters = { programs: [], contributors: [], search: '', score: '' };
   tagsScore = new Map<string, number>();
-  //
+
+  //tabs
+  tabData = [
+    { label: 'Programmes', value: 'programs' },
+    { label: 'Questions', value: 'questions' },
+    { label: 'Tags', value: 'tags' },
+  ];
+  activeTab = this.tabData[0].value;
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
-    private readonly programRestService: ProgramsRestService,
     private readonly questionsService: QuestionsRestService,
     private readonly scoresRestServices: ScoresRestService,
     private readonly scoresServices: ScoresService,
@@ -84,16 +102,18 @@ export class ProgramsComponent implements OnInit {
     private readonly profileStore: ProfileStore,
     public readonly programsStore: ProgramsStore,
     private modalService: NgbModal,
+    private readonly scoreService: ScoresService,
+    private replaceInTranslationPipe: ReplaceInTranslationPipe,
   ) {}
 
   ngOnInit(): void {
     this.getQuestions();
     this.getSubmittedQuestions();
     this.getTags();
-    this.contributors = this.profileStore.users.value.map((u) => ({
-      id: u.id,
-      fullname: u.firstname + ' ' + u.lastname,
-    }));
+  }
+
+  handleTabChange(value: any) {
+    this.activeTab = value;
   }
 
   deleteQuestion(question?: QuestionDtoApi) {
@@ -105,6 +125,33 @@ export class ProgramsComponent implements OnInit {
         switchMap(() => this.questionsService.deleteQuestion(question?.id ?? '')),
         tap(() => {
           modalRef.close();
+          this.getQuestions();
+          this.tagRestService.resetTags();
+          this.getTags();
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
+  }
+
+  deleteTag(tag: TagDtoApi) {
+    const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
+
+    const componentInstance = modalRef.componentInstance as DeleteModalComponent;
+    componentInstance.data = {
+      title: this.replaceInTranslationPipe.transform(I18ns.tags.deleteModal.title, tag.name),
+      subtitle: this.replaceInTranslationPipe.transform(
+        I18ns.tags.deleteModal.subtitle,
+        tag.questionsCount ?? 0,
+      ),
+    };
+    componentInstance.objectDeleted
+      .pipe(
+        switchMap(() => this.tagRestService.deleteTag(tag?.id ?? '')),
+        tap(() => {
+          modalRef.close();
+          this.tagRestService.resetTags();
+          this.getTags();
           this.getQuestions();
         }),
         untilDestroyed(this),
@@ -118,7 +165,15 @@ export class ProgramsComponent implements OnInit {
       panelClass: 'overflow-auto',
     });
     canvasRef.componentInstance.question = question;
-    canvasRef.componentInstance.createdQuestion.pipe(tap(() => this.getQuestions())).subscribe();
+    canvasRef.componentInstance.createdQuestion
+      .pipe(
+        tap(() => {
+          this.getQuestions();
+          this.tagRestService.resetTags();
+          this.getTags();
+        }),
+      )
+      .subscribe();
   }
 
   openSubmittedQuestionForm(question?: QuestionSubmittedDtoApi) {
@@ -146,40 +201,55 @@ export class ProgramsComponent implements OnInit {
     {
       programs = this.questionFilters.programs,
       tags = this.questionFilters.tags,
-      contributors = this.questionFilters.contributors,
+      score = this.questionFilters.score,
       search = this.questionFilters.search,
     }: QuestionFilters = this.questionFilters,
+    refreshPagination = false,
   ) {
     this.isQuestionsLoading = true;
 
     this.questionFilters.programs = programs;
     this.questionFilters.tags = tags;
-    this.questionFilters.contributors = contributors;
+    this.questionFilters.score = score;
     this.questionFilters.search = search;
 
     this.questionsService
-      .getQuestionsPaginated({
-        page: this.questionsPage,
-        itemsPerPage: this.questionsPageSize,
+      .getQuestions({
         programIds: programs?.join(','),
         tagIds: tags?.join(','),
-        createdBy: contributors?.length ? contributors?.join(',') : undefined,
         search,
       })
       .pipe(
         tap((questions) => {
-          this.questions = questions.data ?? [];
-          this.questionsCount = questions.meta.totalItems;
+          this.questions = questions;
+          this.questionsCount = questions.length;
+          if (refreshPagination) {
+            this.questionsPage = 1;
+          }
+          this.changeQuestionsPage(questions);
         }),
-        switchMap((questions) => this.getScoresfromQuestions(questions)),
-        map(() => this.questions?.map((q) => q.createdBy) ?? []),
+        switchMap((questions) => this.getScoresfromQuestions(questions.map((q) => q.id))),
+        map(() => this.questions.map((q) => q.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
         map((ids) => this.getUsersfromIds(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
-        tap(() => (this.isQuestionsLoading = false)),
+        tap(() => {
+          this.filterQuestionsByScore(this.questions as QuestionDisplay[], this.questionFilters.score);
+          this.isQuestionsLoading = false;
+        }),
         untilDestroyed(this),
       )
       .subscribe();
+  }
+
+  filterQuestionsByScore(questions: QuestionDisplay[], score?: string) {
+    if (!score) return;
+
+    questions.forEach((question) => (question.score = this.getQuestionScore(question.id)));
+
+    questions = this.scoreService.filterByScore(questions, score as ScoreFilter, true);
+
+    this.changeQuestionsPage(questions);
   }
 
   getUsersfromIds(ids: string[]): UserDtoApi[] {
@@ -187,8 +257,7 @@ export class ProgramsComponent implements OnInit {
     return this.profileStore.users.value.filter((u) => filter.some((i) => i === u.id));
   }
 
-  getScoresfromQuestions(questions: QuestionDtoPaginatedResponseApi): Observable<ScoresResponseDtoApi> {
-    const ids = questions.data?.map((q) => q.id);
+  getScoresfromQuestions(ids: string[]): Observable<ScoresResponseDtoApi> {
     return this.scoresRestServices
       .getScores({
         type: ScoreTypeEnumApi.Question,
@@ -228,9 +297,12 @@ export class ProgramsComponent implements OnInit {
       );
   }
 
-  changeQuestionsPage(page: number) {
-    this.questionsPage = page;
-    this.getQuestions();
+  changeQuestionsPage(questions: QuestionDtoApi[]) {
+    this.questionsCount = questions.length;
+    this.paginatedQuestions = questions.slice(
+      (this.questionsPage - 1) * this.questionsPageSize,
+      this.questionsPage * this.questionsPageSize,
+    );
   }
 
   @memoize()
@@ -302,18 +374,28 @@ export class ProgramsComponent implements OnInit {
       programs = this.tagFilters.programs,
       contributors = this.tagFilters.contributors,
       search = this.tagFilters.search,
+      score = this.tagFilters.score,
     }: TagFilters = this.tagFilters,
   ) {
     this.tagFilters.programs = programs;
     this.tagFilters.contributors = contributors;
     this.tagFilters.search = search;
+    this.tagFilters.score = score;
 
-    const res = this.tagsService.filterTags(this.tags, { programs, contributors, search });
-    this.changeTagsPage(res);
+    let output = this.tagsService.filterTags(this.tags, { programs, contributors, search }) as TagDisplay[];
+
+    output.forEach((tag) => (tag.score = this.getTagScore(tag.id)));
+
+    if (score) {
+      output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
+    }
+
+    this.changeTagsPage(output);
   }
 
   resetFilters() {
     this.getQuestions((this.questionFilters = {}));
+    this.selectedItems = [];
   }
 
   @memoize()

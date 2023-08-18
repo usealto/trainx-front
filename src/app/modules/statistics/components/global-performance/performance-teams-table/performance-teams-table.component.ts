@@ -1,12 +1,13 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { StatsDtoApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
+import { ProgramDtoApi, TagDtoApi, TeamDtoApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
+import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { TeamsStatsFilters } from 'src/app/modules/shared/models/stats.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
@@ -34,19 +35,27 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   teamsDisplay: TeamStatsDtoApi[] = [];
   paginatedTeams: TeamStatsDtoApi[] = [];
   teamsPage = 1;
-  teamsPageSize = 10;
-  programs: StatsDtoApi[] = [];
-  tags: StatsDtoApi[] = [];
+  teamsPageSize = 5;
+
+  programs: ProgramDtoApi[] = [];
+  tags: TagDtoApi[] = [];
   scoreIsLoading = false;
 
   constructor(
     public readonly teamStore: TeamStore,
     public readonly profileStore: ProfileStore,
     public readonly programsStore: ProgramsStore,
+    public readonly programsRestService: ProgramsRestService,
     private readonly scoreRestService: ScoresRestService,
   ) {}
 
   ngOnInit(): void {
+    this.programsRestService
+      .getPrograms()
+      .pipe(tap((pgs) => (this.programs = pgs)))
+      .subscribe();
+    this.tags = this.programsStore.tags.value;
+
     this.getTeamsByDuration();
   }
 
@@ -68,7 +77,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
     this.teamFilters.duration = duration;
     this.teamFilters.programs = programs;
     this.teamFilters.tags = tags;
-    this.teamFilters.teams = teams;
+    // this.teamFilters.teams = teams;
     this.teamFilters.search = search;
 
     let output: TeamStatsDtoApi[] = this.teams;
@@ -78,9 +87,13 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
     if (tags && tags.length > 0) {
       output = output.filter((t) => t.tags?.some((p) => tags.some((pr) => pr === p.id)));
     }
-    if (teams && teams.length > 0) {
-      output = output.filter((t) => teams.some((pr) => pr === t.id));
+
+    if (search) {
+      output = output.filter((t) => t.team.longName.includes(search));
     }
+    // if (teams && teams.length > 0) {
+    //   output = output.filter((t) => teams.some((pr) => pr === t.id));
+    // }
 
     this.teamsDisplay = output;
 
@@ -95,8 +108,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
         tap((t) => {
           this.teams = t;
           this.teamsDisplay = t;
-          this.programs = t.map((te) => te.programs || []).flat();
-          this.tags = t.map((te) => te.tags || []).flat();
+
           this.changeTeamsPage(1);
         }),
         switchMap(() => this.scoreRestService.getTeamsStats(this.duration, true)),
@@ -115,6 +127,11 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   @memoize()
   getTeamPreviousScore(team: TeamStatsDtoApi) {
     const prevScore = this.teamsPreviousPeriod.filter((t) => t.id === team.id)[0]?.score || 0;
-    return prevScore === 0 ? 0 : ((team.score || 0) - prevScore) / prevScore;
+    return prevScore && team.score ? team.score - prevScore : 0;
   }
+
+  // @memoize()
+  // getTeamsDropdown(size: number): TeamDtoApi[] {
+  //   return this.teamsDisplay.map((t) => t.team);
+  // }
 }

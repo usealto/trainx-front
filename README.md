@@ -33,7 +33,8 @@ Files will be placed in _dist/alto_
 
 ### Components
 
-The component demo page is here (http://localhost:4200/test)
+If you need to contribute, or simply check out some of our component, please refer to our Storybook. Follow this [link to our storybook](https://app-doc.usealto.com/)  
+Another way is to check out our (old) component demo page is here (http://localhost:4200/test)
 
 ### Packages
 
@@ -82,7 +83,38 @@ Merge `develop` branch into `admin`
 - Create a tag with '3.x.x' and push it
 - Create a pull request to `main` with title 'v3.x.x' and merge it
 
+# Contribute
+
+### Math
+
+- Per default, back-end send us scores in decimal nor in percentage (exemple: 0.88 instead of 88). Make sure to use directly percente pipe.
+- To get variation between percentages: we take only differences (exemple: 10% and 20%, the variation will be +10%).
+- To get variation between numbers: We use this formula: ( A - B) / A (exemple: (20 - 10) / 10 that give us +100% of variation).
+- We try to put maximum of calculations in the backend to provide any errors of "manual" calculations.
+- During testing, make sure all cases are tested and sounds good.
+- As much as you can, use score/stats services to help you.
+
 ## Hotfix
 
 - Create a commit on `main` with the hotfix
 - Make a 'git cherry pick' to bring the hot fix on `develop`
+
+## EMOJIS
+
+Demo page https://fluentemoji.com/
+
+You can access all names with the `enum EmojiName`
+
+```
+Figma => fluent-emoji:waving-hand
+
+EmojiName => EmojiName.WavingHand
+```
+
+You can use the `emoji` pipe to to transform the Enum to an SVG
+
+You then, have to set the height and width with CSS
+
+```
+  <img [src]="EmojiName.Gear | emoji" loading="lazy" />
+```

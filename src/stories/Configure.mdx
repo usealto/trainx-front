@@ -1,0 +1,116 @@
+import { Meta } from "@storybook/blocks";
+
+
+<Meta title="Alto doc" />
+
+<div className="sb-container">
+  <div className='sb-section-title'>
+ 
+    # Alto documentation
+ 
+
+    This documentation enables alto assessment team to share the behaviour of components used in <a href="https://usealto.com/">Alto Assessment application</a>.  
+    It's mainly used for hard to catch "edge cases".
+
+    ### Start
+    `npm run storybook`  
+    Then go to [http://localhost:6006/](http://localhost:6006/)
+
+    ### Quick tips
+    - Stories must have a title describing where it belongs in our app. It makes it easier to find our components  
+    So for a `ButtonGroup`, we specify `title: 'Shared/ButtonGroup'`
+    - Always add the property `tags: ['autodocs'],` in order to generate automatically the "Docs" file in the documentation
+ 
+    ### Learn
+    New to storybook, here are some useful links :
+  </div>
+  <div className="sb-section">
+    <div className="sb-section-item">
+      <p className="sb-section-item-heading">Add styling and CSS</p>
+      <a
+        href="https://storybook.js.org/docs/angular/configure/styling-and-css"
+        target="_blank"
+      >Learn more</a>
+    </div>
+    <div className="sb-section-item">
+      <p className="sb-section-item-heading">Provide context and mocking</p>
+      <a
+        href="https://storybook.js.org/docs/angular/writing-stories/decorators#context-for-mocking"
+        target="_blank"
+      >Learn more</a>
+    </div>
+    <div className="sb-section-item">
+      <p className="sb-section-item-heading">Figma Plugin</p>
+      <a
+        href="https://storybook.js.org/docs/angular/sharing/design-integrations#embed-storybook-in-figma-with-the-plugin"
+        target="_blank"
+      >Learn more</a>
+    </div>
+    <div className="sb-section-item">
+      <p className="sb-section-item-heading">Testing</p>
+      <a
+        href="https://storybook.js.org/docs/angular/writing-tests/introduction"
+        target="_blank"
+      >Learn more</a>
+    </div>
+  </div>
+</div>
+
+### FAQ
+- I cannot see anymore the "control panel", what do i do ?  
+Plesae delete your "storybook" localstorage, as mentionned [here](https://github.com/storybookjs/storybook/issues/12481)
+- JSdoc does not appear on Storybook ?   
+There is a known bug of storybook, we need to wait until it's fixed.  
+
+<style>
+  {`
+  .sb-container {
+    margin-bottom: 48px;
+  }
+
+  .sb-section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .sb-section-title {
+    margin-bottom: 5px;
+  }
+
+  .sb-section a:not(h1 a, h2 a, h3 a) {
+    font-size: 14px;
+  }
+
+  .sb-section-item, .sb-grid-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sb-section-item-heading {
+    padding-top: 0px !important;
+    padding-bottom: 5px !important;
+    margin: 0 !important;
+  }
+  
+  .sb-features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 32px 20px;
+  }
+
+
+  @media screen and (max-width: 600px) {
+    .sb-section {
+      flex-direction: column;
+    }
+
+    .sb-features-grid {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+  }
+  `}
+</style>

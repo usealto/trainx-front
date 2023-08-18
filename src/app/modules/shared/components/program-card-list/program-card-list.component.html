@@ -1,47 +1,43 @@
 <span [ngSwitch]="place">
-  <div class="row mb-4" *ngSwitchCase="'home'">
-    <div class="col-5"></div>
-    <div class="col-7 text-end">
-      <alto-dropdown-filter
-        class="text-start me-3"
-        [data]="teamStore.teams.value"
-        [displayLabel]="'shortName'"
-        [placeholder]="I18ns.programs.programs.filters.team"
-        (selectChange)="filterPrograms({ teams: $event })"
-        [isColored]="true"
-      ></alto-dropdown-filter>
-      <button
-        [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
-        class="btn btn-outline-secondary align-bottom"
-      >
-        {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
-      </button>
+  <ng-container *ngIf="!this.isActive">
+    <div class="row mb-5" *ngSwitchCase="'program'">
+      <div class="col-5">
+        <alto-search
+          data-cy="programSearch"
+          class="d-inline-block program-search"
+          (searchChange)="filterPrograms({ search: $event })"
+        ></alto-search>
+      </div>
+      <div class="col-7 text-end">
+        <alto-dropdown-filter
+          class="me-3 text-start"
+          data-cy="programTeamFilter"
+          [data]="teamStore.teams.value"
+          [displayLabel]="'shortName'"
+          [placeholder]="I18ns.programs.programs.filters.teams"
+          (selectChange)="filterPrograms({ teams: $event })"
+          [isColored]="true"
+        ></alto-dropdown-filter>
+        <alto-score-filter
+          class="me-3 text-start"
+          data-cy="filterByScore"
+          (selectChange)="filterPrograms({ score: $event })"
+        ></alto-score-filter>
+        <alto-progression-filter
+          class="text-start"
+          [disabled]="programs.length === 0"
+          [selectedItems]="[]"
+          (selectChange)="filterPrograms({ progress: $event })"
+        ></alto-progression-filter>
+      </div>
     </div>
-  </div>
-  <div class="row mb-4" *ngSwitchCase="'program'">
-    <div class="col-7">
-      <alto-dropdown-filter
-        [data]="teamStore.teams.value"
-        [displayLabel]="'shortName'"
-        [placeholder]="I18ns.programs.programs.filters.team"
-        (selectChange)="filterPrograms({ teams: $event })"
-        [isColored]="true"
-      ></alto-dropdown-filter>
-    </div>
-    <div class="col-5 text-end">
-      <alto-search
-        class="d-inline-block ms-3"
-        (searchChange)="filterPrograms({ search: $event })"
-      ></alto-search>
-    </div>
-  </div>
+  </ng-container>
   <div *ngSwitchDefault></div>
 </span>
 <ng-container *ngIf="programsDisplay.length > 0; else noPrograms">
   <div class="row mb-4">
     <div
-      [ngClass]="getCardWidth(width)"
-      class="mb-4"
+      class="mb-4 col-4"
       *ngFor="let prog of programsDisplay | slice : (page - 1) * pageSize : page * pageSize"
     >
       <alto-program-card
@@ -50,6 +46,7 @@
         [progress]="programsProgress.get(prog.id)"
         [participation]="programsInvolvement.get(prog.id)"
         [program]="prog"
+        [allTeamsCount]="teamStore.teams.value.length"
       ></alto-program-card>
     </div>
   </div>
@@ -67,9 +64,7 @@
 
 <alto-pagination
   [collectionSize]="count"
-  (pageChange)="loadScores($event)"
   [(page)]="page"
   [pageSize]="pageSize"
-  [maxSize]="10"
   aria-label="Default pagination"
 ></alto-pagination>

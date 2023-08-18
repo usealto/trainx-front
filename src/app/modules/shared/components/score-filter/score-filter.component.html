@@ -1,9 +1,10 @@
 <alto-dropdown-filter
-  class="d-inline-block me-3"
   displayLabel="name"
   returnValue="name"
   [data]="scoreFilters"
   [multiple]="false"
   [placeholder]="I18ns.leadTeam.members.filters.score"
+  [selectedItems]="selectedItems"
   (selectChange)="selectChange.emit($event)"
+  [disabled]="disabled"
 ></alto-dropdown-filter>

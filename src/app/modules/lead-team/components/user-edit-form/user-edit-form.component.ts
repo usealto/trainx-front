@@ -15,11 +15,14 @@ import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UserForm } from '../../model/user-edit.form';
 import { TeamsRestService } from '../../services/teams-rest.service';
+import { ToastService } from 'src/app/core/toast/toast.service';
+import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
 
 @Component({
   selector: 'alto-user-edit-form',
   templateUrl: './user-edit-form.component.html',
   styleUrls: ['./user-edit-form.component.scss'],
+  providers: [ReplaceInTranslationPipe],
 })
 export class UserEditFormComponent implements OnInit {
   I18ns = I18ns;
@@ -39,6 +42,8 @@ export class UserEditFormComponent implements OnInit {
     private readonly teamsRestService: TeamsRestService,
     private readonly userService: UsersRestService,
     private readonly profileStore: ProfileStore,
+    private readonly toastService: ToastService,
+    private replaceInTranslationPipe: ReplaceInTranslationPipe,
   ) {}
 
   ngOnInit(): void {
@@ -90,8 +95,16 @@ export class UserEditFormComponent implements OnInit {
         .patchUser(this.user?.id, params)
         .pipe(
           tap((user) => {
+            this.userService.resetUsers();
             this.editedUser.emit(user);
             this.activeOffcanvas.close();
+            this.toastService.show({
+              text: this.replaceInTranslationPipe.transform(
+                I18ns.settings.users.successEdit,
+                user.firstname + ' ' + user.lastname,
+              ),
+              type: 'success',
+            });
           }),
         )
         .subscribe();
