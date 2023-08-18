@@ -198,7 +198,7 @@
 
   <div class="mb-5">
     <div class="d-inline-block float-end">
-      <alto-score-filter (selectChange)="getQuestions({ score: $event })"></alto-score-filter>
+      <alto-score-filter (selectChange)="filterTags({ score: $event })"></alto-score-filter>
     </div>
     <div class="d-inline-block">
       <alto-search class="search" (searchChange)="filterTags({ search: $event })"></alto-search>

@@ -1,6 +1,6 @@
 <div class="header-panel mb-4 row align-items-center">
-  <img class="col-1" [src]="Emoji.WavingHand | emoji" height="48" />
-  <div class="col">
+  <img class="col-1 p-0" [src]="Emoji.WavingHand | emoji" height="48" width="48" />
+  <div class="col ps-0">
     <h1 class="mb-3">{{ I18ns.leadHome.title + (profileStore.user.value.firstname | titlecase) + '!' }}</h1>
     <p class="alto-grey fs-6b">{{ I18ns.leadHome.subtitle }}</p>
   </div>
@@ -99,7 +99,7 @@
         <div class="col ps-4">
           <p class="stats-title">{{ I18ns.leadHome.statistics.guessesCount }}</p>
           <div class="mt-2 row g-0">
-            <h2 class="mb-0 col">{{ guessCount + '/' + totalGuessCount }}</h2>
+            <h2 class="mb-0 col">{{ guessCount + '/' + expectedGuessCount }}</h2>
             <alto-progression-badge class="col-3" [score]="guessCountProgression"></alto-progression-badge>
           </div>
         </div>
@@ -155,7 +155,7 @@
     </div>
   </div>
 
-  <alto-program-card-list [place]="'home'"></alto-program-card-list>
+  <alto-program-card-list [place]="'home'" [isActive]="true"></alto-program-card-list>
 
   <!-- CHALLENGES -->
   <div class="row mt-6 mb-4" hidden>

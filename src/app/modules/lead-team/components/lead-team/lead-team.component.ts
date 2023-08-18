@@ -31,6 +31,7 @@ interface TeamDisplay extends TeamDtoApi {
   score?: number;
   totalGuessesCount?: number;
   validGuessesCount?: number;
+  questionsPushedCount?: number;
 }
 interface UserDisplay extends UserDtoApi {
   score?: number;
@@ -97,6 +98,7 @@ export class LeadTeamComponent implements OnInit {
             score: teamStat.score,
             totalGuessesCount: teamStat.totalGuessesCount,
             validGuessesCount: teamStat.validGuessesCount,
+            questionsPushedCount: teamStat.questionsPushedCount,
           }));
 
           this.users = usersStats.map((userStat) => userStat.user);
