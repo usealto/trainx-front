@@ -45,7 +45,6 @@ import { TrainingCardComponent } from './components/training-card/training-card.
 import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
-
 @NgModule({
   declarations: [
     ProgressionPillPipe,
@@ -62,7 +61,6 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     ProfileCardComponent,
     PeriodFilterComponent,
     DropzoneComponent,
-    CustomPaginationComponent,
     ProgramCardListComponent,
     TimePickerComponent,
     TeamColorPipe,
@@ -79,6 +77,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     DeleteModalComponent,
   ],
   imports: [
+    NgbdSortableHeaderDirective,
     CommonModule,
     TranslationModule,
     NgbNavModule,
@@ -127,7 +126,6 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     LoadingModule,
     NgbDatepickerModule,
     DropzoneComponent,
-    CustomPaginationComponent,
     TimePickerComponent,
     PaginationComponent,
     AutoResizeTextareaDirective,
