@@ -38,7 +38,7 @@ export class CreateProgramsComponent implements OnInit {
 
   questions!: QuestionDtoApi[];
   questionsDisplay: QuestionDisplay[] = [];
-  questionList: { id: string; delete: boolean, isNewQuestion: boolean }[] = [];
+  questionList: { id: string; delete: boolean; isNewQuestion: boolean }[] = [];
   questionPage = 1;
   questionPageSize = 10;
   questionsCount = 0;
@@ -237,6 +237,10 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   addOrRemoveQuestion(questionId: string, toDelete: any) {
+    this.questionList = this.questionList.filter((q) => q.id !== questionId);
+    if (!toDelete) {
+      this.questionList.push({ id: questionId, delete: toDelete, isNewQuestion: false });
+    }
     if (this.isEdit && this.editedProgram) {
       this.programRestService
         .addOrRemoveQuestion(this.editedProgram.id, questionId, toDelete)
@@ -248,11 +252,6 @@ export class CreateProgramsComponent implements OnInit {
           untilDestroyed(this),
         )
         .subscribe();
-    } else {
-      this.questionList = this.questionList.filter((q) => q.id !== questionId);
-      if (!toDelete) {
-        this.questionList.push({ id: questionId, delete: toDelete, isNewQuestion: false });
-      }
     }
   }
 
