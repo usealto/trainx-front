@@ -44,12 +44,12 @@
     </tbody>
   </table>
   <div class="px-2">
-    <alto-custom-pagination
+    <alto-pagination
       [(page)]="page"
       [collectionSize]="csvData.length"
       [pageSize]="pageSize"
       (pageChange)="refreshUsers()"
-    ></alto-custom-pagination>
+    ></alto-pagination>
   </div>
 </div>
 
