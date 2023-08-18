@@ -52,31 +52,32 @@
       formControlName="explanation"
       placeholder="{{ I18ns.questions.form.explanationPlaceholder }}"
     ></textarea>
-
-    <label class="form-label">{{ I18ns.questions.form.programs }}</label>
-    <ng-select
-      class="alto-form mb-4"
-      [items]="programs"
-      [multiple]="true"
-      bindLabel="name"
-      [placeholder]="I18ns.questions.form.programsPlaceholder"
-      [closeOnSelect]="false"
-      bindValue="id"
-      formControlName="programs"
-    >
-      <ng-template ng-label-tmp let-item="item" let-clear="clear">
-        <div class="alto-badge">
-          <span>{{ item.name }}</span>
-          <span class="cursor-pointer ms-2 align-middle" (click)="clear(item)" aria-hidden="true">
-            <i class="bi bi-x-lg"></i>
-          </span>
-        </div>
-      </ng-template>
-      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-        <span class="alto-badge">{{ item.name }}</span>
-        <i class="bi bi-check-circle-fill"></i>
-      </ng-template>
-    </ng-select>
+    <ng-container *ngIf="!isNewProgram">
+      <label class="form-label">{{ I18ns.questions.form.programs }}</label>
+      <ng-select
+        class="alto-form mb-4"
+        [items]="programs"
+        [multiple]="true"
+        bindLabel="name"
+        [placeholder]="I18ns.questions.form.programsPlaceholder"
+        [closeOnSelect]="false"
+        bindValue="id"
+        formControlName="programs"
+      >
+        <ng-template ng-label-tmp let-item="item" let-clear="clear">
+          <div class="alto-badge">
+            <span>{{ item.name }}</span>
+            <span class="cursor-pointer ms-2 align-middle" (click)="clear(item)" aria-hidden="true">
+              <i class="bi bi-x-lg"></i>
+            </span>
+          </div>
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+          <span class="alto-badge">{{ item.name }}</span>
+          <i class="bi bi-check-circle-fill"></i>
+        </ng-template>
+      </ng-select>
+    </ng-container>
 
     <label class="form-label required">{{ I18ns.questions.form.tags }}</label>
     <ng-select
