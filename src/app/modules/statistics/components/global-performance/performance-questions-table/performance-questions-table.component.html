@@ -3,7 +3,7 @@
     <alto-search (searchChange)="getQuestionsFiltered({ search: $event })"></alto-search>
   </div>
   <div class="col-8 text-end">
-    <alto-dropdown-filter
+    <!-- <alto-dropdown-filter
       class="text-start me-3"
       [data]="teamStore.teams.value"
       [displayLabel]="'longName'"
@@ -11,7 +11,7 @@
       [placeholder]="I18ns.programs.programs.filters.team"
       [isColored]="true"
       (selectChange)="getQuestionsFiltered({ teams: $event })"
-    ></alto-dropdown-filter>
+    ></alto-dropdown-filter> -->
     <alto-score-filter
       (selectChange)="getQuestionsFiltered({ score: $event })"
       class="text-start"
@@ -46,7 +46,9 @@
           {{ quest.question.title }}
         </td>
         <td class="text-center">
-          {{ quest.score | percent }}
+          <span class="alto-score" [class]="(quest.score || 0) * 100 | pillColor">{{
+            quest.score | percent
+          }}</span>
         </td>
         <td>
           <alto-progression-badge
@@ -72,6 +74,7 @@
             <alto-colored-pill-list
               [hasDynamicColor]="true"
               [limit]="3"
+              [textLimit]="15"
               [data]="quest.teams | sort : 'asc' : 'score' | slice : 0 : 6"
             ></alto-colored-pill-list>
           </ng-container>
