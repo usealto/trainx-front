@@ -11,6 +11,7 @@ describe('Lead Programs', () => {
     cy.get('[ng-reflect-router-link="l/programs"]').click();
     cy.wait(500);
     cy.get('[data-cy="createNewProgram"]').click();
+    cy.wait(500);
 
     // Create a new program
     cy.get('[data-cy="programName"]').clear();
@@ -24,7 +25,7 @@ describe('Lead Programs', () => {
 
     cy.get('[data-cy="programCreateNext"]').click();
 
-    cy.get('input[type="checkbox"]').eq(1).click();
+    cy.get('input[type="checkbox"]').first().click();
     // Create a new question
     cy.get('[data-cy="createNewQuestion"]').click();
     cy.get('[data-cy="questionCreateTitle"]').type(newQuestion);
