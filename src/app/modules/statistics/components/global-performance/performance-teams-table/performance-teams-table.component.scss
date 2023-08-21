@@ -6,4 +6,9 @@ alto-search {
 }
 tbody tr {
   font-size: 0.833rem;
+  .alto-badge {
+    @media screen and (max-width: 820px) {
+      max-width: 8.333rem;
+    }
+  }
 }
