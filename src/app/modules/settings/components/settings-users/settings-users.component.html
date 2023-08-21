@@ -31,7 +31,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of adminsDisplay" class="align-middle">
+          <tr *ngFor="let user of paginatedAdmins" class="align-middle">
             <td>
               <alto-profile-card [user]="user"></alto-profile-card>
             </td>
@@ -70,7 +70,7 @@
         class="mx-4 d-block"
         [collectionSize]="adminsCount"
         [(page)]="adminsPage"
-        (pageChange)="changeAdminsPage($event)"
+        (pageChange)="changeAdminsPage(adminsDisplay, $event)"
         [pageSize]="adminsPageSize"
       ></alto-pagination>
     </div>
@@ -106,7 +106,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let user of usersDisplay" class="align-middle">
+            <tr *ngFor="let user of paginatedUsers" class="align-middle">
               <td>
                 <alto-profile-card [user]="user"></alto-profile-card>
               </td>
@@ -150,7 +150,7 @@
           class="mx-4 d-block"
           [collectionSize]="usersCount"
           [(page)]="usersPage"
-          (pageChange)="changeUsersPage($event)"
+          (pageChange)="changeUsersPage(usersDisplay, $event)"
           [pageSize]="usersPageSize"
         ></alto-pagination>
       </div>
