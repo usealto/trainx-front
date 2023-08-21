@@ -14,6 +14,7 @@ import {
 import { TagForm } from '../../../models/tag.form';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
 import { TagsRestService } from '../../../services/tags-rest.service';
+import { ToastService } from 'src/app/core/toast/toast.service';
 
 @Component({
   selector: 'alto-tags-form',
@@ -43,6 +44,7 @@ export class TagsFormComponent implements OnInit {
     private readonly programService: ProgramsRestService,
     private readonly tagService: TagsRestService,
     readonly fob: UntypedFormBuilder,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -87,6 +89,12 @@ export class TagsFormComponent implements OnInit {
         .pipe(
           tap((tag) => this.createdTag.emit(tag)),
           tap(() => this.activeOffcanvas.dismiss()),
+          tap(() =>
+            this.toastService.show({
+              text: I18ns.tags.form.successCreate,
+              type: 'success',
+            }),
+          ),
         )
         .subscribe();
     } else {
@@ -99,6 +107,12 @@ export class TagsFormComponent implements OnInit {
         .pipe(
           tap((tag) => this.createdTag.emit(tag)),
           tap(() => this.activeOffcanvas.dismiss()),
+          tap(() =>
+            this.toastService.show({
+              text: I18ns.tags.form.successEdit,
+              type: 'success',
+            }),
+          ),
         )
         .subscribe();
     }
