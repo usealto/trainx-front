@@ -35,7 +35,10 @@
         ></i>
         <div class="mt-5">
           <h1 class="d-inline-block">{{ avgScore | percent }}</h1>
-          <alto-progression-badge class="float-end mt-2" [score]="avgScoreProgression"></alto-progression-badge>
+          <alto-progression-badge
+            class="float-end mt-2"
+            [score]="avgScoreProgression"
+          ></alto-progression-badge>
         </div>
       </div>
     </div>
@@ -66,7 +69,14 @@
           class="alto-grey bi bi-question-circle float-end"
           ngbTooltip="{{ I18ns.training.continuingTraining.panels.streakTooltip }}"
         ></i>
-        <h1 class="mt-4">{{ streak + ' ' + (I18ns.shared.days | plural : streak) }}</h1>
+        <ng-container *ngIf="streak; else currentStreakPlaceholder">
+          <h1 class="mt-4">{{ streak + ' ' + (I18ns.shared.days | plural : streak) }}</h1>
+        </ng-container>
+        <ng-template #currentStreakPlaceholder>
+          <p class="alto-grey mt-4">
+            {{ I18ns.training.continuingTraining.panels.currentStreakPlaceholder }}
+          </p>
+        </ng-template>
       </div>
     </div>
     <div class="col-6">
@@ -78,7 +88,14 @@
           class="alto-grey bi bi-question-circle float-end"
           ngbTooltip="{{ I18ns.training.continuingTraining.panels.bestStreakTooltip }}"
         ></i>
-        <h1 class="mt-4">{{ longestStreak + ' ' + (I18ns.shared.days | plural : longestStreak) }}</h1>
+        <ng-container *ngIf="longestStreak; else longestStreakPlaceholder">
+          <h1 class="mt-4">{{ longestStreak + ' ' + (I18ns.shared.days | plural : longestStreak) }}</h1>
+        </ng-container>
+        <ng-template #longestStreakPlaceholder>
+          <p class="alto-grey mt-4">
+            {{ I18ns.training.continuingTraining.panels.longestStreakPlaceholder }}
+          </p>
+        </ng-template>
       </div>
     </div>
   </div>
