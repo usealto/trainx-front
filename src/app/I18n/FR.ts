@@ -415,12 +415,14 @@ export const FR = {
       subtitle:
         "Indiquer le nom de votre nouveau tag ainsi que les programmes et questions auxquels vous souhaitez l'associer.",
       tagName: 'Nom du tag',
-      tagNamePlaceholder: 'Exemple: RGPD',
+      tagNamePlaceholder: 'Exemple: Règlement Général de Protection des Données (RGPD)',
       programs: 'Programmes',
       programsPlaceholder: 'Rechercher dans vos programmes',
       questions: 'Questions',
       questionsPlaceholder: 'Rechercher dans vos questions',
       description: 'Description',
+      successCreate: 'Le nouveau tag a bien été ajouté',
+      successEdit: 'Le tag a bien été modifié',
     },
     deleteModal: {
       title: 'Supprimer le tag "{{}}"',
