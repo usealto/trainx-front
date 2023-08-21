@@ -38,7 +38,7 @@ export class CreateProgramsComponent implements OnInit {
 
   questions!: QuestionDtoApi[];
   questionsDisplay: QuestionDisplay[] = [];
-  questionList: { id: string; delete: boolean }[] = [];
+  questionList: { id: string; delete: boolean; isNewQuestion: boolean }[] = [];
   questionPage = 1;
   questionPageSize = 10;
   questionsCount = 0;
@@ -159,6 +159,8 @@ export class CreateProgramsComponent implements OnInit {
     }
     if (this.isEdit && this.editedProgram) {
       canvasRef.componentInstance.program = this.editedProgram;
+    } else {
+      canvasRef.componentInstance.isNewProgram = true;
     }
     canvasRef.componentInstance.createdQuestion
       .pipe(
@@ -166,7 +168,7 @@ export class CreateProgramsComponent implements OnInit {
           //if it's a new question, add it to the list
           if (!isQuestionEdit) {
             this.questionList = this.questionList.filter((q) => q.id !== newQuestion.id);
-            this.questionList.push({ id: newQuestion.id, delete: false });
+            this.questionList.push({ id: newQuestion.id, delete: false, isNewQuestion: true });
           }
 
           // refresh the program
@@ -235,6 +237,10 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   addOrRemoveQuestion(questionId: string, toDelete: any) {
+    this.questionList = this.questionList.filter((q) => q.id !== questionId);
+    if (!toDelete) {
+      this.questionList.push({ id: questionId, delete: toDelete, isNewQuestion: false });
+    }
     if (this.isEdit && this.editedProgram) {
       this.programRestService
         .addOrRemoveQuestion(this.editedProgram.id, questionId, toDelete)
@@ -246,11 +252,6 @@ export class CreateProgramsComponent implements OnInit {
           untilDestroyed(this),
         )
         .subscribe();
-    } else {
-      this.questionList = this.questionList.filter((q) => q.id !== questionId);
-      if (!toDelete) {
-        this.questionList.push({ id: questionId, delete: toDelete });
-      }
     }
   }
 

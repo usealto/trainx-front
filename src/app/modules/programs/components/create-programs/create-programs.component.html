@@ -66,7 +66,10 @@
           data-cy="programCreateNext"
           [disabled]="programForm && !programForm.valid"
         >
-          {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
+          <div>
+            {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
+          </div>
+          <i class="bi bi-arrow-right-short fs-2"></i>
         </button>
       </div>
     </div>
@@ -79,7 +82,7 @@
     </div>
 
     <div class="text-center">
-      <!-- <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.new }}</p> -->
+      <!-- <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.newSubtitle }}</p> -->
       <button class="btn btn-primary mb-8" (click)="openQuestionForm()">
         <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
       </button>

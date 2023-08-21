@@ -3,7 +3,6 @@ import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   QuestionDtoApi,
-  QuestionDtoPaginatedResponseApi,
   QuestionSubmittedDtoApi,
   ScoreTypeEnumApi,
   ScoresResponseDtoApi,
@@ -36,6 +35,9 @@ import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
 interface TagDisplay extends TagDtoApi {
   score?: number;
 }
+interface QuestionDisplay extends QuestionDtoApi {
+  score?: number;
+}
 @UntilDestroy()
 @Component({
   selector: 'alto-programs',
@@ -51,8 +53,9 @@ export class ProgramsComponent implements OnInit {
   programsCount = 0;
   //
   questions: QuestionDtoApi[] = [];
+  paginatedQuestions!: QuestionDtoApi[];
   questionsPage = 1;
-  questionsCount?: number;
+  questionsCount = 0;
   questionsPageSize = 10;
   isQuestionsLoading = true;
   questionsScore = new Map<string, number>();
@@ -201,6 +204,7 @@ export class ProgramsComponent implements OnInit {
       score = this.questionFilters.score,
       search = this.questionFilters.search,
     }: QuestionFilters = this.questionFilters,
+    refreshPagination = false,
   ) {
     this.isQuestionsLoading = true;
 
@@ -210,27 +214,27 @@ export class ProgramsComponent implements OnInit {
     this.questionFilters.search = search;
 
     this.questionsService
-      .getQuestionsPaginated({
-        page: this.questionsPage,
-        itemsPerPage: this.questionsPageSize,
+      .getQuestions({
         programIds: programs?.join(','),
         tagIds: tags?.join(','),
         search,
       })
       .pipe(
         tap((questions) => {
-          this.questions = questions.data ?? [];
-          this.questionsCount = questions.meta.totalItems;
+          this.questions = questions;
+          this.questionsCount = questions.length;
+          if (refreshPagination) {
+            this.questionsPage = 1;
+          }
+          this.changeQuestionsPage(questions);
         }),
-        switchMap((questions) => this.getScoresfromQuestions(questions)),
-        map(() => this.questions?.map((q) => q.createdBy) ?? []),
+        switchMap((questions) => this.getScoresfromQuestions(questions.map((q) => q.id))),
+        map(() => this.questions.map((q) => q.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
         map((ids) => this.getUsersfromIds(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
         tap(() => {
-          if (this.questionFilters.score) {
-            this.filterByScore();
-          }
+          this.filterQuestionsByScore(this.questions as QuestionDisplay[], this.questionFilters.score);
           this.isQuestionsLoading = false;
         }),
         untilDestroyed(this),
@@ -238,12 +242,14 @@ export class ProgramsComponent implements OnInit {
       .subscribe();
   }
 
-  filterByScore() {
-    this.questions.forEach((q) => {
-      const score = this.getQuestionScore(q.id);
-      // TODO WHEN FILTERS ARE AVAILABLE ON STATS ROUTES
-    });
-    return;
+  filterQuestionsByScore(questions: QuestionDisplay[], score?: string) {
+    if (!score) return;
+
+    questions.forEach((question) => (question.score = this.getQuestionScore(question.id)));
+
+    questions = this.scoreService.filterByScore(questions, score as ScoreFilter, true);
+
+    this.changeQuestionsPage(questions);
   }
 
   getUsersfromIds(ids: string[]): UserDtoApi[] {
@@ -251,8 +257,7 @@ export class ProgramsComponent implements OnInit {
     return this.profileStore.users.value.filter((u) => filter.some((i) => i === u.id));
   }
 
-  getScoresfromQuestions(questions: QuestionDtoPaginatedResponseApi): Observable<ScoresResponseDtoApi> {
-    const ids = questions.data?.map((q) => q.id);
+  getScoresfromQuestions(ids: string[]): Observable<ScoresResponseDtoApi> {
     return this.scoresRestServices
       .getScores({
         type: ScoreTypeEnumApi.Question,
@@ -292,9 +297,12 @@ export class ProgramsComponent implements OnInit {
       );
   }
 
-  changeQuestionsPage(page: number) {
-    this.questionsPage = page;
-    this.getQuestions();
+  changeQuestionsPage(questions: QuestionDtoApi[]) {
+    this.questionsCount = questions.length;
+    this.paginatedQuestions = questions.slice(
+      (this.questionsPage - 1) * this.questionsPageSize,
+      this.questionsPage * this.questionsPageSize,
+    );
   }
 
   @memoize()

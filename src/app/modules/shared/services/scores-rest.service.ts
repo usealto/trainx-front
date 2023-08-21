@@ -23,6 +23,7 @@ import { Observable, filter, map } from 'rxjs';
 import { ChartFilters } from '../../shared/models/chart.model';
 import { ScoreDuration, ScoreFilters } from '../models/score.model';
 import { ScoresService } from './scores.service';
+import { addDays } from 'date-fns';
 
 @Injectable({
   providedIn: 'root',
@@ -51,6 +52,7 @@ export class ScoresRestService {
     } else {
       dateAfter = this.service.getStartDate(duration);
       dateBefore = new Date();
+      dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
 
     return this.statsApi
@@ -79,6 +81,7 @@ export class ScoresRestService {
     } else {
       dateAfter = this.service.getStartDate(duration);
       dateBefore = new Date();
+      dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
 
     return this.statsApi
@@ -105,6 +108,7 @@ export class ScoresRestService {
     } else {
       dateAfter = this.service.getStartDate(duration);
       dateBefore = new Date();
+      dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
 
     return this.statsApi
@@ -133,6 +137,7 @@ export class ScoresRestService {
     } else {
       dateAfter = this.service.getStartDate(duration);
       dateBefore = new Date();
+      dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
 
     return this.statsApi
@@ -152,6 +157,7 @@ export class ScoresRestService {
     } else {
       dateAfter = this.service.getStartDate(duration);
       dateBefore = new Date();
+      dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
 
     return this.statsApi
@@ -167,7 +173,7 @@ export class ScoresRestService {
       type: type ?? ScoreTypeEnumApi.Guess,
       timeframe: timeframe ?? ScoreTimeframeEnumApi.Day,
       dateAfter: this.service.getStartDate(duration as ScoreDuration),
-      dateBefore: new Date(),
+      dateBefore: addDays(new Date(), 1), //! TEMPORARY FIX to get data from actual day
       fillValues: ScoreFillValuesEnumApi.Null,
       sortBy,
     };

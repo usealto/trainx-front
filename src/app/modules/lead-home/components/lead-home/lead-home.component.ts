@@ -61,7 +61,7 @@ export class LeadHomeComponent implements OnInit {
   averageFinishedProgramsProgression = 0;
 
   guessCount = 0;
-  totalGuessCount = 0;
+  expectedGuessCount = 0;
   guessCountProgression = 0;
 
   commentsCount = 0;
@@ -71,7 +71,7 @@ export class LeadHomeComponent implements OnInit {
   //
   challengesByTeam: ChallengeDtoApi[] = [];
   challengesByUser: ChallengeDtoApi[] = [];
-
+  //
   teamsLeaderboard: { name: string; score: number }[] = [];
   usersLeaderboard: { name: string; score: number }[] = [];
   topflopLoaded = false;
@@ -283,16 +283,19 @@ export class LeadHomeComponent implements OnInit {
     combineLatest([
       this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration),
       this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration, true),
-      this.companiesRestService.getMyCompany(),
+      this.scoresRestService.getTeamsStats(duration),
     ])
       .pipe(
-        tap(([guesses, previousGuesses, company]) => {
+        tap(([guesses, previousGuesses, teamsStats]) => {
           this.guessCount = guesses.meta.totalItems;
           this.guessCountProgression =
             previousGuesses.meta.totalItems && guesses.meta.totalItems
               ? (guesses.meta.totalItems - previousGuesses.meta.totalItems) / previousGuesses.meta.totalItems
               : 0;
-          // console.log(company);
+          this.expectedGuessCount = teamsStats.reduce(
+            (acc, team) => acc + (team.questionsPushedCount ?? 0),
+            0,
+          );
         }),
       )
       .subscribe();

@@ -41,9 +41,9 @@ export const FR = {
       on: 'sur',
     },
     priorities: {
-      high: 'High',
-      medium: 'Medium',
-      low: 'Low',
+      high: 'Haute',
+      medium: 'Moyenne',
+      low: 'Basse',
     },
     status: {
       title: 'Status',
@@ -245,8 +245,8 @@ export const FR = {
         title: 'Informations',
         subtitle: 'Informations générales du programme.',
         name: 'Nom du programme',
-        nameSubtitle: 'Visible par tout le monde',
-        namePlaceholder: 'Onboarding',
+        nameSubtitle: 'Visible par tout le monde.',
+        namePlaceholder: 'Exemple: Onboarding',
         description: 'Description',
         descriptionSubtitle: 'Ecrivez une brève description du contenu du programme',
         descriptionPlaceholder:
@@ -485,16 +485,17 @@ export const FR = {
       shortTitle: 'Équipes',
       subtitle: "Retrouvez l'ensemble des équipes de votre entreprise.",
       table: {
-        name: 'Nom',
+        name: "Nom de l'équipe",
         initials: '',
         usersCount: 'Nombre de membres',
         noUsers: 'Aucun membre',
         users: ['Aucun', '{{}}', '{{}}'],
-        averageScore: 'Score moyen',
+        averageScore: 'Score moyen (30 derniers jours)',
         ativity: 'Activité  moyenne (30 derniers jours)',
         noScore: 'Aucun score',
         averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         creationDate: 'Date de création',
+        noActivity: 'Aucune activité',
       },
       form: {
         title: {
