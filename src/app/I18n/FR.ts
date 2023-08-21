@@ -832,6 +832,8 @@ export const FR = {
         frequency: 'Régularité',
         frequencyTooltip: '% de questions répondues sur le nombre de question envoyées',
         streak: 'Série en cours',
+        currentStreakPlaceholder: 'C’est le moment de tester vos connaissances',
+        longestStreakPlaceholder: 'Prêt(e) à relever le défi ? Lancez une session !',
         streakTooltip: "Nombre de jours consécutifs d'utilisation de l'application",
         bestStreak: 'Meilleure série',
         bestStreakTooltip: "Meilleure série de jours consécutifs d'utilisation de l'application",
