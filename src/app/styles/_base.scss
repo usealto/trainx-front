@@ -5,7 +5,19 @@
   --alto-panel-padding-x: 1.7rem;
   --alto-panel-padding-y: 1.4rem;
   --font-family: 'PlusJakartaSans', Arial;
-  --alto-page-padding: 3.333rem 3.5rem;
+  --alto-page-padding: 40px 42px;
+  @media screen and (min-width: 768px) {
+    --alto-page-padding: 40px 42px;
+  }
+  @media screen and (min-width: 992px) {
+    --alto-page-padding: 40px 82px;
+  }
+  @media screen and (min-width: 1200px) {
+    --alto-page-padding: 40px 42px;
+  }
+  @media screen and (min-width: 1400px) {
+    --alto-page-padding: 32px 52px;
+  }
 }
 
 body,
