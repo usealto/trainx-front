@@ -26,10 +26,12 @@ export class SettingsUsersComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
 
+  paginatedUsers: UserDtoApi[] = [];
   usersDisplay: UserDtoApi[] = [];
   usersPageSize = 5;
   usersPage = 1;
   usersCount = 0;
+  paginatedAdmins: UserDtoApi[] = [];
   adminsDisplay: UserDtoApi[] = [];
   adminsPageSize = 5;
   adminsPage = 1;
@@ -50,14 +52,11 @@ export class SettingsUsersComponent implements OnInit {
 
   getAdmins() {
     this.userRestService
-      .getUsersPaginated({
-        isCompanyAdmin: true,
-        page: this.adminsPage,
-        itemsPerPage: this.adminsPageSize,
-      })
+      .getUsersFiltered({ isCompanyAdmin: true })
       .pipe(
-        tap((users) => (this.adminsDisplay = users.data ?? [])),
-        tap((users) => (this.adminsCount = users.meta.totalItems)),
+        tap((users) => (this.adminsDisplay = users ?? [])),
+        tap((users) => (this.adminsCount = users.length)),
+        tap(() => this.changeAdminsPage(this.adminsDisplay, 1)),
         untilDestroyed(this),
       )
       .subscribe();
@@ -65,40 +64,48 @@ export class SettingsUsersComponent implements OnInit {
 
   getUsers() {
     this.userRestService
-      .getUsersPaginated({ isCompanyAdmin: false, page: this.usersPage, itemsPerPage: this.usersPageSize })
+      .getUsersFiltered({ isCompanyAdmin: false })
       .pipe(
-        tap((users) => (this.usersDisplay = users.data ?? [])),
-        tap((users) => (this.usersCount = users.meta.totalItems)),
+        tap((users) => (this.usersDisplay = users ?? [])),
+        tap((users) => (this.usersCount = users.length)),
+        tap(() => this.changeUsersPage(this.usersDisplay, 1)),
         untilDestroyed(this),
       )
       .subscribe();
   }
 
   filterAdmins({ search = this.userFilters.search }: UserFilters = this.userFilters) {
-    if (search) {
-      this.userRestService
-        .getUsersFiltered({ isCompanyAdmin: true })
-        .pipe(
-          tap((users) => (this.adminsDisplay = this.usersService.filterUsers(users, { search }))),
-          tap(() => (this.adminsCount = this.adminsDisplay.length)),
-        )
-        .subscribe();
-    } else {
-      this.getAdmins();
-    }
+    this.userRestService
+      .getUsersFiltered({ isCompanyAdmin: true })
+      .pipe(
+        tap((users) => {
+          const filteredUsers = this.usersService.filterUsers(users, { search });
+          this.adminsCount = filteredUsers.length;
+          this.adminsDisplay = filteredUsers;
+          this.changeAdminsPage(this.adminsDisplay, 1);
+          if (search === '') {
+            this.getAdmins();
+          }
+        }),
+      )
+      .subscribe();
   }
 
   filterUsers({ search = this.userFilters.search }: UserFilters = this.userFilters) {
-    if (search) {
-      this.userRestService
-        .getUsersFiltered({ isCompanyAdmin: false })
-        .pipe(
-          tap((users) => (this.usersDisplay = this.usersService.filterUsers(users, { search }))),
-          tap(() => (this.usersCount = this.usersDisplay.length)),
-        )
-        .subscribe();
-    }
-    this.getUsers();
+    this.userRestService
+      .getUsersFiltered({ isCompanyAdmin: false })
+      .pipe(
+        tap((users) => {
+          const filteredUsers = this.usersService.filterUsers(users, { search });
+          this.usersCount = filteredUsers.length;
+          this.usersDisplay = filteredUsers;
+          this.changeUsersPage(this.usersDisplay, 1);
+          if (search === '') {
+            this.getUsers();
+          }
+        }),
+      )
+      .subscribe();
   }
 
   deleteUser(user: UserDtoApi) {
@@ -124,13 +131,18 @@ export class SettingsUsersComponent implements OnInit {
       .subscribe();
   }
 
-  changeUsersPage(page: number): void {
-    this.getUsers();
+  changeUsersPage(users: UserDtoApi[], page: number): void {
+    this.usersPage = page;
+    this.paginatedUsers = this.usersDisplay.slice((page - 1) * this.usersPageSize, page * this.usersPageSize);
     return;
   }
 
-  changeAdminsPage(page: number): void {
-    this.getAdmins();
+  changeAdminsPage(admins: UserDtoApi[], page: number): void {
+    this.adminsPage = page;
+    this.paginatedAdmins = this.adminsDisplay.slice(
+      (page - 1) * this.adminsPageSize,
+      page * this.adminsPageSize,
+    );
     return;
   }
 

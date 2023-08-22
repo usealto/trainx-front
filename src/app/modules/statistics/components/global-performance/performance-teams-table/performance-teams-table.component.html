@@ -54,10 +54,12 @@
     <tbody>
       <tr *ngFor="let team of paginatedTeams" class="align-middle">
         <td>
-          {{ team.team.longName }}
+          <span class="alto-badge" [style]="team.team.id | teamColor">{{ team.team.longName }}</span>
         </td>
         <td class="text-center">
-          {{ team.score | percent }}
+          <span class="alto-score" [class]="(team.score || 0) * 100 | pillColor">{{
+            team.score | percent
+          }}</span>
         </td>
         <td class="text-center">
           <alto-progression-badge
@@ -73,6 +75,7 @@
 
           <ng-container *ngIf="team.programs">
             <alto-colored-pill-list
+              [textLimit]="15"
               [data]="team.programs || [] | sort : 'asc' : 'score' | slice : 0 : 3"
             ></alto-colored-pill-list>
           </ng-container>
@@ -84,6 +87,7 @@
 
           <ng-container *ngIf="team.tags">
             <alto-colored-pill-list
+              [textLimit]="15"
               [data]="team.tags | sort : 'asc' : 'score' | slice : 0 : 3"
             ></alto-colored-pill-list>
           </ng-container>

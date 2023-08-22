@@ -62,6 +62,15 @@ hr {
   border-top: 1px solid var(--gray-300);
 }
 
+@media screen and (max-width: 820px) {
+  h1 {
+    font-size: 1.167rem;
+  }
+  h2 {
+    font-size: 1rem;
+  }
+}
+
 // --- UTILITIES
 
 .link {
