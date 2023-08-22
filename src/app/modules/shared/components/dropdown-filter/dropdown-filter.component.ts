@@ -23,4 +23,8 @@ export class DropdownFilterComponent {
   search(a: NgSelectComponent, b: any) {
     a.filter(b.target.value);
   }
+
+  isSelected(item: any) {
+    return this.selectedItems.find((selectedItem) => selectedItem.id === item.id);
+  }
 }

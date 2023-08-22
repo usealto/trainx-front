@@ -10,6 +10,7 @@
   [searchable]="false"
   (change)="selectChange.emit(selectedItems)"
   [class]="position"
+  appendTo="body"
   #select
 >
   <ng-template ng-header-tmp>
@@ -36,6 +37,6 @@
     >
       {{ item[displayLabel] }}
     </span>
-    <i class="bi bi-check-circle-fill"></i>
+    <i class="bi bi-check-circle-fill" *ngIf="selectedItems.includes(item) || isSelected(item)"></i>
   </ng-template>
 </ng-select>
