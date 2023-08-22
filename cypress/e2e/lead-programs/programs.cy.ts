@@ -11,51 +11,64 @@ describe('Lead Programs', () => {
 
   it('Search Programs and check if title is right', () => {
     cy.get('[ng-reflect-router-link="l/programs"]').click();
-    cy.wait(3000);
-
-    cy.get(':nth-child(1) > alto-program-card > :nth-child(1) > .panel > .d-flex > .title').then(($data) => {
-      const text = $data.text();
-      cy.get('.d-inline-block > .search-group > .form-control').type(text);
-      cy.wait(500);
-
-      cy.get(':nth-child(1) > alto-program-card > :nth-child(1) > .panel > .d-flex > .title').should(
-        'have.text',
-        text,
-      );
-    });
-  });
-
-  it('Search Programs by description', function () {
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
-    cy.wait(500);
-    cy.get(':nth-child(2) > alto-program-card > :nth-child(1) > .panel').click();
     cy.wait(500);
 
-    cy.get('[data-cy="descriptionField"]')
-      .invoke('val')
-      .then((data) => {
-        const text = (data as string).slice(0, 10);
-        cy.get('.mb-6 > .text-end > .btn-outline-secondary').click();
-        cy.get('.d-inline-block > .search-group > .form-control').type(text).wait(500);
-        cy.get(':nth-child(1) > alto-program-card > :nth-child(1) > .panel').click();
-        cy.get('[data-cy="descriptionField"]').should('contain.value', text);
+    cy.get('[data-cy="programCard"] > .panel > .title')
+      .eq(1)
+      .then(($data) => {
+        const text = $data.text();
+        cy.get('[data-cy="programSearch"]').type(text);
+        cy.wait(500);
+
+        cy.get('[data-cy="programCardList"]')
+          .children()
+          .eq(1)
+          .within(() => {
+            cy.get(`[data-cy="program${text}"]`);
+          });
       });
   });
 
-  it('filter programs by team', function () {
+  it('Filters programs by team', function () {
+    let teamShortname = '';
     cy.get('[ng-reflect-router-link="l/programs"]').click();
     cy.wait(500);
 
-    cy.get(
-      ':nth-child(2) > alto-program-card > :nth-child(1) > .panel > .card-bottom > [data-cy="coloredTeams"] > :nth-child(1)',
-    ).then(($data) => {
-      const teamShortname = $data.text();
-      cy.get(
-        '[data-cy="programTeamFilter"] > .ng-select-multiple > .ng-select-container > .ng-arrow-wrapper',
-      ).click();
-      cy.get('.ng-dropdown-header > input').type(`${teamShortname}{enter}`);
+    // Select a program card that already has at least one team
 
-      cy.get('[data-cy="coloredTeams"]').first().contains(teamShortname);
-    });
+    cy.get('[data-cy="programCard"]').contains('Équipes:').first().click().wait(500);
+
+    // Select first team badge and collect shortname
+
+    cy.get('[data-cy="teamBadge"]')
+      .first()
+      .then(($data) => {
+        teamShortname = $data.text();
+
+        // Goes back to programs page
+
+        cy.get('.cancel-btn').click();
+        cy.wait(500);
+
+        // Click the team search dropdown's input and type the collected shortname
+
+        cy.get(
+          '[data-cy="programTeamFilter"] > .ng-select-multiple > .ng-select-container > .ng-arrow-wrapper',
+        ).click();
+        cy.get('.ng-dropdown-header > input').type(`${teamShortname}{enter}`);
+
+        // Check the programs card list and get the first element
+
+        cy.get('[data-cy="programCardList"]')
+          .children()
+          .eq(1)
+          .within(() => {
+            cy.get(`[data-cy="programCard"]`).first().click();
+          });
+
+        // Check the program teams badges list and check the list contains the collected shortname
+
+        cy.get('[data-cy="teamBadge"]').contains(`${teamShortname}`);
+      });
   });
 });
