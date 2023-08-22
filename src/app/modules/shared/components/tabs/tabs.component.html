@@ -8,7 +8,7 @@
     autocomplete="off"
     [checked]="i === 0"
   />
-  <label class="alto-tab-btn" [for]="'btnradio' + getId(i + ID)">
+  <label data-cy="selectedTab" class="alto-tab-btn" [for]="'btnradio' + getId(i + ID)">
     {{ item.label }}
   </label>
 </ng-container>

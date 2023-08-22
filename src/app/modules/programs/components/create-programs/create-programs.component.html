@@ -5,6 +5,7 @@
 
 <div class="mt-4 form-nav">
   <div
+    data-cy="informationsTab"
     class="step"
     [ngClass]="{
       'cursor-pointer': isEdit,
@@ -17,6 +18,7 @@
   </div>
   <div
     class="step"
+    data-cy="questionsTab"
     [ngClass]="{
       'cursor-pointer': isEdit,
       'highlight-step': currentStep === 2
