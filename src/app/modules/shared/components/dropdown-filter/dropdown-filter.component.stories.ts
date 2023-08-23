@@ -1,10 +1,11 @@
-import { type Meta, type StoryObj } from '@storybook/angular';
+import { componentWrapperDecorator, type Meta, type StoryObj } from '@storybook/angular';
 import { DropdownFilterComponent } from './dropdown-filter.component';
 
 const meta: Meta<DropdownFilterComponent> = {
   title: 'Shared/DropdownFilter',
   component: DropdownFilterComponent,
   tags: ['autodocs'],
+  decorators: [componentWrapperDecorator((story) => `<div style="height: 20rem">${story}</div>`)],
   render: (args: DropdownFilterComponent) => ({
     props: {
       ...args,
@@ -23,6 +24,8 @@ export const DropdownFilter: Story = {
       { id: '9DAA38asdfr4', name: 'team 3' },
       { id: 'AEE123qsd', name: 'team 4' },
     ],
+    isColored: true,
+    multiple: false,
   },
 };
 

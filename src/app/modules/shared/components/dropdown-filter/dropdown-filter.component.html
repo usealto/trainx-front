@@ -10,7 +10,7 @@
   [searchable]="false"
   (change)="selectChange.emit(selectedItems)"
   [class]="position"
-  appendTo="body"
+  [appendTo]="appendTo"
   #select
 >
   <ng-template ng-header-tmp>

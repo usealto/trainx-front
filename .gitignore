@@ -43,3 +43,5 @@ Thumbs.db
 cypress.env.json
 cypress/screenshots
 cypress/videos
+
+documentation.json

@@ -10,5 +10,6 @@ const config: StorybookConfig = {
   docs: {
     autodocs: 'tag',
   },
+  features: {},
 };
 export default config;

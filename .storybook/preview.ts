@@ -4,6 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { applicationConfig, moduleMetadata, type Preview } from '@storybook/angular';
 import { SharedModule } from 'src/app/modules/shared/shared.module';
 import '@angular/localize/init';
+import docJson from '../documentation.json';
+import { setCompodocJson } from '@storybook/addon-docs/angular';
+
+setCompodocJson(docJson);
 
 const decorators = [
   moduleMetadata({
