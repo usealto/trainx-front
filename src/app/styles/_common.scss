@@ -18,24 +18,6 @@
   color: red;
 }
 
-input[type='text'].form-control {
-  height: 3.167rem;
-  color: var(--gray-900);
-}
-
-textarea.form-control {
-  color: var(--gray-900);
-}
-
-input[type='text'].form-control:focus {
-  height: 3.167rem;
-  color: var(--gray-900);
-}
-
-textarea.form-control:focus {
-  color: var(--gray-900);
-}
-
 .alto-badge-no-size {
   display: inline-block;
   border-radius: 25px;
@@ -72,7 +54,7 @@ textarea.form-control:focus {
   width: 2.667rem;
   line-height: 2.667rem;
   font-size: 2rem;
-  color: var(--alto-blue);
+  color: var(--gray-900);
   background-color: var(--alto-medium-grey);
 }
 .alto-badge-blue {

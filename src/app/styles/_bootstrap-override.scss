@@ -5,6 +5,27 @@
 .form-control {
   background: #fff;
 }
+input[type='text'].form-control {
+  height: 3.167rem;
+  color: var(--gray-900);
+}
+
+textarea.form-control {
+  color: var(--gray-900);
+}
+
+input[type='text'].form-control:focus {
+  height: 3.167rem;
+  color: var(--gray-900);
+}
+
+textarea.form-control:focus {
+  color: var(--gray-900);
+}
+
+.form-control::placeholder {
+  color: var(--gray-500);
+}
 
 .btn {
   --bs-btn-border-radius: 24px;
@@ -29,7 +50,7 @@
 .offcanvas {
   --bs-offcanvas-width: 520px;
   --bs-offcanvas-border-width: 0;
-  --bs-offcanvas-color: var(--alto-text-color);
+  --bs-offcanvas-color: var(--gray-900);
   --bs-offcanvas-bg: white;
 }
 
