@@ -6,12 +6,31 @@ describe('L/Programs Questions Tab', () => {
     cy.get('[ng-reflect-router-link="l/programs"]').click();
   });
 
-  it('search questions by word', () => {
-    cy.get('#questionsAnchor').should('have.text', 'Questions');
+  let questionTitle = '';
 
-    cy.get('[data-cy="questionsSearchFilter"]').click().type('chocolatine{enter}');
-    /* ==== Generated with Cypress Studio ==== */
-    cy.get('.w-40').contains('Chocolatine');
-    /* ==== End Cypress Studio ==== */
+  it('Collects an existing question', () => {
+    cy.get('[data-cy="programCard"]').first().click().wait(500);
+
+    cy.get('[data-cy="questionsTab"]').click();
+    cy.get('[data-cy="questionTitle"]')
+      .last()
+      .then(($data) => {
+        questionTitle = $data.text();
+      });
+  });
+
+  it('Searches the collected question by its title', () => {
+    cy.get('[data-cy="selectedTab"]').eq(1).click();
+
+    cy.get('[data-cy="searchFilter"]').type(`${questionTitle}{enter}`);
+
+    cy.wait(500);
+
+    cy.get('[data-cy="questionsList"]')
+      .first()
+      .then(($data) => {
+        const text = $data.text();
+        expect(text.trim()).to.equal(questionTitle);
+      });
   });
 });

@@ -90,11 +90,7 @@
       <alto-score-filter (selectChange)="getQuestions({ score: $event }, true)"></alto-score-filter>
     </div>
     <div class="d-inline-block">
-      <alto-search
-        class="search"
-        data-cy="questionsSearchFilter"
-        (searchChange)="getQuestions({ search: $event }, true)"
-      ></alto-search>
+      <alto-search class="search" (searchChange)="getQuestions({ search: $event }, true)"></alto-search>
     </div>
   </div>
   <ng-container *ngIf="paginatedQuestions.length > 0; else noQuestions">
@@ -114,7 +110,7 @@
         <tbody [style.height]="53 * paginatedQuestions.length + 'px'">
           <ng-container *ngIf="!isQuestionsLoading">
             <tr *ngFor="let question of paginatedQuestions">
-              <td class="text-black">
+              <td class="text-black" data-cy="questionsList">
                 {{ question.title }}
               </td>
               <td class="w-10 text-center">
