@@ -131,7 +131,7 @@
                 <td>-</td>
               </ng-template>
 
-              <td *ngIf="question.programs && question.programs.length > 0">
+              <td data-cy="questionPrograms" *ngIf="question.programs && question.programs.length > 0">
                 <alto-colored-pill-list [data]="question.programs" [limit]="2"></alto-colored-pill-list>
               </td>
               <td *ngIf="!question.programs || question.programs.length < 1">-</td>
