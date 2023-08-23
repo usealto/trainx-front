@@ -66,7 +66,7 @@
       >
         <ng-template ng-label-tmp let-item="item" let-clear="clear">
           <div class="alto-badge">
-            <span>{{ item.name }}</span>
+            <span data-cy="programsNames">{{ item.name }}</span>
             <span class="cursor-pointer ms-2 align-middle" (click)="clear(item)" aria-hidden="true">
               <i class="bi bi-x-lg"></i>
             </span>

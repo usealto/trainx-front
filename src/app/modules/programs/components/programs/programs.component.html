@@ -106,8 +106,8 @@
             <th scope="col" class="w-10 text-center">
               {{ headers.score }}
             </th>
-            <th scope="col" class="w-30" data-cy="questionsTableTagCol">{{ headers.tags }}</th>
-            <th scope="col" class="w-30" data-cy="questionsTableProgramCol">{{ headers.programs }}</th>
+            <th scope="col" class="w-30">{{ headers.tags }}</th>
+            <th scope="col" class="w-30">{{ headers.programs }}</th>
             <th class="w-20"></th>
           </tr>
         </thead>
@@ -131,7 +131,7 @@
                 <td>-</td>
               </ng-template>
 
-              <td data-cy="questionPrograms" *ngIf="question.programs && question.programs.length > 0">
+              <td *ngIf="question.programs && question.programs.length > 0">
                 <alto-colored-pill-list [data]="question.programs" [limit]="2"></alto-colored-pill-list>
               </td>
               <td *ngIf="!question.programs || question.programs.length < 1">-</td>
@@ -141,7 +141,11 @@
                   class="cursor-pointer fs-4 bi bi-trash3 me-4"
                   (click)="deleteQuestion(question)"
                 ></i>
-                <i class="cursor-pointer fs-4 bi bi-pencil" (click)="openQuestionForm(question)"></i>
+                <i
+                  data-cy="questionEditPen"
+                  class="cursor-pointer fs-4 bi bi-pencil"
+                  (click)="openQuestionForm(question)"
+                ></i>
               </td>
             </tr>
           </ng-container>
