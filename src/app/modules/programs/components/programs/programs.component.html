@@ -120,7 +120,11 @@
               </td>
               <ng-container *ngIf="question.tags && question.tags.length > 0; else elseQuestionTag">
                 <td>
-                  <alto-colored-pill-list [data]="question.tags" [limit]="3"></alto-colored-pill-list>
+                  <alto-colored-pill-list
+                    data-cy="questionsTagsList"
+                    [data]="question.tags"
+                    [limit]="3"
+                  ></alto-colored-pill-list>
                 </td>
               </ng-container>
               <ng-template #elseQuestionTag>

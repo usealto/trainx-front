@@ -4,18 +4,36 @@ describe('L/Programs Questions Tab', () => {
     cy.visit('/');
 
     cy.get('[ng-reflect-router-link="l/programs"]').click();
+    cy.get('[data-cy="selectedTab"]').eq(1).click();
   });
 
-  it('filter questions by tag', () => {
-    cy.get('#questionsAnchor').should('have.text', 'Questions');
+  let tagRealName = '';
+  let tagTruncName = '';
 
+  it('Collects a tag name', () => {
+    cy.get('[data-cy="questionsTagsList"]')
+      .last()
+      .children()
+      .then(($data) => {
+        tagRealName = $data.text();
+        tagTruncName = $data.text().slice(0, -3);
+      });
+  });
+
+  it('Filters questions by collected tag', () => {
     cy.get('[data-cy="questionsTagFilter"]').click();
-    /* ==== Generated with Cypress Studio ==== */
-    cy.get('.ng-dropdown-header > input').clear();
-    cy.get('.ng-dropdown-header > input').type('cypress{enter}');
 
-    cy.get('[data-cy="questionsTableTagCol"]').should('have.text', 'Tags');
-    cy.get(':nth-child(3) > alto-colored-pill-list > .alto-badge').should('have.text', 'Cypress Tag');
-    /* ==== End Cypress Studio ==== */
+    cy.get('.ng-dropdown-header > input').clear();
+    cy.get('.ng-dropdown-header > input').type(`${tagTruncName}{enter}`);
+
+    cy.wait(500);
+
+    cy.get('[data-cy="questionsTagsList"]')
+      .first()
+      .children()
+      .then(($data) => {
+        const text = $data.text();
+        expect(text.trim()).to.equal(tagRealName);
+      });
   });
 });
