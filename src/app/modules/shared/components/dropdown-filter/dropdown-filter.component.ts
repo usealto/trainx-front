@@ -16,11 +16,16 @@ export class DropdownFilterComponent {
   @Input() selectedItems: any[] = [];
   @Input() position: DropdownPosition = 'auto';
   @Input() ngClass: string | any;
+  @Input() appendTo = '';
   @Input() disabled: boolean | any;
 
   @Output() selectChange = new EventEmitter<any>();
 
   search(a: NgSelectComponent, b: any) {
     a.filter(b.target.value);
+  }
+
+  isSelected(item: any) {
+    return this.selectedItems.find((selectedItem) => selectedItem.id === item.id);
   }
 }
