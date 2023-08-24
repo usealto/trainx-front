@@ -71,12 +71,13 @@ export const FR = {
     noCompany: {
       title: "Oops ! Nous n'avons pas trouvé votre entreprise.",
       subtitle:
-        'Une erreur s’est produite, et pour y remédier, il faudrait vous rapprocher de votre entreprise.',
+        'Une erreur s’est produite. Contactez-nous et nous ferons notre maximum pour régler la situation.',
+      button: 'Envoyer un mail à Alto',
     },
     noTeams: {
       title: "Oops ! Nous n'avons pas trouvé votre équipe.",
-      subtitle:
-        'Une erreur s’est produite, et pour y remédier, il faudrait vous rapprocher de votre entreprise.',
+      subtitle: 'S’il s’agit d’une erreur, informez-en votre administrateur directement.',
+      button: 'Envoyer un mail à mon administrateur',
     },
   },
   leadHome: {
