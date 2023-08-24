@@ -71,7 +71,7 @@ export class LeadHomeComponent implements OnInit {
   //
   challengesByTeam: ChallengeDtoApi[] = [];
   challengesByUser: ChallengeDtoApi[] = [];
-
+  //
   teamsLeaderboard: { name: string; score: number }[] = [];
   usersLeaderboard: { name: string; score: number }[] = [];
   topflopLoaded = false;

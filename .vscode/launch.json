@@ -18,6 +18,22 @@
       }
     },
     {
+      "name": "Storybook",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:6006/",
+      "preLaunchTask": "npm: storybook",
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:/*": "${webRoot}/*",
+        "/./*": "${webRoot}/*",
+        "/src/*": "${webRoot}/src/*",
+        "/*": "*",
+        "/./~/*": "${workspaceFolder}/node_modules/*"
+      }
+    },
+    {
       "name": "ng test",
       "type": "chrome",
       "request": "launch",

@@ -5,14 +5,26 @@
   --alto-panel-padding-x: 1.7rem;
   --alto-panel-padding-y: 1.4rem;
   --font-family: 'PlusJakartaSans', Arial;
-  --alto-page-padding: 3.333rem 3.5rem;
+  --alto-page-padding: 40px 42px;
+  @media screen and (min-width: 768px) {
+    --alto-page-padding: 40px 42px;
+  }
+  @media screen and (min-width: 992px) {
+    --alto-page-padding: 40px 82px;
+  }
+  @media screen and (min-width: 1200px) {
+    --alto-page-padding: 40px 42px;
+  }
+  @media screen and (min-width: 1400px) {
+    --alto-page-padding: 32px 52px;
+  }
 }
 
 body,
 html {
   --bs-body-font-size: 12px;
   font-family: var(--font-family);
-  color: var(--alto-text-color);
+  color: var(--gray-900);
 }
 
 @media screen and (min-width: 1900px) {
@@ -38,7 +50,7 @@ p {
 
 a {
   text-decoration: none;
-  color: var(--alto-blue);
+  color: var(--gray-900);
 }
 p {
   margin: 0;
@@ -60,6 +72,15 @@ h3 {
 }
 hr {
   border-top: 1px solid var(--gray-300);
+}
+
+@media screen and (max-width: 820px) {
+  h1 {
+    font-size: 1.167rem;
+  }
+  h2 {
+    font-size: 1rem;
+  }
 }
 
 // --- UTILITIES

@@ -1,6 +1,9 @@
 label {
   font-weight: 600;
 }
+hr {
+  border-color: var(--bs-gray-300);
+}
 .form-control {
   margin-bottom: 1.143rem;
 }
@@ -9,12 +12,21 @@ label {
   margin-bottom: 0.667rem;
 }
 
-.input-group {
+.input-group,
+.input-group .form-control {
   height: 3.167rem;
+  font-size: 0.833rem;
+}
+
+.input-group-text {
+  color: var(--gray-900);
+  background-color: var(--gray-200);
+  padding: 0.5rem 1rem;
 }
 
 .sidebar-body {
   overflow: auto;
+  margin-bottom: 80px;
 }
 .footer {
   background-color: white;
@@ -26,9 +38,6 @@ label {
   .button-container {
     padding: 1.333rem 2.667rem;
     height: 6.083rem;
-    & > * {
-      font-size: 1.167rem;
-    }
   }
 }
 .add-field {

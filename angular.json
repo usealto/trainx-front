@@ -25,18 +25,11 @@
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/assets/favicon.ico",
-              "src/assets/img"
-            ],
-            "styles": [
-              "src/app/styles/styles.scss"
-            ],
+            "assets": ["src/assets/favicon.ico", "src/assets/img"],
+            "styles": ["src/app/styles/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -159,19 +152,11 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/assets/favicon.ico",
-              "src/assets/img"
-            ],
-            "styles": [
-              "src/app/styles/styles.scss"
-            ],
+            "assets": ["src/assets/favicon.ico", "src/assets/img"],
+            "styles": ["src/app/styles/styles.scss"],
             "scripts": [],
             "karmaConfig": "karma.conf.js"
           }
@@ -179,10 +164,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         },
         "cypress-run": {
@@ -235,7 +217,16 @@
           "options": {
             "configDir": ".storybook",
             "browserTarget": "assessment-front:build",
-            "compodoc": false,
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              ".",
+              "--disableLifeCycleHooks",
+              "--disableRoutesGraph",
+              "--disableGraph"
+            ],
             "port": 6006
           }
         },
@@ -244,7 +235,16 @@
           "options": {
             "configDir": ".storybook",
             "browserTarget": "assessment-front:build",
-            "compodoc": false,
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              ".",
+              "--disableLifeCycleHooks",
+              "--disableRoutesGraph",
+              "--disableGraph"
+            ],
             "outputDir": "storybook-static"
           }
         }
@@ -252,10 +252,7 @@
     }
   },
   "cli": {
-    "schematicCollections": [
-      "@angular-eslint/schematics",
-      "@schematics/angular"
-    ],
+    "schematicCollections": ["@angular-eslint/schematics", "@schematics/angular"],
     "analytics": false
   }
 }
