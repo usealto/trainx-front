@@ -6,15 +6,17 @@
   height: 93vh;
 }
 
-h1 {
-  font-size: 2rem;
-}
-
-p {
-  width: 44.8rem;
-  font-size: 1.16667rem;
-}
-
 .background-img {
   opacity: 0.1;
+  height: 75%;
+}
+.text-404 {
+  margin-top: -3rem;
+  h1 {
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  .btn span {
+    font-size: 1rem;
+  }
 }
