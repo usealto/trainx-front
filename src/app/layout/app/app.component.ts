@@ -5,13 +5,4 @@ import { Component } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  constructor() {
-    // Clean Up Bubble stuff
-    const test = localStorage.getItem('_codeVersion');
-    if (test) {
-      localStorage.clear();
-      window.location.reload();
-    }
-  }
-}
+export class AppComponent {}
