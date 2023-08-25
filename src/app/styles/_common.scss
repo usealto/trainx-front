@@ -68,6 +68,13 @@
   background-color: #fee4e2;
 }
 
+.ellipsis-badge {
+  max-width: 6rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .subtitles {
   color: var(--alto-text-second-color);
 }
