@@ -386,7 +386,8 @@ export const FR = {
       namePlaceholder: 'Exemple : Quel est notre principal concurrent sur le marché des PMEs ?',
       goodAnswer: 'Bonne(s) réponse(s)',
       addGoodAnswer: 'Ajouter une autre bonne réponse',
-      answerPlaceholder: 'Réponse',
+      goodAnswerPlaceholder: 'Écrire une bonne réponse',
+      badAnswerPlaceholder: 'Écrire une mauvaise réponse',
       badAnswer: 'Mauvaise(s) réponse(s)',
       badAnswerSubtitle: 'Minimum 1 mauvaise réponse.',
       addBadAnswer: 'Ajouter une autre mauvaise réponse',
@@ -400,6 +401,8 @@ export const FR = {
       link: 'Lien utile',
       linkPlaceholder: 'Lien vers une ressource utile',
       remainingCharacters: 'caractères restants',
+      createSuccess: 'La question a bien été ajoutée',
+      editSuccess: 'La question a bien été modifiée',
     },
     deleteModal: {
       title: 'Supprimer la question "{{}}"',

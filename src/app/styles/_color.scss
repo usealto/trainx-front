@@ -225,6 +225,11 @@
   background-color: var(--error-50);
   color: var(--error-600);
 }
+.pill-outline {
+  background-color: white;
+  border: 1px solid var(--gray-200);
+  color: var(--gray-700);
+}
 
 .alto-green {
   color: var(--success-600);

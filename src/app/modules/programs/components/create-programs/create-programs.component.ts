@@ -4,11 +4,17 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { PriorityEnumApi, ProgramDtoApi, QuestionDtoApi, TeamApi } from '@usealto/sdk-ts-angular';
-import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
+import {
+  PriorityEnumApi,
+  ProgramDtoApi,
+  ProgramDtoApiPriorityEnumApi,
+  QuestionDtoApi,
+  TeamApi,
+} from '@usealto/sdk-ts-angular';
+import { Observable, combineLatest, delay, filter, map, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { I18ns, getTranslation } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
@@ -18,6 +24,7 @@ import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 @UntilDestroy()
 @Component({
@@ -157,11 +164,13 @@ export class CreateProgramsComponent implements OnInit {
       canvasRef.componentInstance.question = this.questions.find((q) => q.id === question?.id);
       isQuestionEdit = true;
     }
+
     if (this.isEdit && this.editedProgram) {
       canvasRef.componentInstance.program = this.editedProgram;
     } else {
       canvasRef.componentInstance.isNewProgram = true;
     }
+
     canvasRef.componentInstance.createdQuestion
       .pipe(
         tap((newQuestion: QuestionDtoApi) => {
@@ -169,6 +178,9 @@ export class CreateProgramsComponent implements OnInit {
           if (!isQuestionEdit) {
             this.questionList = this.questionList.filter((q) => q.id !== newQuestion.id);
             this.questionList.push({ id: newQuestion.id, delete: false, isNewQuestion: true });
+
+            // We keep the form open after question's creation
+            this.openQuestionForm();
           }
 
           // refresh the program
@@ -310,8 +322,31 @@ export class CreateProgramsComponent implements OnInit {
     return this.programStore.tags.value.find((t) => t.id === id)?.name;
   }
 
-  findTeamName(id: string) {
-    return this.teamStore.teams.value.find((t) => t.id === id)?.shortName;
+  @memoize()
+  mapTeams(ids: string[]) {
+    return this.teamStore.teams.value.filter((t) => ids.some((x) => x === t.id));
+  }
+
+  @memoize()
+  getPriorityClass(prio: ProgramDtoApiPriorityEnumApi | null) {
+    switch (prio) {
+      case ProgramDtoApiPriorityEnumApi.High:
+        return 'pill-red';
+      case ProgramDtoApiPriorityEnumApi.Medium:
+        return 'pill-orange';
+      case ProgramDtoApiPriorityEnumApi.Low:
+        return 'pill-green';
+      default:
+        return '';
+    }
+  }
+
+  @memoize()
+  getPriorityName(p: ProgramDtoApiPriorityEnumApi | null) {
+    if (!p) {
+      return '';
+    }
+    return getTranslation(I18ns.shared.priorities, p.toLowerCase());
   }
 
   refreshProgram() {
