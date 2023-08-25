@@ -71,12 +71,13 @@ export const FR = {
     noCompany: {
       title: "Oops ! Nous n'avons pas trouvé votre entreprise.",
       subtitle:
-        'Une erreur s’est produite, et pour y remédier, il faudrait vous rapprocher de votre entreprise.',
+        'Une erreur s’est produite. Contactez-nous et nous ferons notre maximum pour régler la situation.',
+      button: 'Envoyer un mail à Alto',
     },
     noTeams: {
       title: "Oops ! Nous n'avons pas trouvé votre équipe.",
-      subtitle:
-        'Une erreur s’est produite, et pour y remédier, il faudrait vous rapprocher de votre entreprise.',
+      subtitle: 'S’il s’agit d’une erreur, informez-en votre administrateur directement.',
+      button: 'Envoyer un mail à mon administrateur',
     },
   },
   leadHome: {
@@ -415,12 +416,14 @@ export const FR = {
       subtitle:
         "Indiquer le nom de votre nouveau tag ainsi que les programmes et questions auxquels vous souhaitez l'associer.",
       tagName: 'Nom du tag',
-      tagNamePlaceholder: 'Exemple: RGPD',
+      tagNamePlaceholder: 'Exemple: Règlement Général de Protection des Données (RGPD)',
       programs: 'Programmes',
       programsPlaceholder: 'Rechercher dans vos programmes',
       questions: 'Questions',
       questionsPlaceholder: 'Rechercher dans vos questions',
       description: 'Description',
+      successCreate: 'Le nouveau tag a bien été ajouté',
+      successEdit: 'Le tag a bien été modifié',
     },
     deleteModal: {
       title: 'Supprimer le tag "{{}}"',
@@ -830,6 +833,8 @@ export const FR = {
         frequency: 'Régularité',
         frequencyTooltip: '% de questions répondues sur le nombre de question envoyées',
         streak: 'Série en cours',
+        currentStreakPlaceholder: 'C’est le moment de tester vos connaissances',
+        longestStreakPlaceholder: 'Prêt(e) à relever le défi ? Lancez une session !',
         streakTooltip: "Nombre de jours consécutifs d'utilisation de l'application",
         bestStreak: 'Meilleure série',
         bestStreakTooltip: "Meilleure série de jours consécutifs d'utilisation de l'application",

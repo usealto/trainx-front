@@ -147,7 +147,7 @@
       </ng-container>
     </ng-container>
     <p class="add-field" *ngIf="answersAccepted.controls.length < 4" (click)="addGoodAnwswer()">
-      <i class="bi bi-plus"></i> {{ I18ns.questions.form.addGoodAnswer }}
+      <i class="bi bi-arrow-right-short"></i> {{ I18ns.questions.form.addGoodAnswer }}
     </p>
 
     <label class="form-label required mb-1">{{ I18ns.questions.form.badAnswer }}</label>
@@ -178,7 +178,7 @@
     </ng-container>
 
     <p class="add-field" *ngIf="answersWrong.controls.length < 6" (click)="addBadAnwswer()">
-      <i class="bi bi-plus"></i> {{ I18ns.questions.form.addBadAnswer }}
+      <i class="bi bi-arrow-right-short"></i> {{ I18ns.questions.form.addBadAnswer }}
     </p>
   </form>
 </div>
@@ -207,13 +207,26 @@
       </button>
     </ng-container>
     <ng-template #elseTemplate>
-      <input
-        type="submit"
-        [disabled]="questionForm && !questionForm.valid"
-        class="btn btn-primary float-end"
-        [value]="I18ns.shared.save"
-        (click)="createQuestion()"
-      />
+      <ng-container *ngIf="isEdit; else notEdit">
+        <input
+          type="submit"
+          [disabled]="questionForm && !questionForm.valid"
+          class="btn btn-primary float-end"
+          [value]="I18ns.shared.submit"
+          (click)="createQuestion()"
+        />
+      </ng-container>
+      <ng-template #notEdit>
+        <button
+          type="submit"
+          [disabled]="questionForm && !questionForm.valid"
+          class="btn btn-primary float-end"
+          (click)="createQuestion()"
+        >
+          <i class="bi bi-plus"></i>
+          <span>{{ I18ns.shared.create }} </span>
+        </button>
+      </ng-template>
     </ng-template>
   </div>
 </div>

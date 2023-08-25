@@ -16,7 +16,7 @@ export class UsersService {
       const s = search.toLowerCase();
       output = s.length
         ? output.filter(
-            (user) => user.firstname?.toLowerCase().includes(s) || user.lastname?.toLowerCase().includes(s),
+            (user) => user.firstname.toLowerCase().includes(s) || user.lastname.toLowerCase().includes(s),
           )
         : users;
     }

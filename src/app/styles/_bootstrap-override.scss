@@ -5,18 +5,39 @@
 .form-control {
   background: #fff;
 }
+input[type='text'].form-control {
+  height: 3.167rem;
+  color: var(--gray-900);
+}
+
+textarea.form-control {
+  color: var(--gray-900);
+}
+
+input[type='text'].form-control:focus {
+  height: 3.167rem;
+  color: var(--gray-900);
+}
+
+textarea.form-control:focus {
+  color: var(--gray-900);
+}
+
+.form-control::placeholder {
+  color: var(--gray-500);
+}
 
 .btn {
   --bs-btn-border-radius: 24px;
-  height: 2.667rem;
+  height: 36px;
   padding: 0 1.167rem;
-  line-height: 2.567rem;
+  line-height: 34px;
   display: inline-flex;
   font-size: 0.833rem;
 
   i {
     font-size: 1.15rem;
-    line-height: 2.567rem;
+    line-height: 34px;
   }
 
   & :first-child:is(i) {
@@ -29,7 +50,7 @@
 .offcanvas {
   --bs-offcanvas-width: 520px;
   --bs-offcanvas-border-width: 0;
-  --bs-offcanvas-color: var(--alto-text-color);
+  --bs-offcanvas-color: var(--gray-900);
   --bs-offcanvas-bg: white;
 }
 
@@ -123,11 +144,12 @@
   display: inline-block !important;
   min-width: 12rem;
   &.ng-select-single .ng-select-container {
-    height: 2.667rem;
+    height: 36px;
   }
   &.ng-select-multiple .ng-select-container .ng-value-container {
     .ng-placeholder {
       top: 8px;
+      position: static !important;
     }
     .ng-value {
       background-color: transparent;
@@ -165,7 +187,7 @@
     border-radius: 28px;
     font-weight: 400;
     font-size: 1rem;
-    min-height: 2.833rem;
+    min-height: 36px;
     color: var(--alto-text-color2);
     padding-inline-start: 0.5rem;
     .ng-value-container .ng-placeholder {

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import {
+  NgbActiveModal,
   NgbDatepickerModule,
   NgbNavModule,
   NgbPaginationModule,
@@ -135,5 +136,6 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     TopFlopComponent,
     DeleteModalComponent,
   ],
+  providers: [NgbActiveModal],
 })
 export class SharedModule {}

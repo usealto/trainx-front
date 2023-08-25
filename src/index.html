@@ -10,4 +10,24 @@
   <body>
     <alto-root></alto-root>
   </body>
+
+  <script type="text/javascript">
+    if (window.location.href.includes('https://app.usealto.com')) {
+      window.smartlook ||
+        (function (d) {
+          var o = (smartlook = function () {
+              o.api.push(arguments);
+            }),
+            h = d.getElementsByTagName('head')[0];
+          var c = d.createElement('script');
+          o.api = new Array();
+          c.async = true;
+          c.type = 'text/javascript';
+          c.charset = 'utf-8';
+          c.src = 'https://web-sdk.smartlook.com/recorder.js';
+          h.appendChild(c);
+        })(document);
+      smartlook('init', '859144cbc2e1751d9223b71993862d211312c7b0', { region: 'eu' });
+    }
+  </script>
 </html>

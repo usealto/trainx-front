@@ -62,6 +62,7 @@ export class LeadTeamComponent implements OnInit {
   paginatedUsers: UserDisplay[] = [];
   usersPage = 1;
   usersPageSize = 10;
+  filteredUsers: UserDisplay[] = [];
   usersScores: UserDisplay[] = [];
   usersQuestionCount = new Map<string, number[]>();
   userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
@@ -145,7 +146,10 @@ export class LeadTeamComponent implements OnInit {
           this.usersScores.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
         }),
         tap(() => this.changeTeamsPage(1)),
-        tap(() => this.changeUsersPage(this.usersScores, 1)),
+        tap(() => {
+          this.filteredUsers = this.usersScores;
+          this.changeUsersPage(this.usersScores, 1);
+        }),
         untilDestroyed(this),
       )
       .subscribe();
@@ -171,14 +175,17 @@ export class LeadTeamComponent implements OnInit {
     if (score) {
       output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
     }
-
+    this.filteredUsers = output;
     this.changeUsersPage(output, 1);
   }
 
   changeUsersPage(users: UserDisplay[], page: number) {
     this.usersPage = page;
     this.usersCount = users.length;
-    this.paginatedUsers = users.slice((page - 1) * this.usersPageSize, page * this.usersPageSize);
+    this.paginatedUsers = this.filteredUsers.slice(
+      (page - 1) * this.usersPageSize,
+      page * this.usersPageSize,
+    );
   }
 
   openTeamForm(team?: TeamDtoApi) {
