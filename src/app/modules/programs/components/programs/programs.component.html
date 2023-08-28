@@ -131,7 +131,11 @@
               </ng-template>
 
               <td *ngIf="question.programs && question.programs.length > 0">
-                <alto-colored-pill-list [data]="question.programs" [limit]="2"></alto-colored-pill-list>
+                <alto-colored-pill-list
+                  [textLimit]="30"
+                  [data]="question.programs"
+                  [limit]="2"
+                ></alto-colored-pill-list>
               </td>
               <td *ngIf="!question.programs || question.programs.length < 1">-</td>
               <td class="px-4 text-end">

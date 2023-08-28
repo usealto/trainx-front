@@ -46,14 +46,6 @@
 
     <alto-programs-form [isEdit]="isEdit" [form]="programForm"></alto-programs-form>
     <div class="row">
-      <ng-container *ngIf="isEdit">
-        <div class="col-12 text-center mb-4">
-          <a data-cy="deleteProgram" class="btn btn-danger" (click)="delete()">
-            <i class="bi bi-trash"></i><span>{{ I18ns.programs.delete.btn }}</span>
-          </a>
-        </div>
-        <hr />
-      </ng-container>
       <div class="col-6">
         <a class="cancel-btn" (click)="cancel()">
           {{ I18ns.shared.cancel }}
@@ -61,15 +53,16 @@
       </div>
       <div class="col-6 text-end">
         <button
-          class="btn btn-primary fs-5"
+          class="btn btn-primary"
           (click)="goNext()"
           data-cy="programCreateNext"
           [disabled]="programForm && !programForm.valid"
         >
-          <div>
-            {{ isEdit ? I18ns.shared.save : I18ns.shared.next }}
-          </div>
-          <i class="bi bi-arrow-right-short fs-2"></i>
+          <span>
+            <!-- {{ isEdit ? I18ns.shared.save : I18ns.shared.next }} -->
+            {{ I18ns.shared.next }}
+          </span>
+          <i class="bi bi-arrow-right-short"></i>
         </button>
       </div>
     </div>
@@ -146,16 +139,17 @@
       [collectionSize]="questionsCount"
       (pageChange)="questionPageChange($event)"
     ></alto-pagination>
-    <hr />
+    <hr class="mt-8" />
     <div class="row">
       <div class="col-6">
-        <a class="cancel-btn" (click)="cancel()">
-          {{ I18ns.shared.cancel }}
-        </a>
+        <button class="btn btn-outline-secondary" (click)="cancel()">
+          <i class="bi bi-arrow-left-short"></i><span>{{ I18ns.shared.previous }}</span>
+        </button>
       </div>
       <div class="col-6 text-end">
-        <button class="btn btn-primary fs-5" (click)="goNext()">
-          {{ I18ns.shared.save }}
+        <button class="btn btn-primary" (click)="goNext()">
+          <span>{{ I18ns.shared.next }}</span
+          ><i class="bi bi-arrow-right-short"></i>
         </button>
       </div>
     </div>
@@ -176,18 +170,16 @@
     </div>
     <div class="panel recap-panel">
       <div class="row mb-4">
-        <div class="col-5">
+        <div class="col-3">
           <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
           {{ I18ns.programs.forms.step1.teams }}
         </div>
-        <div class="col-7 p-0 text-end">
-          <span
-            *ngFor="let id of programForm.controls.teams.value"
-            class="alto-badge ms-1"
-            [style]="id | teamColor"
-          >
-            {{ findTeamName(id) }}
-          </span>
+        <div class="col-9 p-0 text-end">
+          <alto-colored-pill-list
+            [data]="mapTeams(programForm.controls.teams.value || [])"
+            [hasDynamicColor]="true"
+            [limit]="6"
+          ></alto-colored-pill-list>
           <span class="ms-3 alto-badge cursor-pointer" (click)="changeTab(1)">
             <i class="bi bi-plus-lg"></i>
           </span>
@@ -198,11 +190,11 @@
           <img class="emoji" [src]="EmojiName.SportsMedal | emoji" />
           {{ I18ns.programs.forms.step1.expectation }}
         </div>
-        <div class="col-7 p-0 text-end">
-          <span class="alto-score" [class]="programForm.controls.expectation.value || 0 | pillColor">
-            {{ programForm.controls.expectation.value }}%
+        <div class="col-7 p-0 d-flex align-items-center justify-content-end">
+          <span class="alto-score pill-green"
+            >{{ (programForm.controls.expectation.value || 0) / 100 | percent }}
           </span>
-          <span class="ms-3 alto-badge cursor-pointer" (click)="changeTab(1)">
+          <span class="ms-3 alto-badge pill-outline cursor-pointer" (click)="changeTab(1)">
             <i class="bi bi-pen"></i>
           </span>
         </div>
@@ -212,9 +204,9 @@
           <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" />
           {{ I18ns.programs.forms.questionCount }}
         </div>
-        <div class="col-7 p-0 text-end">
+        <div class="col-7 p-0 d-flex align-items-center justify-content-end">
           <span data-cy="questionCount" class="alto-badge">{{ this.editedProgram?.questionsCount }}</span>
-          <span class="ms-3 alto-badge cursor-pointer" (click)="changeTab(2)">
+          <span class="ms-3 alto-badge pill-outline cursor-pointer" (click)="changeTab(2)">
             <i class="bi bi-pen"></i>
           </span>
         </div>
@@ -222,16 +214,25 @@
       <div class="row">
         <div class="col-5">
           <img class="emoji" [src]="EmojiName.Warning | emoji" />
-
           {{ I18ns.programs.forms.step1.priority }}
         </div>
-        <div class="col-7 p-0 text-end">
-          {{ programForm.controls.priority.value }}
-          <span class="ms-3 alto-badge cursor-pointer" (click)="changeTab(1)">
+        <div class="col-7 p-0 d-flex align-items-center justify-content-end">
+          <span class="alto-badge" [ngClass]="getPriorityClass(programForm.controls.priority.value)">
+            {{ getPriorityName(programForm.controls.priority.value) }}
+          </span>
+          <span class="ms-3 alto-badge pill-outline cursor-pointer" (click)="changeTab(1)">
             <i class="bi bi-pen"></i>
           </span>
         </div>
       </div>
     </div>
+
+    <ng-container *ngIf="isEdit">
+      <div class="col-12 text-center mt-8">
+        <a data-cy="deleteProgram" class="btn btn-danger" (click)="delete()">
+          <i class="bi bi-trash3"></i><span>{{ I18ns.programs.delete.btn }}</span>
+        </a>
+      </div>
+    </ng-container>
   </div>
 </div>

@@ -20,6 +20,7 @@ import { ProgramsRestService } from '../../../services/programs-rest.service';
 import { QuestionsRestService } from '../../../services/questions-rest.service';
 import { QuestionsSubmittedRestService } from '../../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../../services/tags-rest.service';
+import { ToastService } from 'src/app/core/toast/toast.service';
 
 @UntilDestroy()
 @Component({
@@ -34,6 +35,7 @@ export class QuestionFormComponent implements OnInit {
   @Input() question?: QuestionDtoApi;
   @Input() isSubmitted = false;
   @Input() isNewProgram = false;
+  @Input() stayOpen = false;
   @Output() createdQuestion = new EventEmitter<QuestionDtoApi>();
   @Output() dismissedQuestion = new EventEmitter<any>();
   private fb: IFormBuilder;
@@ -62,6 +64,7 @@ export class QuestionFormComponent implements OnInit {
     private readonly questionSubmittedRestService: QuestionsSubmittedRestService,
     readonly fob: UntypedFormBuilder,
     public activeOffcanvas: NgbActiveOffcanvas,
+    private readonly toastService: ToastService,
   ) {
     this.fb = fob;
   }
@@ -140,30 +143,40 @@ export class QuestionFormComponent implements OnInit {
       explanation,
       link,
     };
+    let obs$;
     if ((!this.isEdit && !this.question) || this.isSubmitted) {
-      this.questionService
-        .createQuestion(params)
-        .pipe(
-          tap((question) => this.createdQuestion.emit(question)),
-          tap(() => {
-            if (this.isSubmitted) {
-              this.changeStatus(PatchQuestionSubmittedDtoApiStatusEnumApi.Accepted);
-            }
-          }),
-          tap(() => this.activeOffcanvas.dismiss()),
-          untilDestroyed(this),
-        )
-        .subscribe();
+      obs$ = this.questionService.createQuestion(params).pipe(
+        tap(() => {
+          if (this.isSubmitted) {
+            this.changeStatus(PatchQuestionSubmittedDtoApiStatusEnumApi.Accepted);
+          }
+        }),
+      );
     } else {
-      this.questionService
-        .updateQuestion({ id: this.question?.id, patchQuestionDtoApi: params } as PatchQuestionRequestParams)
-        .pipe(
-          tap((question) => this.createdQuestion.emit(question)),
-          tap(() => this.activeOffcanvas.dismiss()),
-          untilDestroyed(this),
-        )
-        .subscribe();
+      obs$ = this.questionService.updateQuestion({
+        id: this.question?.id,
+        patchQuestionDtoApi: params,
+      } as PatchQuestionRequestParams);
     }
+
+    obs$
+      .pipe(
+        tap(() =>
+          this.toastService.show({
+            text: this.isEdit ? I18ns.questions.form.editSuccess : I18ns.questions.form.createSuccess,
+            type: 'success',
+            autoHide: true,
+          }),
+        ),
+        tap((question) => this.createdQuestion.emit(question)),
+        tap(() => {
+          if (!this.stayOpen) {
+            this.activeOffcanvas.dismiss();
+          }
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
   }
 
   changeStatus(status: PatchQuestionSubmittedDtoApiStatusEnumApi) {
