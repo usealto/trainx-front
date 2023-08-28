@@ -1,65 +1,80 @@
 <div>
-  <div class="logo d-flex align-items-baseline">
-    <img height="22" src="assets/img/logo-white.png" alt="Alto Logo" />
-    <span class="company-name">Admin</span>
+  <div class="logo">
+    <img height="20" src="assets/img/favicon.png" alt="Alto Logo" />
+    <p class="">Admin</p>
   </div>
 
   <div class="menu">
     <div>
-      <a [routerLink]="'home'" routerLinkActive="menu-selected" class="module">
-        <i class="bi bi-house alto-grey"></i> Home
-      </a>
-      <a
-        [routerLink]="'companies'"
-        routerLinkActive="menu-selected"
-        [routerLinkActiveOptions]="{ exact: true }"
-        class="module"
-      >
-        <i class="bi bi-buildings alto-grey"></i>
-
-        All Companies
-      </a>
-      <a [routerLink]="'users'" routerLinkActive="menu-selected" class="module">
-        <i class="bi bi-people alto-grey"></i> All users
-      </a>
-      <a
-        *ngIf="user && impersonatedUser"
-        [routerLink]="['/', 'admin', 'companies', user.company.id]"
-        routerLinkActive="menu-selected"
-        class="module submenu"
-      >
-        <i class="bi bi-people alto-grey"></i>
-        Company's Home
-      </a>
-      <a
-        *ngIf="user && impersonatedUser"
-        [routerLink]="['/', 'admin', 'companies', user.company.id, 'users']"
-        routerLinkActive="menu-selected"
-        class="module submenu"
-      >
-        <i class="bi bi-people alto-grey"></i>
-        Company's Users
-      </a>
+      <div ngbTooltip="Home" placement="right">
+        <a [routerLink]="'home'" routerLinkActive="menu-selected" class="module">
+          <i class="bi bi-house-door"></i>
+        </a>
+      </div>
+      <div ngbTooltip="All Companies">
+        <a
+          [routerLink]="'companies'"
+          routerLinkActive="menu-selected"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="module"
+        >
+          <i class="bi bi-buildings alto-grey"></i>
+        </a>
+      </div>
+      <div ngbTooltip="All users" placement="right">
+        <a [routerLink]="'users'" routerLinkActive="menu-selected" class="module">
+          <i class="bi bi-people alto-grey"></i>
+        </a>
+      </div>
+      <div *ngIf="user && impersonatedUser" ngbTooltip="Company's home" placement="right">
+        <a
+          [routerLink]="['/', 'admin', 'companies', user.company.id]"
+          routerLinkActive="menu-selected"
+          class="module"
+        >
+          <i class="bi bi-building-fill-exclamation"></i>
+        </a>
+      </div>
+      <div *ngIf="user && impersonatedUser" ngbTooltip="Company's users" placement="right">
+        <a
+          [routerLink]="['/', 'admin', 'companies', user.company.id, 'users']"
+          routerLinkActive="menu-selected"
+          class="module"
+        >
+          <i class="bi bi-people-fill"></i>
+        </a>
+      </div>
     </div>
 
     <div class="bottom-block mb-2" *ngIf="user">
-      <div class="px-4">
+      <ng-template #popContent>
+        <a [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.profile">
+          <div><i class="bi bi-person"></i>{{ I18ns.menu.profile }}</div>
+        </a>
         <a
           *ngIf="impersonatedUser"
-          class="btn btn-danger"
+          class="logout"
           (click)="removeImpersonation()"
           [routerLink]="'/admin/home'"
         >
-          remove impersonation
+          <div><i class="bi bi-exclamation-triangle"></i>Remove impersonation</div>
         </a>
-      </div>
-      <hr />
-      <a class="logout" (click)="logOut()">
-        <i class="p-3 mx-4 text-white fs-4 bi bi-box-arrow-right"></i>
-      </a>
-      <a class="profile">
-        <alto-profile-card [isWhite]="true" [user]="user"> </alto-profile-card>
-      </a>
+        <a class="logout" (click)="logOut()">
+          <div><i class="bi bi-box-arrow-right"></i>{{ I18ns.menu.disconnect }}</div>
+        </a>
+      </ng-template>
+      <alto-img-badge
+        [toggleTooltip]="toggleTooltip"
+        class="img-badge-menu"
+        type="button"
+        placement="right"
+        [ngbPopover]="popContent"
+        popoverClass="menu-popover"
+        placement="right-bottom"
+        [user]="user"
+        [size]="40"
+      >
+      </alto-img-badge>
     </div>
   </div>
 </div>

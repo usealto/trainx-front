@@ -7,6 +7,7 @@ import {
   NgbDatepickerModule,
   NgbNavModule,
   NgbPaginationModule,
+  NgbPopoverModule,
   NgbProgressbarModule,
   NgbTooltipModule,
 } from '@ng-bootstrap/ng-bootstrap';
@@ -95,6 +96,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     NgbProgressbarModule,
     AutoResizeTextareaDirective,
     EmojiPipe,
+    NgbPopoverModule
   ],
   exports: [
     TranslationModule,
@@ -140,6 +142,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     EmojiPipe,
     TopFlopComponent,
     DeleteModalComponent,
+    NgbPopoverModule,
   ],
   providers: [NgbActiveModal],
 })

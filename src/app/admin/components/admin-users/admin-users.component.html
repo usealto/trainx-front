@@ -38,8 +38,8 @@
       <th scope="row">{{ user.username }}</th>
       <td>{{user.email}}</td>
       <td>{{user.email_verified}}</td>
-      <td>{{user.created_at}}</td>
-      <td>{{user.last_login}}</td>
+      <td>{{user.created_at | date:"medium"}}</td>
+      <td>{{user.last_login | date:"medium"}}</td>
       <td>
         <a *ngIf="user.user_metadata && user.user_metadata.altoId" [routerLink]="['/', 'admin', 'users',user.user_metadata.altoId]" routerLinkActive="menu-selected" class="btn btn-primary">
           Voir

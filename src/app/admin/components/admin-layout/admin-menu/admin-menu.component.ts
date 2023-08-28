@@ -4,6 +4,8 @@ import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { DataService } from 'src/app/admin/admin-data.service';
 import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
 
 @Component({
   selector: 'alto-admin-menu',
@@ -17,6 +19,11 @@ export class AdminMenuComponent implements OnInit {
     private router: Router,
     public auth: AuthService,
   ) {}
+  AltoRoutes = AltoRoutes;
+  I18ns = I18ns;
+
+  toggleTooltip = false;
+
   user!: UserDtoApi;
   userEmail = '';
   impersonatedUser =
