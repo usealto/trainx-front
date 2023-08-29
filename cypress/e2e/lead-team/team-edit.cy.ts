@@ -28,7 +28,7 @@ describe('Team edition', () => {
           cy.get('[data-cy="closeEditTeamPanel"]').first().click();
 
           cy.get('[data-cy="editTeam"]').first().click();
-          cy.get('[data-cy="editShortnameInput"]').click().wait(100).clear().type(existedTeamShortname);
+          cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type(existedTeamShortname);
           cy.get('[data-cy="btnSave"').click();
 
           cy.get('[data-cy="closeEditTeamPanel"]').click();
@@ -50,18 +50,18 @@ describe('Team edition', () => {
             const newShortName = '000';
 
             // Edit team shortname
-            cy.get('[data-cy="editShortnameInput"]').click().wait(100).clear().type(newShortName);
+            cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type(newShortName);
             cy.get('[data-cy="btnSave"]').click();
-            cy.get('[data-cy="closeEditTeamPanel"]').click().wait(100);
+            cy.get('[data-cy="closeEditTeamPanel"]').click().wait(5000);
 
             // Check that it's work
             cy.get('[data-cy="editTeam"]').first().click();
             cy.get('[data-cy="editShortnameInput"]').should('have.value', newShortName);
 
             // Reset shortname update
-            cy.get('[data-cy="editShortnameInput"]').click().wait(100).clear().type(oldShortname);
+            cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type(oldShortname);
             cy.get('[data-cy="btnSave"]').click();
-            cy.get('[data-cy="closeEditTeamPanel"]').click().wait(100);
+            cy.get('[data-cy="closeEditTeamPanel"]').click().wait(5000);
 
             cy.get('[data-cy="editTeam"]').first().click();
             cy.get('[data-cy="editShortnameInput"]').should('have.value', oldShortname);
@@ -78,7 +78,7 @@ describe('Team edition', () => {
 
           cy.get('[data-cy="editTeam"]').first().click();
 
-          cy.get('[data-cy="editLongnameInput"]').click().wait(100).clear().type(teamLongname);
+          cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(teamLongname);
           cy.get('[data-cy="btnSave"').click();
 
           cy.get('[data-cy="closeEditTeamPanel"]').click();
@@ -100,18 +100,18 @@ describe('Team edition', () => {
             const newLongName = 'Updated Longname';
 
             // Update team longname
-            cy.get('[data-cy="editLongnameInput"]').click().wait(100).clear().type(newLongName);
+            cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(newLongName);
             cy.get('[data-cy="btnSave"').click();
-            cy.get('[data-cy="closeEditTeamPanel"]').click().wait(100);
+            cy.get('[data-cy="closeEditTeamPanel"]').click().wait(5000);
 
             // Check that it's work
             cy.get('[data-cy="teamLongname"').first().should('contain.text', newLongName);
 
             // Reset team longname
             cy.get('[data-cy="editTeam"]').first().click();
-            cy.get('[data-cy="editLongnameInput"]').click().wait(100).clear().type(oldLongname);
+            cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(oldLongname);
             cy.get('[data-cy="btnSave"').click();
-            cy.get('[data-cy="closeEditTeamPanel"]').click().wait(100);
+            cy.get('[data-cy="closeEditTeamPanel"]').click().wait(5000);
 
             // Check that it's work
             cy.get('[data-cy="teamLongname"').first().should('contain.text', oldLongname);
