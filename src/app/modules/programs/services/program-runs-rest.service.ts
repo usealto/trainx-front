@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, combineLatest, map, switchMap, tap } from 'rxjs';
 import {
   CreateProgramRunDtoApi,
+  GetAllProgramRunQuestionsPaginatedRequestParams,
   GetProgramRunsRequestParams,
   ProgramRunApi,
   ProgramRunPaginatedResponseApi,
@@ -100,10 +101,24 @@ export class ProgramRunsRestService {
       params.createdAfter = isProgression
         ? this.scoresService.getPreviousPeriod(duration)[0]
         : this.scoresService.getStartDate(duration);
-      params.createdBefore = isProgression ? this.scoresService.getPreviousPeriod(duration)[1] : addDays(new Date(), 1); //! TEMPORARY FIX to get data from actual day
+      params.createdBefore = isProgression
+        ? this.scoresService.getPreviousPeriod(duration)[1]
+        : addDays(new Date(), 1); //! TEMPORARY FIX to get data from actual day
     }
 
     return this.programRunApi.getProgramRuns(params).pipe(map((res) => res.data ?? []));
+  }
+
+  getMyProgramRunsQuestions(
+    req: GetAllProgramRunQuestionsPaginatedRequestParams,
+  ): Observable<ProgramRunPaginatedResponseApi> {
+    const par = {
+      ...req,
+      page: req?.page ?? 1,
+      itemsPerPage: req?.itemsPerPage ?? 300,
+    };
+
+    return this.programRunApi.getAllProgramRunQuestionsPaginated(par);
   }
 
   create(createProgramRunDtoApi: CreateProgramRunDtoApi) {

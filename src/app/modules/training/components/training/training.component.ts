@@ -54,6 +54,7 @@ export class TrainingComponent implements OnInit {
   program?: ProgramDtoApi;
   programRun?: ProgramRunApi;
   score = 0;
+
   remainingQuestions: QuestionDtoApi[] = [];
 
   displayedQuestion!: QuestionApi | QuestionDtoApi;
@@ -111,15 +112,15 @@ export class TrainingComponent implements OnInit {
         switchMap(() => this.programsRestService.getPrograms()),
         tap((progs) => {
           this.program = progs.find((p) => p.id === this.programId);
-          if (this.program) {
-            this.questionsCount = this.program.questionsCount;
+          if (this.programRun) {
+            this.questionsCount = this.programRun.questionsCount;
           } else {
             throw 'Program Not Found';
           }
         }),
         switchMap(() =>
           combineLatest([
-            this.questionsRestService.getQuestions({ programIds: this.programId }),
+            this.programRunsRestService.getMyProgramRunsQuestions({ id: this.programRun?.id ?? '' }),
             this.guessRestService.getGuesses({
               createdBy: this.profileStore.user.value.id,
               programRunIds: this.programRun?.id,
@@ -129,9 +130,10 @@ export class TrainingComponent implements OnInit {
         tap(([questions, guesses]) => {
           this.questionsAnswered = guesses.meta.totalItems;
           this.questionNumber = this.questionsAnswered;
-          this.remainingQuestions = questions.filter((q) =>
+          this.remainingQuestions = questions.data?.filter((q) =>
             guesses.data?.every((g) => g.questionId !== q.id),
-          );
+          ) as any;
+          //TODO remove 'as any'
           this.getNextQuestion();
         }),
         untilDestroyed(this),
@@ -255,14 +257,14 @@ export class TrainingComponent implements OnInit {
         )
         .subscribe();
     } else {
-      if (this.remainingQuestions.length === 0) {
+      if (this.remainingQuestions?.length === 0) {
         setTimeout(() => {
           // ? SetTimeout is beacause of an animation problem from the Offcanvas (I think)
           this.openDoneModal();
         }, 1000);
       } else {
         this.questionNumber++;
-        const last = this.remainingQuestions.pop();
+        const last = this.remainingQuestions?.pop();
         if (last) {
           this.setDisplayedQuestion(last);
         }
