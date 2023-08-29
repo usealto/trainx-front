@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Observable, combineLatest, map, switchMap, tap } from 'rxjs';
 import {
   CreateProgramRunDtoApi,
   GetAllProgramRunQuestionsPaginatedRequestParams,
   GetProgramRunsRequestParams,
-  ProgramRunApi,
   ProgramRunPaginatedResponseApi,
   ProgramRunsApiService,
+  QuestionDtoPaginatedResponseApi,
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { ProgramsRestService } from './programs-rest.service';
-import { TrainingCardData } from '../../training/models/training.model';
+import { addDays } from 'date-fns';
+import { Observable, combineLatest, map, switchMap, tap } from 'rxjs';
 import { ProfileStore } from '../../profile/profile.store';
+import { UsersRestService } from '../../profile/services/users-rest.service';
 import { ScoreDuration } from '../../shared/models/score.model';
 import { ScoresService } from '../../shared/services/scores.service';
-import { UsersRestService } from '../../profile/services/users-rest.service';
-import { addDays } from 'date-fns';
+import { TrainingCardData } from '../../training/models/training.model';
+import { ProgramsRestService } from './programs-rest.service';
 
 @Injectable({
   providedIn: 'root',
@@ -111,7 +111,7 @@ export class ProgramRunsRestService {
 
   getMyProgramRunsQuestions(
     req: GetAllProgramRunQuestionsPaginatedRequestParams,
-  ): Observable<ProgramRunPaginatedResponseApi> {
+  ): Observable<QuestionDtoPaginatedResponseApi> {
     const par = {
       ...req,
       page: req?.page ?? 1,
