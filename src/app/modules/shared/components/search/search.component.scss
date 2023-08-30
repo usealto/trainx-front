@@ -1,7 +1,6 @@
 :host {
   display: inline-block;
   vertical-align: bottom;
-
 }
 .search-group {
   position: relative;
@@ -9,7 +8,7 @@
   flex-wrap: wrap;
   align-items: stretch;
   max-width: 23rem;
-  height: 2.667rem;
+  height: 36px;
   background-color: transparent;
   .input-group-text {
     display: flex;

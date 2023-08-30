@@ -5,12 +5,10 @@
   --bs-danger: #f04438;
   --bs-warning: #fdb022;
 
-  --alto-blue: #101828;
   --alto-blue-second: #3b434e;
   --alto-blue-disabled: #3b434e;
   --alto-purple: #a757fa;
 
-  --alto-text-color: #101828;
   --alto-text-color2: #344054;
 
   --alto-text-second-color: #475467;
@@ -179,10 +177,10 @@
 }
 
 .alto-text {
-  color: var(--alto-text-color);
+  color: var(--gray-900);
 }
 .alto-blue {
-  color: var(--alto-blue);
+  color: var(--gray-900);
 }
 .alto-second-blue {
   color: var(--alto-blue-second);
@@ -205,7 +203,7 @@
   background-color: var(--alto-dark-grey);
 }
 .alto-blue-bg {
-  background-color: var(--alto-blue);
+  background-color: var(--gray-900);
 }
 .alto-orange-bg {
   background-color: var(--bs-orange);
@@ -226,6 +224,11 @@
 .pill-red {
   background-color: var(--error-50);
   color: var(--error-600);
+}
+.pill-outline {
+  background-color: white;
+  border: 1px solid var(--gray-200);
+  color: var(--gray-700);
 }
 
 .alto-green {

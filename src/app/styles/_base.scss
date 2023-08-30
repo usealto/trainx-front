@@ -24,7 +24,7 @@ body,
 html {
   --bs-body-font-size: 12px;
   font-family: var(--font-family);
-  color: var(--alto-text-color);
+  color: var(--gray-900);
 }
 
 @media screen and (min-width: 1900px) {
@@ -50,7 +50,7 @@ p {
 
 a {
   text-decoration: none;
-  color: var(--alto-blue);
+  color: var(--gray-900);
 }
 p {
   margin: 0;

@@ -71,12 +71,13 @@ export const FR = {
     noCompany: {
       title: "Oops ! Nous n'avons pas trouvé votre entreprise.",
       subtitle:
-        'Une erreur s’est produite, et pour y remédier, il faudrait vous rapprocher de votre entreprise.',
+        'Une erreur s’est produite. Contactez-nous et nous ferons notre maximum pour régler la situation.',
+      button: 'Envoyer un mail à Alto',
     },
     noTeams: {
       title: "Oops ! Nous n'avons pas trouvé votre équipe.",
-      subtitle:
-        'Une erreur s’est produite, et pour y remédier, il faudrait vous rapprocher de votre entreprise.',
+      subtitle: 'S’il s’agit d’une erreur, informez-en votre administrateur directement.',
+      button: 'Envoyer un mail à mon administrateur',
     },
   },
   leadHome: {
@@ -385,7 +386,8 @@ export const FR = {
       namePlaceholder: 'Exemple : Quel est notre principal concurrent sur le marché des PMEs ?',
       goodAnswer: 'Bonne(s) réponse(s)',
       addGoodAnswer: 'Ajouter une autre bonne réponse',
-      answerPlaceholder: 'Réponse',
+      goodAnswerPlaceholder: 'Écrire une bonne réponse',
+      badAnswerPlaceholder: 'Écrire une mauvaise réponse',
       badAnswer: 'Mauvaise(s) réponse(s)',
       badAnswerSubtitle: 'Minimum 1 mauvaise réponse.',
       addBadAnswer: 'Ajouter une autre mauvaise réponse',
@@ -399,6 +401,8 @@ export const FR = {
       link: 'Lien utile',
       linkPlaceholder: 'Lien vers une ressource utile',
       remainingCharacters: 'caractères restants',
+      createSuccess: 'La question a bien été ajoutée',
+      editSuccess: 'La question a bien été modifiée',
     },
     deleteModal: {
       title: 'Supprimer la question "{{}}"',

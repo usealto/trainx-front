@@ -18,24 +18,6 @@
   color: red;
 }
 
-input[type='text'].form-control {
-  height: 3.167rem;
-  color: var(--gray-900);
-}
-
-textarea.form-control {
-  color: var(--gray-900);
-}
-
-input[type='text'].form-control:focus {
-  height: 3.167rem;
-  color: var(--gray-900);
-}
-
-textarea.form-control:focus {
-  color: var(--gray-900);
-}
-
 .alto-badge-no-size {
   display: inline-block;
   border-radius: 25px;
@@ -54,7 +36,7 @@ textarea.form-control:focus {
 .alto-badge {
   @extend .alto-badge-no-size;
   min-height: 1.66rem;
-  min-width: 1.58rem;
+  min-width: 1.66rem;
   line-height: 1.66rem;
   font-size: 0.833rem;
   background-color: var(--blue-gray-50);
@@ -72,7 +54,7 @@ textarea.form-control:focus {
   width: 2.667rem;
   line-height: 2.667rem;
   font-size: 2rem;
-  color: var(--alto-blue);
+  color: var(--gray-900);
   background-color: var(--alto-medium-grey);
 }
 .alto-badge-blue {
@@ -84,6 +66,13 @@ textarea.form-control:focus {
   @extend .alto-badge-big;
   color: #d92d20;
   background-color: #fee4e2;
+}
+
+.ellipsis-badge {
+  max-width: 6rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .subtitles {
@@ -177,9 +166,10 @@ h2 {
 }
 
 .cancel-btn {
-  color: var(--gray-500, #667085);
-  font-size: 1.167rem;
+  color: var(--gray-700);
+  font-size: 0.833rem;
   font-weight: 600;
+  line-height: 3rem;
   cursor: pointer;
 }
 
