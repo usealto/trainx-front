@@ -55,7 +55,7 @@ export class TrainingComponent implements OnInit {
   programRun?: ProgramRunApi;
   score = 0;
 
-  remainingQuestions?: QuestionDtoApi[] = [];
+  remainingQuestions: QuestionDtoApi[] = [];
 
   displayedQuestion!: QuestionApi | QuestionDtoApi;
   isQuestionsLoading = true;
@@ -130,9 +130,8 @@ export class TrainingComponent implements OnInit {
         tap(([questions, guesses]) => {
           this.questionsAnswered = guesses.meta.totalItems;
           this.questionNumber = this.questionsAnswered;
-          this.remainingQuestions = questions.data?.filter((q) =>
-            guesses.data?.every((g) => g.questionId !== q.id),
-          );
+          this.remainingQuestions =
+            questions.data?.filter((q) => guesses.data?.every((g) => g.questionId !== q.id)) ?? [];
           this.getNextQuestion();
         }),
         untilDestroyed(this),
