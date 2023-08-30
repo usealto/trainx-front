@@ -60,64 +60,97 @@
     {{ I18ns.leadHome.statistics.title }}
   </h2>
   <p class="subtitle">{{ I18ns.leadHome.statistics.subtitle }}</p>
+  <ng-container *ngIf="programsCount < 0; else noProgram">
+    <div class="panel px-0 py-4 mt-5">
+      <div class="row">
+        <div class="col border-end d-flex flex-row align-items-center px-4">
+          <alto-icon-badge [size]="4" icon="bi-bar-chart-fill"></alto-icon-badge>
 
-  <div class="panel px-0 py-4 mt-5">
-    <div class="row">
-      <div class="col border-end d-flex flex-row align-items-center px-4">
-        <alto-icon-badge [size]="4" icon="bi-bar-chart-fill"></alto-icon-badge>
-
-        <div class="col ps-4">
-          <p class="stats-title">{{ I18ns.leadHome.statistics.averageScore }}</p>
-          <div class="mt-2 row">
-            <h2 class="mb-0 col">{{ averageScore | percent }}</h2>
-            <alto-progression-badge class="col-3" [score]="averageScoreProgression"></alto-progression-badge>
-          </div>
-        </div>
-      </div>
-      <div class="col border-end d-flex flex-row align-items-center px-4">
-        <alto-icon-badge [size]="4" icon="bi-check-square-fill"></alto-icon-badge>
-
-        <div class="col ps-4">
-          <p class="stats-title">{{ I18ns.leadHome.statistics.terminatedPrograms }}</p>
-          <div class="mt-2 row">
-            <div class="mb-0 col">
-              <span class="fs-5 stats-content">
-                {{ finishedProgramsCount + '/' + programsCount }}
-              </span>
-              <span class="fs-6 stats-content">{{ ' (' + (averageFinishedPrograms | percent) + ')' }}</span>
+          <div class="col ps-4">
+            <p class="stats-title">{{ I18ns.leadHome.statistics.averageScore }}</p>
+            <div class="mt-2 row">
+              <h2 class="mb-0 col">{{ averageScore | percent }}</h2>
+              <alto-progression-badge
+                class="col-3"
+                [score]="averageScoreProgression"
+              ></alto-progression-badge>
             </div>
-            <alto-progression-badge
-              class="col-3"
-              [score]="averageFinishedProgramsProgression"
-            ></alto-progression-badge>
           </div>
         </div>
-      </div>
-      <div class="col d-flex flex-row align-items-center px-4">
-        <alto-icon-badge [size]="4" icon="bi-reply-all-fill"></alto-icon-badge>
+        <div class="col border-end d-flex flex-row align-items-center px-4">
+          <alto-icon-badge [size]="4" icon="bi-check-square-fill"></alto-icon-badge>
 
-        <div class="col ps-4">
-          <p class="stats-title">{{ I18ns.leadHome.statistics.guessesCount }}</p>
-          <div class="mt-2 row g-0">
-            <h2 class="mb-0 col">{{ guessCount + '/' + expectedGuessCount }}</h2>
-            <alto-progression-badge class="col-3" [score]="guessCountProgression"></alto-progression-badge>
+          <div class="col ps-4">
+            <p class="stats-title">{{ I18ns.leadHome.statistics.terminatedPrograms }}</p>
+            <div class="mt-2 row">
+              <div class="mb-0 col">
+                <span class="fs-5 stats-content">
+                  {{ finishedProgramsCount + '/' + programsCount }}
+                </span>
+                <span class="fs-6 stats-content">{{ ' (' + (averageFinishedPrograms | percent) + ')' }}</span>
+              </div>
+              <alto-progression-badge
+                class="col-3"
+                [score]="averageFinishedProgramsProgression"
+              ></alto-progression-badge>
+            </div>
+          </div>
+        </div>
+        <div class="col d-flex flex-row align-items-center px-4">
+          <alto-icon-badge [size]="4" icon="bi-reply-all-fill"></alto-icon-badge>
+
+          <div class="col ps-4">
+            <p class="stats-title">{{ I18ns.leadHome.statistics.guessesCount }}</p>
+            <div class="mt-2 row g-0">
+              <h2 class="mb-0 col">{{ guessCount + '/' + expectedGuessCount }}</h2>
+              <alto-progression-badge class="col-3" [score]="guessCountProgression"></alto-progression-badge>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </ng-container>
+
+  <ng-template #noProgram>
+    <div class="nodata-placeholder text-center">
+      <div class="row">
+        <div class="text-center">
+          <img [src]="Emoji.CowboyHatFace | emoji" height="24" />
+          <p>{{ I18ns.leadHome.statistics.placeholder }}</p>
+        </div>
+        <button class="btn btn-primary">
+          <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
 
   <!-- CHARTS -->
-  <div class="panel h-100 mt-5 mb-5">
-    <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
-    <p class="alto-grey mb-4">{{ I18ns.leadHome.globalEvolution.chartSubtitle }}</p>
-    <div [hidden]="!scoreCount" class="chart-container">
-      <canvas id="programScoreEvol"></canvas>
+  <ng-container *ngIf="programsCount < 0; else noChart">
+    <div class="panel h-100 mt-5 mb-5">
+      <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
+      <p class="alto-grey mb-4">{{ I18ns.leadHome.globalEvolution.chartSubtitle }}</p>
+      <div [hidden]="!scoreCount" class="chart-container">
+        <canvas id="programScoreEvol"></canvas>
+      </div>
+      <div [hidden]="scoreCount > 0" class="text-center pt-6">
+        {{ I18ns.shared.noData }}
+      </div>
     </div>
-    <div [hidden]="scoreCount > 0" class="text-center pt-6">
-      {{ I18ns.shared.noData }}
+  </ng-container>
+  <ng-template #noChart>
+    <div class="nodata-placeholder text-center">
+      <div class="row">
+        <div class="text-center">
+          <img [src]="Emoji.Rocket | emoji" height="24" />
+          <p>{{ I18ns.leadHome.graph.placeholder }}</p>
+        </div>
+        <button class="btn btn-primary">
+          <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+        </button>
+      </div>
     </div>
-  </div>
+  </ng-template>
   <!-- TOP / FLOP -->
   <div class="row h-100">
     <div class="col pe-4">

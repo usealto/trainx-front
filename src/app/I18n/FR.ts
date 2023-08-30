@@ -102,11 +102,14 @@ export const FR = {
       averageScore: 'Score moyen',
       terminatedPrograms: 'Programmes terminés',
       guessesCount: 'Nombre total de réponses ',
+      placeholder: 'C’est le moment d’amorcer la montée en compétences de vos équipes !',
     },
     graph: {
       period: 'Période',
       score: 'Score (%)',
       tagFilter: 'Tags',
+      placeholder:
+        'Embarquez vos équipes dans un programme pour commencer à les entraîner et à les évaluer !',
     },
     globalEvolution: {
       title: 'Évolution globale',

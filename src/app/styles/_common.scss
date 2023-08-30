@@ -86,6 +86,21 @@
   padding: 1.667rem;
 }
 
+.nodata-placeholder {
+  background-color: var(--indigo-25);
+  border-radius: 0.667rem;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  button {
+    width: fit-content;
+    margin: 1rem auto 0;
+  }
+  p {
+    margin-top: 0.67rem;
+    color: var(--indigo-900);
+  }
+}
+
 .header-panel {
   background-color: var(--primary-50);
   border-radius: 0.67rem;
