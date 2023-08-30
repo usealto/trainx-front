@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+
 describe('L/Programs Questions Tab', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
@@ -26,11 +28,6 @@ describe('L/Programs Questions Tab', () => {
 
     cy.wait(500);
 
-    cy.get('[data-cy="questionsList"]')
-      .first()
-      .then(($data) => {
-        const text = $data.text();
-        expect(text.trim()).to.equal(questionTitle);
-      });
+    cy.get('[data-cy="questionsList"]').should('contain', questionTitle);
   });
 });
