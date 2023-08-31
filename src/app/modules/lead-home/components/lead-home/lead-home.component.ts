@@ -56,6 +56,7 @@ export class LeadHomeComponent implements OnInit {
   averageScoreProgression = 0;
 
   programsCount = 0;
+  startedProgramsCount = 0;
   finishedProgramsCount = 0;
   averageFinishedPrograms = 0;
   averageFinishedProgramsProgression = 0;
@@ -77,6 +78,7 @@ export class LeadHomeComponent implements OnInit {
   usersLeaderboard: { name: string; score: number }[] = [];
   usersLeaderboardCount = 0;
   topflopLoaded = false;
+  isActiveCount = 0;
 
   constructor(
     private readonly commentsRestService: CommentsRestService,
@@ -264,6 +266,7 @@ export class LeadHomeComponent implements OnInit {
     ])
       .pipe(
         tap(([programsStats, lastProgramsStats]) => {
+          this.isActiveCount = programsStats.filter((p) => p.program.isActive).length;
           this.programsCount = programsStats.length;
           this.finishedProgramsCount = programsStats.filter((p) => p.participation === 1).length;
           this.averageFinishedPrograms =
