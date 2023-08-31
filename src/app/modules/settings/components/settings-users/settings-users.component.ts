@@ -28,7 +28,7 @@ export class SettingsUsersComponent implements OnInit {
 
   paginatedUsers: UserDtoApi[] = [];
   usersDisplay: UserDtoApi[] = [];
-  usersPageSize = 5;
+  usersPageSize = 10;
   usersPage = 1;
   usersCount = 0;
   paginatedAdmins: UserDtoApi[] = [];
