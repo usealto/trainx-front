@@ -73,7 +73,9 @@ export class LeadHomeComponent implements OnInit {
   challengesByUser: ChallengeDtoApi[] = [];
   //
   teamsLeaderboard: { name: string; score: number }[] = [];
+  teamsLeaderboardCount = 0;
   usersLeaderboard: { name: string; score: number }[] = [];
+  usersLeaderboardCount = 0;
   topflopLoaded = false;
 
   constructor(
@@ -218,6 +220,8 @@ export class LeadHomeComponent implements OnInit {
               score: u.score ?? 0,
             }),
           );
+          this.teamsLeaderboardCount = this.teamsLeaderboard.length;
+          this.usersLeaderboardCount = this.usersLeaderboard.length;
           this.topflopLoaded = true;
         }),
         untilDestroyed(this),

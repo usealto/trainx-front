@@ -88,15 +88,14 @@
 
 .nodata-placeholder {
   background-color: var(--indigo-25);
-  border-radius: 0.667rem;
+  border-radius: 0.6667rem;
   padding: 2rem;
   margin: 1.5rem 0;
-  button {
+  a {
     width: fit-content;
-    margin: 1rem auto 0;
+    margin: 0 auto;
   }
   p {
-    margin-top: 0.67rem;
     color: var(--indigo-900);
   }
 }

@@ -126,10 +126,12 @@ export const FR = {
       teams: {
         title: 'Niveau de connaissance de vos équipes',
         subtitle: 'Aperçu du niveau de maîtrise de vos équipes par thématiques.',
+        placeholder: 'Envie de découvrir le niveau de connaissance de vos équipes ?',
       },
       users: {
         title: 'Niveau de connaissance de vos collaborateurs',
         subtitle: 'Aperçu du niveau de maîtrise de vos collaborateurs.',
+        placeholder: 'Envie de découvrir le niveau de connaissance de vos collaborateurs ?',
       },
     },
     ongoingPrograms: {
@@ -141,6 +143,8 @@ export const FR = {
       noDataSubtitle:
         'Créez votre premier programme et assignez le à vos équipes en quelques minutes seulement',
       score: 'Score',
+      placeholder:
+        'Construisez votre premier programme pour commencer à entraîner et à évaluer vos équipes !',
     },
     ongoingChallenges: {
       title: 'Challenges en cours',

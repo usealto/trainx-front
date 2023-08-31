@@ -34,33 +34,22 @@
   </ng-container>
   <div *ngSwitchDefault></div>
 </span>
-<ng-container *ngIf="programsDisplay.length > 0; else noPrograms">
-  <div class="row mb-4">
-    <div
-      class="mb-4 col-4"
-      *ngFor="let prog of programsDisplay | slice : (page - 1) * pageSize : page * pageSize"
-    >
-      <alto-program-card
-        [displayToggle]="displayToggle"
-        [score]="programsScores.get(prog.id)"
-        [progress]="programsProgress.get(prog.id)"
-        [participation]="programsInvolvement.get(prog.id)"
-        [program]="prog"
-        [allTeamsCount]="teamStore.teams.value.length"
-      ></alto-program-card>
-    </div>
+
+<div class="row mb-4">
+  <div
+    class="mb-4 col-4"
+    *ngFor="let prog of programsDisplay | slice : (page - 1) * pageSize : page * pageSize"
+  >
+    <alto-program-card
+      [displayToggle]="displayToggle"
+      [score]="programsScores.get(prog.id)"
+      [progress]="programsProgress.get(prog.id)"
+      [participation]="programsInvolvement.get(prog.id)"
+      [program]="prog"
+      [allTeamsCount]="teamStore.teams.value.length"
+    ></alto-program-card>
   </div>
-</ng-container>
-<ng-template #noPrograms>
-  <div class="panel text-center p-6 mb-4">
-    <i class="alto-badge-big alto-badge-blue bi-file-earmark-text"></i>
-    <h2 class="my-4">{{ I18ns.leadHome.ongoingPrograms.noData }}</h2>
-    <p class="alto-grey mb-4">{{ I18ns.leadHome.ongoingPrograms.noDataSubtitle }}</p>
-    <a type="button" class="btn btn-primary" href="/l/programs/e/new"
-      ><i class="bi bi-plus-lg"></i> Créer un programme
-    </a>
-  </div>
-</ng-template>
+</div>
 
 <alto-pagination
   [collectionSize]="count"
