@@ -319,14 +319,17 @@ export const FR = {
         subtitle: "Retrouvez une vue d' ensemble sur les résultats de vos équipes.",
         teamFilter: 'Équipes',
         scoreEvolution: {
-          title: 'Évolution du score',
+          title: 'Évolution du score de vos équipes',
           subtitle: 'Evolution du niveau de maitrise global de vos équipes par tags/programmes',
+          placeholderTitle: 'Aucune donnée à afficher pour le moment',
+          placeholderSubtitle: 'Les équipes s’activent pour fournir les premiers résultats !',
         },
         leaderboard: {
           title: 'Leaderboard',
           subtitle: 'Aperçu du niveau de maîtrise de vos équipes.',
           top: 'Top',
           flop: 'Flop',
+          placeholder: 'Motivez vos équipes à réaliser des programmes !',
         },
       },
       perThemePerformance: {
@@ -338,10 +341,13 @@ export const FR = {
         scoreEvolutionChart: {
           title: 'Évolution du niveau de maîtrise',
           subtitle: 'Évolution du score moyen de vos équipes par tag.',
+          placeholderTitle: 'Les équipes sont en train de s’échauffer',
+          placeholderSubtitle: 'Les premiers résultats ne devraient plus tarder !',
         },
         control: {
           title: 'Niveau de maîtrise des thématiques',
           subtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
+          placeholder: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
         },
         nav: {
           tags: 'Tags',
@@ -351,6 +357,7 @@ export const FR = {
       teamsTable: {
         title: 'Vos équipes',
         subtitle: "Découvrez les scores moyens et les axes d'amélioration par équipe.",
+        placeholder: 'Envie de lever le voile sur la face cachée de vos équipes ?',
         columns: {
           team: 'Équipe',
           globalScore: 'Score global',
@@ -362,6 +369,7 @@ export const FR = {
       questionsTable: {
         title: 'Questions',
         subtitle: 'Découvrez les scores moyens de vos équipes par question.',
+        placeholder: 'Certaines questions peuvent s’avérer plus piquantes que d’autres...',
         columns: {
           question: 'Intitulé de la question',
           globalScore: 'Score global',

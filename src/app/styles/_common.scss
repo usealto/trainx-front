@@ -87,15 +87,20 @@
 }
 
 .nodata-placeholder {
+  min-height: 12rem;
   background-color: var(--indigo-25);
   border-radius: 0.6667rem;
   padding: 2rem;
-  margin: 1.5rem 0;
+  margin: 2rem 0;
   a {
     width: fit-content;
     margin: 0 auto;
   }
   p {
+    font-weight: 600;
+    color: var(--indigo-900);
+  }
+  span {
     color: var(--indigo-900);
   }
 }

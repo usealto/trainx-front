@@ -16,6 +16,7 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -26,14 +27,17 @@ export class PerformanceByTeamsComponent implements OnChanges {
   @Input() duration: ScoreDuration = ScoreDuration.Year;
   @Output() selecedDuration = this.duration;
 
+  Emoji = EmojiName;
   I18ns = I18ns;
   init = true;
   teams: ScoreDtoApi[] = [];
   selectedTeams: ScoreDtoApi[] = [];
   scoredTeams: { label: string; score: number | null; progression: number | null }[] = [];
   scoreEvolutionChart?: Chart;
+  scoreCount = 0;
 
   teamsLeaderboard: { name: string; score: number }[] = [];
+  teamsLeaderboardCount = 0;
 
   constructor(
     public readonly teamStore: TeamStore,
@@ -59,6 +63,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
           tap(([, teams]) => {
             teams = teams.filter((t) => t.score && t.score >= 0);
             this.teamsLeaderboard = teams.map((t) => ({ name: t.team.longName, score: t.score ?? 0 }));
+            this.teamsLeaderboardCount = this.teamsLeaderboard.length;
           }),
           tap(([scores, current, previous]) => {
             this.teams = scores.scores;
@@ -113,6 +118,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
     scores = this.scoresServices.reduceChartData(scores);
+    this.scoreCount = scores.length;
     const aggregateData = this.statisticsServices.aggregateDataForScores(scores[0], duration);
     const labels = this.statisticsServices.formatLabel(
       aggregateData.map((d) => d.x),

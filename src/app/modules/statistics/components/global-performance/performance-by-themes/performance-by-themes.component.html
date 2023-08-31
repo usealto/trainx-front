@@ -1,4 +1,4 @@
-<div class="score-evolution-chart panel mb-5">
+<div [hidden]="!scoreCount" class="score-evolution-chart panel mb-5">
   <alto-dropdown-filter
     *ngIf="items.length >= 7"
     class="float-end mx-2"
@@ -19,10 +19,35 @@
     <canvas id="themeScoreEvolution"></canvas>
   </div>
 </div>
+<div [hidden]="scoreCount > 0" class="row nodata-placeholder">
+  <h2 class="mb-5 fs-6">
+    {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}
+  </h2>
+  <div class="text-center">
+    <img [src]="Emoji.FourOclock | emoji" height="24" />
+    <p class="mt-3">
+      {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderTitle }}
+    </p>
+    <span class="d-inline-block mt-3">
+      {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderSubtitle }}
+    </span>
+  </div>
+</div>
 
-<alto-top-flop
-  [title]="I18ns.statistics.globalPerformance.perThemePerformance.control.title"
-  [subtitle]="I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle"
-  [leaderboard]="tagsLeaderboard"
->
-</alto-top-flop>
+<ng-container *ngIf="tagsLeaderboardCount > 0; else noTopFlopTags">
+  <alto-top-flop
+    [title]="I18ns.statistics.globalPerformance.perThemePerformance.control.title"
+    [subtitle]="I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle"
+    [leaderboard]="tagsLeaderboard"
+  >
+  </alto-top-flop>
+</ng-container>
+<ng-template #noTopFlopTags>
+  <div class="col nodata-placeholder me-4">
+    <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
+    <div class="text-center">
+      <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.placeholder }}</p>
+    </div>
+  </div>
+</ng-template>
