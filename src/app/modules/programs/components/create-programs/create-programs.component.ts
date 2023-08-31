@@ -47,7 +47,7 @@ export class CreateProgramsComponent implements OnInit {
   isEdit = false;
 
   questions!: QuestionDtoApi[];
-  questionsAssiciated!: QuestionDtoApi[];
+  questionsAssociated!: QuestionDtoApi[];
   questionsDisplay?: QuestionDtoPaginatedResponseApi;
   questionsAssociatedDisplay?: QuestionDtoPaginatedResponseApi;
   questionList: { id: string; delete: boolean; isNewQuestion: boolean }[] = [];
@@ -169,7 +169,7 @@ export class CreateProgramsComponent implements OnInit {
     if (question) {
       canvasRef.componentInstance.question =
         this.questions.find((q) => q.id === question?.id) ||
-        this.questionsAssiciated.find((q) => q.id === question?.id);
+        this.questionsAssociated.find((q) => q.id === question?.id);
       isQuestionEdit = true;
     }
 
