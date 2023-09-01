@@ -22,6 +22,7 @@ export const FR = {
     noDataSubtitle: 'Aucun résultat ne correspond à votre recherche',
     reply: 'Répondre',
     search: 'Rechercher',
+    textNotFound: 'Aucun résultat',
     period: 'Période',
     soon: 'Bientôt',
     tag: 'tag',
