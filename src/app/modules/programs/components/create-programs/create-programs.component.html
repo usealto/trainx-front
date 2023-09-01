@@ -5,6 +5,7 @@
 
 <div class="mt-4 form-nav">
   <div
+    data-cy="informationsTab"
     class="step"
     [ngClass]="{
       'cursor-pointer': isEdit,
@@ -16,6 +17,7 @@
     <span>{{ I18ns.programs.forms.step1.title }}</span>
   </div>
   <div
+    data-cy="questionsTab"
     class="step"
     [ngClass]="{
       'cursor-pointer': isEdit,
@@ -88,7 +90,7 @@
           <alto-search class="mb-6" (searchChange)="searchQuestions($event)"></alto-search>
         </div>
         <div class="col-6 text-end">
-          <button class="btn btn-primary mb-8" (click)="openQuestionForm()">
+          <button class="btn btn-primary mb-8" (click)="openQuestionForm()" data-cy="createNewQuestion">
             <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
           </button>
         </div>
@@ -108,7 +110,7 @@
     </ng-container>
     <ng-template #noAssociatedQuestions>
       <div class="text-center">
-        <button class="btn btn-primary mb-8" (click)="openQuestionForm()">
+        <button class="btn btn-primary mb-8" (click)="openQuestionForm()" data-cy="createNewQuestion">
           <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
         </button>
         <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.or }}</p>

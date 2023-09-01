@@ -6,10 +6,12 @@ describe('App Connection Admin', () => {
 
   it('Login', function () {
     cy.get('#welcome').contains('Bonjour E2e-admin');
+    cy.get('[data-cy="profileImgBadge"]').click();
     cy.get('#adminSwitch').should('exist');
   });
 
   it('Logout', function () {
+    cy.get('[data-cy="profileImgBadge"]').click();
     cy.get('.logout').click();
     cy.wait(1000);
     cy.url().should('not.include', Cypress.config().baseUrl);
@@ -23,13 +25,13 @@ describe('App Connection', () => {
   });
 
   it('logs In', function () {
-    /* ==== Generated with Cypress Studio ==== */
-    cy.get('#welcome').should('have.text', 'Bonjour E2e');
-    /* ==== End Cypress Studio ==== */
+    cy.get('#welcome').contains('Bonjour E2e');
+    cy.get('[data-cy="profileImgBadge"]').click();
     cy.get('#adminSwitch').should('not.exist');
   });
 
   it('logs out', function () {
+    cy.get('[data-cy="profileImgBadge"]').click();
     cy.get('.logout').click();
     cy.wait(1000);
     cy.url().should('not.include', Cypress.config().baseUrl);
