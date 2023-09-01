@@ -220,6 +220,12 @@ textarea.form-control:focus {
           float: right;
           opacity: 1;
         }
+        .alto-badge {
+          max-width: 90%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
       }
     }
   }
