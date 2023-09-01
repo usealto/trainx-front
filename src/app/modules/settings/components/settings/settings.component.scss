@@ -3,6 +3,14 @@
   padding: var(--alto-page-padding);
 }
 
+:host ::ng-deep {
+  .alto-tabs {
+    .alto-tab-btn {
+      font-size: 1.1667rem;
+    }
+  }
+}
+
 .alto-tabs {
   margin-bottom: 4rem;
 }

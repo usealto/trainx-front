@@ -6,12 +6,12 @@
   height: 4.667rem;
 }
 
-.table-panel .table th {
-  font-size: 10px;
-}
-
-.table-panel .table tbody tr {
-  font-size: 10px;
+.table tbody td,
+.table thead th {
+  padding-top: 0.6667rem;
+  padding-bottom: 0.6667rem;
+  padding-right: 1.3333rem;
+  padding-left: 0rem;
 }
 
 .disabled-icon {
@@ -25,19 +25,19 @@ h2 {
     margin-right: 0.667rem;
     vertical-align: bottom;
   }
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-top: 10px;
+  padding-left: 0.8333rem;
+  padding-right: 0.8333rem;
+  padding-top: 0.8333rem;
 }
 
 p {
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-bottom: 12px;
+  padding-left: 0.8333rem;
+  padding-right: 0.8333rem;
+  margin-bottom: 1rem;
 }
 
 alto-search {
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-bottom: 10px;
+  padding-left: 0.8333rem;
+  padding-right: 0.8333rem;
+  margin-bottom: 0.8333rem;
 }
