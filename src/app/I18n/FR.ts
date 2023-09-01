@@ -22,6 +22,7 @@ export const FR = {
     noDataSubtitle: 'Aucun résultat ne correspond à votre recherche',
     reply: 'Répondre',
     search: 'Rechercher',
+    textNotFound: 'Aucun résultat',
     period: 'Période',
     soon: 'Bientôt',
     tag: 'tag',
@@ -271,7 +272,20 @@ export const FR = {
         new: 'Créer une nouvelle question',
         newSubtitle: "Aucune question n'a été ajoutée pour l'instant. Vous pouvez :",
         or: 'OU',
-        existing: 'Choisir des questions à associer à ce programme :',
+        associatedQuestions: {
+          title: 'Questions ajoutées au programme',
+          subtitle: 'Retrouvez ici les questions que vous venez de créer.',
+        },
+        existing: {
+          title: 'Choisir des questions à associer à ce programme :',
+          subtitle:
+            'Retrouvez ici les questions associées aux tags sélectionnés dans la partie “Informations”.',
+        },
+        existing2: {
+          title: 'Questions pouvant être ajoutées au programme',
+          subtitle:
+            'Retrouvez ici les questions associées aux tags sélectionnés dans la partie “Informations”.',
+        },
       },
       step3: {
         title: 'Récapitulatif',

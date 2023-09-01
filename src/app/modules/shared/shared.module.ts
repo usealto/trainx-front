@@ -10,7 +10,7 @@ import {
   NgbProgressbarModule,
   NgbTooltipModule,
 } from '@ng-bootstrap/ng-bootstrap';
-import { NgSelectModule } from '@ng-select/ng-select';
+import { NgSelectConfig, NgSelectModule } from '@ng-select/ng-select';
 import { AutoResizeTextareaDirective } from 'src/app/core/utils/directives/auto-resize-textarea.directive';
 import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
 import { EmojiPipe } from 'src/app/core/utils/emoji/emoji.pipe';
@@ -44,6 +44,7 @@ import { TrainingCardComponent } from './components/training-card/training-card.
 import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
 
 @NgModule({
   declarations: [
@@ -138,4 +139,8 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
   ],
   providers: [NgbActiveModal],
 })
-export class SharedModule {}
+export class SharedModule {
+  constructor(private config: NgSelectConfig) {
+    this.config.notFoundText = I18ns.shared.textNotFound;
+  }
+}

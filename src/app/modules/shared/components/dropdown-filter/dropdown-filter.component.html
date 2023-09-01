@@ -27,8 +27,9 @@
       {{ item[displayLabel] }}
     </span>
     <span
+      data-cy="dropdownItems"
       *ngIf="!isColored"
-      class="me-4"
+      class="me-4 text-truncate"
       [ngClass]="{
         'score-filter-pill-green': item[displayLabel].includes('>'),
         'score-filter-pill-blue': item[displayLabel].includes('\<'),
@@ -37,6 +38,6 @@
     >
       {{ item[displayLabel] }}
     </span>
-    <i class="bi bi-check-circle-fill" *ngIf="selectedItems.includes(item) || isSelected(item)"></i>
+    <i class="bi bi-check-circle-fill"></i>
   </ng-template>
 </ng-select>
