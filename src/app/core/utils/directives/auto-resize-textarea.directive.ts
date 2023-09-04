@@ -10,7 +10,7 @@ export class AutoResizeTextareaDirective implements OnInit {
   /**
    * Integer without Pixels
    */
-  @Input() minHeight = 32;
+  @Input() minHeight = 33;
 
   @HostListener('input', ['$event'])
   onInput(e: any) {

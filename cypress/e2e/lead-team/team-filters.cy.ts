@@ -6,15 +6,18 @@ describe('Lead Team', () => {
   });
 
   it('Filters members by team', () => {
-    cy.get('[data-cy="teamShortname"]')
-      .first()
-      .click()
-      .then(($data) => {
-        const text = $data.text();
-        cy.get('[data-cy="filterByTeam"]').click();
-        cy.get('.ng-dropdown-header > input').clear().type(`${text}{enter}`).wait(500);
-        cy.get('[data-cy="memberTeamShortname"]').first().should('contain', text);
+    const team = 'MAN';
+
+    cy.get('[data-cy="filterByTeam"]').click();
+
+    cy.get('.ng-dropdown-header > input').clear();
+    cy.get('.ng-dropdown-header > input')
+      .type(`${team}`)
+      .then(() => {
+        cy.get('.ng-dropdown-panel > .ng-dropdown-panel-items > div > .ng-option').first().click();
       });
+
+    cy.get('[data-cy="memberTeamShortname"]').first().should('have.text', ' Manager - MAN ');
   });
 
   it('Filters members by score', () => {

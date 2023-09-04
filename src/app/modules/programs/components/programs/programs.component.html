@@ -48,6 +48,7 @@
   </div>
 
   <alto-program-card-list
+    data-cy="programCardList"
     (programTotal)="programsCount = $event"
     [place]="'program'"
   ></alto-program-card-list>
@@ -89,11 +90,7 @@
       <alto-score-filter (selectChange)="getQuestions({ score: $event }, true)"></alto-score-filter>
     </div>
     <div class="d-inline-block">
-      <alto-search
-        class="search"
-        data-cy="questionsSearchFilter"
-        (searchChange)="getQuestions({ search: $event }, true)"
-      ></alto-search>
+      <alto-search class="search" (searchChange)="getQuestions({ search: $event }, true)"></alto-search>
     </div>
   </div>
   <ng-container *ngIf="paginatedQuestions.length > 0; else noQuestions">
@@ -105,15 +102,15 @@
             <th scope="col" class="w-10 text-center">
               {{ headers.score }}
             </th>
-            <th scope="col" class="w-30" data-cy="questionsTableTagCol">{{ headers.tags }}</th>
-            <th scope="col" class="w-30" data-cy="questionsTableProgramCol">{{ headers.programs }}</th>
+            <th scope="col" class="w-30">{{ headers.tags }}</th>
+            <th scope="col" class="w-30">{{ headers.programs }}</th>
             <th class="w-20"></th>
           </tr>
         </thead>
         <tbody [style.height]="53 * paginatedQuestions.length + 'px'">
           <ng-container *ngIf="!isQuestionsLoading">
             <tr *ngFor="let question of paginatedQuestions">
-              <td class="text-black">
+              <td class="alto-text fs-7" data-cy="questionsList">
                 {{ question.title }}
               </td>
               <td class="w-10 text-center">
@@ -123,7 +120,11 @@
               </td>
               <ng-container *ngIf="question.tags && question.tags.length > 0; else elseQuestionTag">
                 <td>
-                  <alto-colored-pill-list [data]="question.tags" [limit]="3"></alto-colored-pill-list>
+                  <alto-colored-pill-list
+                    data-cy="questionsTagsList"
+                    [data]="question.tags"
+                    [limit]="3"
+                  ></alto-colored-pill-list>
                 </td>
               </ng-container>
               <ng-template #elseQuestionTag>
@@ -139,8 +140,16 @@
               </td>
               <td *ngIf="!question.programs || question.programs.length < 1">-</td>
               <td class="px-4 text-end">
-                <i class="cursor-pointer fs-4 bi bi-trash3 me-4" (click)="deleteQuestion(question)"></i>
-                <i class="cursor-pointer fs-4 bi bi-pencil" (click)="openQuestionForm(question)"></i>
+                <i
+                  data-cy="deleteQuestionTrash"
+                  class="cursor-pointer fs-4 bi bi-trash3 me-4"
+                  (click)="deleteQuestion(question)"
+                ></i>
+                <i
+                  data-cy="questionEditPen"
+                  class="cursor-pointer fs-4 bi bi-pencil"
+                  (click)="openQuestionForm(question)"
+                ></i>
               </td>
             </tr>
           </ng-container>

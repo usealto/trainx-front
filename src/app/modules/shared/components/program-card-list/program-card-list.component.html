@@ -41,6 +41,7 @@
       *ngFor="let prog of programsDisplay | slice : (page - 1) * pageSize : page * pageSize"
     >
       <alto-program-card
+        data-cy="programCard"
         [displayToggle]="displayToggle"
         [score]="programsScores.get(prog.id)"
         [progress]="programsProgress.get(prog.id)"
