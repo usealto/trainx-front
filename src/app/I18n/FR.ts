@@ -76,7 +76,7 @@ export const FR = {
       button: 'Envoyer un mail à Alto',
     },
     noTeams: {
-      title: "Oops ! Nous n'avons pas trouvé votre équipe.",
+      title: 'Oops ! Vous n’êtes assigné(e) à aucune équipe.',
       subtitle: 'S’il s’agit d’une erreur, informez-en votre administrateur directement.',
       button: 'Envoyer un mail à mon administrateur',
     },
