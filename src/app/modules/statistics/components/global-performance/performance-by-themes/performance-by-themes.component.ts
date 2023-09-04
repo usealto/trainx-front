@@ -36,7 +36,6 @@ export class PerformanceByThemesComponent implements OnChanges {
   items: ScoreDtoApi[] = [];
   selectedItems: ScoreDtoApi[] = [];
   tagsLeaderboard: { name: string; score: number }[] = [];
-  tagsLeaderboardCount = 0;
 
   scoreEvolutionChart?: Chart;
   scoreCount = 0;
@@ -66,7 +65,6 @@ export class PerformanceByThemesComponent implements OnChanges {
           tap((res) => {
             const output = res.filter((t) => t.score && t.score >= 0);
             this.tagsLeaderboard = output.map((t) => ({ name: t.tag.name, score: t.score ?? 0 }));
-            this.tagsLeaderboardCount = this.tagsLeaderboard.length;
           }),
           untilDestroyed(this),
         )

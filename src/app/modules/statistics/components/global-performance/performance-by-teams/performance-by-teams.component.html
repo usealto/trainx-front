@@ -16,7 +16,7 @@
     <canvas id="teamScoreEvolution"></canvas>
   </div>
 </div>
-<div [hidden]="scoreCount > 0" class="row nodata-placeholder">
+<div [hidden]="scoreCount > 0" class="nodata-placeholder">
   <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}</h2>
   <div class="text-center">
     <img [src]="Emoji.FlexedBiceps | emoji" height="24" />
@@ -29,7 +29,7 @@
   </div>
 </div>
 
-<ng-container *ngIf="teamsLeaderboardCount > 0; else noTopFlopTeams">
+<ng-container *ngIf="teamsLeaderboard.length > 0; else noTopFlopTeams">
   <alto-top-flop
     [title]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title"
     [subtitle]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.subtitle"
@@ -38,7 +38,7 @@
   </alto-top-flop>
 </ng-container>
 <ng-template #noTopFlopTeams>
-  <div class="col nodata-placeholder me-4">
+  <div class="nodata-placeholder">
     <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}</h2>
     <div class="text-center">
       <img [src]="Emoji.Rocket | emoji" height="24" />
