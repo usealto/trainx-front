@@ -8,7 +8,7 @@ import {
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
-import { Observable, combineLatest, map, of, tap } from 'rxjs';
+import { Observable, combineLatest, delay, map, of, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -116,7 +116,7 @@ export class LeadHomeComponent implements OnInit {
         tap(() => this.getAverageScore(this.globalFilters.duration as ScoreDuration)),
         tap(() => this.getProgramsStats(this.globalFilters)),
         tap(() => this.getGuessesCount(this.globalFilters.duration as ScoreDuration)),
-        tap(() => this.getTopFlop(this.globalFilters.duration as ScoreDuration)),
+        switchMap(() => this.getTopFlop(this.globalFilters.duration as ScoreDuration)),
         untilDestroyed(this),
       )
       .subscribe();
@@ -207,28 +207,24 @@ export class LeadHomeComponent implements OnInit {
   }
 
   getTopFlop(duration: ScoreDuration) {
-    combineLatest([
+    return combineLatest([
       this.scoresRestService.getTeamsStats(duration),
       this.scoresRestService.getUsersStats(duration),
-    ])
-      .pipe(
-        tap(([teams, users]) => {
-          teams = teams.filter((t) => t.score && t.score >= 0);
-          users = users.filter((u) => u.score && u.score >= 0);
-          teams.forEach((t) => this.teamsLeaderboard.push({ name: t.team.longName, score: t.score ?? 0 }));
-          users.forEach((u) =>
-            this.usersLeaderboard.push({
-              name: u.user.firstname + ' ' + u.user.lastname,
-              score: u.score ?? 0,
-            }),
-          );
-          this.teamsLeaderboardCount = this.teamsLeaderboard.length;
-          this.usersLeaderboardCount = this.usersLeaderboard.length;
-          this.topflopLoaded = true;
-        }),
-        untilDestroyed(this),
-      )
-      .subscribe();
+    ]).pipe(
+      tap(([teams, users]) => {
+        teams = teams.filter((t) => t.score && t.score >= 0);
+        users = users.filter((u) => u.score && u.score >= 0);
+        this.teamsLeaderboard = teams.map((t) => ({ name: t.team.longName, score: t.score ?? 0 }));
+        this.usersLeaderboard = users.map((u) => ({
+          name: u.user.firstname + ' ' + u.user.lastname,
+          score: u.score ?? 0,
+        }));
+
+        this.teamsLeaderboardCount = this.teamsLeaderboard.length;
+        this.usersLeaderboardCount = this.usersLeaderboard.length;
+        this.topflopLoaded = true;
+      }),
+    );
   }
 
   updateStatisticsDuration(duration: string) {

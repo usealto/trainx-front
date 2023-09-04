@@ -29,7 +29,7 @@
   </div>
 </div>
 
-<ng-container *ngIf="teamsLeaderboard.length > 0; else noTopFlopTeams">
+<ng-container *ngIf="teamsLeaderboardCount > 0; else noTopFlopTeams">
   <alto-top-flop
     [title]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title"
     [subtitle]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.subtitle"

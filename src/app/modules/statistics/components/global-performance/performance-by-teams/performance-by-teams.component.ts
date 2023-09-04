@@ -37,6 +37,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
   scoreCount = 0;
 
   teamsLeaderboard: { name: string; score: number }[] = [];
+  teamsLeaderboardCount = 0;
 
   constructor(
     public readonly teamStore: TeamStore,
@@ -62,6 +63,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
           tap(([, teams]) => {
             teams = teams.filter((t) => t.score && t.score >= 0);
             this.teamsLeaderboard = teams.map((t) => ({ name: t.team.longName, score: t.score ?? 0 }));
+            this.teamsLeaderboardCount = this.teamsLeaderboard.length;
           }),
           tap(([scores, current, previous]) => {
             this.teams = scores.scores;
