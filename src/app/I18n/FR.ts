@@ -511,7 +511,7 @@ export const FR = {
         noUsers: 'Aucun membre',
         users: ['Aucun', '{{}}', '{{}}'],
         averageScore: 'Score moyen (30 derniers jours)',
-        ativity: 'Activité  moyenne (30 derniers jours)',
+        activity: 'Activité  moyenne (30 derniers jours)',
         noScore: 'Aucun score',
         averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         creationDate: 'Date de création',
