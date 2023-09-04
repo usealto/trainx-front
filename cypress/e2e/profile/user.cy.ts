@@ -5,13 +5,28 @@ describe('User Profile', () => {
     cy.wait(1500);
   });
 
-  /* ==== Test Created with Cypress Studio ==== */
+  const lastname1 = 'testing1';
+  const lastname2 = 'testing2';
+
   it('changes lastname', function () {
+    cy.get('[data-cy="profileImgBadge"]').click();
     cy.get('[data-cy="profile"]').click();
     cy.get('[data-cy="lastname"]').clear();
-    cy.get('[data-cy="lastname"]').type('testing2');
+
+    // changes lastname to lastname1
+
+    cy.get('[data-cy="lastname"]').type(lastname1);
     cy.get('[data-cy="save-button"]').click();
     cy.reload();
-    cy.get('[data-cy="lastname"]').should('have.value', 'testing2');
+    cy.get('[data-cy="lastname"]').should('have.value', lastname1);
+
+    cy.get('[data-cy="lastname"]').clear();
+
+    // changes lastname1 to lastname2 so that if lastname was already lastname1 we can be sure it changed
+
+    cy.get('[data-cy="lastname"]').type(lastname2);
+    cy.get('[data-cy="save-button"]').click();
+    cy.reload();
+    cy.get('[data-cy="lastname"]').should('have.value', lastname2);
   });
 });

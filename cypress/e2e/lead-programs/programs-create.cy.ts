@@ -20,7 +20,7 @@ describe('Lead Programs', () => {
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
 
     cy.get('[data-cy="programCreateNext"]').click();
-    cy.get('.btn-primary').first().click();
+    cy.get('.btn-primary').eq(1).click();
 
     // Delete the program
 
@@ -28,7 +28,7 @@ describe('Lead Programs', () => {
 
     cy.get('[data-cy="programSearch"]').clear();
     cy.get('[data-cy="programSearch"]').type(newProg);
-    cy.get('[data-cy="programABCDTEST"]').click();
+    cy.get('[data-cy="programABCDTEST"]').eq(1).click();
 
     cy.wait(500);
 

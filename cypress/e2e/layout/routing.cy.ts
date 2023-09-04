@@ -30,8 +30,8 @@ describe('User Routing', () => {
     cy.url().should('include', 'u/home');
   });
 
-  it('display the 404 page', function () {
+  it('displays the 404 page', function () {
     cy.visit('/3q5s4d6ws5d4fwxfc');
-    cy.get('h1').should('have.text', 'Erreur 404');
+    cy.url().should('contains', '/404');
   });
 });
