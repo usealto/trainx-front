@@ -8,7 +8,7 @@ import {
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
-import { Observable, combineLatest, delay, map, of, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, map, of, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -219,7 +219,6 @@ export class LeadHomeComponent implements OnInit {
           name: u.user.firstname + ' ' + u.user.lastname,
           score: u.score ?? 0,
         }));
-
         this.teamsLeaderboardCount = this.teamsLeaderboard.length;
         this.usersLeaderboardCount = this.usersLeaderboard.length;
         this.topflopLoaded = true;
