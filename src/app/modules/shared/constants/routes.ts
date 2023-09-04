@@ -33,4 +33,6 @@ export const AltoRoutes = {
   // ADMIN
   translation: 'translation',
   admin: 'admin',
+  companies: 'companies',
+  users: 'users',
 };

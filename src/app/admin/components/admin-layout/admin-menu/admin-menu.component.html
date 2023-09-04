@@ -44,6 +44,15 @@
           <i class="bi bi-people-fill"></i>
         </a>
       </div>
+      <div *ngIf="user && impersonatedUser" ngbTooltip="Company's questions" placement="right">
+        <a
+          [routerLink]="['/', 'admin', 'companies', user.company.id, 'questions']"
+          routerLinkActive="menu-selected"
+          class="module"
+        >
+          <i class="bi bi-question-circle-fill"></i>
+        </a>
+      </div>
     </div>
 
     <div class="bottom-block mb-2" *ngIf="user">

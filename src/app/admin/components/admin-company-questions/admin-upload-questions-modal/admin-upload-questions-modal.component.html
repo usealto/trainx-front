@@ -1,0 +1,88 @@
+<div class="modal-header">
+  <div>
+    <h4 class="modal-title" id="modal-title">Upload and attach questions files</h4>
+    <span>Upload files with questions to be uploaded.</span>
+  </div>
+</div>
+<div class="modal-body">
+  <alto-dropzone [multiple]="false" (change)="onDropzoneEvent($event)">
+    <span subtitle class="fs-7"
+      >Following the CSV format :
+      <i>question,A,B,C,D,E,F,G,H,I,J,CorrectAnswers,CorrectAnswerInfo,Tags,Programs,KB_Link</i></span
+    >
+  </alto-dropzone>
+  <ng-container *ngIf="errorLogs.length > 0">
+    <h2 class="mt-5 text-danger">Some questions missing informations</h2>
+    <div class="table-container table-panel">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Questions</th>
+            <th>Errors</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let errorLog of errorLogs">
+            <td>{{ errorLog.title }}</td>
+            <td>{{ errorLog.error }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <alto-pagination
+        class="mx-4 d-block"
+        [collectionSize]="errorLogs.length"
+        (pageChange)="changeErrorLogsPage($event)"
+        [pageSize]="10"
+        [page]="errorLogsPage"
+      >
+      </alto-pagination>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="displayedQuestions.length > 0">
+    <h2 class="mt-5">Questions ready to be uploaded</h2>
+    <div class="table-container table-panel">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th class="w-5 text-center">Good answers</th>
+            <th class="w-5 text-center">Bad answers</th>
+            <th>Explanation</th>
+            <th class="w-5 text-center">Tags</th>
+            <th class="w-5 text-center">Programs</th>
+            <th>link</th>
+            <th class="w-5"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let question of displayedQuestions">
+            <td>{{ question.title }}</td>
+            <td class="text-center">{{ question.answersAccepted.length }}</td>
+            <td class="text-center">{{ question.answersWrong.length }}</td>
+            <td>{{ question.explanation }}</td>
+            <td class="text-center">{{ question.tagIds ? question.tagIds.length : '0' }}</td>
+            <td class="text-center">{{ question.programIds ? question.programIds.length : '0' }}</td>
+            <td>{{ question.link }}</td>
+            <td class="cursor-pointer px-3" (click)="deleteQuestion(question)">
+              <i class="fs-5 bi bi-trash3 float-end me-4"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <alto-pagination
+        class="mx-4 d-block"
+        [collectionSize]="questions.length"
+        (pageChange)="changeQuestionsPage($event)"
+        [pageSize]="10"
+        [page]="questionsPage"
+      >
+      </alto-pagination>
+    </div>
+  </ng-container>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary flex-grow-1" (click)="modal.dismiss('cancel click')">
+    Cancel
+  </button>
+  <button type="button" class="btn btn-primary flex-grow-1" (click)="uploadQuestions()">Upload</button>
+</div>

@@ -1,0 +1,58 @@
+<alto-admin-header
+  *ngIf="company"
+  title="Questions of {{ company.name }}"
+  subtitle="Find here the members of the company."
+  [divider]="true"
+  [breadcrumbs]="[
+    {
+      label: 'Companies',
+      url: '/admin/companies'
+    },
+    {
+      label: company.name,
+      url: ['/', 'admin', 'companies', company.id, 'questions']
+    }
+  ]"
+></alto-admin-header>
+<div *ngIf="company" class="d-flex justify-content-between align-items-center alto-grey fs-5 pb-4">
+  <div class="d-flex flex-column">
+    <span class="alto-text">{{ company.name }}</span>
+    <span class="fs-6">{{ questions.length }} questions in the company</span>
+  </div>
+  <div class="d-flex align-items-center gap-3">
+    <button type="button" (click)="uploadQuestions()" class="btn btn-outline-secondary">
+      <i class="bi bi-cloud-upload"></i>
+      Upload questions using CSV file
+    </button>
+    <button disabled class="btn btn-primary my-2 align-middle">
+      <i class="bi bi-plus-lg pe-2"></i>
+      Create question
+    </button>
+  </div>
+</div>
+<div *ngIf="questions.length > 0" class="table-container table-panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Question</th>
+        <th>Good answers</th>
+        <th>bad answers</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let question of displayedQuestions">
+        <td>{{ question.title }}</td>
+        <td>{{ question.answersAccepted.length }}</td>
+        <td>{{ question.answersWrong.length }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <alto-pagination
+    class="mx-4"
+    [collectionSize]="questions.length"
+    (pageChange)="changeQuestionsPage($event)"
+    [pageSize]="questionsPageSize"
+    [page]="questionsPage"
+  >
+  </alto-pagination>
+</div>

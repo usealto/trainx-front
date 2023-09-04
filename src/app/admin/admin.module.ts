@@ -30,6 +30,8 @@ import { AdminAssignSelectedUsersTeamModalComponent } from './components/admin-c
 import { ChangeStatusSelectedUsersTeamModalComponent } from './components/admin-company-users/change-status-selected-users-team-modal/change-status-selected-users-team-modal.component';
 import { ShowRawDataModalComponent } from './components/admin-user-create/admin-user-create-form/show-raw-data-modal/show-raw-data-modal.component';
 import { AdminUsersFiltersListComponent } from './components/admin-company-users/admin-users-filters-list/admin-users-filters-list.component';
+import { AdminCompanyQuestionsComponent } from './components/admin-company-questions/admin-company-questions.component';
+import { AdminUploadQuestionsModalComponent } from './components/admin-company-questions/admin-upload-questions-modal/admin-upload-questions-modal.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +59,8 @@ import { AdminUsersFiltersListComponent } from './components/admin-company-users
     ChangeStatusSelectedUsersTeamModalComponent,
     ShowRawDataModalComponent,
     AdminUsersFiltersListComponent,
+    AdminCompanyQuestionsComponent,
+    AdminUploadQuestionsModalComponent,
   ],
   imports: [
     CommonModule,
