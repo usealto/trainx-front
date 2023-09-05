@@ -144,6 +144,7 @@ export const FR = {
       noDataSubtitle:
         'Créez votre premier programme et assignez le à vos équipes en quelques minutes seulement',
       score: 'Score',
+      cardPlaceholder: 'Motivez vos équipes à réaliser des programmes !',
       placeholder:
         'Construisez votre premier programme pour commencer à entraîner et à évaluer vos équipes !',
     },

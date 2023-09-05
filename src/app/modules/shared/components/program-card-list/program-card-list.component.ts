@@ -142,8 +142,8 @@ export class ProgramCardListComponent implements OnInit {
             x.program.teams = x.teams.map((t) => t.team) as unknown as TeamLightDtoApi[];
           });
           this.programs = p.map((x) => x.program);
-          // this.programsDisplay = this.programs;
-          // this.count = this.programs.length;
+          this.programsDisplay = this.programs;
+          this.count = this.programs.length;
           this.isSearchResult = false;
           p.forEach((x) => {
             this.programsScores.set(x.program.id, x.score ?? 0);
