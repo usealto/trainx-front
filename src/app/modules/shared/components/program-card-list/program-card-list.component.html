@@ -34,25 +34,55 @@
   </ng-container>
   <div *ngSwitchDefault></div>
 </span>
-<div class="row mb-4">
-  <div
-    class="mb-4 col-4"
-    *ngFor="let prog of programsDisplay | slice : (page - 1) * pageSize : page * pageSize"
-  >
-    <alto-program-card
-      [displayToggle]="displayToggle"
-      [score]="programsScores.get(prog.id)"
-      [progress]="programsProgress.get(prog.id)"
-      [participation]="programsInvolvement.get(prog.id)"
-      [program]="prog"
-      [allTeamsCount]="teamStore.teams.value.length"
-    ></alto-program-card>
+<ng-container *ngIf="count > 0; else noPrograms">
+  <div class="row mb-4">
+    <div
+      class="mb-4 col-4"
+      *ngFor="let prog of programsDisplay | slice : (page - 1) * pageSize : page * pageSize"
+    >
+      <alto-program-card
+        [displayToggle]="displayToggle"
+        [score]="programsScores.get(prog.id)"
+        [progress]="programsProgress.get(prog.id)"
+        [participation]="programsInvolvement.get(prog.id)"
+        [program]="prog"
+        [allTeamsCount]="teamStore.teams.value.length"
+      ></alto-program-card>
+    </div>
   </div>
-</div>
 
-<alto-pagination
-  [collectionSize]="count"
-  [(page)]="page"
-  [pageSize]="pageSize"
-  aria-label="Default pagination"
-></alto-pagination>
+  <alto-pagination
+    [collectionSize]="count"
+    [(page)]="page"
+    [pageSize]="pageSize"
+    aria-label="Default pagination"
+  ></alto-pagination>
+</ng-container>
+
+<ng-template #noPrograms>
+  <div *ngIf="isSearchResult; else noSearchResult" class="nodata-placeholder text-center">
+    <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" />
+    <p class="mt-3">{{ I18ns.programs.programs.placeholderTitle }}</p>
+    <span class="mt-3 d-block">{{ I18ns.programs.programs.placeholderSubtitle }}</span>
+    <a type="button" class="btn btn-primary mt-4" [routerLink]="AltoRoutes.programsCreate"
+      ><i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+    </a>
+  </div>
+  <ng-template #noSearchResult>
+    <div *ngIf="this.isActive" class="nodata-placeholder text-center">
+      <img [src]="Emoji.BuildingConstruction | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.leadHome.ongoingPrograms.placeholder }}</p>
+      <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new"
+        ><i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+      </a>
+    </div>
+    <div *ngIf="!this.isActive" class="nodata-placeholder text-center">
+      <img [src]="Emoji.BeachWithUmbrella | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.programs.activePrograms.placeholderTitle }}</p>
+      <span class="mt-3 d-block">{{ I18ns.programs.activePrograms.placeholderSubtitle }}</span>
+      <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new"
+        ><i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+      </a>
+    </div>
+  </ng-template>
+</ng-template>

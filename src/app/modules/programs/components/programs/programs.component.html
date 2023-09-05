@@ -1,5 +1,5 @@
 <div class="header-panel mb-5">
-  <img class="emoji me-4" [src]="EmojiName.Bullseye | emoji" />
+  <img class="emoji me-4" [src]="Emoji.Bullseye | emoji" />
   <div class="d-inline-block">
     <h1>{{ I18ns.programs.title }}</h1>
     <p class="alto-grey fs-6">{{ I18ns.programs.subtitle }}</p>
@@ -13,7 +13,7 @@
 <div *ngIf="activeTab === 'programs'" class="active-programs">
   <div>
     <h2>
-      <img class="emoji" [src]="EmojiName.Bullseye | emoji" />
+      <img class="emoji" [src]="Emoji.Bullseye | emoji" />
       {{ I18ns.programs.activePrograms.title }}
     </h2>
     <p class="subtitle alto-grey">{{ I18ns.programs.activePrograms.subtitle }}</p>
@@ -29,7 +29,7 @@
   <div class="d-flex justify-content-between align-items-center mb-5">
     <div>
       <h2 id="programsAnchor">
-        <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
+        <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" />
         {{ I18ns.programs.programs.title }}
       </h2>
       <p class="mt-2 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
@@ -60,7 +60,7 @@
     <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.questions.createQuestion }}</span>
   </button>
   <h2 id="questionsAnchor">
-    <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" />
+    <img class="emoji" [src]="Emoji.RedQuestionMark | emoji" />
     {{ I18ns.programs.questions.title }}
   </h2>
   <p class="mt-3 mb-5 alto-grey">{{ I18ns.programs.questions.subtitle }}</p>
@@ -204,7 +204,7 @@
     <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.tags.createTag }}</span>
   </button>
   <h2 id="tagsAnchor">
-    <img class="emoji" [src]="EmojiName.Label | emoji" />
+    <img class="emoji" [src]="Emoji.Label | emoji" />
     {{ I18ns.programs.tags.title }}
   </h2>
   <p class="mt-3 mb-5 alto-grey">{{ I18ns.programs.tags.subtitle }}</p>

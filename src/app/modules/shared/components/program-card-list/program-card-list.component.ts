@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ProgramDtoApi, TeamLightDtoApi } from '@usealto/sdk-ts-angular';
 import { map, tap } from 'rxjs';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
@@ -21,6 +22,7 @@ import { ScoresService } from '../../services/scores.service';
   styleUrls: ['./program-card-list.component.scss'],
 })
 export class ProgramCardListComponent implements OnInit {
+  Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
 
@@ -41,6 +43,7 @@ export class ProgramCardListComponent implements OnInit {
   programFilters: ProgramFilters = { teams: [], search: '' };
 
   displayToggle = false;
+  isSearchResult = false;
 
   constructor(
     private readonly programRunsService: ProgramRunsRestService,
@@ -112,6 +115,7 @@ export class ProgramCardListComponent implements OnInit {
       return { ...p, score: undefined };
     });
     this.count = this.programsDisplay.length;
+    this.isSearchResult = true;
   }
 
   getPrograms() {
@@ -138,8 +142,9 @@ export class ProgramCardListComponent implements OnInit {
             x.program.teams = x.teams.map((t) => t.team) as unknown as TeamLightDtoApi[];
           });
           this.programs = p.map((x) => x.program);
-          this.programsDisplay = this.programs;
-          this.count = this.programs.length;
+          // this.programsDisplay = this.programs;
+          // this.count = this.programs.length;
+          this.isSearchResult = false;
           p.forEach((x) => {
             this.programsScores.set(x.program.id, x.score ?? 0);
             this.programsProgress.set(x.program.id, x.progress ?? 0);

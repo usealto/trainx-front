@@ -46,7 +46,7 @@ interface QuestionDisplay extends QuestionDtoApi {
   providers: [ReplaceInTranslationPipe],
 })
 export class ProgramsComponent implements OnInit {
-  EmojiName = EmojiName;
+  Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   //

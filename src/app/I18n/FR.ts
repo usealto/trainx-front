@@ -174,6 +174,8 @@ export const FR = {
       titleIcon: '🎯',
       title: 'Programmes en cours',
       subtitle: 'Retrouvez les programmes que vos équipes sont en train de réaliser.',
+      placeholderTitle: 'Vos équipes n’ont pas encore entamé leur montée en compétences.',
+      placeholderSubtitle: 'Commencez à créer des programmes pour les motiver !',
     },
     programs: {
       title: 'Programmes de vos équipes',
@@ -192,6 +194,8 @@ export const FR = {
         score: 'Score',
         progression: 'Avancement',
       },
+      placeholderTitle: 'Aucun résultat ne correspond aux filtres sélectionnés.',
+      placeholderSubtitle: 'Essayez avec d’autres filtres.',
     },
     questions: {
       title: 'Questions de vos programmes',
