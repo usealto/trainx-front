@@ -110,7 +110,7 @@
         <tbody [style.height]="53 * paginatedQuestions.length + 'px'">
           <ng-container *ngIf="!isQuestionsLoading">
             <tr *ngFor="let question of paginatedQuestions">
-              <td class="text-black" data-cy="questionsList">
+              <td class="alto-text fs-7" data-cy="questionsList">
                 {{ question.title }}
               </td>
               <td class="w-10 text-center">

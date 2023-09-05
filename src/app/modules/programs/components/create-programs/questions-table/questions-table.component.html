@@ -1,0 +1,27 @@
+<div class="panel questions-panel">
+  <ng-container *ngFor="let quest of questionsDisplay">
+    <div class="row">
+      <div class="form-check form-switch col-1">
+        <input
+          class="form-check-input cursor-pointer"
+          #switchQuestion
+          type="checkbox"
+          [checked]="quest.isChecked"
+          (change)="addOrRemoveQuestion(quest.id, !switchQuestion.checked)"
+        />
+      </div>
+      <div class="col-9 fs-7 fw-medium lh-lg" data-cy="questionTitle">{{ quest.title }}</div>
+      <div class="col-2 text-end cursor-pointer" (click)="openForm(quest)">
+        <i class="bi bi-pen"></i>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<alto-pagination
+  class="mt-4"
+  [(page)]="questionPage"
+  [pageSize]="questionPageSize"
+  [collectionSize]="questionsCount"
+  (pageChange)="questionPageChange($event)"
+></alto-pagination>

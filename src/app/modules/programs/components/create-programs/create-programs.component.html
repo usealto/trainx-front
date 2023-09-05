@@ -48,6 +48,9 @@
     </div>
 
     <alto-programs-form [isEdit]="isEdit" [form]="programForm"></alto-programs-form>
+
+    <hr class="mt-8 bottom-hr" />
+
     <div class="row">
       <div class="col-6">
         <a class="cancel-btn" (click)="cancel()">
@@ -62,7 +65,6 @@
           [disabled]="programForm && !programForm.valid"
         >
           <span>
-            <!-- {{ isEdit ? I18ns.shared.save : I18ns.shared.next }} -->
             {{ I18ns.shared.next }}
           </span>
           <i class="bi bi-arrow-right-short"></i>
@@ -77,72 +79,92 @@
       <span class="">{{ I18ns.programs.forms.step2.subtitle }}</span>
     </div>
 
-    <div class="text-center">
-      <!-- <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.newSubtitle }}</p> -->
-      <button data-cy="createNewQuestion" class="btn btn-primary mb-8" (click)="openQuestionForm()">
-        <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
-      </button>
-      <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.or }}</p>
-    </div>
+    <ng-container *ngIf="(questionsAssociatedDisplay?.data?.length || 0) > 0; else noAssociatedQuestions">
+      <div class="row">
+        <div class="col-6">
+          <h2>
+            <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" />
+            {{ I18ns.programs.forms.step2.associatedQuestions.title }}
+          </h2>
+          <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.associatedQuestions.subtitle }}</p>
 
-    <p class="fw-medium mb-5">{{ I18ns.programs.forms.step2.existing }}</p>
-    <div class="panel questions-panel">
-      <div>
-        <ng-select
-          class="me-4 w-35"
-          [items]="programStore.tags.value$ | async"
-          [multiple]="true"
-          bindValue="id"
-          bindLabel="name"
-          [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder"
-          [closeOnSelect]="false"
-          [(ngModel)]="selectedTags"
-          (ngModelChange)="getQuestions()"
-        >
-          <ng-template ng-label-tmp let-item="item" let-clear="clear">
-            <div class="alto-badge">
-              <span class="cursor-pointer me-2 align-middle" (click)="clear(item)" aria-hidden="true">
-                <i class="bi bi-x-lg"></i>
-              </span>
-              <span>{{ item.name }}</span>
-            </div>
-          </ng-template>
-          <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-            <span class="alto-badge">{{ item.name }}</span>
-            <i class="bi bi-check-circle-fill"></i>
-          </ng-template>
-        </ng-select>
+          <alto-search class="mb-6" (searchChange)="searchQuestions($event)"></alto-search>
+        </div>
+        <div class="col-6 text-end">
+          <button class="btn btn-primary mb-8" (click)="openQuestionForm()" data-cy="createNewQuestion">
+            <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ASSOCIATED QUESTIONS' LIST -->
+
+      <alto-questions-table
+        class="mb-8"
+        [data]="questionsAssociatedDisplay"
+        [isChecked]="true"
+        (changeQuestionAssociation)="addOrRemoveQuestion($event)"
+        (openQuestionForm)="openQuestionForm($event)"
+        (pageChange)="questionPageChange($event)"
+      >
+      </alto-questions-table>
+    </ng-container>
+    <ng-template #noAssociatedQuestions>
+      <div class="text-center">
+        <button class="btn btn-primary mb-8" (click)="openQuestionForm()" data-cy="createNewQuestion">
+          <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
+        </button>
+        <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.or }}</p>
+      </div>
+    </ng-template>
+
+    <ng-container *ngIf="(questionsAssociatedDisplay?.data?.length || 0) > 0; else noAssociatedQuestions2">
+      <h2>
+        <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" />
+        {{ I18ns.programs.forms.step2.existing2.title }}
+      </h2>
+      <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.existing2.subtitle }}</p>
+    </ng-container>
+
+    <ng-template #noAssociatedQuestions2>
+      <h2>
+        <img class="emoji" [src]="EmojiName.Memo | emoji" />
+        {{ I18ns.programs.forms.step2.existing.title }}
+      </h2>
+      <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.existing.subtitle }}</p>
+    </ng-template>
+
+    <div class="row mb-6">
+      <div class="col-6">
         <alto-search (searchChange)="searchQuestions($event)"></alto-search>
       </div>
 
-      <!-- QUESTION LIST -->
-      <ng-container *ngFor="let quest of questionsDisplay">
-        <div class="row">
-          <div class="form-check form-switch col-1">
-            <input
-              class="form-check-input cursor-pointer"
-              #switchQuestion
-              type="checkbox"
-              [checked]="quest.isChecked"
-              (change)="addOrRemoveQuestion(quest.id, !switchQuestion.checked)"
-            />
-          </div>
-          <div class="col-9 fs-7 fw-medium lh-lg" data-cy="questionTitle">{{ quest.title }}</div>
-          <div class="col-2 text-end cursor-pointer" (click)="openQuestionForm(quest)">
-            <i class="bi bi-pen"></i>
-          </div>
-        </div>
-      </ng-container>
+      <div class="col-6 text-end">
+        <alto-dropdown-filter
+          class="text-start"
+          [data]="programStore.tags.value"
+          [returnValue]="'id'"
+          [displayLabel]="'name'"
+          [placeholder]="I18ns.programs.questions.filters.tags"
+          [selectedItems]="selectedTags"
+          (selectChange)="tagChange($event)"
+        ></alto-dropdown-filter>
+      </div>
     </div>
 
-    <alto-pagination
-      class="mt-4"
-      [(page)]="questionPage"
-      [pageSize]="questionPageSize"
-      [collectionSize]="questionsCount"
+    <!-- QUESTION LIST -->
+
+    <alto-questions-table
+      [data]="questionsDisplay"
+      [isChecked]="false"
+      (changeQuestionAssociation)="addOrRemoveQuestion($event)"
+      (openQuestionForm)="openQuestionForm($event)"
       (pageChange)="questionPageChange($event)"
-    ></alto-pagination>
-    <hr class="mt-8" />
+    >
+    </alto-questions-table>
+
+    <hr class="mt-8" class="bottom-hr" />
+
     <div class="row">
       <div class="col-6">
         <button class="btn btn-outline-secondary" (click)="cancel()">
@@ -157,6 +179,7 @@
       </div>
     </div>
   </div>
+
   <!-- SUMMARY  -->
   <div *ngSwitchCase="3">
     <div class="infos">
@@ -237,5 +260,11 @@
         </a>
       </div>
     </ng-container>
+
+    <hr class="mt-8 bottom-hr" />
+
+    <a class="btn btn-primary float-end" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]">{{
+      I18ns.shared.submit
+    }}</a>
   </div>
 </div>

@@ -4,8 +4,20 @@ label {
 hr {
   border-color: var(--bs-gray-300);
 }
+:host ::ng-deep {
+  .form-control {
+    font-size: 0.833rem;
+    padding: 0.667rem 1rem;
+  }
+  ng-select {
+    .ng-placeholder {
+      font-size: 0.833rem;
+    }
+  }
+}
 .form-control {
   margin-bottom: 1.143rem;
+  font-size: 0.833rem;
 }
 
 .form-label {
@@ -22,6 +34,7 @@ hr {
   color: var(--gray-900);
   background-color: var(--gray-200);
   padding: 0.5rem 1rem;
+  font-size: 0.833rem;
 }
 
 .sidebar-body {
