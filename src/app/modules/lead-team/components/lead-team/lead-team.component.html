@@ -20,7 +20,7 @@
             <th scope="col" class="w-25">{{ I18ns.leadTeam.teams.table.name }}</th>
             <th scope="col" class="w-20 text-center">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
             <th scope="col" class="w-20 text-start">{{ I18ns.leadTeam.teams.table.usersCount }}</th>
-            <th scope="col" class="w-25 text-start">{{ I18ns.leadTeam.teams.table.ativity }}</th>
+            <th scope="col" class="w-25 text-start">{{ I18ns.leadTeam.teams.table.activity }}</th>
             <th scope="col" class="w-10 text-start">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
             <th></th>
             <th></th>
@@ -49,10 +49,10 @@
                   <div
                     class="progress-bar d-inline-block"
                     role="progressbar"
-                    [style]="'width:' + (team.totalGuessesCount/team.questionsPushedCount) * 100 + '%'"
+                    [style]="'width:' + (team.totalGuessesCount / team.questionsPushedCount) * 100 + '%'"
                   ></div>
                 </div>
-                {{ team.totalGuessesCount }} / {{ team.questionsPushedCount }}
+                <span>{{ team.totalGuessesCount }} / {{ team.questionsPushedCount }}</span>
               </div>
               <div class="text-start" *ngIf="!team.totalGuessesCount || !team.questionsPushedCount">
                 {{ I18ns.leadTeam.teams.table.noActivity }}
