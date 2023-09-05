@@ -53,7 +53,7 @@ export class UserEditFormComponent implements OnInit {
         .pipe(tap((teams) => (this.teams = teams)))
         .subscribe();
       this.userForm.patchValue({
-        team: this.user?.team?.id,
+        team: this.user?.teamId,
         type: this.getHigherRole(this.user?.roles ?? []),
       });
     });
