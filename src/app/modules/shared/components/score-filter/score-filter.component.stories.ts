@@ -1,10 +1,11 @@
-import { type Meta, type StoryObj } from '@storybook/angular';
+import { componentWrapperDecorator, type Meta, type StoryObj } from '@storybook/angular';
 import { ScoreFilterComponent } from './score-filter.component';
 
 const meta: Meta<ScoreFilterComponent> = {
   title: 'Shared/ScoreFilter',
   component: ScoreFilterComponent,
   tags: ['autodocs'],
+  decorators: [componentWrapperDecorator((story) => `<div style="height: 26rem">${story}</div>`)],
   render: (args: ScoreFilterComponent) => ({
     props: {
       ...args,

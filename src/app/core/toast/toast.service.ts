@@ -17,9 +17,6 @@ export interface Toast {
 export class ToastService {
   toasts: Toast[] = [];
 
-  // show(text: string, options: any = {}) {
-  //   this.toasts.push({ text, ...options });
-  // }
   show(t: Toast) {
     this.toasts.push(t);
   }

@@ -10,6 +10,10 @@ h1 {
   vertical-align: bottom;
   display: inline-block;
 }
+
+alto-search {
+  width: 26.667rem;
+}
 .infos {
   height: 4.333rem;
   background-color: var(--primary-25);
@@ -17,20 +21,6 @@ h1 {
   padding: 1.14rem 1.7rem;
   color: var(--primary-600);
   margin-bottom: 4rem;
-}
-
-.questions-panel {
-  padding: 0;
-  & > div {
-    padding: 1.333rem 2rem;
-    margin: 0;
-  }
-  & .row {
-    border-top: 1px solid var(--gray-200);
-  }
-  .form-switch {
-    margin: 0;
-  }
 }
 
 .recap-panel-header {
@@ -55,6 +45,23 @@ h1 {
   .bi {
     color: var(--gray-900);
   }
+
+  .pill-outline {
+    height: 2rem;
+    width: 2rem;
+    font-size: 1rem;
+    line-height: 2rem;
+  }
+}
+
+:host ::ng-deep .recap-panel alto-colored-pill-list .alto-badge,
+.recap-panel .alto-badge:not(.pill-outline),
+.recap-panel .alto-score {
+  height: 2.333rem;
+  min-width: 2.333rem;
+  line-height: 2.333rem;
+  padding: 0 1rem;
+  font-size: 1rem;
 }
 
 .form-nav {
@@ -78,4 +85,8 @@ h1 {
       color: white;
     }
   }
+}
+
+.bottom-hr {
+  border-top-color: var(--gray-400);
 }

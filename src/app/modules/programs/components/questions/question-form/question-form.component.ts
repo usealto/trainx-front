@@ -1,5 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormArray, FormControl, UntypedFormBuilder, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormControl,
+  UntypedFormBuilder,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -14,6 +21,7 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { combineLatest, tap } from 'rxjs';
 import { IFormBuilder, IFormControl, IFormGroup } from 'src/app/core/form-types';
+import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { QuestionForm } from '../../../models/question.form';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
@@ -30,12 +38,15 @@ import { TagsRestService } from '../../../services/tags-rest.service';
 export class QuestionFormComponent implements OnInit {
   I18ns = I18ns;
   QuestionSubmittedStatusEnum = PatchQuestionSubmittedDtoApiStatusEnumApi;
+
   @Input() program: ProgramDtoApi | undefined;
   @Input() question?: QuestionDtoApi;
   @Input() isSubmitted = false;
   @Input() isNewProgram = false;
+  @Input() stayOpen = false;
   @Output() createdQuestion = new EventEmitter<QuestionDtoApi>();
   @Output() dismissedQuestion = new EventEmitter<any>();
+
   private fb: IFormBuilder;
   questionForm!: IFormGroup<QuestionForm>;
   isEdit = false;
@@ -62,6 +73,7 @@ export class QuestionFormComponent implements OnInit {
     private readonly questionSubmittedRestService: QuestionsSubmittedRestService,
     readonly fob: UntypedFormBuilder,
     public activeOffcanvas: NgbActiveOffcanvas,
+    private readonly toastService: ToastService,
   ) {
     this.fb = fob;
   }
@@ -86,9 +98,11 @@ export class QuestionFormComponent implements OnInit {
         answerType: AnswerFormatTypeEnumApi.Text,
         answersAccepted: this.fb.array(
           this.question ? this.createFormArray(this.question.answersAccepted.length) : [this.fb.control('')],
+          this.atLeastOne,
         ),
         answersWrong: this.fb.array(
           this.question ? this.createFormArray(this.question.answersWrong.length) : [this.fb.control('')],
+          this.atLeastOne,
         ),
         explanation: '',
         link: '',
@@ -112,6 +126,7 @@ export class QuestionFormComponent implements OnInit {
           this.questionForm.controls.answersWrong.patchValue(this.question.answersWrong);
         }
       }
+      this.questionForm.valueChanges.pipe(tap(console.log)).subscribe();
     }, 0);
   }
 
@@ -140,30 +155,40 @@ export class QuestionFormComponent implements OnInit {
       explanation,
       link,
     };
+    let obs$;
     if ((!this.isEdit && !this.question) || this.isSubmitted) {
-      this.questionService
-        .createQuestion(params)
-        .pipe(
-          tap((question) => this.createdQuestion.emit(question)),
-          tap(() => {
-            if (this.isSubmitted) {
-              this.changeStatus(PatchQuestionSubmittedDtoApiStatusEnumApi.Accepted);
-            }
-          }),
-          tap(() => this.activeOffcanvas.dismiss()),
-          untilDestroyed(this),
-        )
-        .subscribe();
+      obs$ = this.questionService.createQuestion(params).pipe(
+        tap(() => {
+          if (this.isSubmitted) {
+            this.changeStatus(PatchQuestionSubmittedDtoApiStatusEnumApi.Accepted);
+          }
+        }),
+      );
     } else {
-      this.questionService
-        .updateQuestion({ id: this.question?.id, patchQuestionDtoApi: params } as PatchQuestionRequestParams)
-        .pipe(
-          tap((question) => this.createdQuestion.emit(question)),
-          tap(() => this.activeOffcanvas.dismiss()),
-          untilDestroyed(this),
-        )
-        .subscribe();
+      obs$ = this.questionService.updateQuestion({
+        id: this.question?.id,
+        patchQuestionDtoApi: params,
+      } as PatchQuestionRequestParams);
     }
+
+    obs$
+      .pipe(
+        tap(() =>
+          this.toastService.show({
+            text: this.isEdit ? I18ns.questions.form.editSuccess : I18ns.questions.form.createSuccess,
+            type: 'success',
+            autoHide: true,
+          }),
+        ),
+        tap((question) => this.createdQuestion.emit(question)),
+        tap(() => {
+          if (!this.stayOpen) {
+            this.activeOffcanvas.dismiss();
+          }
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
   }
 
   changeStatus(status: PatchQuestionSubmittedDtoApiStatusEnumApi) {
@@ -202,12 +227,8 @@ export class QuestionFormComponent implements OnInit {
     }
   }
 
-  // @memoize()
-  // getLength(data: string | undefined | null): number {
-  //   if (!data) {
-  //     return 0;
-  //   } else {
-  //     return data.length;
-  //   }
-  // }
+  atLeastOne(control: AbstractControl): ValidationErrors | null {
+    const valid = (control as FormArray).controls.some((c) => c.value !== '');
+    return valid ? null : { atLeastOneError: true };
+  }
 }

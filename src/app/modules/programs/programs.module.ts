@@ -9,6 +9,7 @@ import { QuestionFormComponent } from './components/questions/question-form/ques
 import { TagsFormComponent } from './components/tags/tag-form/tag-form.component';
 import { AutoResizeTextareaDirective } from 'src/app/core/utils/directives/auto-resize-textarea.directive';
 import { QuestionSubmittedFormComponent } from './components/questions/question-submitted-form/question-submitted-form.component';
+import { QuestionsTableComponent } from './components/create-programs/questions-table/questions-table.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { QuestionSubmittedFormComponent } from './components/questions/question-
     QuestionFormComponent,
     TagsFormComponent,
     QuestionSubmittedFormComponent,
+    QuestionsTableComponent,
   ],
   imports: [CommonModule, ProgramsRoutingModule, SharedModule],
 })

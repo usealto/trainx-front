@@ -22,6 +22,7 @@ export const FR = {
     noDataSubtitle: 'Aucun résultat ne correspond à votre recherche',
     reply: 'Répondre',
     search: 'Rechercher',
+    textNotFound: 'Aucun résultat',
     period: 'Période',
     soon: 'Bientôt',
     tag: 'tag',
@@ -75,7 +76,7 @@ export const FR = {
       button: 'Envoyer un mail à Alto',
     },
     noTeams: {
-      title: "Oops ! Nous n'avons pas trouvé votre équipe.",
+      title: 'Oops ! Vous n’êtes assigné(e) à aucune équipe.',
       subtitle: 'S’il s’agit d’une erreur, informez-en votre administrateur directement.',
       button: 'Envoyer un mail à mon administrateur',
     },
@@ -271,7 +272,20 @@ export const FR = {
         new: 'Créer une nouvelle question',
         newSubtitle: "Aucune question n'a été ajoutée pour l'instant. Vous pouvez :",
         or: 'OU',
-        existing: 'Choisir des questions à associer à ce programme :',
+        associatedQuestions: {
+          title: 'Questions ajoutées au programme',
+          subtitle: 'Retrouvez ici les questions que vous venez de créer.',
+        },
+        existing: {
+          title: 'Choisir des questions à associer à ce programme :',
+          subtitle:
+            'Retrouvez ici les questions associées aux tags sélectionnés dans la partie “Informations”.',
+        },
+        existing2: {
+          title: 'Questions pouvant être ajoutées au programme',
+          subtitle:
+            'Retrouvez ici les questions associées aux tags sélectionnés dans la partie “Informations”.',
+        },
       },
       step3: {
         title: 'Récapitulatif',
@@ -386,7 +400,8 @@ export const FR = {
       namePlaceholder: 'Exemple : Quel est notre principal concurrent sur le marché des PMEs ?',
       goodAnswer: 'Bonne(s) réponse(s)',
       addGoodAnswer: 'Ajouter une autre bonne réponse',
-      answerPlaceholder: 'Réponse',
+      goodAnswerPlaceholder: 'Écrire une bonne réponse',
+      badAnswerPlaceholder: 'Écrire une mauvaise réponse',
       badAnswer: 'Mauvaise(s) réponse(s)',
       badAnswerSubtitle: 'Minimum 1 mauvaise réponse.',
       addBadAnswer: 'Ajouter une autre mauvaise réponse',
@@ -400,6 +415,8 @@ export const FR = {
       link: 'Lien utile',
       linkPlaceholder: 'Lien vers une ressource utile',
       remainingCharacters: 'caractères restants',
+      createSuccess: 'La question a bien été ajoutée',
+      editSuccess: 'La question a bien été modifiée',
     },
     deleteModal: {
       title: 'Supprimer la question "{{}}"',
@@ -494,7 +511,7 @@ export const FR = {
         noUsers: 'Aucun membre',
         users: ['Aucun', '{{}}', '{{}}'],
         averageScore: 'Score moyen (30 derniers jours)',
-        ativity: 'Activité  moyenne (30 derniers jours)',
+        activity: 'Activité  moyenne (30 derniers jours)',
         noScore: 'Aucun score',
         averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         creationDate: 'Date de création',

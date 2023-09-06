@@ -4,11 +4,19 @@ import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { PriorityEnumApi, ProgramDtoApi, QuestionDtoApi, TeamApi } from '@usealto/sdk-ts-angular';
+import {
+  PriorityEnumApi,
+  ProgramDtoApi,
+  ProgramDtoApiPriorityEnumApi,
+  QuestionDtoApi,
+  QuestionDtoPaginatedResponseApi,
+  TeamApi,
+} from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { I18ns, getTranslation } from 'src/app/core/utils/i18n/I18n';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
@@ -18,6 +26,7 @@ import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 
 @UntilDestroy()
 @Component({
@@ -29,6 +38,7 @@ import { QuestionFormComponent } from '../questions/question-form/question-form.
 export class CreateProgramsComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
+  AltoRoutes = AltoRoutes;
   private fb: IFormBuilder;
 
   programForm!: IFormGroup<ProgramForm>;
@@ -37,14 +47,17 @@ export class CreateProgramsComponent implements OnInit {
   isEdit = false;
 
   questions!: QuestionDtoApi[];
-  questionsDisplay: QuestionDisplay[] = [];
+  questionsAssociated!: QuestionDtoApi[];
+  questionsDisplay?: QuestionDtoPaginatedResponseApi;
+  questionsAssociatedDisplay?: QuestionDtoPaginatedResponseApi;
   questionList: { id: string; delete: boolean; isNewQuestion: boolean }[] = [];
-  questionPage = 1;
   questionPageSize = 10;
-  questionsCount = 0;
+  questionPage = 1;
+  questionAssociatedPage = 1;
 
   selectedTags: string[] = [];
   questionSearch = '';
+  questionAssociatedSearch = '';
 
   constructor(
     readonly fob: UntypedFormBuilder,
@@ -96,55 +109,55 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   saveProgram() {
-    if (this.programForm.value) {
-      const { teams, priority, ...rest } = this.programForm.value;
-
-      delete rest['tags'];
-
-      const progValues = {
-        ...rest,
-        priority: priority as string as PriorityEnumApi,
-        teams: teams.map((id) => ({ id } as TeamApi)),
-      };
-
-      let obs$: Observable<any>;
-
-      if (this.isEdit && this.editedProgram) {
-        obs$ = !this.programForm.touched
-          ? of(null)
-          : this.programRestService.updateProgram(this.editedProgram.id, progValues);
-      } else {
-        obs$ = this.programRestService.createProgram(progValues);
-      }
-      let progId = '';
-      obs$
-        .pipe(
-          filter((x) => !!x),
-          map((d) => d.data),
-          map((prog: ProgramDtoApi) => {
-            progId = prog.id;
-            if (!this.isEdit) {
-              // add questionList to the program
-              return this.questionList.map((q) =>
-                this.programRestService.addOrRemoveQuestion(prog.id, q.id, false),
-              );
-            } else {
-              return of(null);
-            }
-          }),
-          switchMap((obs) => combineLatest(obs ?? [])),
-          tap(() => {
-            this.isEdit = true;
-          }),
-          switchMap(() => this.programRestService.getProgram(progId)),
-          tap((prog) => {
-            this.editedProgram = prog;
-            this.programStore.programs.value = [];
-          }),
-          untilDestroyed(this),
-        )
-        .subscribe();
+    if (!this.programForm.value) {
+      return;
     }
+    const { teams, priority, ...rest } = this.programForm.value;
+
+    delete rest['tags'];
+
+    const progValues = {
+      ...rest,
+      priority: priority as string as PriorityEnumApi,
+      teams: teams.map((id) => ({ id } as TeamApi)),
+    };
+
+    let obs$: Observable<any>;
+
+    if (this.isEdit && this.editedProgram) {
+      obs$ = !this.programForm.touched
+        ? of(null)
+        : this.programRestService.updateProgram(this.editedProgram.id, progValues);
+    } else {
+      obs$ = this.programRestService.createProgram(progValues);
+    }
+    let progId = '';
+    obs$
+      .pipe(
+        filter((x) => !!x),
+        map((d) => d.data),
+        switchMap((prog: ProgramDtoApi) => {
+          progId = prog.id;
+          if (!this.isEdit) {
+            // add questionList to the program
+            return combineLatest(
+              this.questionList.map((q) => this.programRestService.addOrRemoveQuestion(prog.id, q.id, false)),
+            );
+          } else {
+            return of(null);
+          }
+        }),
+        tap(() => {
+          this.isEdit = true;
+        }),
+        switchMap(() => this.programRestService.getProgram(progId)),
+        tap((prog: ProgramDtoApi) => {
+          this.editedProgram = prog;
+          this.programStore.programs.value = [];
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
   }
 
   openQuestionForm(question?: QuestionDisplay) {
@@ -154,14 +167,18 @@ export class CreateProgramsComponent implements OnInit {
       panelClass: 'overflow-auto',
     });
     if (question) {
-      canvasRef.componentInstance.question = this.questions.find((q) => q.id === question?.id);
+      canvasRef.componentInstance.question =
+        this.questions.find((q) => q.id === question?.id) ||
+        this.questionsAssociated.find((q) => q.id === question?.id);
       isQuestionEdit = true;
     }
+
     if (this.isEdit && this.editedProgram) {
       canvasRef.componentInstance.program = this.editedProgram;
     } else {
       canvasRef.componentInstance.isNewProgram = true;
     }
+
     canvasRef.componentInstance.createdQuestion
       .pipe(
         tap((newQuestion: QuestionDtoApi) => {
@@ -169,6 +186,9 @@ export class CreateProgramsComponent implements OnInit {
           if (!isQuestionEdit) {
             this.questionList = this.questionList.filter((q) => q.id !== newQuestion.id);
             this.questionList.push({ id: newQuestion.id, delete: false, isNewQuestion: true });
+
+            // We keep the form open after question's creation
+            this.openQuestionForm();
           }
 
           // refresh the program
@@ -176,9 +196,16 @@ export class CreateProgramsComponent implements OnInit {
 
           // refresh the questions list
           this.getQuestions();
+          this.getAssociatedQuestions();
         }),
+        untilDestroyed(this),
       )
       .subscribe();
+  }
+
+  tagChange(e: string[]) {
+    this.selectedTags = e;
+    this.getQuestions();
   }
 
   getQuestions() {
@@ -186,16 +213,39 @@ export class CreateProgramsComponent implements OnInit {
       .getQuestionsPaginated({
         tagIds: this.selectedTags.join(','),
         sortByProgramId: this.editedProgram?.id ?? undefined,
+        notInProgramIds: this.editedProgram?.id ?? undefined,
         itemsPerPage: this.questionPageSize,
         page: this.questionPage,
         search: this.questionSearch,
       })
+
       .pipe(
         tap((questions) => {
-          const { data = [], meta } = questions;
+          const { data = [] } = questions;
           this.questions = data;
-          this.setquestionsDisplay(this.mapQuestionsToDisplay(data));
-          this.questionsCount = meta.totalItems;
+          this.questionsDisplay = questions;
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
+  }
+
+  getAssociatedQuestions() {
+    if (!this.isEdit) {
+      return;
+    }
+    this.questionRestService
+      .getQuestionsPaginated({
+        tagIds: this.selectedTags.join(','),
+        itemsPerPage: this.questionPageSize,
+        programIds: this.editedProgram?.id ?? undefined,
+        page: this.questionAssociatedPage,
+        search: this.questionSearch,
+      })
+      .pipe(
+        tap((associatedQuestions) => {
+          this.questionsAssociated = associatedQuestions.data || [];
+          this.questionsAssociatedDisplay = associatedQuestions;
         }),
         untilDestroyed(this),
       )
@@ -207,6 +257,7 @@ export class CreateProgramsComponent implements OnInit {
     if (this.currentStep === 2) {
       this.selectedTags = this.programForm.value?.tags ?? [];
       this.getQuestions();
+      this.getAssociatedQuestions();
     }
   }
 
@@ -218,6 +269,7 @@ export class CreateProgramsComponent implements OnInit {
     if (this.currentStep === 2) {
       this.selectedTags = this.programForm.value?.tags ?? [];
       this.getQuestions();
+      this.getAssociatedQuestions();
     } else if (this.currentStep === 3) {
       this.saveProgram();
     }
@@ -228,15 +280,22 @@ export class CreateProgramsComponent implements OnInit {
     this.getQuestions();
   }
 
-  questionPageChange(e: any) {
+  questionPageChange(e: number) {
+    this.questionPage = e;
     this.getQuestions();
   }
 
-  setquestionsDisplay(quest: QuestionDisplay[]) {
-    this.questionsDisplay = quest.sort((a, b) => (a.isChecked ? -1 : 1));
+  searchAssociatedQuestions(value: string) {
+    this.questionAssociatedSearch = value;
+    this.getAssociatedQuestions();
   }
 
-  addOrRemoveQuestion(questionId: string, toDelete: any) {
+  associatedQuestionPageChange(e: number) {
+    this.questionAssociatedPage = e;
+    this.getAssociatedQuestions();
+  }
+
+  addOrRemoveQuestion({ questionId, toDelete }: { questionId: string; toDelete: boolean }) {
     this.questionList = this.questionList.filter((q) => q.id !== questionId);
     if (!toDelete) {
       this.questionList.push({ id: questionId, delete: toDelete, isNewQuestion: false });
@@ -247,6 +306,7 @@ export class CreateProgramsComponent implements OnInit {
         .pipe(
           tap(() => {
             this.getQuestions();
+            this.getAssociatedQuestions();
             this.refreshProgram();
           }),
           untilDestroyed(this),
@@ -293,25 +353,35 @@ export class CreateProgramsComponent implements OnInit {
     navigator.clipboard.writeText(window.location.href);
   }
 
-  mapQuestionsToDisplay(questions: QuestionDtoApi[]): QuestionDisplay[] {
-    return questions.map((q) => ({
-      id: q.id,
-      title: q.title,
-      isChecked:
-        (this.questionList.some((question) => question.id === q.id && !question.delete) ||
-          (this.isEdit && this.editedProgram
-            ? q.programs?.some((p) => p.id === this.editedProgram?.id)
-            : false)) ??
-        false,
-    }));
-  }
-
   findTagName(id: string) {
     return this.programStore.tags.value.find((t) => t.id === id)?.name;
   }
 
-  findTeamName(id: string) {
-    return this.teamStore.teams.value.find((t) => t.id === id)?.shortName;
+  @memoize()
+  mapTeams(ids: string[]) {
+    return this.teamStore.teams.value.filter((t) => ids.some((x) => x === t.id));
+  }
+
+  @memoize()
+  getPriorityClass(prio: ProgramDtoApiPriorityEnumApi | null) {
+    switch (prio) {
+      case ProgramDtoApiPriorityEnumApi.High:
+        return 'pill-red';
+      case ProgramDtoApiPriorityEnumApi.Medium:
+        return 'pill-orange';
+      case ProgramDtoApiPriorityEnumApi.Low:
+        return 'pill-green';
+      default:
+        return '';
+    }
+  }
+
+  @memoize()
+  getPriorityName(p: ProgramDtoApiPriorityEnumApi | null) {
+    if (!p) {
+      return '';
+    }
+    return getTranslation(I18ns.shared.priorities, p.toLowerCase());
   }
 
   refreshProgram() {
