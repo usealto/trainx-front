@@ -40,9 +40,9 @@ export class ProgramCardComponent implements OnInit, OnChanges {
       .getTeams()
       .pipe(tap((teams) => (this.teamsCount = teams.length)))
       .subscribe();
-    this.membersHaveValidatedPercentage =
-      Number(this.membersHaveValidatedCount?.split('/')[0]) /
-      Number(this.membersHaveValidatedCount?.split('/')[1]);
+    this.membersHaveValidatedPercentage = this.membersHaveValidatedCount
+      ? +this.membersHaveValidatedCount?.split('/')[0] / +this.membersHaveValidatedCount?.split('/')[1]
+      : 0;
   }
 
   ngOnChanges(changes: SimpleChanges) {
