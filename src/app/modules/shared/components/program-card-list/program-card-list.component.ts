@@ -44,6 +44,7 @@ export class ProgramCardListComponent implements OnInit {
 
   displayToggle = false;
   isSearchResult = false;
+  selectedItems: ProgramDtoApi[] = [];
 
   constructor(
     private readonly programRunsService: ProgramRunsRestService,
@@ -118,6 +119,10 @@ export class ProgramCardListComponent implements OnInit {
     this.isSearchResult = true;
   }
 
+  resetFilters() {
+    this.filterPrograms((this.programFilters = {}));
+    this.selectedItems = [];
+  }
   getPrograms() {
     this.scoresRestService
       .getProgramsStats(ScoreDuration.Year, false, {

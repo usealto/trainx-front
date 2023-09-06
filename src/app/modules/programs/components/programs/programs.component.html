@@ -93,7 +93,7 @@
       <alto-search class="search" (searchChange)="getQuestions({ search: $event }, true)"></alto-search>
     </div>
   </div>
-  <ng-container *ngIf="paginatedQuestions.length > 0; else noQuestions">
+  <ng-container *ngIf="paginatedQuestions.length < 0; else noQuestions">
     <div class="table-panel">
       <table class="table">
         <thead>
@@ -167,33 +167,22 @@
     </div>
   </ng-container>
   <ng-template #noQuestions>
-    <div *ngIf="questionsCount === undefined">
-      <div class="panel text-center p-6 mb-4">
-        <i class="alto-badge-big fs-5 alto-badge-blue bi bi-chat"></i>
-        <h2 class="my-4">{{ I18ns.programs.questions.placeholder.noQuestion }}</h2>
-        <p class="alto-grey mb-4">{{ I18ns.programs.questions.placeholder.noQuestionSubtitle }}</p>
-        <button class="btn btn-outline-secondary me-2">
-          <i class="bi bi-cloud-upload"></i>
-          {{ I18ns.programs.questions.placeholder.importQuestionPlaceholder }}
-        </button>
-        <button type="button" class="btn btn-primary ms-2" (click)="openQuestionForm()">
-          <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.placeholder.createQuestionPlaceholder }}
-        </button>
-      </div>
+    <div *ngIf="true" class="nodata-placeholder text-center">
+      <img [src]="Emoji.NerdFace | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.programs.questions.table.placeholder }}</p>
+      <button type="button" class="btn btn-primary mt-4" (click)="openQuestionForm()">
+        <i class="bi bi-plus-lg"></i>
+        {{ I18ns.programs.questions.createQuestion }}
+      </button>
     </div>
-    <div *ngIf="questionsCount === 0">
-      <div class="panel text-center p-6 mb-4">
-        <i class="alto-badge-big fs-5 bi bi-search"></i>
-        <h2 class="my-4">{{ I18ns.programs.questions.placeholder.noData }}</h2>
-        <p class="alto-grey mb-4">{{ I18ns.programs.questions.placeholder.noDataSubtitle }}</p>
-        <button class="btn btn-outline-secondary me-2" (click)="resetFilters()">
-          <i class="bi bi-arrow-repeat"></i>
-          {{ I18ns.training.donePrograms.resetFilters }}
-        </button>
-        <button type="button" class="btn btn-primary ms-2" (click)="openQuestionForm()">
-          <i class="bi bi-plus-lg"></i> {{ I18ns.programs.questions.placeholder.createQuestionPlaceholder }}
-        </button>
-      </div>
+    <div *ngIf="true" class="nodata-placeholder text-center">
+      <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.shared.noData }}</p>
+      <span class="mt-3 d-block">{{ I18ns.shared.noDataSubtitle }}</span>
+      <button class="btn btn-primary mt-4" (click)="resetFilters()">
+        <i class="bi bi-arrow-clockwise"></i>
+        {{ I18ns.shared.resetFilters }}
+      </button>
     </div>
   </ng-template>
 </div>

@@ -18,8 +18,9 @@ export const FR = {
     seconds: 'secondes',
     noTeam: "Pas d'équipes pour l'instant.",
     optional: '(facultatif)',
-    noData: 'Aucune donnée à afficher',
-    noDataSubtitle: 'Aucun résultat ne correspond à votre recherche',
+    noData: 'Aucun résultat ne correspond à votre recherche.',
+    noDataSubtitle: 'Essayez avec d’autres filtres.',
+    resetFilters: 'Réinitialiser les filtres',
     reply: 'Répondre',
     search: 'Rechercher',
     textNotFound: 'Aucun résultat',
@@ -219,6 +220,7 @@ export const FR = {
         author: 'Ajoutée par',
         tags: 'Tags',
         programs: 'Programmes',
+        placeholder: 'Créez vos premières questions pour challenger vos équipes !',
       },
       filters: {
         programs: 'Programmes',
@@ -502,6 +504,8 @@ export const FR = {
           'Nombre de questions répondues sur les 30 derniers jours et variation sur la dernière période',
         active: 'Actif',
         inactive: 'Inactif',
+        placeholderTitle: 'Aucun utilisateur n’existe dans votre entreprise.',
+        placeholderSubtitle: 'Créez vos premiers utilisateurs pour amorcer leur montée en compétences !',
       },
       forms: {
         edition: {
@@ -536,6 +540,8 @@ export const FR = {
         averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         creationDate: 'Date de création',
         noActivity: 'Aucune activité',
+        placeholderTitle: 'Aucune équipe n’a été créée pour l’instant. ',
+        placeholderSubtitle: 'Créez votre première équipe pour commencer à les entraîner !',
       },
       form: {
         title: {
@@ -894,7 +900,6 @@ export const FR = {
       noResult: 'Aucun résultat correspondant',
       noResultSubtitle:
         'Votre recherche n’a donné aucun résultat, essayez une autre formulation ou d’autres filtres.',
-      resetFilters: 'Réinitialiser',
     },
     showAll: {
       title: 'Tous vos programmes',
