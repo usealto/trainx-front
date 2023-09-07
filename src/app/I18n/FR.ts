@@ -177,6 +177,7 @@ export const FR = {
       progress: 'Avancement',
       progressToolTip: 'Nombre de questions répondues par tout les membres sur le nombre total de questions',
       score: 'Score',
+      membersHaveValidated: 'membres ayant validé',
       scoreToolTip: 'Score moyen du programme depuis sa création',
       teams: 'Équipes:',
       filters: {

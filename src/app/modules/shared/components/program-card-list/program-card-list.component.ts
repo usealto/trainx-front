@@ -34,6 +34,7 @@ export class ProgramCardListComponent implements OnInit {
   programsScores = new Map<string, number>();
   programsProgress = new Map<string, number>();
   programsInvolvement = new Map<string, number>();
+  programsMemberHaveValidatedCount = new Map<string, string>();
   page = 1;
   count = 0;
   pageSize = 3;
@@ -43,13 +44,10 @@ export class ProgramCardListComponent implements OnInit {
   displayToggle = false;
 
   constructor(
-    private readonly programRunsService: ProgramRunsRestService,
     private readonly scoreService: ScoresService,
     private readonly programService: ProgramsService,
     public readonly teamStore: TeamStore,
     private readonly scoresRestService: ScoresRestService,
-    private readonly programRestService: ProgramsRestService,
-    private userStore: ProfileStore,
   ) {}
 
   ngOnInit(): void {
@@ -144,6 +142,10 @@ export class ProgramCardListComponent implements OnInit {
             this.programsScores.set(x.program.id, x.score ?? 0);
             this.programsProgress.set(x.program.id, x.progress ?? 0);
             this.programsInvolvement.set(x.program.id, x.participation ?? 0);
+            this.programsMemberHaveValidatedCount.set(
+              x.program.id,
+              x.userValidatedProgramCount + '/' + x.totalUsersCount,
+            );
           });
           this.programTotal.emit(p.map((x) => x.program).length);
         }),
