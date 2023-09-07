@@ -59,9 +59,18 @@
                 </div>
               </div>
             </td>
-            <td class="px-4 text-end">
-              <i class="cursor-pointer fs-5 bi bi-trash3 disabled-icon me-4"></i>
-              <i class="cursor-pointer fs-5 bi bi-pen" (click)="openUserEditionForm(user)"></i>
+            <td class="px-4">
+              <div class="d-flex justify-content-center">
+                <div
+                  ngbTooltip="{{ I18ns.settings.users.deleteAdminTooltip }}"
+                  placement="top"
+                  class="me-5"
+                  tooltipClass="tooltip-class"
+                >
+                  <i class="cursor-pointer fs-5 bi bi-trash3 disabled-icon"></i>
+                </div>
+                <i class="cursor-pointer fs-5 bi bi-pen" (click)="openUserEditionForm(user)"></i>
+              </div>
             </td>
           </tr>
         </tbody>
