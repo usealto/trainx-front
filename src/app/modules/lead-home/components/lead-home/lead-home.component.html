@@ -62,84 +62,145 @@
     {{ I18ns.leadHome.statistics.title }}
   </h2>
   <p class="subtitle">{{ I18ns.leadHome.statistics.subtitle }}</p>
+  <ng-container *ngIf="averageScore || (programsCount || expectedGuessCount) > 0; else noProgram">
+    <div class="panel px-0 py-4 mt-5">
+      <div class="row">
+        <div class="col border-end">
+          <div class="d-flex flex-row align-items-center px-4">
+            <alto-icon-badge [size]="4" icon="bi-bar-chart-fill"></alto-icon-badge>
 
-  <div class="panel px-0 py-4 mt-5">
-    <div class="row">
-      <div class="col border-end d-flex flex-row align-items-center px-4">
-        <alto-icon-badge [size]="4" icon="bi-bar-chart-fill"></alto-icon-badge>
-
-        <div class="col ps-4">
-          <p class="stats-title">{{ I18ns.leadHome.statistics.averageScore }}</p>
-          <div class="mt-2 row">
-            <h2 class="mb-0 col">{{ averageScore | percent }}</h2>
-            <alto-progression-badge class="col-3" [score]="averageScoreProgression"></alto-progression-badge>
-          </div>
-        </div>
-      </div>
-      <div class="col border-end d-flex flex-row align-items-center px-4">
-        <alto-icon-badge [size]="4" icon="bi-check-square-fill"></alto-icon-badge>
-
-        <div class="col ps-4">
-          <p class="stats-title">{{ I18ns.leadHome.statistics.terminatedPrograms }}</p>
-          <div class="mt-2 row">
-            <div class="mb-0 col">
-              <span class="fs-5 stats-content">
-                {{ finishedProgramsCount + '/' + programsCount }}
-              </span>
-              <span class="fs-6 stats-content">{{ ' (' + (averageFinishedPrograms | percent) + ')' }}</span>
+            <div class="col ps-4">
+              <p class="stats-title">{{ I18ns.leadHome.statistics.averageScore }}</p>
+              <div class="mt-2 row">
+                <h2 class="mb-0 col">{{ averageScore | percent }}</h2>
+                <alto-progression-badge
+                  class="col-3"
+                  [score]="averageScoreProgression"
+                ></alto-progression-badge>
+              </div>
             </div>
-            <alto-progression-badge
-              class="col-3"
-              [score]="averageFinishedProgramsProgression"
-            ></alto-progression-badge>
           </div>
         </div>
-      </div>
-      <div class="col d-flex flex-row align-items-center px-4">
-        <alto-icon-badge [size]="4" icon="bi-reply-all-fill"></alto-icon-badge>
+        <div class="col border-end">
+          <div class="d-flex flex-row align-items-center px-4">
+            <alto-icon-badge [size]="4" icon="bi-check-square-fill"></alto-icon-badge>
 
-        <div class="col ps-4">
-          <p class="stats-title">{{ I18ns.leadHome.statistics.guessesCount }}</p>
-          <div class="mt-2 row g-0">
-            <h2 class="mb-0 col">{{ guessCount + '/' + expectedGuessCount }}</h2>
-            <alto-progression-badge class="col-3" [score]="guessCountProgression"></alto-progression-badge>
+            <div class="col ps-4">
+              <p class="stats-title">{{ I18ns.leadHome.statistics.terminatedPrograms }}</p>
+              <div class="mt-2 row">
+                <div class="mb-0 col">
+                  <span class="fs-5 stats-content">
+                    {{ finishedProgramsCount + '/' + programsCount }}
+                  </span>
+                  <span class="fs-6 stats-content">{{
+                    ' (' + (averageFinishedPrograms | percent) + ')'
+                  }}</span>
+                </div>
+                <alto-progression-badge
+                  class="col-3"
+                  [score]="averageFinishedProgramsProgression"
+                ></alto-progression-badge>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="d-flex flex-row align-items-center px-4">
+            <alto-icon-badge [size]="4" icon="bi-reply-all-fill"></alto-icon-badge>
+
+            <div class="col ps-4">
+              <p class="stats-title">{{ I18ns.leadHome.statistics.guessesCount }}</p>
+              <div class="mt-2 row g-0">
+                <h2 class="mb-0 col">{{ guessCount + '/' + expectedGuessCount }}</h2>
+                <alto-progression-badge
+                  class="col-3"
+                  [score]="guessCountProgression"
+                ></alto-progression-badge>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noProgram>
+    <div class="nodata-placeholder text-center">
+      <img [src]="Emoji.CowboyHatFace | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.leadHome.statistics.placeholder }}</p>
+      <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
+        <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+      </a>
+    </div>
+  </ng-template>
+
+  <!-- CHARTS -->
+  <div [hidden]="!scoreCount" class="panel h-100 my-5">
+    <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
+    <p class="alto-grey mb-4">{{ I18ns.leadHome.globalEvolution.chartSubtitle }}</p>
+    <div class="chart-container">
+      <canvas id="programScoreEvol"></canvas>
     </div>
   </div>
 
-  <!-- CHARTS -->
-  <div class="panel h-100 mt-5 mb-5">
-    <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
-    <p class="alto-grey mb-4">{{ I18ns.leadHome.globalEvolution.chartSubtitle }}</p>
-    <div [hidden]="!scoreCount" class="chart-container">
-      <canvas id="programScoreEvol"></canvas>
-    </div>
-    <div [hidden]="scoreCount > 0" class="text-center pt-6">
-      {{ I18ns.shared.noData }}
+  <div [hidden]="scoreCount > 0" class="nodata-placeholder">
+    <h2 class="mb-5 fs-6">{{ I18ns.leadHome.globalEvolution.score }}</h2>
+    <div class="text-center">
+      <img [src]="Emoji.Rocket | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.leadHome.graph.placeholder }}</p>
+      <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
+        <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+      </a>
     </div>
   </div>
   <!-- TOP / FLOP -->
   <div class="row h-100">
     <div class="col pe-4">
-      <alto-top-flop
-        *ngIf="topflopLoaded"
-        [title]="I18ns.leadHome.topFlop.teams.title"
-        [subtitle]="I18ns.leadHome.topFlop.teams.subtitle"
-        [leaderboard]="teamsLeaderboard"
-      ></alto-top-flop>
+      <ng-container *ngIf="teamsLeaderboardCount > 0; else noTopFlopTeams">
+        <alto-top-flop
+          *ngIf="topflopLoaded"
+          [title]="I18ns.leadHome.topFlop.teams.title"
+          [subtitle]="I18ns.leadHome.topFlop.teams.subtitle"
+          [leaderboard]="teamsLeaderboard"
+        ></alto-top-flop>
+      </ng-container>
     </div>
     <div class="col ps-0">
-      <alto-top-flop
-        *ngIf="topflopLoaded"
-        [title]="I18ns.leadHome.topFlop.users.title"
-        [subtitle]="I18ns.leadHome.topFlop.users.subtitle"
-        [leaderboard]="usersLeaderboard"
-      ></alto-top-flop>
+      <ng-container *ngIf="usersLeaderboardCount > 0; else noTopFlopUsers">
+        <alto-top-flop
+          *ngIf="topflopLoaded"
+          [title]="I18ns.leadHome.topFlop.users.title"
+          [subtitle]="I18ns.leadHome.topFlop.users.subtitle"
+          [leaderboard]="usersLeaderboard"
+        ></alto-top-flop>
+      </ng-container>
     </div>
   </div>
 
+  <ng-template #noTopFlopTeams>
+    <div class="nodata-placeholder">
+      <h2 class="mb-5 fs-6">{{ I18ns.leadHome.topFlop.teams.title }}</h2>
+      <div class="text-center">
+        <img [src]="Emoji.BustsInSilhouette | emoji" height="24" />
+        <p class="mt-3">{{ I18ns.leadHome.topFlop.teams.placeholder }}</p>
+        <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
+          <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+        </a>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #noTopFlopUsers>
+    <div class="nodata-placeholder">
+      <h2 class="mb-5 fs-6">{{ I18ns.leadHome.topFlop.users.title }}</h2>
+      <div class="text-center">
+        <img [src]="Emoji.BustsInSilhouette | emoji" height="24" />
+        <p class="mt-3">{{ I18ns.leadHome.topFlop.users.placeholder }}</p>
+        <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
+          <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+        </a>
+      </div>
+    </div>
+  </ng-template>
   <!-- ONGOING PROGRAMS -->
   <div class="mt-6 mb-5">
     <button
@@ -158,7 +219,6 @@
   </div>
 
   <alto-program-card-list [place]="'home'" [isActive]="true"></alto-program-card-list>
-
   <!-- CHALLENGES -->
   <div class="row mt-6 mb-4" hidden>
     <div class="col-5">
