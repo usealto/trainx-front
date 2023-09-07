@@ -16,6 +16,9 @@ import { TeamStore } from '../team.store';
 export class TeamsRestService {
   constructor(private readonly teamApi: TeamsApiService, private teamStore: TeamStore) {}
 
+  getTeam(id: string) {
+    return this.teamApi.getTeamById({ id });
+  }
   getTeams(req?: GetTeamsRequestParams): Observable<TeamDtoApi[]> {
     if (this.teamStore.teams.value.length) {
       return this.teamStore.teams.value$;

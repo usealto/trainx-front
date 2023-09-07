@@ -45,7 +45,7 @@ interface UserDisplay extends UserDtoApi {
   providers: [ReplaceInTranslationPipe],
 })
 export class LeadTeamComponent implements OnInit {
-  EmojiName = EmojiName;
+  Emoji = EmojiName;
   I18ns = I18ns;
   // Teams
   teams: TeamDtoApi[] = [];
@@ -66,6 +66,8 @@ export class LeadTeamComponent implements OnInit {
   usersScores: UserDisplay[] = [];
   usersQuestionCount = new Map<string, number[]>();
   userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
+  isFilteredUsers = false;
+  selectedItems: UserDisplay[] = [];
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -176,7 +178,14 @@ export class LeadTeamComponent implements OnInit {
       output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
     }
     this.filteredUsers = output;
+    this.isFilteredUsers = true;
     this.changeUsersPage(output, 1);
+  }
+
+  resetFilters() {
+    this.filterUsers((this.userFilters = {}));
+    this.selectedItems = [];
+    this.isFilteredUsers = false;
   }
 
   changeUsersPage(users: UserDisplay[], page: number) {

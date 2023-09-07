@@ -54,6 +54,18 @@
         {{ score ? (score | percent) : '-' }}
       </span>
     </p>
+    <p class="score">
+      <span>
+        <img class="pe-1 mb-2" [src]="Emoji.CheckMarkButton | emoji" height="14" />
+        {{ I18ns.programs.programs.membersHaveValidated }}
+      </span>
+      <span
+        class="float-end alto-score"
+        [class]="(membersHaveValidatedPercentage ? membersHaveValidatedPercentage * 100 : '') | pillColor"
+      >
+        {{ membersHaveValidatedCount }}
+      </span>
+    </p>
   </div>
   <div class="panel inactive" *ngIf="!program.isActive"></div>
 </ng-container>

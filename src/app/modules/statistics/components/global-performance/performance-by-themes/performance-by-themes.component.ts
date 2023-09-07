@@ -17,6 +17,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 @UntilDestroy()
 @Component({
   selector: 'alto-performance-by-themes',
@@ -25,6 +26,7 @@ import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.
 })
 export class PerformanceByThemesComponent implements OnChanges {
   @Input() duration: ScoreDuration = ScoreDuration.Year;
+  Emoji = EmojiName;
   I18ns = I18ns;
   init = true;
 
@@ -36,6 +38,7 @@ export class PerformanceByThemesComponent implements OnChanges {
   tagsLeaderboard: { name: string; score: number }[] = [];
 
   scoreEvolutionChart?: Chart;
+  scoreCount = 0;
 
   constructor(
     private readonly scoresRestService: ScoresRestService,
@@ -98,6 +101,7 @@ export class PerformanceByThemesComponent implements OnChanges {
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
     scores = this.scoresServices.reduceChartData(scores);
+    this.scoreCount = scores.length;
     const aggregateData = this.statisticsServices.aggregateDataForScores(scores[0], duration);
     const labels = this.statisticsServices.formatLabel(
       aggregateData.map((d) => d.x),
