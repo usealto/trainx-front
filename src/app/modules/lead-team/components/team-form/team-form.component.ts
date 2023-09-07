@@ -54,22 +54,28 @@ export class TeamFormComponent implements OnInit {
         .subscribe();
 
       if (this.team) {
-        // Todo Remove later
-        // this.teamsRestService.getTeam(this.team.id).pipe(tap(console.log)).subscribe();
+        this.teamsRestService
+          .getTeam(this.team.id)
+          .pipe(
+            tap((d) => {
+              if (!d.data) {
+                return;
+              }
+              this.team = d.data;
+              this.isEdit = true;
+              const { shortName, longName } = this.team;
+              this.userFilters.teams.push(this.team);
+              const filteredUsers = this.userService.filterUsers(this.users, this.userFilters);
 
-        this.isEdit = true;
-        const { shortName, longName } = this.team;
-        const t = this.team;
-
-        this.userFilters.teams.push(t);
-        const filteredUsers = this.userService.filterUsers(this.users, this.userFilters);
-
-        this.teamForm.patchValue({
-          shortName,
-          longName,
-          programs: this.team?.programs as ProgramDtoApi[],
-          invitationEmails: filteredUsers,
-        });
+              this.teamForm.patchValue({
+                shortName,
+                longName,
+                programs: this.team?.programs as ProgramDtoApi[],
+                invitationEmails: filteredUsers,
+              });
+            }),
+          )
+          .subscribe();
       }
     });
   }
