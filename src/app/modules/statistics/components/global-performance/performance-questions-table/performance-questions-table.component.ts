@@ -93,12 +93,12 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
         tap((t) => {
           this.questions = t;
           this.questionsDisplay = t;
-
           this.changeQuestionsPage(1);
         }),
         switchMap(() => this.scoreRestService.getQuestionsStats(this.duration, true)),
         tap((t) => (this.questionsPreviousPeriod = t)),
         tap(() => (this.scoreIsLoading = false)),
+        tap(() => this.getQuestionsFiltered()),
         untilDestroyed(this),
       )
       .subscribe();
