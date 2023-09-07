@@ -244,6 +244,7 @@ export class CreateProgramsComponent implements OnInit {
       })
       .pipe(
         tap((associatedQuestions) => {
+          this.questionsAssociated = associatedQuestions.data || [];
           this.questionsAssociatedDisplay = associatedQuestions;
         }),
         untilDestroyed(this),
