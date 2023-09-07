@@ -1,4 +1,4 @@
-<div class="panel mb-5">
+<div [hidden]="!scoreCount" class="panel mb-5">
   <alto-dropdown-filter
     class="float-end mx-2"
     [data]="teams"
@@ -16,10 +16,33 @@
     <canvas id="teamScoreEvolution"></canvas>
   </div>
 </div>
+<div [hidden]="scoreCount > 0" class="nodata-placeholder">
+  <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}</h2>
+  <div class="text-center">
+    <img [src]="Emoji.FlexedBiceps | emoji" height="24" />
+    <p class="mt-3">
+      {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderTitle }}
+    </p>
+    <span class="d-inline-block mt-3">
+      {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderSubtitle }}
+    </span>
+  </div>
+</div>
 
-<alto-top-flop
-  [title]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title"
-  [subtitle]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.subtitle"
-  [leaderboard]="teamsLeaderboard"
->
-</alto-top-flop>
+<ng-container *ngIf="teamsLeaderboardCount > 0; else noTopFlopTeams">
+  <alto-top-flop
+    [title]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title"
+    [subtitle]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.subtitle"
+    [leaderboard]="teamsLeaderboard"
+  >
+  </alto-top-flop>
+</ng-container>
+<ng-template #noTopFlopTeams>
+  <div class="nodata-placeholder">
+    <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}</h2>
+    <div class="text-center">
+      <img [src]="Emoji.Rocket | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.placeholder }}</p>
+    </div>
+  </div>
+</ng-template>
