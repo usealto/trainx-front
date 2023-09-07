@@ -122,7 +122,9 @@ export class ProgramCardListComponent implements OnInit {
   resetFilters() {
     this.filterPrograms((this.programFilters = {}));
     this.selectedItems = [];
+    this.isSearchResult = false;
   }
+
   getPrograms() {
     this.scoresRestService
       .getProgramsStats(ScoreDuration.Year, false, {

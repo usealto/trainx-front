@@ -251,6 +251,7 @@ export const FR = {
         score: 'Score moyen de vos équipes',
         associatedQuestions: 'Nombre de questions associées',
         questions: ' questions',
+        placeholder: 'Créez vos premiers tags pour cibler les axes d’amélioration de vos équipes !',
       },
     },
     forms: {
