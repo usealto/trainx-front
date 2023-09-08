@@ -10,7 +10,7 @@ import { TopFlop } from '../../models/score.model';
 })
 export class TopFlopComponent implements OnChanges {
   @Input() leaderboard!: { name: string; score: number }[];
-  @Input() size = 5;
+  @Input() size = 3;
   @Input() title!: string;
   @Input() subtitle!: string;
   Emoji = EmojiName;

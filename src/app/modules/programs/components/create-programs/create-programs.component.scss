@@ -6,9 +6,7 @@
   height: 2rem;
 }
 h1 {
-  line-height: 2rem;
-  vertical-align: bottom;
-  display: inline-block;
+  vertical-align: middle;
 }
 
 alto-search {
@@ -51,6 +49,10 @@ alto-search {
     width: 2rem;
     font-size: 1rem;
     line-height: 2rem;
+  }
+  span.alto-badge.plus-badge {
+    width: 2rem;
+    padding: 0;
   }
 }
 

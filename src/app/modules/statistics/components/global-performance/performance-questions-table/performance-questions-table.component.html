@@ -76,7 +76,7 @@
                 [hasDynamicColor]="true"
                 [limit]="3"
                 [textLimit]="15"
-                [data]="quest.teams | sort : 'asc' : 'score' | slice : 0 : 6"
+                [data]="getBadTeams(quest.teams)"
               ></alto-colored-pill-list>
             </ng-container>
           </td>

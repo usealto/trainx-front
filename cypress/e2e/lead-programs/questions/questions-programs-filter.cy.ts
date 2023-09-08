@@ -35,6 +35,7 @@ describe('L/Programs Questions Tab', () => {
     cy.get('.button-container > .btn-primary').click();
     cy.wait(500);
 
+    cy.get('.btn-close').click();
     cy.get('.btn-primary').eq(1).click();
     cy.wait(500);
     cy.reload();
@@ -59,6 +60,7 @@ describe('L/Programs Questions Tab', () => {
 
     cy.get(`[data-cy="program${newProg}"]`).first().click().wait(500);
 
+    cy.get('[data-cy="recapTab"]').click();
     cy.get('[data-cy="deleteProgram"]').click();
     cy.get('[data-cy="deleteButton"]').click();
 

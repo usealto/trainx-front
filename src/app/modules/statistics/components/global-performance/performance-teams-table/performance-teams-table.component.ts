@@ -117,6 +117,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
         switchMap(() => this.scoreRestService.getTeamsStats(this.duration, true)),
         tap((t) => (this.teamsPreviousPeriod = t)),
         tap(() => (this.scoreIsLoading = false)),
+        tap(() => this.getTeamsFiltered()),
         untilDestroyed(this),
       )
       .subscribe();

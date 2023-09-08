@@ -32,6 +32,8 @@ describe('Lead Programs', () => {
 
     cy.wait(500);
 
+    cy.get('[data-cy="recapTab"]').click();
+
     cy.get('[data-cy="deleteProgram"]').click();
 
     cy.wait(500);

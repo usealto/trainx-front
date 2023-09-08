@@ -666,6 +666,8 @@ export const FR = {
         subtitle: 'Êtes-vous sûr(e) de vouloir supprimer ce collaborateur ? Cette action est irréversible.',
       },
       successEdit: 'Le collaborateur {{}} a bien été modifié',
+      deleteAdminTooltip:
+        'Pour supprimer un administrateur, transformez-le d’abord en utilisateur standard. Vous pourrez ensuite procéder à la suppression',
     },
     continuousSession: {
       title: 'Session continue',
