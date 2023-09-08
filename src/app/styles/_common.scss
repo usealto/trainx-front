@@ -120,6 +120,19 @@
   }
 }
 
+.header-panel2 {
+  @extend .header-panel;
+  background-color: var(--primary-25);
+  height: 5.333rem;
+  padding: 0 1.7rem;
+
+  h1 {
+    display: inline-block;
+    line-height: 5.33rem;
+    font-weight: 600;
+  }
+}
+
 h2 {
   .emoji {
     height: 1.667rem;
