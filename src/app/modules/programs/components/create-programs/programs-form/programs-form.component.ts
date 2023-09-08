@@ -18,7 +18,6 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 export class ProgramsFormComponent implements OnInit {
   @Input() form!: IFormGroup<ProgramForm>;
   @Input() isEdit = false;
-
   EmojiName = EmojiName;
   I18ns = I18ns;
 
@@ -28,7 +27,6 @@ export class ProgramsFormComponent implements OnInit {
     id: p,
     value: getTranslation(I18ns.shared.priorities, p.toLowerCase()),
   }));
-
   constructor(private readonly tagService: TagsRestService, private readonly teamService: TeamsRestService) {}
 
   ngOnInit(): void {
