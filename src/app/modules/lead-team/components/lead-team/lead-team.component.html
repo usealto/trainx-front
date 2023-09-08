@@ -123,8 +123,11 @@
 
       <div class="d-inline-block flex-grow-1">
         <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
-        <h1 class="mb-0 d-inline-block">{{ getTotalQuestions() }}</h1>
-        <alto-progression-badge class="float-end" [score]="getPercentageQuestions()"></alto-progression-badge>
+        <h1 class="mb-0 d-inline-block">{{ getTotalQuestions(usersQuestionCount.size) }}</h1>
+        <alto-progression-badge
+          class="float-end"
+          [score]="getPercentageQuestions(usersQuestionCount.size)"
+        ></alto-progression-badge>
       </div>
     </div>
   </div>
@@ -214,7 +217,7 @@
             {{ getQuestionsByUser(user.id)[0] }}
             <alto-progression-badge
               class="d-inline-block ms-3"
-              [score]="getQuestionsByUser(user.id)[1]"
+              [score]="getQuestionsByUser(user.id)[2]"
             ></alto-progression-badge>
           </td>
           <td>

@@ -117,13 +117,14 @@ export class LeadTeamComponent implements OnInit {
                   data.push(0);
                 } else {
                   u.totalGuessesCount
-                    ? data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount)
-                    : data.push(0);
+                    ? data.push(u.totalGuessesCount, (data[0] - u.totalGuessesCount) / u.totalGuessesCount)
+                    : data.push(0, 0);
                 }
                 this.usersQuestionCount.set(u.id, data);
               }
             }
           });
+
           this.users.forEach((user) => {
             const member = this.teams.find((team) => team.id === user.teamId);
             this.usersMap.set(user.id, member ? member.longName + ' - ' + member.shortName : '');
@@ -252,7 +253,8 @@ export class LeadTeamComponent implements OnInit {
     return this.usersQuestionCount.get(id) || [0, 0];
   }
 
-  getTotalQuestions(): number {
+  @memoize()
+  getTotalQuestions(num: number): number {
     let totalQuestions = 0;
 
     this.usersQuestionCount.forEach((values) => {
@@ -264,9 +266,17 @@ export class LeadTeamComponent implements OnInit {
     return totalQuestions;
   }
 
-  getPercentageQuestions(): number {
-    // TODO
-    return 0;
+  @memoize()
+  getPercentageQuestions(num: number): number {
+    let variation = 0;
+
+    this.usersQuestionCount.forEach((values) => {
+      if (values && values.length > 1) {
+        variation += values[1];
+      }
+    });
+
+    return (this.getTotalQuestions(num) - variation) / variation;
   }
 
   airtableRedirect() {
