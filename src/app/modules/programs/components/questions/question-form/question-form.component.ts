@@ -126,7 +126,6 @@ export class QuestionFormComponent implements OnInit {
           this.questionForm.controls.answersWrong.patchValue(this.question.answersWrong);
         }
       }
-      this.questionForm.valueChanges.pipe(tap(console.log)).subscribe();
     }, 0);
   }
 
