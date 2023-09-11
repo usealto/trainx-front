@@ -173,13 +173,15 @@ export const Feature_Tooltip: Story = {
     chartOption : {    
         tooltip: {
           trigger: 'axis',
+          borderWidth: 1,
+          borderColor: '#EAECF0',
         },
         xAxis: [
           {
             type: 'category',
             data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             axisPointer: {
-              type: 'shadow',
+              type: 'line',
             },
           },
         ],
