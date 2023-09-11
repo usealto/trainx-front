@@ -45,6 +45,7 @@ export class CreateProgramsComponent implements OnInit {
   currentStep = 1;
   editedProgram?: ProgramDtoApi;
   isEdit = false;
+  isNewProgram = false;
 
   questions!: QuestionDtoApi[];
   questionsAssociated!: QuestionDtoApi[];
@@ -80,6 +81,7 @@ export class CreateProgramsComponent implements OnInit {
         map((p) => {
           if (p['id'] === 'new') {
             this.initForm();
+            this.isNewProgram = true;
             return null;
           } else {
             this.isEdit = true;
@@ -131,29 +133,15 @@ export class CreateProgramsComponent implements OnInit {
     } else {
       obs$ = this.programRestService.createProgram(progValues);
     }
-    let progId = '';
     obs$
       .pipe(
         filter((x) => !!x),
         map((d) => d.data),
-        switchMap((prog: ProgramDtoApi) => {
-          progId = prog.id;
-          if (!this.isEdit) {
-            // add questionList to the program
-            return combineLatest(
-              this.questionList.map((q) => this.programRestService.addOrRemoveQuestion(prog.id, q.id, false)),
-            );
-          } else {
-            return of(null);
-          }
-        }),
-        tap(() => {
-          this.isEdit = true;
-        }),
-        switchMap(() => this.programRestService.getProgram(progId)),
         tap((prog: ProgramDtoApi) => {
+          this.isEdit = true;
           this.editedProgram = prog;
           this.programStore.programs.value = [];
+          this.getAssociatedQuestions();
         }),
         untilDestroyed(this),
       )
@@ -175,9 +163,8 @@ export class CreateProgramsComponent implements OnInit {
 
     if (this.isEdit && this.editedProgram) {
       canvasRef.componentInstance.program = this.editedProgram;
-    } else {
-      canvasRef.componentInstance.isNewProgram = true;
     }
+    canvasRef.componentInstance.isNewProgram = this.isNewProgram;
 
     canvasRef.componentInstance.createdQuestion
       .pipe(
@@ -186,7 +173,6 @@ export class CreateProgramsComponent implements OnInit {
           if (!isQuestionEdit) {
             this.questionList = this.questionList.filter((q) => q.id !== newQuestion.id);
             this.questionList.push({ id: newQuestion.id, delete: false, isNewQuestion: true });
-
             // We keep the form open after question's creation
             this.openQuestionForm();
           }
@@ -196,7 +182,9 @@ export class CreateProgramsComponent implements OnInit {
 
           // refresh the questions list
           this.getQuestions();
-          this.getAssociatedQuestions();
+          setTimeout(() => {
+            this.getAssociatedQuestions();
+          }, 1000);
         }),
         untilDestroyed(this),
       )
@@ -231,9 +219,6 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   getAssociatedQuestions() {
-    if (!this.isEdit) {
-      return;
-    }
     this.questionRestService
       .getQuestionsPaginated({
         tagIds: this.selectedTags.join(','),
@@ -259,19 +244,16 @@ export class CreateProgramsComponent implements OnInit {
       this.getQuestions();
       this.getAssociatedQuestions();
     }
+    this.saveProgram();
   }
 
   goNext() {
-    if (this.isEdit) {
-      this.saveProgram();
-    }
+    this.saveProgram();
     this.currentStep++;
     if (this.currentStep === 2) {
       this.selectedTags = this.programForm.value?.tags ?? [];
       this.getQuestions();
       this.getAssociatedQuestions();
-    } else if (this.currentStep === 3) {
-      this.saveProgram();
     }
   }
 
