@@ -210,6 +210,12 @@ export const Feature_Tooltip: Story = {
                 return (value as number) + ' %';
               },
             },
+            emphasis: {
+                scale: 4,
+                itemStyle: {
+                  borderWidth : 3
+                }
+            },
           },
         ]  
     }
