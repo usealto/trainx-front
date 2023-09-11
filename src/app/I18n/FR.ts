@@ -530,6 +530,10 @@ export const FR = {
       title: 'Vos équipes',
       shortTitle: 'Équipes',
       subtitle: "Retrouvez l'ensemble des équipes de votre entreprise.",
+      failEdit:
+        'Une équipe portant le même nom existe déjà. Veuillez choisir un autre nom pour modifier votre équipe.',
+      failCreate:
+        'Une équipe portant le même nom existe déjà. Veuillez choisir un autre nom pour votre nouvelle équipe.',
       table: {
         name: "Nom de l'équipe",
         initials: '',

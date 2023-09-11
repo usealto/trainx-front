@@ -1,5 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  UntypedFormBuilder,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, filter, of, switchMap, tap } from 'rxjs';
@@ -24,8 +31,8 @@ export class TeamFormComponent implements OnInit {
   private fb: IFormBuilder = this.fob;
 
   teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
-    shortName: ['', [Validators.required]],
-    longName: ['', [Validators.required]],
+    shortName: ['', [Validators.required, this.uniqueNameValidation]],
+    longName: ['', [Validators.required, this.uniqueNameValidation]],
     programs: [],
     invitationEmails: [],
   });
@@ -34,6 +41,8 @@ export class TeamFormComponent implements OnInit {
   programs: ProgramDtoApi[] = [];
   users: UserDtoApi[] = [];
   userFilters = { teams: [] as TeamDtoApi[] };
+
+  teamsNames: string[] = [];
 
   constructor(
     public activeOffcanvas: NgbActiveOffcanvas,
@@ -45,6 +54,14 @@ export class TeamFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.teamsRestService
+      .getTeams()
+      .pipe(
+        tap((t) => (this.teamsNames = t.map((t) => t.longName))),
+        tap(() => console.log(this.teamsNames)),
+      )
+      .subscribe();
+
     setTimeout(() => {
       combineLatest([this.programService.getPrograms(), this.userRestService.getUsers()])
         .pipe(
@@ -183,5 +200,14 @@ export class TeamFormComponent implements OnInit {
     });
 
     return output$;
+  }
+
+  uniqueNameValidation(control: AbstractControl): ValidationErrors | null {
+    // const valid = (control as FormArray).controls.some((c) => c.value !== '');
+    // return valid ? null : { 'uniqueNameError': true };
+    if (control.value.trim() == 'sam') {
+      return { nameNotAllowed: true };
+    }
+    return null;
   }
 }
