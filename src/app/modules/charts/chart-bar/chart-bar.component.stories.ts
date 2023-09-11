@@ -24,11 +24,6 @@ type Story = StoryObj<ChartBarComponent>;
 export const Default: Story = {
   args: {
     chartOption : {    
-        tooltip: {
-          trigger: 'axis',
-          borderWidth: 1,
-          borderColor: '#EAECF0',
-        },
         xAxis: [
           {
             type: 'category',
@@ -64,7 +59,17 @@ export const Default: Story = {
               },
             },
           },
-        ]  
+        ],
+        tooltip: {
+          trigger: 'axis',
+          borderWidth: 1,
+          borderColor: '#EAECF0',
+        },
+        legend: {
+          bottom: 0,
+          icon: 'circle',
+          itemWidth: 8,
+        },
     }
 
   }
