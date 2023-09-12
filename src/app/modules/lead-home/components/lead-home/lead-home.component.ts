@@ -7,7 +7,6 @@ import {
   ScoreTypeEnumApi,
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
-import Chart, { ChartData } from 'chart.js/auto';
 import { Observable, combineLatest, map, of, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -68,7 +67,6 @@ export class LeadHomeComponent implements OnInit {
   commentsCount = 0;
   questionsCount = 0;
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
-  evolutionChart?: Chart;
   //
   challengesByTeam: ChallengeDtoApi[] = [];
   challengesByUser: ChallengeDtoApi[] = [];
@@ -78,6 +76,7 @@ export class LeadHomeComponent implements OnInit {
   usersLeaderboard: { name: string; score: number }[] = [];
   usersLeaderboardCount = 0;
   topflopLoaded = false;
+  chartOption: any = {};
 
   constructor(
     private readonly commentsRestService: CommentsRestService,
@@ -95,7 +94,7 @@ export class LeadHomeComponent implements OnInit {
     public readonly companiesRestService: CompaniesRestService,
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
     combineLatest([
       this.commentsRestService.getComments(),
       this.questionsSubmittedRestService.getQuestions(),
@@ -123,10 +122,6 @@ export class LeadHomeComponent implements OnInit {
   }
 
   createChart(duration: ScoreDuration) {
-    if (this.evolutionChart) {
-      this.evolutionChart.destroy();
-    }
-
     const params = {
       duration: duration,
       type: ScoreTypeEnumApi.Team,
@@ -172,33 +167,49 @@ export class LeadHomeComponent implements OnInit {
             }
           });
 
-          const dataset = {
-            label: 'Global',
-            data: globalScore.map((u) => (u.y ? Math.round((u.y * 10000) / 100) : u.y)),
-            fill: false,
-            tension: 0.2,
-            spanGaps: true,
-          };
-
-          const data: ChartData = {
-            labels: labels,
-            datasets: [dataset],
-          };
-
-          const customChartOptions = {
-            ...chartDefaultOptions,
-            plugins: {
-              legend: {
-                display: false,
+          
+          const data = globalScore.map((u) => (u.y ? Math.round((u.y * 10000) / 100) : u.y))
+          
+          
+          this.chartOption = {
+            xAxis: [
+              {
+                type: 'category',
+                data: labels,
+                axisPointer: {
+                  type: 'line',
+                },
               },
-            },
-          };
+            ],
+            yAxis: [
+              {
+                type: 'value',
+                name: 'Score (%)',
+                nameLocation: 'middle',
+                nameGap: 50,
+                min: 0,
+                max: 100,
+                interval: 10,
+                axisLabel: {
+                  formatter: '{value}',
+                },
+              },
+            ],
+            series: [
+              {
+                name: 'Global',
+                color: '#09479e',
+                data: data,
+                type: 'line',
+                tooltip: {
+                  valueFormatter: (value:any) => {
+                    return (value as number) + ' %';
+                  },
+                },
+              },
+            ], 
+          }
 
-          this.evolutionChart = new Chart('programScoreEvol', {
-            type: 'line',
-            data: data,
-            options: customChartOptions,
-          });
         }),
         untilDestroyed(this),
       )
