@@ -28,6 +28,7 @@ input[type='range']::-moz-range-thumb {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-radius: 4px;
 }
 
 .circle {
@@ -39,9 +40,10 @@ input[type='range']::-moz-range-thumb {
   > span {
     display: inline-block;
     margin-top: 19px;
-    margin-left: -11px;
+    margin-left: -9px;
     width: 30px;
     text-align: center;
+    font-size: 1rem;
   }
 }
 

@@ -1,8 +1,8 @@
 <div class="grey-bar">
-  <div class="circle"><span>0</span></div>
-  <div class="circle"><span>25</span></div>
-  <div class="circle"><span>50</span></div>
-  <div class="circle"><span>75</span></div>
-  <div class="circle"><span>100</span></div>
+  <div class="circle"><span [ngClass]="{ 'text-primary fw-medium': control.value === 0 }">0</span></div>
+  <div class="circle"><span [ngClass]="{ 'text-primary fw-medium': control.value === 25 }">25</span></div>
+  <div class="circle"><span [ngClass]="{ 'text-primary fw-medium': control.value === 50 }">50</span></div>
+  <div class="circle"><span [ngClass]="{ 'text-primary fw-medium': control.value === 75 }">75</span></div>
+  <div class="circle"><span [ngClass]="{ 'text-primary fw-medium': control.value === 100 }">100</span></div>
 </div>
 <input type="range" class="form-range over-range" min="0" max="100" step="25" [formControl]="control" />
