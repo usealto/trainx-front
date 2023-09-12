@@ -12,12 +12,13 @@ import {
   QuestionDtoPaginatedResponseApi,
   TeamApi,
 } from '@usealto/sdk-ts-angular';
-import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
+import { Observable, filter, map, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns, getTranslation } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
 import { ProgramForm } from '../../models/programs.form';
@@ -26,7 +27,6 @@ import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
-import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 
 @UntilDestroy()
 @Component({
@@ -164,15 +164,13 @@ export class CreateProgramsComponent implements OnInit {
     if (this.isEdit && this.editedProgram) {
       canvasRef.componentInstance.program = this.editedProgram;
     }
-    canvasRef.componentInstance.isNewProgram = this.isNewProgram;
+    canvasRef.componentInstance.isProgramEdit = true;
 
     canvasRef.componentInstance.createdQuestion
       .pipe(
-        tap((newQuestion: QuestionDtoApi) => {
+        tap(() => {
           //if it's a new question, add it to the list
           if (!isQuestionEdit) {
-            this.questionList = this.questionList.filter((q) => q.id !== newQuestion.id);
-            this.questionList.push({ id: newQuestion.id, delete: false, isNewQuestion: true });
             // We keep the form open after question's creation
             this.openQuestionForm();
           }
@@ -182,9 +180,7 @@ export class CreateProgramsComponent implements OnInit {
 
           // refresh the questions list
           this.getQuestions();
-          setTimeout(() => {
-            this.getAssociatedQuestions();
-          }, 1000);
+          this.getAssociatedQuestions();
         }),
         untilDestroyed(this),
       )
