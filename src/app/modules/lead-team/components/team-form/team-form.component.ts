@@ -1,12 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  UntypedFormBuilder,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, filter, of, switchMap, tap } from 'rxjs';
@@ -30,9 +23,11 @@ export class TeamFormComponent implements OnInit {
 
   private fb: IFormBuilder = this.fob;
 
+  teamsNames: string[][] = [[], []];
+
   teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
-    shortName: ['', [Validators.required, this.uniqueNameValidation]],
-    longName: ['', [Validators.required, this.uniqueNameValidation]],
+    longName: ['', [Validators.required, this.uniqueNameValidation(this.teamsNames[0])]],
+    shortName: ['', [Validators.required, this.uniqueNameValidation(this.teamsNames[1])]],
     programs: [],
     invitationEmails: [],
   });
@@ -41,8 +36,6 @@ export class TeamFormComponent implements OnInit {
   programs: ProgramDtoApi[] = [];
   users: UserDtoApi[] = [];
   userFilters = { teams: [] as TeamDtoApi[] };
-
-  teamsNames: string[] = [];
 
   constructor(
     public activeOffcanvas: NgbActiveOffcanvas,
@@ -57,8 +50,22 @@ export class TeamFormComponent implements OnInit {
     this.teamsRestService
       .getTeams()
       .pipe(
-        tap((t) => (this.teamsNames = t.map((t) => t.longName))),
-        tap(() => console.log(this.teamsNames)),
+        tap((d) => {
+          d.forEach((t) => {
+            this.teamsNames[0].push(t.longName.toLowerCase());
+            this.teamsNames[1].push(t.shortName.toLowerCase());
+          });
+        }),
+        tap(() => {
+          const longName = this.team?.longName.toLowerCase();
+          const index = this.teamsNames[0].indexOf(longName ?? '');
+          this.teamsNames[0].splice(index, 1);
+        }),
+        tap(() => {
+          const shortName = this.team?.shortName.toLowerCase();
+          const index = this.teamsNames[1].indexOf(shortName ?? '');
+          this.teamsNames[1].splice(index, 1);
+        }),
       )
       .subscribe();
 
@@ -202,12 +209,14 @@ export class TeamFormComponent implements OnInit {
     return output$;
   }
 
-  uniqueNameValidation(control: AbstractControl): ValidationErrors | null {
-    // const valid = (control as FormArray).controls.some((c) => c.value !== '');
-    // return valid ? null : { 'uniqueNameError': true };
-    if (control.value.trim() == 'sam') {
-      return { nameNotAllowed: true };
-    }
-    return null;
+  uniqueNameValidation(teams: string[]): ValidatorFn {
+    return (control: AbstractControl) => {
+      const typedName = control.value.toLowerCase();
+
+      if (teams && teams.includes(typedName)) {
+        return { nameNotAllowed: true };
+      }
+      return null;
+    };
   }
 }
