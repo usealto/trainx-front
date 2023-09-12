@@ -27,6 +27,7 @@ import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
+import { ToastService } from 'src/app/core/toast/toast.service';
 
 @UntilDestroy()
 @Component({
@@ -67,6 +68,7 @@ export class CreateProgramsComponent implements OnInit {
     private readonly questionRestService: QuestionsRestService,
     private readonly route: ActivatedRoute,
     private readonly location: Location,
+    private readonly toastService: ToastService,
     public programStore: ProgramsStore,
     public teamStore: TeamStore,
     private modalService: NgbModal,
@@ -291,6 +293,13 @@ export class CreateProgramsComponent implements OnInit {
         )
         .subscribe();
     }
+  }
+
+  displayToast() {
+    this.toastService.show({
+      text: this.replaceInTranslationPipe.transform(I18ns.programs.forms.step3.validateCreate),
+      type: 'success',
+    });
   }
 
   delete() {

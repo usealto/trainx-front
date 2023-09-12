@@ -272,9 +272,12 @@
         </button>
       </div>
       <div class="col-6 text-end">
-        <a class="btn btn-primary float-end" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]">{{
-          I18ns.shared.submit
-        }}</a>
+        <a
+          class="btn btn-primary float-end"
+          (click)="displayToast()"
+          [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
+          >{{ I18ns.shared.submit }}</a
+        >
       </div>
     </div>
   </div>
