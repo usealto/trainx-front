@@ -51,6 +51,7 @@
         [program]="prog"
         [allTeamsCount]="teamStore.teams.value.length"
         [membersHaveValidatedCount]="programsMemberHaveValidatedCount.get(prog.id)"
+        data-cy="programCard"
       ></alto-program-card>
     </div>
     <div *ngIf="count < 3" class="nodata-placeholder m-0 col-4">

@@ -52,7 +52,7 @@ export class LeadTeamComponent implements OnInit {
   teamsStats: TeamStatsDtoApi[] = [];
   paginatedTeams: TeamDisplay[] = [];
   teamsPage = 1;
-  teamsPageSize = 7;
+  teamsPageSize = 5;
   teamsScores: TeamDisplay[] = [];
   // Users
   absoluteUsersCount = 0;
@@ -61,7 +61,7 @@ export class LeadTeamComponent implements OnInit {
   users: UserDtoApi[] = [];
   paginatedUsers: UserDisplay[] = [];
   usersPage = 1;
-  usersPageSize = 10;
+  usersPageSize = 5;
   filteredUsers: UserDisplay[] = [];
   usersScores: UserDisplay[] = [];
   usersQuestionCount = new Map<string, number[]>();

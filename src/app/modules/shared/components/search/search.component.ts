@@ -27,15 +27,18 @@ export class SearchComponent implements OnChanges {
 
   timeOut: any;
 
+  inputText = '';
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes['searchItems']) {
-      if (this.searchInput) {
+      if (this.searchInput && this.inputText !== changes['searchItems'].currentValue) {
         this.searchInput.nativeElement.value = changes['searchItems'].currentValue ?? '';
       }
     }
   }
 
   searchReq(value: string) {
+    this.inputText = value;
     clearTimeout(this.timeOut);
     this.timeOut = setTimeout(() => {
       this.searchChange.emit(value);
