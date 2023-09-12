@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { NGX_ECHARTS_CONFIG } from 'ngx-echarts';
-
+import { ChartsService } from '../charts.service';
 @Component({
   selector: 'alto-chart-basicline',
   templateUrl: './chart-basicline.component.html',
@@ -13,6 +13,15 @@ import { NGX_ECHARTS_CONFIG } from 'ngx-echarts';
     },
   ],
 })
-export class ChartBasiclineComponent{
-  chartOption?: EChartsOption
+export class ChartBasiclineComponent implements OnInit{
+  @Input() chartOption?: EChartsOption
+  lineOptions?: EChartsOption
+  constructor(private chartsService: ChartsService) { }
+  ngOnInit(): void {
+    setTimeout(() => {
+      if (this.chartOption) {
+        this.lineOptions = this.chartsService.altoFormattingMultiline(this.chartOption)
+      }
+    }, 500);
+  }
 }
