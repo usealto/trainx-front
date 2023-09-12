@@ -2,7 +2,7 @@ import { registerLocaleData } from '@angular/common';
 import { Injectable } from '@angular/core';
 
 /**
- * This service exports js files from Angular locales. 
+ * This service exports js files from Angular locales.
  * Used to format currencies, dates, numbers
  */
 @Injectable({
@@ -25,6 +25,8 @@ export class LocaleService {
       browserLang = browserLang.split('_')[0];
     }
 
+    // ! To Remove for multi-lang support
+    return 'fr';
     return browserLang || 'en';
   }
 }

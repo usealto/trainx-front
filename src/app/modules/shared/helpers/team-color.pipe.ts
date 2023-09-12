@@ -28,6 +28,7 @@ export class TeamColorPipe implements PipeTransform {
     return `background-color: ${this.colorCodes[num].bg}; color: ${this.colorCodes[num].color}`;
   }
 
+  @memoize()
   extractNumber(str: string): number {
     if (str.length < 8) {
       // console.error('String length must be at least 8');
