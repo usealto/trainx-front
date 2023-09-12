@@ -129,7 +129,13 @@ export class LeadHomeComponent implements OnInit {
 
     const params = {
       duration: duration,
-      type: ScoreTypeEnumApi.Team,
+      type: ScoreTypeEnumApi.Guess,
+      timeframe:
+        duration === ScoreDuration.Year
+          ? ScoreTimeframeEnumApi.Month
+          : duration === ScoreDuration.Trimester
+          ? ScoreTimeframeEnumApi.Week
+          : ScoreTimeframeEnumApi.Day,
     };
 
     this.scoresRestService
@@ -138,7 +144,7 @@ export class LeadHomeComponent implements OnInit {
         tap((res) => {
           this.scoreCount = res.scores.length;
           const scores = this.scoreService.reduceChartData(res.scores);
-
+          console.log(scores);
           const labels = this.statisticsServices.formatLabel(
             this.statisticsServices
               .aggregateDataForScores(scores[0], duration as ScoreDuration)
@@ -149,7 +155,7 @@ export class LeadHomeComponent implements OnInit {
           const total = scores.map((s) =>
             this.statisticsServices.aggregateDataForScores(s, duration as ScoreDuration),
           );
-
+          // console.log(total)
           const globalScore: { x: Date; y: number | null; z: number }[] = [];
           total.forEach((teamData) => {
             teamData.forEach((point) => {

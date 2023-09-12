@@ -44,7 +44,6 @@ export class StatisticsService {
       }
       groupedData[dateKey].push(score.averages[index]);
     });
-
     for (const dateKey in groupedData) {
       const avg = this.scoresService.reduceWithoutNull(groupedData[dateKey]);
       data.push({ x: parseISO(dateKey), y: avg });
