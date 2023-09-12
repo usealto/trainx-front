@@ -6,7 +6,6 @@ import {
   ScoresResponseDtoApi,
   TeamStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
-import Chart, { ChartData } from 'chart.js/auto';
 import { Observable, combineLatest, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -33,11 +32,11 @@ export class PerformanceByTeamsComponent implements OnChanges {
   teams: ScoreDtoApi[] = [];
   selectedTeams: ScoreDtoApi[] = [];
   scoredTeams: { label: string; score: number | null; progression: number | null }[] = [];
-  scoreEvolutionChart?: Chart;
   scoreCount = 0;
 
   teamsLeaderboard: { name: string; score: number }[] = [];
   teamsLeaderboardCount = 0;
+  chartOption: any = {};
 
   constructor(
     public readonly teamStore: TeamStore,
@@ -124,47 +123,55 @@ export class PerformanceByTeamsComponent implements OnChanges {
       duration,
     );
 
-    if (this.scoreEvolutionChart) {
-      this.scoreEvolutionChart.destroy();
-    }
-
     const dataSet = scores.map((s) => {
       const d = this.statisticsServices.aggregateDataForScores(s, duration);
       return {
         label: s.label,
         data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
-        fill: false,
-        tension: 0.2,
-        spanGaps: true,
       };
     });
 
-    const data: ChartData = {
-      labels: labels,
-      datasets: dataSet,
-    };
-
-    const customChartOptions = {
-      ...chartDefaultOptions,
-      plugins: {
+    const series = dataSet.map((d) => {
+      return {
+        name: d.label,
+        // color: '#09479e',
+        data: d.data,
+        type: 'line',
         tooltip: {
-          callbacks: {
-            label: function (tooltipItem: any) {
-              const labelType = 'équipe';
-              return `${labelType} ${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
-            },
+          valueFormatter: (value:any) => {
+            return (value as number) + ' %';
           },
         },
-        legend: {
-          display: false,
+      }
+    }
+    );
+
+    this.chartOption = {
+      xAxis: [
+        {
+          type: 'category',
+          data: labels,
+          axisPointer: {
+            type: 'line',
+          },
         },
-      },
-    };
-    this.scoreEvolutionChart = new Chart('teamScoreEvolution', {
-      type: 'line',
-      data: data,
-      options: customChartOptions,
-    });
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          name: 'Score (%)',
+          nameLocation: 'middle',
+          nameGap: 50,
+          min: 0,
+          max: 100,
+          interval: 10,
+          axisLabel: {
+            formatter: '{value}',
+          },
+        },
+      ],
+      series: series,
+    }
   }
 
   filterTeams(event: ScoreDtoApi[]) {
