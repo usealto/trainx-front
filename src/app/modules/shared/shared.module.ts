@@ -14,6 +14,7 @@ import { NgSelectConfig, NgSelectModule } from '@ng-select/ng-select';
 import { AutoResizeTextareaDirective } from 'src/app/core/utils/directives/auto-resize-textarea.directive';
 import { NgVar } from 'src/app/core/utils/directives/ng-var.directive';
 import { EmojiPipe } from 'src/app/core/utils/emoji/emoji.pipe';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TranslationModule } from 'src/app/core/utils/i18n/translation.module';
 import { LoadingModule } from 'src/app/core/utils/loading/loading.module';
 import { UtilsPipeModule } from 'src/app/core/utils/pipe/utils-pipe.module';
@@ -33,6 +34,7 @@ import { ProgramCardComponent } from './components/program-card/program-card.com
 import { ProgressionBadgeComponent } from './components/progression-badge/progression-badge.component';
 import { ProgressionFilterComponent } from './components/progression-filter/progression-filter.component';
 import { QuestionDeleteModalComponent } from './components/question-delete-modal/question-delete-modal.component';
+import { RangeComponent } from './components/range/range.component';
 import { ScoreFilterComponent } from './components/score-filter/score-filter.component';
 import { SearchComponent } from './components/search/search.component';
 import { StatusPillComponent } from './components/status-pill/status-pill.component';
@@ -44,7 +46,6 @@ import { TrainingCardComponent } from './components/training-card/training-card.
 import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
     TopFlopComponent,
     IconBadgeComponent,
     DeleteModalComponent,
+    RangeComponent,
   ],
   imports: [
     CommonModule,
@@ -135,6 +137,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
     QuestionDeleteModalComponent,
     EmojiPipe,
     TopFlopComponent,
+    RangeComponent,
     DeleteModalComponent,
   ],
   providers: [NgbActiveModal],

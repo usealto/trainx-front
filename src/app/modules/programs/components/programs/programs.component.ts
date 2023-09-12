@@ -215,6 +215,7 @@ export class ProgramsComponent implements OnInit {
     this.questionFilters.programs = programs;
     this.questionFilters.tags = tags;
     this.questionFilters.score = score;
+
     this.questionFilters.search = search;
 
     this.questionsService

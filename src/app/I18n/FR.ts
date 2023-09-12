@@ -480,7 +480,7 @@ export const FR = {
       title: 'Vos membres',
       shortTitle: 'Membres',
       subtitle: 'Retrouvez l’ensemble des utilisateurs de votre entreprise.',
-      invite: 'Inviter',
+      invite: 'Inviter des membres',
       filters: {
         activity: 'Activité',
         teams: 'Équipe',
@@ -498,9 +498,8 @@ export const FR = {
       table: {
         name: 'Nom',
         team: 'Équipe',
-        averageScore: 'Score moyen (30 derniers jours)',
+        globalScore: 'Score global (30 derniers jours)',
         noScore: 'Aucun score',
-        averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         questionsPerMonth: 'Questions (30 derniers jours)',
         questionsPerMonthTooltip:
           'Nombre de questions répondues sur les 30 derniers jours et variation sur la dernière période',
@@ -537,10 +536,9 @@ export const FR = {
         usersCount: 'Nombre de membres',
         noUsers: 'Aucun membre',
         users: ['Aucun', '{{}}', '{{}}'],
-        averageScore: 'Score moyen (30 derniers jours)',
+        globalScore: 'Score global',
         activity: 'Activité  moyenne (30 derniers jours)',
         noScore: 'Aucun score',
-        averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         creationDate: 'Date de création',
         noActivity: 'Aucune activité',
         placeholderTitle: 'Aucune équipe n’a été créée pour l’instant. ',

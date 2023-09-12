@@ -42,7 +42,7 @@ export class QuestionFormComponent implements OnInit {
   @Input() program: ProgramDtoApi | undefined;
   @Input() question?: QuestionDtoApi;
   @Input() isSubmitted = false;
-  @Input() isNewProgram = false;
+  @Input() isProgramEdit = false;
   @Input() stayOpen = false;
   @Output() createdQuestion = new EventEmitter<QuestionDtoApi>();
   @Output() dismissedQuestion = new EventEmitter<any>();
@@ -126,7 +126,6 @@ export class QuestionFormComponent implements OnInit {
           this.questionForm.controls.answersWrong.patchValue(this.question.answersWrong);
         }
       }
-      this.questionForm.valueChanges.pipe(tap(console.log)).subscribe();
     }, 0);
   }
 

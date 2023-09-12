@@ -174,9 +174,6 @@ export class TeamFormComponent implements OnInit {
 
     initialTeamProgs.forEach((p) => {
       if (!formProgs.find((po) => po.id === p.id)) {
-        // To Delete
-        console.log('program ' + p.name + ' will be deleted');
-
         output$.push(
           this.programService.updateProgram(p.id, {
             teamIds: p.teams.filter((t) => t.id !== team.id).map((t) => ({ id: t.id })),
