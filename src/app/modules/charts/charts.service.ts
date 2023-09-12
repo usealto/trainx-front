@@ -47,4 +47,36 @@ export class ChartsService {
 
     return eChartsOption
   }
+
+
+
+  altoFormattingBar(eChartsOption: EChartsOption) : EChartsOption {
+    // replace null or 'n' values with 0 for every series begining with null or 'n'
+    if (eChartsOption.series && eChartsOption.series && Array.isArray(eChartsOption.series)) {
+      eChartsOption.series.forEach((serie) => {
+        if(serie.type === 'bar' ){
+          serie.tooltip = {
+            valueFormatter: (value) => {
+              return (value as number) + ' %';
+            },
+          }       
+        }
+      });
+    }
+
+    eChartsOption.tooltip = {
+      trigger: 'axis',
+      borderWidth: 1,
+      borderColor: '#EAECF0',
+    }
+    eChartsOption.legend = {
+      bottom: 0,
+      icon: 'circle',
+      itemWidth: 8,
+    }
+
+    return eChartsOption
+  }
 }
+
+
