@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { NGX_ECHARTS_CONFIG } from 'ngx-echarts';
 import { ChartsService } from './../charts.service';
@@ -15,7 +15,7 @@ import { ChartsService } from './../charts.service';
   ],
 })
 
-export class ChartBarComponent implements OnInit{
+export class ChartBarComponent implements OnInit, OnChanges{
   @Input() chartOption?: EChartsOption
   barOptions?: EChartsOption
   constructor(private chartsService: ChartsService ) { }  
@@ -24,6 +24,14 @@ export class ChartBarComponent implements OnInit{
       if (this.chartOption) {
         this.barOptions = this.chartsService.altoFormattingBar(this.chartOption)
       }
-    }, 500);
+    }, 300);
+  }
+
+  ngOnChanges(): void {
+    setTimeout(() => {
+      if (this.chartOption) {
+        this.barOptions = this.chartsService.altoFormattingBar(this.chartOption)
+      }
+    }, 300);
   }
 }
