@@ -16,9 +16,12 @@ export class ImgBadgeComponent implements OnChanges {
 
   thumb = '';
 
+  avatarsFolder = 'assets/avatars/';
+  avatarsCount = 71;
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['user']?.currentValue) {
-      this.thumb = this.user?.pictureUrl?.replace('s=480', 's=' + this.size) || '';
+      this.thumb = this.getAvatar(this.user?.id);
     } else if (changes['url']?.currentValue) {
       this.thumb = this.url || '';
     }
@@ -28,11 +31,29 @@ export class ImgBadgeComponent implements OnChanges {
   getStyle(size: number): string {
     return `width: ${size}px; height: ${size}px;`;
   }
+
   @memoize()
   getUserName(user: UserDtoApi | UserLightDtoApi | null | undefined) {
     if (!user) {
       return '';
     }
     return user?.firstname + ' ' + user?.lastname;
+  }
+
+  @memoize()
+  getAvatar(id?: string) {
+    return this.avatarsFolder + this.extractNumber(id ?? '') + '.svg';
+  }
+
+  @memoize()
+  extractNumber(str: string): number {
+    if (str.length < 8) {
+      return 0;
+    }
+    let output = 0;
+    for (let index = 0; index < str.length; index++) {
+      output += str[index].charCodeAt(0);
+    }
+    return output % this.avatarsCount;
   }
 }
