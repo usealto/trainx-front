@@ -14,10 +14,9 @@
     />
   </div>
   <alto-icon-badge
-    [size]="3.3333"
-    icon="bi-people"
+    [size]="3"
+    icon="bi bi-link-45deg"
     [color]="slackCheck.checked ? 'badge-double-primary' : 'badge-double-gray'"
-    class="badge"
   ></alto-icon-badge>
   <div class="d-grid">
     <span class="integration-titles" [ngStyle]="{ color: slackCheck.checked ? '#101828' : '#D0D5DD' }">
@@ -60,7 +59,7 @@
   <div class="form-check form-switch d-inline-block align-middle me-5">
     <input #appWebCheck type="checkbox" class="form-check-input" disabled />
   </div>
-  <alto-icon-badge [size]="3.3333" icon="bi bi-wifi-2" color="badge-double-gray" class="badge">
+  <alto-icon-badge [size]="3" icon="bi bi-wifi-2" color="badge-double-gray">
   </alto-icon-badge>
   <div class="d-grid disabled-text">
     <span class="integration-titles">{{ I18ns.settings.continuousSession.webApp.title }}</span>
