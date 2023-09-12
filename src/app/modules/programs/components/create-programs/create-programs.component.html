@@ -1,4 +1,4 @@
-<div class="header-panel mb-8">
+<div class="header-panel2 mb-8">
   <img class="emoji-title me-4" [src]="EmojiName.Bullseye | emoji" />
   <h1>{{ isEdit ? I18ns.programs.forms.edit : I18ns.programs.forms.create }}</h1>
 </div>
@@ -29,6 +29,7 @@
     <span>{{ I18ns.programs.forms.step2.title }}</span>
   </div>
   <div
+    data-cy="recapTab"
     class="step"
     [ngClass]="{ 'cursor-pointer': isEdit, 'highlight-step': currentStep === 3 }"
     (click)="isEdit && changeTab(3)"
@@ -104,12 +105,14 @@
         [isChecked]="true"
         (changeQuestionAssociation)="addOrRemoveQuestion($event)"
         (openQuestionForm)="openQuestionForm($event)"
-        (pageChange)="questionPageChange($event)"
+        (pageChange)="associatedQuestionPageChange($event)"
       >
       </alto-questions-table>
     </ng-container>
     <ng-template #noAssociatedQuestions>
       <div class="text-center">
+        <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.newSubtitle }}</p>
+
         <button class="btn btn-primary mb-8" (click)="openQuestionForm()" data-cy="createNewQuestion">
           <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
         </button>
@@ -166,14 +169,14 @@
 
     <div class="row">
       <div class="col-6">
-        <button class="btn btn-outline-secondary" (click)="cancel()">
-          <i class="bi bi-arrow-left-short"></i><span>{{ I18ns.shared.previous }}</span>
+        <button class="btn btn-outline-secondary" (click)="changeTab(1)">
+          <i class="fs-3 bi bi-arrow-left-short"></i><span>{{ I18ns.shared.previous }}</span>
         </button>
       </div>
       <div class="col-6 text-end">
         <button class="btn btn-primary" (click)="goNext()">
           <span>{{ I18ns.shared.next }}</span
-          ><i class="bi bi-arrow-right-short"></i>
+          ><i class="fs-3 bi bi-arrow-right-short"></i>
         </button>
       </div>
     </div>
@@ -205,7 +208,7 @@
             [hasDynamicColor]="true"
             [limit]="6"
           ></alto-colored-pill-list>
-          <span class="ms-3 alto-badge cursor-pointer" (click)="changeTab(1)">
+          <span class="ms-3 alto-badge cursor-pointer plus-badge" (click)="changeTab(1)">
             <i class="bi bi-plus-lg"></i>
           </span>
         </div>
@@ -262,8 +265,17 @@
 
     <hr class="mt-8 bottom-hr" />
 
-    <a class="btn btn-primary float-end" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]">{{
-      I18ns.shared.submit
-    }}</a>
+    <div class="row mb-4">
+      <div class="col-6">
+        <button class="btn btn-outline-secondary" (click)="changeTab(2)">
+          <i class="fs-3 bi bi-arrow-left-short"></i><span>{{ I18ns.shared.previous }}</span>
+        </button>
+      </div>
+      <div class="col-6 text-end">
+        <a class="btn btn-primary float-end" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]">{{
+          I18ns.shared.submit
+        }}</a>
+      </div>
+    </div>
   </div>
 </div>

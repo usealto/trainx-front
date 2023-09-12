@@ -46,7 +46,7 @@ interface QuestionDisplay extends QuestionDtoApi {
   providers: [ReplaceInTranslationPipe],
 })
 export class ProgramsComponent implements OnInit {
-  EmojiName = EmojiName;
+  Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   //
@@ -62,6 +62,7 @@ export class ProgramsComponent implements OnInit {
   questionFilters: QuestionFilters = { programs: [], tags: [], search: '' };
   contributors: { id: string; fullname: string }[] = [];
   selectedItems: QuestionDtoApi[] = [];
+  isFilteredQuestions = false;
   //
   userCache = new Map<string, UserDtoApi>();
   pillsRowDisplayLimit = 3;
@@ -81,6 +82,7 @@ export class ProgramsComponent implements OnInit {
   isTagProgramsLoading = true;
   tagFilters: TagFilters = { programs: [], contributors: [], search: '', score: '' };
   tagsScore = new Map<string, number>();
+  isFilteredTags = false;
 
   //tabs
   tabData = [
@@ -110,6 +112,7 @@ export class ProgramsComponent implements OnInit {
     this.getQuestions();
     this.getSubmittedQuestions();
     this.getTags();
+    this.isFilteredQuestions = false;
   }
 
   handleTabChange(value: any) {
@@ -207,10 +210,12 @@ export class ProgramsComponent implements OnInit {
     refreshPagination = false,
   ) {
     this.isQuestionsLoading = true;
+    this.isFilteredQuestions = true;
 
     this.questionFilters.programs = programs;
     this.questionFilters.tags = tags;
     this.questionFilters.score = score;
+
     this.questionFilters.search = search;
 
     this.questionsService
@@ -390,12 +395,22 @@ export class ProgramsComponent implements OnInit {
       output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
     }
 
+    this.isFilteredTags = true;
     this.changeTagsPage(output);
   }
 
   resetFilters() {
     this.getQuestions((this.questionFilters = {}));
+    this.filterTags((this.tagFilters = {}));
     this.selectedItems = [];
+    this.isFilteredQuestions = false;
+    this.isFilteredTags = false;
+  }
+
+  resetTagsFilters() {
+    this.filterTags((this.tagFilters = {}));
+    this.selectedItems = [];
+    this.isFilteredTags = false;
   }
 
   @memoize()

@@ -86,6 +86,25 @@
   padding: 1.667rem;
 }
 
+.nodata-placeholder {
+  min-height: 12rem;
+  background-color: var(--indigo-25);
+  border-radius: 0.6667rem;
+  padding: 4rem;
+  margin: 2rem 0;
+  a {
+    width: fit-content;
+    margin: 0 auto;
+  }
+  p {
+    font-weight: 600;
+    color: var(--indigo-900);
+  }
+  span {
+    color: var(--indigo-900);
+  }
+}
+
 .header-panel {
   background-color: var(--primary-50);
   border-radius: 0.67rem;
@@ -98,6 +117,19 @@
   }
   p {
     font-size: 1.1667rem;
+  }
+}
+
+.header-panel2 {
+  @extend .header-panel;
+  background-color: var(--primary-25);
+  height: 5.333rem;
+  padding: 0 1.7rem;
+
+  h1 {
+    display: inline-block;
+    line-height: 5.33rem;
+    font-weight: 600;
   }
 }
 

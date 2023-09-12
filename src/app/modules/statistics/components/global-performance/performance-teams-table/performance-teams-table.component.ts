@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/cor
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ProgramDtoApi, TagDtoApi, TeamDtoApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { switchMap, tap } from 'rxjs';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -19,6 +20,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
   styleUrls: ['./performance-teams-table.component.scss'],
 })
 export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
+  Emoji = EmojiName;
   I18ns = I18ns;
 
   @Input() duration: ScoreDuration = ScoreDuration.Year;
@@ -34,6 +36,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   teamsPreviousPeriod: TeamStatsDtoApi[] = [];
   teamsDisplay: TeamStatsDtoApi[] = [];
   paginatedTeams: TeamStatsDtoApi[] = [];
+  paginatedTeamsCount = 0;
   teamsPage = 1;
   teamsPageSize = 5;
 
@@ -114,6 +117,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
         switchMap(() => this.scoreRestService.getTeamsStats(this.duration, true)),
         tap((t) => (this.teamsPreviousPeriod = t)),
         tap(() => (this.scoreIsLoading = false)),
+        tap(() => this.getTeamsFiltered()),
         untilDestroyed(this),
       )
       .subscribe();
@@ -122,6 +126,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   changeTeamsPage(page: number) {
     this.teamsPage = page;
     this.paginatedTeams = this.teamsDisplay.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
+    this.paginatedTeamsCount = this.paginatedTeams.length;
   }
 
   @memoize()

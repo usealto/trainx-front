@@ -45,14 +45,14 @@ interface UserDisplay extends UserDtoApi {
   providers: [ReplaceInTranslationPipe],
 })
 export class LeadTeamComponent implements OnInit {
-  EmojiName = EmojiName;
+  Emoji = EmojiName;
   I18ns = I18ns;
   // Teams
   teams: TeamDtoApi[] = [];
   teamsStats: TeamStatsDtoApi[] = [];
   paginatedTeams: TeamDisplay[] = [];
   teamsPage = 1;
-  teamsPageSize = 7;
+  teamsPageSize = 5;
   teamsScores: TeamDisplay[] = [];
   // Users
   absoluteUsersCount = 0;
@@ -61,11 +61,13 @@ export class LeadTeamComponent implements OnInit {
   users: UserDtoApi[] = [];
   paginatedUsers: UserDisplay[] = [];
   usersPage = 1;
-  usersPageSize = 10;
+  usersPageSize = 5;
   filteredUsers: UserDisplay[] = [];
   usersScores: UserDisplay[] = [];
   usersQuestionCount = new Map<string, number[]>();
   userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
+  isFilteredUsers = false;
+  selectedItems: UserDisplay[] = [];
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -115,13 +117,14 @@ export class LeadTeamComponent implements OnInit {
                   data.push(0);
                 } else {
                   u.totalGuessesCount
-                    ? data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount)
-                    : data.push(0);
+                    ? data.push(u.totalGuessesCount, (data[0] - u.totalGuessesCount) / u.totalGuessesCount)
+                    : data.push(0, 0);
                 }
                 this.usersQuestionCount.set(u.id, data);
               }
             }
           });
+
           this.users.forEach((user) => {
             const member = this.teams.find((team) => team.id === user.teamId);
             this.usersMap.set(user.id, member ? member.longName + ' - ' + member.shortName : '');
@@ -176,7 +179,14 @@ export class LeadTeamComponent implements OnInit {
       output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
     }
     this.filteredUsers = output;
+    this.isFilteredUsers = true;
     this.changeUsersPage(output, 1);
+  }
+
+  resetFilters() {
+    this.filterUsers((this.userFilters = {}));
+    this.selectedItems = [];
+    this.isFilteredUsers = false;
   }
 
   changeUsersPage(users: UserDisplay[], page: number) {
@@ -243,7 +253,8 @@ export class LeadTeamComponent implements OnInit {
     return this.usersQuestionCount.get(id) || [0, 0];
   }
 
-  getTotalQuestions(): number {
+  @memoize()
+  getTotalQuestions(num: number): number {
     let totalQuestions = 0;
 
     this.usersQuestionCount.forEach((values) => {
@@ -255,9 +266,17 @@ export class LeadTeamComponent implements OnInit {
     return totalQuestions;
   }
 
-  getPercentageQuestions(): number {
-    // TODO
-    return 0;
+  @memoize()
+  getPercentageQuestions(num: number): number {
+    let variation = 0;
+
+    this.usersQuestionCount.forEach((values) => {
+      if (values && values.length > 1) {
+        variation += values[1];
+      }
+    });
+
+    return (this.getTotalQuestions(num) - variation) / variation;
   }
 
   airtableRedirect() {

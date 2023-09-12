@@ -52,7 +52,7 @@
       formControlName="explanation"
       placeholder="{{ I18ns.questions.form.explanationPlaceholder }}"
     ></textarea>
-    <ng-container *ngIf="!isNewProgram">
+    <ng-container *ngIf="!isProgramEdit">
       <label class="form-label">{{ I18ns.questions.form.programs }}</label>
       <ng-select
         class="alto-form mb-4"

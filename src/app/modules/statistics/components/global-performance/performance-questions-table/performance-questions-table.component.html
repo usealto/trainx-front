@@ -19,74 +19,84 @@
   </div>
 </div>
 
-<div class="table-panel">
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col" class="w-35">
-          {{ I18ns.statistics.globalPerformance.questionsTable.columns.question }}
-        </th>
-        <th scope="col" class="w-10 text-center">
-          {{ I18ns.statistics.globalPerformance.questionsTable.columns.globalScore }}
-        </th>
-        <th scope="col" class="w-10">
-          {{ I18ns.statistics.globalPerformance.questionsTable.columns.scoreEvolution }}
-        </th>
-        <th scope="col" class="w-20 text-center">
-          {{ I18ns.statistics.globalPerformance.questionsTable.columns.usersNumber }}
-        </th>
-        <th scope="col" class="w-25">
-          {{ I18ns.statistics.globalPerformance.questionsTable.columns.badTeams }}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let quest of paginatedQuestions" class="align-middle">
-        <td>
-          {{ quest.question.title }}
-        </td>
-        <td class="text-center">
-          <span class="alto-score" [class]="(quest.score || 0) * 100 | pillColor">{{
-            quest.score | percent
-          }}</span>
-        </td>
-        <td>
-          <alto-progression-badge
-            class="d-inline-block ms-3"
-            [score]="getQuestionPreviousScore(quest)"
-            *ngIf="!scoreIsLoading"
-          ></alto-progression-badge>
-        </td>
-        <td class="text-center">
-          <!-- todo when api is ready -->
-          <!-- <div class="progress">
+<ng-container *ngIf="paginatedQuestionsCount > 0; else noQuestionsTable">
+  <div class="table-panel">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" class="w-35">
+            {{ I18ns.statistics.globalPerformance.questionsTable.columns.question }}
+          </th>
+          <th scope="col" class="w-10 text-center">
+            {{ I18ns.statistics.globalPerformance.questionsTable.columns.globalScore }}
+          </th>
+          <th scope="col" class="w-10">
+            {{ I18ns.statistics.globalPerformance.questionsTable.columns.scoreEvolution }}
+          </th>
+          <th scope="col" class="w-20 text-center">
+            {{ I18ns.statistics.globalPerformance.questionsTable.columns.usersNumber }}
+          </th>
+          <th scope="col" class="w-25">
+            {{ I18ns.statistics.globalPerformance.questionsTable.columns.badTeams }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let quest of paginatedQuestions" class="align-middle">
+          <td>
+            {{ quest.question.title }}
+          </td>
+          <td class="text-center">
+            <span class="alto-score" [class]="(quest.score || 0) * 100 | pillColor">{{
+              quest.score | percent
+            }}</span>
+          </td>
+          <td>
+            <alto-progression-badge
+              class="d-inline-block ms-3"
+              [score]="getQuestionPreviousScore(quest)"
+              *ngIf="!scoreIsLoading"
+            ></alto-progression-badge>
+          </td>
+          <td class="text-center">
+            <!-- todo when api is ready -->
+            <!-- <div class="progress">
             <div
               class="progress-bar d-inline-block"
               role="progressbar"
               [style]="'width:' + (quest.usersCount / quest.totalUsersCount | percent : '1.0-0' : 'en-US')"
             ></div>
           </div> -->
-          <!-- {{ quest.usersCount }}/{{ quest.totalUsersCount }} -->
-          {{ quest.usersCount }}
-        </td>
-        <td>
-          <ng-container *ngIf="quest.teams">
-            <alto-colored-pill-list
-              [hasDynamicColor]="true"
-              [limit]="3"
-              [textLimit]="15"
-              [data]="quest.teams | sort : 'asc' : 'score' | slice : 0 : 6"
-            ></alto-colored-pill-list>
-          </ng-container>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <alto-pagination
-    class="mx-4 d-block"
-    [collectionSize]="questionsDisplay.length"
-    (pageChange)="changeQuestionsPage($event)"
-    [pageSize]="questionsPageSize"
-    [page]="questionsPage"
-  ></alto-pagination>
-</div>
+            <!-- {{ quest.usersCount }}/{{ quest.totalUsersCount }} -->
+            {{ quest.usersCount }}
+          </td>
+          <td>
+            <ng-container *ngIf="quest.teams">
+              <alto-colored-pill-list
+                [hasDynamicColor]="true"
+                [limit]="3"
+                [textLimit]="15"
+                [data]="getBadTeams(quest.teams)"
+              ></alto-colored-pill-list>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <alto-pagination
+      class="mx-4 d-block"
+      [collectionSize]="questionsDisplay.length"
+      (pageChange)="changeQuestionsPage($event)"
+      [pageSize]="questionsPageSize"
+      [page]="questionsPage"
+    ></alto-pagination>
+  </div>
+</ng-container>
+<ng-template #noQuestionsTable>
+  <div class="col nodata-placeholder d-flex justify-content-center align-items-center">
+    <div class="text-center">
+      <img [src]="Emoji.Collision | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.statistics.globalPerformance.questionsTable.placeholder }}</p>
+    </div>
+  </div>
+</ng-template>

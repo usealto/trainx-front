@@ -20,6 +20,7 @@ export class ProgramCardComponent implements OnInit, OnChanges {
   @Input() progress: number | undefined;
   @Input() participation: number | undefined;
   @Input() allTeamsCount: number | undefined;
+  @Input() membersHaveValidatedCount!: string | undefined;
 
   Emoji = EmojiName;
   I18ns = I18ns;
@@ -27,6 +28,7 @@ export class ProgramCardComponent implements OnInit, OnChanges {
   EmojiName = EmojiName;
 
   teamsCount = 0;
+  membersHaveValidatedPercentage = 0;
 
   constructor(
     private readonly programRestService: ProgramsRestService,
@@ -38,6 +40,9 @@ export class ProgramCardComponent implements OnInit, OnChanges {
       .getTeams()
       .pipe(tap((teams) => (this.teamsCount = teams.length)))
       .subscribe();
+    this.membersHaveValidatedPercentage = this.membersHaveValidatedCount
+      ? +this.membersHaveValidatedCount?.split('/')[0] / +this.membersHaveValidatedCount?.split('/')[1]
+      : 0;
   }
 
   ngOnChanges(changes: SimpleChanges) {

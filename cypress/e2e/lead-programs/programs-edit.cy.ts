@@ -28,8 +28,8 @@ describe('Lead Programs', () => {
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
 
     cy.get('[data-cy="programCreateNext"]').click();
-
     // Create a new question
+
     cy.get('[data-cy="createNewQuestion"]').click();
     cy.get('[data-cy="questionCreateTitle"]').type(newQuestion);
     cy.get('[data-cy="goodAnswerInput"]').type(goodAnswer);
@@ -38,6 +38,7 @@ describe('Lead Programs', () => {
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
     cy.get('.button-container > .btn-primary').click();
     cy.wait(500);
+    cy.get('.btn-close').click();
 
     // Create a new question with a different tag
     cy.get('[data-cy="createNewQuestion"]').click();
@@ -48,6 +49,7 @@ describe('Lead Programs', () => {
     cy.get('.ng-dropdown-panel-items .ng-option').eq(1).click();
     cy.get('.button-container > .btn-primary').click();
     cy.wait(500);
+    cy.get('.btn-close').click();
 
     // Check if the question is NOT displayed because of the different tag
     cy.get('input[type="checkbox"]:checked').should('have.length', 1);
@@ -72,7 +74,7 @@ describe('Lead Programs', () => {
     cy.get('[data-cy=questionCount]').should('contain', '3');
 
     // Delete the program and questions created
-    cy.get('[data-cy="informationsTab"]').click();
+    cy.get('[data-cy="recapTab"]').click();
     cy.get('[data-cy="deleteProgram"]').click();
     cy.get('[data-cy="deleteButton"]').click();
     cy.get('[data-cy="selectedTab"]').eq(1).click();

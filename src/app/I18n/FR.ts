@@ -18,8 +18,9 @@ export const FR = {
     seconds: 'secondes',
     noTeam: "Pas d'équipes pour l'instant.",
     optional: '(facultatif)',
-    noData: 'Aucune donnée à afficher',
-    noDataSubtitle: 'Aucun résultat ne correspond à votre recherche',
+    noData: 'Aucun résultat ne correspond à votre recherche.',
+    noDataSubtitle: 'Essayez avec d’autres filtres.',
+    resetFilters: 'Réinitialiser les filtres',
     reply: 'Répondre',
     search: 'Rechercher',
     textNotFound: 'Aucun résultat',
@@ -103,11 +104,14 @@ export const FR = {
       averageScore: 'Score moyen',
       terminatedPrograms: 'Programmes terminés',
       guessesCount: 'Nombre total de réponses ',
+      placeholder: 'C’est le moment d’amorcer la montée en compétences de vos équipes !',
     },
     graph: {
       period: 'Période',
       score: 'Score (%)',
       tagFilter: 'Tags',
+      placeholder:
+        'Embarquez vos équipes dans un programme pour commencer à les entraîner et à les évaluer !',
     },
     globalEvolution: {
       title: 'Évolution globale',
@@ -124,10 +128,12 @@ export const FR = {
       teams: {
         title: 'Niveau de connaissance de vos équipes',
         subtitle: 'Aperçu du niveau de maîtrise de vos équipes par thématiques.',
+        placeholder: 'Envie de découvrir le niveau de connaissance de vos équipes ?',
       },
       users: {
         title: 'Niveau de connaissance de vos collaborateurs',
         subtitle: 'Aperçu du niveau de maîtrise de vos collaborateurs.',
+        placeholder: 'Envie de découvrir le niveau de connaissance de vos collaborateurs ?',
       },
     },
     ongoingPrograms: {
@@ -139,6 +145,9 @@ export const FR = {
       noDataSubtitle:
         'Créez votre premier programme et assignez le à vos équipes en quelques minutes seulement',
       score: 'Score',
+      cardPlaceholder: 'Motivez vos équipes à réaliser des programmes !',
+      placeholder:
+        'Construisez votre premier programme pour commencer à entraîner et à évaluer vos équipes !',
     },
     ongoingChallenges: {
       title: 'Challenges en cours',
@@ -167,6 +176,8 @@ export const FR = {
       titleIcon: '🎯',
       title: 'Programmes en cours',
       subtitle: 'Retrouvez les programmes que vos équipes sont en train de réaliser.',
+      placeholderTitle: 'Vos équipes n’ont pas encore entamé leur montée en compétences.',
+      placeholderSubtitle: 'Commencez à créer des programmes pour les motiver !',
     },
     programs: {
       title: 'Programmes de vos équipes',
@@ -177,6 +188,7 @@ export const FR = {
       progress: 'Avancement',
       progressToolTip: 'Nombre de questions répondues par tout les membres sur le nombre total de questions',
       score: 'Score',
+      membersHaveValidated: 'membres ayant validé',
       scoreToolTip: 'Score moyen du programme depuis sa création',
       teams: 'Équipes:',
       filters: {
@@ -185,6 +197,8 @@ export const FR = {
         score: 'Score',
         progression: 'Avancement',
       },
+      placeholderTitle: 'Aucun résultat ne correspond aux filtres sélectionnés.',
+      placeholderSubtitle: 'Essayez avec d’autres filtres.',
     },
     questions: {
       title: 'Questions de vos programmes',
@@ -207,6 +221,7 @@ export const FR = {
         author: 'Ajoutée par',
         tags: 'Tags',
         programs: 'Programmes',
+        placeholder: 'Créez vos premières questions pour challenger vos équipes !',
       },
       filters: {
         programs: 'Programmes',
@@ -237,6 +252,7 @@ export const FR = {
         score: 'Score moyen de vos équipes',
         associatedQuestions: 'Nombre de questions associées',
         questions: ' questions',
+        placeholder: 'Créez vos premiers tags pour cibler les axes d’amélioration de vos équipes !',
       },
     },
     forms: {
@@ -326,14 +342,17 @@ export const FR = {
         subtitle: "Retrouvez une vue d' ensemble sur les résultats de vos équipes.",
         teamFilter: 'Équipes',
         scoreEvolution: {
-          title: 'Évolution du score',
+          title: 'Évolution du score de vos équipes',
           subtitle: 'Evolution du niveau de maitrise global de vos équipes par tags/programmes',
+          placeholderTitle: 'Aucune donnée à afficher pour le moment',
+          placeholderSubtitle: 'Les équipes s’activent pour fournir les premiers résultats !',
         },
         leaderboard: {
           title: 'Leaderboard',
           subtitle: 'Aperçu du niveau de maîtrise de vos équipes.',
           top: 'Top',
           flop: 'Flop',
+          placeholder: 'Motivez vos équipes à réaliser des programmes !',
         },
       },
       perThemePerformance: {
@@ -345,10 +364,13 @@ export const FR = {
         scoreEvolutionChart: {
           title: 'Évolution du niveau de maîtrise',
           subtitle: 'Évolution du score moyen de vos équipes par tag.',
+          placeholderTitle: 'Les équipes sont en train de s’échauffer',
+          placeholderSubtitle: 'Les premiers résultats ne devraient plus tarder !',
         },
         control: {
           title: 'Niveau de maîtrise des thématiques',
           subtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
+          placeholder: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
         },
         nav: {
           tags: 'Tags',
@@ -358,6 +380,7 @@ export const FR = {
       teamsTable: {
         title: 'Vos équipes',
         subtitle: "Découvrez les scores moyens et les axes d'amélioration par équipe.",
+        placeholder: 'Envie de lever le voile sur la face cachée de vos équipes ?',
         columns: {
           team: 'Équipe',
           globalScore: 'Score global',
@@ -369,6 +392,7 @@ export const FR = {
       questionsTable: {
         title: 'Questions',
         subtitle: 'Découvrez les scores moyens de vos équipes par question.',
+        placeholder: 'Certaines questions peuvent s’avérer plus piquantes que d’autres...',
         columns: {
           question: 'Intitulé de la question',
           globalScore: 'Score global',
@@ -456,7 +480,7 @@ export const FR = {
       title: 'Vos membres',
       shortTitle: 'Membres',
       subtitle: 'Retrouvez l’ensemble des utilisateurs de votre entreprise.',
-      invite: 'Inviter',
+      invite: 'Inviter des membres',
       filters: {
         activity: 'Activité',
         teams: 'Équipe',
@@ -474,14 +498,15 @@ export const FR = {
       table: {
         name: 'Nom',
         team: 'Équipe',
-        averageScore: 'Score moyen (30 derniers jours)',
+        globalScore: 'Score global (30 derniers jours)',
         noScore: 'Aucun score',
-        averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         questionsPerMonth: 'Questions (30 derniers jours)',
         questionsPerMonthTooltip:
           'Nombre de questions répondues sur les 30 derniers jours et variation sur la dernière période',
         active: 'Actif',
         inactive: 'Inactif',
+        placeholderTitle: 'Aucun utilisateur n’existe dans votre entreprise.',
+        placeholderSubtitle: 'Créez vos premiers utilisateurs pour amorcer leur montée en compétences !',
       },
       forms: {
         edition: {
@@ -510,12 +535,13 @@ export const FR = {
         usersCount: 'Nombre de membres',
         noUsers: 'Aucun membre',
         users: ['Aucun', '{{}}', '{{}}'],
-        averageScore: 'Score moyen (30 derniers jours)',
+        globalScore: 'Score global',
         activity: 'Activité  moyenne (30 derniers jours)',
         noScore: 'Aucun score',
-        averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         creationDate: 'Date de création',
         noActivity: 'Aucune activité',
+        placeholderTitle: 'Aucune équipe n’a été créée pour l’instant. ',
+        placeholderSubtitle: 'Créez votre première équipe pour commencer à les entraîner !',
       },
       form: {
         title: {
@@ -638,6 +664,8 @@ export const FR = {
         subtitle: 'Êtes-vous sûr(e) de vouloir supprimer ce collaborateur ? Cette action est irréversible.',
       },
       successEdit: 'Le collaborateur {{}} a bien été modifié',
+      deleteAdminTooltip:
+        'Pour supprimer un administrateur, transformez-le d’abord en utilisateur standard. Vous pourrez ensuite procéder à la suppression',
     },
     continuousSession: {
       title: 'Session continue',
@@ -874,7 +902,6 @@ export const FR = {
       noResult: 'Aucun résultat correspondant',
       noResultSubtitle:
         'Votre recherche n’a donné aucun résultat, essayez une autre formulation ou d’autres filtres.',
-      resetFilters: 'Réinitialiser',
     },
     showAll: {
       title: 'Tous vos programmes',
