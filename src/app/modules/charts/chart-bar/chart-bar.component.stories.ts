@@ -85,7 +85,7 @@ export const Colored: Story = {
             type: 'category',
             data: ['Customer Success Manager', 'Business Manager', 'Sales representative', 'Sales development', 'Head of sales'],
             axisPointer: {
-              type: 'shadow',
+              type: 'line',
             },
           },
         ],
@@ -138,11 +138,6 @@ export const Colored: Story = {
               }
             }],
             type: 'bar',
-            tooltip: {
-              valueFormatter: (value) => {
-                return (value as number) + ' %';
-              },
-            },
           },
         ]  
     }
