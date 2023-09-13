@@ -123,8 +123,7 @@
       </div>
     </div>
     <div class="col-right">
-      <input type="range" class="form-range" min="1" max="100" formControlName="expectation" />
-      <p class="text-center">{{ form.controls.expectation.value }}%</p>
+      <alto-range [control]="form.controls.expectation"></alto-range>
     </div>
   </div>
 </form>
