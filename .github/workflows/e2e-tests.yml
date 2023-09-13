@@ -17,16 +17,16 @@ jobs:
 
     - name: Logs
       run: |
-        echo "AUTH_AUDIENCE=${{ secrets.CYPRESS_AUTH_AUDIENCE }}"
-        echo "AUTH_URL=${{ secrets.CYPRESS_AUTH_URL }}"
-        echo "AUTH_CLIENT_ID=${{ secrets.CYPRESS_AUTH_CLIENT_ID }}"
-        echo "AUTH_CLIENT_SECRET=${{ secrets.CYPRESS_AUTH_CLIENT_SECRET }}"
-        echo "AUTH_USERNAME_ADMIN=${{ secrets.CYPRESS_AUTH_USERNAME_ADMIN }}"
-        echo "AUTH_PASSWORD_ADMIN=${{ secrets.CYPRESS_AUTH_PASSWORD_ADMIN }}"
-        echo "AUTH_USERNAME=${{ secrets.CYPRESS_AUTH_USERNAME }}"
-        echo "AUTH_PASSWORD=${{ secrets.CYPRESS_AUTH_PASSWORD }}"
-        echo "API_URL=${{ secrets.CYPRESS_API_URL }}"
-
+        echo "La valeur de CYPRESS_AUTH_AUDIENCE est ${{ secrets.CYPRESS_AUTH_AUDIENCE }}"
+        echo "La valeur de CYPRESS_AUTH_URL est ${{ secrets.CYPRESS_AUTH_URL }}"
+        echo "La valeur de AUTH_CLIENT_ID est ${{ secrets.CYPRESS_AUTH_CLIENT_ID }}"
+        echo "La valeur de AUTH_CLIENT_SECRET est ${{ secrets.CYPRESS_AUTH_CLIENT_SECRET }}"
+        echo "La valeur de AUTH_USERNAME_ADMIN est ${{ secrets.CYPRESS_AUTH_USERNAME_ADMIN }}"
+        echo "La valeur de AUTH_PASSWORD_ADMIN est ${{ secrets.CYPRESS_AUTH_PASSWORD_ADMIN }}"
+        echo "La valeur de AUTH_USERNAME est ${{ secrets.CYPRESS_AUTH_USERNAME }}"
+        echo "La valeur de AUTH_PASSWORD est ${{ secrets.CYPRESS_AUTH_PASSWORD }}"
+        echo "La valeur de API_URL est ${{ secrets.CYPRESS_API_URL }}"
+       
     - name: Cypress run
       uses: cypress-io/github-action@v6
       env:
