@@ -16,3 +16,13 @@ a {
   background-color: var(--success-50);
   border: 1px solid var(--success-100);
 }
+
+.danger {
+  font-weight: 400 !important;
+  color: var(--error-600) !important;
+  background-color: var(--error-50);
+  border: 1px solid var(--error-100);
+  a {
+    color: var(--error-600) !important;
+  }
+}
