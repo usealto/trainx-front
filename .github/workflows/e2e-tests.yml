@@ -15,6 +15,18 @@ jobs:
     - name: Checkout code 
       uses: actions/checkout@v4
 
+    - name: Logs
+      run: |
+        echo "AUTH_AUDIENCE=${{ secrets.CYPRESS_AUTH_AUDIENCE }}"
+        echo "AUTH_URL=${{ secrets.CYPRESS_AUTH_URL }}"
+        echo "AUTH_CLIENT_ID=${{ secrets.CYPRESS_AUTH_CLIENT_ID }}"
+        echo "AUTH_CLIENT_SECRET=${{ secrets.CYPRESS_AUTH_CLIENT_SECRET }}"
+        echo "AUTH_USERNAME_ADMIN=${{ secrets.CYPRESS_AUTH_USERNAME_ADMIN }}"
+        echo "AUTH_PASSWORD_ADMIN=${{ secrets.CYPRESS_AUTH_PASSWORD_ADMIN }}"
+        echo "AUTH_USERNAME=${{ secrets.CYPRESS_AUTH_USERNAME }}"
+        echo "AUTH_PASSWORD=${{ secrets.CYPRESS_AUTH_PASSWORD }}"
+        echo "API_URL=${{ secrets.CYPRESS_API_URL }}"
+
     - name: Cypress run
       uses: cypress-io/github-action@v6
       env:
