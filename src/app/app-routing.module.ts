@@ -14,6 +14,7 @@ import { haveTeam } from './no-team.guard';
 import { NoCompanyComponent } from './layout/no-company/no-company.component';
 import { NoTeamComponent } from './layout/no-team/no-team.component';
 import { haveCompany } from './no-company.guard';
+import { noSmallScreen } from './no-small-screen.guard';
 
 const routes: Routes = [
   {
@@ -99,6 +100,7 @@ const routes: Routes = [
       {
         path: AltoRoutes.notFound,
         component: NotFoundComponent,
+        canActivate: [noSmallScreen],
       },
     ],
     canActivate: [AuthGuard],
