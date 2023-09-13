@@ -16,7 +16,7 @@
   </p>
 
   <div class="chart-container">
-    <canvas id="themeScoreEvolution"></canvas>
+    <alto-chart-basicline [chartOption]="chartOption"></alto-chart-basicline>
   </div>
 </div>
 <div [hidden]="scoreCount > 0" class="nodata-placeholder">

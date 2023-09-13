@@ -39,6 +39,7 @@ export class PerformanceByThemesComponent implements OnChanges {
 
   scoreEvolutionChart?: Chart;
   scoreCount = 0;
+  chartOption: any = {};
 
   constructor(
     private readonly scoresRestService: ScoresRestService,
@@ -158,39 +159,47 @@ export class PerformanceByThemesComponent implements OnChanges {
       spanGaps: true,
     });
 
-    const data: ChartData = {
-      labels: labels,
-      datasets: dataSet,
-    };
-
-    const customChartOptions = {
-      ...chartDefaultOptions,
-      plugins: {
+    const series = dataSet.map((d) => {
+      return {
+        name: d.label,
+        // color: '#09479e',
+        data: d.data,
+        type: 'line',
         tooltip: {
-          callbacks: {
-            label: function (tooltipItem: any) {
-              const labelType = 'tag';
-              return `${labelType} ${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
-            },
+          valueFormatter: (value:any) => {
+            return (value as number) + ' %';
           },
         },
-        legend: {
-          display: false,
+      }
+    }
+    );
+
+    this.chartOption = {
+      xAxis: [
+        {
+          type: 'category',
+          data: labels,
+          axisPointer: {
+            type: 'line',
+          },
         },
-      },
-    };
-    this.scoreEvolutionChart = new Chart('themeScoreEvolution', {
-      type: 'line',
-      data: data,
-      options: {
-        ...customChartOptions,
-        scales: {
-          ...customChartOptions.scales,
-          x: { ...customChartOptions.scales?.['x'], grid: { display: true } },
-          y: { ...customChartOptions.scales?.['y'], grid: { display: false } },
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          name: 'Score (%)',
+          nameLocation: 'middle',
+          nameGap: 50,
+          min: 0,
+          max: 100,
+          interval: 10,
+          axisLabel: {
+            formatter: '{value}',
+          },
         },
-      },
-    });
+      ],
+      series: series,
+    }
   }
 
   filterTeams(teams: { label: string; id: string }[]) {
