@@ -7,10 +7,9 @@ import {
   ScoresResponseDtoApi,
   TagStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
-import Chart, { ChartData } from 'chart.js/auto';
 import { Observable, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
+// import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
@@ -37,7 +36,6 @@ export class PerformanceByThemesComponent implements OnChanges {
   selectedItems: ScoreDtoApi[] = [];
   tagsLeaderboard: { name: string; score: number }[] = [];
 
-  scoreEvolutionChart?: Chart;
   scoreCount = 0;
   chartOption: any = {};
 
@@ -108,10 +106,6 @@ export class PerformanceByThemesComponent implements OnChanges {
       aggregateData.map((d) => d.x),
       duration,
     );
-
-    if (this.scoreEvolutionChart) {
-      this.scoreEvolutionChart.destroy();
-    }
 
     // Global
     const total = scores.map((s) => this.statisticsServices.aggregateDataForScores(s, duration));
