@@ -14,10 +14,9 @@
     />
   </div>
   <alto-icon-badge
-    [size]="3.3333"
-    icon="bi-people"
+    [size]="3"
+    icon="bi bi-link-45deg"
     [color]="slackCheck.checked ? 'badge-double-primary' : 'badge-double-gray'"
-    class="badge"
   ></alto-icon-badge>
   <div class="d-grid">
     <span class="integration-titles" [ngStyle]="{ color: slackCheck.checked ? '#101828' : '#D0D5DD' }">
@@ -32,7 +31,7 @@
   <div class="slack-div py-3 me-5">
     <div class="form-check">
       <input class="form-check-input me-3" type="radio" id="exampleRadios1" value="option1" checked />
-      <label class="form-check-label" for="inlineCheckbox1">
+      <label class="form-check-label" for="exampleRadios1">
         <img src="assets/img/slack-logo.svg" width="16" height="16" alt="Slack Logo" class="me-2" />
         <span>{{ I18ns.settings.continuousSession.integrations.slack }}</span>
       </label>
@@ -40,14 +39,7 @@
   </div>
   <div class="py-3" style="border-radius: 4px; padding-left: 1rem; padding-right: 1rem">
     <div class="form-check">
-      <input
-        class="form-check-input me-3"
-        type="radio"
-        name="exampleRadios"
-        id="exampleRadios2"
-        value="option2"
-        disabled
-      />
+      <input class="form-check-input me-3" type="radio" id="exampleRadios3" value="option2" disabled />
       <label class="form-check-label" for="exampleRadios3">
         <img src="assets/img/teams-logo.svg" width="16" height="16" alt="Slack Logo" class="me-2" />
         <span>{{ I18ns.settings.continuousSession.integrations.teams }}</span>
@@ -60,8 +52,7 @@
   <div class="form-check form-switch d-inline-block align-middle me-5">
     <input #appWebCheck type="checkbox" class="form-check-input" disabled />
   </div>
-  <alto-icon-badge [size]="3.3333" icon="bi bi-wifi-2" color="badge-double-gray" class="badge">
-  </alto-icon-badge>
+  <alto-icon-badge [size]="3" icon="bi bi-wifi-2" color="badge-double-gray"> </alto-icon-badge>
   <div class="d-grid disabled-text">
     <span class="integration-titles">{{ I18ns.settings.continuousSession.webApp.title }}</span>
     <span class="integration-subtitles">
