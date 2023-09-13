@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, filter, of, switchMap, tap } from 'rxjs';
@@ -23,9 +23,11 @@ export class TeamFormComponent implements OnInit {
 
   private fb: IFormBuilder = this.fob;
 
+  teamsNames: string[][] = [[], []];
+
   teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
-    shortName: ['', [Validators.required]],
-    longName: ['', [Validators.required]],
+    longName: ['', [Validators.required, this.uniqueNameValidation(this.teamsNames[0])]],
+    shortName: ['', [Validators.required, this.uniqueNameValidation(this.teamsNames[1])]],
     programs: [],
     invitationEmails: [],
   });
@@ -45,6 +47,28 @@ export class TeamFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.teamsRestService
+      .getTeams()
+      .pipe(
+        tap((d) => {
+          d.forEach((t) => {
+            this.teamsNames[0].push(t.longName.toLowerCase());
+            this.teamsNames[1].push(t.shortName.toLowerCase());
+          });
+        }),
+        tap(() => {
+          const longName = this.team?.longName.toLowerCase();
+          const index = this.teamsNames[0].indexOf(longName ?? '');
+          this.teamsNames[0].splice(index, 1);
+        }),
+        tap(() => {
+          const shortName = this.team?.shortName.toLowerCase();
+          const index = this.teamsNames[1].indexOf(shortName ?? '');
+          this.teamsNames[1].splice(index, 1);
+        }),
+      )
+      .subscribe();
+
     setTimeout(() => {
       combineLatest([this.programService.getPrograms(), this.userRestService.getUsers()])
         .pipe(
@@ -180,5 +204,16 @@ export class TeamFormComponent implements OnInit {
     });
 
     return output$;
+  }
+
+  uniqueNameValidation(teams: string[]): ValidatorFn {
+    return (control: AbstractControl) => {
+      const typedName = control.value.toLowerCase();
+
+      if (teams && teams.includes(typedName)) {
+        return { nameNotAllowed: true };
+      }
+      return null;
+    };
   }
 }
