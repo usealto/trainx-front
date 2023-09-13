@@ -94,7 +94,7 @@ export class LeadHomeComponent implements OnInit {
     public readonly companiesRestService: CompaniesRestService,
   ) {}
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     combineLatest([
       this.commentsRestService.getComments(),
       this.questionsSubmittedRestService.getQuestions(),
@@ -167,10 +167,8 @@ export class LeadHomeComponent implements OnInit {
             }
           });
 
-          
-          const data = globalScore.map((u) => (u.y ? Math.round((u.y * 10000) / 100) : u.y))
-          
-          
+          const data = globalScore.map((u) => (u.y ? Math.round((u.y * 10000) / 100) : u.y));
+
           this.chartOption = {
             xAxis: [
               {
@@ -202,14 +200,13 @@ export class LeadHomeComponent implements OnInit {
                 data: data,
                 type: 'line',
                 tooltip: {
-                  valueFormatter: (value:any) => {
+                  valueFormatter: (value: any) => {
                     return (value as number) + ' %';
                   },
                 },
               },
-            ], 
-          }
-
+            ],
+          };
         }),
         untilDestroyed(this),
       )
