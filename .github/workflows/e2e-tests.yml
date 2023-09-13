@@ -18,7 +18,6 @@ jobs:
     - name: Cypress run
       uses: cypress-io/github-action@v6
       env:
-        baseURL: "https://app-develop.usealto.com"
         auth_audience: ${{ secrets.CYPRESS_AUTH_AUDIENCE }}
         auth_url: ${{ secrets.CYPRESS_AUTH_URL }}
         auth_client_id: ${{ secrets.CYPRESS_AUTH_CLIENT_ID }}
@@ -32,3 +31,4 @@ jobs:
           build: npm run build
           start: npm start
           browser: chrome
+          config-file: cypress-ci.config.ts
