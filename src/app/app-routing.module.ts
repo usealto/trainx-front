@@ -100,10 +100,9 @@ const routes: Routes = [
       {
         path: AltoRoutes.notFound,
         component: NotFoundComponent,
-        canActivate: [noSmallScreen],
       },
     ],
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, noSmallScreen],
     canActivateChild: [AuthGuard],
   },
   {
