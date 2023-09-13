@@ -61,7 +61,7 @@
               {{ team.createdAt | date : 'shortDate' }}
             </td>
             <td class="cursor-pointer px-3" (click)="deleteTeam(team)">
-              <i [attr.data-cy]="'deleteTeam' + team.shortName" class="fs-5 bi bi-trash3 float-end"></i>
+              <i [attr.data-cy]="'deleteTeam' + team.longName" class="fs-5 bi bi-trash3 float-end"></i>
             </td>
             <td class="cursor-pointer px-3" (click)="openTeamForm(team)">
               <i data-cy="editTeam" class="fs-5 bi bi-pen float-end me-4"></i>

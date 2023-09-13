@@ -23,11 +23,10 @@ export class TeamFormComponent implements OnInit {
 
   private fb: IFormBuilder = this.fob;
 
-  teamsNames: string[][] = [[], []];
+  teamsNames: string[] = [];
 
   teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
-    longName: ['', [Validators.required, this.uniqueNameValidation(this.teamsNames[0])]],
-    shortName: ['', [Validators.required, this.uniqueNameValidation(this.teamsNames[1])]],
+    longName: ['', [Validators.required, this.uniqueNameValidation(this.teamsNames)]],
     programs: [],
     invitationEmails: [],
   });
@@ -52,19 +51,13 @@ export class TeamFormComponent implements OnInit {
       .pipe(
         tap((d) => {
           d.forEach((t) => {
-            this.teamsNames[0].push(t.longName.toLowerCase());
-            this.teamsNames[1].push(t.shortName.toLowerCase());
+            this.teamsNames.push(t.longName.toLowerCase());
           });
         }),
         tap(() => {
           const longName = this.team?.longName.toLowerCase();
-          const index = this.teamsNames[0].indexOf(longName ?? '');
-          this.teamsNames[0].splice(index, 1);
-        }),
-        tap(() => {
-          const shortName = this.team?.shortName.toLowerCase();
-          const index = this.teamsNames[1].indexOf(shortName ?? '');
-          this.teamsNames[1].splice(index, 1);
+          const index = this.teamsNames.indexOf(longName ?? '');
+          this.teamsNames.splice(index, 1);
         }),
       )
       .subscribe();
@@ -87,14 +80,13 @@ export class TeamFormComponent implements OnInit {
               }
               this.team = d.data;
               this.isEdit = true;
-              const { shortName, longName } = this.team;
+              const { longName, programs } = this.team;
               this.userFilters.teams.push(this.team);
               const filteredUsers = this.userService.filterUsers(this.users, this.userFilters);
 
               this.teamForm.patchValue({
-                shortName,
                 longName,
-                programs: this.team?.programs as ProgramDtoApi[],
+                programs: programs as ProgramDtoApi[],
                 invitationEmails: filteredUsers,
               });
             }),
@@ -107,12 +99,12 @@ export class TeamFormComponent implements OnInit {
   createTeam() {
     if (!this.teamForm.value) return;
 
-    const { shortName, longName, programs, invitationEmails } = this.teamForm.value;
+    const { longName, programs, invitationEmails } = this.teamForm.value;
 
     if (!this.isEdit && !this.team) {
       //CREATION MODE
       this.teamsRestService
-        .createTeam({ shortName, longName })
+        .createTeam({ longName, shortName: '' }) // ! remove shortname when SDK is Updated
         .pipe(
           switchMap((team) => {
             this.teamsRestService.resetCache();
@@ -131,7 +123,7 @@ export class TeamFormComponent implements OnInit {
     } else {
       //EDIT MODE
       const params: PatchTeamDtoApi = {
-        shortName: shortName,
+        shortName: '', // ! remove shortname when SDK is Updated
         longName: longName,
       };
       if (this.team?.id) {

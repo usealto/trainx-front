@@ -127,7 +127,7 @@ export class LeadTeamComponent implements OnInit {
 
           this.users.forEach((user) => {
             const member = this.teams.find((team) => team.id === user.teamId);
-            this.usersMap.set(user.id, member ? member.longName + ' - ' + member.shortName : '');
+            this.usersMap.set(user.id, member ? member.longName : '');
           });
         }),
         switchMap(() => {

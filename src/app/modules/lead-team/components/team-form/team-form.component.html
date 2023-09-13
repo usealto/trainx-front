@@ -36,23 +36,6 @@
     >
       {{ I18ns.leadTeam.teams.duplicateName }}
     </p>
-    <label class="mt-4 form-label required">{{ I18ns.leadTeam.teams.form.shortName }}</label>
-    <input
-      data-cy="editShortnameInput"
-      type="text"
-      class="form-control"
-      formControlName="shortName"
-      placeholder="{{ I18ns.leadTeam.teams.form.shortNamePlaceholder }}"
-    />
-    <p
-      class="text-end mt-2"
-      [ngClass]="{
-        'text-danger': teamForm.controls.shortName.errors?.['nameNotAllowed'],
-        invisible: !teamForm.controls.shortName.errors?.['nameNotAllowed']
-      }"
-    >
-      {{ I18ns.leadTeam.teams.duplicateName }}
-    </p>
 
     <!-- <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.invitationEmails }}</label>
     <ng-select class="alto-form"
