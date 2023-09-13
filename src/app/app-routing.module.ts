@@ -94,6 +94,11 @@ const routes: Routes = [
             loadChildren: () =>
               import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
           },
+          {
+            path: AltoRoutes.collaboration,
+            loadChildren: () =>
+              import('./modules/collaboration/collaboration.module').then((m) => m.CollaborationModule),
+          },
         ],
       },
       {
