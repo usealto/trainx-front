@@ -194,8 +194,7 @@ export class AdminUserCreateFormComponent implements OnInit {
           email: this.user.email,
           userId: this.user.id,
           companyId: this.companyId,
-          slackAdmin: 'toto@test.com'
-          // slackAdmin: this.company.slackAdmin,
+          slackAdmin: this.company.slackAdmin,
         }).pipe(tap(() => {
           this.toastService.show({
             text : 'Update slack Id request sent, please refresh this page in a few seconds',
