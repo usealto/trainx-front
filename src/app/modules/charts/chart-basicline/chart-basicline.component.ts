@@ -16,9 +16,8 @@ import { ChartsService } from '../charts.service';
 })
 export class ChartBasiclineComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() chartOption?: EChartsOption;
-
   lineOptions?: EChartsOption;
-  isLoaded = false;
+  @Input() isLoaded = true;
   constructor(private chartsService: ChartsService) {}
 
   ngOnInit(): void {
