@@ -30,25 +30,8 @@
     <p
       class="text-end mt-2"
       [ngClass]="{
-        'text-danger': teamForm.controls.longName.errors?.['nameNotAllowed'],
-        invisible: !teamForm.controls.longName.errors?.['nameNotAllowed']
-      }"
-    >
-      {{ I18ns.leadTeam.teams.duplicateName }}
-    </p>
-    <label class="mt-4 form-label required">{{ I18ns.leadTeam.teams.form.shortName }}</label>
-    <input
-      data-cy="editShortnameInput"
-      type="text"
-      class="form-control"
-      formControlName="shortName"
-      placeholder="{{ I18ns.leadTeam.teams.form.shortNamePlaceholder }}"
-    />
-    <p
-      class="text-end mt-2"
-      [ngClass]="{
-        'text-danger': teamForm.controls.shortName.errors?.['nameNotAllowed'],
-        invisible: !teamForm.controls.shortName.errors?.['nameNotAllowed']
+        'text-danger': teamForm.controls.name.errors?.['nameNotAllowed'],
+        invisible: !teamForm.controls.name.errors?.['nameNotAllowed']
       }"
     >
       {{ I18ns.leadTeam.teams.duplicateName }}

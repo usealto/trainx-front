@@ -53,9 +53,9 @@ export class PerformanceByThemesComponent implements OnChanges {
           switchMap(() => this.teamRestService.getTeams()),
           tap((res) => {
             this.teams = res
-              .sort((a, b) => a.longName.localeCompare(b.longName))
+              .sort((a, b) => a.name.localeCompare(b.name))
               .map((t) => ({
-                label: t.longName,
+                label: t.name,
                 id: t.id,
               }));
             this.selectedTeams = this.teams.splice(0, 5);

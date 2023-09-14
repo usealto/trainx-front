@@ -55,7 +55,7 @@
       <tbody>
         <tr *ngFor="let team of paginatedTeams" class="align-middle">
           <td>
-            <span class="alto-badge" [style]="team.team.id | teamColor">{{ team.team.longName }}</span>
+            <span class="alto-badge" [style]="team.team.id | teamColor">{{ team.team.name }}</span>
           </td>
           <td class="text-center">
             <span class="alto-score" [class]="(team.score || 0) * 100 | pillColor">{{

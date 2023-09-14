@@ -226,7 +226,7 @@ export class LeadHomeComponent implements OnInit {
       tap(([teams, users]) => {
         teams = teams.filter((t) => t.score && t.score >= 0);
         users = users.filter((u) => u.score && u.score >= 0);
-        this.teamsLeaderboard = teams.map((t) => ({ name: t.team.longName, score: t.score ?? 0 }));
+        this.teamsLeaderboard = teams.map((t) => ({ name: t.team.name, score: t.score ?? 0 }));
         this.usersLeaderboard = users.map((u) => ({
           name: u.user.firstname + ' ' + u.user.lastname,
           score: u.score ?? 0,
