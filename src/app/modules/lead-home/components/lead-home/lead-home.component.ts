@@ -144,7 +144,6 @@ export class LeadHomeComponent implements OnInit {
         tap((res) => {
           this.scoreCount = res.scores.length;
           const scores = this.scoreService.reduceChartData(res.scores);
-          console.log(scores);
           const labels = this.statisticsServices.formatLabel(
             this.statisticsServices
               .aggregateDataForScores(scores[0], duration as ScoreDuration)
@@ -155,7 +154,7 @@ export class LeadHomeComponent implements OnInit {
           const total = scores.map((s) =>
             this.statisticsServices.aggregateDataForScores(s, duration as ScoreDuration),
           );
-          // console.log(total)
+          // scores.forEach((s, index) => console.log(index, this.statisticsServices.transformDataToPoint(s)));
           const globalScore: { x: Date; y: number | null; z: number }[] = [];
           total.forEach((teamData) => {
             teamData.forEach((point) => {

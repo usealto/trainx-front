@@ -50,4 +50,12 @@ export class StatisticsService {
     }
     return data.sort((a, b) => a.x.getTime() - b.x.getTime());
   }
+
+  transformDataToPoint(score: ScoreDtoApi) {
+    const res: Point[] = [];
+    score.dates.forEach((date, index) => {
+      res.push({ x: date, y: score.averages[index] });
+    });
+    return res;
+  }
 }
