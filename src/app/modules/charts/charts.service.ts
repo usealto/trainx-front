@@ -1,5 +1,14 @@
-import { EChartsOption, color } from 'echarts';
+import { EChartsOption } from 'echarts';
 import { Injectable } from '@angular/core';
+
+// Tooltip params interface used to override default typing
+interface ITooltipParams {
+  data: number | string;
+  name: string;
+  seriesName: string;
+  color: string;
+  seriesIndex: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -31,21 +40,30 @@ export class ChartsService {
 
     eChartsOption.tooltip = {
       trigger: 'item',
-      borderWidth: 1,
+      padding: 0,
       borderColor: '#EAECF0',
-      padding:0,
-      formatter : `
-      <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10);">
-        <div style="background-color: #F9FAFB; padding : 5px; border-radius: 4px 4px 0px 0px;">
-          <strong>{b}</strong>
-        </div>
-        <div style="padding : 5px">
-        {a} : {c}
-        </div>        
-      </div>`,
-      valueFormatter: (value) => {
-        return (value as number) + ' %';
-      },
+      formatter : (params) => {
+        const valueFormatter = Array.isArray(eChartsOption.series)
+          ? eChartsOption.series[(params as ITooltipParams).seriesIndex].tooltip?.valueFormatter
+          : eChartsOption.series?.tooltip?.valueFormatter;
+        const formattedData = valueFormatter
+          ? valueFormatter((params as ITooltipParams).data)
+          : (params as ITooltipParams).data;
+
+        return `
+          <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10); border-radius: 4px;">
+            <div style="color: #667085; background-color: #F9FAFB; padding : 8px 10px 4px 10px;">
+              <p>${(params as ITooltipParams).name}</p>
+            </div>
+            <div style="padding : 4px 10px 8px 10px; display: flex; align-items: center; gap: 10px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="11" viewBox="0 0 10 11" fill="none">
+                <circle cx="5" cy="5.5" r="5" fill="${(params as ITooltipParams).color}"/>
+              </svg>
+              <p>${(params as ITooltipParams).seriesName} : <b style="color: ${(params as ITooltipParams).color}">${formattedData}<b></p>
+            </div>
+          </div>
+        `;
+      }
     }
     eChartsOption.legend = {
       bottom: 0,
@@ -67,7 +85,7 @@ export class ChartsService {
             valueFormatter: (value) => {
               return (value as number) + ' %';
             },
-          }       
+          }
         }
       });
     }

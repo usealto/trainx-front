@@ -132,8 +132,8 @@ export class PerformanceByThemesComponent implements OnChanges {
         data: d.data,
         type: 'line',
         tooltip: {
-          valueFormatter: (value: any) => {
-            return (value as number) + ' %';
+          valueFormatter: (value:any) => {
+            return (value as number) + '%';
           },
         },
       };

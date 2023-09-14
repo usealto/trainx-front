@@ -158,7 +158,7 @@ export class LeadHomeComponent implements OnInit {
                 tooltip: {
                   trigger: 'item',
                   valueFormatter: (value: any) => {
-                    return value ? (value as number) + ' %' : '';
+                      return value ? (value as number) + '%' : '';
                   },
                 },
               },
