@@ -11,9 +11,8 @@ export class ScoresService {
   reduceWithoutNull(data: number[] = []): number | null {
     if (data.length === 0) return null;
 
-    const output = data.filter((x) => !!x);
+    const output = data.filter((x) => x !== null && x !== undefined);
     if (output.length === 0) return null;
-
     return output.reduce((prev, curr) => prev + curr, 0) / output.length;
   }
 
