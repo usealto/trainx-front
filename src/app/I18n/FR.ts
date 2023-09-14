@@ -938,4 +938,8 @@ export const FR = {
       },
     },
   },
+  collaboration: {
+    title: 'Collaboration',
+    subtitle: "Gérer l'ensemble des contributions de vos équipes.",
+  },
 };
