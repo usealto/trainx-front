@@ -129,7 +129,13 @@ export class LeadHomeComponent implements OnInit {
 
     const params = {
       duration: duration,
-      type: ScoreTypeEnumApi.Team,
+      type: ScoreTypeEnumApi.Guess,
+      timeframe:
+        duration === ScoreDuration.Year
+          ? ScoreTimeframeEnumApi.Month
+          : duration === ScoreDuration.Trimester
+          ? ScoreTimeframeEnumApi.Week
+          : ScoreTimeframeEnumApi.Day,
     };
 
     this.scoresRestService
@@ -138,7 +144,6 @@ export class LeadHomeComponent implements OnInit {
         tap((res) => {
           this.scoreCount = res.scores.length;
           const scores = this.scoreService.reduceChartData(res.scores);
-
           const labels = this.statisticsServices.formatLabel(
             this.statisticsServices
               .aggregateDataForScores(scores[0], duration as ScoreDuration)
@@ -149,7 +154,7 @@ export class LeadHomeComponent implements OnInit {
           const total = scores.map((s) =>
             this.statisticsServices.aggregateDataForScores(s, duration as ScoreDuration),
           );
-
+          // scores.forEach((s, index) => console.log(index, this.statisticsServices.transformDataToPoint(s)));
           const globalScore: { x: Date; y: number | null; z: number }[] = [];
           total.forEach((teamData) => {
             teamData.forEach((point) => {
@@ -213,7 +218,7 @@ export class LeadHomeComponent implements OnInit {
       tap(([teams, users]) => {
         teams = teams.filter((t) => t.score && t.score >= 0);
         users = users.filter((u) => u.score && u.score >= 0);
-        this.teamsLeaderboard = teams.map((t) => ({ name: t.team.longName, score: t.score ?? 0 }));
+        this.teamsLeaderboard = teams.map((t) => ({ name: t.team.name, score: t.score ?? 0 }));
         this.usersLeaderboard = users.map((u) => ({
           name: u.user.firstname + ' ' + u.user.lastname,
           score: u.score ?? 0,
