@@ -82,6 +82,9 @@ export class ScoresService {
       case ScoreDuration.Year:
         date = addDays(date, -365);
         break;
+      case ScoreDuration.All:
+        date = addDays(date, -3650);
+        break;
     }
     date = addHours(date, gmtDataOffset + 1);
     return date;
