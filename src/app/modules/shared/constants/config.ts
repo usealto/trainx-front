@@ -4,24 +4,6 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 
 //! Changing this constant will change every charts using it!
 
-/**
- * To override scales :
- * ```
-  const options = {
-    ...chartDefaultOptions,
-    scales: {
-      x: {
-        display: true,
-        title: {
-          display: true,
-          text: I18ns...,
-        },
-      },
-    },
-  };
- * ```
- */
-
 export const xAxisDatesOptions :any  = {
   type: 'category',
   axisPointer: {
@@ -36,12 +18,13 @@ export const yAxisScoreOptions :any  = {
   nameGap: 50,
   min: 0,
   max: 100,
-  interval: 10,
+  interval: 20,
   axisLabel: {
     formatter: '{value}',
   },
 }
 
+// ! DEPRECATED
 export const chartDefaultOptions: ChartOptions = {
   maintainAspectRatio: false,
   responsive: true,

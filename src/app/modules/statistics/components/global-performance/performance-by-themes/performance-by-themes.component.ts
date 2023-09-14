@@ -17,6 +17,7 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 @UntilDestroy()
 @Component({
   selector: 'alto-performance-by-themes',
@@ -74,7 +75,12 @@ export class PerformanceByThemesComponent implements OnChanges {
   getScores(): Observable<ScoresResponseDtoApi> {
     return this.scoresRestService
       .getScores({
-        timeframe: ScoreTimeframeEnumApi.Day,
+        timeframe:
+          this.duration === ScoreDuration.Year
+            ? ScoreTimeframeEnumApi.Month
+            : this.duration === ScoreDuration.Trimester
+            ? ScoreTimeframeEnumApi.Week
+            : ScoreTimeframeEnumApi.Day,
         duration: this.duration ?? ScoreDuration.Year,
         type: ScoreTypeEnumApi.Tag,
       } as ChartFilters)
@@ -101,37 +107,11 @@ export class PerformanceByThemesComponent implements OnChanges {
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
     scores = this.scoresServices.reduceChartData(scores);
     this.scoreCount = scores.length;
-    const aggregateData = this.statisticsServices.aggregateDataForScores(scores[0], duration);
+    const aggregateData = this.statisticsServices.transformDataToPoint(scores[0]);
     const labels = this.statisticsServices.formatLabel(
       aggregateData.map((d) => d.x),
       duration,
     );
-
-    // Global
-    const total = scores.map((s) => this.statisticsServices.aggregateDataForScores(s, duration));
-    const res: { x: Date; y: number | null; z: number }[] = [];
-
-    total.forEach((teamData) => {
-      teamData.forEach((point) => {
-        const element = res.filter((pt) => pt.x.getTime() === point.x.getTime());
-        if (element.length === 1) {
-          if (!element[0].y) {
-            element[0].y = point.y;
-          } else {
-            element[0].y += point.y || 0;
-          }
-          element[0].z += point.y ? 1 : 0;
-        } else {
-          res.push({ ...point, z: point.y ? 1 : 0 });
-        }
-      });
-    });
-
-    res.forEach((pt) => {
-      if (pt.y && pt.z > 0) {
-        pt.y = pt.y / pt.z;
-      }
-    });
 
     const dataSet = scores.map((s) => {
       const d = this.statisticsServices.aggregateDataForScores(s, duration);
@@ -144,14 +124,6 @@ export class PerformanceByThemesComponent implements OnChanges {
         spanGaps: true,
       };
     });
-    dataSet.push({
-      label: 'Global',
-      data: res.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
-      fill: false,
-      tension: 0.2,
-      borderDash: [4],
-      spanGaps: true,
-    });
 
     const series = dataSet.map((d) => {
       return {
@@ -160,40 +132,18 @@ export class PerformanceByThemesComponent implements OnChanges {
         data: d.data,
         type: 'line',
         tooltip: {
-          valueFormatter: (value:any) => {
+          valueFormatter: (value: any) => {
             return (value as number) + ' %';
           },
         },
-      }
-    }
-    );
+      };
+    });
 
     this.chartOption = {
-      xAxis: [
-        {
-          type: 'category',
-          data: labels,
-          axisPointer: {
-            type: 'line',
-          },
-        },
-      ],
-      yAxis: [
-        {
-          type: 'value',
-          name: 'Score (%)',
-          nameLocation: 'middle',
-          nameGap: 50,
-          min: 0,
-          max: 100,
-          interval: 10,
-          axisLabel: {
-            formatter: '{value}',
-          },
-        },
-      ],
+      xAxis: [{ ...xAxisDatesOptions, data: labels }],
+      yAxis: [{ ...yAxisScoreOptions }],
       series: series,
-    }
+    };
   }
 
   filterTeams(teams: { label: string; id: string }[]) {

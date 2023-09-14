@@ -52,3 +52,32 @@
     </div>
   </div>
 </ng-template>
+<div class="score-evolution-chart panel mt-5">
+  <alto-dropdown-filter
+  *ngIf="items.length >= 7"
+  class="float-end mx-2"
+  [data]="items"
+  [displayLabel]="'label'"
+  [selectedItems]="selectedItems"
+  [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.tags"
+  (selectChange)="filterTagsAndPrograms($event)"
+></alto-dropdown-filter>
+<alto-dropdown-filter
+*ngIf="items.length >= 7"
+class="float-end mx-2"
+[data]="items"
+[displayLabel]="'label'"
+[selectedItems]="selectedItems"
+[placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.tags"
+(selectChange)="filterTagsAndPrograms($event)"
+></alto-dropdown-filter>
+  <h2>
+    {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.title }}
+  </h2>
+  <p class="alto-grey mb-4">
+    {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.subtitle }}
+  </p>
+  <div class="chart-container">
+    <alto-chart-bar [chartOption]="chartOption" [isLoaded]="false"></alto-chart-bar>
+  </div>
+</div>

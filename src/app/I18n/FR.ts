@@ -81,6 +81,7 @@ export const FR = {
       subtitle: 'S’il s’agit d’une erreur, informez-en votre administrateur directement.',
       button: 'Envoyer un mail à mon administrateur',
     },
+    global: 'Global',
   },
   leadHome: {
     title: 'Bonjour ',
@@ -366,6 +367,10 @@ export const FR = {
           subtitle: 'Évolution du score moyen de vos équipes par tag.',
           placeholderTitle: 'Les équipes sont en train de s’échauffer',
           placeholderSubtitle: 'Les premiers résultats ne devraient plus tarder !',
+        },
+        teamsKnowledgeChart: {
+          title: 'Niveau de maîtrise de vos équipes par thématique',
+          subtitle: 'Aperçu du score moyen de vos équipes sur le tag sélectionné.',
         },
         control: {
           title: 'Niveau de maîtrise des thématiques',

@@ -147,24 +147,19 @@ export class LeadHomeComponent implements OnInit {
           );
 
           this.chartOption = {
-            xAxis: [
-              {...xAxisDatesOptions, data: labels},
-            ],
-            yAxis: [
-              {...yAxisScoreOptions },
-            ],
+            xAxis: [{ ...xAxisDatesOptions, data: labels }],
+            yAxis: [{ ...yAxisScoreOptions }],
             series: [
               {
-                name: 'Global',
+                name: I18ns.shared.global,
                 color: '#09479e',
-                data: points.map((p) => (p.y ? Math.round((p.y * 10000) / 100) : p.y as number)),
+                data: points.map((p) => (p.y ? Math.round((p.y * 10000) / 100) : (p.y as number))),
                 type: 'line',
                 tooltip: {
                   trigger: 'item',
                   valueFormatter: (value: any) => {
-                      return value ? (value as number) + ' %' : '';
+                    return value ? (value as number) + ' %' : '';
                   },
-
                 },
               },
             ],
