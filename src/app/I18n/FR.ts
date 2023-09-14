@@ -550,7 +550,7 @@ export const FR = {
           edit: 'Modifier une équipe',
         },
         subtitle: 'Donner un nom à votre équipe',
-        longName: 'Nom (version longue)',
+        longName: "Nom de l'équipe",
         longNamePlaceholder: 'Exemple : Sales Development Representative',
         shortName: 'Nom (version abrégée)',
         shortNamePlaceholder: 'Exemple : SDR',
@@ -558,7 +558,7 @@ export const FR = {
         invitationEmailsPlaceholder: 'Séparer les emails par une virgule',
         invitationEmailsSubtitle:
           "Vos collaborateurs recevront une invitation par mail pour s'inscrire à Alto.",
-        Programs: 'Programmes',
+        Programs: 'Programmes assignés',
         programsPlaceholder: 'Sélectionner les programmes assignés à cette équipe',
       },
       deleteModal: {
