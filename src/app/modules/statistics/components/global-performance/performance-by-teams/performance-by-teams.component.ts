@@ -83,9 +83,14 @@ export class PerformanceByTeamsComponent implements OnChanges {
   getScores(): Observable<ScoresResponseDtoApi> {
     return this.scoresRestService
       .getScores({
-        timeframe: ScoreTimeframeEnumApi.Day,
         duration: this.duration ?? ScoreDuration.Year,
         type: ScoreTypeEnumApi.Team,
+        timeframe:
+          this.duration === ScoreDuration.Year
+            ? ScoreTimeframeEnumApi.Month
+            : this.duration === ScoreDuration.Trimester
+            ? ScoreTimeframeEnumApi.Week
+            : ScoreTimeframeEnumApi.Day,
       } as ChartFilters)
       .pipe(
         tap((res) => {
@@ -138,13 +143,12 @@ export class PerformanceByTeamsComponent implements OnChanges {
         data: d.data,
         type: 'line',
         tooltip: {
-          valueFormatter: (value:any) => {
+          valueFormatter: (value: any) => {
             return (value as number) + ' %';
           },
         },
-      }
-    }
-    );
+      };
+    });
 
     this.chartOption = {
       xAxis: [
@@ -171,7 +175,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
         },
       ],
       series: series,
-    }
+    };
   }
 
   filterTeams(event: ScoreDtoApi[]) {

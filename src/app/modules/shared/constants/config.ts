@@ -21,6 +21,27 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
   };
  * ```
  */
+
+export const xAxisDatesOptions :any  = {
+  type: 'category',
+  axisPointer: {
+    type: 'line',
+  },
+}
+
+export const yAxisScoreOptions :any  = {
+  type: 'value',
+  name: 'Score (%)',
+  nameLocation: 'middle',
+  nameGap: 50,
+  min: 0,
+  max: 100,
+  interval: 10,
+  axisLabel: {
+    formatter: '{value}',
+  },
+}
+
 export const chartDefaultOptions: ChartOptions = {
   maintainAspectRatio: false,
   responsive: true,
