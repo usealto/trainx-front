@@ -1,4 +1,4 @@
-import { EChartsOption } from 'echarts';
+import { EChartsOption, color } from 'echarts';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -35,9 +35,22 @@ export class ChartsService {
     }
 
     eChartsOption.tooltip = {
-      trigger: 'axis',
+      trigger: 'item',
       borderWidth: 1,
       borderColor: '#EAECF0',
+      padding:0,
+      formatter : `
+      <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10);">
+        <div style="background-color: #F9FAFB; padding : 5px; border-radius: 4px 4px 0px 0px;">
+          <strong>{b}</strong>
+        </div>
+        <div style="padding : 5px">
+        {a} : {c}
+        </div>        
+      </div>`,
+      valueFormatter: (value) => {
+        return (value as number) + ' %';
+      },
     }
     eChartsOption.legend = {
       bottom: 0,
@@ -65,7 +78,7 @@ export class ChartsService {
     }
 
     eChartsOption.tooltip = {
-      trigger: 'axis',
+      trigger: 'item',
       borderWidth: 1,
       borderColor: '#EAECF0',
     }
