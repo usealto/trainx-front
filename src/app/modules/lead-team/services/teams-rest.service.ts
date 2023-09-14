@@ -27,7 +27,7 @@ export class TeamsRestService {
         ...req,
         page: req?.page ?? 1,
         itemsPerPage: req?.itemsPerPage ?? 300,
-        sortBy: req?.sortBy ?? 'longName:asc',
+        sortBy: req?.sortBy ?? 'name:asc',
       };
 
       return this.teamApi.getTeams(par).pipe(

@@ -127,7 +127,7 @@ export class LeadTeamComponent implements OnInit {
 
           this.users.forEach((user) => {
             const member = this.teams.find((team) => team.id === user.teamId);
-            this.usersMap.set(user.id, member ? member.longName : '');
+            this.usersMap.set(user.id, member ? member.name : '');
           });
         }),
         switchMap(() => {
@@ -213,7 +213,7 @@ export class LeadTeamComponent implements OnInit {
 
     const componentInstance = modalRef.componentInstance as DeleteModalComponent;
     componentInstance.data = {
-      title: this.replaceInTranslationPipe.transform(I18ns.leadTeam.teams.deleteModal.title, team.longName),
+      title: this.replaceInTranslationPipe.transform(I18ns.leadTeam.teams.deleteModal.title, team.name),
       subtitle: this.replaceInTranslationPipe.transform(
         I18ns.leadTeam.teams.deleteModal.subtitle,
         this.getTeamUsersCount(team.id),

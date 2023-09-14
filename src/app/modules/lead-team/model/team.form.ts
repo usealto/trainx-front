@@ -1,7 +1,7 @@
 import { ProgramDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 
 export interface TeamForm {
-  longName: string;
+  name: string;
   invitationEmails: UserDtoApi[];
   programs: ProgramDtoApi[];
 }

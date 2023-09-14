@@ -26,7 +26,7 @@ export class TeamFormComponent implements OnInit {
   teamsNames: string[] = [];
 
   teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
-    longName: ['', [Validators.required, this.uniqueNameValidation(this.teamsNames)]],
+    name: ['', [Validators.required, this.uniqueNameValidation(this.teamsNames)]],
     programs: [],
     invitationEmails: [],
   });
@@ -51,11 +51,11 @@ export class TeamFormComponent implements OnInit {
       .pipe(
         tap((d) => {
           d.forEach((t) => {
-            this.teamsNames.push(t.longName.toLowerCase());
+            this.teamsNames.push(t.name.toLowerCase());
           });
         }),
         tap(() => {
-          const longName = this.team?.longName.toLowerCase();
+          const longName = this.team?.name.toLowerCase();
           const index = this.teamsNames.indexOf(longName ?? '');
           this.teamsNames.splice(index, 1);
         }),
@@ -80,12 +80,12 @@ export class TeamFormComponent implements OnInit {
               }
               this.team = d.data;
               this.isEdit = true;
-              const { longName, programs } = this.team;
+              const { name: longName, programs } = this.team;
               this.userFilters.teams.push(this.team);
               const filteredUsers = this.userService.filterUsers(this.users, this.userFilters);
 
               this.teamForm.patchValue({
-                longName,
+                name: longName,
                 programs: programs as ProgramDtoApi[],
                 invitationEmails: filteredUsers,
               });
@@ -99,12 +99,12 @@ export class TeamFormComponent implements OnInit {
   createTeam() {
     if (!this.teamForm.value) return;
 
-    const { longName, programs, invitationEmails } = this.teamForm.value;
+    const { name, programs, invitationEmails } = this.teamForm.value;
 
     if (!this.isEdit && !this.team) {
       //CREATION MODE
       this.teamsRestService
-        .createTeam({ longName, shortName: '' }) // ! remove shortname when SDK is Updated
+        .createTeam({ name })
         .pipe(
           switchMap((team) => {
             this.teamsRestService.resetCache();
@@ -123,8 +123,7 @@ export class TeamFormComponent implements OnInit {
     } else {
       //EDIT MODE
       const params: PatchTeamDtoApi = {
-        shortName: '', // ! remove shortname when SDK is Updated
-        longName: longName,
+        name: name,
       };
       if (this.team?.id) {
         this.teamsRestService
