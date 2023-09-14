@@ -529,6 +529,7 @@ export const FR = {
       title: 'Vos équipes',
       shortTitle: 'Équipes',
       subtitle: "Retrouvez l'ensemble des équipes de votre entreprise.",
+      duplicateName: 'Une équipe portant le même nom existe déjà.',
       table: {
         name: "Nom de l'équipe",
         initials: '',

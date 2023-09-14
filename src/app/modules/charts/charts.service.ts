@@ -13,12 +13,7 @@ export class ChartsService {
     if (eChartsOption.series && eChartsOption.series && Array.isArray(eChartsOption.series)) {
       eChartsOption.series.forEach((serie) => {
         if(serie.type === 'line' && serie.data){
-          serie.data = serie.data.map((value, index) => {
-            if (index === 0 && (value === null || value === undefined || value === '-')) {
-              return 0;
-            }
-            return value;
-          });
+          serie.data[0] = serie.data[0] === "-" ? 0 : (serie.data[0] ?? 0);
 
           serie.emphasis = {
             scale: 4,
