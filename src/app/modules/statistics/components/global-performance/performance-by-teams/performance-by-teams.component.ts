@@ -144,7 +144,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
         type: 'line',
         tooltip: {
           valueFormatter: (value: any) => {
-            return (value as number) + ' %';
+            return (value as number) + '%';
           },
         },
       };
