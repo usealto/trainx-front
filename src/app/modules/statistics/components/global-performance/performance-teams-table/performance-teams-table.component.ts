@@ -92,7 +92,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
     }
 
     if (search) {
-      output = output.filter((t) => t.team.longName.toLowerCase().includes(search.toLowerCase()));
+      output = output.filter((t) => t.team.name.toLowerCase().includes(search.toLowerCase()));
     }
     // if (teams && teams.length > 0) {
     //   output = output.filter((t) => teams.some((pr) => pr === t.id));

@@ -28,7 +28,7 @@ export const Default: Story = {
             type: 'category',
             data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             axisPointer: {
-              type: 'shadow',
+              type: 'line',
             },
           },
         ],
@@ -52,13 +52,30 @@ export const Default: Story = {
             color: '#09479e',
             data: [20, 23, 45, 56, 13, 47, 40],
             type: 'line',
+            connectNulls : true,
             tooltip: {
               valueFormatter: (value) => {
                 return (value as number) + ' %';
               },
             },
+            emphasis: {
+              scale: 4,
+              itemStyle: {
+                borderWidth : 3
+              }
+            },
           },
-        ]  
+        ],
+        tooltip: {
+          trigger: 'axis',
+          borderWidth: 1,
+          borderColor: '#EAECF0',
+        },
+        legend: {
+          bottom: 0,
+          icon: 'circle',
+          itemWidth: 8,
+        },
     }
 
   }
@@ -69,7 +86,6 @@ export const Feature_Legend: Story = {
   args: {
     chartOption : {    
         legend: {
-          data: ['Votre Score'],
           bottom: 0,
           icon: 'circle',
           itemWidth: 8,
@@ -173,13 +189,15 @@ export const Feature_Tooltip: Story = {
     chartOption : {    
         tooltip: {
           trigger: 'axis',
+          borderWidth: 1,
+          borderColor: '#EAECF0',
         },
         xAxis: [
           {
             type: 'category',
             data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             axisPointer: {
-              type: 'shadow',
+              type: 'line',
             },
           },
         ],
@@ -207,6 +225,12 @@ export const Feature_Tooltip: Story = {
               valueFormatter: (value) => {
                 return (value as number) + ' %';
               },
+            },
+            emphasis: {
+                scale: 4,
+                itemStyle: {
+                  borderWidth : 3
+                }
             },
           },
         ]  
@@ -337,6 +361,7 @@ export const Data_MiddleMissing: Story = {
             color: '#09479e',
             data: [20, 23, '-', 56, 13, 47, 40],
             type: 'line',
+            connectNulls : true,
             tooltip: {
               valueFormatter: (value) => {
                 return (value as number) + ' %';
@@ -382,6 +407,7 @@ export const Data_OnePoint: Story = {
             color: '#09479e',
             data: ['-','-', '-', '-', 13, '-','-',],
             type: 'line',
+            connectNulls : true,
             tooltip: {
               valueFormatter: (value) => {
                 return (value as number) + ' %';
@@ -427,6 +453,7 @@ export const Data_MultiLine: Story = {
             color: '#09479e',
             data: [20, 23, 45, 56, 13, 47, 40],
             type: 'line',
+            connectNulls : true,
             tooltip: {
               valueFormatter: (value) => {
                 return (value as number) + ' %';
@@ -438,6 +465,7 @@ export const Data_MultiLine: Story = {
             color: '#039855',
             data: ['-', '-', 15, 85, 60, 65, 45],
             type: 'line',
+            connectNulls : true,
             tooltip: {
               valueFormatter: (value) => {
                 return (value as number) + ' %';
@@ -449,6 +477,7 @@ export const Data_MultiLine: Story = {
             color: '#FDB022',
             data: [80, 70, 73, 68, 62, 76, 55],
             type: 'line',
+            connectNulls : true,
             tooltip: {
               valueFormatter: (value) => {
                 return (value as number) + ' %';

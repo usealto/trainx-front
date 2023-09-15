@@ -36,6 +36,7 @@ export const FR = {
     flop: 'Flop',
     waitingForNewResults: "Dans l'attente de nouveaux résultats.",
     days: ['jour', 'jours'],
+    score: 'Score',
     imageBadge: {
       userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],
     },
@@ -81,6 +82,7 @@ export const FR = {
       subtitle: 'S’il s’agit d’une erreur, informez-en votre administrateur directement.',
       button: 'Envoyer un mail à mon administrateur',
     },
+    global: 'Global',
   },
   leadHome: {
     title: 'Bonjour ',
@@ -367,6 +369,15 @@ export const FR = {
           placeholderTitle: 'Les équipes sont en train de s’échauffer',
           placeholderSubtitle: 'Les premiers résultats ne devraient plus tarder !',
         },
+        teamsKnowledgeChart: {
+          title: 'Niveau de maîtrise de vos équipes par thématique',
+          subtitle: 'Aperçu du score moyen de vos équipes sur le tag sélectionné.',
+          placeholderTitle: 'Quelles thématiques déstabilisent vos équipes ? Vous le saurez prochainement',
+          filters: {
+            tags: 'Tags',
+            teams: 'Équipes',
+          },
+        },
         control: {
           title: 'Niveau de maîtrise des thématiques',
           subtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
@@ -529,6 +540,7 @@ export const FR = {
       title: 'Vos équipes',
       shortTitle: 'Équipes',
       subtitle: "Retrouvez l'ensemble des équipes de votre entreprise.",
+      duplicateName: 'Une équipe portant le même nom existe déjà.',
       table: {
         name: "Nom de l'équipe",
         initials: '',
@@ -549,7 +561,7 @@ export const FR = {
           edit: 'Modifier une équipe',
         },
         subtitle: 'Donner un nom à votre équipe',
-        longName: 'Nom (version longue)',
+        longName: "Nom de l'équipe",
         longNamePlaceholder: 'Exemple : Sales Development Representative',
         shortName: 'Nom (version abrégée)',
         shortNamePlaceholder: 'Exemple : SDR',
@@ -557,7 +569,7 @@ export const FR = {
         invitationEmailsPlaceholder: 'Séparer les emails par une virgule',
         invitationEmailsSubtitle:
           "Vos collaborateurs recevront une invitation par mail pour s'inscrire à Alto.",
-        Programs: 'Programmes',
+        Programs: 'Programmes assignés',
         programsPlaceholder: 'Sélectionner les programmes assignés à cette équipe',
       },
       deleteModal: {

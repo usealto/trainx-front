@@ -1,2 +1,1 @@
-<div *ngIf="chartOption" echarts [options]="chartOption" class="chart"></div>
-
+<div *ngIf="lineOptions && this.isLoaded" echarts [options]="lineOptions" class="chart"></div>

@@ -29,7 +29,7 @@ export const Default: Story = {
             type: 'category',
             data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             axisPointer: {
-              type: 'shadow',
+              type: 'line',
             },
           },
         ],
@@ -59,7 +59,17 @@ export const Default: Story = {
               },
             },
           },
-        ]  
+        ],
+        tooltip: {
+          trigger: 'axis',
+          borderWidth: 1,
+          borderColor: '#EAECF0',
+        },
+        legend: {
+          bottom: 0,
+          icon: 'circle',
+          itemWidth: 8,
+        },
     }
 
   }
@@ -75,7 +85,7 @@ export const Colored: Story = {
             type: 'category',
             data: ['Customer Success Manager', 'Business Manager', 'Sales representative', 'Sales development', 'Head of sales'],
             axisPointer: {
-              type: 'shadow',
+              type: 'line',
             },
           },
         ],
@@ -128,11 +138,6 @@ export const Colored: Story = {
               }
             }],
             type: 'bar',
-            tooltip: {
-              valueFormatter: (value) => {
-                return (value as number) + ' %';
-              },
-            },
           },
         ]  
     }
