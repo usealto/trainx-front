@@ -2,7 +2,7 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'https://app-develop.usealto.com',
+    baseUrl: 'http://localhost:4200',
     experimentalStudio: true,
     viewportWidth: 1400,
     viewportHeight: 860,
