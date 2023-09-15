@@ -14,7 +14,7 @@
           class="me-3 text-start"
           data-cy="programTeamFilter"
           [data]="teamStore.teams.value"
-          [displayLabel]="'shortName'"
+          [displayLabel]="'name'"
           [placeholder]="I18ns.programs.programs.filters.teams"
           [selectedItems]="selectedItems"
           (selectChange)="filterPrograms({ teams: $event })"
