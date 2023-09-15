@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnChanges, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { NGX_ECHARTS_CONFIG } from 'ngx-echarts';
 import { ChartsService } from '../charts.service';
@@ -14,19 +14,13 @@ import { ChartsService } from '../charts.service';
     },
   ],
 })
-export class ChartBasiclineComponent implements OnInit, OnChanges, AfterViewInit {
+export class ChartBasiclineComponent implements OnChanges, AfterViewInit {
   @Input() chartOption?: EChartsOption;
-  @Input() isLoaded = true;
 
+  isLoaded = false;
   lineOptions?: EChartsOption;
 
   constructor(private chartsService: ChartsService) {}
-
-  ngOnInit(): void {
-    if (this.chartOption && this.isLoaded) {
-      this.lineOptions = this.chartsService.altoFormattingMultiline(this.chartOption);
-    }
-  }
 
   ngOnChanges(): void {
     if (this.chartOption && this.isLoaded) {
@@ -36,5 +30,14 @@ export class ChartBasiclineComponent implements OnInit, OnChanges, AfterViewInit
 
   ngAfterViewInit(): void {
     this.isLoaded = true;
+
+    // ! For Storybook
+    if (this.chartOption) {
+      setTimeout(() => {
+        if (this.chartOption) {
+          this.lineOptions = this.chartsService.altoFormattingMultiline(this.chartOption);
+        }
+      }, 1000);
+    }
   }
 }
