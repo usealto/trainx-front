@@ -14,6 +14,7 @@ export enum ScoreDuration {
   Month = 'month',
   Trimester = 'trimester',
   Year = 'year',
+  All = 'all',
 }
 
 export enum ScoreFilter {
