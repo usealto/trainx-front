@@ -28,9 +28,6 @@ jobs:
           "auth_password": "'${{ secrets.CYPRESS_AUTH_PASSWORD }}'",
           "apiURL": "'${{ secrets.CYPRESS_API_URL }}'"
         }' > cypress.env.json
-
-    - name: log cypress.env.json
-      run: cat cypress.env.json
         
     - name: Cypress run
       uses: cypress-io/github-action@v6
