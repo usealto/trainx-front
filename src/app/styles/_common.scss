@@ -47,6 +47,11 @@
     text-overflow: ellipsis;
   }
 }
+.alto-badge-orange {
+  @extend .alto-badge;
+  color: white;
+  background-color: var(--orange-500);
+}
 
 .alto-badge-big {
   @extend .alto-badge-no-size;

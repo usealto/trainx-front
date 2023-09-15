@@ -5,3 +5,33 @@
     <p class="alto-grey fs-6">{{ I18ns.collaboration.subtitle }}</p>
   </div>
 </div>
+
+<div class="tabs-container">
+  <!-- Pending tab -->
+  <div class="tab"
+  [class.selected]="selectedTab.value === tabs[0].value"
+  (click)="handleTabChange(tabs[0])">
+    <p>{{ tabs[0].label }}</p>
+
+    <div class="alto-badge-orange" *ngIf="pendingCount">
+      <p>{{ pendingCount }}</p>
+    </div>
+  </div>
+
+  <!-- Archived tab -->
+  <div class="tab"
+  [class.selected]="selectedTab.value === tabs[1].value"
+  (click)="handleTabChange(tabs[1])">
+    <p>{{ tabs[1].label }}</p>
+  </div>
+
+  <div class="delimiter"></div>
+
+  <!-- All tab -->
+  <div class="tab"
+  [class.selected]="selectedTab.value === tabs[2].value"
+  (click)="handleTabChange(tabs[2])">
+    <p>{{ tabs[2].label }}</p>
+  </div>
+</div>
+
