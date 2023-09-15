@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommentDtoApi } from '@usealto/sdk-ts-angular';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 
 enum ETabValue {
   PENDING = 'pending',
@@ -24,7 +26,7 @@ interface ITab {
   templateUrl: './lead-collaboration.component.html',
   styleUrls: ['./lead-collaboration.component.scss'],
 })
-export class LeadCollaborationComponent {
+export class LeadCollaborationComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
 
@@ -36,7 +38,19 @@ export class LeadCollaborationComponent {
 
   selectedTab = this.tabs[0];
 
-  pendingCount = 2;
+  comments: CommentDtoApi[] = [];
+  pendingCount = 0;
+
+  constructor(
+    private readonly commentsRestService: CommentsRestService,
+  ) {}
+
+  ngOnInit() {
+    this.commentsRestService.getComments().subscribe((comments) => {
+      this.comments = comments;
+      this.pendingCount = comments.filter((comment) => !comment.isRead).length;
+    });
+  }
 
   handleTabChange(tab: ITab) {
     this.selectedTab =  tab;
