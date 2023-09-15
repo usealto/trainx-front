@@ -22,8 +22,8 @@ jobs:
           "auth_url": "'${{ secrets.CYPRESS_AUTH_URL }}'",
           "auth_client_id": "'${{ secrets.CYPRESS_AUTH_CLIENT_ID }}'",
           "auth_client_secret": "'${{ secrets.CYPRESS_AUTH_CLIENT_SECRET }}'",
-          "auth_username_admin": "'${{ secrets.CYPRESS_AUTH_USERNAME_ADMIN }}'",
-          "auth_password_admin": "'${{ secrets.CYPRESS_AUTH_PASSWORD_ADMIN }}'",
+          "auth_username_admin": "e2e-testing-admin@usealto.com",
+          "auth_password_admin": "e2e-testing-admin@usealto.com###",
           "auth_username": "'${{ secrets.CYPRESS_AUTH_USERNAME }}'",
           "auth_password": "'${{ secrets.CYPRESS_AUTH_PASSWORD }}'",
           "apiURL": "'${{ secrets.CYPRESS_API_URL }}'"
@@ -37,6 +37,3 @@ jobs:
       with:
           build: npm run build
           start: npm start
-          
-    - name: Delete cypress.env.json
-      run: rm cypress.env.json
