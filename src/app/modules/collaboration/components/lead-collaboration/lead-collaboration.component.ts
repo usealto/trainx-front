@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { CommentDtoApi } from '@usealto/sdk-ts-angular';
+import { CommentDtoApi, QuestionSubmittedDtoApi } from '@usealto/sdk-ts-angular';
+import { combineLatest } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
+import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 
 enum ETabValue {
   PENDING = 'pending',
@@ -39,16 +41,23 @@ export class LeadCollaborationComponent implements OnInit {
   selectedTab = this.tabs[0];
 
   comments: CommentDtoApi[] = [];
+  submittedQuestions: QuestionSubmittedDtoApi[] = [];
   pendingCount = 0;
 
   constructor(
     private readonly commentsRestService: CommentsRestService,
+    private readonly questionsSubmittedTestService: QuestionsSubmittedRestService
   ) {}
 
   ngOnInit() {
-    this.commentsRestService.getComments().subscribe((comments) => {
+    combineLatest([
+      this.commentsRestService.getComments(),
+      this.questionsSubmittedTestService.getQuestions(),
+    ])
+    .subscribe(([comments, submittedQuestions]) => {
       this.comments = comments;
-      this.pendingCount = comments.filter((comment) => !comment.isRead).length;
+      this.submittedQuestions = submittedQuestions;
+      this.pendingCount = comments.filter((comment) => !comment.isRead).length + submittedQuestions.length;
     });
   }
 
