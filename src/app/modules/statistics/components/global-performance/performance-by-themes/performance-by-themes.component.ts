@@ -1,16 +1,17 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
+  ScoreByTypeEnumApi,
   ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   ScoresResponseDtoApi,
+  TagDtoApi,
   TagStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
-import Chart, { ChartData } from 'chart.js/auto';
 import { Observable, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
+// import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
@@ -18,6 +19,11 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
+import { ProgramsStore } from 'src/app/modules/programs/programs.store';
+import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { isUndefined } from 'cypress/types/lodash';
+
 @UntilDestroy()
 @Component({
   selector: 'alto-performance-by-themes',
@@ -37,10 +43,18 @@ export class PerformanceByThemesComponent implements OnChanges {
   selectedItems: ScoreDtoApi[] = [];
   tagsLeaderboard: { name: string; score: number }[] = [];
 
-  scoreEvolutionChart?: Chart;
   scoreCount = 0;
 
+  ScoreEvolutionChartOption: any = {};
+
+  selectedTeamsKnowledgeTag?: TagDtoApi;
+  selectedTeamsKnowledgeScores: ScoreDtoApi[] = [];
+  teamsKnowledgeFilteredScores: ScoreDtoApi[] = [];
+  teamsKnowledgeChartOption: any = {};
+
   constructor(
+    public readonly programsStore: ProgramsStore,
+    public readonly teamsStore: TeamStore,
     private readonly scoresRestService: ScoresRestService,
     private readonly statisticsServices: StatisticsService,
     private readonly scoresServices: ScoresService,
@@ -66,16 +80,82 @@ export class PerformanceByThemesComponent implements OnChanges {
             const output = res.filter((t) => t.score && t.score >= 0);
             this.tagsLeaderboard = output.map((t) => ({ name: t.tag.name, score: t.score ?? 0 }));
           }),
+          tap(() => {
+            this.getTeamsKnowledgeScores();
+          }),
           untilDestroyed(this),
         )
         .subscribe();
     }
   }
 
+  filterTeamsKnowledgeTags(tags: TagDtoApi) {
+    this.selectedTeamsKnowledgeTag = tags;
+    this.getTeamsKnowledgeScores(this.selectedTeamsKnowledgeScores);
+  }
+
+  getTeamsKnowledgeScores(teamsScores: ScoreDtoApi[] = []) {
+    if (teamsScores) {
+      this.selectedTeamsKnowledgeScores = teamsScores;
+    }
+    this.scoresRestService
+      .getScores({
+        timeframe:
+          this.duration === ScoreDuration.Year
+            ? ScoreTimeframeEnumApi.Month
+            : this.duration === ScoreDuration.Trimester
+            ? ScoreTimeframeEnumApi.Week
+            : ScoreTimeframeEnumApi.Day,
+        duration: this.duration ?? ScoreDuration.Year,
+        type: ScoreTypeEnumApi.Team,
+        scoredBy: this.selectedTeamsKnowledgeTag ? ScoreByTypeEnumApi.Tag : undefined,
+        scoredById: this.selectedTeamsKnowledgeTag ? this.selectedTeamsKnowledgeTag.id : undefined,
+        ids: this.selectedTeamsKnowledgeScores.map((t) => t.id),
+      })
+      .pipe(
+        tap((res) => {
+          this.createTeamsKnowledgeChart(res.scores);
+        }),
+      )
+      .subscribe();
+  }
+
+  createTeamsKnowledgeChart(rawScores: ScoreDtoApi[]) {
+    const scores = this.scoresServices.reduceChartData(rawScores);
+
+    const series = scores.map((s) => {
+      const points = this.statisticsServices.transformDataToPoint(s);
+      const point = points.reduce((acc, curr) => acc + (curr.y ?? 0), 0) / points.length;
+      return {
+        name: s.label,
+        type: 'bar',
+        data: [Math.round((point * 10000) / 100)],
+        barWidth: 24,
+        barGap: '10',
+        tooltip: {
+          valueFormatter: (value: any) => {
+            return (value as number) + '%';
+          },
+        },
+      };
+    });
+
+    this.teamsKnowledgeChartOption = {
+      xAxis: [{ ...xAxisDatesOptions, data: [I18ns.shared.score], show: false }],
+      yAxis: [{ ...yAxisScoreOptions }],
+      series: series,
+    };
+  }
+
   getScores(): Observable<ScoresResponseDtoApi> {
     return this.scoresRestService
       .getScores({
-        timeframe: ScoreTimeframeEnumApi.Day,
+        timeframe:
+          this.duration === ScoreDuration.Year
+            ? ScoreTimeframeEnumApi.Month
+            : this.duration === ScoreDuration.Trimester
+            ? ScoreTimeframeEnumApi.Week
+            : ScoreTimeframeEnumApi.Day,
         duration: this.duration ?? ScoreDuration.Year,
         type: ScoreTypeEnumApi.Tag,
       } as ChartFilters)
@@ -102,41 +182,11 @@ export class PerformanceByThemesComponent implements OnChanges {
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
     scores = this.scoresServices.reduceChartData(scores);
     this.scoreCount = scores.length;
-    const aggregateData = this.statisticsServices.aggregateDataForScores(scores[0], duration);
+    const aggregateData = this.statisticsServices.transformDataToPoint(scores[0]);
     const labels = this.statisticsServices.formatLabel(
       aggregateData.map((d) => d.x),
       duration,
     );
-
-    if (this.scoreEvolutionChart) {
-      this.scoreEvolutionChart.destroy();
-    }
-
-    // Global
-    const total = scores.map((s) => this.statisticsServices.aggregateDataForScores(s, duration));
-    const res: { x: Date; y: number | null; z: number }[] = [];
-
-    total.forEach((teamData) => {
-      teamData.forEach((point) => {
-        const element = res.filter((pt) => pt.x.getTime() === point.x.getTime());
-        if (element.length === 1) {
-          if (!element[0].y) {
-            element[0].y = point.y;
-          } else {
-            element[0].y += point.y || 0;
-          }
-          element[0].z += point.y ? 1 : 0;
-        } else {
-          res.push({ ...point, z: point.y ? 1 : 0 });
-        }
-      });
-    });
-
-    res.forEach((pt) => {
-      if (pt.y && pt.z > 0) {
-        pt.y = pt.y / pt.z;
-      }
-    });
 
     const dataSet = scores.map((s) => {
       const d = this.statisticsServices.aggregateDataForScores(s, duration);
@@ -149,48 +199,26 @@ export class PerformanceByThemesComponent implements OnChanges {
         spanGaps: true,
       };
     });
-    dataSet.push({
-      label: 'Global',
-      data: res.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
-      fill: false,
-      tension: 0.2,
-      borderDash: [4],
-      spanGaps: true,
-    });
 
-    const data: ChartData = {
-      labels: labels,
-      datasets: dataSet,
-    };
-
-    const customChartOptions = {
-      ...chartDefaultOptions,
-      plugins: {
+    const series = dataSet.map((d) => {
+      return {
+        name: d.label,
+        // color: '#09479e',
+        data: d.data,
+        type: 'line',
         tooltip: {
-          callbacks: {
-            label: function (tooltipItem: any) {
-              const labelType = 'tag';
-              return `${labelType} ${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
-            },
+          valueFormatter: (value: any) => {
+            return (value as number) + '%';
           },
         },
-        legend: {
-          display: false,
-        },
-      },
-    };
-    this.scoreEvolutionChart = new Chart('themeScoreEvolution', {
-      type: 'line',
-      data: data,
-      options: {
-        ...customChartOptions,
-        scales: {
-          ...customChartOptions.scales,
-          x: { ...customChartOptions.scales?.['x'], grid: { display: true } },
-          y: { ...customChartOptions.scales?.['y'], grid: { display: false } },
-        },
-      },
+      };
     });
+
+    this.ScoreEvolutionChartOption = {
+      xAxis: [{ ...xAxisDatesOptions, data: labels }],
+      yAxis: [{ ...yAxisScoreOptions }],
+      series: series,
+    };
   }
 
   filterTeams(teams: { label: string; id: string }[]) {

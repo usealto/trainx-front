@@ -136,6 +136,23 @@ export class ScoresService {
       s.dates = s.dates.slice(firstIndex, s.dates.length);
       s.valids = s.valids.slice(firstIndex, s.valids.length);
     });
+
+    // Adds a zero instead of null before the first value
+    for (let j = 0; j < scores.length; j++) {
+      const s = scores[j];
+      if (s.averages[0] !== null) {
+        continue;
+      }
+
+      for (let k = 0; k < s.averages.length; k++) {
+        const a = s.averages[k];
+        if (a && !s.averages[k - 1]) {
+          s.averages[k - 1] = 0;
+          break;
+        }
+      }
+    }
+
     return scores;
   }
 

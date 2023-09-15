@@ -138,8 +138,8 @@
   <div [hidden]="!scoreCount" class="panel h-100 my-5">
     <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
     <p class="alto-grey mb-4">{{ I18ns.leadHome.globalEvolution.chartSubtitle }}</p>
-    <div class="chart-container">
-      <canvas id="programScoreEvol"></canvas>
+    <div>
+      <alto-chart-basicline [chartOption]="chartOption"></alto-chart-basicline>
     </div>
   </div>
 

@@ -1,0 +1,21 @@
+<div [hidden]="!scoreCount" class="score-evolution-chart panel mb-5">
+  <alto-dropdown-filter
+    *ngIf="items.length >= 7"
+    class="float-end mx-2"
+    [data]="items"
+    [displayLabel]="'label'"
+    [selectedItems]="selectedItems"
+    [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.tags"
+    (selectChange)="filterTagsAndPrograms($event)"
+  ></alto-dropdown-filter>
+  <h2>
+    {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}
+  </h2>
+  <p class="alto-grey mb-4">
+    {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.subtitle }}
+  </p>
+
+  <div class="chart-container">
+    <alto-chart-bar [chartOption]="chartOption" [isLoaded]="false"></alto-chart-bar>
+  </div>
+</div>

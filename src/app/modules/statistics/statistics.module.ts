@@ -10,6 +10,8 @@ import { StatisticsGlobalEngagementComponent } from './components/statistics-glo
 import { StatisticsPerTeamsComponent } from './components/statistics-per-teams/statistics-per-teams.component';
 import { StatisticsComponent } from './components/statistics/statistics.component';
 import { StatisticsRoutingModule } from './statistics-routing.module';
+import { ChartsModule } from '../charts/charts.module';
+import { PerformanceByThemeBarchartComponent } from './components/global-performance/performance-by-theme-barchart/performance-by-theme-barchart.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,8 @@ import { StatisticsRoutingModule } from './statistics-routing.module';
     PerformanceByThemesComponent,
     PerformanceTeamsTableComponent,
     PerformanceQuestionsTableComponent,
+    PerformanceByThemeBarchartComponent,
   ],
-  imports: [CommonModule, StatisticsRoutingModule, SharedModule],
+  imports: [CommonModule, StatisticsRoutingModule, ChartsModule, SharedModule],
 })
 export class StatisticsModule {}
