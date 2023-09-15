@@ -96,7 +96,6 @@ export class ProgramsComponent implements OnInit {
     private readonly offcanvasService: NgbOffcanvas,
     private readonly questionsService: QuestionsRestService,
     private readonly scoresRestServices: ScoresRestService,
-    private readonly scoresServices: ScoresService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly tagRestService: TagsRestService,
     private readonly tagsService: TagsServiceService,
