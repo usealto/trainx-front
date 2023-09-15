@@ -66,10 +66,27 @@ export class LeadCollaborationComponent implements OnInit {
   handleTabChange(tab: ITab): void {
     this.selectedTab = tab;
 
-    this.selectedTabData = this.filterData(tab);
+    this.selectedTabData = this.getSelectedTabData(tab);
+    this.sort();
   }
 
-  private filterData(tab: ITab): (CommentDtoApi | QuestionSubmittedDtoApi)[] {
+  sort(): void {
+    this.selectedTabData.sort(this.sortByCreatedAt);
+  }
+
+  private sortByCreatedAt(a: CommentDtoApi | QuestionSubmittedDtoApi, b: CommentDtoApi | QuestionSubmittedDtoApi): number {
+    if (a.createdAt > b.createdAt) {
+      return -1;
+    }
+
+    if (a.createdAt < b.createdAt) {
+      return 1;
+    }
+
+    return 0;
+  }
+
+  private getSelectedTabData(tab: ITab): (CommentDtoApi | QuestionSubmittedDtoApi)[] {
     switch (tab.value) {
       case ETabValue.PENDING:
         return [
