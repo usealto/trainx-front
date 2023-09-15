@@ -371,6 +371,11 @@ export const FR = {
         teamsKnowledgeChart: {
           title: 'Niveau de maîtrise de vos équipes par thématique',
           subtitle: 'Aperçu du score moyen de vos équipes sur le tag sélectionné.',
+          placeholderTitle: 'Quelles thématiques déstabilisent vos équipes ? Vous le saurez prochainement',
+          filters: {
+            tags: 'Tags',
+            teams: 'Équipes',
+          },
         },
         control: {
           title: 'Niveau de maîtrise des thématiques',

@@ -1,10 +1,12 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
+  ScoreByTypeEnumApi,
   ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   ScoresResponseDtoApi,
+  TagDtoApi,
   TagStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { Observable, switchMap, tap } from 'rxjs';
@@ -18,6 +20,10 @@ import { StatisticsService } from '../../../services/statistics.service';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
+import { ProgramsStore } from 'src/app/modules/programs/programs.store';
+import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { isUndefined } from 'cypress/types/lodash';
+
 @UntilDestroy()
 @Component({
   selector: 'alto-performance-by-themes',
@@ -38,9 +44,17 @@ export class PerformanceByThemesComponent implements OnChanges {
   tagsLeaderboard: { name: string; score: number }[] = [];
 
   scoreCount = 0;
-  chartOption: any = {};
+
+  ScoreEvolutionChartOption: any = {};
+
+  selectedTeamsKnowledgeTag?: TagDtoApi;
+  selectedTeamsKnowledgeScores: ScoreDtoApi[] = [];
+  teamsKnowledgeFilteredScores: ScoreDtoApi[] = [];
+  teamsKnowledgeChartOption: any = {};
 
   constructor(
+    public readonly programsStore: ProgramsStore,
+    public readonly teamsStore: TeamStore,
     private readonly scoresRestService: ScoresRestService,
     private readonly statisticsServices: StatisticsService,
     private readonly scoresServices: ScoresService,
@@ -66,10 +80,73 @@ export class PerformanceByThemesComponent implements OnChanges {
             const output = res.filter((t) => t.score && t.score >= 0);
             this.tagsLeaderboard = output.map((t) => ({ name: t.tag.name, score: t.score ?? 0 }));
           }),
+          tap(() => {
+            this.getTeamsKnowledgeScores();
+          }),
           untilDestroyed(this),
         )
         .subscribe();
     }
+  }
+
+  filterTeamsKnowledgeTags(tags: TagDtoApi) {
+    this.selectedTeamsKnowledgeTag = tags;
+    this.getTeamsKnowledgeScores(this.selectedTeamsKnowledgeScores);
+  }
+
+  getTeamsKnowledgeScores(teamsScores: ScoreDtoApi[] = []) {
+    if (teamsScores) {
+      this.selectedTeamsKnowledgeScores = teamsScores;
+    }
+    this.scoresRestService
+      .getScores({
+        timeframe:
+          this.duration === ScoreDuration.Year
+            ? ScoreTimeframeEnumApi.Month
+            : this.duration === ScoreDuration.Trimester
+            ? ScoreTimeframeEnumApi.Week
+            : ScoreTimeframeEnumApi.Day,
+        duration: this.duration ?? ScoreDuration.Year,
+        type: ScoreTypeEnumApi.Team,
+        scoredBy: this.selectedTeamsKnowledgeTag ? ScoreByTypeEnumApi.Tag : undefined,
+        scoredById: this.selectedTeamsKnowledgeTag ? this.selectedTeamsKnowledgeTag.id : undefined,
+        ids: this.selectedTeamsKnowledgeScores.map((t) => t.id),
+      })
+      .pipe(
+        tap((res) => {
+          this.createTeamsKnowledgeChart(res.scores);
+        }),
+      )
+      .subscribe();
+  }
+
+  createTeamsKnowledgeChart(rawScores: ScoreDtoApi[]) {
+    const scores = this.scoresServices.reduceChartData(rawScores);
+    const aggregatedData = this.statisticsServices.transformDataToPoint(scores[0]);
+    const labels = this.statisticsServices.formatLabel(
+      aggregatedData.map((d) => d.x),
+      this.duration,
+    );
+
+    const series = scores.map((s) => {
+      const points = this.statisticsServices.aggregateDataForScores(s, this.duration);
+      return {
+        name: s.label,
+        type: 'bar',
+        data: points.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
+        tooltip: {
+          valueFormatter: (value: any) => {
+            return (value as number) + '%';
+          },
+        },
+      };
+    });
+
+    this.teamsKnowledgeChartOption = {
+      xAxis: [{ ...xAxisDatesOptions, data: labels }],
+      yAxis: [{ ...yAxisScoreOptions }],
+      series: series,
+    };
   }
 
   getScores(): Observable<ScoresResponseDtoApi> {
@@ -132,14 +209,14 @@ export class PerformanceByThemesComponent implements OnChanges {
         data: d.data,
         type: 'line',
         tooltip: {
-          valueFormatter: (value:any) => {
+          valueFormatter: (value: any) => {
             return (value as number) + '%';
           },
         },
       };
     });
 
-    this.chartOption = {
+    this.ScoreEvolutionChartOption = {
       xAxis: [{ ...xAxisDatesOptions, data: labels }],
       yAxis: [{ ...yAxisScoreOptions }],
       series: series,
