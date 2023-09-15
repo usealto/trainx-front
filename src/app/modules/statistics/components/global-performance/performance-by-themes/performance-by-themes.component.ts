@@ -122,18 +122,16 @@ export class PerformanceByThemesComponent implements OnChanges {
 
   createTeamsKnowledgeChart(rawScores: ScoreDtoApi[]) {
     const scores = this.scoresServices.reduceChartData(rawScores);
-    const aggregatedData = this.statisticsServices.transformDataToPoint(scores[0]);
-    const labels = this.statisticsServices.formatLabel(
-      aggregatedData.map((d) => d.x),
-      this.duration,
-    );
 
     const series = scores.map((s) => {
-      const points = this.statisticsServices.aggregateDataForScores(s, this.duration);
+      const points = this.statisticsServices.transformDataToPoint(s);
+      const point = points.reduce((acc, curr) => acc + (curr.y ?? 0), 0) / points.length;
       return {
         name: s.label,
         type: 'bar',
-        data: points.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
+        data: [Math.round((point * 10000) / 100)],
+        barWidth: 24,
+        barGap: '10',
         tooltip: {
           valueFormatter: (value: any) => {
             return (value as number) + '%';
@@ -143,7 +141,7 @@ export class PerformanceByThemesComponent implements OnChanges {
     });
 
     this.teamsKnowledgeChartOption = {
-      xAxis: [{ ...xAxisDatesOptions, data: labels }],
+      xAxis: [{ ...xAxisDatesOptions, data: [I18ns.shared.score], show: false }],
       yAxis: [{ ...yAxisScoreOptions }],
       series: series,
     };

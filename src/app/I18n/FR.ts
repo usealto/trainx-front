@@ -36,6 +36,7 @@ export const FR = {
     flop: 'Flop',
     waitingForNewResults: "Dans l'attente de nouveaux résultats.",
     days: ['jour', 'jours'],
+    score: 'Score',
     imageBadge: {
       userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],
     },
