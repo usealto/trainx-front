@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { QuestionStatsDtoApi } from '@usealto/sdk-ts-angular';
+import { QuestionStatsDtoApi, QuestionStatsTeamDtoApi } from '@usealto/sdk-ts-angular';
 import { switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -96,12 +96,12 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
         tap((t) => {
           this.questions = t;
           this.questionsDisplay = t;
-
           this.changeQuestionsPage(1);
         }),
         switchMap(() => this.scoreRestService.getQuestionsStats(this.duration, true)),
         tap((t) => (this.questionsPreviousPeriod = t)),
         tap(() => (this.scoreIsLoading = false)),
+        tap(() => this.getQuestionsFiltered()),
         untilDestroyed(this),
       )
       .subscribe();
@@ -120,5 +120,12 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
   getQuestionPreviousScore(quest: QuestionStatsDtoApi) {
     const prevScore = this.questionsPreviousPeriod.filter((t) => t.id === quest.id)[0]?.score || 0;
     return prevScore && quest.score ? quest.score - prevScore : 0;
+  }
+
+  getBadTeams(teams: QuestionStatsTeamDtoApi[]) {
+    return teams
+      .filter((t) => (t.score || 0) < 0.5)
+      .sort((a, b) => (a.score || 0) - (b.score || 0))
+      .slice(0, 3);
   }
 }

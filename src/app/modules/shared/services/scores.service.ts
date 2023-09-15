@@ -11,9 +11,8 @@ export class ScoresService {
   reduceWithoutNull(data: number[] = []): number | null {
     if (data.length === 0) return null;
 
-    const output = data.filter((x) => !!x);
+    const output = data.filter((x) => x !== null && x !== undefined);
     if (output.length === 0) return null;
-
     return output.reduce((prev, curr) => prev + curr, 0) / output.length;
   }
 
@@ -82,6 +81,9 @@ export class ScoresService {
         break;
       case ScoreDuration.Year:
         date = addDays(date, -365);
+        break;
+      case ScoreDuration.All:
+        date = addDays(date, -3650);
         break;
     }
     date = addHours(date, gmtDataOffset + 1);

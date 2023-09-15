@@ -109,6 +109,7 @@
   background-color: var(--primary-50);
   border-radius: 0.67rem;
   padding: 1.14rem 1.7rem;
+  min-height: 5.333rem;
   h1 {
     margin: 0;
   }
@@ -117,6 +118,19 @@
   }
   p {
     font-size: 1.1667rem;
+  }
+}
+
+.header-panel2 {
+  @extend .header-panel;
+  background-color: var(--primary-25);
+  height: 5.333rem;
+  padding: 0 1.7rem;
+
+  h1 {
+    display: inline-block;
+    line-height: 5.33rem;
+    font-weight: 600;
   }
 }
 

@@ -1,5 +1,5 @@
-<div class="header-panel">
-  <img class="emoji me-4" [src]="Emoji.BustsInSilhouette | emoji" />
+<div class="header-panel d-flex align-items-center">
+  <img class="me-4" [src]="Emoji.BustsInSilhouette | emoji" />
   <h1 data-cy="leadTeamTitle" class="d-inline-block">{{ I18ns.leadTeam.title }}</h1>
 </div>
 
@@ -8,19 +8,21 @@
   <button type="button" class="btn btn-primary float-end" (click)="openTeamForm()">
     <i data-cy="createTeam" class="bi bi-plus-lg"></i><span>{{ I18ns.leadTeam.createTeam }}</span>
   </button>
-  <h2 id="teamsAnchor">
+  <h2 id="teamsAnchor" class="me-3">
     <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" /> {{ I18ns.leadTeam.teams.title }}
   </h2>
-  <p class="mb-4 alto-grey">{{ I18ns.leadTeam.teams.subtitle }}</p>
+  <p class="mb-5 alto-grey">{{ I18ns.leadTeam.teams.subtitle }}</p>
   <ng-container *ngIf="paginatedTeams.length > 0; else noTeams">
     <div class="table-panel">
       <table class="table team-table">
         <thead>
           <tr>
             <th scope="col" class="w-25">{{ I18ns.leadTeam.teams.table.name }}</th>
-            <th scope="col" class="w-20 text-center">{{ I18ns.leadTeam.teams.table.averageScore }}</th>
+            <th scope="col" class="w-20 text-center">
+              {{ I18ns.leadTeam.teams.table.globalScore }}
+            </th>
             <th scope="col" class="w-20 text-start">{{ I18ns.leadTeam.teams.table.usersCount }}</th>
-            <th scope="col" class="w-25 text-start">{{ I18ns.leadTeam.teams.table.activity }}</th>
+            <th scope="col" class="w-25 text-center">{{ I18ns.leadTeam.teams.table.activity }}</th>
             <th scope="col" class="w-10 text-start">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
             <th></th>
             <th></th>
@@ -28,9 +30,13 @@
         </thead>
         <tbody>
           <tr *ngFor="let team of paginatedTeams" class="align-middle fs-7">
-            <td data-cy="teamLongname">{{ team.longName }}</td>
+            <td data-cy="teamLongname">{{ team.name }}</td>
             <td>
-              <div *ngIf="team.score" class="text-center">{{ team.score | percent }}</div>
+              <div *ngIf="team.score" class="text-center">
+                <span class="alto-score" [class]="(team.score || 0) * 100 | pillColor">
+                  {{ team.score | percent }}
+                </span>
+              </div>
               <div class="text-center" *ngIf="!team.score">
                 {{ I18ns.leadTeam.teams.table.noScore }}
               </div>
@@ -44,17 +50,10 @@
               </div>
             </td>
             <td>
-              <div *ngIf="team.totalGuessesCount && team.questionsPushedCount">
-                <div class="progress">
-                  <div
-                    class="progress-bar d-inline-block"
-                    role="progressbar"
-                    [style]="'width:' + (team.totalGuessesCount / team.questionsPushedCount) * 100 + '%'"
-                  ></div>
-                </div>
-                <span>{{ team.totalGuessesCount }} / {{ team.questionsPushedCount }}</span>
+              <div *ngIf="team.totalGuessesCount && team.questionsPushedCount" class="text-center">
+                {{ (team.totalGuessesCount / team.questionsPushedCount) * 100 | number : '1.0-0' }}
               </div>
-              <div class="text-start" *ngIf="!team.totalGuessesCount || !team.questionsPushedCount">
+              <div class="text-center" *ngIf="!team.totalGuessesCount || !team.questionsPushedCount">
                 {{ I18ns.leadTeam.teams.table.noActivity }}
               </div>
             </td>
@@ -62,7 +61,7 @@
               {{ team.createdAt | date : 'shortDate' }}
             </td>
             <td class="cursor-pointer px-3" (click)="deleteTeam(team)">
-              <i [attr.data-cy]="'deleteTeam' + team.shortName" class="fs-5 bi bi-trash3 float-end"></i>
+              <i [attr.data-cy]="'deleteTeam' + team.name" class="fs-5 bi bi-trash3 float-end"></i>
             </td>
             <td class="cursor-pointer px-3" (click)="openTeamForm(team)">
               <i data-cy="editTeam" class="fs-5 bi bi-pen float-end me-4"></i>
@@ -112,7 +111,7 @@
 <div class="panel mb-5">
   <div class="row align-items-start">
     <div class="col border-end d-flex">
-      <alto-icon-badge [size]="4" icon="bi bi-bar-chart-fill" class="me-4"></alto-icon-badge>
+      <alto-icon-badge [size]="4" icon="bi bi-people-fill" class="me-4"></alto-icon-badge>
       <div class="d-inline-block">
         <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.total }}</p>
         <h1 class="mb-0">{{ absoluteUsersCount }}</h1>
@@ -123,8 +122,11 @@
 
       <div class="d-inline-block flex-grow-1">
         <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
-        <h1 class="mb-0 d-inline-block">{{ getTotalQuestions() }}</h1>
-        <alto-progression-badge class="float-end" [score]="getPercentageQuestions()"></alto-progression-badge>
+        <h1 class="mb-0 d-inline-block">{{ getTotalQuestions(usersQuestionCount.size) }}</h1>
+        <alto-progression-badge
+          class="float-end"
+          [score]="getPercentageQuestions(usersQuestionCount.size)"
+        ></alto-progression-badge>
       </div>
     </div>
   </div>
@@ -162,19 +164,15 @@
 
 <ng-container *ngIf="paginatedUsers.length > 0; else noUsers">
   <div class="table-panel">
-    <table class="table">
+    <table class="table members-table">
       <thead>
         <tr>
           <th scope="col" class="w-25">{{ I18ns.leadTeam.members.table.name }}</th>
           <th scope="col" class="w-25">{{ I18ns.leadTeam.members.table.team }}</th>
-          <th scope="col">
-            {{ I18ns.leadTeam.members.table.averageScore }}
-            <i
-              class="ms-2 alto-grey bi bi-question-circle"
-              ngbTooltip="{{ I18ns.leadTeam.members.table.averageScoreTooltip }}"
-            ></i>
+          <th scope="col" class="w-25 text-center">
+            {{ I18ns.leadTeam.members.table.globalScore }}
           </th>
-          <th scope="col" class="text-center w-20">
+          <th scope="col" class="w-25">
             {{ I18ns.leadTeam.members.table.questionsPerMonth }}
             <i
               class="ms-2 alto-grey bi bi-question-circle"
@@ -194,27 +192,21 @@
               {{ usersMap.get(user.id) }}
             </span>
           </td>
-          <td>
+          <td class="text-center">
             <ng-container *ngIf="user.score; else elseTemplate">
-              <div class="progress">
-                <div
-                  data-cy="scoreProgressBar"
-                  class="progress-bar d-inline-block"
-                  role="progressbar"
-                  [style]="user.score && 'width:' + (user.score | percent : '1.0-0' : 'en-US')"
-                ></div>
-              </div>
-              {{ user.score | percent }}
+              <span class="alto-score" [class]="(user.score || 0) * 100 | pillColor">
+                {{ user.score | percent }}
+              </span>
             </ng-container>
             <ng-template #elseTemplate>
               {{ I18ns.leadTeam.members.table.noScore }}
             </ng-template>
           </td>
-          <td class="text-center">
+          <td>
             {{ getQuestionsByUser(user.id)[0] }}
             <alto-progression-badge
               class="d-inline-block ms-3"
-              [score]="getQuestionsByUser(user.id)[1]"
+              [score]="getQuestionsByUser(user.id)[2]"
             ></alto-progression-badge>
           </td>
           <td>

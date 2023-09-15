@@ -480,7 +480,7 @@ export const FR = {
       title: 'Vos membres',
       shortTitle: 'Membres',
       subtitle: 'Retrouvez l’ensemble des utilisateurs de votre entreprise.',
-      invite: 'Inviter',
+      invite: 'Inviter des membres',
       filters: {
         activity: 'Activité',
         teams: 'Équipe',
@@ -498,9 +498,8 @@ export const FR = {
       table: {
         name: 'Nom',
         team: 'Équipe',
-        averageScore: 'Score moyen (30 derniers jours)',
+        globalScore: 'Score global (30 derniers jours)',
         noScore: 'Aucun score',
-        averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         questionsPerMonth: 'Questions (30 derniers jours)',
         questionsPerMonthTooltip:
           'Nombre de questions répondues sur les 30 derniers jours et variation sur la dernière période',
@@ -530,16 +529,16 @@ export const FR = {
       title: 'Vos équipes',
       shortTitle: 'Équipes',
       subtitle: "Retrouvez l'ensemble des équipes de votre entreprise.",
+      duplicateName: 'Une équipe portant le même nom existe déjà.',
       table: {
         name: "Nom de l'équipe",
         initials: '',
         usersCount: 'Nombre de membres',
         noUsers: 'Aucun membre',
         users: ['Aucun', '{{}}', '{{}}'],
-        averageScore: 'Score moyen (30 derniers jours)',
+        globalScore: 'Score global',
         activity: 'Activité  moyenne (30 derniers jours)',
         noScore: 'Aucun score',
-        averageScoreTooltip: 'Score moyen sur les 30 derniers jours',
         creationDate: 'Date de création',
         noActivity: 'Aucune activité',
         placeholderTitle: 'Aucune équipe n’a été créée pour l’instant. ',
@@ -551,7 +550,7 @@ export const FR = {
           edit: 'Modifier une équipe',
         },
         subtitle: 'Donner un nom à votre équipe',
-        longName: 'Nom (version longue)',
+        longName: "Nom de l'équipe",
         longNamePlaceholder: 'Exemple : Sales Development Representative',
         shortName: 'Nom (version abrégée)',
         shortNamePlaceholder: 'Exemple : SDR',
@@ -559,7 +558,7 @@ export const FR = {
         invitationEmailsPlaceholder: 'Séparer les emails par une virgule',
         invitationEmailsSubtitle:
           "Vos collaborateurs recevront une invitation par mail pour s'inscrire à Alto.",
-        Programs: 'Programmes',
+        Programs: 'Programmes assignés',
         programsPlaceholder: 'Sélectionner les programmes assignés à cette équipe',
       },
       deleteModal: {
@@ -666,6 +665,8 @@ export const FR = {
         subtitle: 'Êtes-vous sûr(e) de vouloir supprimer ce collaborateur ? Cette action est irréversible.',
       },
       successEdit: 'Le collaborateur {{}} a bien été modifié',
+      deleteAdminTooltip:
+        'Pour supprimer un administrateur, transformez-le d’abord en utilisateur standard. Vous pourrez ensuite procéder à la suppression',
     },
     continuousSession: {
       title: 'Session continue',

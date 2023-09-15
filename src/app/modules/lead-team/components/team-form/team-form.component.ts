@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, filter, of, switchMap, tap } from 'rxjs';
@@ -23,9 +23,10 @@ export class TeamFormComponent implements OnInit {
 
   private fb: IFormBuilder = this.fob;
 
+  teamsNames: string[] = [];
+
   teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
-    shortName: ['', [Validators.required]],
-    longName: ['', [Validators.required]],
+    name: ['', [Validators.required, this.uniqueNameValidation(this.teamsNames)]],
     programs: [],
     invitationEmails: [],
   });
@@ -45,6 +46,22 @@ export class TeamFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.teamsRestService
+      .getTeams()
+      .pipe(
+        tap((d) => {
+          d.forEach((t) => {
+            this.teamsNames.push(t.name.toLowerCase());
+          });
+        }),
+        tap(() => {
+          const longName = this.team?.name.toLowerCase();
+          const index = this.teamsNames.indexOf(longName ?? '');
+          this.teamsNames.splice(index, 1);
+        }),
+      )
+      .subscribe();
+
     setTimeout(() => {
       combineLatest([this.programService.getPrograms(), this.userRestService.getUsers()])
         .pipe(
@@ -63,14 +80,13 @@ export class TeamFormComponent implements OnInit {
               }
               this.team = d.data;
               this.isEdit = true;
-              const { shortName, longName } = this.team;
+              const { name: longName, programs } = this.team;
               this.userFilters.teams.push(this.team);
               const filteredUsers = this.userService.filterUsers(this.users, this.userFilters);
 
               this.teamForm.patchValue({
-                shortName,
-                longName,
-                programs: this.team?.programs as ProgramDtoApi[],
+                name: longName,
+                programs: programs as ProgramDtoApi[],
                 invitationEmails: filteredUsers,
               });
             }),
@@ -83,12 +99,12 @@ export class TeamFormComponent implements OnInit {
   createTeam() {
     if (!this.teamForm.value) return;
 
-    const { shortName, longName, programs, invitationEmails } = this.teamForm.value;
+    const { name, programs, invitationEmails } = this.teamForm.value;
 
     if (!this.isEdit && !this.team) {
       //CREATION MODE
       this.teamsRestService
-        .createTeam({ shortName, longName })
+        .createTeam({ name })
         .pipe(
           switchMap((team) => {
             this.teamsRestService.resetCache();
@@ -107,8 +123,7 @@ export class TeamFormComponent implements OnInit {
     } else {
       //EDIT MODE
       const params: PatchTeamDtoApi = {
-        shortName: shortName,
-        longName: longName,
+        name: name,
       };
       if (this.team?.id) {
         this.teamsRestService
@@ -150,9 +165,6 @@ export class TeamFormComponent implements OnInit {
 
     initialTeamProgs.forEach((p) => {
       if (!formProgs.find((po) => po.id === p.id)) {
-        // To Delete
-        console.log('program ' + p.name + ' will be deleted');
-
         output$.push(
           this.programService.updateProgram(p.id, {
             teamIds: p.teams.filter((t) => t.id !== team.id).map((t) => ({ id: t.id })),
@@ -183,5 +195,16 @@ export class TeamFormComponent implements OnInit {
     });
 
     return output$;
+  }
+
+  uniqueNameValidation(teams: string[]): ValidatorFn {
+    return (control: AbstractControl) => {
+      const typedName = control.value.toLowerCase();
+
+      if (teams && teams.includes(typedName)) {
+        return { nameNotAllowed: true };
+      }
+      return null;
+    };
   }
 }

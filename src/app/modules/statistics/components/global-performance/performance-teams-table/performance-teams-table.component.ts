@@ -92,7 +92,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
     }
 
     if (search) {
-      output = output.filter((t) => t.team.longName.toLowerCase().includes(search.toLowerCase()));
+      output = output.filter((t) => t.team.name.toLowerCase().includes(search.toLowerCase()));
     }
     // if (teams && teams.length > 0) {
     //   output = output.filter((t) => teams.some((pr) => pr === t.id));
@@ -117,6 +117,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
         switchMap(() => this.scoreRestService.getTeamsStats(this.duration, true)),
         tap((t) => (this.teamsPreviousPeriod = t)),
         tap(() => (this.scoreIsLoading = false)),
+        tap(() => this.getTeamsFiltered()),
         untilDestroyed(this),
       )
       .subscribe();

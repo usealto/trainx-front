@@ -5,7 +5,7 @@ import {
   DeleteResponseApi,
   GetProgramsRequestParams,
   PatchProgramDtoApi,
-  ProgramAssignmentPaginatedResponseApi,
+  ProgramAssignmentDtoPaginatedResponseApi,
   ProgramDtoApi,
   ProgramDtoPaginatedResponseApi,
   ProgramDtoResponseApi,
@@ -37,13 +37,16 @@ export class ProgramsRestService {
       ...req,
       page: req?.page ?? 1,
       itemsPerPage: req?.itemsPerPage ?? 300,
+      sortBy: req?.sortBy ?? 'name:asc',
     } as GetProgramsRequestParams;
 
     if (duration) {
       par.createdAfter = isProgression
         ? this.scoresService.getPreviousPeriod(duration)[0]
         : this.scoresService.getStartDate(duration);
-      par.createdBefore = isProgression ? this.scoresService.getPreviousPeriod(duration)[1] : addDays(new Date(), 1); //! TEMPORARY FIX to get data from actual day
+      par.createdBefore = isProgression
+        ? this.scoresService.getPreviousPeriod(duration)[1]
+        : addDays(new Date(), 1); //! TEMPORARY FIX to get data from actual day
     }
 
     return this.programApi.getPrograms(par);
@@ -60,6 +63,7 @@ export class ProgramsRestService {
       const par = {
         page: 1,
         itemsPerPage: 400,
+        sortBy: 'name:asc',
       } as GetProgramsRequestParams;
 
       return this.programApi.getPrograms(par).pipe(
@@ -115,7 +119,7 @@ export class ProgramsRestService {
     }
   }
 
-  getAssignments(ids: string[]): Observable<ProgramAssignmentPaginatedResponseApi> {
+  getAssignments(ids: string[]): Observable<ProgramAssignmentDtoPaginatedResponseApi> {
     return this.programApi.getAllAssignmentsProgram({
       programIds: ids.join(','),
       itemsPerPage: 200,

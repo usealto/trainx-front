@@ -1,7 +1,7 @@
 <ngb-toast
   *ngFor="let toast of toastService.toasts"
   [class]="(toast.className ?? '') + ' ' + toast.type"
-  [autohide]="toast.autoHide || false"
+  [autohide]="toast.autoHide || true"
   [delay]="toast.delay || 5000"
   (hidden)="toastService.remove(toast)"
 >
@@ -18,7 +18,9 @@
       <span *ngSwitchCase="'success'">
         <i class="bi bi-check-circle-fill me-3"></i>
       </span>
-      <span *ngSwitchCase="'danger'"> </span>
+      <span *ngSwitchCase="'danger'">
+        <i class="bi bi-x-circle-fill me-3"></i>
+      </span>
       <span *ngSwitchDefault> </span>
     </ng-container>
     {{ toast.text }}

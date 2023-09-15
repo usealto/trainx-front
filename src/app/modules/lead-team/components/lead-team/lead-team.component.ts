@@ -52,7 +52,7 @@ export class LeadTeamComponent implements OnInit {
   teamsStats: TeamStatsDtoApi[] = [];
   paginatedTeams: TeamDisplay[] = [];
   teamsPage = 1;
-  teamsPageSize = 7;
+  teamsPageSize = 5;
   teamsScores: TeamDisplay[] = [];
   // Users
   absoluteUsersCount = 0;
@@ -61,7 +61,7 @@ export class LeadTeamComponent implements OnInit {
   users: UserDtoApi[] = [];
   paginatedUsers: UserDisplay[] = [];
   usersPage = 1;
-  usersPageSize = 10;
+  usersPageSize = 5;
   filteredUsers: UserDisplay[] = [];
   usersScores: UserDisplay[] = [];
   usersQuestionCount = new Map<string, number[]>();
@@ -117,16 +117,17 @@ export class LeadTeamComponent implements OnInit {
                   data.push(0);
                 } else {
                   u.totalGuessesCount
-                    ? data.push((u.totalGuessesCount - data[0]) / u.totalGuessesCount)
-                    : data.push(0);
+                    ? data.push(u.totalGuessesCount, (data[0] - u.totalGuessesCount) / u.totalGuessesCount)
+                    : data.push(0, 0);
                 }
                 this.usersQuestionCount.set(u.id, data);
               }
             }
           });
+
           this.users.forEach((user) => {
             const member = this.teams.find((team) => team.id === user.teamId);
-            this.usersMap.set(user.id, member ? member.longName + ' - ' + member.shortName : '');
+            this.usersMap.set(user.id, member ? member.name : '');
           });
         }),
         switchMap(() => {
@@ -212,7 +213,7 @@ export class LeadTeamComponent implements OnInit {
 
     const componentInstance = modalRef.componentInstance as DeleteModalComponent;
     componentInstance.data = {
-      title: this.replaceInTranslationPipe.transform(I18ns.leadTeam.teams.deleteModal.title, team.longName),
+      title: this.replaceInTranslationPipe.transform(I18ns.leadTeam.teams.deleteModal.title, team.name),
       subtitle: this.replaceInTranslationPipe.transform(
         I18ns.leadTeam.teams.deleteModal.subtitle,
         this.getTeamUsersCount(team.id),
@@ -252,7 +253,8 @@ export class LeadTeamComponent implements OnInit {
     return this.usersQuestionCount.get(id) || [0, 0];
   }
 
-  getTotalQuestions(): number {
+  @memoize()
+  getTotalQuestions(num: number): number {
     let totalQuestions = 0;
 
     this.usersQuestionCount.forEach((values) => {
@@ -264,9 +266,17 @@ export class LeadTeamComponent implements OnInit {
     return totalQuestions;
   }
 
-  getPercentageQuestions(): number {
-    // TODO
-    return 0;
+  @memoize()
+  getPercentageQuestions(num: number): number {
+    let variation = 0;
+
+    this.usersQuestionCount.forEach((values) => {
+      if (values && values.length > 1) {
+        variation += values[1];
+      }
+    });
+
+    return (this.getTotalQuestions(num) - variation) / variation;
   }
 
   airtableRedirect() {

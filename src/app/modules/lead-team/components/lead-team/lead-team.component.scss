@@ -3,12 +3,24 @@
   padding: var(--alto-page-padding);
 }
 
+:host ::ng-deep {
+  alto-search {
+    .search-group {
+      min-width: 26.6667rem;
+    }
+  }
+}
+
 .header-panel {
   margin-bottom: 3.333rem;
+  padding: 1.3333rem 2rem;
 }
 
 .team-table tbody tr {
   height: 3.333rem;
+}
+.members-table tbody tr {
+  height: 4.667rem;
 }
 .members {
   margin-top: 3.333rem;

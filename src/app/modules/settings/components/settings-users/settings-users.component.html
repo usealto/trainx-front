@@ -1,4 +1,4 @@
-<h2>
+<h2 class="mt-5">
   <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
   <div class="d-inline-block">
     {{ I18ns.settings.users.admins }}
@@ -41,10 +41,10 @@
             <td class="px-4">
               <alto-profile-card [user]="user"></alto-profile-card>
             </td>
-            <td title="{{ user.createdAt | date : 'short' }}">
+            <td title="{{ user.createdAt | date : 'short' }}" class="fs-7">
               {{ user.createdAt | date : 'shortDate' }}
             </td>
-            <td title="{{ user.updatedAt | date : 'short' }}">
+            <td title="{{ user.updatedAt | date : 'short' }}" class="fs-7">
               {{ user.updatedAt | date : 'shortDate' }}
             </td>
             <td>
@@ -69,9 +69,18 @@
                 </div>
               </div>
             </td>
-            <td class="px-4 text-center">
-              <i class="cursor-pointer fs-5 bi bi-trash3 disabled-icon me-4"></i>
-              <i class="cursor-pointer fs-5 bi bi-pen" (click)="openUserEditionForm(user)"></i>
+            <td class="px-4">
+              <div class="d-flex justify-content-center">
+                <div
+                  ngbTooltip="{{ I18ns.settings.users.deleteAdminTooltip }}"
+                  placement="top"
+                  class="me-5"
+                  tooltipClass="tooltip-class"
+                >
+                  <i class="cursor-pointer fs-5 bi bi-trash3 disabled-icon"></i>
+                </div>
+                <i class="cursor-pointer fs-5 bi bi-pen" (click)="openUserEditionForm(user)"></i>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -128,10 +137,10 @@
               <td class="px-4">
                 <alto-profile-card [user]="user"></alto-profile-card>
               </td>
-              <td title="{{ user.createdAt | date : 'short' }}">
+              <td title="{{ user.createdAt | date : 'short' }}" class="fs-7">
                 {{ user.createdAt | date : 'shortDate' }}
               </td>
-              <td title="{{ user.updatedAt | date : 'short' }}">
+              <td title="{{ user.updatedAt | date : 'short' }}" class="fs-7">
                 {{ user.updatedAt | date : 'shortDate' }}
               </td>
               <td>
