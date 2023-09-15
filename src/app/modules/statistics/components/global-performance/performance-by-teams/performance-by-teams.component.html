@@ -6,14 +6,13 @@
     [displayLabel]="'label'"
     [placeholder]="I18ns.statistics.globalPerformance.perTeamPerformance.teamFilter"
     (selectChange)="filterTeams($event)"
-    [isColored]="true"
   ></alto-dropdown-filter>
   <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}</h2>
   <p class="alto-grey mb-4">
     {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.subtitle }}
   </p>
   <div class="chart-container">
-    <canvas id="teamScoreEvolution"></canvas>
+    <alto-chart-basicline [chartOption]="chartOption"></alto-chart-basicline>
   </div>
 </div>
 <div [hidden]="scoreCount > 0" class="nodata-placeholder">
