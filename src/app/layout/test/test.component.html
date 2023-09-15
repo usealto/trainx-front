@@ -29,7 +29,7 @@
       <alto-dropdown-filter
         class="text-start"
         [data]="teamStore.teams.value"
-        [displayLabel]="'shortName'"
+        [displayLabel]="'name'"
         [returnValue]="'id'"
         [placeholder]="I18ns.programs.programs.filters.teams"
         [isColored]="true"
@@ -39,7 +39,7 @@
       <alto-dropdown-filter
         class="text-start"
         [data]="teamStore.teams.value"
-        [displayLabel]="'shortName'"
+        [displayLabel]="'name'"
         [returnValue]="'id'"
         [placeholder]="I18ns.programs.programs.filters.team"
         [isColored]="false"
@@ -164,7 +164,7 @@
     <br />
     <br />
 
-    <alto-range></alto-range>
+    <alto-range [control]="control"></alto-range>
   </div>
 </div>
 <hr />

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDays, addHours, startOfDay } from 'date-fns';
+import { addDays, addHours, format, parse, startOfDay } from 'date-fns';
 import { ScoreDtoApi, ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
 import { ScoreDuration, ScoreFilter, TopFlopDisplay } from '../models/score.model';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -81,6 +81,9 @@ export class ScoresService {
         break;
       case ScoreDuration.Year:
         date = addDays(date, -365);
+        break;
+      case ScoreDuration.All:
+        date = new Date(2022, 0, 1);
         break;
     }
     date = addHours(date, gmtDataOffset + 1);
