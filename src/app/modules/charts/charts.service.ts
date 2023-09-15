@@ -29,8 +29,6 @@ export class ChartsService {
           };
 
           serie.connectNulls = true;
-          // serie.showSymbol = false;
-          // serie.triggerLineEvent = true;
         }
       });
     }
@@ -40,28 +38,7 @@ export class ChartsService {
       padding: 0,
       borderColor: '#EAECF0',
       formatter: (params) => {
-        const valueFormatter = Array.isArray(eChartsOption.series)
-          ? eChartsOption.series[(params as ITooltipParams).seriesIndex].tooltip?.valueFormatter
-          : eChartsOption.series?.tooltip?.valueFormatter;
-        const formattedData = valueFormatter
-          ? valueFormatter((params as ITooltipParams).data)
-          : (params as ITooltipParams).data;
-
-        return `
-          <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10); border-radius: 4px;">
-            <div style="color: #667085; background-color: #F9FAFB; padding : 8px 10px 4px 10px;">
-              <p>${(params as ITooltipParams).name}</p>
-            </div>
-            <div style="padding : 4px 10px 8px 10px; display: flex; align-items: center; gap: 10px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="11" viewBox="0 0 10 11" fill="none">
-                <circle cx="5" cy="5.5" r="5" fill="${(params as ITooltipParams).color}"/>
-              </svg>
-              <p>${(params as ITooltipParams).seriesName} : <b style="color: ${
-          (params as ITooltipParams).color
-        }">${formattedData}<b></p>
-            </div>
-          </div>
-        `;
+        return this.tooltipFormatter(params as ITooltipParams, eChartsOption);
       },
     };
     eChartsOption.legend = {
@@ -71,9 +48,9 @@ export class ChartsService {
     };
 
     eChartsOption.grid = {
-      left: '8%',
+      left: '6%',
       top: '30',
-      right: '5%',
+      right: '1%',
     };
 
     return eChartsOption;
@@ -95,15 +72,48 @@ export class ChartsService {
 
     eChartsOption.tooltip = {
       trigger: 'item',
-      borderWidth: 1,
+      padding: 0,
       borderColor: '#EAECF0',
+      formatter: (params) => {
+        return this.tooltipFormatter(params as ITooltipParams, eChartsOption);
+      },
     };
     eChartsOption.legend = {
       bottom: 0,
       icon: 'circle',
       itemWidth: 8,
     };
+    eChartsOption.grid = {
+      left: '6%',
+      top: '30',
+      right: '1%',
+    };
 
     return eChartsOption;
+  }
+
+  private tooltipFormatter(params: ITooltipParams, eChartsOption: EChartsOption) {
+    const valueFormatter = Array.isArray(eChartsOption.series)
+      ? eChartsOption.series[(params as ITooltipParams).seriesIndex].tooltip?.valueFormatter
+      : eChartsOption.series?.tooltip?.valueFormatter;
+    const formattedData = valueFormatter
+      ? valueFormatter((params as ITooltipParams).data)
+      : (params as ITooltipParams).data;
+
+    return `
+    <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10); border-radius: 4px;">
+      <div style="color: #667085; background-color: #F9FAFB; padding : 8px 10px 4px 10px;">
+        ${(params as ITooltipParams).name}
+      </div>
+      <div style="padding : 4px 10px 8px 10px; display: flex; align-items: center; gap: 10px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="11" viewBox="0 0 10 11" fill="none">
+          <circle cx="5" cy="5.5" r="5" fill="${(params as ITooltipParams).color}"/>
+        </svg>
+        <p>${(params as ITooltipParams).seriesName} : <b style="color: ${
+      (params as ITooltipParams).color
+    }">${formattedData}<b></p>
+      </div>
+    </div>
+  `;
   }
 }
