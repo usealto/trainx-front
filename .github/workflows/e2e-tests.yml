@@ -20,7 +20,7 @@ jobs:
       env:
         auth_audience: ${{ secrets.CYPRESS_AUTH_AUDIENCE }}
         #auth_url: ${{ secrets.CYPRESS_AUTH_URL }}
-        auth_url: dev-bmttww5s.eu.auth0.com
+        auth_url: "dev-bmttww5s.eu.auth0.com"
         auth_client_id: ${{ secrets.CYPRESS_AUTH_CLIENT_ID }}
         auth_client_secret: ${{ secrets.CYPRESS_AUTH_CLIENT_SECRET }}
         auth_username_admin: ${{ secrets.CYPRESS_AUTH_USERNAME_ADMIN }}
