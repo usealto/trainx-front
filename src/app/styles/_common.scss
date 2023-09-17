@@ -52,6 +52,22 @@
   color: white;
   background-color: var(--orange-500);
 }
+.alto-badge-orange-light {
+  @extend .alto-badge;
+  color: #DC6803;
+  background-color: #FFFAEB;
+}
+.alto-badge-red-light {
+  @extend .alto-badge;
+  color: #D92D20;
+  background-color: #FEF3F2;
+}
+.alto-badge-green-light {
+  @extend .alto-badge;
+  color: #039855;
+  background-color: #ECFDF3;
+}
+
 
 .alto-badge-big {
   @extend .alto-badge-no-size;
@@ -210,6 +226,15 @@ h2 {
   line-height: 3rem;
   cursor: pointer;
 }
+
+.blue-btn {
+  font-size: 0.833rem;
+  font-weight: 600;
+  line-height: 3rem;
+  cursor: pointer;
+  color: #175CD3;
+}
+
 
 // Used in modals
 .close-button {
