@@ -42,6 +42,7 @@ export class LeadCollaborationComponent implements OnInit {
   comments: CommentDtoApi[] = [];
   submittedQuestions: QuestionSubmittedDtoApi[] = [];
   selectedTabData: (CommentDtoApi | QuestionSubmittedDtoApi)[] = [];
+  contributors: { id: string; name: string; }[] = [];
 
   pendingCount = 0;
 
@@ -60,6 +61,17 @@ export class LeadCollaborationComponent implements OnInit {
       this.submittedQuestions = submittedQuestions;
       this.pendingCount = comments.filter((comment) => !comment.isRead).length +
         submittedQuestions.filter(({ status }) => status === QuestionSubmittedDtoApiStatusEnumApi.Submitted).length;
+
+      this.contributors = [
+        ...comments.map(({ createdByUser }) => createdByUser),
+        ...submittedQuestions.map(({ createdByUser }) => createdByUser),
+      ].reduce((acc, contributor) => {
+        if (!acc.find(({ id }) => id === contributor.id)) {
+          acc.push({ id: contributor.id, name: `${contributor.firstname} ${contributor.lastname}`});
+        }
+
+        return acc;
+      }, [] as { id: string; name: string; }[]);
     });
   }
 
