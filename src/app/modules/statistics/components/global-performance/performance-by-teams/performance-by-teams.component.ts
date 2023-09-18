@@ -100,10 +100,13 @@ export class PerformanceByTeamsComponent implements OnChanges {
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], globalScore: ScoreDtoApi, duration: ScoreDuration) {
     scores = this.scoresServices.reduceChartData(scores);
-    // globalScore = this.scoresServices.reduceChartData([globalScore])[0];
     this.scoreCount = scores.length;
 
-    const globalPoints = this.statisticsServices.transformDataToPoint(globalScore);
+    // Aligns Global with Score's Length so thay start on the same month
+    const globalPoints = this.statisticsServices
+      .transformDataToPoint(globalScore)
+      .slice(-scores[0]?.averages?.length);
+
     const aggregatedData = this.statisticsServices.transformDataToPoint(scores[0]);
     const labels = this.statisticsServices.formatLabel(
       aggregatedData.map((d) => d.x),
@@ -134,9 +137,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
 
     series.push({
       name: I18ns.shared.global,
-      data: globalPoints
-        .slice(-scores[0]?.averages?.length)
-        .map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
+      data: globalPoints.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
       type: 'line',
       tooltip: {
         valueFormatter: (value: any) => {
