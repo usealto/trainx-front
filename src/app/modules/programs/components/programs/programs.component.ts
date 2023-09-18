@@ -9,7 +9,7 @@ import {
   TagStatsDtoApi,
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { Observable, combineLatest, map, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, delay, map, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -84,11 +84,10 @@ export class ProgramsComponent implements OnInit {
   tagsScore = new Map<string, number>();
   isFilteredTags = false;
 
-  //tabs
   tabData = [
-    { label: 'Programmes', value: 'programs' },
-    { label: 'Questions', value: 'questions' },
-    { label: 'Tags', value: 'tags' },
+    { label: I18ns.programs.tabs.programs, value: 'programs' },
+    { label: I18ns.programs.tabs.questions, value: 'questions' },
+    { label: I18ns.programs.tabs.tags, value: 'tags' },
   ];
   activeTab = this.tabData[0].value;
 
@@ -334,7 +333,6 @@ export class ProgramsComponent implements OnInit {
       .getTags()
       .pipe(
         tap((tags) => (this.tags = tags)),
-        tap((tags) => (this.tagsCount = tags.length)),
         tap((tags) => this.changeTagsPage(tags)),
         map(() => this.tags.map((t) => t.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
