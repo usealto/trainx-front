@@ -5,19 +5,19 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 
 @Component({
-  selector: 'alto-question-sugg-card',
-  templateUrl: './question-sugg-card.component.html',
-  styleUrls: ['./question-sugg-card.component.scss']
+  selector: 'alto-sugg-question-card',
+  templateUrl: './sugg-question-card.component.html',
+  styleUrls: ['./sugg-question-card.component.scss']
 })
-export class QuestionSuggCardComponent implements OnInit{
-  @Input() questionSugg?: QuestionSubmittedDtoApi;
+export class SuggQuestionCardComponent implements OnInit{
+  @Input() suggQuestion?: QuestionSubmittedDtoApi;
   user? : UserDtoApi;
   status? : string;
   statusClass? : string;
   
   constructor(private userService: UsersRestService) { }
   ngOnInit(): void {
-    switch (this.questionSugg?.status) {
+    switch (this.suggQuestion?.status) {
       case 'declined':
         this.status = "Refusée"
         this.statusClass = "alto-badge-red-light"
@@ -32,7 +32,7 @@ export class QuestionSuggCardComponent implements OnInit{
         break;
     }    
     
-    this.getUser(this.questionSugg?.createdBy)
+    this.getUser(this.suggQuestion?.createdBy)
     .subscribe((u) => { 
       this.user = u;
     });
