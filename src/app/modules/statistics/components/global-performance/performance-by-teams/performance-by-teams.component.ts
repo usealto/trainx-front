@@ -7,21 +7,16 @@ import {
   TeamStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, tap } from 'rxjs';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import {
-  chartDefaultOptions,
-  xAxisDatesOptions,
-  yAxisScoreOptions,
-} from 'src/app/modules/shared/constants/config';
+import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
-import { EmojiName } from 'src/app/core/utils/emoji/data';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { truncate } from 'cypress/types/lodash';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -105,7 +100,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], globalScore: ScoreDtoApi, duration: ScoreDuration) {
     scores = this.scoresServices.reduceChartData(scores);
-    globalScore = this.scoresServices.reduceChartData([globalScore])[0];
+    // globalScore = this.scoresServices.reduceChartData([globalScore])[0];
     this.scoreCount = scores.length;
 
     const globalPoints = this.statisticsServices.transformDataToPoint(globalScore);
@@ -126,7 +121,6 @@ export class PerformanceByTeamsComponent implements OnChanges {
     const series = dataSet.map((d) => {
       return {
         name: d.label,
-        // color: '#09479e',
         data: d.data,
         type: 'line',
         tooltip: {
@@ -140,7 +134,9 @@ export class PerformanceByTeamsComponent implements OnChanges {
 
     series.push({
       name: I18ns.shared.global,
-      data: globalPoints.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
+      data: globalPoints
+        .slice(-scores[0]?.averages?.length)
+        .map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
       type: 'line',
       tooltip: {
         valueFormatter: (value: any) => {
