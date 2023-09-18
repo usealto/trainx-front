@@ -87,6 +87,6 @@ export class AdminUsersUploadComponent implements OnInit {
   }
 
   findSelectedTeam(teamName: string) {
-    return this.teams.find((team) => team.shortName === teamName)?.id;
+    return this.teams.find((team) => team.name === teamName)?.id;
   }
 }

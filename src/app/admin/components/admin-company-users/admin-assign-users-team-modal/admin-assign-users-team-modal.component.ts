@@ -66,6 +66,6 @@ export class AdminAssignUsersTeamModalComponent {
   }
 
   findSelectedTeam(teamName: string) {
-    return this.teams.find((team) => team.shortName === teamName);
+    return this.teams.find((team) => team.name === teamName);
   }
 }

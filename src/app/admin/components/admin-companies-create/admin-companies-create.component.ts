@@ -120,7 +120,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
   createTeams(companyId?: string): void {
     this.newTeams.value.forEach((team: CreateTeamDtoApi) => {
       this.teamService
-        .createTeam({ shortName: team.shortName, longName: team.longName, companyId: companyId })
+        .createTeam({ name: team.name, companyId: companyId })
         .pipe(take(1))
         .subscribe((uploadedTeam) => {
           if (uploadedTeam) {
