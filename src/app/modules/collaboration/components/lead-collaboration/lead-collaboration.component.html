@@ -8,9 +8,7 @@
 
 <div class="tabs-container">
   <!-- Pending tab -->
-  <div class="tab"
-  [class.selected]="selectedTab.value === tabs[0].value"
-  (click)="handleTabChange(tabs[0])">
+  <div class="tab" [class.selected]="selectedTab.value === tabs[0].value" (click)="handleTabChange(tabs[0])">
     <p>{{ tabs[0].label }}</p>
 
     <div class="alto-badge-orange" *ngIf="pendingCount">
@@ -19,46 +17,40 @@
   </div>
 
   <!-- Archived tab -->
-  <div class="tab"
-  [class.selected]="selectedTab.value === tabs[1].value"
-  (click)="handleTabChange(tabs[1])">
+  <div class="tab" [class.selected]="selectedTab.value === tabs[1].value" (click)="handleTabChange(tabs[1])">
     <p>{{ tabs[1].label }}</p>
   </div>
 
   <div class="delimiter"></div>
 
   <!-- All tab -->
-  <div class="tab"
-  [class.selected]="selectedTab.value === tabs[2].value"
-  (click)="handleTabChange(tabs[2])">
+  <div class="tab" [class.selected]="selectedTab.value === tabs[2].value" (click)="handleTabChange(tabs[2])">
     <p>{{ tabs[2].label }}</p>
   </div>
 </div>
 
 <div class="content-header">
-  <alto-dropdown-filter
-  placeholder="Contributeur"
-  [data]="contributors"
-  ></alto-dropdown-filter>
+  <alto-dropdown-filter placeholder="Contributeur" [data]="contributors"></alto-dropdown-filter>
 
   <div class="header-end">
-    <alto-dropdown-filter
-    placeholder="Filtrer"
-    ></alto-dropdown-filter>
+    <alto-dropdown-filter placeholder="Filtrer"></alto-dropdown-filter>
     <button class="sort-cta" (click)="sort()">
-      <svg xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#000000"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round">
-        <path d="M12 5v13M5 12l7 7 7-7"/>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#000000"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M12 5v13M5 12l7 7 7-7" />
       </svg>
       Trier
     </button>
   </div>
 </div>
 
+<alto-question-sugg-card [questionSugg]="submittedQuestions[0]"></alto-question-sugg-card>

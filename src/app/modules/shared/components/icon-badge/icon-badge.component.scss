@@ -30,4 +30,8 @@
     color: var(--gray-600);
     background: radial-gradient(circle, var(--gray-100) 50%, var(--gray-50) 50%);
   }
+  &.badge-double-purple {
+    color: var(--purple-600);
+    background: radial-gradient(circle, var(--purple-100) 50%, var(--purple-50) 50%);
+  }
 }
