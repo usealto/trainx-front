@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  padding: var(--alto-page-padding);
+}
+
+.breadcrumb {
+  color: var(--gray-500);
+}
+
+.breadcrumb-link {
+  color: var(--primary-700);
+}
+
+.question-panel {
+  background-color: var(--indigo-25);
+}
