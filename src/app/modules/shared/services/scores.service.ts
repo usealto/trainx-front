@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDays, addHours, startOfDay } from 'date-fns';
+import { addDays, addHours, format, parse, startOfDay } from 'date-fns';
 import { ScoreDtoApi, ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
 import { ScoreDuration, ScoreFilter, TopFlopDisplay } from '../models/score.model';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -11,9 +11,8 @@ export class ScoresService {
   reduceWithoutNull(data: number[] = []): number | null {
     if (data.length === 0) return null;
 
-    const output = data.filter((x) => !!x);
+    const output = data.filter((x) => x !== null && x !== undefined);
     if (output.length === 0) return null;
-
     return output.reduce((prev, curr) => prev + curr, 0) / output.length;
   }
 
@@ -83,6 +82,9 @@ export class ScoresService {
       case ScoreDuration.Year:
         date = addDays(date, -365);
         break;
+      case ScoreDuration.All:
+        date = new Date(2022, 0, 1);
+        break;
     }
     date = addHours(date, gmtDataOffset + 1);
     return date;
@@ -134,6 +136,23 @@ export class ScoresService {
       s.dates = s.dates.slice(firstIndex, s.dates.length);
       s.valids = s.valids.slice(firstIndex, s.valids.length);
     });
+
+    // Adds a zero instead of null before the first value
+    for (let j = 0; j < scores.length; j++) {
+      const s = scores[j];
+      if (s.averages[0] !== null) {
+        continue;
+      }
+
+      for (let k = 0; k < s.averages.length; k++) {
+        const a = s.averages[k];
+        if (a && !s.averages[k - 1]) {
+          s.averages[k - 1] = 0;
+          break;
+        }
+      }
+    }
+
     return scores;
   }
 

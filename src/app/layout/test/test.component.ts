@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import {
   ChallengeDtoApiStatusEnumApi,
   ScoreDtoApi,
@@ -38,6 +39,8 @@ export class TestComponent {
   ChallengeDtoApiStatusEnumApi = ChallengeDtoApiStatusEnumApi;
 
   pageSize = 5;
+
+  control = new FormControl(50);
 
   // Chart
   statisticsDuration = ScoreDuration.Trimester;

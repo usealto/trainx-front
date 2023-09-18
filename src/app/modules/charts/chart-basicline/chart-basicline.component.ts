@@ -1,7 +1,8 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { NGX_ECHARTS_CONFIG } from 'ngx-echarts';
 import { ChartsService } from '../charts.service';
+
 @Component({
   selector: 'alto-chart-basicline',
   templateUrl: './chart-basicline.component.html',
@@ -9,27 +10,34 @@ import { ChartsService } from '../charts.service';
   providers: [
     {
       provide: NGX_ECHARTS_CONFIG,
-      useFactory: () => ({ echarts: () => import('echarts') })
+      useFactory: () => ({ echarts: () => import('echarts') }),
     },
   ],
 })
-export class ChartBasiclineComponent implements OnInit, OnChanges {
-  @Input() chartOption?: EChartsOption
-  lineOptions?: EChartsOption
-  constructor(private chartsService: ChartsService) { }
-  ngOnInit(): void {
-    setTimeout(() => {
-      if (this.chartOption) {
-        this.lineOptions = this.chartsService.altoFormattingMultiline(this.chartOption)
-      }
-    }, 300);
-  }
+export class ChartBasiclineComponent implements OnChanges, AfterViewInit {
+  @Input() chartOption?: EChartsOption;
+
+  isLoaded = false;
+  lineOptions?: EChartsOption;
+
+  constructor(private chartsService: ChartsService) {}
 
   ngOnChanges(): void {
-    setTimeout(() => {
-      if (this.chartOption) {
-        this.lineOptions = this.chartsService.altoFormattingMultiline(this.chartOption)
-      }
-    }, 300);
+    if (this.chartOption && this.isLoaded) {
+      this.lineOptions = this.chartsService.altoFormattingMultiline(this.chartOption);
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.isLoaded = true;
+
+    // ! For Storybook
+    if (this.chartOption) {
+      setTimeout(() => {
+        if (this.chartOption) {
+          this.lineOptions = this.chartsService.altoFormattingMultiline(this.chartOption);
+        }
+      }, 1000);
+    }
   }
 }
