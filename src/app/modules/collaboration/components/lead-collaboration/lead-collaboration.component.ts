@@ -46,6 +46,7 @@ interface IContribution {
   createdAt: Date;
   updatedAt: Date;
   type: ETypeValue;
+  data: CommentDtoApi | QuestionSubmittedDtoApi;
 }
 
 @Component({
@@ -144,7 +145,8 @@ export class LeadCollaborationComponent implements OnInit {
               contributorId: comment.createdBy,
               createdAt: comment.createdAt,
               updatedAt: comment.updatedAt,
-              type: ETypeValue.COMMENTS
+              type: ETypeValue.COMMENTS,
+              data: comment,
             })),
           ...this.submittedQuestions
             .filter(({ status }) => {
@@ -155,7 +157,8 @@ export class LeadCollaborationComponent implements OnInit {
               contributorId: question.createdBy,
               createdAt: question.createdAt,
               updatedAt: question.updatedAt,
-              type: ETypeValue.QUESTIONS
+              type: ETypeValue.QUESTIONS,
+              data: question,
             })),
         ];
         break;
@@ -170,7 +173,8 @@ export class LeadCollaborationComponent implements OnInit {
               contributorId: comment.createdBy,
               createdAt: comment.createdAt,
               updatedAt: comment.updatedAt,
-              type: ETypeValue.COMMENTS
+              type: ETypeValue.COMMENTS,
+              data: comment,
             })),
           ...this.submittedQuestions
             .filter(({ status }) => {
@@ -181,7 +185,8 @@ export class LeadCollaborationComponent implements OnInit {
               contributorId: question.createdBy,
               createdAt: question.createdAt,
               updatedAt: question.updatedAt,
-              type: ETypeValue.QUESTIONS
+              type: ETypeValue.QUESTIONS,
+              data: question,
             })),
         ];
         break;
@@ -192,14 +197,16 @@ export class LeadCollaborationComponent implements OnInit {
               contributorId: comment.createdBy,
               createdAt: comment.createdAt,
               updatedAt: comment.updatedAt,
-              type: ETypeValue.COMMENTS
+              type: ETypeValue.COMMENTS,
+              data: comment,
             })),
           ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS) ? this.submittedQuestions : [])
             .map((question) => ({
               contributorId: question.createdBy,
               createdAt: question.createdAt,
               updatedAt: question.updatedAt,
-              type: ETypeValue.QUESTIONS
+              type: ETypeValue.QUESTIONS,
+              data: question,
             })),
         ];
         break;
