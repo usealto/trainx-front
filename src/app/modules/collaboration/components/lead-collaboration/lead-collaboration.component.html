@@ -11,7 +11,7 @@
   <div class="tab" [class.selected]="selectedTab.value === tabs[0].value" (click)="handleTabChange(tabs[0])">
     <p>{{ tabs[0].label }}</p>
 
-    <div class="alto-badge-orange" *ngIf="pendingCount">
+    <div class="alto-badge-orange-light" *ngIf="pendingCount">
       <p>{{ pendingCount }}</p>
     </div>
   </div>
