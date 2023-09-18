@@ -41,6 +41,13 @@ interface ITab {
   value: ETabValue;
 }
 
+interface IContribution {
+  contributorId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  type: ETypeValue;
+}
+
 @Component({
   selector: 'alto-lead-collaboration',
   templateUrl: './lead-collaboration.component.html',
@@ -77,7 +84,7 @@ export class LeadCollaborationComponent implements OnInit {
   typesFilters: ETypeValue[] = [];
   periodsFilters: EPeriodValue[] = [];
 
-  contributions: (CommentDtoApi | QuestionSubmittedDtoApi)[] = [];
+  contributions: IContribution[] = [];
 
   selectedTab = this.tabs[0];
   contributors: { id: string; name: string }[] = [];
@@ -123,37 +130,77 @@ export class LeadCollaborationComponent implements OnInit {
   }
 
   private getSelectedTabData(tab: ITab): void {
-    let data: (CommentDtoApi | QuestionSubmittedDtoApi)[] = [];
+    let data: IContribution[] = [];
 
     switch (tab.value) {
       case ETabValue.PENDING:
         data = [
-          ...this.comments.filter((comment) => {
-            return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS))
-              && !comment.isRead;
-          }),
-          ...this.submittedQuestions.filter(({ status }) => {
-            return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS))
-              && status === QuestionSubmittedDtoApiStatusEnumApi.Submitted
-          }),
+          ...this.comments
+            .filter((comment) => {
+              return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS))
+                && !comment.isRead;
+            })
+            .map((comment) => ({
+              contributorId: comment.createdBy,
+              createdAt: comment.createdAt,
+              updatedAt: comment.updatedAt,
+              type: ETypeValue.COMMENTS
+            })),
+          ...this.submittedQuestions
+            .filter(({ status }) => {
+              return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS))
+                && status === QuestionSubmittedDtoApiStatusEnumApi.Submitted
+            })
+            .map((question) => ({
+              contributorId: question.createdBy,
+              createdAt: question.createdAt,
+              updatedAt: question.updatedAt,
+              type: ETypeValue.QUESTIONS
+            })),
         ];
         break;
       case ETabValue.ARCHIVED:
         data = [
-          ...this.comments.filter((comment) => {
-            return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS))
-              && comment.isRead;
-          }),
-          ...this.submittedQuestions.filter(({ status }) => {
-            return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS))
-              && status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted;
-          }),
+          ...this.comments
+            .filter((comment) => {
+              return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS))
+                && comment.isRead;
+            })
+            .map((comment) => ({
+              contributorId: comment.createdBy,
+              createdAt: comment.createdAt,
+              updatedAt: comment.updatedAt,
+              type: ETypeValue.COMMENTS
+            })),
+          ...this.submittedQuestions
+            .filter(({ status }) => {
+              return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS))
+                && status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted;
+            })
+            .map((question) => ({
+              contributorId: question.createdBy,
+              createdAt: question.createdAt,
+              updatedAt: question.updatedAt,
+              type: ETypeValue.QUESTIONS
+            })),
         ];
         break;
       case ETabValue.ALL:
         data = [
-          ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS) ? this.comments : []),
-          ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS) ? this.submittedQuestions : []),
+          ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS) ? this.comments : [])
+            .map((comment) => ({
+              contributorId: comment.createdBy,
+              createdAt: comment.createdAt,
+              updatedAt: comment.updatedAt,
+              type: ETypeValue.COMMENTS
+            })),
+          ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS) ? this.submittedQuestions : [])
+            .map((question) => ({
+              contributorId: question.createdBy,
+              createdAt: question.createdAt,
+              updatedAt: question.updatedAt,
+              type: ETypeValue.QUESTIONS
+            })),
         ];
         break;
     }
@@ -166,16 +213,16 @@ export class LeadCollaborationComponent implements OnInit {
   }
 
   private filterByContributors(
-    data: (CommentDtoApi | QuestionSubmittedDtoApi)[],
+    data: IContribution[],
     contributorsIds: string[]
-  ): (CommentDtoApi | QuestionSubmittedDtoApi)[] {
-    return data.filter(({ createdBy }) => contributorsIds.length === 0 || contributorsIds.includes(createdBy));
+  ): IContribution[] {
+    return data.filter(({ contributorId }) => contributorsIds.length === 0 || contributorsIds.includes(contributorId));
   }
 
   private filterByPeriod(
-    data: (CommentDtoApi | QuestionSubmittedDtoApi)[],
+    data: IContribution[],
     periods: EPeriodValue[]
-  ): (CommentDtoApi | QuestionSubmittedDtoApi)[] {
+  ): IContribution[] {
     return data.filter(({ createdAt }) => {
       const date = new Date(createdAt);
       const today = new Date();

@@ -50,9 +50,12 @@
   </div>
 </div>
 
-<div *ngFor="let contribution of contributions">
+<div *ngFor="let contribution of contributions" style="margin-bottom: 1rem;">
+  {{ contribution.type ===  'comments' ? 'Commentaire' : 'Question'}}
+  <br>
   <!-- TODO : implement cards -->
-  Contributor: {{ contribution.createdByUser.email }}
+  Contributor: {{ contribution.contributorId }}
   <br>
   Date: {{ contribution.createdAt | date: 'dd/MM/yyyy' }}
+  <br>
 </div>
