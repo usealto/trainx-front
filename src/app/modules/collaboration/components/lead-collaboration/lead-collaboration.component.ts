@@ -77,7 +77,7 @@ export class LeadCollaborationComponent implements OnInit {
   typesFilters: ETypeValue[] = [];
   periodsFilters: EPeriodValue[] = [];
 
-  selectedTabData: (CommentDtoApi | QuestionSubmittedDtoApi)[] = [];
+  contributions: (CommentDtoApi | QuestionSubmittedDtoApi)[] = [];
 
   selectedTab = this.tabs[0];
   contributors: { id: string; name: string }[] = [];
@@ -162,7 +162,7 @@ export class LeadCollaborationComponent implements OnInit {
     data = this.filterByContributors(data, this.contributorsFilters);
     data = this.filterByPeriod(data, this.periodsFilters);
 
-    this.selectedTabData = data.slice(0, this.itemsPerPage);
+    this.contributions = data.slice(0, this.itemsPerPage);
   }
 
   private filterByContributors(
@@ -193,7 +193,7 @@ export class LeadCollaborationComponent implements OnInit {
     this.getSelectedTabData(this.selectedTab);
   }
 
-  handleFilterChange(filters: {id: ETypeValue, name: string}[]): void {
+  handleTypeChange(filters: {id: ETypeValue, name: string}[]): void {
     this.typesFilters = filters.map(({ id }) => id);
     this.getSelectedTabData(this.selectedTab);
   }

@@ -40,7 +40,7 @@
     <alto-dropdown-filter
       [placeholder]="I18ns.collaboration.filters.filterType"
       [data]="filters"
-      (selectChange)="handleFilterChange($event)">
+      (selectChange)="handleTypeChange($event)">
     </alto-dropdown-filter>
     <alto-dropdown-filter
       [placeholder]="I18ns.collaboration.filters.period"
@@ -50,9 +50,9 @@
   </div>
 </div>
 
-<div *ngFor="let data of selectedTabData">
+<div *ngFor="let contribution of contributions">
   <!-- TODO : implement cards -->
-  Contributor: {{ data.createdByUser.email }}
+  Contributor: {{ contribution.createdByUser.email }}
   <br>
-  Date: {{ data.createdAt | date: 'dd/MM/yyyy' }}
+  Date: {{ contribution.createdAt | date: 'dd/MM/yyyy' }}
 </div>
