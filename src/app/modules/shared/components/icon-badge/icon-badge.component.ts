@@ -25,6 +25,7 @@ export class IconBadgeComponent implements OnInit {
     | 'badge-double-warning'
     | 'badge-double-success'
     | 'badge-double-gray'
+    | 'badge-double-error'
     | 'badge-double-purple' = 'badge-double-primary';
 
   @Input() icon = 'bi-question-circle';
