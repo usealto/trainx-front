@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { CommentDtoApi, QuestionSubmittedDtoApi, QuestionSubmittedDtoApiStatusEnumApi, QuestionSubmittedStatusEnumApi } from '@usealto/sdk-ts-angular';
-import { combineLatest } from 'rxjs';
+import {
+  CommentDtoApi,
+  QuestionSubmittedDtoApi,
+  QuestionSubmittedDtoApiStatusEnumApi,
+} from '@usealto/sdk-ts-angular';
+import { combineLatest, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
@@ -42,37 +46,40 @@ export class LeadCollaborationComponent implements OnInit {
   comments: CommentDtoApi[] = [];
   submittedQuestions: QuestionSubmittedDtoApi[] = [];
   selectedTabData: (CommentDtoApi | QuestionSubmittedDtoApi)[] = [];
-  contributors: { id: string; name: string; }[] = [];
+  contributors: { id: string; name: string }[] = [];
 
   pendingCount = 0;
 
   constructor(
     private readonly commentsRestService: CommentsRestService,
-    private readonly questionsSubmittedTestService: QuestionsSubmittedRestService
+    private readonly questionsSubmittedTestService: QuestionsSubmittedRestService,
   ) {}
 
   ngOnInit(): void {
-    combineLatest([
-      this.commentsRestService.getComments(),
-      this.questionsSubmittedTestService.getQuestions(),
-    ])
-    .subscribe(([comments, submittedQuestions]) => {
-      this.comments = comments;
-      this.submittedQuestions = submittedQuestions;
-      this.pendingCount = comments.filter((comment) => !comment.isRead).length +
-        submittedQuestions.filter(({ status }) => status === QuestionSubmittedDtoApiStatusEnumApi.Submitted).length;
+    combineLatest([this.commentsRestService.getComments(), this.questionsSubmittedTestService.getQuestions()])
+      .pipe(
+        tap(([comments, submittedQuestions]) => {
+          this.comments = comments;
+          this.submittedQuestions = submittedQuestions;
+          this.pendingCount =
+            comments.filter((comment) => !comment.isRead).length +
+            submittedQuestions.filter(
+              ({ status }) => status === QuestionSubmittedDtoApiStatusEnumApi.Submitted,
+            ).length;
 
-      this.contributors = [
-        ...comments.map(({ createdByUser }) => createdByUser),
-        ...submittedQuestions.map(({ createdByUser }) => createdByUser),
-      ].reduce((acc, contributor) => {
-        if (!acc.find(({ id }) => id === contributor.id)) {
-          acc.push({ id: contributor.id, name: `${contributor.firstname} ${contributor.lastname}`});
-        }
+          this.contributors = [
+            ...comments.map(({ createdByUser }) => createdByUser),
+            ...submittedQuestions.map(({ createdByUser }) => createdByUser),
+          ].reduce((acc, contributor) => {
+            if (!acc.find(({ id }) => id === contributor.id)) {
+              acc.push({ id: contributor.id, name: `${contributor.firstname} ${contributor.lastname}` });
+            }
 
-        return acc;
-      }, [] as { id: string; name: string; }[]);
-    });
+            return acc;
+          }, [] as { id: string; name: string }[]);
+        }),
+      )
+      .subscribe();
   }
 
   handleTabChange(tab: ITab): void {
@@ -86,7 +93,10 @@ export class LeadCollaborationComponent implements OnInit {
     this.selectedTabData.sort(this.sortByCreatedAt);
   }
 
-  private sortByCreatedAt(a: CommentDtoApi | QuestionSubmittedDtoApi, b: CommentDtoApi | QuestionSubmittedDtoApi): number {
+  private sortByCreatedAt(
+    a: CommentDtoApi | QuestionSubmittedDtoApi,
+    b: CommentDtoApi | QuestionSubmittedDtoApi,
+  ): number {
     if (a.createdAt > b.createdAt) {
       return -1;
     }
@@ -103,18 +113,19 @@ export class LeadCollaborationComponent implements OnInit {
       case ETabValue.PENDING:
         return [
           ...this.comments.filter((comment) => !comment.isRead),
-          ...this.submittedQuestions.filter(({ status }) => status === QuestionSubmittedDtoApiStatusEnumApi.Submitted),
+          ...this.submittedQuestions.filter(
+            ({ status }) => status === QuestionSubmittedDtoApiStatusEnumApi.Submitted,
+          ),
         ];
       case ETabValue.ARCHIVED:
         return [
           ...this.comments.filter((comment) => comment.isRead),
-          ...this.submittedQuestions.filter(({ status }) => status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted),
+          ...this.submittedQuestions.filter(
+            ({ status }) => status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted,
+          ),
         ];
       case ETabValue.ALL:
-        return [
-          ...this.comments,
-          ...this.submittedQuestions,
-        ];
+        return [...this.comments, ...this.submittedQuestions];
     }
   }
 }
