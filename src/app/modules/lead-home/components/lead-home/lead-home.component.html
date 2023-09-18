@@ -8,7 +8,7 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-6 ps-0">
+  <div class="col-6 ps-0" [routerLink]="['/', AltoRoutes.lead , AltoRoutes.collaboration]" >
     <div *ngIf="commentsCount" [class]="commentsCount ? 'warning-panel' : 'success-panel'">
       <alto-icon-badge
         [size]="5"
