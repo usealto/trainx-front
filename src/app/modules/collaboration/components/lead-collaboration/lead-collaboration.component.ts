@@ -16,11 +16,17 @@ enum ETabValue {
   ALL = 'all',
 }
 
-const labels = {
-  [ETabValue.PENDING]: 'En attente',
-  [ETabValue.ARCHIVED]: 'Archivés',
-  [ETabValue.ALL]: 'Tout voir',
-};
+enum EFilterValue {
+  COMMENTS = 'comments',
+  QUESTIONS = 'questions',
+}
+
+enum EPeriodValue {
+  TODAY = 'today',
+  WEEK = 'week',
+  MONTH = 'month',
+  OLD = 'old',
+}
 
 interface ITab {
   label: string;
@@ -37,17 +43,29 @@ export class LeadCollaborationComponent implements OnInit {
   I18ns = I18ns;
 
   tabs: ITab[] = [
-    { label: labels[ETabValue.PENDING], value: ETabValue.PENDING },
-    { label: labels[ETabValue.ARCHIVED], value: ETabValue.ARCHIVED },
-    { label: labels[ETabValue.ALL], value: ETabValue.ALL },
+    { label: I18ns.collaboration.tabs.pending, value: ETabValue.PENDING },
+    { label: I18ns.collaboration.tabs.archived, value: ETabValue.ARCHIVED },
+    { label: I18ns.collaboration.tabs.all, value: ETabValue.ALL },
   ];
-  selectedTab = this.tabs[0];
+
+  filters: { id: EFilterValue, name: string }[] = [
+    { id: EFilterValue.COMMENTS, name: I18ns.collaboration.filters.types.comments },
+    { id: EFilterValue.QUESTIONS, name: I18ns.collaboration.filters.types.questions },
+  ];
+
+  periods: { id: EPeriodValue, name: string }[] = [
+    { id: EPeriodValue.TODAY, name: I18ns.collaboration.filters.periods.today },
+    { id: EPeriodValue.WEEK, name: I18ns.collaboration.filters.periods.week },
+    { id: EPeriodValue.MONTH, name: I18ns.collaboration.filters.periods.month },
+    { id: EPeriodValue.OLD, name: I18ns.collaboration.filters.periods.old },
+  ];
 
   comments: CommentDtoApi[] = [];
   submittedQuestions: QuestionSubmittedDtoApi[] = [];
   selectedTabData: (CommentDtoApi | QuestionSubmittedDtoApi)[] = [];
-  contributors: { id: string; name: string }[] = [];
 
+  selectedTab = this.tabs[0];
+  contributors: { id: string; name: string }[] = [];
   pendingCount = 0;
 
   constructor(
@@ -78,6 +96,7 @@ export class LeadCollaborationComponent implements OnInit {
             return acc;
           }, [] as { id: string; name: string }[]);
         }),
+        tap(() => this.handleTabChange(this.tabs[0]))
       )
       .subscribe();
   }
@@ -86,26 +105,6 @@ export class LeadCollaborationComponent implements OnInit {
     this.selectedTab = tab;
 
     this.selectedTabData = this.getSelectedTabData(tab);
-    this.sort();
-  }
-
-  sort(): void {
-    this.selectedTabData.sort(this.sortByCreatedAt);
-  }
-
-  private sortByCreatedAt(
-    a: CommentDtoApi | QuestionSubmittedDtoApi,
-    b: CommentDtoApi | QuestionSubmittedDtoApi,
-  ): number {
-    if (a.createdAt > b.createdAt) {
-      return -1;
-    }
-
-    if (a.createdAt < b.createdAt) {
-      return 1;
-    }
-
-    return 0;
   }
 
   private getSelectedTabData(tab: ITab): (CommentDtoApi | QuestionSubmittedDtoApi)[] {
