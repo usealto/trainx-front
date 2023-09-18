@@ -18,6 +18,7 @@ export class DropdownFilterComponent {
   @Input() ngClass: string | any;
   @Input() appendTo = '';
   @Input() disabled: boolean | any;
+  @Input() enableSearch = true;
 
   @Output() selectChange = new EventEmitter<any>();
 

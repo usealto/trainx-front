@@ -13,7 +13,7 @@
   [appendTo]="appendTo"
   #select
 >
-  <ng-template ng-header-tmp>
+  <ng-template *ngIf="enableSearch" ng-header-tmp>
     <input style="width: 100%; line-height: 24px" type="text" (input)="search(select, $event)" />
   </ng-template>
 
