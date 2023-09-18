@@ -145,7 +145,7 @@
   <div class="col-6 text-end">
     <alto-dropdown-filter
       data-cy="filterByTeam"
-      class="me-3"
+      class="me-3 text-start"
       [data]="teams"
       [displayLabel]="'name'"
       [isColored]="true"
@@ -155,6 +155,7 @@
     ></alto-dropdown-filter>
 
     <alto-score-filter
+      class="text-start"
       data-cy="filterByScore"
       [selectedItems]="selectedItems"
       (selectChange)="filterUsers({ score: $event })"
