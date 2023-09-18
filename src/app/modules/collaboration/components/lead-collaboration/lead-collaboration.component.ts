@@ -10,13 +10,21 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 
+import {
+  compareDesc,
+  differenceInDays,
+  isToday,
+  isSameWeek,
+  isSameMonth
+} from 'date-fns'
+
 enum ETabValue {
   PENDING = 'pending',
   ARCHIVED = 'archived',
   ALL = 'all',
 }
 
-enum EFilterValue {
+enum ETypeValue {
   COMMENTS = 'comments',
   QUESTIONS = 'questions',
 }
@@ -39,6 +47,8 @@ interface ITab {
   styleUrls: ['./lead-collaboration.component.scss'],
 })
 export class LeadCollaborationComponent implements OnInit {
+  readonly itemsPerPage = 10;
+
   Emoji = EmojiName;
   I18ns = I18ns;
 
@@ -48,9 +58,9 @@ export class LeadCollaborationComponent implements OnInit {
     { label: I18ns.collaboration.tabs.all, value: ETabValue.ALL },
   ];
 
-  filters: { id: EFilterValue, name: string }[] = [
-    { id: EFilterValue.COMMENTS, name: I18ns.collaboration.filters.types.comments },
-    { id: EFilterValue.QUESTIONS, name: I18ns.collaboration.filters.types.questions },
+  filters: { id: ETypeValue, name: string }[] = [
+    { id: ETypeValue.COMMENTS, name: I18ns.collaboration.filters.types.comments },
+    { id: ETypeValue.QUESTIONS, name: I18ns.collaboration.filters.types.questions },
   ];
 
   periods: { id: EPeriodValue, name: string }[] = [
@@ -62,6 +72,11 @@ export class LeadCollaborationComponent implements OnInit {
 
   comments: CommentDtoApi[] = [];
   submittedQuestions: QuestionSubmittedDtoApi[] = [];
+
+  contributorsFilters: string[] = [];
+  typesFilters: ETypeValue[] = [];
+  periodsFilters: EPeriodValue[] = [];
+
   selectedTabData: (CommentDtoApi | QuestionSubmittedDtoApi)[] = [];
 
   selectedTab = this.tabs[0];
@@ -95,36 +110,96 @@ export class LeadCollaborationComponent implements OnInit {
 
             return acc;
           }, [] as { id: string; name: string }[]);
+
+          this.handleTabChange(this.tabs[0])
         }),
-        tap(() => this.handleTabChange(this.tabs[0]))
       )
       .subscribe();
   }
 
   handleTabChange(tab: ITab): void {
     this.selectedTab = tab;
-
-    this.selectedTabData = this.getSelectedTabData(tab);
+    this.getSelectedTabData(tab);
   }
 
-  private getSelectedTabData(tab: ITab): (CommentDtoApi | QuestionSubmittedDtoApi)[] {
+  private getSelectedTabData(tab: ITab): void {
+    let data: (CommentDtoApi | QuestionSubmittedDtoApi)[] = [];
+
     switch (tab.value) {
       case ETabValue.PENDING:
-        return [
-          ...this.comments.filter((comment) => !comment.isRead),
-          ...this.submittedQuestions.filter(
-            ({ status }) => status === QuestionSubmittedDtoApiStatusEnumApi.Submitted,
-          ),
+        data = [
+          ...this.comments.filter((comment) => {
+            return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS))
+              && !comment.isRead;
+          }),
+          ...this.submittedQuestions.filter(({ status }) => {
+            return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS))
+              && status === QuestionSubmittedDtoApiStatusEnumApi.Submitted
+          }),
         ];
+        break;
       case ETabValue.ARCHIVED:
-        return [
-          ...this.comments.filter((comment) => comment.isRead),
-          ...this.submittedQuestions.filter(
-            ({ status }) => status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted,
-          ),
+        data = [
+          ...this.comments.filter((comment) => {
+            return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS))
+              && comment.isRead;
+          }),
+          ...this.submittedQuestions.filter(({ status }) => {
+            return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS))
+              && status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted;
+          }),
         ];
+        break;
       case ETabValue.ALL:
-        return [...this.comments, ...this.submittedQuestions];
+        data = [
+          ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS) ? this.comments : []),
+          ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS) ? this.submittedQuestions : []),
+        ];
+        break;
     }
+
+    data.sort((a, b) => compareDesc(a.createdAt, b.createdAt));
+    data = this.filterByContributors(data, this.contributorsFilters);
+    data = this.filterByPeriod(data, this.periodsFilters);
+
+    this.selectedTabData = data.slice(0, this.itemsPerPage);
+  }
+
+  private filterByContributors(
+    data: (CommentDtoApi | QuestionSubmittedDtoApi)[],
+    contributorsIds: string[]
+  ): (CommentDtoApi | QuestionSubmittedDtoApi)[] {
+    return data.filter(({ createdBy }) => contributorsIds.length === 0 || contributorsIds.includes(createdBy));
+  }
+
+  private filterByPeriod(
+    data: (CommentDtoApi | QuestionSubmittedDtoApi)[],
+    periods: EPeriodValue[]
+  ): (CommentDtoApi | QuestionSubmittedDtoApi)[] {
+    return data.filter(({ createdAt }) => {
+      const date = new Date(createdAt);
+      const today = new Date();
+
+      return periods.length === 0
+        || (periods.includes(EPeriodValue.TODAY) && isToday(date))
+        || (periods.includes(EPeriodValue.WEEK) && isSameWeek(date, today))
+        || (periods.includes(EPeriodValue.MONTH) && isSameMonth(date, today))
+        || (periods.includes(EPeriodValue.OLD) && differenceInDays(today, date) > 30);
+    });
+  }
+
+  handleContributorChange(contributors: {id: string, name: string}[]): void {
+    this.contributorsFilters = contributors.map(({ id }) => id);
+    this.getSelectedTabData(this.selectedTab);
+  }
+
+  handleFilterChange(filters: {id: ETypeValue, name: string}[]): void {
+    this.typesFilters = filters.map(({ id }) => id);
+    this.getSelectedTabData(this.selectedTab);
+  }
+
+  handlePeriodChange(periods: {id: EPeriodValue, name: string}[]): void {
+    this.periodsFilters = periods.map(({ id }) => id);
+    this.getSelectedTabData(this.selectedTab);
   }
 }

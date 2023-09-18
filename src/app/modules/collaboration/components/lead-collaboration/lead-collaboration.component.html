@@ -32,17 +32,27 @@
 <div class="content-header">
   <alto-dropdown-filter
     [placeholder]="I18ns.collaboration.filters.contributor"
-    [data]="contributors">
+    [data]="contributors"
+    (selectChange)="handleContributorChange($event)">
   </alto-dropdown-filter>
 
   <div class="header-end">
     <alto-dropdown-filter
       [placeholder]="I18ns.collaboration.filters.filterType"
-      [data]="filters">
+      [data]="filters"
+      (selectChange)="handleFilterChange($event)">
     </alto-dropdown-filter>
     <alto-dropdown-filter
       [placeholder]="I18ns.collaboration.filters.period"
-      [data]="periods">
+      [data]="periods"
+      (selectChange)="handlePeriodChange($event)">
     </alto-dropdown-filter>
   </div>
+</div>
+
+<div *ngFor="let data of selectedTabData">
+  <!-- TODO : implement cards -->
+  Contributor: {{ data.createdByUser.email }}
+  <br>
+  Date: {{ data.createdAt | date: 'dd/MM/yyyy' }}
 </div>
