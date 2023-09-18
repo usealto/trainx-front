@@ -1,20 +1,20 @@
-<ng-container *ngIf="true">
+<ng-container>
   <div class="header d-flex flex-row">
-    <div class="d-flex flex-row header1">
+    <div class="d-flex flex-row align-items-center">
       <alto-icon-badge [icon]="'bi-lightbulb'" [color]="'badge-double-purple'"></alto-icon-badge>
-      <span style="color: #5925dc; font-weight: 600">Question suggérée</span>
+      <span class="fw-semibold text-purple m-sm-2">Question suggérée</span>
     </div>
-    <div class="{{ statusClass }}" style="align-self: center">
+    <div class="{{ statusClass }} align-self-center">
       {{ status }}
     </div>
   </div>
-  <div class="middle d-flex flex-row">
+  <div class="middle d-flex flex-row bg-white">
     <div>
       <alto-img-badge [size]="24" [user]="getUser(suggQuestion?.createdBy) | async"></alto-img-badge>
     </div>
     <div class="d-flex flex-column">
       <div>
-        <span style="font-weight: 600">{{ user?.firstname }} {{ user?.lastname }} </span
+        <span class="fw-semibold">{{ user?.firstname }} {{ user?.lastname }} </span
         ><span class="date-text">{{ suggQuestion?.createdAt | date : 'shortDate' }}</span>
       </div>
       <div>
@@ -25,15 +25,13 @@
     </div>
   </div>
   <div class="separator"></div>
-  <div class="footer d-flex flex-row">
+  <div class="footer d-flex flex-row bg-white">
     <div class="d-flex flex-row header1">
-      <!-- not working... status is the oppostie -->
       <a class="cancel-btn" (click)="refuse()" *ngIf="suggQuestion?.status === 'submitted'">
         <i class="bi bi-x-lg"></i> Refuser
       </a>
     </div>
     <div>
-      <!-- not working... status is the oppostie -->
       <a class="blue-btn" (click)="refuse()" *ngIf="suggQuestion?.status === 'submitted'">
         <i class="bi bi-plus-lg"></i> Créer la question {{ status !== 'submitted' }}
       </a>

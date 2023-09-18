@@ -6,18 +6,11 @@
   justify-content: space-between;  
 }
 
-.header1 {
-  align-items: center;
-  gap: 10px;
- 
-}
-
 .middle{
   padding: 16px 20px;
   align-items: flex-start;
   gap: 16px;
   align-self: stretch;
-  background-color: white;
 }
 
 .separator{
@@ -29,35 +22,17 @@
   border-radius: 0px 0px 12px 12px;
   padding: 16px 20px;
   align-self: stretch;
-  background-color: white;
   justify-content: space-between;  
-}
-
-.icon{
-  border-radius: 28px;
-  border: 4px solid var(--purple-50);
-  background: var(--purple-100);
-  color: #6938EF;
-  width: 32px;
-  height: 32px;
-  padding: 8px;
-  justify-content: center;
-  align-items: center;
 }
 
 .light-text{
   color: var(--alto-grey);
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
   line-height: 20px; 
 }
 
 .date-text{
   color: var(--alto-grey);
   font-size: 10px;
-  font-style: normal;
-  font-weight: 400;
   line-height: 20px;
   margin-left: 12px;
 }
