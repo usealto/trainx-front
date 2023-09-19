@@ -3,13 +3,13 @@ import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   QuestionDtoApi,
+  QuestionStatsDtoApi,
   QuestionSubmittedDtoApi,
-  ScoreTypeEnumApi,
-  ScoresResponseDtoApi,
   TagDtoApi,
+  TagStatsDtoApi,
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { Observable, map, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, delay, map, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -84,11 +84,10 @@ export class ProgramsComponent implements OnInit {
   tagsScore = new Map<string, number>();
   isFilteredTags = false;
 
-  //tabs
   tabData = [
-    { label: 'Programmes', value: 'programs' },
-    { label: 'Questions', value: 'questions' },
-    { label: 'Tags', value: 'tags' },
+    { label: I18ns.programs.tabs.programs, value: 'programs' },
+    { label: I18ns.programs.tabs.questions, value: 'questions' },
+    { label: I18ns.programs.tabs.tags, value: 'tags' },
   ];
   activeTab = this.tabData[0].value;
 
@@ -96,7 +95,6 @@ export class ProgramsComponent implements OnInit {
     private readonly offcanvasService: NgbOffcanvas,
     private readonly questionsService: QuestionsRestService,
     private readonly scoresRestServices: ScoresRestService,
-    private readonly scoresServices: ScoresService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly tagRestService: TagsRestService,
     private readonly tagsService: TagsServiceService,
@@ -113,6 +111,8 @@ export class ProgramsComponent implements OnInit {
     this.getSubmittedQuestions();
     this.getTags();
     this.isFilteredQuestions = false;
+
+    combineLatest([this.getScoresFromTags(), this.getScoresfromQuestions()]).subscribe();
   }
 
   handleTabChange(value: any) {
@@ -233,7 +233,6 @@ export class ProgramsComponent implements OnInit {
           }
           this.changeQuestionsPage(questions);
         }),
-        switchMap((questions) => this.getScoresfromQuestions(questions.map((q) => q.id))),
         map(() => this.questions.map((q) => q.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
         map((ids) => this.getUsersfromIds(ids)),
@@ -262,44 +261,24 @@ export class ProgramsComponent implements OnInit {
     return this.profileStore.users.value.filter((u) => filter.some((i) => i === u.id));
   }
 
-  getScoresfromQuestions(ids: string[]): Observable<ScoresResponseDtoApi> {
-    return this.scoresRestServices
-      .getScores({
-        type: ScoreTypeEnumApi.Question,
-        duration: ScoreDuration.Month,
-        ids,
-      })
-      .pipe(
-        tap((scores) => {
-          ids?.forEach((id) => {
-            const qScore = scores.scores.filter((score) => score.id === id);
-            this.questionsScore.set(
-              id,
-              this.scoresServices.reduceWithoutNull(qScore.shift()?.averages ?? []) || 0,
-            );
-          });
-        }),
-      );
+  getScoresfromQuestions(): Observable<QuestionStatsDtoApi[]> {
+    return this.scoresRestServices.getQuestionsStats(ScoreDuration.All, false).pipe(
+      tap((stats) => {
+        stats.forEach((stat) => {
+          this.questionsScore.set(stat.question.id, stat.score || 0);
+        });
+      }),
+    );
   }
 
-  getScoresFromTags(ids: string[]) {
-    return this.scoresRestServices
-      .getScores({
-        type: ScoreTypeEnumApi.Tag,
-        duration: ScoreDuration.Month,
-        ids,
-      })
-      .pipe(
-        tap((scores) => {
-          ids?.forEach((id) => {
-            const qScore = scores.scores.filter((score) => score.id === id);
-            this.tagsScore.set(
-              id,
-              this.scoresServices.reduceWithoutNull(qScore.shift()?.averages ?? []) || 0,
-            );
-          });
-        }),
-      );
+  getScoresFromTags(): Observable<TagStatsDtoApi[]> {
+    return this.scoresRestServices.getTagsStats(ScoreDuration.All, false).pipe(
+      tap((stats) => {
+        stats.forEach((stat) => {
+          this.tagsScore.set(stat.tag.id, stat.score || 0);
+        });
+      }),
+    );
   }
 
   changeQuestionsPage(questions: QuestionDtoApi[]) {
@@ -354,9 +333,7 @@ export class ProgramsComponent implements OnInit {
       .getTags()
       .pipe(
         tap((tags) => (this.tags = tags)),
-        tap((tags) => (this.tagsCount = tags.length)),
         tap((tags) => this.changeTagsPage(tags)),
-        switchMap((tags) => this.getScoresFromTags(tags.map((t) => t.id))),
         map(() => this.tags.map((t) => t.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
         map((ids) => this.getUsersfromIds(ids)),

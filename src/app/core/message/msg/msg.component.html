@@ -1,4 +1,4 @@
-<div data-cy="toastError" class="toast-container">
+<div class="toast-container">
   <ng-container *ngFor="let item of msg.toasts.value$ | async">
     <div [style.top.px]="toastTop" [ngClass]="getClass(item)" id="{{ item.id }}">
       <div class="d-flex justify-content-between pb-2">
