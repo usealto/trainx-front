@@ -60,7 +60,7 @@
       <div class="col-6 text-end">
         <button
           class="btn btn-primary"
-          (click)="goNext()"
+          (click)="changeTab(2)"
           data-cy="programCreateNext"
           [disabled]="programForm && !programForm.valid"
         >
@@ -174,7 +174,7 @@
         </button>
       </div>
       <div class="col-6 text-end">
-        <button class="btn btn-primary" (click)="goNext()">
+        <button class="btn btn-primary" (click)="changeTab(3)">
           <span>{{ I18ns.shared.next }}</span
           ><i class="fs-3 bi bi-arrow-right-short"></i>
         </button>

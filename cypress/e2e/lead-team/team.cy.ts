@@ -2,7 +2,7 @@ describe('Lead Team', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
     cy.visit('/', {});
-    cy.get('[ng-reflect-router-link="l/teams"]').click();
+    cy.get('[href="/l/teams"]').click();
   });
 
   it('Should load teams Page', () => {
@@ -45,7 +45,7 @@ describe('User Team', () => {
   });
 
   it('not load lead teams from the menu', function () {
-    cy.get('[ng-reflect-router-link="l/teams"]').should('be.hidden');
+    cy.get('[href="/l/teams"]').should('be.hidden');
   });
 
   it('not load lead teams from url', function () {

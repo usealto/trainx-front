@@ -5,13 +5,13 @@ describe('Lead Programs', () => {
   });
 
   it('Access Lead Programs Page', function () {
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
+    cy.get('[href="/l/programs"]').click();
     cy.get('h1').should('have.text', 'Programmes');
   });
 
   it('Filters programs by team', function () {
     let teamShortname = '';
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
+    cy.get('[href="/l/programs"]').click();
     cy.wait(500);
 
     // Select a program card that already has at least one team
