@@ -174,6 +174,11 @@ export const FR = {
     titleIcon: '🎯',
     title: 'Programmes',
     subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
+    tabs: {
+      programs: 'Programmes',
+      questions: 'Questions',
+      tags: 'Tags',
+    },
     activePrograms: {
       titleIcon: '🎯',
       title: 'Programmes en cours',
