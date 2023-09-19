@@ -13,7 +13,7 @@
 //     const goodAnswer2 = 'goodAnswer2';
 //     const badAnswer2 = 'badAnswer2';
 
-//     cy.get('[ng-reflect-router-link="l/programs"]').click();
+//     cy.get('[href="/l/programs"]').click();
 //     cy.wait(500);
 //     cy.get('[data-cy="createNewProgram"]').click();
 //     cy.wait(500);
