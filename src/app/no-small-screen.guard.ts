@@ -23,9 +23,7 @@ export const noSmallScreen: CanActivateFn = () => {
             isTooSmall = true;
             tmpUrl = router.url;
 
-            //TODO replace by proper location
-
-            router.navigate(['/', AltoRoutes.noAccess]);
+            router.navigate(['/', AltoRoutes.noSmallScreen]);
           } else if (check && isTooSmall) {
             isTooSmall = false;
             router.navigate([tmpUrl]);
@@ -37,9 +35,7 @@ export const noSmallScreen: CanActivateFn = () => {
   }
 
   if (innerWidth < 745) {
-    //TODO replace by proper location
-
-    router.navigate(['/', AltoRoutes.noAccess]);
+    router.navigate(['/', AltoRoutes.noSmallScreen]);
   }
 
   return window.innerWidth > 745;
