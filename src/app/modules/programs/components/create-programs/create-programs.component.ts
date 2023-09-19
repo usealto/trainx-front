@@ -217,11 +217,14 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   getAssociatedQuestions() {
+    if (!this.editedProgram?.id) {
+      return;
+    }
     this.questionRestService
       .getQuestionsPaginated({
         tagIds: this.selectedTags.join(','),
         itemsPerPage: this.questionPageSize,
-        programIds: this.editedProgram?.id ?? undefined,
+        programIds: this.editedProgram?.id,
         page: this.questionAssociatedPage,
         search: this.questionSearch,
       })
@@ -236,23 +239,15 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   changeTab(num: number) {
+    if (this.currentStep === 1 && num === 2) {
+      this.displayToast();
+      this.saveProgram();
+    }
     this.currentStep = num;
     if (this.currentStep === 2) {
       this.selectedTags = this.programForm.value?.tags ?? [];
       this.getQuestions();
       this.getAssociatedQuestions();
-    }
-    this.saveProgram();
-  }
-
-  goNext() {
-    this.saveProgram();
-    this.currentStep++;
-    if (this.currentStep === 2) {
-      this.selectedTags = this.programForm.value?.tags ?? [];
-      this.getQuestions();
-      this.getAssociatedQuestions();
-      this.displayToast();
     }
   }
 
