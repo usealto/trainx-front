@@ -1,10 +1,5 @@
 <div class="header-panel mb-4 row align-items-center">
-  <img
-    class="col-1 p-0 me-5"
-    [src]="Emoji.WavingHand | emoji"
-    height="48"
-    style="width: 48px !important"
-  />
+  <img class="col-1 p-0 me-5" [src]="Emoji.WavingHand | emoji" height="48" style="width: 48px !important" />
   <div class="col ps-0">
     <h1 id="welcome" class="mb-3">
       {{ I18ns.leadHome.title + (profileStore.user.value.firstname | titlecase) + ' !' }}
@@ -143,8 +138,8 @@
   <div [hidden]="!scoreCount" class="panel h-100 my-5">
     <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
     <p class="alto-grey mb-4">{{ I18ns.leadHome.globalEvolution.chartSubtitle }}</p>
-    <div class="chart-container">
-      <canvas id="programScoreEvol"></canvas>
+    <div>
+      <alto-chart-basicline [chartOption]="chartOption"></alto-chart-basicline>
     </div>
   </div>
 
@@ -265,7 +260,7 @@
                     [style.backgroundColor]="chal.leadTeam.id | uuid2color"
                     [style.color]="'white'"
                   >
-                    {{ chal.leadTeam.shortName }}
+                    {{ chal.leadTeam.name }}
                   </span>
                 </td>
                 <td>

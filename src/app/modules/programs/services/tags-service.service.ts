@@ -16,7 +16,7 @@ export class TagsServiceService {
       output = output.filter((t: TagDtoApi) => contributors.includes(t.createdBy));
     }
     if (search) {
-      output = output.filter((p: any) => p.name.toLowerCase().includes(search.toLowerCase()));
+      output = output.filter((t: TagDtoApi) => t.name.toLowerCase().includes(search.toLowerCase()));
     }
     return output;
   }

@@ -30,7 +30,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let team of paginatedTeams" class="align-middle fs-7">
-            <td data-cy="teamLongname">{{ team.longName }}</td>
+            <td data-cy="teamLongname">{{ team.name }}</td>
             <td>
               <div *ngIf="team.score" class="text-center">
                 <span class="alto-score" [class]="(team.score || 0) * 100 | pillColor">
@@ -61,7 +61,7 @@
               {{ team.createdAt | date : 'shortDate' }}
             </td>
             <td class="cursor-pointer px-3" (click)="deleteTeam(team)">
-              <i [attr.data-cy]="'deleteTeam' + team.shortName" class="fs-5 bi bi-trash3 float-end"></i>
+              <i [attr.data-cy]="'deleteTeam' + team.name" class="fs-5 bi bi-trash3 float-end"></i>
             </td>
             <td class="cursor-pointer px-3" (click)="openTeamForm(team)">
               <i data-cy="editTeam" class="fs-5 bi bi-pen float-end me-4"></i>
@@ -145,9 +145,9 @@
   <div class="col-6 text-end">
     <alto-dropdown-filter
       data-cy="filterByTeam"
-      class="me-3"
+      class="me-3 text-start"
       [data]="teams"
-      [displayLabel]="'shortName'"
+      [displayLabel]="'name'"
       [isColored]="true"
       [placeholder]="I18ns.leadTeam.members.filters.teams"
       [selectedItems]="selectedItems"
@@ -155,6 +155,7 @@
     ></alto-dropdown-filter>
 
     <alto-score-filter
+      class="text-start"
       data-cy="filterByScore"
       [selectedItems]="selectedItems"
       (selectChange)="filterUsers({ score: $event })"
@@ -183,18 +184,18 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of paginatedUsers" class="align-middle">
+        <tr *ngFor="let user of paginatedUsers" class="align-middle" data-cy="companyMembersTable">
           <td>
             <alto-profile-card data-cy="profileCard" [user]="user"></alto-profile-card>
           </td>
           <td>
-            <span data-cy="memberTeamShortname" class="alto-badge" [style]="user.teamId || '' | teamColor">
+            <span data-cy="memberTeamName" class="alto-badge" [style]="user.teamId || '' | teamColor">
               {{ usersMap.get(user.id) }}
             </span>
           </td>
           <td class="text-center">
             <ng-container *ngIf="user.score; else elseTemplate">
-              <span class="alto-score" [class]="(user.score || 0) * 100 | pillColor">
+              <span data-cy="progressBadge" class="alto-score" [class]="(user.score || 0) * 100 | pillColor">
                 {{ user.score | percent }}
               </span>
             </ng-container>
