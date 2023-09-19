@@ -47,11 +47,6 @@
     text-overflow: ellipsis;
   }
 }
-.alto-badge-orange {
-  @extend .alto-badge;
-  color: white;
-  background-color: var(--orange-500);
-}
 .alto-badge-orange-light {
   @extend .alto-badge;
   color: #DC6803;
