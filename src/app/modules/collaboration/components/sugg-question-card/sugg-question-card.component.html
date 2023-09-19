@@ -27,12 +27,12 @@
   <div class="separator"></div>
   <div class="footer d-flex flex-row bg-white">
     <div class="d-flex flex-row header1">
-      <a class="cancel-btn" (click)="refuse()" *ngIf="suggQuestion?.status === 'submitted'">
+      <a class="cancel-btn" (click)="refuseQuestion()" *ngIf="suggQuestion?.status === 'submitted'">
         <i class="bi bi-x-lg"></i> Refuser
       </a>
     </div>
     <div>
-      <a class="blue-btn" (click)="refuse()" *ngIf="suggQuestion?.status === 'submitted'">
+      <a class="blue-btn" (click)="createQuestion()" *ngIf="suggQuestion?.status === 'submitted'">
         <i class="bi bi-plus-lg"></i> Créer la question {{ status !== 'submitted' }}
       </a>
     </div>

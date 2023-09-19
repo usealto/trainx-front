@@ -5,10 +5,11 @@ import { CollaborationRoutingModule } from './collaboration-routing.module';
 import { LeadCollaborationComponent } from './components/lead-collaboration/lead-collaboration.component';
 import { SharedModule } from '../shared/shared.module';
 import { SuggQuestionCardComponent } from './components/sugg-question-card/sugg-question-card.component';
+import { SuggQuestionRefuseModalComponent } from './components/sugg-question-refuse-modal/sugg-question-refuse-modal.component';
 import { TopContributorsComponent } from './components/lead-collaboration/top-contributors/top-contributors.component';
 
 @NgModule({
-  declarations: [LeadCollaborationComponent, SuggQuestionCardComponent, TopContributorsComponent],
+  declarations: [LeadCollaborationComponent, SuggQuestionCardComponent, SuggQuestionRefuseModalComponent, TopContributorsComponent],
   imports: [CommonModule, CollaborationRoutingModule, SharedModule],
 })
 export class CollaborationModule {}

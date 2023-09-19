@@ -1,8 +1,11 @@
+import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { QuestionSubmittedDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
-import { Observable, map, of } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PatchQuestionSubmittedDtoApi, PatchQuestionSubmittedRequestParams, QuestionSubmittedDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
+import { Observable, map, of, tap } from 'rxjs';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
+import { SuggQuestionRefuseModalComponent } from '../sugg-question-refuse-modal/sugg-question-refuse-modal.component';
 
 @Component({
   selector: 'alto-sugg-question-card',
@@ -15,7 +18,11 @@ export class SuggQuestionCardComponent implements OnInit{
   status? : string;
   statusClass? : string;
   
-  constructor(private userService: UsersRestService) { }
+  constructor(
+    private userService: UsersRestService,
+    private modalService: NgbModal,
+    private QuestionsSubmittedRestService: QuestionsSubmittedRestService,
+    ) { }
   ngOnInit(): void {
     switch (this.suggQuestion?.status) {
       case 'declined':
@@ -34,7 +41,7 @@ export class SuggQuestionCardComponent implements OnInit{
     
     this.getUser(this.suggQuestion?.createdBy)
     .subscribe((u) => { 
-      this.user = u;
+      this.user = u;  
     });
   }
   @memoize()
@@ -45,8 +52,57 @@ export class SuggQuestionCardComponent implements OnInit{
     return this.userService.getUsersFiltered({ ids: id }).pipe(map((u) => u.shift()));
   }
 
-  refuse(){
+  refuseQuestion(){
+    console.log('TODO : action to develop');
+    const modalRef = this.modalService.open(SuggQuestionRefuseModalComponent, {
+       centered: true, size: 'md' 
+      });
+
+    const componentInstance = modalRef.componentInstance as SuggQuestionRefuseModalComponent;
+    componentInstance.data = {
+      title: 'Refuser une question',
+      subtitle: 'Souhaitez-vous envoyer un message à Phoenix Baker pour expliquer votre choix ?',
+      icon: 'bi-x-circle',
+      color: 'badge-double-error',
+      button: 'Refuser ',
+      textarea: 'Réponse à Phoenix Baker (facultatif)',
+    };
+    
+    componentInstance.objectDeleted
+      .pipe(
+        tap(
+          () => {
+            console.log(this.suggQuestion);
+            
+            if(!this.suggQuestion){
+              return;
+            }  
+            console.log('ffff');
+            // for some reason, the call is not working
+            this.QuestionsSubmittedRestService.update({
+              id: this.suggQuestion.id, 
+              patchQuestionSubmittedDtoApi: {
+                status: 'declined' as PatchQuestionSubmittedDtoApi['status'],
+              }
+            })
+          }
+        ),
+        tap(() => {
+          modalRef.close();
+          console.log('her');
+          // from another template, not sure to use this here
+          // this.location.back();
+        }),
+        // from another template, not sure to use this here
+        // untilDestroyed(this),
+      )
+      .subscribe();
+    
+  }
+
+  createQuestion(){
     console.log('TODO : action to develop');
   }
+
 
 }
