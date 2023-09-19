@@ -79,6 +79,15 @@
         <i class="bi bi-people"></i>
       </a>
     </div>
+    <div ngbTooltip="{{ I18ns.menu.collaboration }}" placement="right" tooltipClass="menu-tooltip-class">
+      <a
+        class="module"
+        [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.collaboration"
+        routerLinkActive="menu-selected"
+      >
+        <i class="bi bi-puzzle"></i>
+      </a>
+    </div>
     <!-- 
     <div ngbTooltip="{{ I18ns.menu.challenges }}" placement="right" tooltipClass="menu-tooltip-class">
       <a
