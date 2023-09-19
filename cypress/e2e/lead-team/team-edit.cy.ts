@@ -2,7 +2,7 @@ describe('Team edition', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
     cy.visit('/', {});
-    cy.get('[ng-reflect-router-link="l/teams"]').click();
+    cy.get('[href="/l/teams"]').click();
   });
 
   it('Should open edit team panel', () => {

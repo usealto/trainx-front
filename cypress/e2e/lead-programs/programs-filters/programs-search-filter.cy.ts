@@ -5,12 +5,12 @@ describe('Lead Programs', () => {
   });
 
   it('Access Lead Programs Page', function () {
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
+    cy.get('[href="/l/programs"]').click();
     cy.get('h1').should('have.text', 'Programmes');
   });
 
   it('Search Programs and check if title is right', () => {
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
+    cy.get('[href="/l/programs"]').click();
     cy.wait(500);
 
     cy.get('[data-cy="programCard"] > .panel > .title')
