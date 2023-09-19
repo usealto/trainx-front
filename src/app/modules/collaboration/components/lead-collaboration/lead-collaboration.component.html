@@ -30,25 +30,34 @@
 </div>
 
 <div class="content-header">
-  <alto-dropdown-filter placeholder="Contributeur" [data]="contributors"></alto-dropdown-filter>
+  <alto-dropdown-filter
+    [placeholder]="I18ns.collaboration.filters.contributor"
+    [data]="contributors"
+    (selectChange)="handleContributorChange($event)">
+  </alto-dropdown-filter>
 
   <div class="header-end">
-    <alto-dropdown-filter placeholder="Filtrer"></alto-dropdown-filter>
-    <button class="sort-cta" (click)="sort()">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#000000"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M12 5v13M5 12l7 7 7-7" />
-      </svg>
-      Trier
-    </button>
+    <alto-dropdown-filter
+      [placeholder]="I18ns.collaboration.filters.filterType"
+      [data]="filters"
+      [enableSearch]="false"
+      (selectChange)="handleTypeChange($event)">
+    </alto-dropdown-filter>
+    <alto-dropdown-filter
+      [placeholder]="I18ns.collaboration.filters.period"
+      [data]="periods"
+      [enableSearch]="false"
+      (selectChange)="handlePeriodChange($event)">
+    </alto-dropdown-filter>
   </div>
+</div>
+
+<div *ngFor="let contribution of contributions" style="margin-bottom: 1rem;">
+  {{ contribution.type ===  'comments' ? 'Commentaire' : 'Question'}}
+  <br>
+  <!-- TODO : implement cards -->
+  Contributor: {{ contribution.contributorId }}
+  <br>
+  Date: {{ contribution.createdAt | date: 'dd/MM/yyyy' }}
+  <br>
 </div>
