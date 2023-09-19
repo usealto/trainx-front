@@ -14,27 +14,44 @@
     </p>
   </span>
 </div>
-<div class="question-panel px-5 py-4 d-flex align-items-center mb-4">
-  <img class="me-4" [src]="Emoji.RedQuestionMark | emoji" />
-  <p class="fw-bold fs-5">
-    bonsoilwsjgml sjfmgljsdfmgkjdsfmlgkjsdf sdklfj gmlsdjkgfmljsd mlkdjfg mljsdfl gjdflg kjsdmlfgjsdlfmg j
-  </p>
-</div>
-<p class="alto-grey">{{ I18ns.collaboration.seeQuestion.discoverQuestionsAndComments }}</p>
-<label class="alto-tab-btn mt-4 mb-7">
-  {{ I18ns.collaboration.seeQuestion.comments }}
-  <span class="ms-2 alto-badge pill-orange">33</span>
-</label>
-<div class="comment-panel">
-  <!-- <alto-img-badge
-  data-cy="profileImgBadge"
-  class="img-badge-menu"
-  type="button"
-  placement="right"
-  popoverClass="menu-popover"
-  placement="right-bottom"
-  [user]="submittedQuestion.createdByUser"
-  [size]="40"
->
-</alto-img-badge> -->
-</div>
+<ng-container *ngIf="!isLoading">
+  <div class="question-panel px-5 py-4 d-flex align-items-center mb-4">
+    <img class="me-4" [src]="Emoji.RedQuestionMark | emoji" />
+    <p class="fw-bold fs-5">
+      {{ submittedQuestion.title }}
+    </p>
+  </div>
+  <p class="alto-grey">{{ I18ns.collaboration.seeQuestion.discoverQuestionsAndComments }}</p>
+  <label class="alto-tab-btn mt-4 mb-7">
+    {{ I18ns.collaboration.seeQuestion.comments }}
+    <span class="ms-2 alto-badge pill-orange">{{ comments.length }}</span>
+  </label>
+  <!-- *ngFor="let comment of comments" -->
+  <div>
+    <div class="comment-panel-header d-flex align-items-center">
+      <alto-img-badge
+        class="me-4 img-badge"
+        type="button"
+        [toggleTooltip]="false"
+        [user]="submittedQuestion.createdByUser"
+        [size]="30"
+      >
+      </alto-img-badge>
+      <div class="d-inline-block">
+        <p class="fw-bold">Hugo Poisot</p>
+        <p class="alto-grey">Aujourd'hui</p>
+      </div>
+    </div>
+    <div class="comment-panel-content d-flex flex-column mb-5">
+      <p>
+        dsqfgmojsdnrgl sernmg jserg lkjsdnfg js lsdkjfglksdfjgnlsdfkjghsdflkg h kljsdhfglk jhsdlkjfgh
+        sdlkjhglsdkfjhglsdkjf lsdgkjghlskdjhfglksdjhg lkjsdfg flkjdshkljhfdlkgjhsdfklgh lskdfhg lksdghlk
+        sdhfgklfdshkljhdflgkjhsdf lkgjsdh dsqfgmojsdnrgl sernmg jserg lkjsdnfg js
+        lsdkjfglksdfjgnlsdfkjghsdflkg h kljsdhfglk jhsdlkjfgh
+      </p>
+      <button class="btn btn-outline-secondary align-self-end mt-4">
+        {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+</ng-container>
