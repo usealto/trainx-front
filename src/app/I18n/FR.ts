@@ -656,6 +656,7 @@ export const FR = {
     adminMode: 'Mode Administrateur',
     disconnect: 'Se déconnecter',
     feedback: 'Envoyer un feedback',
+    collaboration: 'Collaboration',
   },
   settings: {
     title: 'Paramètres',
@@ -961,7 +962,7 @@ export const FR = {
     tabs: {
       pending: 'En attente',
       archived: 'Archivés',
-      all: 'Tout voir'
+      all: 'Tout voir',
     },
     filters: {
       contributor: 'Contributeur',
@@ -977,6 +978,12 @@ export const FR = {
         month: 'Ce mois-ci',
         old: 'Plus de 30 jours',
       },
+    },
+    topContributors: {
+      title: 'Tops contributeurs des 30 derniers jours',
+      contributionCount: 'A contribué {{}} fois.',
+      questions: '{{}} questions',
+      comments: '{{}} commentaires',
     },
   },
 };
