@@ -12,5 +12,22 @@
 }
 
 .question-panel {
+  border-radius: 8px;
   background-color: var(--indigo-25);
+}
+
+.comment-panel {
+  border-radius: 12px 12px 0px 0px;
+  background-color: var(--primary-25);
+}
+
+.alto-tab-btn {
+  display: inline-block;
+  height: 2.5rem;
+  margin-right: 1.33rem;
+  cursor: pointer;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px #175cd3 solid;
+  color: #175cd3;
+  font-weight: 600;
 }

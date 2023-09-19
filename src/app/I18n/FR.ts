@@ -944,7 +944,8 @@ export const FR = {
     seeQuestion: {
       awaiting: 'En attente',
       seeQuestion: 'Voir la question',
-      discoverQuestionsAndComments: 'Découvrez les réponses et commentaires associés à cette question.'
+      discoverQuestionsAndComments: 'Découvrez les réponses et commentaires associés à cette question.',
+      comments: 'Commentaires',
     }
   },
 };
