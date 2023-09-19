@@ -5,6 +5,7 @@ import { combineLatest, map, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
+import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 @Component({
@@ -16,7 +17,7 @@ export class SeeQuestionComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
 
-  submittedQuestion!: QuestionSubmittedDtoApi;
+  questionTitle = '';
   comments: CommentDtoApi[] = [];
 
   isLoading = true;
@@ -25,7 +26,6 @@ export class SeeQuestionComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly commentsRestService: CommentsRestService,
   ) {}
 
@@ -35,24 +35,13 @@ export class SeeQuestionComponent implements OnInit {
         map((p) => {
           return p['id'];
         }),
-        switchMap((id) =>
-          combineLatest([
-            this.questionsSubmittedRestService.getQuestion(id),
-            this.commentsRestService.getComments({ questionId: id }),
-          ]),
-        ),
+        switchMap((id) => this.commentsRestService.getComments({ questionId: id })),
         tap({
-          next: ([question, comments]) => {
-            if (question) {
-              console.log(this.route.firstChild);
-              console.log(question);
-              console.log(comments);
-              this.comments = comments;
-              this.submittedQuestion = question;
-              this.isLoading = false;
-            } else {
-              this.router.navigate(['/', AltoRoutes.notFound]);
-            }
+          next: (comments) => {
+            console.log(this.route.firstChild);
+            this.questionTitle = comments[0].question.title;
+            this.comments = comments;
+            this.isLoading = false;
           },
           error: () => {
             this.router.navigate(['/', AltoRoutes.notFound]);

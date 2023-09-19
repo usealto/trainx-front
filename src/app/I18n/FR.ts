@@ -966,6 +966,7 @@ export const FR = {
       seeQuestion: 'Voir la question',
       discoverQuestionsAndComments: 'Découvrez les réponses et commentaires associés à cette question.',
       comments: 'Commentaires',
+      archiveComment: 'Archiver le commentaire',
     }
   },
 };

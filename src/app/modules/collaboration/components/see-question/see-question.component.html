@@ -18,39 +18,36 @@
   <div class="question-panel px-5 py-4 d-flex align-items-center mb-4">
     <img class="me-4" [src]="Emoji.RedQuestionMark | emoji" />
     <p class="fw-bold fs-5">
-      {{ submittedQuestion.title }}
+      {{ questionTitle }}
     </p>
   </div>
   <p class="alto-grey">{{ I18ns.collaboration.seeQuestion.discoverQuestionsAndComments }}</p>
   <label class="alto-tab-btn mt-4 mb-7">
     {{ I18ns.collaboration.seeQuestion.comments }}
-    <span class="ms-2 alto-badge pill-orange">{{ comments.length }}</span>
+    <span class="ms-2 alto-badge pill-orange2">{{ comments.length }}</span>
   </label>
   <!-- *ngFor="let comment of comments" -->
-  <div>
+  <div *ngFor="let comment of comments">
     <div class="comment-panel-header d-flex align-items-center">
       <alto-img-badge
         class="me-4 img-badge"
         type="button"
         [toggleTooltip]="false"
-        [user]="submittedQuestion.createdByUser"
+        [user]="comment.createdByUser"
         [size]="30"
       >
       </alto-img-badge>
       <div class="d-inline-block">
-        <p class="fw-bold">Hugo Poisot</p>
+        <p class="fw-bold">{{ comment.createdByUser.firstname + comment.createdByUser.lastname }}</p>
         <p class="alto-grey">Aujourd'hui</p>
       </div>
     </div>
     <div class="comment-panel-content d-flex flex-column mb-5">
       <p>
-        dsqfgmojsdnrgl sernmg jserg lkjsdnfg js lsdkjfglksdfjgnlsdfkjghsdflkg h kljsdhfglk jhsdlkjfgh
-        sdlkjhglsdkfjhglsdkjf lsdgkjghlskdjhfglksdjhg lkjsdfg flkjdshkljhfdlkgjhsdfklgh lskdfhg lksdghlk
-        sdhfgklfdshkljhdflgkjhsdf lkgjsdh dsqfgmojsdnrgl sernmg jserg lkjsdnfg js
-        lsdkjfglksdfjgnlsdfkjghsdflkg h kljsdhfglk jhsdlkjfgh
+        {{ comment.text }}
       </p>
       <button class="btn btn-outline-secondary align-self-end mt-4">
-        {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
+        <i class="ms-2 bi bi-eye"></i> {{ I18ns.collaboration.seeQuestion.archiveComment }}
       </button>
     </div>
   </div>
