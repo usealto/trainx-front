@@ -184,18 +184,18 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of paginatedUsers" class="align-middle">
+        <tr *ngFor="let user of paginatedUsers" class="align-middle" data-cy="companyMembersTable">
           <td>
             <alto-profile-card data-cy="profileCard" [user]="user"></alto-profile-card>
           </td>
           <td>
-            <span data-cy="memberTeamShortname" class="alto-badge" [style]="user.teamId || '' | teamColor">
+            <span data-cy="memberTeamName" class="alto-badge" [style]="user.teamId || '' | teamColor">
               {{ usersMap.get(user.id) }}
             </span>
           </td>
           <td class="text-center">
             <ng-container *ngIf="user.score; else elseTemplate">
-              <span class="alto-score" [class]="(user.score || 0) * 100 | pillColor">
+              <span data-cy="progressBadge" class="alto-score" [class]="(user.score || 0) * 100 | pillColor">
                 {{ user.score | percent }}
               </span>
             </ng-container>
