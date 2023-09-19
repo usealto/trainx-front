@@ -130,6 +130,16 @@ export class LeadCollaborationComponent implements OnInit {
     this.getSelectedTabData(tab);
   }
 
+  private createContributionFromData(data: CommentDtoApi | QuestionSubmittedDtoApi, type: ETypeValue): IContribution {
+    return {
+      contributorId: data.createdBy,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+      type,
+      data,
+    };
+  }
+
   private getSelectedTabData(tab: ITab): void {
     let data: IContribution[] = [];
 
@@ -141,25 +151,13 @@ export class LeadCollaborationComponent implements OnInit {
               return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS))
                 && !comment.isRead;
             })
-            .map((comment) => ({
-              contributorId: comment.createdBy,
-              createdAt: comment.createdAt,
-              updatedAt: comment.updatedAt,
-              type: ETypeValue.COMMENTS,
-              data: comment,
-            })),
+            .map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
           ...this.submittedQuestions
             .filter(({ status }) => {
               return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS))
                 && status === QuestionSubmittedDtoApiStatusEnumApi.Submitted
             })
-            .map((question) => ({
-              contributorId: question.createdBy,
-              createdAt: question.createdAt,
-              updatedAt: question.updatedAt,
-              type: ETypeValue.QUESTIONS,
-              data: question,
-            })),
+            .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
         break;
       case ETabValue.ARCHIVED:
@@ -169,45 +167,21 @@ export class LeadCollaborationComponent implements OnInit {
               return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS))
                 && comment.isRead;
             })
-            .map((comment) => ({
-              contributorId: comment.createdBy,
-              createdAt: comment.createdAt,
-              updatedAt: comment.updatedAt,
-              type: ETypeValue.COMMENTS,
-              data: comment,
-            })),
+            .map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
           ...this.submittedQuestions
             .filter(({ status }) => {
               return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS))
                 && status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted;
             })
-            .map((question) => ({
-              contributorId: question.createdBy,
-              createdAt: question.createdAt,
-              updatedAt: question.updatedAt,
-              type: ETypeValue.QUESTIONS,
-              data: question,
-            })),
+            .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
         break;
       case ETabValue.ALL:
         data = [
           ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS) ? this.comments : [])
-            .map((comment) => ({
-              contributorId: comment.createdBy,
-              createdAt: comment.createdAt,
-              updatedAt: comment.updatedAt,
-              type: ETypeValue.COMMENTS,
-              data: comment,
-            })),
+            .map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
           ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS) ? this.submittedQuestions : [])
-            .map((question) => ({
-              contributorId: question.createdBy,
-              createdAt: question.createdAt,
-              updatedAt: question.updatedAt,
-              type: ETypeValue.QUESTIONS,
-              data: question,
-            })),
+            .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
         break;
     }
@@ -255,5 +229,13 @@ export class LeadCollaborationComponent implements OnInit {
   handlePeriodChange(periods: {id: EPeriodValue, name: string}[]): void {
     this.periodsFilters = periods.map(({ id }) => id);
     this.getSelectedTabData(this.selectedTab);
+  }
+
+  getQuestionFromContribution(contribution: IContribution): QuestionSubmittedDtoApi {
+    return contribution.data as QuestionSubmittedDtoApi;
+  }
+
+  getCommentFromContribution(contribution: IContribution): CommentDtoApi {
+    return contribution.data as CommentDtoApi;
   }
 }

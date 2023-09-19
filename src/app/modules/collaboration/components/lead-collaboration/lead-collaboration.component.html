@@ -11,7 +11,7 @@
   <div class="tab" [class.selected]="selectedTab.value === tabs[0].value" (click)="handleTabChange(tabs[0])">
     <p>{{ tabs[0].label }}</p>
 
-    <div class="alto-badge-orange-light" *ngIf="pendingCount">
+    <div class="alto-badge orange" *ngIf="pendingCount">
       <p>{{ pendingCount }}</p>
     </div>
   </div>
@@ -52,12 +52,19 @@
   </div>
 </div>
 
-<div *ngFor="let contribution of contributions" style="margin-bottom: 1rem;">
-  {{ contribution.type ===  'comments' ? 'Commentaire' : 'Question'}}
-  <br>
-  <!-- TODO : implement cards -->
-  Contributor: {{ contribution.contributorId }}
-  <br>
-  Date: {{ contribution.createdAt | date: 'dd/MM/yyyy' }}
+<div *ngFor="let contribution of contributions" class="mb-5">
+  <ng-container *ngIf="contribution.type === 'comments'; else questionTemplate">
+    Commentaire
+    <!-- TODO : implement cards -->
+    Contributor: {{ contribution.contributorId }}
+    <br>
+    Date: {{ contribution.createdAt | date: 'dd/MM/yyyy' }}
+    <br>
+  </ng-container>
+  <ng-template #questionTemplate>
+    <alto-sugg-question-card
+    [suggQuestion]="getQuestionFromContribution(contribution)">
+    </alto-sugg-question-card>
+  </ng-template>
   <br>
 </div>

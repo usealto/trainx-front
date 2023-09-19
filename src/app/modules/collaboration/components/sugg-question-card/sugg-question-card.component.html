@@ -4,22 +4,24 @@
       <alto-icon-badge [icon]="'bi-lightbulb'" [color]="'badge-double-purple'"></alto-icon-badge>
       <span class="fw-semibold text-purple m-sm-2">Question suggérée</span>
     </div>
-    <div class="{{ statusClass }} align-self-center">
-      {{ status }}
+    <div
+    class="align-self-center alto-badge"
+    [ngClass]="suggQuestion.status === 'declined' ? 'red' : suggQuestion.status === 'accepted' ? 'green' : 'orange'">
+      {{ I18n.collaboration.question[suggQuestion.status] }}
     </div>
   </div>
   <div class="middle d-flex flex-row bg-white">
     <div>
-      <alto-img-badge [size]="24" [user]="getUser(suggQuestion?.createdBy) | async"></alto-img-badge>
+      <alto-img-badge [size]="24" [user]="suggQuestion.createdByUser"></alto-img-badge>
     </div>
     <div class="d-flex flex-column">
       <div>
-        <span class="fw-semibold">{{ user?.firstname }} {{ user?.lastname }} </span
-        ><span class="date-text">{{ suggQuestion?.createdAt | date : 'shortDate' }}</span>
+        <span class="fw-semibold">{{ suggQuestion.createdByUser.firstname }} {{ suggQuestion.createdByUser.lastname }} </span>
+        <span class="date-text">{{ suggQuestion.createdAt | date : 'shortDate' }}</span>
       </div>
       <div>
         <span class="light-text">
-          {{ suggQuestion?.title }}
+          {{ suggQuestion.title }}
         </span>
       </div>
     </div>
@@ -27,13 +29,13 @@
   <div class="separator"></div>
   <div class="footer d-flex flex-row bg-white">
     <div class="d-flex flex-row header1">
-      <a class="cancel-btn" (click)="refuseQuestion()" *ngIf="suggQuestion?.status === 'submitted'">
+      <a class="cancel-btn" (click)="refuseQuestion()" *ngIf="suggQuestion.status === 'submitted'">
         <i class="bi bi-x-lg"></i> Refuser
       </a>
     </div>
     <div>
-      <a class="blue-btn" (click)="createQuestion()" *ngIf="suggQuestion?.status === 'submitted'">
-        <i class="bi bi-plus-lg"></i> Créer la question {{ status !== 'submitted' }}
+      <a class="blue-btn" (click)="createQuestion()" *ngIf="suggQuestion.status === 'submitted'">
+        <i class="bi bi-plus-lg"></i> Créer la question
       </a>
     </div>
   </div>

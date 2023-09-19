@@ -961,7 +961,7 @@ export const FR = {
     subtitle: "Gérer l'ensemble des contributions de vos équipes.",
     tabs: {
       pending: 'En attente',
-      archived: 'Archivés',
+      archived: 'Traités',
       all: 'Tout voir',
     },
     filters: {
@@ -985,5 +985,10 @@ export const FR = {
       questions: '{{}} questions',
       comments: '{{}} commentaires',
     },
+    question: {
+      declined: 'Refusée',
+      accepted: 'Acceptée',
+      submitted: 'En attente',
+    }
   },
 };
