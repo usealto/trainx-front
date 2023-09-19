@@ -941,6 +941,26 @@ export const FR = {
   collaboration: {
     title: 'Collaboration',
     subtitle: "Gérer l'ensemble des contributions de vos équipes.",
+    tabs: {
+      pending: 'En attente',
+      archived: 'Archivés',
+      all: 'Tout voir'
+    },
+    filters: {
+      contributor: 'Contributeur',
+      filterType: 'Type de contribution',
+      types: {
+        comments: 'Commentaires',
+        questions: 'Questions',
+      },
+      period: 'Période',
+      periods: {
+        today: 'Aujourd’hui',
+        week: 'Cette semaine',
+        month: 'Ce mois-ci',
+        old: 'Plus de 30 jours',
+      },
+    },
     seeQuestion: {
       awaiting: 'En attente',
       seeQuestion: 'Voir la question',
