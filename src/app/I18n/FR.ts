@@ -65,6 +65,10 @@ export const FR = {
       trimester: '3 mois',
       month: '1 mois',
     },
+    noSmallScreen: {
+      title: 'Alto n’est pas disponible sur votre taille d’écran.',
+      subtitle: 'Pour accéder au contenu de l’application, connectez-vous sur un ordinateur.',
+    },
     noWebAccess: {
       title: 'Félicitations ! Votre compte Alto est actif',
       subtitle:
