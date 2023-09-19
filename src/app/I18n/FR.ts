@@ -174,6 +174,11 @@ export const FR = {
     titleIcon: '🎯',
     title: 'Programmes',
     subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
+    tabs: {
+      programs: 'Programmes',
+      questions: 'Questions',
+      tags: 'Tags',
+    },
     activePrograms: {
       titleIcon: '🎯',
       title: 'Programmes en cours',
@@ -312,6 +317,7 @@ export const FR = {
           'Récapitulatif des informations essentielles du programme avant de le partager à vos équipes.',
         summary: 'Récapitulatif',
         summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
+        validateCreate: 'Le nouveau programme a bien été ajouté',
       },
     },
     delete: {
