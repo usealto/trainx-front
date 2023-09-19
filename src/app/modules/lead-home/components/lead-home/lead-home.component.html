@@ -9,7 +9,7 @@
 </div>
 <div class="row">
   <div class="col-6 ps-0">
-    <div *ngIf="commentsCount" [class]="commentsCount ? 'warning-panel' : 'success-panel'">
+    <div *ngIf="commentsCount" [routerLink]="['/', AltoRoutes.lead , AltoRoutes.collaboration]" class="cursor-pointer" [class]="commentsCount ? 'warning-panel' : 'success-panel'">
       <alto-icon-badge
         [size]="5"
         icon="bi-chat"
@@ -27,9 +27,11 @@
       </div>
     </div>
   </div>
-  <div class="col-6 pe-0">
+  <div class="col-6 pe-0" >
     <div
       *ngIf="questionsCount"
+      [routerLink]="['/', AltoRoutes.lead , AltoRoutes.collaboration]"
+      class="cursor-pointer"
       [class]="questionsCount ? 'warning-panel' : 'success-panel'"
       fragment="submittedQuestionsAnchor"
     >
