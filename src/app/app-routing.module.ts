@@ -14,6 +14,8 @@ import { haveTeam } from './no-team.guard';
 import { NoCompanyComponent } from './layout/no-company/no-company.component';
 import { NoTeamComponent } from './layout/no-team/no-team.component';
 import { haveCompany } from './no-company.guard';
+import { noSmallScreen } from './no-small-screen.guard';
+import { NoSmallScreenComponent } from './layout/no-small-screen/no-small-screen.component';
 
 const routes: Routes = [
   {
@@ -101,7 +103,7 @@ const routes: Routes = [
         component: NotFoundComponent,
       },
     ],
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, noSmallScreen],
     canActivateChild: [AuthGuard],
   },
   {
@@ -131,6 +133,10 @@ const routes: Routes = [
   {
     path: AltoRoutes.noTeam,
     component: NoTeamComponent,
+  },
+  {
+    path: AltoRoutes.noSmallScreen,
+    component: NoSmallScreenComponent,
   },
   {
     path: '**',
