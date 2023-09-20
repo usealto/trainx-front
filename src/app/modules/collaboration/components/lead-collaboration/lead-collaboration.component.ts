@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   CommentDtoApi,
   QuestionSubmittedDtoApi,
   QuestionSubmittedDtoApiStatusEnumApi,
 } from '@usealto/sdk-ts-angular';
-import { combineLatest, tap } from 'rxjs';
+import { Subscription, combineLatest, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
@@ -54,7 +54,7 @@ interface IContribution {
   templateUrl: './lead-collaboration.component.html',
   styleUrls: ['./lead-collaboration.component.scss'],
 })
-export class LeadCollaborationComponent implements OnInit {
+export class LeadCollaborationComponent implements OnInit, OnDestroy {
   readonly itemsPerPage = 10;
 
   Emoji = EmojiName;
@@ -91,38 +91,56 @@ export class LeadCollaborationComponent implements OnInit {
   contributors: { id: string; name: string }[] = [];
   pendingCount = 0;
 
+  apiSubscription = new Subscription();
+
   constructor(
     private readonly commentsRestService: CommentsRestService,
     private readonly questionsSubmittedTestService: QuestionsSubmittedRestService,
   ) {}
 
   ngOnInit(): void {
-    combineLatest([this.commentsRestService.getComments(), this.questionsSubmittedTestService.getQuestions()])
-      .pipe(
-        tap(([comments, submittedQuestions]) => {
-          this.comments = comments;
-          this.submittedQuestions = submittedQuestions;
-          this.pendingCount =
-            comments.filter((comment) => !comment.isRead).length +
-            submittedQuestions.filter(
-              ({ status }) => status === QuestionSubmittedDtoApiStatusEnumApi.Submitted,
-            ).length;
+    this.getCollaborationData();
+  }
 
-          this.contributors = [
-            ...comments.map(({ createdByUser }) => createdByUser),
-            ...submittedQuestions.map(({ createdByUser }) => createdByUser),
-          ].reduce((acc, contributor) => {
-            if (!acc.find(({ id }) => id === contributor.id)) {
-              acc.push({ id: contributor.id, name: `${contributor.firstname} ${contributor.lastname}` });
-            }
+  ngOnDestroy(): void {
+    this.apiSubscription.unsubscribe();
+  }
 
-            return acc;
-          }, [] as { id: string; name: string }[]);
+  getCollaborationData(): void {
+    this.apiSubscription.unsubscribe();
 
-          this.handleTabChange(this.tabs[0])
-        }),
-      )
-      .subscribe();
+    this.apiSubscription = new Subscription();
+    this.apiSubscription.add(
+      combineLatest([
+        this.commentsRestService.getComments(),
+        this.questionsSubmittedTestService.getQuestions()
+      ])
+        .pipe(
+          tap(([comments, submittedQuestions]) => {
+            this.comments = comments;
+            this.submittedQuestions = submittedQuestions;
+            this.pendingCount =
+              comments.filter((comment) => !comment.isRead).length +
+              submittedQuestions.filter(
+                ({ status }) => status === QuestionSubmittedDtoApiStatusEnumApi.Submitted,
+              ).length;
+
+            this.contributors = [
+              ...comments.map(({ createdByUser }) => createdByUser),
+              ...submittedQuestions.map(({ createdByUser }) => createdByUser),
+            ].reduce((acc, contributor) => {
+              if (!acc.find(({ id }) => id === contributor.id)) {
+                acc.push({ id: contributor.id, name: `${contributor.firstname} ${contributor.lastname}` });
+              }
+
+              return acc;
+            }, [] as { id: string; name: string }[]);
+
+            this.handleTabChange(this.tabs[0])
+          }),
+        )
+        .subscribe()
+    );
   }
 
   handleTabChange(tab: ITab): void {

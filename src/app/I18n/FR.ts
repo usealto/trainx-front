@@ -989,6 +989,11 @@ export const FR = {
       declined: 'Refusée',
       accepted: 'Acceptée',
       submitted: 'En attente',
-    }
+    },
+    dateLabels: {
+      today: 'Aujourd’hui',
+      yesterday: 'Hier',
+      daysCount: (days: number) => `Il y a ${days} jours`,
+    },
   },
 };

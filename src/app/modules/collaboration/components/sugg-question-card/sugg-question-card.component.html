@@ -1,23 +1,28 @@
-<ng-container>
-  <div class="header d-flex flex-row">
-    <div class="d-flex flex-row align-items-center">
-      <alto-icon-badge [icon]="'bi-lightbulb'" [color]="'badge-double-purple'"></alto-icon-badge>
-      <span class="fw-semibold text-purple m-sm-2">Question suggérée</span>
-    </div>
-    <div
-    class="align-self-center alto-badge"
-    [ngClass]="suggQuestion.status === 'declined' ? 'red' : suggQuestion.status === 'accepted' ? 'green' : 'orange'">
-      {{ I18n.collaboration.question[suggQuestion.status] }}
-    </div>
+<div class="header d-flex flex-row">
+  <div class="d-flex flex-row align-items-center">
+    <alto-icon-badge [icon]="'bi-lightbulb'" [color]="'badge-double-purple'"></alto-icon-badge>
+    <span class="fw-semibold text-purple m-sm-2">Question suggérée</span>
   </div>
-  <div class="middle d-flex flex-row bg-white">
-    <div>
+  <div
+  class="align-self-center alto-badge"
+  [ngClass]="suggQuestion.status === 'declined' ? 'red' : suggQuestion.status === 'accepted' ? 'green' : 'orange'">
+    {{ I18n.collaboration.question[suggQuestion.status] }}
+  </div>
+</div>
+
+<div
+class="content-container"
+[class.footer]="suggQuestion.status !== 'submitted'">
+  <div class="text-container">
+    <div class="badge-with-connector">
       <alto-img-badge [size]="24" [user]="suggQuestion.createdByUser"></alto-img-badge>
+      <div *ngIf="suggQuestion.response" class="connector"></div>
     </div>
-    <div class="d-flex flex-column">
-      <div>
+
+    <div class="text-content">
+      <div class="author">
         <span class="fw-semibold">{{ suggQuestion.createdByUser.firstname }} {{ suggQuestion.createdByUser.lastname }} </span>
-        <span class="date-text">{{ suggQuestion.createdAt | date : 'shortDate' }}</span>
+        <span class="date-text">{{ suggQuestion.createdAt | dateLabel }}</span>
       </div>
       <div>
         <span class="light-text">
@@ -26,8 +31,33 @@
       </div>
     </div>
   </div>
+
+  <div *ngIf="suggQuestion.response" class="text-container">
+    <alto-img-badge [size]="24" [user]="suggQuestion.updatedByUser"></alto-img-badge>
+
+    <div class="text-content">
+      <div class="author">
+        <span class="fw-semibold">{{ suggQuestion.updatedByUser?.firstname }} {{ suggQuestion.updatedByUser?.lastname }} </span>
+        <span class="date-text">{{ suggQuestion.updatedAt | dateLabel }}</span>
+      </div>
+
+      <div [ngSwitch]="suggQuestion.status">
+        <div *ngSwitchCase="'accepted'">
+          <!-- TODO: add program name to the following text -->
+          <p>A ajouté la question au programme.</p>
+        </div>
+        <div *ngSwitchCase="'declined'" class="response">
+          <span class="light-text">A refusé cette suggestion.</span>
+          <span class="light-text">{{ suggQuestion.response }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="suggQuestion.status === 'submitted'" class="bg-white">
   <div class="separator"></div>
-  <div class="footer d-flex flex-row bg-white">
+  <div class="footer d-flex flex-row">
     <div class="d-flex flex-row header1">
       <a class="cancel-btn" (click)="refuseQuestion()" *ngIf="suggQuestion.status === 'submitted'">
         <i class="bi bi-x-lg"></i> Refuser
@@ -39,4 +69,4 @@
       </a>
     </div>
   </div>
-</ng-container>
+</div>

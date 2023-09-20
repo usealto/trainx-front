@@ -1,5 +1,5 @@
 import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   PatchQuestionSubmittedDtoApiStatusEnumApi,
@@ -9,8 +9,9 @@ import {
 import { switchMap, tap } from 'rxjs';
 import { SuggQuestionRefuseModalComponent } from '../sugg-question-refuse-modal/sugg-question-refuse-modal.component';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'alto-sugg-question-card',
   templateUrl: './sugg-question-card.component.html',
@@ -37,6 +38,7 @@ export class SuggQuestionCardComponent {
     },
     updatedAt: new Date(),
   };
+  @Output() refresh = new EventEmitter<boolean>();
 
   I18n = I18ns;
 
@@ -65,15 +67,19 @@ export class SuggQuestionCardComponent {
 
     componentInstance.objectDeleted
       .pipe(
-        switchMap(() => {
+        switchMap((response) => {
           return this.QuestionsSubmittedRestService.update({
             id: this.suggQuestion.id,
             patchQuestionSubmittedDtoApi: {
               status: PatchQuestionSubmittedDtoApiStatusEnumApi.Declined,
+              response,
             }
           });
         }),
-        tap(() => modalRef.close()),
+        tap(() => {
+          modalRef.close();
+          this.refresh.emit(true);
+        }),
         untilDestroyed(this)
       )
       .subscribe();
@@ -82,6 +88,4 @@ export class SuggQuestionCardComponent {
   createQuestion(){
     console.log('TODO : action to develop');
   }
-
-
 }

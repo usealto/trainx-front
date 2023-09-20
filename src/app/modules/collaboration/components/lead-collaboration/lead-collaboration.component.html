@@ -63,7 +63,8 @@
   </ng-container>
   <ng-template #questionTemplate>
     <alto-sugg-question-card
-    [suggQuestion]="getQuestionFromContribution(contribution)">
+    [suggQuestion]="getQuestionFromContribution(contribution)"
+    (refresh)="getCollaborationData()">
     </alto-sugg-question-card>
   </ng-template>
   <br>
