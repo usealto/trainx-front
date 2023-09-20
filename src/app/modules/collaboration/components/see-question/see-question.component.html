@@ -7,10 +7,14 @@
 </div>
 <div class="mb-7">
   <span class="fw-bold breadcrumb"
-    >{{ I18ns.collaboration.seeQuestion.awaiting }}
+    >{{
+      breadcrumbElem
+        ? I18ns.collaboration.seeQuestion.breadcrumb.awaiting
+        : I18ns.collaboration.seeQuestion.breadcrumb.seeAll
+    }}
     <i class="bi bi-chevron-right fw-normal mx-3"></i>
     <p class="fw-bold breadcrumb-link">
-      {{ I18ns.collaboration.seeQuestion.seeQuestion }}
+      {{ I18ns.collaboration.seeQuestion.breadcrumb.seeQuestion }}
     </p>
   </span>
 </div>
@@ -26,7 +30,6 @@
     {{ I18ns.collaboration.seeQuestion.comments }}
     <span class="ms-2 alto-badge pill-orange2">{{ comments.length }}</span>
   </label>
-  <!-- *ngFor="let comment of comments" -->
   <div *ngFor="let comment of comments">
     <div class="comment-panel-header d-flex align-items-center">
       <alto-img-badge
@@ -39,15 +42,15 @@
       </alto-img-badge>
       <div class="d-inline-block">
         <p class="fw-bold">{{ comment.createdByUser.firstname + comment.createdByUser.lastname }}</p>
-        <p class="alto-grey">Aujourd'hui</p>
+        <p class="alto-grey">{{ getDate(comment.createdAt) }}</p>
       </div>
     </div>
     <div class="comment-panel-content d-flex flex-column mb-5">
       <p>
         {{ comment.text }}
       </p>
-      <button class="btn btn-outline-secondary align-self-end mt-4">
-        <i class="ms-2 bi bi-eye"></i> {{ I18ns.collaboration.seeQuestion.archiveComment }}
+      <button class="btn btn-outline-secondary align-self-end mt-4" (click)="archiveComment(comment.id)">
+        <i class="ms-2 bi bi-archive"></i> {{ I18ns.collaboration.seeQuestion.archiveComment }}
       </button>
     </div>
   </div>

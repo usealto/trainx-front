@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommentDtoApi, QuestionSubmittedDtoApi } from '@usealto/sdk-ts-angular';
+import { CommentDtoApi } from '@usealto/sdk-ts-angular';
+import { format } from 'date-fns';
 import { combineLatest, map, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
-import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 @Component({
   selector: 'alto-see-question',
@@ -21,11 +21,13 @@ export class SeeQuestionComponent implements OnInit {
   comments: CommentDtoApi[] = [];
 
   isLoading = true;
-  breadCrumbElem = '';
+  breadcrumbElem = '';
+  currentDay = new Date();
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
+    private readonly questionRestSerive: QuestionsRestService,
     private readonly commentsRestService: CommentsRestService,
   ) {}
 
@@ -35,11 +37,17 @@ export class SeeQuestionComponent implements OnInit {
         map((p) => {
           return p['id'];
         }),
-        switchMap((id) => this.commentsRestService.getComments({ questionId: id })),
+        switchMap((id) =>
+          combineLatest([
+            this.questionRestSerive.getQuestion(id),
+            this.commentsRestService.getComments({ questionId: id }),
+          ]),
+        ),
         tap({
-          next: (comments) => {
-            console.log(this.route.firstChild);
-            this.questionTitle = comments[0].question.title;
+          next: ([question, comments]) => {
+            if (question) {
+              this.questionTitle = question.title;
+            }
             this.comments = comments;
             this.isLoading = false;
           },
@@ -49,5 +57,20 @@ export class SeeQuestionComponent implements OnInit {
         }),
       )
       .subscribe();
+  }
+
+  getDate(date: Date): string {
+    const today = format(new Date(), 'dd/MM/yyyy');
+    const commentDate = format(date, 'dd/MM/yyyy');
+
+    if (today === commentDate) {
+      return I18ns.collaboration.seeQuestion.date.today;
+    } else {
+      return commentDate;
+    }
+  }
+
+  archiveComment(id: string) {
+    this.commentsRestService.updateComment({ id, patchCommentDtoApi: { isRead: true } }).subscribe();
   }
 }

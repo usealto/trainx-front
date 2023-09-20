@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
-import { CommentDtoApi, CommentsApiService, GetCommentsRequestParams } from '@usealto/sdk-ts-angular';
+import {
+  CommentDtoApi,
+  CommentsApiService,
+  GetCommentsRequestParams,
+  PatchCommentRequestParams,
+} from '@usealto/sdk-ts-angular';
 import { ProgramsStore } from '../programs.store';
 
 @Injectable({
@@ -11,6 +16,10 @@ export class CommentsRestService {
     private readonly commentApi: CommentsApiService,
     private readonly programStore: ProgramsStore,
   ) {}
+
+  updateComment(req: PatchCommentRequestParams): Observable<CommentDtoApi | undefined> {
+    return this.commentApi.patchComment(req).pipe(map((r) => r.data));
+  }
 
   getComments(req?: GetCommentsRequestParams): Observable<CommentDtoApi[]> {
     if (this.programStore.unreadComments.value.length) {

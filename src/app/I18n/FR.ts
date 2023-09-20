@@ -944,7 +944,7 @@ export const FR = {
     tabs: {
       pending: 'En attente',
       archived: 'Archivés',
-      all: 'Tout voir'
+      all: 'Tout voir',
     },
     filters: {
       contributor: 'Contributeur',
@@ -962,11 +962,17 @@ export const FR = {
       },
     },
     seeQuestion: {
-      awaiting: 'En attente',
-      seeQuestion: 'Voir la question',
+      breadcrumb: {
+        seeQuestion: 'Voir la question',
+        awaiting: 'En attente',
+        seeAll: 'Tout voir',
+      },
+      date: {
+        today: 'Aujourd’hui',
+      },
       discoverQuestionsAndComments: 'Découvrez les réponses et commentaires associés à cette question.',
       comments: 'Commentaires',
       archiveComment: 'Archiver le commentaire',
-    }
+    },
   },
 };
