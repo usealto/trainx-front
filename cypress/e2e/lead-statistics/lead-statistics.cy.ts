@@ -1,4 +1,4 @@
-describe('Lead Team', () => {
+describe('Lead Statistics', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
     cy.visit('/', {});
