@@ -435,7 +435,7 @@ export const FR = {
       title: {
         create: 'Créer une question',
         edit: 'Modifier une question',
-        submitted: 'Question suggérée',
+        submitted: 'Créer la question',
       },
       subtitle: {
         question: 'Indiquer l’intitulé, les réponses possibles et les informations complémentaires.',
