@@ -974,5 +974,11 @@ export const FR = {
       comments: 'Commentaires',
       archiveComment: 'Archiver le commentaire',
     },
+    archiveModal: {
+      title: 'Archiver un commentaire',
+      subtitle: 'Souhaitez-vous envoyer un message à {{}} en réponse à son commentaire ?',
+      answerTitle: 'Réponse à {{}} (facultatif)',
+      answerPlaceholder: 'Écrivez votre message...',
+    },
   },
 };

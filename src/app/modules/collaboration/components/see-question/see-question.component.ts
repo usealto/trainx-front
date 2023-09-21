@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommentDtoApi } from '@usealto/sdk-ts-angular';
 import { format } from 'date-fns';
 import { combineLatest, map, switchMap, tap } from 'rxjs';
@@ -8,6 +9,8 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ArchiveModalComponent } from '../archive-modal/archive-modal.component';
+import { untilDestroyed } from '@ngneat/until-destroy';
 @Component({
   selector: 'alto-see-question',
   templateUrl: './see-question.component.html',
@@ -25,6 +28,7 @@ export class SeeQuestionComponent implements OnInit {
   currentDay = new Date();
 
   constructor(
+    private modalService: NgbModal,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly questionRestSerive: QuestionsRestService,
@@ -71,6 +75,26 @@ export class SeeQuestionComponent implements OnInit {
   }
 
   archiveComment(id: string) {
-    this.commentsRestService.updateComment({ id, patchCommentDtoApi: { isRead: true } }).subscribe();
+    const modalRef = this.modalService.open(ArchiveModalComponent, { centered: true, size: 'md' });
+
+    const componentInstance = modalRef.componentInstance as ArchiveModalComponent;
+    const comment = this.comments.find((c) => c.id === id);
+    const author = comment ? comment.createdByUser.firstname + ' ' + comment.createdByUser.lastname : '';
+    componentInstance.author = author;
+
+    componentInstance.archivedComment
+      .pipe(
+        switchMap((answer) =>
+          this.commentsRestService.updateComment({
+            id,
+            patchCommentDtoApi: { isRead: true, response: answer },
+          }),
+        ),
+        tap((res) => {
+          console.log(res, 'doit recharger les commentaires');
+          modalRef.close();
+        }),
+      )
+      .subscribe();
   }
 }

@@ -1,0 +1,27 @@
+<div class="modal-body p-5">
+  <alto-icon-badge [size]="5" icon="bi-archive" [color]="'badge-double-primary'"></alto-icon-badge>
+  <h2 class="fw-bold mb-3">
+    {{ I18ns.collaboration.archiveModal.title }}
+  </h2>
+  <p class="mb-5">{{ I18ns.collaboration.archiveModal.subtitle | replaceInTranslation : author }}</p>
+  <p class="mb-3 fw-bold">
+    {{ I18ns.collaboration.archiveModal.answerTitle | replaceInTranslation : author }}
+  </p>
+  <textarea
+    #answerText
+    class="form-control"
+    placeholder="{{ I18ns.collaboration.archiveModal.answerPlaceholder }}"
+  ></textarea>
+  <div class="row mt-6">
+    <div class="col-6">
+      <button class="btn btn-outline-secondary w-100" (click)="closeModal()">
+        {{ I18ns.shared.cancel }}
+      </button>
+    </div>
+    <div class="col-6">
+      <button data-cy="deleteButton" class="btn btn-primary w-100" (click)="archiveComment(answerText)">
+        {{ I18ns.shared.submit }}
+      </button>
+    </div>
+  </div>
+</div>
