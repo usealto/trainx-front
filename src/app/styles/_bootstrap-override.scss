@@ -227,6 +227,9 @@ textarea.form-control:focus {
           text-overflow: ellipsis;
         }
       }
+      .ng-option:last-child {
+        border-bottom: 0;
+      }
     }
   }
   &.alto-form {
