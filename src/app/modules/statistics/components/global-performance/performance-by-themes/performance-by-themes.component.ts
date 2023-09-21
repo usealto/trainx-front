@@ -8,21 +8,21 @@ import {
   ScoresResponseDtoApi,
   TagDtoApi,
   TagStatsDtoApi,
+  TeamDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { Observable, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-// import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { ChartsService, ITooltipParams } from 'src/app/modules/charts/charts.service';
+import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
+import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { ProgramsStore } from 'src/app/modules/programs/programs.store';
+import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
-import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { EmojiName } from 'src/app/core/utils/emoji/data';
-import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
-import { ProgramsStore } from 'src/app/modules/programs/programs.store';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { isUndefined } from 'cypress/types/lodash';
 
 @UntilDestroy()
 @Component({
@@ -48,9 +48,10 @@ export class PerformanceByThemesComponent implements OnChanges {
   ScoreEvolutionChartOption: any = {};
 
   selectedTeamsKnowledgeTag?: TagDtoApi;
-  selectedTeamsKnowledgeScores: ScoreDtoApi[] = [];
+  selectedTeamsKnowledgeScores: TeamDtoApi[] = [];
   teamsKnowledgeFilteredScores: ScoreDtoApi[] = [];
   teamsKnowledgeChartOption: any = {};
+  series: any[] = [];
 
   constructor(
     public readonly programsStore: ProgramsStore,
@@ -59,6 +60,7 @@ export class PerformanceByThemesComponent implements OnChanges {
     private readonly statisticsServices: StatisticsService,
     private readonly scoresServices: ScoresService,
     private readonly teamRestService: TeamsRestService,
+    private readonly chartService: ChartsService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -94,7 +96,7 @@ export class PerformanceByThemesComponent implements OnChanges {
     this.getTeamsKnowledgeScores(this.selectedTeamsKnowledgeScores);
   }
 
-  getTeamsKnowledgeScores(teamsScores: ScoreDtoApi[] = []) {
+  getTeamsKnowledgeScores(teamsScores: TeamDtoApi[] = []) {
     if (teamsScores) {
       this.selectedTeamsKnowledgeScores = teamsScores;
     }
@@ -121,29 +123,70 @@ export class PerformanceByThemesComponent implements OnChanges {
   }
 
   createTeamsKnowledgeChart(rawScores: ScoreDtoApi[]) {
-    const scores = this.scoresServices.reduceChartData(rawScores);
+    const scores = rawScores.map((s) => {
+      return {
+        label: s.label,
+        score: this.scoresServices.reduceWithoutNull(s.averages) || 0,
+      };
+    });
 
-    const series = scores.map((s) => {
-      const points = this.statisticsServices.transformDataToPoint(s);
-      const point = points.reduce((acc, curr) => acc + (curr.y ?? 0), 0) / points.length;
+    // Adds Teams without scores but seleected in the filter
+    this.selectedTeamsKnowledgeScores
+      .filter((t) => rawScores.every((te) => te.id !== t.id))
+      .forEach((s) => {
+        scores.push({
+          label: s.name,
+          score: 0,
+        });
+      });
+
+    this.series = scores.map((s, index) => {
       return {
         name: s.label,
-        type: 'bar',
-        data: [Math.round((point * 10000) / 100)],
-        barWidth: 24,
-        barGap: '10',
-        tooltip: {
-          valueFormatter: (value: any) => {
-            return (value as number) + '%';
-          },
+        value: Math.round((s.score * 10000) / 100),
+        itemStyle: {
+          color: this.chartService.getDefaultThemeColors(index),
         },
       };
     });
 
     this.teamsKnowledgeChartOption = {
-      xAxis: [{ ...xAxisDatesOptions, data: [I18ns.shared.score], show: false }],
-      yAxis: [{ ...yAxisScoreOptions }],
-      series: series,
+      xAxis: [{ type: 'category', show: false }],
+      yAxis: [{ max: 100 }],
+      series: [
+        {
+          type: 'bar',
+          barWidth: 24,
+          data: this.series,
+        },
+      ],
+      grid: {
+        left: '6%',
+        top: '30',
+        right: '1%',
+        bottom: '4%',
+      },
+      tooltip: {
+        trigger: 'item',
+        padding: 0,
+        borderColor: '#EAECF0',
+        formatter: (params: ITooltipParams) => {
+          const data = params.data as any;
+          return `
+          <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10); border-radius: 4px;">
+            <div style="color: #667085; background-color: #F9FAFB; padding : 8px 10px 4px 10px;">
+              ${I18ns.shared.score}
+            </div>
+            <div style="padding : 4px 10px 8px 10px; display: flex; align-items: center; gap: 10px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="11" viewBox="0 0 10 11" fill="none">
+                <circle cx="5" cy="5.5" r="5" fill="${params.color}"/>
+              </svg>
+              <p>${params.name} : <b style="color: ${params.color}">${data.value} %<b></p>
+            </div>
+          </div>
+        `;
+        },
+      },
     };
   }
 
@@ -180,7 +223,7 @@ export class PerformanceByThemesComponent implements OnChanges {
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
-    scores = this.scoresServices.reduceChartData(scores);
+    scores = this.scoresServices.reduceLineChartData(scores);
     this.scoreCount = scores.length;
     const aggregateData = this.statisticsServices.transformDataToPoint(scores[0]);
     const labels = this.statisticsServices.formatLabel(
@@ -203,7 +246,6 @@ export class PerformanceByThemesComponent implements OnChanges {
     const series = dataSet.map((d) => {
       return {
         name: d.label,
-        // color: '#09479e',
         data: d.data,
         type: 'line',
         tooltip: {

@@ -99,7 +99,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
   }
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], globalScore: ScoreDtoApi, duration: ScoreDuration) {
-    scores = this.scoresServices.reduceChartData(scores);
+    scores = this.scoresServices.reduceLineChartData(scores);
     this.scoreCount = scores.length;
 
     // Aligns Global with Score's Length so thay start on the same month

@@ -20,6 +20,7 @@ export const FR = {
     optional: '(facultatif)',
     noData: 'Aucun résultat ne correspond à votre recherche.',
     noDataSubtitle: 'Essayez avec d’autres filtres.',
+    noDataInt: '-%',
     resetFilters: 'Réinitialiser les filtres',
     reply: 'Répondre',
     search: 'Rechercher',
@@ -64,6 +65,10 @@ export const FR = {
       year: '12 mois',
       trimester: '3 mois',
       month: '1 mois',
+    },
+    noSmallScreen: {
+      title: 'Alto n’est pas disponible sur votre taille d’écran.',
+      subtitle: 'Pour accéder au contenu de l’application, connectez-vous sur un ordinateur.',
     },
     noWebAccess: {
       title: 'Félicitations ! Votre compte Alto est actif',

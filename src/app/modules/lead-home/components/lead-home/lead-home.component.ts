@@ -140,7 +140,7 @@ export class LeadHomeComponent implements OnInit {
       .pipe(
         tap((res) => {
           this.scoreCount = res.scores.length;
-          const scores = this.scoreService.reduceChartData(res.scores);
+          const scores = this.scoreService.reduceLineChartData(res.scores);
           const points = this.statisticsServices.transformDataToPoint(scores[0]);
           const labels = this.statisticsServices.formatLabel(
             points.map((p) => p.x),
@@ -159,7 +159,7 @@ export class LeadHomeComponent implements OnInit {
                 tooltip: {
                   trigger: 'item',
                   valueFormatter: (value: any) => {
-                      return value ? (value as number) + '%' : '';
+                    return value ? (value as number) + '%' : '';
                   },
                 },
               },

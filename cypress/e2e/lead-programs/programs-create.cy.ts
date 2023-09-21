@@ -5,7 +5,7 @@ describe('Lead Programs', () => {
   });
   it('Creates and delete a program', function () {
     const newProg = 'ABCDTEST';
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
+    cy.get('[data-cy="leadMenuPrograms"]').click();
     cy.wait(500);
     cy.get('[data-cy="createNewProgram"]').click();
 
@@ -24,7 +24,7 @@ describe('Lead Programs', () => {
 
     // Delete the program
 
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
+    cy.get('[data-cy="leadMenuPrograms"]').click();
 
     cy.get('[data-cy="programSearch"]').clear();
     cy.get('[data-cy="programSearch"]').type(newProg);
@@ -42,7 +42,7 @@ describe('Lead Programs', () => {
 
     // Check if the program is deleted
     cy.wait(500);
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
+    cy.get('[data-cy="leadMenuPrograms"]').click();
 
     cy.get('[data-cy="programSearch"]').clear();
     cy.get('[data-cy="programSearch"]').type(newProg);

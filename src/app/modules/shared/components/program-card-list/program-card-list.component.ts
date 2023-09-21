@@ -127,9 +127,9 @@ export class ProgramCardListComponent implements OnInit {
       })
       .pipe(
         map((data) => {
-          // If the place is 'active', filter out programs that are not active
+          // If the place is 'active', filter out programs that are not active and that has no team
           if (this.isActive) {
-            data = data?.filter((program) => program.program.isActive) ?? [];
+            data = data?.filter((program) => program.program.isActive && program.teams.length !== 0) ?? [];
           }
           return data?.sort((a, b) => {
             if (a.program.isActive === b.program.isActive) {

@@ -2,7 +2,7 @@ describe('L/Teams Members Section', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
     cy.visit('/', {});
-    cy.get('[ng-reflect-router-link="l/teams"]').click();
+    cy.get('[data-cy="leadMenuTeams"]').click();
   });
 
   it('Filters members by score', () => {

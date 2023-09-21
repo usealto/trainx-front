@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { addDays, addHours, format, parse, startOfDay } from 'date-fns';
 import { ScoreDtoApi, ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
-import { ScoreDuration, ScoreFilter, TopFlopDisplay } from '../models/score.model';
+import { addDays, addHours, startOfDay } from 'date-fns';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { ScoreDuration, ScoreFilter, TopFlopDisplay } from '../models/score.model';
 
 @Injectable({
   providedIn: 'root',
@@ -116,7 +116,7 @@ export class ScoresService {
     }
   }
 
-  reduceChartData(scores: ScoreDtoApi[]): ScoreDtoApi[] {
+  reduceLineChartData(scores: ScoreDtoApi[]): ScoreDtoApi[] {
     if (scores.length === 0) {
       return [];
     }
