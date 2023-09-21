@@ -136,7 +136,7 @@ export class LeadCollaborationComponent implements OnInit, OnDestroy {
               return acc;
             }, [] as { id: string; name: string }[]);
 
-            this.handleTabChange(this.tabs[0])
+            this.handleTabChange(this.tabs[0]);
           }),
         )
         .subscribe()

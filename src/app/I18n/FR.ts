@@ -993,7 +993,8 @@ export const FR = {
     dateLabels: {
       today: 'Aujourd’hui',
       yesterday: 'Hier',
-      daysCount: (days: number) => `Il y a ${days} jours`,
+      daysCount: 'Il y a {{}} jours',
     },
+    declineSuggestedQuestion: 'La question a bien été refusée'
   },
 };

@@ -10,6 +10,7 @@ import { switchMap, tap } from 'rxjs';
 import { SuggQuestionRefuseModalComponent } from '../sugg-question-refuse-modal/sugg-question-refuse-modal.component';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ToastService } from 'src/app/core/toast/toast.service';
 
 @UntilDestroy()
 @Component({
@@ -43,8 +44,9 @@ export class SuggQuestionCardComponent {
   I18n = I18ns;
 
   constructor(
-    private modalService: NgbModal,
-    private QuestionsSubmittedRestService: QuestionsSubmittedRestService,
+    private readonly modalService: NgbModal,
+    private readonly QuestionsSubmittedRestService: QuestionsSubmittedRestService,
+    private readonly toastService: ToastService
   ) { }
 
   refuseQuestion() {
@@ -79,6 +81,10 @@ export class SuggQuestionCardComponent {
         tap(() => {
           modalRef.close();
           this.refresh.emit(true);
+          this.toastService.show({
+            text: I18ns.collaboration.declineSuggestedQuestion,
+            type: 'success',
+          });
         }),
         untilDestroyed(this)
       )

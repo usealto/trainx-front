@@ -32,7 +32,7 @@ class="content-container"
     </div>
   </div>
 
-  <div *ngIf="suggQuestion.response" class="text-container">
+  <div *ngIf="suggQuestion.status !== 'submitted'" class="text-container">
     <alto-img-badge [size]="24" [user]="suggQuestion.updatedByUser"></alto-img-badge>
 
     <div class="text-content">
@@ -42,9 +42,9 @@ class="content-container"
       </div>
 
       <div [ngSwitch]="suggQuestion.status">
-        <div *ngSwitchCase="'accepted'">
+        <div *ngSwitchCase="'accepted'" class="response">
           <!-- TODO: add program name to the following text -->
-          <p>A ajouté la question au programme.</p>
+          <span class="light-text">A ajouté la question au programme.</span>
         </div>
         <div *ngSwitchCase="'declined'" class="response">
           <span class="light-text">A refusé cette suggestion.</span>

@@ -21,7 +21,7 @@ export class DateLabelPipe implements PipeTransform {
 
     const diff = differenceInDays(new Date(), date);
     if (diff < 7) {
-      return I18ns.collaboration.dateLabels.daysCount(diff);
+      return I18ns.collaboration.dateLabels.daysCount.replace('{{}}', diff.toFixed());
     }
 
     return format(date, 'dd/MM/yyyy');
