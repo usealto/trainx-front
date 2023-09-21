@@ -41,7 +41,7 @@
           <th scope="col" class="w-10 text-center">
             {{ I18ns.statistics.globalPerformance.teamsTable.columns.globalScore }}
           </th>
-          <th scope="col" class="w-15">
+          <th scope="col" class="w-15 text-center">
             {{ I18ns.statistics.globalPerformance.teamsTable.columns.scoreEvolution }}
           </th>
           <th scope="col" class="w-35">
@@ -64,7 +64,7 @@
           </td>
           <td class="text-center">
             <alto-progression-badge
-              class="d-inline-block ms-3"
+              class="d-inline-block"
               [score]="getTeamPreviousScore(team)"
               *ngIf="!scoreIsLoading"
             ></alto-progression-badge>

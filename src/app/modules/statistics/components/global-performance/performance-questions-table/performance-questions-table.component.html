@@ -30,7 +30,7 @@
           <th scope="col" class="w-10 text-center">
             {{ I18ns.statistics.globalPerformance.questionsTable.columns.globalScore }}
           </th>
-          <th scope="col" class="w-10">
+          <th scope="col" class="w-10 text-center">
             {{ I18ns.statistics.globalPerformance.questionsTable.columns.scoreEvolution }}
           </th>
           <th scope="col" class="w-20 text-center">
@@ -51,7 +51,7 @@
               quest.score | percent
             }}</span>
           </td>
-          <td>
+          <td class="text-center">
             <alto-progression-badge
               class="d-inline-block ms-3"
               [score]="getQuestionPreviousScore(quest)"
