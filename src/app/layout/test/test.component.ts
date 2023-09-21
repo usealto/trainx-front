@@ -117,7 +117,7 @@ export class TestComponent {
         tap(([usersScores, teamsScores]) => {
           //USER SCORES: reduce scores to remove all first values without data
           const rawUserScores = usersScores.scores.find((u) => u.id === this.userStore.user.value.id);
-          const reducedUserScores = this.scoresService.reduceChartData([
+          const reducedUserScores = this.scoresService.reduceLineChartData([
             rawUserScores ?? ({} as ScoreDtoApi),
           ]);
 
@@ -128,7 +128,7 @@ export class TestComponent {
 
           //TEAM SCORES: reduce scores to remove all first values without data
           const rawTeamScores = teamsScores.scores.find((t) => t.id === this.userStore.user.value.teamId);
-          const reducedTeamScores = this.scoresService.reduceChartData([
+          const reducedTeamScores = this.scoresService.reduceLineChartData([
             rawTeamScores ?? ({} as ScoreDtoApi),
           ]);
 

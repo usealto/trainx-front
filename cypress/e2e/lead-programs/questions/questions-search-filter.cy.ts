@@ -1,11 +1,9 @@
-import { expect } from 'chai';
-
 describe('L/Programs Questions Tab', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
     cy.visit('/');
 
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
+    cy.get('[data-cy="leadMenuPrograms"]').click();
   });
 
   let questionTitle = '';

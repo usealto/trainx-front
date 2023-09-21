@@ -4,14 +4,14 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 
 //! Changing this constant will change every charts using it!
 
-export const xAxisDatesOptions :any  = {
+export const xAxisDatesOptions: any = {
   type: 'category',
   axisPointer: {
     type: 'line',
   },
-}
+};
 
-export const yAxisScoreOptions :any  = {
+export const yAxisScoreOptions: any = {
   type: 'value',
   name: 'Score (%)',
   nameLocation: 'middle',
@@ -22,9 +22,9 @@ export const yAxisScoreOptions :any  = {
   axisLabel: {
     formatter: '{value}',
   },
-}
+};
 
-// ! DEPRECATED
+// ! DEPRECATED for V3.2
 export const chartDefaultOptions: ChartOptions = {
   maintainAspectRatio: false,
   responsive: true,
