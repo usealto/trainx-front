@@ -979,6 +979,7 @@ export const FR = {
       subtitle: 'Souhaitez-vous envoyer un message à {{}} en réponse à son commentaire ?',
       answerTitle: 'Réponse à {{}} (facultatif)',
       answerPlaceholder: 'Écrivez votre message...',
+      successToast: 'La commentaire a bien été archivé.',
     },
   },
 };

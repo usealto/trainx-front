@@ -21,8 +21,8 @@ export class CommentsRestService {
     return this.commentApi.patchComment(req).pipe(map((r) => r.data));
   }
 
-  getComments(req?: GetCommentsRequestParams): Observable<CommentDtoApi[]> {
-    if (this.programStore.unreadComments.value.length) {
+  getComments(req?: GetCommentsRequestParams, refresh = false): Observable<CommentDtoApi[]> {
+    if (this.programStore.unreadComments.value.length && refresh === false) {
       return this.programStore.unreadComments.value$;
     } else {
       const par = {

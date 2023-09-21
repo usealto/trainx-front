@@ -10,7 +10,7 @@ import { CommentsRestService } from 'src/app/modules/programs/services/comments-
 import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ArchiveModalComponent } from '../archive-modal/archive-modal.component';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import { ToastService } from 'src/app/core/toast/toast.service';
 @Component({
   selector: 'alto-see-question',
   templateUrl: './see-question.component.html',
@@ -29,6 +29,7 @@ export class SeeQuestionComponent implements OnInit {
 
   constructor(
     private modalService: NgbModal,
+    private readonly toastService: ToastService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly questionRestSerive: QuestionsRestService,
@@ -36,6 +37,10 @@ export class SeeQuestionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getComments();
+  }
+
+  getComments(): void {
     this.route.params
       .pipe(
         map((p) => {
@@ -44,7 +49,7 @@ export class SeeQuestionComponent implements OnInit {
         switchMap((id) =>
           combineLatest([
             this.questionRestSerive.getQuestion(id),
-            this.commentsRestService.getComments({ questionId: id }),
+            this.commentsRestService.getComments({ questionId: id }, true),
           ]),
         ),
         tap({
@@ -90,9 +95,13 @@ export class SeeQuestionComponent implements OnInit {
             patchCommentDtoApi: { isRead: true, response: answer },
           }),
         ),
-        tap((res) => {
-          console.log(res, 'doit recharger les commentaires');
+        tap(() => {
+          this.getComments();
           modalRef.close();
+          this.toastService.show({
+            text: I18ns.collaboration.archiveModal.successToast,
+            type: 'success',
+          });
         }),
       )
       .subscribe();
