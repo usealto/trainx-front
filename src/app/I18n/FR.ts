@@ -961,7 +961,7 @@ export const FR = {
     subtitle: "Gérer l'ensemble des contributions de vos équipes.",
     tabs: {
       pending: 'En attente',
-      archived: 'Archivés',
+      archived: 'Traités',
       all: 'Tout voir',
     },
     filters: {
@@ -985,5 +985,22 @@ export const FR = {
       questions: '{{}} questions',
       comments: '{{}} commentaires',
     },
+    question: {
+      declined: 'Refusée',
+      accepted: 'Acceptée',
+      submitted: 'En attente',
+    },
+    dateLabels: {
+      today: 'Aujourd’hui',
+      yesterday: 'Hier',
+      daysCount: 'Il y a {{}} jours',
+    },
+    questionCard: {
+      denyQuestionTitle: 'Refuser une question',
+      denyQuestionSubtitle: 'Souhaitez-vous envoyer un message à {{}} pour expliquer votre choix ?',
+      deny: 'Refuser',
+      textArea: 'Réponse à {{}} (facultatif)',
+      suggQuestionDenied: 'La question a bien été refusée'
+    }
   },
 };

@@ -3,6 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ChallengeDtoApi,
   ChallengeDtoApiTypeEnumApi,
+  QuestionSubmittedStatusEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   UserDtoApi,
@@ -98,7 +99,7 @@ export class LeadHomeComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([
       this.commentsRestService.getComments(),
-      this.questionsSubmittedRestService.getQuestions(),
+      this.questionsSubmittedRestService.getQuestions({ status: QuestionSubmittedStatusEnumApi.Submitted }),
       this.challengesRestService.getChallenges({ itemsPerPage: 40, sortBy: 'endDate:desc' }),
     ])
       .pipe(

@@ -46,6 +46,21 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  &.orange {
+    color: var(--warning-600);
+    background-color: var(--warning-50);
+  }
+
+  &.red {
+    color: var(--error-600);
+    background-color: var(--error-50);
+  }
+
+  &.green {
+    color: var(--success-600);
+    background-color: var(--success-50);
+  }
 }
 
 .alto-badge-big {

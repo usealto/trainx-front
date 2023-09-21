@@ -1,0 +1,30 @@
+<div class="modal-body text-left p-5">
+  <alto-icon-badge [icon]="icon" [color]="'badge-double-error'" [size]="4"></alto-icon-badge>
+  <h2 class="fw-semibold mb-4 mt-4">
+    {{data.title}}
+  </h2>
+  <p class="mb-5 alto-grey">
+    {{data.subtitle}}
+  </p>
+  <p class="fw-medium mb-3">
+    {{data.textarea}}
+  </p>
+  <textarea
+    rows="5"
+    class="form-control"
+    placeholder="Écrivez votre message..."
+    [formControl]="response"
+  ></textarea>
+  <div class="row mt-6 text-center">
+    <div class="col-6">
+      <button class="btn btn-outline-secondary w-100 justify-content-sm-center" style="font-size: 1rem;" (click)="closeModal()">
+        Annuler
+      </button>
+    </div>
+    <div class="col-6">
+      <button class="btn btn-primary w-100 justify-content-sm-center" style="font-size: 1rem;" (click)="refuseQuestion()">
+        {{data.button}}
+      </button>
+    </div>
+  </div>
+</div>
