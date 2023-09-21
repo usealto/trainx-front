@@ -11,6 +11,7 @@ import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { SuggQuestionRefuseModalComponent } from '../sugg-question-refuse-modal/sugg-question-refuse-modal.component';
 import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
+import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
 
 @UntilDestroy()
 @Component({
@@ -29,6 +30,7 @@ export class SuggQuestionCardComponent {
     private readonly modalService: NgbModal,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly toastService: ToastService,
+    private readonly replaceInTranslationPipe: ReplaceInTranslationPipe
   ) {}
 
   refuseQuestion() {
@@ -41,12 +43,12 @@ export class SuggQuestionCardComponent {
 
     const componentInstance = modalRef.componentInstance as SuggQuestionRefuseModalComponent;
     componentInstance.data = {
-      title: 'Refuser une question',
-      subtitle: `Souhaitez-vous envoyer un message à ${fullname} pour expliquer votre choix ?`,
+      title: I18ns.collaboration.questionCard.denyQuestionTitle,
+      subtitle: this.replaceInTranslationPipe.transform(I18ns.collaboration.questionCard.denyQuestionSubtitle, fullname),
       icon: 'bi-x-circle',
       color: 'badge-double-error',
-      button: 'Refuser ',
-      textarea: `Réponse à ${fullname} (facultatif)`,
+      button: I18ns.collaboration.questionCard.deny,
+      textarea: this.replaceInTranslationPipe.transform(I18ns.collaboration.questionCard.textArea, fullname),
     };
 
     componentInstance.objectDeleted
@@ -67,7 +69,7 @@ export class SuggQuestionCardComponent {
           modalRef.close();
           this.refresh.emit(true);
           this.toastService.show({
-            text: I18ns.collaboration.declineSuggestedQuestion,
+            text: I18ns.collaboration.questionCard.suggQuestionDenied,
             type: 'success',
           });
         }),

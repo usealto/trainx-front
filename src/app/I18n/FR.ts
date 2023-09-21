@@ -995,6 +995,12 @@ export const FR = {
       yesterday: 'Hier',
       daysCount: 'Il y a {{}} jours',
     },
-    declineSuggestedQuestion: 'La question a bien été refusée'
+    questionCard: {
+      denyQuestionTitle: 'Refuser une question',
+      denyQuestionSubtitle: 'Souhaitez-vous envoyer un message à {{}} pour expliquer votre choix ?',
+      deny: 'Refuser',
+      textArea: 'Réponse à {{}} (facultatif)',
+      suggQuestionDenied: 'La question a bien été refusée'
+    }
   },
 };
