@@ -12,3 +12,16 @@
   text-overflow: ellipsis;
   vertical-align: bottom;
 }
+.legend {
+  margin-right: 1rem;
+  display: inline-block;
+  color: var(--alto-grey);
+}
+.circle {
+  margin-right: 0.5rem;
+  display: inline-block;
+  vertical-align: middle;
+  width: 8px;
+  height: 8px;
+  border-radius: 17px;
+}

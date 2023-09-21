@@ -86,8 +86,13 @@
       [isLoaded]="false"
     ></alto-chart-bar>
   </div>
+  <div class="d-flex justify-content-center">
+    <p *ngFor="let team of series" class="legend">
+      <span class="circle" [style.background]="team.itemStyle.color"></span> {{ team.name }}
+    </p>
+  </div>
 </div>
-<div [hidden]="scoreCount > 0" class="nodata-placeholder">
+<div [hidden]="this.series.length > 0" class="nodata-placeholder">
   <h2 class="mb-5 fs-6">
     {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.title }}
   </h2>
