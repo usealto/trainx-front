@@ -19,10 +19,32 @@
 }
 
 .footer {
+  display: flex;
   border-radius: 0px 0px 12px 12px;
   padding: 16px 20px;
   align-self: stretch;
   justify-content: space-between;
+
+  .button {
+    font-size: 0.833rem;
+    font-weight: 600;
+    line-height: 3rem;
+    cursor: pointer;
+    background-color: white;
+    border: none;
+    padding: 8px 12px 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    &.gray {
+      color: var(--gray-700);
+    }
+
+    &.blue {
+      color: var(--alto-text-blue);
+    }
+  }
 }
 
 .light-text {

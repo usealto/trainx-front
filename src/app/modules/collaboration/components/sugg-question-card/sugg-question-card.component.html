@@ -13,7 +13,7 @@
         : 'orange'
     "
   >
-    {{ I18n.collaboration.question[suggQuestion?.status || StatusEnum.Accepted] }}
+    {{ I18ns.collaboration.question[suggQuestion?.status || StatusEnum.Accepted] }}
   </div>
 </div>
 
@@ -53,10 +53,10 @@
       <div [ngSwitch]="suggQuestion?.status">
         <div *ngSwitchCase="StatusEnum.Accepted" class="response">
           <!-- TODO: add program name to the following text -->
-          <span class="light-text">A ajouté la question au programme.</span>
+          <span class="light-text">{{ I18ns.collaboration.questionCard.hasAccepted }}</span>
         </div>
         <div *ngSwitchCase="StatusEnum.Declined" class="response">
-          <span class="light-text">A refusé cette suggestion.</span>
+          <span class="light-text">{{ I18ns.collaboration.questionCard.hasDenied }}</span>
           <span class="light-text">{{ suggQuestion?.response }}</span>
         </div>
       </div>
@@ -66,16 +66,15 @@
 
 <div *ngIf="suggQuestion?.status === StatusEnum.Submitted" class="bg-white">
   <div class="separator"></div>
-  <div class="footer d-flex flex-row">
-    <div class="d-flex flex-row header1">
-      <a class="cancel-btn" (click)="refuseQuestion()" *ngIf="suggQuestion?.status === StatusEnum.Submitted">
-        <i class="bi bi-x-lg"></i> Refuser
-      </a>
-    </div>
-    <div>
-      <a class="blue-btn" (click)="createQuestion()" *ngIf="suggQuestion?.status === StatusEnum.Submitted">
-        <i class="bi bi-plus-lg"></i> Créer la question
-      </a>
-    </div>
+  <div class="footer">
+    <button class="button gray" (click)="refuseQuestion()" *ngIf="suggQuestion?.status === StatusEnum.Submitted">
+      <i class="bi bi-x-lg"></i>
+      {{ I18ns.collaboration.questionCard.deny }}
+    </button>
+
+    <button class="button blue" (click)="createQuestion()" *ngIf="suggQuestion?.status === StatusEnum.Submitted">
+      <i class="bi bi-plus-lg"></i>
+      {{ I18ns.collaboration.questionCard.accept }}
+    </button>
   </div>
 </div>

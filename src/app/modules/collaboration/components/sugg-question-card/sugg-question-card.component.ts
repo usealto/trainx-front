@@ -24,7 +24,7 @@ export class SuggQuestionCardComponent {
   @Input() suggQuestion?: QuestionSubmittedDtoApi;
   @Output() refresh = new EventEmitter<boolean>();
 
-  I18n = I18ns;
+  I18ns = I18ns;
   StatusEnum = QuestionSubmittedDtoApiStatusEnumApi;
 
   constructor(
