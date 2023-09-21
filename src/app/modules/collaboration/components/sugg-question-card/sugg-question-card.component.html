@@ -67,12 +67,20 @@
 <div *ngIf="suggQuestion?.status === StatusEnum.Submitted" class="bg-white">
   <div class="separator"></div>
   <div class="footer">
-    <button class="button gray" (click)="refuseQuestion()" *ngIf="suggQuestion?.status === StatusEnum.Submitted">
+    <button
+      class="button gray"
+      (click)="refuseQuestion()"
+      *ngIf="suggQuestion?.status === StatusEnum.Submitted"
+    >
       <i class="bi bi-x-lg"></i>
       {{ I18ns.collaboration.questionCard.deny }}
     </button>
 
-    <button class="button blue" (click)="createQuestion()" *ngIf="suggQuestion?.status === StatusEnum.Submitted">
+    <button
+      class="button blue"
+      (click)="createQuestion(suggQuestion)"
+      *ngIf="suggQuestion?.status === StatusEnum.Submitted"
+    >
       <i class="bi bi-plus-lg"></i>
       {{ I18ns.collaboration.questionCard.accept }}
     </button>

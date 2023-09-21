@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   PatchQuestionSubmittedDtoApiStatusEnumApi,
+  QuestionDtoApi,
   QuestionSubmittedDtoApi,
   QuestionSubmittedDtoApiStatusEnumApi,
 } from '@usealto/sdk-ts-angular';
@@ -12,6 +13,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { SuggQuestionRefuseModalComponent } from '../sugg-question-refuse-modal/sugg-question-refuse-modal.component';
 import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
+import { QuestionFormComponent } from 'src/app/modules/programs/components/questions/question-form/question-form.component';
 
 @UntilDestroy()
 @Component({
@@ -32,6 +34,7 @@ export class SuggQuestionCardComponent {
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly toastService: ToastService,
     private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
+    private readonly offcanvasService: NgbOffcanvas,
   ) {}
 
   refuseQuestion() {
@@ -82,8 +85,24 @@ export class SuggQuestionCardComponent {
       .subscribe();
   }
 
-  createQuestion() {
-    // ! TODO
-    console.log('TODO : action to develop');
+  createQuestion(question: QuestionSubmittedDtoApi | undefined) {
+    const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto',
+    });
+    const instance = canvasRef.componentInstance as QuestionFormComponent;
+    instance.createdQuestion;
+    instance.questionSubmitted = question;
+    instance.isSubmitted = true;
+
+    canvasRef.componentInstance.createdQuestion
+      .pipe(
+        tap(() => {
+          // this.getQuestions();
+          // this.tagRestService.resetTags();
+          // this.getTags();
+        }),
+      )
+      .subscribe();
   }
 }
