@@ -1,8 +1,9 @@
 import { EChartsOption } from 'echarts';
 import { Injectable } from '@angular/core';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 // Tooltip params interface used to override default typing
-interface ITooltipParams {
+export interface ITooltipParams {
   data: number | string;
   name: string;
   seriesName: string;
@@ -14,6 +15,23 @@ interface ITooltipParams {
   providedIn: 'root',
 })
 export class ChartsService {
+  defaultThemeColors = [
+    '#5470c6',
+    '#91cc75',
+    '#fac858',
+    '#ee6666',
+    '#73c0de',
+    '#3ba272',
+    '#fc8452',
+    '#9a60b4',
+    '#ea7ccc',
+  ];
+
+  @memoize()
+  getDefaultThemeColors(index: number) {
+    return this.defaultThemeColors[index % this.defaultThemeColors.length];
+  }
+
   altoFormattingMultiline(eChartsOption: EChartsOption): EChartsOption {
     // replace null or 'n' values with 0 for every series begining with null or 'n'
     if (eChartsOption.series && eChartsOption.series && Array.isArray(eChartsOption.series)) {
@@ -94,24 +112,20 @@ export class ChartsService {
 
   private tooltipFormatter(params: ITooltipParams, eChartsOption: EChartsOption) {
     const valueFormatter = Array.isArray(eChartsOption.series)
-      ? eChartsOption.series[(params as ITooltipParams).seriesIndex].tooltip?.valueFormatter
+      ? eChartsOption.series[params.seriesIndex].tooltip?.valueFormatter
       : eChartsOption.series?.tooltip?.valueFormatter;
-    const formattedData = valueFormatter
-      ? valueFormatter((params as ITooltipParams).data)
-      : (params as ITooltipParams).data;
+    const formattedData = valueFormatter ? valueFormatter(params.data) : params.data;
 
     return `
     <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10); border-radius: 4px;">
       <div style="color: #667085; background-color: #F9FAFB; padding : 8px 10px 4px 10px;">
-        ${(params as ITooltipParams).name}
+        ${params.name}
       </div>
       <div style="padding : 4px 10px 8px 10px; display: flex; align-items: center; gap: 10px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="11" viewBox="0 0 10 11" fill="none">
-          <circle cx="5" cy="5.5" r="5" fill="${(params as ITooltipParams).color}"/>
+          <circle cx="5" cy="5.5" r="5" fill="${params.color}"/>
         </svg>
-        <p>${(params as ITooltipParams).seriesName} : <b style="color: ${
-      (params as ITooltipParams).color
-    }">${formattedData}<b></p>
+        <p>${params.seriesName} : <b style="color: ${params.color}">${formattedData}<b></p>
       </div>
     </div>
   `;

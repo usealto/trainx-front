@@ -10,26 +10,27 @@ import { ChartsService } from './../charts.service';
   providers: [
     {
       provide: NGX_ECHARTS_CONFIG,
-      useFactory: () => ({ echarts: () => import('echarts') })
+      useFactory: () => ({ echarts: () => import('echarts') }),
     },
   ],
 })
-
-export class ChartBarComponent implements OnInit, OnChanges, AfterViewInit{
-  @Input() chartOption?: EChartsOption
-  barOptions?: EChartsOption
+export class ChartBarComponent implements OnInit, OnChanges, AfterViewInit {
+  @Input() chartOption?: EChartsOption;
+  barOptions?: EChartsOption;
   @Input() isLoaded = true;
-  constructor(private chartsService: ChartsService ) { }  
-  
+  constructor(private chartsService: ChartsService) {}
+
   ngOnInit(): void {
     if (this.chartOption && this.isLoaded) {
-      this.barOptions = this.chartsService.altoFormattingBar(this.chartOption)
+      // this.barOptions = this.chartsService.altoFormattingBar(this.chartOption)
+      this.barOptions = this.chartOption;
     }
   }
 
   ngOnChanges(): void {
     if (this.chartOption && this.isLoaded) {
-      this.barOptions = this.chartsService.altoFormattingBar(this.chartOption)
+      // this.barOptions = this.chartsService.altoFormattingBar(this.chartOption);
+      this.barOptions = this.chartOption;
     }
   }
 

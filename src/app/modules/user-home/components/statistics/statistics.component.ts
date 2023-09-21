@@ -67,8 +67,7 @@ export class StatisticsComponent implements OnInit {
         tap(([curr, prev]) => {
           this.userScore = curr[0]?.score ?? 0;
           const previousScore = prev[0]?.score ?? 0;
-          this.userScoreProgression =
-            previousScore && this.userScore ? this.userScore - previousScore : 0;
+          this.userScoreProgression = previousScore && this.userScore ? this.userScore - previousScore : 0;
         }),
       )
       .subscribe();
@@ -159,7 +158,7 @@ export class StatisticsComponent implements OnInit {
             this.hasData = false;
             return;
           }
-          const reducedUserScores = this.scoresService.reduceChartData([
+          const reducedUserScores = this.scoresService.reduceLineChartData([
             rawUserScores ?? ({} as ScoreDtoApi),
           ]);
 
@@ -170,7 +169,7 @@ export class StatisticsComponent implements OnInit {
 
           //TEAM SCORES: reduce scores to remove all first values without data
           const rawTeamScores = teamsScores.scores.find((t) => t.id === this.profileStore.user.value.teamId);
-          const reducedTeamScores = this.scoresService.reduceChartData([
+          const reducedTeamScores = this.scoresService.reduceLineChartData([
             rawTeamScores ?? ({} as ScoreDtoApi),
           ]);
 
