@@ -9,7 +9,7 @@ import {
   TagStatsDtoApi,
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { Observable, combineLatest, delay, map, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, map, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
