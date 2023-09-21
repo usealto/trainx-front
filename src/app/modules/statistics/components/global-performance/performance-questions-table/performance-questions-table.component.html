@@ -47,9 +47,16 @@
             {{ quest.question.title }}
           </td>
           <td class="text-center">
-            <span class="alto-score" [class]="(quest.score || 0) * 100 | pillColor">{{
-              quest.score | percent
-            }}</span>
+            <ng-container *ngIf="quest.score; else elseTemplate">
+              <span class="alto-score" [class]="(quest.score || 0) * 100 | pillColor">{{
+                quest.score | percent
+              }}</span>
+            </ng-container>
+            <ng-template #elseTemplate>
+              <span class="alto-score" [class]="0 | pillColor">
+                {{ I18ns.shared.noDataInt }}
+              </span>
+            </ng-template>
           </td>
           <td class="text-center">
             <alto-progression-badge

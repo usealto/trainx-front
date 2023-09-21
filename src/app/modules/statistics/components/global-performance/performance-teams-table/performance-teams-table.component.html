@@ -58,9 +58,16 @@
             <span class="alto-badge" [style]="team.team.id | teamColor">{{ team.team.name }}</span>
           </td>
           <td class="text-center">
-            <span class="alto-score" [class]="(team.score || 0) * 100 | pillColor">{{
-              team.score | percent
-            }}</span>
+            <ng-container *ngIf="team.score; else elseTemplate">
+              <span class="alto-score" [class]="(team.score || 0) * 100 | pillColor">{{
+                team.score | percent
+              }}</span>
+            </ng-container>
+            <ng-template #elseTemplate>
+              <span class="alto-score" [class]="0 | pillColor">
+                {{ I18ns.shared.noDataInt }}
+              </span>
+            </ng-template>
           </td>
           <td class="text-center">
             <alto-progression-badge
