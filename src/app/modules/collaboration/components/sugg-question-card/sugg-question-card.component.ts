@@ -1,60 +1,42 @@
-import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   PatchQuestionSubmittedDtoApiStatusEnumApi,
   QuestionSubmittedDtoApi,
-  QuestionSubmittedDtoApiStatusEnumApi
+  QuestionSubmittedDtoApiStatusEnumApi,
 } from '@usealto/sdk-ts-angular';
-import { switchMap, tap } from 'rxjs';
-import { SuggQuestionRefuseModalComponent } from '../sugg-question-refuse-modal/sugg-question-refuse-modal.component';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { of, switchMap, tap } from 'rxjs';
 import { ToastService } from 'src/app/core/toast/toast.service';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { SuggQuestionRefuseModalComponent } from '../sugg-question-refuse-modal/sugg-question-refuse-modal.component';
+import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
 
 @UntilDestroy()
 @Component({
   selector: 'alto-sugg-question-card',
   templateUrl: './sugg-question-card.component.html',
-  styleUrls: ['./sugg-question-card.component.scss']
+  styleUrls: ['./sugg-question-card.component.scss'],
 })
 export class SuggQuestionCardComponent {
-  @Input() suggQuestion: QuestionSubmittedDtoApi = {
-    title: '',
-    status: QuestionSubmittedDtoApiStatusEnumApi.Submitted,
-    company: {
-      id: '',
-      name: '',
-      usersHaveWebAccess: false,
-    },
-    companyId: '',
-    id: '',
-    createdAt: new Date(),
-    createdBy: '',
-    createdByUser: {
-      id: '',
-      firstname: '',
-      lastname: '',
-      email: '',
-    },
-    updatedAt: new Date(),
-  };
+  @Input() suggQuestion?: QuestionSubmittedDtoApi;
   @Output() refresh = new EventEmitter<boolean>();
 
   I18n = I18ns;
+  StatusEnum = QuestionSubmittedDtoApiStatusEnumApi;
 
   constructor(
     private readonly modalService: NgbModal,
-    private readonly QuestionsSubmittedRestService: QuestionsSubmittedRestService,
-    private readonly toastService: ToastService
-  ) { }
+    private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
+    private readonly toastService: ToastService,
+  ) {}
 
   refuseQuestion() {
-    const fullname = `${this.suggQuestion.createdByUser.firstname} ${this.suggQuestion.createdByUser.lastname}`;
+    const fullname = `${this.suggQuestion?.createdByUser.firstname} ${this.suggQuestion?.createdByUser.lastname}`;
 
     const modalRef = this.modalService.open(SuggQuestionRefuseModalComponent, {
       centered: true,
-      size: 'md'
+      size: 'md',
     });
 
     const componentInstance = modalRef.componentInstance as SuggQuestionRefuseModalComponent;
@@ -70,13 +52,16 @@ export class SuggQuestionCardComponent {
     componentInstance.objectDeleted
       .pipe(
         switchMap((response) => {
-          return this.QuestionsSubmittedRestService.update({
-            id: this.suggQuestion.id,
-            patchQuestionSubmittedDtoApi: {
-              status: PatchQuestionSubmittedDtoApiStatusEnumApi.Declined,
-              response,
-            }
-          });
+          if (this.suggQuestion) {
+            return this.questionsSubmittedRestService.update({
+              id: this.suggQuestion.id,
+              patchQuestionSubmittedDtoApi: {
+                status: PatchQuestionSubmittedDtoApiStatusEnumApi.Declined,
+                response,
+              },
+            });
+          }
+          return of(null);
         }),
         tap(() => {
           modalRef.close();
@@ -86,12 +71,13 @@ export class SuggQuestionCardComponent {
             type: 'success',
           });
         }),
-        untilDestroyed(this)
+        untilDestroyed(this),
       )
       .subscribe();
   }
 
-  createQuestion(){
+  createQuestion() {
+    // ! TODO
     console.log('TODO : action to develop');
   }
 }
