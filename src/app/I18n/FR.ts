@@ -1006,7 +1006,7 @@ export const FR = {
       deny: 'Refuser',
       textArea: 'Réponse à {{}} (facultatif)',
       suggQuestionDenied: 'La question a bien été refusée'
-    }
+    },
     seeQuestion: {
       breadcrumb: {
         seeQuestion: 'Voir la question',
