@@ -29,7 +29,7 @@
   </div>
 </div>
 
-<div class="content-header">
+<div class="content-header mb-5">
   <alto-dropdown-filter
     [placeholder]="I18ns.collaboration.filters.contributor"
     [data]="contributors"
@@ -61,7 +61,7 @@
     <!-- TODO : implement cards -->
     Contributor: {{ contribution.contributorId }}
     <br />
-    Date: {{ contribution.createdAt | date : 'dd/MM/yyyy' }}
+    Date: {{ contribution.createdAt | date : 'short' }}
     <br />
   </ng-container>
   <ng-template #questionTemplate>

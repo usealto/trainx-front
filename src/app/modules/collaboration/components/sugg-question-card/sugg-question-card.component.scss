@@ -15,7 +15,7 @@
 
 .separator {
   margin: 0px 20px;
-  border: 1px solid #EAECF0;
+  border: 1px solid #eaecf0;
 }
 
 .footer {
@@ -52,7 +52,7 @@
   line-height: 20px;
 }
 
-.date-text{
+.date-text {
   color: var(--alto-grey);
   font-size: 10px;
   line-height: 20px;
@@ -69,7 +69,7 @@
 
   .text-container {
     display: flex;
-    gap: 4px;
+    gap: 1rem;
 
     .badge-with-connector {
       display: flex;

@@ -9,6 +9,10 @@ const routes: Routes = [
     component: LeadCollaborationComponent,
   },
   {
+    path: 'tab/:tab',
+    component: LeadCollaborationComponent,
+  },
+  {
     path: 'top-contributors',
     component: TopContributorsComponent,
   },
