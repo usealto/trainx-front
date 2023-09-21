@@ -16,7 +16,10 @@
   </p>
 
   <div class="chart-container">
-    <alto-chart-basicline [chartOption]="ScoreEvolutionChartOption"></alto-chart-basicline>
+    <alto-chart-basicline
+      data-cy="chartBasiclineThemes"
+      [chartOption]="ScoreEvolutionChartOption"
+    ></alto-chart-basicline>
   </div>
 </div>
 <div [hidden]="scoreCount > 0" class="nodata-placeholder">
@@ -77,7 +80,11 @@
     {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.subtitle }}
   </p>
   <div class="chart-container">
-    <alto-chart-bar [chartOption]="teamsKnowledgeChartOption" [isLoaded]="false"></alto-chart-bar>
+    <alto-chart-bar
+      data-cy="barChart"
+      [chartOption]="teamsKnowledgeChartOption"
+      [isLoaded]="false"
+    ></alto-chart-bar>
   </div>
 </div>
 <div [hidden]="scoreCount > 0" class="nodata-placeholder">
