@@ -33,7 +33,8 @@
   <alto-dropdown-filter
     [placeholder]="I18ns.collaboration.filters.contributor"
     [data]="contributors"
-    (selectChange)="handleContributorChange($event)">
+    (selectChange)="handleContributorChange($event)"
+  >
   </alto-dropdown-filter>
 
   <div class="header-end">
@@ -41,13 +42,15 @@
       [placeholder]="I18ns.collaboration.filters.filterType"
       [data]="filters"
       [enableSearch]="false"
-      (selectChange)="handleTypeChange($event)">
+      (selectChange)="handleTypeChange($event)"
+    >
     </alto-dropdown-filter>
     <alto-dropdown-filter
       [placeholder]="I18ns.collaboration.filters.period"
       [data]="periods"
       [enableSearch]="false"
-      (selectChange)="handlePeriodChange($event)">
+      (selectChange)="handlePeriodChange($event)"
+    >
     </alto-dropdown-filter>
   </div>
 </div>
@@ -57,15 +60,16 @@
     Commentaire
     <!-- TODO : implement cards -->
     Contributor: {{ contribution.contributorId }}
-    <br>
-    Date: {{ contribution.createdAt | date: 'dd/MM/yyyy' }}
-    <br>
+    <br />
+    Date: {{ contribution.createdAt | date : 'dd/MM/yyyy' }}
+    <br />
   </ng-container>
   <ng-template #questionTemplate>
     <alto-sugg-question-card
-    [suggQuestion]="getQuestionFromContribution(contribution)"
-    (refresh)="getCollaborationData()">
+      [suggQuestion]="getQuestionFromContribution(contribution)"
+      (refresh)="getCollaborationData()"
+    >
     </alto-sugg-question-card>
   </ng-template>
-  <br>
+  <br />
 </div>

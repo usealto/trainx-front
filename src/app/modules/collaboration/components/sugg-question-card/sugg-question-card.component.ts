@@ -18,6 +18,7 @@ import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-tra
   selector: 'alto-sugg-question-card',
   templateUrl: './sugg-question-card.component.html',
   styleUrls: ['./sugg-question-card.component.scss'],
+  providers: [ReplaceInTranslationPipe],
 })
 export class SuggQuestionCardComponent {
   @Input() suggQuestion?: QuestionSubmittedDtoApi;
@@ -30,7 +31,7 @@ export class SuggQuestionCardComponent {
     private readonly modalService: NgbModal,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly toastService: ToastService,
-    private readonly replaceInTranslationPipe: ReplaceInTranslationPipe
+    private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
   ) {}
 
   refuseQuestion() {
@@ -44,7 +45,10 @@ export class SuggQuestionCardComponent {
     const componentInstance = modalRef.componentInstance as SuggQuestionRefuseModalComponent;
     componentInstance.data = {
       title: I18ns.collaboration.questionCard.denyQuestionTitle,
-      subtitle: this.replaceInTranslationPipe.transform(I18ns.collaboration.questionCard.denyQuestionSubtitle, fullname),
+      subtitle: this.replaceInTranslationPipe.transform(
+        I18ns.collaboration.questionCard.denyQuestionSubtitle,
+        fullname,
+      ),
       icon: 'bi-x-circle',
       color: 'badge-double-error',
       button: I18ns.collaboration.questionCard.deny,
