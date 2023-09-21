@@ -1,4 +1,5 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { getLocaleDateFormat } from '@angular/common';
+import { Inject, LOCALE_ID, Pipe, PipeTransform } from '@angular/core';
 import { format, isToday, isYesterday, differenceInDays } from 'date-fns';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 
@@ -6,6 +7,8 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
   name: 'dateLabel',
 })
 export class DateLabelPipe implements PipeTransform {
+  constructor(@Inject(LOCALE_ID) public locale: string) {}
+
   transform(date: Date | undefined): string {
     if (!date) {
       return '';
@@ -23,6 +26,6 @@ export class DateLabelPipe implements PipeTransform {
       return I18ns.collaboration.dateLabels.daysCount.replace('{{}}', diff.toFixed());
     }
 
-    return format(date, 'dd/MM/yyyy');
+    return format(date, getLocaleDateFormat(this.locale, 0));
   }
 }

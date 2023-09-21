@@ -1004,8 +1004,11 @@ export const FR = {
       denyQuestionTitle: 'Refuser une question',
       denyQuestionSubtitle: 'Souhaitez-vous envoyer un message à {{}} pour expliquer votre choix ?',
       deny: 'Refuser',
+      accept: 'Créer la question',
       textArea: 'Réponse à {{}} (facultatif)',
-      suggQuestionDenied: 'La question a bien été refusée'
+      suggQuestionDenied: 'La question a bien été refusée',
+      hasDenied: 'A refusé cette suggestion',
+      hasAccepted: 'A ajouté la question au programme',
     },
     seeQuestion: {
       breadcrumb: {

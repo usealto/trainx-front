@@ -11,13 +11,9 @@ import { CommentsRestService } from 'src/app/modules/programs/services/comments-
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import {
-  compareDesc,
-  differenceInDays,
-  isToday,
-  isSameWeek,
-  isSameMonth
-} from 'date-fns'
+import { compareDesc, differenceInDays, isToday, isSameWeek, isSameMonth } from 'date-fns';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 enum ETabValue {
   PENDING = 'pending',
@@ -40,6 +36,7 @@ enum EPeriodValue {
 interface ITab {
   label: string;
   value: ETabValue;
+  index: number;
 }
 
 interface IContribution {
@@ -63,17 +60,17 @@ export class LeadCollaborationComponent implements OnInit {
   I18ns = I18ns;
 
   tabs: ITab[] = [
-    { label: I18ns.collaboration.tabs.pending, value: ETabValue.PENDING },
-    { label: I18ns.collaboration.tabs.archived, value: ETabValue.ARCHIVED },
-    { label: I18ns.collaboration.tabs.all, value: ETabValue.ALL },
+    { label: I18ns.collaboration.tabs.pending, value: ETabValue.PENDING, index: 1 },
+    { label: I18ns.collaboration.tabs.archived, value: ETabValue.ARCHIVED, index: 2 },
+    { label: I18ns.collaboration.tabs.all, value: ETabValue.ALL, index: 3 },
   ];
 
-  filters: { id: ETypeValue, name: string }[] = [
+  filters: { id: ETypeValue; name: string }[] = [
     { id: ETypeValue.COMMENTS, name: I18ns.collaboration.filters.types.comments },
     { id: ETypeValue.QUESTIONS, name: I18ns.collaboration.filters.types.questions },
   ];
 
-  periods: { id: EPeriodValue, name: string }[] = [
+  periods: { id: EPeriodValue; name: string }[] = [
     { id: EPeriodValue.TODAY, name: I18ns.collaboration.filters.periods.today },
     { id: EPeriodValue.WEEK, name: I18ns.collaboration.filters.periods.week },
     { id: EPeriodValue.MONTH, name: I18ns.collaboration.filters.periods.month },
@@ -89,24 +86,31 @@ export class LeadCollaborationComponent implements OnInit {
 
   contributions: IContribution[] = [];
 
-  selectedTab = this.tabs[0];
+  selectedTab!: ITab;
   contributors: { id: string; name: string }[] = [];
   pendingCount = 0;
 
   constructor(
     private readonly commentsRestService: CommentsRestService,
     private readonly questionsSubmittedTestService: QuestionsSubmittedRestService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly location: Location,
   ) {}
 
   ngOnInit(): void {
-    this.getCollaborationData();
+    this.activatedRoute.params
+      .pipe(
+        tap((par) => {
+          this.selectedTab = par['tab'] ? this.tabs[+par['tab'] - 1] : this.tabs[0];
+          this.getCollaborationData();
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
   }
 
   getCollaborationData(): void {
-    combineLatest([
-      this.commentsRestService.getComments(),
-      this.questionsSubmittedTestService.getQuestions()
-    ])
+    combineLatest([this.commentsRestService.getComments(), this.questionsSubmittedTestService.getQuestions()])
       .pipe(
         tap(([comments, submittedQuestions]) => {
           this.comments = comments;
@@ -128,19 +132,25 @@ export class LeadCollaborationComponent implements OnInit {
             return acc;
           }, [] as { id: string; name: string }[]);
 
-          this.handleTabChange(this.tabs[0]);
+          this.handleTabChange(this.selectedTab);
         }),
-        untilDestroyed(this)
+        untilDestroyed(this),
       )
-      .subscribe()
+      .subscribe();
   }
 
   handleTabChange(tab: ITab): void {
+    this.location.replaceState(
+      '/' + this.location.path().split('/').slice(1, 3).join('/') + '/tab/' + tab.index,
+    );
     this.selectedTab = tab;
     this.getSelectedTabData(tab);
   }
 
-  private createContributionFromData(data: CommentDtoApi | QuestionSubmittedDtoApi, type: ETypeValue): IContribution {
+  private createContributionFromData(
+    data: CommentDtoApi | QuestionSubmittedDtoApi,
+    type: ETypeValue,
+  ): IContribution {
     return {
       contributorId: data.createdBy,
       createdAt: data.createdAt,
@@ -158,14 +168,18 @@ export class LeadCollaborationComponent implements OnInit {
         data = [
           ...this.comments
             .filter((comment) => {
-              return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS))
-                && !comment.isRead;
+              return (
+                (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS)) &&
+                !comment.isRead
+              );
             })
             .map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
           ...this.submittedQuestions
             .filter(({ status }) => {
-              return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS))
-                && status === QuestionSubmittedDtoApiStatusEnumApi.Submitted
+              return (
+                (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS)) &&
+                status === QuestionSubmittedDtoApiStatusEnumApi.Submitted
+              );
             })
             .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
@@ -174,24 +188,32 @@ export class LeadCollaborationComponent implements OnInit {
         data = [
           ...this.comments
             .filter((comment) => {
-              return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS))
-                && comment.isRead;
+              return (
+                (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS)) &&
+                comment.isRead
+              );
             })
             .map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
           ...this.submittedQuestions
             .filter(({ status }) => {
-              return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS))
-                && status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted;
+              return (
+                (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS)) &&
+                status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted
+              );
             })
             .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
         break;
       case ETabValue.ALL:
         data = [
-          ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS) ? this.comments : [])
-            .map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
-          ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS) ? this.submittedQuestions : [])
-            .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
+          ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS)
+            ? this.comments
+            : []
+          ).map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
+          ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS)
+            ? this.submittedQuestions
+            : []
+          ).map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
         break;
     }
@@ -203,40 +225,38 @@ export class LeadCollaborationComponent implements OnInit {
     this.contributions = data.slice(0, this.itemsPerPage);
   }
 
-  private filterByContributors(
-    data: IContribution[],
-    contributorsIds: string[]
-  ): IContribution[] {
-    return data.filter(({ contributorId }) => contributorsIds.length === 0 || contributorsIds.includes(contributorId));
+  private filterByContributors(data: IContribution[], contributorsIds: string[]): IContribution[] {
+    return data.filter(
+      ({ contributorId }) => contributorsIds.length === 0 || contributorsIds.includes(contributorId),
+    );
   }
 
-  private filterByPeriod(
-    data: IContribution[],
-    periods: EPeriodValue[]
-  ): IContribution[] {
+  private filterByPeriod(data: IContribution[], periods: EPeriodValue[]): IContribution[] {
     return data.filter(({ createdAt }) => {
       const date = new Date(createdAt);
       const today = new Date();
 
-      return periods.length === 0
-        || (periods.includes(EPeriodValue.TODAY) && isToday(date))
-        || (periods.includes(EPeriodValue.WEEK) && isSameWeek(date, today))
-        || (periods.includes(EPeriodValue.MONTH) && isSameMonth(date, today))
-        || (periods.includes(EPeriodValue.OLD) && differenceInDays(today, date) > 30);
+      return (
+        periods.length === 0 ||
+        (periods.includes(EPeriodValue.TODAY) && isToday(date)) ||
+        (periods.includes(EPeriodValue.WEEK) && isSameWeek(date, today)) ||
+        (periods.includes(EPeriodValue.MONTH) && isSameMonth(date, today)) ||
+        (periods.includes(EPeriodValue.OLD) && differenceInDays(today, date) > 30)
+      );
     });
   }
 
-  handleContributorChange(contributors: {id: string, name: string}[]): void {
+  handleContributorChange(contributors: { id: string; name: string }[]): void {
     this.contributorsFilters = contributors.map(({ id }) => id);
     this.getSelectedTabData(this.selectedTab);
   }
 
-  handleTypeChange(filters: {id: ETypeValue, name: string}[]): void {
+  handleTypeChange(filters: { id: ETypeValue; name: string }[]): void {
     this.typesFilters = filters.map(({ id }) => id);
     this.getSelectedTabData(this.selectedTab);
   }
 
-  handlePeriodChange(periods: {id: EPeriodValue, name: string}[]): void {
+  handlePeriodChange(periods: { id: EPeriodValue; name: string }[]): void {
     this.periodsFilters = periods.map(({ id }) => id);
     this.getSelectedTabData(this.selectedTab);
   }

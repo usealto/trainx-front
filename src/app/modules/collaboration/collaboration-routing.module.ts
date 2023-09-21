@@ -11,6 +11,10 @@ const routes: Routes = [
     component: LeadCollaborationComponent,
   },
   {
+    path: 'tab/:tab',
+    component: LeadCollaborationComponent,
+  },
+  {
     path: AltoRoutes.collaborationSeeQuestion + '/:id',
     component: SeeQuestionComponent,
   },
