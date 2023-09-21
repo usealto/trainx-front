@@ -11,7 +11,6 @@ import { StatisticsPerTeamsComponent } from './components/statistics-per-teams/s
 import { StatisticsComponent } from './components/statistics/statistics.component';
 import { StatisticsRoutingModule } from './statistics-routing.module';
 import { ChartsModule } from '../charts/charts.module';
-import { PerformanceByThemeBarchartComponent } from './components/global-performance/performance-by-theme-barchart/performance-by-theme-barchart.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +22,6 @@ import { PerformanceByThemeBarchartComponent } from './components/global-perform
     PerformanceByThemesComponent,
     PerformanceTeamsTableComponent,
     PerformanceQuestionsTableComponent,
-    PerformanceByThemeBarchartComponent,
   ],
   imports: [CommonModule, StatisticsRoutingModule, ChartsModule, SharedModule],
 })

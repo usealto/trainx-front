@@ -52,6 +52,19 @@ export class ChartsService {
       top: '30',
       right: '1%',
     };
+    // we only want this option to be trigger if there is only one xAxis value
+    if(eChartsOption.xAxis && Array.isArray(eChartsOption.xAxis) &&  eChartsOption.xAxis.length === 1 ) {
+      eChartsOption.xAxis[0].axisPointer = {
+          show: true,
+          triggerTooltip : false,
+          type: 'line',
+          label: {
+            show: false,
+          },
+          triggerOn: 'mousemove|click',
+      }
+    }
+
 
     return eChartsOption;
   }
