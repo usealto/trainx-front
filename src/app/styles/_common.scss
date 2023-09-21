@@ -46,23 +46,22 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
-}
-.alto-badge-orange-light {
-  @extend .alto-badge;
-  color: #DC6803;
-  background-color: #FFFAEB;
-}
-.alto-badge-red-light {
-  @extend .alto-badge;
-  color: #D92D20;
-  background-color: #FEF3F2;
-}
-.alto-badge-green-light {
-  @extend .alto-badge;
-  color: #039855;
-  background-color: #ECFDF3;
-}
 
+  &.orange {
+    color: var(--warning-600);
+    background-color: var(--warning-50);
+  }
+
+  &.red {
+    color: var(--error-600);
+    background-color: var(--error-50);
+  }
+
+  &.green {
+    color: var(--success-600);
+    background-color: var(--success-50);
+  }
+}
 
 .alto-badge-big {
   @extend .alto-badge-no-size;
@@ -72,6 +71,22 @@
   font-size: 2rem;
   color: var(--gray-900);
   background-color: var(--alto-medium-grey);
+}
+
+.alto-badge-orange-light {
+  @extend .alto-badge;
+  color: #dc6803;
+  background-color: #fffaeb;
+}
+.alto-badge-red-light {
+  @extend .alto-badge;
+  color: #d92d20;
+  background-color: #fef3f2;
+}
+.alto-badge-green-light {
+  @extend .alto-badge;
+  color: #039855;
+  background-color: #ecfdf3;
 }
 .alto-badge-blue {
   @extend .alto-badge-big;
@@ -227,9 +242,8 @@ h2 {
   font-weight: 600;
   line-height: 3rem;
   cursor: pointer;
-  color: #175CD3;
+  color: #175cd3;
 }
-
 
 // Used in modals
 .close-button {

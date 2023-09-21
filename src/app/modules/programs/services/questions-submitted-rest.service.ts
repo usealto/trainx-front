@@ -22,10 +22,9 @@ export class QuestionsSubmittedRestService {
 
   getQuestions(req?: GetQuestionsSubmittedRequestParams): Observable<QuestionSubmittedDtoApi[]> {
     const par = {
+      page: 1,
+      itemsPerPage: 300,
       ...req,
-      page: req?.page ?? 1,
-      itemsPerPage: req?.itemsPerPage ?? 300,
-      status: 'submitted',
     } as GetQuestionsSubmittedRequestParams;
 
     return this.questionSubmittedApi.getQuestionsSubmitted(par).pipe(map((r) => r.data ?? []));
@@ -35,10 +34,10 @@ export class QuestionsSubmittedRestService {
     req?: GetQuestionsSubmittedRequestParams,
   ): Observable<QuestionSubmittedDtoPaginatedResponseApi> {
     const par = {
-      ...req,
-      page: req?.page ?? 1,
-      itemsPerPage: req?.itemsPerPage ?? 10,
+      page: 1,
+      itemsPerPage: 10,
       status: 'submitted',
+      ...req,
     } as GetQuestionsSubmittedRequestParams;
 
     return this.questionSubmittedApi.getQuestionsSubmitted(par).pipe();

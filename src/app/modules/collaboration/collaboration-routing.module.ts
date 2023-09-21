@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LeadCollaborationComponent } from './components/lead-collaboration/lead-collaboration.component';
 import { AltoRoutes } from '../shared/constants/routes';
 import { SeeQuestionComponent } from './components/see-question/see-question.component';
+import { TopContributorsComponent } from './components/lead-collaboration/top-contributors/top-contributors.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: AltoRoutes.collaborationSeeQuestion + '/:id',
     component: SeeQuestionComponent,
+  },
+  {
+    path: 'top-contributors',
+    component: TopContributorsComponent,
   },
 ];
 

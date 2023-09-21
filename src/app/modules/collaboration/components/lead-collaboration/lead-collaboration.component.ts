@@ -9,6 +9,7 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import {
   compareDesc,
@@ -49,6 +50,7 @@ interface IContribution {
   data: CommentDtoApi | QuestionSubmittedDtoApi;
 }
 
+@UntilDestroy()
 @Component({
   selector: 'alto-lead-collaboration',
   templateUrl: './lead-collaboration.component.html',
@@ -97,7 +99,14 @@ export class LeadCollaborationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    combineLatest([this.commentsRestService.getComments(), this.questionsSubmittedTestService.getQuestions()])
+    this.getCollaborationData();
+  }
+
+  getCollaborationData(): void {
+    combineLatest([
+      this.commentsRestService.getComments(),
+      this.questionsSubmittedTestService.getQuestions()
+    ])
       .pipe(
         tap(([comments, submittedQuestions]) => {
           this.comments = comments;
@@ -119,15 +128,26 @@ export class LeadCollaborationComponent implements OnInit {
             return acc;
           }, [] as { id: string; name: string }[]);
 
-          this.handleTabChange(this.tabs[0])
+          this.handleTabChange(this.tabs[0]);
         }),
+        untilDestroyed(this)
       )
-      .subscribe();
+      .subscribe()
   }
 
   handleTabChange(tab: ITab): void {
     this.selectedTab = tab;
     this.getSelectedTabData(tab);
+  }
+
+  private createContributionFromData(data: CommentDtoApi | QuestionSubmittedDtoApi, type: ETypeValue): IContribution {
+    return {
+      contributorId: data.createdBy,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+      type,
+      data,
+    };
   }
 
   private getSelectedTabData(tab: ITab): void {
@@ -141,25 +161,13 @@ export class LeadCollaborationComponent implements OnInit {
               return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS))
                 && !comment.isRead;
             })
-            .map((comment) => ({
-              contributorId: comment.createdBy,
-              createdAt: comment.createdAt,
-              updatedAt: comment.updatedAt,
-              type: ETypeValue.COMMENTS,
-              data: comment,
-            })),
+            .map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
           ...this.submittedQuestions
             .filter(({ status }) => {
               return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS))
                 && status === QuestionSubmittedDtoApiStatusEnumApi.Submitted
             })
-            .map((question) => ({
-              contributorId: question.createdBy,
-              createdAt: question.createdAt,
-              updatedAt: question.updatedAt,
-              type: ETypeValue.QUESTIONS,
-              data: question,
-            })),
+            .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
         break;
       case ETabValue.ARCHIVED:
@@ -169,45 +177,21 @@ export class LeadCollaborationComponent implements OnInit {
               return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS))
                 && comment.isRead;
             })
-            .map((comment) => ({
-              contributorId: comment.createdBy,
-              createdAt: comment.createdAt,
-              updatedAt: comment.updatedAt,
-              type: ETypeValue.COMMENTS,
-              data: comment,
-            })),
+            .map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
           ...this.submittedQuestions
             .filter(({ status }) => {
               return (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS))
                 && status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted;
             })
-            .map((question) => ({
-              contributorId: question.createdBy,
-              createdAt: question.createdAt,
-              updatedAt: question.updatedAt,
-              type: ETypeValue.QUESTIONS,
-              data: question,
-            })),
+            .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
         break;
       case ETabValue.ALL:
         data = [
           ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS) ? this.comments : [])
-            .map((comment) => ({
-              contributorId: comment.createdBy,
-              createdAt: comment.createdAt,
-              updatedAt: comment.updatedAt,
-              type: ETypeValue.COMMENTS,
-              data: comment,
-            })),
+            .map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
           ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS) ? this.submittedQuestions : [])
-            .map((question) => ({
-              contributorId: question.createdBy,
-              createdAt: question.createdAt,
-              updatedAt: question.updatedAt,
-              type: ETypeValue.QUESTIONS,
-              data: question,
-            })),
+            .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
         break;
     }
@@ -255,5 +239,13 @@ export class LeadCollaborationComponent implements OnInit {
   handlePeriodChange(periods: {id: EPeriodValue, name: string}[]): void {
     this.periodsFilters = periods.map(({ id }) => id);
     this.getSelectedTabData(this.selectedTab);
+  }
+
+  getQuestionFromContribution(contribution: IContribution): QuestionSubmittedDtoApi {
+    return contribution.data as QuestionSubmittedDtoApi;
+  }
+
+  getCommentFromContribution(contribution: IContribution): CommentDtoApi {
+    return contribution.data as CommentDtoApi;
   }
 }

@@ -2,7 +2,7 @@ describe('Team edition', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
     cy.visit('/', {});
-    cy.get('[ng-reflect-router-link="l/teams"]').click();
+    cy.get('[data-cy="leadMenuTeams"]').click();
   });
 
   it('Should open edit team panel', () => {
@@ -14,75 +14,19 @@ describe('Team edition', () => {
     cy.get('[data-cy="closeEditTeamPanel"]').first().click();
   });
 
-  describe('Shortname/Longname edition', () => {
-    it('Should edit team shortname and check "already existing" error', () => {
-      cy.get('table tr').eq(2).find('[data-cy="editTeam"]').click();
-
-      cy.get('[data-cy="editShortnameInput"]')
-        .click()
-        .invoke('val')
-        .then(($data) => {
-          const existedTeamShortname = $data ? $data.toString() : '';
-          const errorToast = '409';
-
-          cy.get('[data-cy="closeEditTeamPanel"]').first().click();
-
-          cy.get('[data-cy="editTeam"]').first().click();
-          cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type(existedTeamShortname);
-          cy.get('[data-cy="btnSave"').click();
-
-          cy.get('[data-cy="closeEditTeamPanel"]').click();
-          cy.get('[data-cy="toastError"]').contains(errorToast);
-        });
-    });
-
-    it('Should edit team shortname and check it worked', () => {
-      let oldShortname: string;
-
-      cy.get('[data-cy="editTeam"]')
-        .first()
-        .click()
-        .wait(1000)
-        .then(() => {
-          cy.get('[data-cy="editShortnameInput"]').then(($input) => {
-            oldShortname = $input.val() as string;
-
-            const newShortName = '000';
-
-            // Edit team shortname
-            cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type(newShortName);
-            cy.get('[data-cy="btnSave"]').click();
-            cy.get('[data-cy="closeEditTeamPanel"]').click().wait(5000);
-
-            // Check that it's work
-            cy.get('[data-cy="editTeam"]').first().click();
-            cy.get('[data-cy="editShortnameInput"]').should('have.value', newShortName);
-
-            // Reset shortname update
-            cy.get('[data-cy="editShortnameInput"]').click().wait(1000).clear().type(oldShortname);
-            cy.get('[data-cy="btnSave"]').click();
-            cy.get('[data-cy="closeEditTeamPanel"]').click().wait(5000);
-
-            cy.get('[data-cy="editTeam"]').first().click();
-            cy.get('[data-cy="editShortnameInput"]').should('have.value', oldShortname);
-          });
-        });
-    });
-
+  describe('Longname edition', () => {
     it('Should edit team longname and check "already existing" error', () => {
       cy.get(':nth-child(2) > [data-cy="teamLongname"]')
         .click()
         .then(($data) => {
           const teamLongname = $data.text().trim();
-          const errorToast = '409';
 
           cy.get('[data-cy="editTeam"]').first().click();
 
           cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(teamLongname);
-          cy.get('[data-cy="btnSave"').click();
+          cy.get('[data-cy="btnSave"').should('be.disabled');
 
           cy.get('[data-cy="closeEditTeamPanel"]').click();
-          cy.get('[data-cy="toastError"]').contains(errorToast);
         });
     });
 

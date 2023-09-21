@@ -20,6 +20,7 @@ export const FR = {
     optional: '(facultatif)',
     noData: 'Aucun résultat ne correspond à votre recherche.',
     noDataSubtitle: 'Essayez avec d’autres filtres.',
+    noDataInt: '-%',
     resetFilters: 'Réinitialiser les filtres',
     reply: 'Répondre',
     search: 'Rechercher',
@@ -36,6 +37,7 @@ export const FR = {
     flop: 'Flop',
     waitingForNewResults: "Dans l'attente de nouveaux résultats.",
     days: ['jour', 'jours'],
+    score: 'Score',
     imageBadge: {
       userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],
     },
@@ -64,6 +66,10 @@ export const FR = {
       trimester: '3 mois',
       month: '1 mois',
     },
+    noSmallScreen: {
+      title: 'Alto n’est pas disponible sur votre taille d’écran.',
+      subtitle: 'Pour accéder au contenu de l’application, connectez-vous sur un ordinateur.',
+    },
     noWebAccess: {
       title: 'Félicitations ! Votre compte Alto est actif',
       subtitle:
@@ -81,6 +87,7 @@ export const FR = {
       subtitle: 'S’il s’agit d’une erreur, informez-en votre administrateur directement.',
       button: 'Envoyer un mail à mon administrateur',
     },
+    global: 'Global',
   },
   leadHome: {
     title: 'Bonjour ',
@@ -172,6 +179,11 @@ export const FR = {
     titleIcon: '🎯',
     title: 'Programmes',
     subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
+    tabs: {
+      programs: 'Programmes',
+      questions: 'Questions',
+      tags: 'Tags',
+    },
     activePrograms: {
       titleIcon: '🎯',
       title: 'Programmes en cours',
@@ -310,6 +322,7 @@ export const FR = {
           'Récapitulatif des informations essentielles du programme avant de le partager à vos équipes.',
         summary: 'Récapitulatif',
         summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
+        validateCreate: 'Le nouveau programme a bien été ajouté',
       },
     },
     delete: {
@@ -366,6 +379,15 @@ export const FR = {
           subtitle: 'Évolution du score moyen de vos équipes par tag.',
           placeholderTitle: 'Les équipes sont en train de s’échauffer',
           placeholderSubtitle: 'Les premiers résultats ne devraient plus tarder !',
+        },
+        teamsKnowledgeChart: {
+          title: 'Niveau de maîtrise de vos équipes par thématique',
+          subtitle: 'Aperçu du score moyen de vos équipes sur le tag sélectionné.',
+          placeholderTitle: 'Quelles thématiques déstabilisent vos équipes ? Vous le saurez prochainement',
+          filters: {
+            tags: 'Tags',
+            teams: 'Équipes',
+          },
         },
         control: {
           title: 'Niveau de maîtrise des thématiques',
@@ -639,6 +661,7 @@ export const FR = {
     adminMode: 'Mode Administrateur',
     disconnect: 'Se déconnecter',
     feedback: 'Envoyer un feedback',
+    collaboration: 'Collaboration',
   },
   settings: {
     title: 'Paramètres',
@@ -943,7 +966,7 @@ export const FR = {
     subtitle: "Gérer l'ensemble des contributions de vos équipes.",
     tabs: {
       pending: 'En attente',
-      archived: 'Archivés',
+      archived: 'Traités',
       all: 'Tout voir',
     },
     filters: {
@@ -961,6 +984,29 @@ export const FR = {
         old: 'Plus de 30 jours',
       },
     },
+    topContributors: {
+      title: 'Tops contributeurs des 30 derniers jours',
+      contributionCount: 'A contribué {{}} fois.',
+      questions: '{{}} questions',
+      comments: '{{}} commentaires',
+    },
+    question: {
+      declined: 'Refusée',
+      accepted: 'Acceptée',
+      submitted: 'En attente',
+    },
+    dateLabels: {
+      today: 'Aujourd’hui',
+      yesterday: 'Hier',
+      daysCount: 'Il y a {{}} jours',
+    },
+    questionCard: {
+      denyQuestionTitle: 'Refuser une question',
+      denyQuestionSubtitle: 'Souhaitez-vous envoyer un message à {{}} pour expliquer votre choix ?',
+      deny: 'Refuser',
+      textArea: 'Réponse à {{}} (facultatif)',
+      suggQuestionDenied: 'La question a bien été refusée'
+    }
     seeQuestion: {
       breadcrumb: {
         seeQuestion: 'Voir la question',

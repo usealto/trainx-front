@@ -3,11 +3,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ChallengeDtoApi,
   ChallengeDtoApiTypeEnumApi,
+  QuestionSubmittedStatusEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
-import Chart, { ChartData } from 'chart.js/auto';
+import { EChartsOption } from 'echarts';
 import { Observable, combineLatest, map, of, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -21,7 +22,7 @@ import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
-import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
+import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoreDuration, ScoreFilters } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
@@ -68,7 +69,6 @@ export class LeadHomeComponent implements OnInit {
   commentsCount = 0;
   questionsCount = 0;
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
-  evolutionChart?: Chart;
   //
   challengesByTeam: ChallengeDtoApi[] = [];
   challengesByUser: ChallengeDtoApi[] = [];
@@ -78,6 +78,7 @@ export class LeadHomeComponent implements OnInit {
   usersLeaderboard: { name: string; score: number }[] = [];
   usersLeaderboardCount = 0;
   topflopLoaded = false;
+  chartOption: EChartsOption = {};
 
   constructor(
     private readonly commentsRestService: CommentsRestService,
@@ -98,7 +99,7 @@ export class LeadHomeComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([
       this.commentsRestService.getComments(),
-      this.questionsSubmittedRestService.getQuestions(),
+      this.questionsSubmittedRestService.getQuestions({ status: QuestionSubmittedStatusEnumApi.Submitted }),
       this.challengesRestService.getChallenges({ itemsPerPage: 40, sortBy: 'endDate:desc' }),
     ])
       .pipe(
@@ -123,10 +124,6 @@ export class LeadHomeComponent implements OnInit {
   }
 
   createChart(duration: ScoreDuration) {
-    if (this.evolutionChart) {
-      this.evolutionChart.destroy();
-    }
-
     const params = {
       duration: duration,
       type: ScoreTypeEnumApi.Guess,
@@ -143,67 +140,31 @@ export class LeadHomeComponent implements OnInit {
       .pipe(
         tap((res) => {
           this.scoreCount = res.scores.length;
-          const scores = this.scoreService.reduceChartData(res.scores);
+          const scores = this.scoreService.reduceLineChartData(res.scores);
+          const points = this.statisticsServices.transformDataToPoint(scores[0]);
           const labels = this.statisticsServices.formatLabel(
-            this.statisticsServices
-              .aggregateDataForScores(scores[0], duration as ScoreDuration)
-              .map((d) => d.x),
+            points.map((p) => p.x),
             duration,
           );
 
-          const total = scores.map((s) =>
-            this.statisticsServices.aggregateDataForScores(s, duration as ScoreDuration),
-          );
-          // scores.forEach((s, index) => console.log(index, this.statisticsServices.transformDataToPoint(s)));
-          const globalScore: { x: Date; y: number | null; z: number }[] = [];
-          total.forEach((teamData) => {
-            teamData.forEach((point) => {
-              const element = globalScore.filter((pt) => pt.x.getTime() === point.x.getTime());
-              if (element.length === 1) {
-                if (!element[0].y) {
-                  element[0].y = point.y;
-                } else {
-                  element[0].y += point.y || 0;
-                }
-                element[0].z += point.y ? 1 : 0;
-              } else {
-                globalScore.push({ ...point, z: point.y ? 1 : 0 });
-              }
-            });
-          });
-          globalScore.forEach((pt) => {
-            if (pt.y && pt.z > 0) {
-              pt.y = pt.y / pt.z;
-            }
-          });
-
-          const dataset = {
-            label: 'Global',
-            data: globalScore.map((u) => (u.y ? Math.round((u.y * 10000) / 100) : u.y)),
-            fill: false,
-            tension: 0.2,
-            spanGaps: true,
-          };
-
-          const data: ChartData = {
-            labels: labels,
-            datasets: [dataset],
-          };
-
-          const customChartOptions = {
-            ...chartDefaultOptions,
-            plugins: {
-              legend: {
-                display: false,
+          this.chartOption = {
+            xAxis: [{ ...xAxisDatesOptions, data: labels }],
+            yAxis: [{ ...yAxisScoreOptions }],
+            series: [
+              {
+                name: I18ns.shared.global,
+                color: '#09479e',
+                data: points.map((p) => (p.y ? Math.round((p.y * 10000) / 100) : (p.y as number))),
+                type: 'line',
+                tooltip: {
+                  trigger: 'item',
+                  valueFormatter: (value: any) => {
+                    return value ? (value as number) + '%' : '';
+                  },
+                },
               },
-            },
+            ],
           };
-
-          this.evolutionChart = new Chart('programScoreEvol', {
-            type: 'line',
-            data: data,
-            options: customChartOptions,
-          });
         }),
         untilDestroyed(this),
       )

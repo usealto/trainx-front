@@ -3,9 +3,6 @@
 }
 .score-evolution-chart {
   height: 100%;
-  .chart-container {
-    height: 510px;
-  }
 }
 .top-flop-label {
   display: inline-block;
@@ -14,4 +11,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
   vertical-align: bottom;
+}
+.legend {
+  margin-right: 1rem;
+  display: inline-block;
+  color: var(--alto-grey);
+}
+.circle {
+  margin-right: 0.5rem;
+  display: inline-block;
+  vertical-align: middle;
+  width: 8px;
+  height: 8px;
+  border-radius: 17px;
 }

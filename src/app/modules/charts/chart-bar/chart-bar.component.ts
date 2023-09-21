@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { NGX_ECHARTS_CONFIG } from 'ngx-echarts';
 import { ChartsService } from './../charts.service';
@@ -10,28 +10,31 @@ import { ChartsService } from './../charts.service';
   providers: [
     {
       provide: NGX_ECHARTS_CONFIG,
-      useFactory: () => ({ echarts: () => import('echarts') })
+      useFactory: () => ({ echarts: () => import('echarts') }),
     },
   ],
 })
+export class ChartBarComponent implements OnInit, OnChanges, AfterViewInit {
+  @Input() chartOption?: EChartsOption;
+  barOptions?: EChartsOption;
+  @Input() isLoaded = true;
+  constructor(private chartsService: ChartsService) {}
 
-export class ChartBarComponent implements OnInit, OnChanges{
-  @Input() chartOption?: EChartsOption
-  barOptions?: EChartsOption
-  constructor(private chartsService: ChartsService ) { }  
   ngOnInit(): void {
-    setTimeout(() => {
-      if (this.chartOption) {
-        this.barOptions = this.chartsService.altoFormattingBar(this.chartOption)
-      }
-    }, 300);
+    if (this.chartOption && this.isLoaded) {
+      // this.barOptions = this.chartsService.altoFormattingBar(this.chartOption)
+      this.barOptions = this.chartOption;
+    }
   }
 
   ngOnChanges(): void {
-    setTimeout(() => {
-      if (this.chartOption) {
-        this.barOptions = this.chartsService.altoFormattingBar(this.chartOption)
-      }
-    }, 300);
+    if (this.chartOption && this.isLoaded) {
+      // this.barOptions = this.chartsService.altoFormattingBar(this.chartOption);
+      this.barOptions = this.chartOption;
+    }
+  }
+
+  ngAfterViewInit(): void {
+    this.isLoaded = true;
   }
 }

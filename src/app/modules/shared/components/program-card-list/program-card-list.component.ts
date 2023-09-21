@@ -5,10 +5,7 @@ import { map, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramFilters } from 'src/app/modules/programs/models/program.model';
-import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
-import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { ProgramsService } from 'src/app/modules/programs/services/programs.service';
 import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { AltoRoutes } from '../../constants/routes';
@@ -125,14 +122,14 @@ export class ProgramCardListComponent implements OnInit {
 
   getPrograms() {
     this.scoresRestService
-      .getProgramsStats(ScoreDuration.Year, false, {
+      .getProgramsStats(ScoreDuration.All, false, {
         sortBy: 'updatedAt:desc',
       })
       .pipe(
         map((data) => {
-          // If the place is 'active', filter out programs that are not active
+          // If the place is 'active', filter out programs that are not active and that has no team
           if (this.isActive) {
-            data = data?.filter((program) => program.program.isActive) ?? [];
+            data = data?.filter((program) => program.program.isActive && program.teams.length !== 0) ?? [];
           }
           return data?.sort((a, b) => {
             if (a.program.isActive === b.program.isActive) {
