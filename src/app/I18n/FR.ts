@@ -1007,8 +1007,28 @@ export const FR = {
       accept: 'Créer la question',
       textArea: 'Réponse à {{}} (facultatif)',
       suggQuestionDenied: 'La question a bien été refusée',
-      hasAccepted: 'A ajouté la question au programme',
       hasDenied: 'A refusé cette suggestion',
-    }
+      hasAccepted: 'A ajouté la question au programme',
+    },
+    seeQuestion: {
+      breadcrumb: {
+        seeQuestion: 'Voir la question',
+        awaiting: 'En attente',
+        seeAll: 'Tout voir',
+      },
+      date: {
+        today: 'Aujourd’hui',
+      },
+      discoverQuestionsAndComments: 'Découvrez les réponses et commentaires associés à cette question.',
+      comments: 'Commentaires',
+      archiveComment: 'Archiver le commentaire',
+    },
+    archiveModal: {
+      title: 'Archiver un commentaire',
+      subtitle: 'Souhaitez-vous envoyer un message à {{}} en réponse à son commentaire ?',
+      answerTitle: 'Réponse à {{}} (facultatif)',
+      answerPlaceholder: 'Écrivez votre message...',
+      successToast: 'La commentaire a bien été archivé.',
+    },
   },
 };

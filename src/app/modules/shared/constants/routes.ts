@@ -15,6 +15,7 @@ export const AltoRoutes = {
   settings: 'settings',
   profile: 'profile',
   collaboration: 'collaboration',
+  collaborationSeeQuestion: 'question',
   statistics: 'statistics',
 
   // USER
