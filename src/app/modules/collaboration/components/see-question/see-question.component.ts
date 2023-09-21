@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommentDtoApi } from '@usealto/sdk-ts-angular';
@@ -11,6 +11,7 @@ import { QuestionsRestService } from 'src/app/modules/programs/services/question
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ArchiveModalComponent } from '../archive-modal/archive-modal.component';
 import { ToastService } from 'src/app/core/toast/toast.service';
+import { getLocaleDateFormat } from '@angular/common';
 @Component({
   selector: 'alto-see-question',
   templateUrl: './see-question.component.html',
@@ -28,6 +29,7 @@ export class SeeQuestionComponent implements OnInit {
   currentDay = new Date();
 
   constructor(
+    @Inject(LOCALE_ID) public locale: string,
     private modalService: NgbModal,
     private readonly toastService: ToastService,
     private readonly route: ActivatedRoute,
@@ -69,8 +71,8 @@ export class SeeQuestionComponent implements OnInit {
   }
 
   getDate(date: Date): string {
-    const today = format(new Date(), 'dd/MM/yyyy');
-    const commentDate = format(date, 'dd/MM/yyyy');
+    const today = format(new Date(), getLocaleDateFormat(this.locale, 0));
+    const commentDate = format(date, getLocaleDateFormat(this.locale, 0));
 
     if (today === commentDate) {
       return I18ns.collaboration.seeQuestion.date.today;
