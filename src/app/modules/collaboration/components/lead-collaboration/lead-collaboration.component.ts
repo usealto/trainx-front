@@ -110,7 +110,10 @@ export class LeadCollaborationComponent implements OnInit {
   }
 
   getCollaborationData(): void {
-    combineLatest([this.commentsRestService.getComments(), this.questionsSubmittedTestService.getQuestions()])
+    combineLatest([
+      this.commentsRestService.getComments({}, true),
+      this.questionsSubmittedTestService.getQuestions(),
+    ])
       .pipe(
         tap(([comments, submittedQuestions]) => {
           this.comments = comments;

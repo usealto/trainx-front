@@ -3,7 +3,6 @@ import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   PatchQuestionSubmittedDtoApiStatusEnumApi,
-  QuestionDtoApi,
   QuestionSubmittedDtoApi,
   QuestionSubmittedDtoApiStatusEnumApi,
 } from '@usealto/sdk-ts-angular';
@@ -19,7 +18,7 @@ import { QuestionFormComponent } from 'src/app/modules/programs/components/quest
 @Component({
   selector: 'alto-sugg-question-card',
   templateUrl: './sugg-question-card.component.html',
-  styleUrls: ['./sugg-question-card.component.scss', '../styles/cards.scss'],
+  styleUrls: ['./sugg-question-card.component.scss', '../styles/collaboration-cards.scss'],
   providers: [ReplaceInTranslationPipe],
 })
 export class SuggQuestionCardComponent {

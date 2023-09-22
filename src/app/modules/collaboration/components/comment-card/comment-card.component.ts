@@ -8,12 +8,13 @@ import { of, switchMap, tap } from 'rxjs';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 
 @UntilDestroy()
 @Component({
   selector: 'alto-comment-card',
   templateUrl: './comment-card.component.html',
-  styleUrls: ['./comment-card.component.scss', '../styles/cards.scss'],
+  styleUrls: ['./comment-card.component.scss', '../styles/collaboration-cards.scss'],
   providers: [ReplaceInTranslationPipe],
 })
 export class CommentCardComponent {
@@ -21,6 +22,7 @@ export class CommentCardComponent {
   @Output() refresh = new EventEmitter<boolean>();
 
   I18ns = I18ns;
+  AltoRoutes = AltoRoutes;
 
   constructor(
     private readonly modalService: NgbModal,
@@ -37,7 +39,7 @@ export class CommentCardComponent {
     const componentInstance = modalRef.componentInstance as CollaborationModalComponent;
     componentInstance.data = {
       title: I18ns.collaboration.commentCard.archiveCommentTitle,
-      subtitle: this.replaceInTranslationPipe.transform(I18ns.collaboration.commentCard.textArea, fullname),
+      subtitle: I18ns.collaboration.commentCard.archiveCommentSubtitle,
       icon: 'bi-archive',
       color: 'badge-double-primary',
       confirmButtonLabel: I18ns.collaboration.commentCard.archive,
@@ -48,7 +50,10 @@ export class CommentCardComponent {
       .pipe(
         switchMap((response) => {
           if (this.comment) {
-            return this.commentsRestService.readComment(this.comment.id, { isRead: true, response });
+            return this.commentsRestService.updateComment({
+              id: this.comment.id,
+              patchCommentDtoApi: { isRead: true, response },
+            });
           }
           return of(null);
         }),
@@ -63,9 +68,5 @@ export class CommentCardComponent {
         untilDestroyed(this),
       )
       .subscribe();
-  }
-
-  seeQuestion(): void {
-    console.log('seeQuestion()');
   }
 }

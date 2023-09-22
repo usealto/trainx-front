@@ -40,8 +40,4 @@ export class CommentsRestService {
       );
     }
   }
-
-  readComment(id: string, patchCommentDtoApi: PatchCommentDtoApi): Observable<CommentDtoResponseApi> {
-    return this.commentApi.patchComment({ id, patchCommentDtoApi });
-  }
 }

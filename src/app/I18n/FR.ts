@@ -1013,6 +1013,7 @@ export const FR = {
       textArea: 'Réponse à {{}} (facultatif)',
       suggQuestionDenied: 'La question a bien été refusée',
       hasDenied: 'A refusé cette suggestion',
+      hasAccepted: 'A ajouté la question au programme',
     },
     commentCard: {
       comment: 'Commentaire',
@@ -1030,7 +1031,6 @@ export const FR = {
     modal: {
       cancel: 'Annuler',
       placeholder: 'Écrivez votre message...',
-      hasAccepted: 'A ajouté la question au programme',
     },
     seeQuestion: {
       breadcrumb: {
@@ -1044,13 +1044,6 @@ export const FR = {
       discoverQuestionsAndComments: 'Découvrez les réponses et commentaires associés à cette question.',
       comments: 'Commentaires',
       archiveComment: 'Archiver le commentaire',
-    },
-    archiveModal: {
-      title: 'Archiver un commentaire',
-      subtitle: 'Souhaitez-vous envoyer un message à {{}} en réponse à son commentaire ?',
-      answerTitle: 'Réponse à {{}} (facultatif)',
-      answerPlaceholder: 'Écrivez votre message...',
-      successToast: 'La commentaire a bien été archivé.',
     },
   },
 };

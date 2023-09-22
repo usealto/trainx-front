@@ -42,7 +42,7 @@
       </alto-img-badge>
       <div class="d-inline-block">
         <p class="fw-bold">{{ comment.createdByUser.firstname + comment.createdByUser.lastname }}</p>
-        <p class="alto-grey">{{ getDate(comment.createdAt) }}</p>
+        <p class="alto-grey">{{ comment.createdAt | dateLabel }}</p>
       </div>
     </div>
     <div class="comment-panel-content d-flex flex-column mb-5">

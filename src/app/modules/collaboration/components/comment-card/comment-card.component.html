@@ -27,7 +27,8 @@
     <div class="text-content">
       <div class="author">
         <span class="fw-semibold"
-          >{{ comment?.createdByUser?.firstname }} {{ comment?.createdByUser?.lastname }}
+          >{{ comment?.createdByUser?.firstname }}
+          {{ comment?.createdByUser?.lastname }}
         </span>
         <span class="date-text">{{ comment?.createdAt | dateLabel }}</span>
       </div>
@@ -49,9 +50,21 @@
       {{ I18ns.collaboration.commentCard.archive }}
     </button>
 
-    <button class="button gray" (click)="seeQuestion()">
+    <a
+      class="button gray"
+      href="{{
+        '/' +
+          AltoRoutes.lead +
+          '/' +
+          AltoRoutes.collaboration +
+          '/' +
+          AltoRoutes.collaborationSeeQuestion +
+          '/' +
+          comment?.questionId
+      }}"
+    >
       <i class="bi bi-eye"></i>
       {{ I18ns.collaboration.commentCard.seeQuestion }}
-    </button>
+    </a>
   </div>
 </div>
