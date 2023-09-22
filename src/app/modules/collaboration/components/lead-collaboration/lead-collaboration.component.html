@@ -29,45 +29,53 @@
   </div>
 </div>
 
-<div class="content-header">
-  <alto-dropdown-filter
-    [placeholder]="I18ns.collaboration.filters.contributor"
-    [data]="contributors"
-    (selectChange)="handleContributorChange($event)"
-  >
-  </alto-dropdown-filter>
+<div class="d-flex">
+  <div class="w-75 pe-8">
+    <div class="content-header mb-5">
+      <alto-dropdown-filter
+        [placeholder]="I18ns.collaboration.filters.contributor"
+        [data]="contributors"
+        (selectChange)="handleContributorChange($event)"
+      >
+      </alto-dropdown-filter>
 
-  <div class="header-end">
-    <alto-dropdown-filter
-      [placeholder]="I18ns.collaboration.filters.filterType"
-      [data]="filters"
-      [enableSearch]="false"
-      (selectChange)="handleTypeChange($event)"
-    >
-    </alto-dropdown-filter>
-    <alto-dropdown-filter
-      [placeholder]="I18ns.collaboration.filters.period"
-      [data]="periods"
-      [enableSearch]="false"
-      (selectChange)="handlePeriodChange($event)"
-    >
-    </alto-dropdown-filter>
+      <div class="header-end">
+        <alto-dropdown-filter
+          [placeholder]="I18ns.collaboration.filters.filterType"
+          [data]="filters"
+          [enableSearch]="false"
+          (selectChange)="handleTypeChange($event)"
+        >
+        </alto-dropdown-filter>
+        <alto-dropdown-filter
+          [placeholder]="I18ns.collaboration.filters.period"
+          [data]="periods"
+          [enableSearch]="false"
+          (selectChange)="handlePeriodChange($event)"
+        >
+        </alto-dropdown-filter>
+      </div>
+    </div>
+
+    <div *ngFor="let contribution of contributions" class="mb-5">
+      <ng-container *ngIf="contribution.type === 'comments'; else questionTemplate">
+        <alto-comment-card
+          [comment]="getCommentFromContribution(contribution)"
+          (refresh)="getCollaborationData()"
+        ></alto-comment-card>
+      </ng-container>
+      <ng-template #questionTemplate>
+        <alto-sugg-question-card
+          [suggQuestion]="getQuestionFromContribution(contribution)"
+          (refresh)="getCollaborationData()"
+        >
+        </alto-sugg-question-card>
+      </ng-template>
+      <br />
+    </div>
   </div>
-</div>
 
-<div *ngFor="let contribution of contributions" class="mb-5">
-  <ng-container *ngIf="contribution.type === 'comments'; else questionTemplate">
-    <alto-comment-card
-      [comment]="getCommentFromContribution(contribution)"
-      (refresh)="getCollaborationData()"
-    ></alto-comment-card>
-  </ng-container>
-  <ng-template #questionTemplate>
-    <alto-sugg-question-card
-      [suggQuestion]="getQuestionFromContribution(contribution)"
-      (refresh)="getCollaborationData()"
-    >
-    </alto-sugg-question-card>
-  </ng-template>
-  <br />
+  <div class="w-25">
+    <alto-top-contributors></alto-top-contributors>
+  </div>
 </div>

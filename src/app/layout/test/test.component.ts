@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { getLocaleDateFormat } from '@angular/common';
+import { Component, Inject, LOCALE_ID } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
   ChallengeDtoApiStatusEnumApi,
@@ -6,6 +7,7 @@ import {
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
 } from '@usealto/sdk-ts-angular';
+import { format } from 'date-fns';
 import { EChartsOption } from 'echarts';
 import { combineLatest, tap } from 'rxjs';
 import { ToastService } from 'src/app/core/toast/toast.service';
@@ -37,6 +39,9 @@ export class TestComponent {
   AltoRoutes = AltoRoutes;
   isDev = !environment.production;
   ChallengeDtoApiStatusEnumApi = ChallengeDtoApiStatusEnumApi;
+
+  today = format(new Date(), getLocaleDateFormat(this.locale, 0));
+  // today = getLocaleDateFormat(this.locale, 0);
 
   pageSize = 5;
 
@@ -92,6 +97,7 @@ export class TestComponent {
     programRestService: ProgramsRestService,
     userRestService: UsersRestService,
     private readonly toastService: ToastService,
+    @Inject(LOCALE_ID) public locale: string,
   ) {
     programRestService.getPrograms().subscribe();
     userRestService.getUsers().subscribe();

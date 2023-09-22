@@ -78,7 +78,7 @@
 
     <button
       class="button blue"
-      (click)="createQuestion()"
+      (click)="createQuestion(suggQuestion)"
       *ngIf="suggQuestion?.status === StatusEnum.Submitted"
     >
       <i class="bi bi-plus-lg"></i>

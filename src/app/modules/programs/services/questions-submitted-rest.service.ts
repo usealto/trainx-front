@@ -3,6 +3,7 @@ import { map, Observable } from 'rxjs';
 import {
   CreateQuestionSubmittedDtoApiStatusEnumApi,
   GetQuestionsSubmittedRequestParams,
+  GetQuestionSubmittedByIdRequestParams,
   PatchQuestionSubmittedRequestParams,
   QuestionsSubmittedApiService,
   QuestionSubmittedDtoApi,
@@ -14,6 +15,10 @@ import {
 })
 export class QuestionsSubmittedRestService {
   constructor(private readonly questionSubmittedApi: QuestionsSubmittedApiService) {}
+
+  getQuestion(id: string): Observable<QuestionSubmittedDtoApi | undefined> {
+    return this.questionSubmittedApi.getQuestionSubmittedById({ id }).pipe(map((r) => r.data));
+  }
 
   getQuestions(req?: GetQuestionsSubmittedRequestParams): Observable<QuestionSubmittedDtoApi[]> {
     const par = {
