@@ -27,6 +27,7 @@ import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
+import { ToastService } from 'src/app/core/toast/toast.service';
 
 @UntilDestroy()
 @Component({
@@ -67,6 +68,7 @@ export class CreateProgramsComponent implements OnInit {
     private readonly questionRestService: QuestionsRestService,
     private readonly route: ActivatedRoute,
     private readonly location: Location,
+    private readonly toastService: ToastService,
     public programStore: ProgramsStore,
     public teamStore: TeamStore,
     private modalService: NgbModal,
@@ -215,11 +217,14 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   getAssociatedQuestions() {
+    if (!this.editedProgram?.id) {
+      return;
+    }
     this.questionRestService
       .getQuestionsPaginated({
         tagIds: this.selectedTags.join(','),
         itemsPerPage: this.questionPageSize,
-        programIds: this.editedProgram?.id ?? undefined,
+        programIds: this.editedProgram?.id,
         page: this.questionAssociatedPage,
         search: this.questionSearch,
       })
@@ -234,18 +239,11 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   changeTab(num: number) {
-    this.currentStep = num;
-    if (this.currentStep === 2) {
-      this.selectedTags = this.programForm.value?.tags ?? [];
-      this.getQuestions();
-      this.getAssociatedQuestions();
+    if (this.currentStep === 1 && num === 2) {
+      this.displayToast();
+      this.saveProgram();
     }
-    this.saveProgram();
-  }
-
-  goNext() {
-    this.saveProgram();
-    this.currentStep++;
+    this.currentStep = num;
     if (this.currentStep === 2) {
       this.selectedTags = this.programForm.value?.tags ?? [];
       this.getQuestions();
@@ -290,6 +288,15 @@ export class CreateProgramsComponent implements OnInit {
           untilDestroyed(this),
         )
         .subscribe();
+    }
+  }
+
+  displayToast() {
+    if (this.isEdit === false) {
+      this.toastService.show({
+        text: this.replaceInTranslationPipe.transform(I18ns.programs.forms.step3.validateCreate),
+        type: 'success',
+      });
     }
   }
 

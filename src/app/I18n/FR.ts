@@ -20,6 +20,7 @@ export const FR = {
     optional: '(facultatif)',
     noData: 'Aucun résultat ne correspond à votre recherche.',
     noDataSubtitle: 'Essayez avec d’autres filtres.',
+    noDataInt: '-%',
     resetFilters: 'Réinitialiser les filtres',
     reply: 'Répondre',
     search: 'Rechercher',
@@ -64,6 +65,10 @@ export const FR = {
       year: '12 mois',
       trimester: '3 mois',
       month: '1 mois',
+    },
+    noSmallScreen: {
+      title: 'Alto n’est pas disponible sur votre taille d’écran.',
+      subtitle: 'Pour accéder au contenu de l’application, connectez-vous sur un ordinateur.',
     },
     noWebAccess: {
       title: 'Félicitations ! Votre compte Alto est actif',
@@ -174,6 +179,11 @@ export const FR = {
     titleIcon: '🎯',
     title: 'Programmes',
     subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
+    tabs: {
+      programs: 'Programmes',
+      questions: 'Questions',
+      tags: 'Tags',
+    },
     activePrograms: {
       titleIcon: '🎯',
       title: 'Programmes en cours',
@@ -312,6 +322,7 @@ export const FR = {
           'Récapitulatif des informations essentielles du programme avant de le partager à vos équipes.',
         summary: 'Récapitulatif',
         summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
+        validateCreate: 'Le nouveau programme a bien été ajouté',
       },
     },
     delete: {

@@ -21,12 +21,13 @@ import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { AppComponent } from './layout/app/app.component';
 import { JwtComponent } from './layout/jwt/jwt.component';
 import { MenuComponent } from './layout/menu/menu.component';
+import { NoCompanyComponent } from './layout/no-company/no-company.component';
+import { NoSmallScreenComponent } from './layout/no-small-screen/no-small-screen.component';
+import { NoTeamComponent } from './layout/no-team/no-team.component';
 import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.component';
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { SharedModule } from './modules/shared/shared.module';
-import { NoCompanyComponent } from './layout/no-company/no-company.component';
-import { NoTeamComponent } from './layout/no-team/no-team.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,6 +39,7 @@ import { NoTeamComponent } from './layout/no-team/no-team.component';
     NoWebAccessComponent,
     NoCompanyComponent,
     NoTeamComponent,
+    NoSmallScreenComponent,
   ],
   imports: [
     ApiModule,

@@ -100,7 +100,7 @@
       ></alto-search>
     </div>
   </div>
-  <ng-container *ngIf="paginatedQuestions.length > 0; else noQuestions">
+  <ng-container *ngIf="paginatedQuestions && paginatedQuestions.length > 0; else noQuestions">
     <div class="table-panel">
       <table class="table">
         <thead>
@@ -154,7 +154,7 @@
                 ></i>
                 <i
                   data-cy="questionEditPen"
-                  class="cursor-pointer fs-4 bi bi-pencil"
+                  class="cursor-pointer fs-4 bi bi-pen"
                   (click)="openQuestionForm(question)"
                 ></i>
               </td>
@@ -197,7 +197,7 @@
 </div>
 
 <!-- TAGS -->
-<div *ngIf="activeTab === 'tags'" class="">
+<div *ngIf="activeTab === 'tags'">
   <button type="button" class="btn btn-primary float-end" (click)="openTagForm()">
     <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.tags.createTag }}</span>
   </button>
@@ -246,7 +246,7 @@
             <td>{{ tag.questionsCount + I18ns.programs.tags.table.questions }}</td>
             <td class="text-end px-4">
               <i class="fs-4 bi bi-trash3 cursor-pointer me-4" (click)="deleteTag(tag)"></i>
-              <i class="fs-4 bi bi-pencil cursor-pointer" (click)="openTagForm(tag)"></i>
+              <i class="fs-4 bi bi-pen cursor-pointer" (click)="openTagForm(tag)"></i>
             </td>
           </tr>
         </tbody>
