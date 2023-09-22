@@ -1,8 +1,8 @@
-<h2>Users</h2>
+<h2>Users across all companies</h2>
 <p>This user list comes directly from Auth0</p>
 
 <p>ℹ️ No buttons means it cannot be found in Alto-API : ask dev for help</p>
-<p>ℹ️ Only "company admins" can be impersonnated</p>
+
 <div class="row mb-3">
   <div class="col-5">
     <div class="input-group">
@@ -29,15 +29,13 @@
       <th scope="col">created date</th>
       <th scope="col">last login</th>
       <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let user of authusers">
       <th scope="row">{{ user.username }}</th>
       <td>{{user.email}}</td>
-      <td>{{user.email_verified}}</td>
+      <td><span *ngIf="user.email_verified"><i class="bi bi-check2-square"></i></span></td>
       <td>{{user.created_at | date:"medium"}}</td>
       <td>{{user.last_login | date:"medium"}}</td>
       <td>
@@ -45,25 +43,6 @@
           Voir
         </a>
       </td>
-      <td>
-        <button *ngIf="user.user_metadata && user.user_metadata.altoId && hasRoleCompanyAdmin(user.email)" class="btn btn-danger" (click)="setImpersonation(user.email)">
-          Impersonnate
-        </button>
-      </td>
-      <td>
-        <a *ngIf="user.user_metadata && user.user_metadata.altoId" [routerLink]="['/']" class="btn btn-info" (click)="setLocalStorage(user.email)">
-          vew app impersonnated
-        </a>
-      </td>
     </tr>
   </tbody>
 </table>
-
-<!-- <ngb-pagination
-    [collectionSize]="usersCount"
-    [(page)]="usersPage"
-    (pageChange)="changeUsersPage()"
-    [pageSize]="usersPageSize"
-    [maxSize]="10"
-    aria-label="Default pagination"
-  ></ngb-pagination> -->
