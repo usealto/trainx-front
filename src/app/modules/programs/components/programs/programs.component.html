@@ -100,7 +100,7 @@
       ></alto-search>
     </div>
   </div>
-  <ng-container *ngIf="paginatedQuestions.length > 0; else noQuestions">
+  <ng-container *ngIf="paginatedQuestions && paginatedQuestions.length > 0; else noQuestions">
     <div class="table-panel">
       <table class="table">
         <thead>
