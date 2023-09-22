@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ProgramDtoApi, TeamLightDtoApi } from '@usealto/sdk-ts-angular';
+import { ProgramDtoApi } from '@usealto/sdk-ts-angular';
 import { map, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -141,7 +141,7 @@ export class ProgramCardListComponent implements OnInit {
         }),
         tap((p) => {
           p.map((x) => {
-            x.program.teams = x.teams.map((t) => t.team) as unknown as TeamLightDtoApi[];
+            x.program.teams = x.teams.map((t) => t.team);
           });
           this.programs = p.map((x) => x.program);
           this.programsDisplay = this.programs;
