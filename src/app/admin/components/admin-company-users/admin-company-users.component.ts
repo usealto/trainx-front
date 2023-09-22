@@ -1,6 +1,6 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, catchError, combineLatest, of, take } from 'rxjs';
+import { combineLatest, take } from 'rxjs';
 import {
   NgbdSortableHeaderDirective,
   SortEvent,
@@ -10,11 +10,7 @@ import { CompaniesRestService } from 'src/app/modules/companies/service/companie
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompanyDtoApi, TeamDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
-import { DataService } from '../../admin-data.service';
-import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { AdminAssignUsersTeamModalComponent } from './admin-assign-users-team-modal/admin-assign-users-team-modal.component';
-import { AdminAssignSelectedUsersTeamModalComponent } from './admin-assign-selected-users-team-modal/admin-assign-selected-users-team-modal.component';
-import { ChangeStatusSelectedUsersTeamModalComponent } from './change-status-selected-users-team-modal/change-status-selected-users-team-modal.component';
+import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import {
   AdminUsersFiltersListComponent,
   FiltersUsersList,
@@ -47,9 +43,7 @@ export class AdminCompanyUsersComponent implements OnInit {
     private readonly companiesRestService: CompaniesRestService,
     private readonly usersRestService: UsersRestService,
     private readonly teamsRestService: TeamsRestService,
-    private dataService: DataService,
     private route: ActivatedRoute,
-    private modalService: NgbModal,
     private readonly offcanvasService: NgbOffcanvas,
   ) {}
 
@@ -79,38 +73,6 @@ export class AdminCompanyUsersComponent implements OnInit {
     this.selectedUsers = event.target.checked ? [...this.users] : [];
   }
 
-  uploadUsersToTeam() {
-    const modalRef = this.modalService.open(AdminAssignUsersTeamModalComponent, { centered: true });
-    modalRef.componentInstance.teams = this.teams;
-    modalRef.result.then((res) => {
-      this.updateUsersTeam(res);
-    });
-  }
-
-  addSelectedUsersToPrograms() {
-    console.log();
-  }
-
-  changeStatusSelectedUsers() {
-    const modalRef = this.modalService.open(ChangeStatusSelectedUsersTeamModalComponent, { centered: true });
-  }
-
-  addSelectedUsersToTeams() {
-    const modalRef = this.modalService.open(AdminAssignSelectedUsersTeamModalComponent, { centered: true });
-    modalRef.componentInstance.teams = this.teams;
-    modalRef.result.then((res) => {
-      const formatedUsers = this.selectedUsers.map((users) => {
-        return {
-          email: users.email,
-          team: {
-            id: res,
-          },
-        };
-      });
-      this.updateUsersTeam(formatedUsers);
-    });
-  }
-
   openFilterCanvas() {
     const canvasRef = this.offcanvasService.open(AdminUsersFiltersListComponent, {
       position: 'end',
@@ -122,18 +84,6 @@ export class AdminCompanyUsersComponent implements OnInit {
       this.activeFilters = result;
       this.refreshUsers();
     });
-  }
-
-  isUserSelected(user: UserDtoApi) {
-    return this.selectedUsers.some((existingUser) => existingUser.email === user.email);
-  }
-
-  selectUser(user: UserDtoApi) {
-    if (this.selectedUsers.some((existingUser) => existingUser.email === user.email)) {
-      this.selectedUsers = this.selectedUsers.filter((existingUser) => existingUser.email !== user.email);
-    } else {
-      this.selectedUsers.push(user);
-    }
   }
 
   onPaginator(page: number) {
@@ -202,34 +152,4 @@ export class AdminCompanyUsersComponent implements OnInit {
     );
   }
 
-  setImpersonation(email: string) {
-    if (email) {
-      localStorage.setItem('impersonatedUser', email.toLowerCase());
-      this.dataService.sendData('impersonatedUserUpdated');
-    }
-  }
-
-  updateUsersTeam(csvData: any[]) {
-    if (csvData.length > 0) {
-      const obs = csvData
-        .map((user) => {
-          const existingUsers = this.users.find((existingUser) => existingUser.email === user.email);
-          if (existingUsers) {
-            return this.usersRestService
-              .patchUser(existingUsers.id, {
-                teamId: user.team.id,
-              })
-              .pipe(catchError(() => of(null)));
-          }
-          return null;
-        })
-        .filter((user) => user !== null);
-
-      combineLatest(obs as Observable<UserDtoApi>[])
-        .pipe(take(1))
-        .subscribe((res) => {
-          this.fetchAll();
-        });
-    }
-  }
 }
