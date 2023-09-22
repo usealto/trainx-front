@@ -1,8 +1,9 @@
 name: Update staging from develop
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: 0 6 * * 1-5
+    - cron: 0 23 * * 1-5
 
 jobs:
   develop-to-staging:
