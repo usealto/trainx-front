@@ -1,0 +1,57 @@
+<div class="header d-flex flex-row">
+  <div class="d-flex flex-row align-items-center">
+    <alto-icon-badge icon="bi-chat" [color]="'badge-double-primary'"></alto-icon-badge>
+
+    <div class="d-flex flex-column m-sm-2">
+      <span class="fw-semibold text-blue">{{ I18ns.collaboration.commentCard.comment }}</span>
+      <span
+        >{{ I18ns.collaboration.commentCard.concerningQuestion }} "<span class="fw-semibold">{{
+          comment?.question?.title
+        }}</span
+        >"</span
+      >
+    </div>
+  </div>
+  <div class="align-self-center alto-badge" [ngClass]="comment?.isRead ? 'gray' : 'orange'">
+    {{ comment?.isRead ? I18ns.collaboration.comment.read : I18ns.collaboration.comment.unread }}
+  </div>
+</div>
+
+<div class="content-container" [class.footer]="comment?.isRead">
+  <div class="text-container">
+    <div class="badge-with-connector">
+      <alto-img-badge [size]="24" [user]="comment?.createdByUser"></alto-img-badge>
+      <div *ngIf="comment?.response" class="connector"></div>
+    </div>
+
+    <div class="text-content">
+      <div class="author">
+        <span class="fw-semibold"
+          >{{ comment?.createdByUser?.firstname }} {{ comment?.createdByUser?.lastname }}
+        </span>
+        <span class="date-text">{{ comment?.createdAt | dateLabel }}</span>
+      </div>
+
+      <div>
+        <span class="light-text">
+          {{ comment?.text }}
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!comment?.isRead" class="bg-white">
+  <div class="separator"></div>
+  <div class="footer">
+    <button class="button gray" (click)="archiveComment()" *ngIf="!comment?.isRead">
+      <i class="bi bi-archive"></i>
+      {{ I18ns.collaboration.commentCard.archive }}
+    </button>
+
+    <button class="button gray" (click)="seeQuestion()">
+      <i class="bi bi-eye"></i>
+      {{ I18ns.collaboration.commentCard.seeQuestion }}
+    </button>
+  </div>
+</div>

@@ -995,12 +995,17 @@ export const FR = {
       accepted: 'Acceptée',
       submitted: 'En attente',
     },
+    comment: {
+      read: 'Archivé',
+      unread: 'En attente',
+    },
     dateLabels: {
       today: 'Aujourd’hui',
       yesterday: 'Hier',
       daysCount: 'Il y a {{}} jours',
     },
     questionCard: {
+      suggQuestion: 'Question suggérée',
       denyQuestionTitle: 'Refuser une question',
       denyQuestionSubtitle: 'Souhaitez-vous envoyer un message à {{}} pour expliquer votre choix ?',
       deny: 'Refuser',
@@ -1009,6 +1014,23 @@ export const FR = {
       suggQuestionDenied: 'La question a bien été refusée',
       hasAccepted: 'A ajouté la question au programme',
       hasDenied: 'A refusé cette suggestion',
-    }
+    },
+    commentCard: {
+      comment: 'Commentaire',
+      archiveCommentTitle: 'Archiver un commentaire',
+      archiveCommentSubtitle: 'Souhaitez-vous envoyer un message à {{}} en réponse à son commentaire ?',
+      deny: 'Annuler',
+      accept: 'Confirmer',
+      textArea: 'Réponse à {{}} (facultatif)',
+      archivedComment: 'Le commentaire a bien été archivé',
+      hasArchivedComment: 'A archivé ce commentaire.',
+      concerningQuestion: 'sur la question',
+      archive: 'Archiver',
+      seeQuestion: 'Voir la question',
+    },
+    modal: {
+      cancel: 'Annuler',
+      placeholder: 'Écrivez votre message...',
+    },
   },
 };

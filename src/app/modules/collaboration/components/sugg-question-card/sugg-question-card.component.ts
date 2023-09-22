@@ -9,15 +9,15 @@ import {
 import { of, switchMap, tap } from 'rxjs';
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { SuggQuestionRefuseModalComponent } from '../sugg-question-refuse-modal/sugg-question-refuse-modal.component';
 import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
+import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
 
 @UntilDestroy()
 @Component({
   selector: 'alto-sugg-question-card',
   templateUrl: './sugg-question-card.component.html',
-  styleUrls: ['./sugg-question-card.component.scss'],
+  styleUrls: ['./sugg-question-card.component.scss', '../styles/cards.scss'],
   providers: [ReplaceInTranslationPipe],
 })
 export class SuggQuestionCardComponent {
@@ -37,12 +37,12 @@ export class SuggQuestionCardComponent {
   refuseQuestion() {
     const fullname = `${this.suggQuestion?.createdByUser.firstname} ${this.suggQuestion?.createdByUser.lastname}`;
 
-    const modalRef = this.modalService.open(SuggQuestionRefuseModalComponent, {
+    const modalRef = this.modalService.open(CollaborationModalComponent, {
       centered: true,
       size: 'md',
     });
 
-    const componentInstance = modalRef.componentInstance as SuggQuestionRefuseModalComponent;
+    const componentInstance = modalRef.componentInstance as CollaborationModalComponent;
     componentInstance.data = {
       title: I18ns.collaboration.questionCard.denyQuestionTitle,
       subtitle: this.replaceInTranslationPipe.transform(
@@ -51,7 +51,7 @@ export class SuggQuestionCardComponent {
       ),
       icon: 'bi-x-circle',
       color: 'badge-double-error',
-      button: I18ns.collaboration.questionCard.deny,
+      confirmButtonLabel: I18ns.collaboration.questionCard.deny,
       textarea: this.replaceInTranslationPipe.transform(I18ns.collaboration.questionCard.textArea, fullname),
     };
 
