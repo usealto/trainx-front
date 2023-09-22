@@ -1,27 +1,27 @@
 .header {
-  border-radius: 12px 12px 0px 0px;
+  border-radius: 0.857rem 0.857rem 0rem 0rem;
   background: var(--purple-25);
-  padding: 16px 20px;
+  padding: 1.143rem 1.429rem;
   align-self: stretch;
   justify-content: space-between;
 }
 
 .middle {
-  padding: 16px 20px;
+  padding: 1.143rem 1.429rem;
   align-items: flex-start;
-  gap: 16px;
+  gap: 1.143rem;
   align-self: stretch;
 }
 
 .separator {
-  margin: 0px 20px;
-  border: 1px solid #eaecf0;
+  margin: 0rem 1.429rem;
+  border-top: 1px solid #eaecf0;
 }
 
 .footer {
   display: flex;
-  border-radius: 0px 0px 12px 12px;
-  padding: 16px 20px;
+  border-radius: 0rem 0rem 0.857rem 0.857rem;
+  padding: 1.143rem 1.429rem;
   align-self: stretch;
   justify-content: space-between;
 
@@ -32,7 +32,7 @@
     cursor: pointer;
     background-color: white;
     border: none;
-    padding: 8px 12px 8px 12px;
+    padding: 0.571rem 0.857rem 0.571rem 0.857rem;
     display: flex;
     align-items: center;
     gap: 4px;

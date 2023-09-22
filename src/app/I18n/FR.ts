@@ -964,6 +964,7 @@ export const FR = {
   collaboration: {
     title: 'Collaboration',
     subtitle: "Gérer l'ensemble des contributions de vos équipes.",
+    showMore: 'Afficher plus',
     tabs: {
       pending: 'En attente',
       archived: 'Traités',

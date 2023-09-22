@@ -54,7 +54,7 @@ interface IContribution {
   styleUrls: ['./lead-collaboration.component.scss'],
 })
 export class LeadCollaborationComponent implements OnInit {
-  readonly itemsPerPage = 10;
+  itemsPerPage = 10;
 
   Emoji = EmojiName;
   I18ns = I18ns;
@@ -84,7 +84,15 @@ export class LeadCollaborationComponent implements OnInit {
   typesFilters: ETypeValue[] = [];
   periodsFilters: EPeriodValue[] = [];
 
-  contributions: IContribution[] = [];
+  contributionsByPeriod: {
+    period: EPeriodValue;
+    contributions: IContribution[];
+  }[] = [
+    { period: EPeriodValue.TODAY, contributions: [] },
+    { period: EPeriodValue.WEEK, contributions: [] },
+    { period: EPeriodValue.MONTH, contributions: [] },
+    { period: EPeriodValue.OLD, contributions: [] },
+  ];
 
   selectedTab!: ITab;
   contributors: { id: string; name: string }[] = [];
@@ -165,6 +173,7 @@ export class LeadCollaborationComponent implements OnInit {
 
   private getSelectedTabData(tab: ITab): void {
     let data: IContribution[] = [];
+    const today = new Date();
 
     switch (tab.value) {
       case ETabValue.PENDING:
@@ -225,7 +234,32 @@ export class LeadCollaborationComponent implements OnInit {
     data = this.filterByContributors(data, this.contributorsFilters);
     data = this.filterByPeriod(data, this.periodsFilters);
 
-    this.contributions = data.slice(0, this.itemsPerPage);
+    data = data.slice(0, this.itemsPerPage);
+
+    this.contributionsByPeriod.forEach((item) => {
+      switch (item.period) {
+        case EPeriodValue.TODAY:
+          item.contributions = data.filter(({ createdAt }) => isToday(createdAt));
+          break;
+        case EPeriodValue.WEEK:
+          item.contributions = data.filter(
+            ({ createdAt }) => !isToday(createdAt) && isSameWeek(today, createdAt),
+          );
+          break;
+        case EPeriodValue.MONTH:
+          item.contributions = data.filter(
+            ({ createdAt }) =>
+              !isToday(createdAt) && !isSameWeek(today, createdAt) && isSameMonth(today, createdAt),
+          );
+          break;
+        case EPeriodValue.OLD:
+          item.contributions = data.filter(
+            ({ createdAt }) =>
+              !isToday(createdAt) && !isSameWeek(today, createdAt) && !isSameMonth(today, createdAt),
+          );
+          break;
+      }
+    });
   }
 
   private filterByContributors(data: IContribution[], contributorsIds: string[]): IContribution[] {
@@ -270,5 +304,10 @@ export class LeadCollaborationComponent implements OnInit {
 
   getCommentFromContribution(contribution: IContribution): CommentDtoApi {
     return contribution.data as CommentDtoApi;
+  }
+
+  showMore(): void {
+    this.itemsPerPage += 10;
+    this.getSelectedTabData(this.selectedTab);
   }
 }

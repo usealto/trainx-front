@@ -39,7 +39,10 @@ export class CommentCardComponent {
     const componentInstance = modalRef.componentInstance as CollaborationModalComponent;
     componentInstance.data = {
       title: I18ns.collaboration.commentCard.archiveCommentTitle,
-      subtitle: I18ns.collaboration.commentCard.archiveCommentSubtitle,
+      subtitle: this.replaceInTranslationPipe.transform(
+        I18ns.collaboration.commentCard.archiveCommentSubtitle,
+        fullname,
+      ),
       icon: 'bi-archive',
       color: 'badge-double-primary',
       confirmButtonLabel: I18ns.collaboration.commentCard.archive,
