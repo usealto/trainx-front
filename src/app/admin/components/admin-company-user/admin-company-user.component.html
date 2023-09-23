@@ -1,19 +1,32 @@
 <alto-admin-header
-  [title]="edit ? 'Edit a user' : 'Create a user'"
-  subtitle="Find here the members of the company."
+  *ngIf="user"
+  [title]="'User information'"
+  subtitle="View all the user information"
+  [divider]="true"
+  [breadcrumbs]="[
+    {
+      label: 'Companies',
+      url: '/admin/companies'
+    },
+    {
+      label: company.name,
+      url: ['/', 'admin', 'companies', company.id, 'users']
+    },
+    {
+      label: user.firstname + ' ' + user.lastname,
+      url: ['/', 'admin', 'companies', company.id, 'users']
+    }
+  ]"
 ></alto-admin-header>
-<div class="d-flex justify-content-between">
-  <div>
-    <h2>Informations</h2>
-    <p class="fs-7">Fill in the general information about this user.</p>
-  </div>
-  <div *ngIf="userForm">
+<div class="d-flex justify-content-end align-items-center alto-grey fs-5 pb-4">
+  <div *ngIf="userForm && user && !user.deletedAt">
     <button
       type="button"
       class="btn btn-outline-secondary d-inline-flex align-items-center me-2"
       routerLink=".."
     >
-      Cancel
+    <i class="bi bi-pencil"></i>
+      Edit
     </button>
     <button
       [disabled]="!userForm.valid || userForm.pristine || !userForm.dirty"
@@ -21,9 +34,13 @@
       class="btn btn-primary d-inline-flex align-items-center"
       (click)="submit()"
     >
-      Save
-      <i class="bi bi-save ps-2"></i>
+    <i class="bi bi-incognito fs-5 text-white"></i>
+      Impersonnate
+      
     </button>
+  </div>
+  <div *ngIf="user && user.deletedAt">
+    <div class="badge alto-badge rounded-pill bg-danger text-white"  >Deleted {{ user.deletedAt | date : 'shortDate' }}</div>
   </div>
 </div>
 <hr />
@@ -34,8 +51,8 @@
       <label for="name" class="col-5 mb-2 required">Name</label>
       <div class="col-7 form-group">
         <div class="d-flex gap-2">
-          <input type="text" class="form-control" placeholder="Firstname" formControlName="firstname" />
-          <input type="text" class="form-control" placeholder="Lastname" formControlName="lastname" />
+          <input type="text" class="form-control" placeholder="Firstname" formControlName="firstname" readonly/>
+          <input type="text" class="form-control" placeholder="Lastname" formControlName="lastname" readonly/>
         </div>
       </div>
     </div>
@@ -52,6 +69,7 @@
           class="form-control"
           placeholder="john.doe@email.com"
           formControlName="email"
+          readonly
         />
       </div>
     </div>
@@ -148,106 +166,80 @@
       </div>
     </div>
   </div>
-  <!-- Slack ID -->
+  <!-- Auth0 Connected -->
   <div class="py-4 border-bottom">
-    <div class="w-80 row">
-      <div class="col-5 mb-2">
-        <label for="name">ID Slack</label>
-      </div>
-      <div class="col-7 form-group">
-        <div class="d-flex gap-3">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Example: U0G9QF9C6"
-            formControlName="slackId"
-          />
-          <button
-            *ngIf="edit"
-            type="button"
-            class="btn btn-primary d-inline-flex align-items-center text-nowrap"
-            (click)="resetSlackId()"
-          >
-            Reset ID
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="py-4 border-bottom" *ngIf="edit">
     <div class="w-80 row">
       <div class="col-5 mb-2">
         <label for="name">Auth0</label>
       </div>
       <div class="col-7 form-group">
-        <div class="d-flex flex-column gap-2 fw-bolder">
-          <div class="w-100 d-flex justify-content-between">
-            <span class="alto-grey">Connected to Auth0:</span>
-            <span *ngIf="userAuth0; else connectedElse"
-              ><i class="bi bi-check-circle-fill fs-4 fw-bolder alto-success"></i
-            ></span>
+        <span *ngIf="userAuth0; else connectedElse">
+          <i class="bi bi-check-circle-fill fs-4 fw-bolder alto-success"></i> Connected </span>
             <ng-template #connectedElse>
               <span><i class="bi bi-x-circle-fill fs-4 fw-bolder alto-red"></i></span>
             </ng-template>
-          </div>
-          <hr />
-          <ng-container *ngIf="userAuth0">
-            <div class="w-100 d-flex justify-content-between">
-              <span class="alto-grey">Last connection to Auth0:</span
-              ><span *ngIf="userAuth0.last_login; else never">{{
-                userAuth0.last_login | date : 'fullDate'
-              }}</span>
-              <ng-template #never><span>Never</span></ng-template>
-            </div>
-            <hr />
-            <div class="w-100 d-flex justify-content-between">
-              <span class="alto-grey">Verified email on Auth0:</span>
-              <span *ngIf="userAuth0.email_verified; else emailVerifiedElse"
-                ><i class="bi bi-check-circle-fill fs-4 fw-bolder alto-success"></i
-              ></span>
-              <ng-template #emailVerifiedElse>
-                <span><i class="bi bi-x-circle-fill fs-4 fw-bolder alto-red"></i></span>
-              </ng-template>
-            </div>
-            <hr />
-            <div class="w-100 d-flex justify-content-between">
-              <span class="alto-grey">Logins count</span>
-              <span class="alto-badge fw-bolder">{{ userAuth0.logins_count || 0 }}</span>
-            </div>
-            <hr />
-            <div class="w-100 d-flex justify-content-between">
-              <span class="alto-grey">Deleted</span>{{ user.deletedAt }}
-            </div>
-            <hr />
-          </ng-container>
-        </div>
       </div>
     </div>
   </div>
-</form>
-<div *ngIf="userForm" class="d-flex justify-content-end pt-4">
-  <div class="d-flex align-items-center">
-    <button
-      routerLink=".."
-      type="button"
-      class="btn btn-outline-secondary d-inline-flex align-items-center me-2"
-    >
-      Cancel
-    </button>
-    <button
-      [disabled]="!userForm.valid || userForm.pristine || !userForm.dirty"
-      type="button"
-      class="btn btn-primary d-inline-flex align-items-center"
-      (click)="submit()"
-    >
-      Save
-      <i class="bi bi-save ps-2"></i>
-    </button>
-  </div>
-</div>
 
-<!-- <div class="py-4 page-max-width">
-  <button type="button" class="btn btn-primary float-end" (click)="submit()">
-    Save
-  </button>
-</div> -->
+  <!-- Auth0 last connexion -->
+  <div class="py-4 border-bottom">
+    <div class="w-80 row">
+      <div class="col-5 mb-2">
+        <label for="name">Last connection</label>
+      </div>
+      <div class="col-7 form-group">
+        <span *ngIf="userAuth0; else never">
+          <span *ngIf="userAuth0.last_login; else never">
+            {{
+              userAuth0.last_login | date : 'fullDate'
+            }}</span>
+          </span>
+          <ng-template #never><span>Never</span></ng-template>
+        </div>
+    </div>
+  </div>
+
+
+  <!-- Auth0 Verified email -->
+  <div class="py-4 border-bottom">
+    <div class="w-80 row">
+      <div class="col-5 mb-2">
+        <label for="name">Verified email</label>
+      </div>
+      <div class="col-7 form-group">
+        <span *ngIf="userAuth0; else never">
+          <span *ngIf="userAuth0.email_verified; else emailVerifiedElse">
+            <i class="bi bi-check-circle-fill fs-4 fw-bolder alto-success"></i> verified </span>
+          </span>
+          <ng-template #emailVerifiedElse><span><i class="bi bi-x-circle-fill fs-4 fw-bolder alto-red"></i></span></ng-template>
+        </div>
+    </div>
+  </div>
+
+
+  <!-- Auth0 Login count -->
+  <div class="py-4 border-bottom">
+    <div class="w-80 row">
+      <div class="col-5 mb-2">
+        <label for="name">Login counts</label>
+      </div>
+      <div class="col-7 form-group">
+        <span *ngIf="userAuth0; else never">
+          <span class="alto-badge fw-bolder">{{ userAuth0.logins_count || 0 }}</span>
+          </span>
+        </div>
+    </div>
+  </div>
+
+
+
+</form>
+<button
+  *ngIf="edit"
+  type="button"
+  class="btn btn-primary d-inline-flex align-items-center text-nowrap mt-4"
+  (click)="showRawDataModal()"
+>
+  Show raw data
+</button>

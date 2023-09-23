@@ -57,7 +57,7 @@ export class AdminCompanyUsersComponent implements OnInit {
     combineLatest({
       teams: this.teamsRestService.getTeams({ companyId: this.id, itemsPerPage: 1000 }),
       company: this.companiesRestService.getCompanyById(this.id as string),
-      users: this.usersRestService.getUsersFiltered({ companyId: this.id, itemsPerPage: 1000 }),
+      users: this.usersRestService.getUsersFiltered({ companyId: this.id, itemsPerPage: 1000, includeSoftDeleted: true }),
     })
       .pipe(take(1))
       .subscribe(({ company, users, teams }) => {

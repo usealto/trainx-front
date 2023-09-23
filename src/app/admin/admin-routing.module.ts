@@ -12,6 +12,7 @@ import { AdminUsersUploadComponent } from './components/admin-users-upload/admin
 import { AdminUnauthorizedComponent } from './components/admin-unauthorized/admin-unauthorized.component';
 import { AdminCompaniesCreateComponent } from './components/admin-companies-create/admin-companies-create.component';
 import { AdminCompanyQuestionsComponent } from './components/admin-company-questions/admin-company-questions.component';
+import { AdminCompanyUserComponent } from './components/admin-company-user/admin-company-user.component';
 
 const routes: Routes = [
   {
@@ -50,7 +51,7 @@ const routes: Routes = [
       },
       {
         path: 'companies/:companyId/users/:userId',
-        component: AdminUserCreateComponent,
+        component: AdminCompanyUserComponent,
       },
       {
         path: 'companies/:id/users/upload',

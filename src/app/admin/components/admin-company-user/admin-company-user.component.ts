@@ -1,3 +1,4 @@
+import { ShowRawDataModalComponent } from './show-raw-data-modal/show-raw-data-modal.component';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,8 +14,8 @@ import {
   UserDtoApiRolesEnumApi,
   UsersApiService,
 } from '@usealto/sdk-ts-angular';
-import { UserForm } from './models/user.form';
-import { AuthUserGet } from '../../admin-users/models/authuser.get';
+import { UserForm } from '../admin-user-create/admin-user-create-form/models/user.form';
+import { AuthUserGet } from '../admin-users/models/authuser.get';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { UsersApiService as SlackApiService } from 'src/app/sdk/api/users.service';
@@ -24,12 +25,13 @@ import { N8nService } from 'src/app/admin/services/n8n.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
 
 @Component({
-  selector: 'alto-admin-user-create-form',
-  templateUrl: './admin-user-create-form.component.html',
-  styleUrls: ['./admin-user-create-form.component.scss'],
+  selector: 'alto-admin-company-user',
+  templateUrl: './admin-company-user.component.html',
+  styleUrls: ['./admin-company-user.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class AdminUserCreateFormComponent implements OnInit {
+
+export class AdminCompanyUserComponent implements OnInit {
   edit = false;
   companyId!: string;
   teams: TeamDtoApi[] = [];
@@ -76,7 +78,7 @@ export class AdminUserCreateFormComponent implements OnInit {
     if (this.userId) {
       this.edit = true;
       this.usersRestService
-        .getUsersFiltered({ ids: this.userId })
+        .getUsersFiltered({ ids: this.userId, includeSoftDeleted: true })
         .pipe(
           tap((users) => {
             if (users[0]) {
@@ -152,6 +154,16 @@ export class AdminUserCreateFormComponent implements OnInit {
     }
   }
 
+  showRawDataModal() {
+    const modalRef = this.modalService.open(ShowRawDataModalComponent, {
+      centered: true,
+      scrollable: true,
+      size: 'xl',
+    });
+    modalRef.componentInstance.userAuth0 = this.userAuth0;
+    modalRef.componentInstance.user = this.user;
+  }
+
   fetchAuth0Data(email: string) {
     this.authApiService.getAuth0Users({ q: email }).subscribe((q) => {
       if (q.data && q.data.length > 0) {
@@ -175,22 +187,5 @@ export class AdminUserCreateFormComponent implements OnInit {
       .subscribe((res) => this.msg.add({ message: res.data, severity: 'success' }));
   }
 
-  resetSlackId() {
-    console.log(this.company)
-    if (this.company.slackAdmin) {
-      this.n8nRestService
-        .updateSlackId({
-          email: this.user.email,
-          userId: this.user.id,
-          companyId: this.companyId,
-          slackAdmin: this.company.slackAdmin,
-        }).pipe(tap(() => {
-          this.toastService.show({
-            text : 'Update slack Id request sent, please refresh this page in a few seconds',
-            type : 'success',
-          })
-        }))
-        .subscribe();
-    }
-  }
+  
 }

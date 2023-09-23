@@ -25,10 +25,11 @@ import { AdminTabComponent } from './components/admin-shared/admin-tabs/admin-ta
 import { AdminUsersUploadFormComponent } from './components/admin-companies-create/admin-users-upload-form/admin-users-upload-form.component';
 import { EditUserUploadFormComponent } from './components/admin-companies-create/edit-user-upload-form/edit-user-upload-form.component';
 import { AdminCompaniesFiltersListComponent } from './components/admin-companies/admin-companies-filters-list/admin-companies-filters-list.component';
-import { ShowRawDataModalComponent } from './components/admin-user-create/admin-user-create-form/show-raw-data-modal/show-raw-data-modal.component';
+import { ShowRawDataModalComponent } from './components/admin-company-user/show-raw-data-modal/show-raw-data-modal.component';
 import { AdminUsersFiltersListComponent } from './components/admin-company-users/admin-users-filters-list/admin-users-filters-list.component';
 import { AdminCompanyQuestionsComponent } from './components/admin-company-questions/admin-company-questions.component';
 import { AdminUploadQuestionsModalComponent } from './components/admin-company-questions/admin-upload-questions-modal/admin-upload-questions-modal.component';
+import { AdminCompanyUserComponent } from './components/admin-company-user/admin-company-user.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { AdminUploadQuestionsModalComponent } from './components/admin-company-q
     AdminUsersFiltersListComponent,
     AdminCompanyQuestionsComponent,
     AdminUploadQuestionsModalComponent,
+    AdminCompanyUserComponent,
   ],
   imports: [
     CommonModule,

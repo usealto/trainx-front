@@ -48,6 +48,7 @@
             <i class="bi bi-arrow-up-short"></i>Email
           </th>
           <th scope="col">Role</th>
+          <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
@@ -71,6 +72,7 @@
               >{{ role }}</span
             >
           </td>
+          <td> <span *ngIf="user.deletedAt"> Deleted {{user.deletedAt | date : 'shortDate'}} </span></td>
         </tr>
       </tbody>
     </table>
