@@ -18,11 +18,10 @@ import { UserForm } from '../admin-user-create/admin-user-create-form/models/use
 import { AuthUserGet } from '../admin-users/models/authuser.get';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { UsersApiService as SlackApiService } from 'src/app/sdk/api/users.service';
 import { MsgService } from 'src/app/core/message/msg.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { N8nService } from 'src/app/admin/services/n8n.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
+import { DataService } from '../../admin-data.service';
 
 @Component({
   selector: 'alto-admin-company-user',
@@ -52,11 +51,10 @@ export class AdminCompanyUserComponent implements OnInit {
     private readonly authApiService: AuthApiService,
     private readonly usersRestService: UsersRestService,
     private readonly companiesRestService: CompaniesRestService,
-    private readonly slackApiService: SlackApiService,
     private readonly msg: MsgService,
     private modalService: NgbModal,
-    private readonly n8nRestService: N8nService,
     private readonly toastService: ToastService,
+    private readonly dataService: DataService,
   ) {
     this.fb = fob;
   }
@@ -185,6 +183,11 @@ export class AdminCompanyUserComponent implements OnInit {
         },
       })
       .subscribe((res) => this.msg.add({ message: res.data, severity: 'success' }));
+  }
+
+  impersonnate(email: string) {
+    localStorage.setItem('impersonatedUser', email.toLowerCase());
+    this.dataService.sendData('impersonatedUserUpdated');
   }
 
   

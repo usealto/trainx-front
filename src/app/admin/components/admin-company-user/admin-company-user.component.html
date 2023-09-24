@@ -20,23 +20,22 @@
 ></alto-admin-header>
 <div class="d-flex justify-content-end align-items-center alto-grey fs-5 pb-4">
   <div *ngIf="userForm && user && !user.deletedAt">
-    <button
+    <a
       type="button"
       class="btn btn-outline-secondary d-inline-flex align-items-center me-2"
-      routerLink=".."
+      [routerLink]="['/admin', 'users', user.id]"
     >
-    <i class="bi bi-pencil"></i>
-      Edit
-    </button>
+    <i class="bi bi-pencil-square"></i>
+      Edit the user TODO
+    </a>
     <button
-      [disabled]="!userForm.valid || userForm.pristine || !userForm.dirty"
+      [disabled]="!user.email"
       type="button"
       class="btn btn-primary d-inline-flex align-items-center"
-      (click)="submit()"
+      (click)="impersonnate(user.email)"
     >
     <i class="bi bi-incognito fs-5 text-white"></i>
-      Impersonnate
-      
+      Impersonnation      
     </button>
   </div>
   <div *ngIf="user && user.deletedAt">
