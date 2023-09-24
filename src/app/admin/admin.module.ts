@@ -30,6 +30,7 @@ import { AdminUsersFiltersListComponent } from './components/admin-company-users
 import { AdminCompanyQuestionsComponent } from './components/admin-company-questions/admin-company-questions.component';
 import { AdminUploadQuestionsModalComponent } from './components/admin-company-questions/admin-upload-questions-modal/admin-upload-questions-modal.component';
 import { AdminCompanyUserComponent } from './components/admin-company-user/admin-company-user.component';
+import { AdminHeaderRemoveImpersonationComponent } from './components/admin-shared/admin-header-remove-impersonation/admin-header-remove-impersonation.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { AdminCompanyUserComponent } from './components/admin-company-user/admin
     AdminCompanyQuestionsComponent,
     AdminUploadQuestionsModalComponent,
     AdminCompanyUserComponent,
+    AdminHeaderRemoveImpersonationComponent,
   ],
   imports: [
     CommonModule,

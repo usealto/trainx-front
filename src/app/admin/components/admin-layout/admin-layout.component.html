@@ -4,6 +4,7 @@
   <alto-admin-menu *ngIf="authorized"></alto-admin-menu>
     
   <div class="router" *ngIf="authorized">
+    <alto-admin-header-remove-impersonation></alto-admin-header-remove-impersonation>
     <router-outlet></router-outlet>
   </div>
 
