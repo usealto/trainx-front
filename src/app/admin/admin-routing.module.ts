@@ -2,7 +2,6 @@ import { AdminCompaniesComponent } from './components/admin-companies/admin-comp
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
-import { AdminCompanyComponent } from './components/admin-company/admin-company.component';
 import { AdminCompanyUsersComponent } from './components/admin-company-users/admin-company-users.component';
 import { AdminUserCreateComponent } from './components/admin-user-create/admin-user-create.component';
 import { AdminUsersUploadComponent } from './components/admin-users-upload/admin-users-upload.component';

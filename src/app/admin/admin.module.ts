@@ -7,7 +7,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
 import { AdminCompaniesComponent } from './components/admin-companies/admin-companies.component';
-import { AdminCompanyComponent } from './components/admin-company/admin-company.component';
 import { AdminMenuComponent } from './components/admin-layout/admin-menu/admin-menu.component';
 import { AdminCompanyUsersComponent } from './components/admin-company-users/admin-company-users.component';
 import { AdminUserCreateComponent } from './components/admin-user-create/admin-user-create.component';
@@ -32,7 +31,6 @@ import { AdminCompanyUserComponent } from './components/admin-company-user/admin
   declarations: [
     AdminLayoutComponent,
     AdminCompaniesComponent,
-    AdminCompanyComponent,
     AdminMenuComponent,
     AdminCompanyUsersComponent,
     AdminUserCreateComponent,
