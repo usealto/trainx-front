@@ -119,7 +119,7 @@ export class AdminUserCreateFormComponent implements OnInit {
           },
         })
         .subscribe((q) => {
-          this.router.navigate(['/admin/home/', this.companyId, 'users', this.userId]);
+          this.router.navigate(['/admin/companies/', this.companyId, 'users', this.userId]);
         });
     } else {
       this.usersApiService
@@ -134,7 +134,7 @@ export class AdminUserCreateFormComponent implements OnInit {
           },
         })
         .subscribe((q) => {
-          this.router.navigate(['/admin/home/', this.companyId, 'users']);
+          this.router.navigate(['/admin/companies/', this.companyId, 'users']);
         });
     }
   }
