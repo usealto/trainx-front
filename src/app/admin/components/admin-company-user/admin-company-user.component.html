@@ -39,7 +39,12 @@
     </button>
   </div>
   <div *ngIf="user && user.deletedAt">
-    <div class="badge alto-badge rounded-pill bg-danger text-white"  >Deleted {{ user.deletedAt | date : 'shortDate' }}</div>
+    <alto-colored-pill-list 
+      [data]="[{name: 'Deleted', id: 'FF1238asdfr4'}]"
+      [hasDynamicColor]="true"
+      [limit]="0"
+    ></alto-colored-pill-list>
+    <div class="badge text-black"> {{ user.deletedAt | date : 'shortDate' }}</div>
   </div>
 </div>
 <hr />

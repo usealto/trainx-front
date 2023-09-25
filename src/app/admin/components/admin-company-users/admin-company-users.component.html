@@ -58,7 +58,14 @@
                 [routerLink]="['/', 'admin', 'companies', company.id, 'users', user.id]"
                 routerLinkActive="menu-selected"
               >
-                {{ user.firstname }} {{ user.lastname }} <span *ngIf="user.deletedAt" class="alto-badge bg-danger text-white mx-3"> Deleted</span>
+                {{ user.firstname }} {{ user.lastname }} 
+                <alto-colored-pill-list 
+                  *ngIf="user.deletedAt" 
+                  class="mx-3"
+                  [data]="[{name: 'Deleted', id: 'FF1238asdfr4'}]"
+                  [hasDynamicColor]="true"
+                  [limit]="0"
+                ></alto-colored-pill-list>
               </a>
             </div>
           </th>
