@@ -68,7 +68,7 @@ export class UserHomeComponent implements OnInit {
         createdBefore: addDays(new Date(), 1),
       })
       .pipe(
-        map((gs) => gs.data?.filter((g) => !g.programRunId)),
+        map((gs) => gs.data?.filter((g) => (g.programRunIds?.length || 0) > 0)),
         tap((guesses = []) => {
           const reducedGuesses = [] as GuessDtoApi[];
           guesses.forEach((guess) => {
