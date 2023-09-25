@@ -1,9 +1,14 @@
+:host {
+  display: block;
+}
+
 .header {
   border-radius: 0.857rem 0.857rem 0rem 0rem;
   background: var(--purple-25);
   padding: 1.143rem 1.429rem;
   align-self: stretch;
   justify-content: space-between;
+  min-height: 5.333rem;
 }
 
 .middle {
@@ -49,13 +54,11 @@
 
 .light-text {
   color: var(--alto-grey);
-  line-height: 20px;
 }
 
 .date-text {
   color: var(--alto-grey);
   font-size: 10px;
-  line-height: 20px;
   margin-left: 12px;
   font-weight: 400;
 }
@@ -63,7 +66,7 @@
 .content-container {
   display: flex;
   flex-direction: column;
-  padding: 20px 16px;
+  padding: 1.333rem 1.667rem;
   background-color: white;
   gap: 8px;
 

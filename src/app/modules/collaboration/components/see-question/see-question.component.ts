@@ -20,6 +20,7 @@ import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-tra
 export class SeeQuestionComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
+  AltoRoutes = AltoRoutes;
 
   questionTitle = '';
   comments: CommentDtoApi[] = [];
@@ -52,7 +53,7 @@ export class SeeQuestionComponent implements OnInit {
         switchMap((id) =>
           combineLatest([
             this.questionRestSerive.getQuestion(id),
-            this.commentsRestService.getComments({ questionId: id }, true),
+            this.commentsRestService.getUnreadComments({ questionId: id }, true),
           ]),
         ),
         tap({

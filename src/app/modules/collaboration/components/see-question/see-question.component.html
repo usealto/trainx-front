@@ -6,17 +6,19 @@
   </div>
 </div>
 <div class="mb-7">
-  <span class="fw-bold breadcrumb"
-    >{{
-      breadcrumbElem
-        ? I18ns.collaboration.seeQuestion.breadcrumb.awaiting
-        : I18ns.collaboration.seeQuestion.breadcrumb.seeAll
-    }}
+  <p class="fw-bold breadcrumb">
+    <span class="cursor-pointer" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.collaboration]">
+      {{
+        breadcrumbElem
+          ? I18ns.collaboration.seeQuestion.breadcrumb.awaiting
+          : I18ns.collaboration.seeQuestion.breadcrumb.seeAll
+      }}
+    </span>
     <i class="bi bi-chevron-right fw-normal mx-3"></i>
-    <p class="fw-bold breadcrumb-link">
+    <span class="fw-bold breadcrumb-link">
       {{ I18ns.collaboration.seeQuestion.breadcrumb.seeQuestion }}
-    </p>
-  </span>
+    </span>
+  </p>
 </div>
 <ng-container *ngIf="!isLoading">
   <div class="question-panel px-5 py-4 d-flex align-items-center mb-4">

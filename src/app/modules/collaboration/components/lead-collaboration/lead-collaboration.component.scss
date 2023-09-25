@@ -47,41 +47,22 @@
     display: flex;
     gap: 0.5rem;
     align-items: center;
-
-    .sort-cta {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-radius: 2.5rem;
-      border: 1px solid var(--gray-200);
-      background-color: white;
-      height: 100%;
-      padding: 0.667rem 1.167rem 0.667rem 1.167rem;
-      cursor: pointer;
-      font-size: 0.875rem;
-      color: var(--alto-grey);
-      font-weight: 600;
-    }
   }
 }
 
-.line {
-  border-top: 1px solid var(--gray-200);
-}
-.over-line {
-  text-align: center;
-  padding: 0 1rem;
-  margin-top: -0.75rem;
-}
-.over-line-button {
-  text-align: center;
-  padding: 0 1rem;
-  margin-top: -1.5rem;
-}
-.centered-block {
-  background-color: #fcfcfd;
-  display: inline-block;
-  padding: 0 1.2rem;
-  color: var(--gray-900);
-  font-weight: 600;
+.time-separator {
+  display: flex;
+  align-items: center;
+  gap: 1.333rem;
+  align-self: stretch;
+  padding: 2rem 0;
+  .line {
+    height: 1px;
+    flex: 1 0 0;
+    background: var(--gray-200);
+  }
+  .centered-block {
+    text-align: center;
+    font-weight: 600;
+  }
 }

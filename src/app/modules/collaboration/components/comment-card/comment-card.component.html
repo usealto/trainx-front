@@ -48,7 +48,7 @@
   </div>
 </div>
 
-<div *ngIf="!comment?.isRead" class="bg-white">
+<div *ngIf="!comment?.isRead" class="bg-white rounded-4 rounded-top-0">
   <div class="separator"></div>
   <div class="footer">
     <button class="button gray" (click)="archiveComment()" *ngIf="!comment?.isRead">

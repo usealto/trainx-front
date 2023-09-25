@@ -32,9 +32,7 @@
         <span class="date-text">{{ suggQuestion?.createdAt | dateLabel }}</span>
       </div>
       <div>
-        <span class="light-text">
-          {{ suggQuestion?.title }}
-        </span>
+        <span class="light-text">"{{ suggQuestion?.title }}"</span>
       </div>
     </div>
   </div>
@@ -57,14 +55,14 @@
         </div>
         <div *ngSwitchCase="StatusEnum.Declined" class="response">
           <span class="light-text">{{ I18ns.collaboration.questionCard.hasDenied }}</span>
-          <span class="light-text">{{ suggQuestion?.response }}</span>
+          <span class="light-text" *ngIf="suggQuestion?.response">"{{ suggQuestion?.response }}"</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div *ngIf="suggQuestion?.status === StatusEnum.Submitted" class="bg-white">
+<div *ngIf="suggQuestion?.status === StatusEnum.Submitted" class="bg-white rounded-4 rounded-top-0">
   <div class="separator"></div>
   <div class="footer">
     <button

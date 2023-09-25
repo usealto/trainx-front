@@ -1024,7 +1024,7 @@ export const FR = {
       accept: 'Confirmer',
       textArea: 'Réponse à {{}} (facultatif)',
       archivedComment: 'Le commentaire a bien été archivé',
-      hasArchivedComment: 'A archivé ce commentaire.',
+      hasArchivedComment: 'La commentaire a bien été archivé.',
       concerningQuestion: 'sur la question',
       archive: 'Archiver',
       seeQuestion: 'Voir la question',

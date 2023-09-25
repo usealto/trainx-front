@@ -31,7 +31,8 @@
 
 <div class="d-flex">
   <div class="w-75 pe-8">
-    <div class="content-header mb-5">
+    <!-- FILTERS -->
+    <div class="content-header">
       <alto-dropdown-filter
         [placeholder]="I18ns.collaboration.filters.contributor"
         [data]="contributors"
@@ -57,40 +58,44 @@
       </div>
     </div>
 
-    <div *ngFor="let data of contributionsByPeriod" class="mb-5">
-      <div *ngIf="data.contributions.length > 0" class="mb-5">
+    <!-- CONTRIBUTIONS -->
+    <ng-container *ngFor="let data of contributionsByPeriod">
+      <div *ngIf="data.contributions.length > 0" class="time-separator">
         <div class="line"></div>
-        <div class="over-line">
-          <span class="centered-block">
-            {{ I18ns.collaboration.filters.periods[data.period] }}
-          </span>
+        <div class="centered-block">
+          {{ I18ns.collaboration.filters.periods[data.period] }}
         </div>
+        <div class="line"></div>
       </div>
-      <div *ngFor="let contribution of data.contributions">
+      <ng-container *ngFor="let contribution of data.contributions">
         <ng-container *ngIf="contribution.type === 'comments'; else questionTemplate">
           <alto-comment-card
             [comment]="getCommentFromContribution(contribution)"
             (refresh)="getCollaborationData()"
+            class="mb-5"
           ></alto-comment-card>
         </ng-container>
         <ng-template #questionTemplate>
           <alto-sugg-question-card
             [suggQuestion]="getQuestionFromContribution(contribution)"
             (refresh)="getCollaborationData()"
+            class="mb-5"
           >
           </alto-sugg-question-card>
         </ng-template>
-        <br />
-      </div>
-    </div>
-    <div class="line"></div>
-    <div class="over-line-button">
-      <span class="centered-block">
+      </ng-container>
+    </ng-container>
+
+    <!-- SHOW MORE -->
+    <div class="time-separator" *ngIf="showMoreButton">
+      <div class="line"></div>
+      <div class="centered-block">
         <button class="btn btn-outline-secondary" style="font-size: 1rem" (click)="showMore()">
           {{ I18ns.collaboration.showMore }}
           <i class="bi bi-arrow-down"></i>
         </button>
-      </span>
+      </div>
+      <div class="line"></div>
     </div>
   </div>
 
