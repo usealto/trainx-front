@@ -6,5 +6,4 @@ export interface UserForm {
   email: string;
   teamId?: string;
   roles: Array<RoleEnumApi>;
-  slackId: string;
 }

@@ -148,32 +148,6 @@
       </div>
     </div>
   </div>
-  <!-- Slack ID -->
-  <div class="py-4 border-bottom">
-    <div class="w-80 row">
-      <div class="col-5 mb-2">
-        <label for="name">ID Slack</label>
-      </div>
-      <div class="col-7 form-group">
-        <div class="d-flex gap-3">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Example: U0G9QF9C6"
-            formControlName="slackId"
-          />
-          <button
-            *ngIf="edit"
-            type="button"
-            class="btn btn-primary d-inline-flex align-items-center text-nowrap"
-            (click)="resetSlackId()"
-          >
-            Reset ID
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
   <div class="py-4 border-bottom" *ngIf="edit">
     <div class="w-80 row">
       <div class="col-5 mb-2">

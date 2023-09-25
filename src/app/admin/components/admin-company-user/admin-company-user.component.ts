@@ -87,7 +87,6 @@ export class AdminCompanyUserComponent implements OnInit {
                 email: [this.user.email || '', [Validators.required, Validators.email]],
                 teamId: [this.user.teamId || '', []],
                 roles: [this.user.roles as unknown as Array<RoleEnumApi>, []],
-                slackId: [{ value: this.user.slackId || '', disabled: true }, []],
               });
             } else {
               throw new Error('User not found');
@@ -106,7 +105,6 @@ export class AdminCompanyUserComponent implements OnInit {
         email: ['', [Validators.required, Validators.email]],
         teamId: ['', []],
         roles: [[RoleEnumApi.CompanyUser], []],
-        slackId: ['', []],
       });
     }
   }
