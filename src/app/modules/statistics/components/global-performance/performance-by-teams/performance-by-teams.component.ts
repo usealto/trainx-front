@@ -17,6 +17,7 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -40,6 +41,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
   chartOption: any = {};
 
   constructor(
+    private titleCasePipe: TitleCasePipe,
     public readonly teamStore: TeamStore,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresServices: ScoresService,
@@ -108,11 +110,12 @@ export class PerformanceByTeamsComponent implements OnChanges {
       .slice(-scores[0]?.averages?.length);
 
     const aggregatedData = this.statisticsServices.transformDataToPoint(scores[0]);
-    const labels = this.statisticsServices.formatLabel(
-      aggregatedData.map((d) => d.x),
-      duration,
-    );
-
+    const labels = this.statisticsServices
+      .formatLabel(
+        aggregatedData.map((d) => d.x),
+        duration,
+      )
+      .map((s) => this.titleCasePipe.transform(s));
     const dataSet = scores.map((s) => {
       const d = this.statisticsServices.transformDataToPoint(s);
       return {

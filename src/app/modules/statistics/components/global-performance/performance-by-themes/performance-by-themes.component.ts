@@ -23,6 +23,7 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
+import { TitleCasePipe } from '@angular/common';
 
 @UntilDestroy()
 @Component({
@@ -54,6 +55,7 @@ export class PerformanceByThemesComponent implements OnChanges {
   series: any[] = [];
 
   constructor(
+    private titleCasePipe: TitleCasePipe,
     public readonly programsStore: ProgramsStore,
     public readonly teamsStore: TeamStore,
     private readonly scoresRestService: ScoresRestService,
@@ -229,10 +231,12 @@ export class PerformanceByThemesComponent implements OnChanges {
     scores = this.scoresServices.reduceLineChartData(scores);
     this.scoreCount = scores.length;
     const aggregateData = this.statisticsServices.transformDataToPoint(scores[0]);
-    const labels = this.statisticsServices.formatLabel(
-      aggregateData.map((d) => d.x),
-      duration,
-    );
+    const labels = this.statisticsServices
+      .formatLabel(
+        aggregateData.map((d) => d.x),
+        duration,
+      )
+      .map((s) => this.titleCasePipe.transform(s));
 
     const dataSet = scores.map((s) => {
       const d = this.statisticsServices.aggregateDataForScores(s, duration);
