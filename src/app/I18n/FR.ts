@@ -964,6 +964,7 @@ export const FR = {
   collaboration: {
     title: 'Collaboration',
     subtitle: "Gérer l'ensemble des contributions de vos équipes.",
+    showMore: 'Afficher plus',
     tabs: {
       pending: 'En attente',
       archived: 'Traités',
@@ -995,12 +996,17 @@ export const FR = {
       accepted: 'Acceptée',
       submitted: 'En attente',
     },
+    comment: {
+      read: 'Archivé',
+      unread: 'En attente',
+    },
     dateLabels: {
       today: 'Aujourd’hui',
       yesterday: 'Hier',
       daysCount: 'Il y a {{}} jours',
     },
     questionCard: {
+      suggQuestion: 'Question suggérée',
       denyQuestionTitle: 'Refuser une question',
       denyQuestionSubtitle: 'Souhaitez-vous envoyer un message à {{}} pour expliquer votre choix ?',
       deny: 'Refuser',
@@ -1009,6 +1015,23 @@ export const FR = {
       suggQuestionDenied: 'La question a bien été refusée',
       hasDenied: 'A refusé cette suggestion',
       hasAccepted: 'A ajouté la question au programme',
+    },
+    commentCard: {
+      comment: 'Commentaire',
+      archiveCommentTitle: 'Archiver un commentaire',
+      archiveCommentSubtitle: 'Souhaitez-vous envoyer un message à {{}} en réponse à son commentaire ?',
+      deny: 'Annuler',
+      accept: 'Confirmer',
+      textArea: 'Réponse à {{}} (facultatif)',
+      archivedComment: 'Le commentaire a bien été archivé',
+      hasArchivedComment: 'La commentaire a bien été archivé.',
+      concerningQuestion: 'sur la question',
+      archive: 'Archiver',
+      seeQuestion: 'Voir la question',
+    },
+    modal: {
+      cancel: 'Annuler',
+      placeholder: 'Écrivez votre message...',
     },
     seeQuestion: {
       breadcrumb: {
@@ -1022,13 +1045,6 @@ export const FR = {
       discoverQuestionsAndComments: 'Découvrez les réponses et commentaires associés à cette question.',
       comments: 'Commentaires',
       archiveComment: 'Archiver le commentaire',
-    },
-    archiveModal: {
-      title: 'Archiver un commentaire',
-      subtitle: 'Souhaitez-vous envoyer un message à {{}} en réponse à son commentaire ?',
-      answerTitle: 'Réponse à {{}} (facultatif)',
-      answerPlaceholder: 'Écrivez votre message...',
-      successToast: 'La commentaire a bien été archivé.',
     },
   },
 };

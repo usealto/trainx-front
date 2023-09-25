@@ -2,24 +2,25 @@ import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommentDtoApi } from '@usealto/sdk-ts-angular';
-import { format } from 'date-fns';
 import { combineLatest, map, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ArchiveModalComponent } from '../archive-modal/archive-modal.component';
 import { ToastService } from 'src/app/core/toast/toast.service';
-import { getLocaleDateFormat } from '@angular/common';
+import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
+import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
 @Component({
   selector: 'alto-see-question',
   templateUrl: './see-question.component.html',
   styleUrls: ['./see-question.component.scss'],
+  providers: [ReplaceInTranslationPipe],
 })
 export class SeeQuestionComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
+  AltoRoutes = AltoRoutes;
 
   questionTitle = '';
   comments: CommentDtoApi[] = [];
@@ -36,6 +37,7 @@ export class SeeQuestionComponent implements OnInit {
     private readonly router: Router,
     private readonly questionRestSerive: QuestionsRestService,
     private readonly commentsRestService: CommentsRestService,
+    private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
   ) {}
 
   ngOnInit(): void {
@@ -51,7 +53,7 @@ export class SeeQuestionComponent implements OnInit {
         switchMap((id) =>
           combineLatest([
             this.questionRestSerive.getQuestion(id),
-            this.commentsRestService.getComments({ questionId: id }, true),
+            this.commentsRestService.getUnreadComments({ questionId: id }, true),
           ]),
         ),
         tap({
@@ -70,26 +72,26 @@ export class SeeQuestionComponent implements OnInit {
       .subscribe();
   }
 
-  getDate(date: Date): string {
-    const today = format(new Date(), getLocaleDateFormat(this.locale, 0));
-    const commentDate = format(date, getLocaleDateFormat(this.locale, 0));
-
-    if (today === commentDate) {
-      return I18ns.collaboration.seeQuestion.date.today;
-    } else {
-      return commentDate;
-    }
-  }
-
   archiveComment(id: string) {
-    const modalRef = this.modalService.open(ArchiveModalComponent, { centered: true, size: 'md' });
+    const modalRef = this.modalService.open(CollaborationModalComponent, { centered: true, size: 'md' });
 
-    const componentInstance = modalRef.componentInstance as ArchiveModalComponent;
+    const componentInstance = modalRef.componentInstance as CollaborationModalComponent;
     const comment = this.comments.find((c) => c.id === id);
-    const author = comment ? comment.createdByUser.firstname + ' ' + comment.createdByUser.lastname : '';
-    componentInstance.author = author;
+    const fullname = `${comment?.createdByUser.firstname} ${comment?.createdByUser.lastname}`;
 
-    componentInstance.archivedComment
+    componentInstance.data = {
+      title: I18ns.collaboration.commentCard.archiveCommentTitle,
+      subtitle: this.replaceInTranslationPipe.transform(
+        I18ns.collaboration.commentCard.archiveCommentSubtitle,
+        fullname,
+      ),
+      icon: 'bi-archive',
+      color: 'badge-double-primary',
+      confirmButtonLabel: I18ns.collaboration.commentCard.archive,
+      textarea: this.replaceInTranslationPipe.transform(I18ns.collaboration.commentCard.textArea, fullname),
+    };
+
+    componentInstance.objectDeleted
       .pipe(
         switchMap((answer) =>
           this.commentsRestService.updateComment({
@@ -101,7 +103,7 @@ export class SeeQuestionComponent implements OnInit {
           this.getComments();
           modalRef.close();
           this.toastService.show({
-            text: I18ns.collaboration.archiveModal.successToast,
+            text: I18ns.collaboration.commentCard.hasArchivedComment,
             type: 'success',
           });
         }),

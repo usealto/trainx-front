@@ -11,7 +11,16 @@ import { CommentsRestService } from 'src/app/modules/programs/services/comments-
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { compareDesc, differenceInDays, isToday, isSameWeek, isSameMonth } from 'date-fns';
+import {
+  compareDesc,
+  differenceInDays,
+  isToday,
+  isSameWeek,
+  isSameMonth,
+  isAfter,
+  isBefore,
+  addDays,
+} from 'date-fns';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -54,20 +63,34 @@ interface IContribution {
   styleUrls: ['./lead-collaboration.component.scss'],
 })
 export class LeadCollaborationComponent implements OnInit {
-  readonly itemsPerPage = 10;
+  itemsPerPage = 10;
 
   Emoji = EmojiName;
   I18ns = I18ns;
 
   tabs: ITab[] = [
-    { label: I18ns.collaboration.tabs.pending, value: ETabValue.PENDING, index: 1 },
-    { label: I18ns.collaboration.tabs.archived, value: ETabValue.ARCHIVED, index: 2 },
+    {
+      label: I18ns.collaboration.tabs.pending,
+      value: ETabValue.PENDING,
+      index: 1,
+    },
+    {
+      label: I18ns.collaboration.tabs.archived,
+      value: ETabValue.ARCHIVED,
+      index: 2,
+    },
     { label: I18ns.collaboration.tabs.all, value: ETabValue.ALL, index: 3 },
   ];
 
   filters: { id: ETypeValue; name: string }[] = [
-    { id: ETypeValue.COMMENTS, name: I18ns.collaboration.filters.types.comments },
-    { id: ETypeValue.QUESTIONS, name: I18ns.collaboration.filters.types.questions },
+    {
+      id: ETypeValue.COMMENTS,
+      name: I18ns.collaboration.filters.types.comments,
+    },
+    {
+      id: ETypeValue.QUESTIONS,
+      name: I18ns.collaboration.filters.types.questions,
+    },
   ];
 
   periods: { id: EPeriodValue; name: string }[] = [
@@ -84,11 +107,15 @@ export class LeadCollaborationComponent implements OnInit {
   typesFilters: ETypeValue[] = [];
   periodsFilters: EPeriodValue[] = [];
 
-  contributions: IContribution[] = [];
+  contributionsByPeriod: {
+    period: EPeriodValue;
+    contributions: IContribution[];
+  }[] = [];
 
   selectedTab!: ITab;
   contributors: { id: string; name: string }[] = [];
   pendingCount = 0;
+  showMoreButton = true;
 
   constructor(
     private readonly commentsRestService: CommentsRestService,
@@ -98,6 +125,8 @@ export class LeadCollaborationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.initContributionsByPeriod();
+
     this.activatedRoute.params
       .pipe(
         tap((par) => {
@@ -126,7 +155,10 @@ export class LeadCollaborationComponent implements OnInit {
             ...submittedQuestions.map(({ createdByUser }) => createdByUser),
           ].reduce((acc, contributor) => {
             if (!acc.find(({ id }) => id === contributor.id)) {
-              acc.push({ id: contributor.id, name: `${contributor.firstname} ${contributor.lastname}` });
+              acc.push({
+                id: contributor.id,
+                name: `${contributor.firstname} ${contributor.lastname}`,
+              });
             }
 
             return acc;
@@ -162,6 +194,7 @@ export class LeadCollaborationComponent implements OnInit {
 
   private getSelectedTabData(tab: ITab): void {
     let data: IContribution[] = [];
+    const today = new Date();
 
     switch (tab.value) {
       case ETabValue.PENDING:
@@ -222,7 +255,25 @@ export class LeadCollaborationComponent implements OnInit {
     data = this.filterByContributors(data, this.contributorsFilters);
     data = this.filterByPeriod(data, this.periodsFilters);
 
-    this.contributions = data.slice(0, this.itemsPerPage);
+    this.showMoreButton = data.length > this.itemsPerPage;
+    data = data.slice(0, this.itemsPerPage);
+
+    this.initContributionsByPeriod();
+    data.forEach((item) => {
+      // today
+      if (isToday(item.createdAt)) {
+        this.contributionsByPeriod[0].contributions.push(item);
+        // week
+      } else if (isAfter(item.createdAt, addDays(today, -7))) {
+        this.contributionsByPeriod[1].contributions.push(item);
+        // month
+      } else if (isBefore(item.createdAt, today) && isAfter(item.createdAt, addDays(today, -30))) {
+        this.contributionsByPeriod[2].contributions.push(item);
+        //old
+      } else {
+        this.contributionsByPeriod[3].contributions.push(item);
+      }
+    });
   }
 
   private filterByContributors(data: IContribution[], contributorsIds: string[]): IContribution[] {
@@ -235,12 +286,13 @@ export class LeadCollaborationComponent implements OnInit {
     return data.filter(({ createdAt }) => {
       const date = new Date(createdAt);
       const today = new Date();
-
       return (
         periods.length === 0 ||
         (periods.includes(EPeriodValue.TODAY) && isToday(date)) ||
-        (periods.includes(EPeriodValue.WEEK) && isSameWeek(date, today)) ||
-        (periods.includes(EPeriodValue.MONTH) && isSameMonth(date, today)) ||
+        (periods.includes(EPeriodValue.WEEK) && isBefore(date, today) && isAfter(date, addDays(today, -7))) ||
+        (periods.includes(EPeriodValue.MONTH) &&
+          isBefore(date, today) &&
+          isAfter(date, addDays(today, -30))) ||
         (periods.includes(EPeriodValue.OLD) && differenceInDays(today, date) > 30)
       );
     });
@@ -267,5 +319,19 @@ export class LeadCollaborationComponent implements OnInit {
 
   getCommentFromContribution(contribution: IContribution): CommentDtoApi {
     return contribution.data as CommentDtoApi;
+  }
+
+  showMore(): void {
+    this.itemsPerPage += 10;
+    this.getSelectedTabData(this.selectedTab);
+  }
+
+  initContributionsByPeriod() {
+    this.contributionsByPeriod = [
+      { period: EPeriodValue.TODAY, contributions: [] },
+      { period: EPeriodValue.WEEK, contributions: [] },
+      { period: EPeriodValue.MONTH, contributions: [] },
+      { period: EPeriodValue.OLD, contributions: [] },
+    ];
   }
 }

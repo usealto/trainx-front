@@ -31,7 +31,8 @@
 
 <div class="d-flex">
   <div class="w-75 pe-8">
-    <div class="content-header mb-5">
+    <!-- FILTERS -->
+    <div class="content-header">
       <alto-dropdown-filter
         [placeholder]="I18ns.collaboration.filters.contributor"
         [data]="contributors"
@@ -57,23 +58,44 @@
       </div>
     </div>
 
-    <div *ngFor="let contribution of contributions" class="mb-5">
-      <ng-container *ngIf="contribution.type === 'comments'; else questionTemplate">
-        Commentaire
-        <!-- TODO : implement cards -->
-        Contributor: {{ contribution.contributorId }}
-        <br />
-        Date: {{ contribution.createdAt | date : 'short' }}
-        <br />
+    <!-- CONTRIBUTIONS -->
+    <ng-container *ngFor="let data of contributionsByPeriod">
+      <div *ngIf="data.contributions.length > 0" class="time-separator">
+        <div class="line"></div>
+        <div class="centered-block">
+          {{ I18ns.collaboration.filters.periods[data.period] }}
+        </div>
+        <div class="line"></div>
+      </div>
+      <ng-container *ngFor="let contribution of data.contributions">
+        <ng-container *ngIf="contribution.type === 'comments'; else questionTemplate">
+          <alto-comment-card
+            [comment]="getCommentFromContribution(contribution)"
+            (refresh)="getCollaborationData()"
+            class="mb-5"
+          ></alto-comment-card>
+        </ng-container>
+        <ng-template #questionTemplate>
+          <alto-sugg-question-card
+            [suggQuestion]="getQuestionFromContribution(contribution)"
+            (refresh)="getCollaborationData()"
+            class="mb-5"
+          >
+          </alto-sugg-question-card>
+        </ng-template>
       </ng-container>
-      <ng-template #questionTemplate>
-        <alto-sugg-question-card
-          [suggQuestion]="getQuestionFromContribution(contribution)"
-          (refresh)="getCollaborationData()"
-        >
-        </alto-sugg-question-card>
-      </ng-template>
-      <br />
+    </ng-container>
+
+    <!-- SHOW MORE -->
+    <div class="time-separator" *ngIf="showMoreButton">
+      <div class="line"></div>
+      <div class="centered-block">
+        <button class="btn btn-outline-secondary" style="font-size: 1rem" (click)="showMore()">
+          {{ I18ns.collaboration.showMore }}
+          <i class="bi bi-arrow-down"></i>
+        </button>
+      </div>
+      <div class="line"></div>
     </div>
   </div>
 
