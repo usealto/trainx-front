@@ -14,7 +14,6 @@ import {
   UsersApiService,
 } from '@usealto/sdk-ts-angular';
 import { UserForm } from './models/user.form';
-import { AuthUserGet } from '../../admin-users/models/authuser.get';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { MsgService } from 'src/app/core/message/msg.service';
@@ -34,7 +33,6 @@ export class AdminUserCreateFormComponent implements OnInit {
   private fb: IFormBuilder;
   rolesPossibleValues = Object.values(UserDtoApiRolesEnumApi);
   userId!: string;
-  userAuth0!: AuthUserGet;
   user!: UserDtoApi;
   company!: CompanyDtoApi;
 
@@ -75,7 +73,6 @@ export class AdminUserCreateFormComponent implements OnInit {
           tap((users) => {
             if (users[0]) {
               this.user = users[0];
-              this.fetchAuth0Data(this.user.email);
 
               this.userForm = this.fb.group<UserForm>({
                 firstname: [this.user.firstname || '', [Validators.required]],
@@ -140,16 +137,6 @@ export class AdminUserCreateFormComponent implements OnInit {
           this.router.navigate(['/admin/companies/', this.companyId, 'users']);
         });
     }
-  }
-
-  fetchAuth0Data(email: string) {
-    this.authApiService.getAuth0Users({ q: email }).subscribe((q) => {
-      if (q.data && q.data.length > 0) {
-        this.userAuth0 = q.data[0];
-      } else {
-        throw new Error('user not found in auth0');
-      }
-    });
   }
 
   sendResetPassword() {

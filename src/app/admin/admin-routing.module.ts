@@ -54,6 +54,10 @@ const routes: Routes = [
         component: AdminCompanyUserComponent,
       },
       {
+        path: 'companies/:companyId/users/:userId/edit',
+        component: AdminUserCreateComponent,
+      },
+      {
         path: 'companies/:id/users/upload',
         component: AdminUsersUploadComponent,
       },
