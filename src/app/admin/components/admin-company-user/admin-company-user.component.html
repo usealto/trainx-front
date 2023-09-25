@@ -174,11 +174,13 @@
         <label for="name">Auth0</label>
       </div>
       <div class="col-7 form-group">
-        <span *ngIf="userAuth0; else connectedElse">
-          <i class="bi bi-check-circle-fill fs-4 fw-bolder alto-success"></i> Connected </span>
-            <ng-template #connectedElse>
-              <span><i class="bi bi-x-circle-fill fs-4 fw-bolder alto-red"></i></span>
-            </ng-template>
+        <alto-colored-pill-list *ngIf="userAuth0; else connectedElse"
+          [data]="[{name: 'Connected', id: '9DAA38asdfr4'}]"
+          [hasDynamicColor]="true"
+        ></alto-colored-pill-list>
+        <ng-template #connectedElse>
+          <span><i class="bi bi-x-circle-fill fs-4 fw-bolder alto-red"></i></span>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -206,13 +208,15 @@
   <div class="py-4 border-bottom">
     <div class="w-80 row">
       <div class="col-5 mb-2">
-        <label for="name">Verified email</label>
+        <label for="name">Email verficiation</label>
       </div>
       <div class="col-7 form-group">
         <span *ngIf="userAuth0; else never">
-          <span *ngIf="userAuth0.email_verified; else emailVerifiedElse">
-            <i class="bi bi-check-circle-fill fs-4 fw-bolder alto-success"></i> verified </span>
-          </span>
+          <alto-colored-pill-list *ngIf="userAuth0.email_verified; else emailVerifiedElse"
+          [data]="[{name: 'Email verified', id: '9DAA38asdfr4'}]"
+          [hasDynamicColor]="true"
+          ></alto-colored-pill-list>
+        </span>
           <ng-template #emailVerifiedElse><span><i class="bi bi-x-circle-fill fs-4 fw-bolder alto-red"></i></span></ng-template>
         </div>
     </div>
@@ -220,10 +224,10 @@
 
 
   <!-- Auth0 Login count -->
-  <div class="py-4 border-bottom">
+  <div class="py-4">
     <div class="w-80 row">
       <div class="col-5 mb-2">
-        <label for="name">Login counts</label>
+        <label for="name">Logins count</label>
       </div>
       <div class="col-7 form-group">
         <span *ngIf="userAuth0; else never">
@@ -238,7 +242,7 @@
 </form>
 <button
   type="button"
-  class="btn btn-primary d-inline-flex align-items-center text-nowrap mt-4"
+  class="btn btn-outline-secondary d-block mx-auto mt-8"
   (click)="showRawDataModal()"
 >
   Show raw data
