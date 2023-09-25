@@ -1,12 +1,8 @@
 <alto-admin-header
   [title]="edit ? 'Edit a user' : 'Create a user'"
-  subtitle="Find here the members of the company."
+  [subtitle]="edit ? 'Edit the user information.' : 'Enter user information to create an account.' "
 ></alto-admin-header>
-<div class="d-flex justify-content-between">
-  <div>
-    <h2>Informations</h2>
-    <p class="fs-7">Fill in the general information about this user.</p>
-  </div>
+<div class="d-flex justify-content-end">
   <div *ngIf="userForm">
     <button
       type="button"
@@ -56,24 +52,6 @@
       </div>
     </div>
   </div>
-  <!-- Password -->
-  <div class="py-4 border-bottom" *ngIf="edit">
-    <div class="w-80 row">
-      <div class="col-5 mb-2">
-        <label for="name" class="required">Password</label>
-      </div>
-      <div class="col-7 form-group">
-        <button
-          type="button"
-          class="btn btn-primary d-inline-flex align-items-center text-nowrap"
-          (click)="sendResetPassword()"
-        >
-          Send reset password email
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Roles -->
   <div class="py-4 border-bottom">
     <div class="w-80 row">

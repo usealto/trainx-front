@@ -139,16 +139,5 @@ export class AdminUserCreateFormComponent implements OnInit {
     }
   }
 
-  sendResetPassword() {
-    if (!this.userForm.value) return;
-    const { email } = this.userForm.value;
-
-    this.authApiService
-      .resetUserPassword({
-        auth0ResetPasswordParamsDtoApi: {
-          email: email,
-        },
-      })
-      .subscribe((res) => this.msg.add({ message: res.data, severity: 'success' }));
-  }
+  
 }

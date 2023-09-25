@@ -8,6 +8,9 @@ import { AuthApiService, TeamDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from '
 import { AuthUserGet } from '../admin-users/models/authuser.get';
 import { TeamsApiService } from '@usealto/sdk-ts-angular';
 
+/**
+* @deprecated since user is now used into a company
+*/
 @Component({
   selector: 'alto-admin-user',
   templateUrl: './admin-user.component.html',

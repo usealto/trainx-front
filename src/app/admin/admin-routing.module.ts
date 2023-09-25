@@ -66,6 +66,9 @@ const routes: Routes = [
         component: AdminUsersComponent,
       },
       {
+        /**
+        * @deprecated
+        */
         path: 'users/:id',
         component: AdminUserComponent,
       },
