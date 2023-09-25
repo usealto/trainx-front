@@ -74,7 +74,8 @@
             <span
               *ngFor="let role of user.roles"
               class="alto-badge text-white me-1 mb-1"
-              [style.backgroundColor]="role | uuid2color"
+              [style.backgroundColor]="role | role2BackgroundColor"
+              [style.color]="role | role2color"
               >{{ role }}</span
             >
           </td>

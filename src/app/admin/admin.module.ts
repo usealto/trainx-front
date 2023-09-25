@@ -26,6 +26,8 @@ import { AdminUsersFiltersListComponent } from './components/admin-company-users
 import { AdminCompanyQuestionsComponent } from './components/admin-company-questions/admin-company-questions.component';
 import { AdminUploadQuestionsModalComponent } from './components/admin-company-questions/admin-upload-questions-modal/admin-upload-questions-modal.component';
 import { AdminCompanyUserComponent } from './components/admin-company-user/admin-company-user.component';
+import { Role2colorPipe } from './roleColor.pipe';
+import { Role2BackgroundColor } from './roleBackgroundColor.pipe';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,8 @@ import { AdminCompanyUserComponent } from './components/admin-company-user/admin
     AdminCompanyQuestionsComponent,
     AdminUploadQuestionsModalComponent,
     AdminCompanyUserComponent,
+    Role2colorPipe,
+    Role2BackgroundColor
   ],
   imports: [
     CommonModule,
@@ -58,5 +62,6 @@ import { AdminCompanyUserComponent } from './components/admin-company-user/admin
     NgbPaginationModule,
     SharedModule,
   ],
+  exports: [Role2colorPipe, Role2BackgroundColor],
 })
 export class AdminModule {}

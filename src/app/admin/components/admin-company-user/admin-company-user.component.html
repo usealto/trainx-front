@@ -151,7 +151,7 @@
           [readonly]="true"
         >
           <ng-template ng-label-tmp let-item="item" let-clear="clear">
-            <div class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
+            <div class="badge rounded-pill p-2" [style.backgroundColor]="item | role2BackgroundColor" [style.color]="item | role2color">
               <span
                 *ngIf="item !== 'company-user'"
                 class="cursor-pointer me-1"
@@ -164,7 +164,7 @@
             </div>
           </ng-template>
           <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-            <span class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
+            <span class="badge rounded-pill p-2" [style.backgroundColor]="item | role2BackgroundColor" [style.color]="item | role2color">
               {{ item }}
             </span>
           </ng-template>

@@ -103,10 +103,6 @@ export class AdminCompaniesCreateComponent implements OnInit {
     this.newTeams.push(teamForm);
   }
 
-  deleteTeam(index: number) {
-    this.newTeams.removeAt(index);
-  }
-
   onSelectLogo(event: any) {
     console.log(event);
   }
