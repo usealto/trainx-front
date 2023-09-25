@@ -20,6 +20,8 @@ describe('L/Teams Members Section', () => {
         cy.get('.ng-dropdown-panel > .ng-dropdown-panel-items > div > .ng-option').first().click();
       });
 
+    cy.wait(500);
+
     // Collects first "Score global" value of the members table and transforms it into integer
 
     cy.get('[data-cy="progressBadge"]')

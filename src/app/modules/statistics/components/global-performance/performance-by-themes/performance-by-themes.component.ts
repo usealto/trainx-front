@@ -169,24 +169,27 @@ export class PerformanceByThemesComponent implements OnChanges {
         bottom: '4%',
       },
       tooltip: {
-        trigger: 'item',
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+        },
         padding: 0,
         borderColor: '#EAECF0',
-        formatter: (params: ITooltipParams) => {
-          const data = params.data as any;
+        formatter: (params: ITooltipParams[]) => {
+          const { name, color, data } = params[0];
           return `
-          <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10); border-radius: 4px;">
-            <div style="color: #667085; background-color: #F9FAFB; padding : 8px 10px 4px 10px;">
-              ${I18ns.shared.score}
+            <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10); border-radius: 4px;">
+              <div style="color: #667085; background-color: #F9FAFB; padding : 8px 10px 4px 10px;">
+                ${I18ns.shared.score}
+              </div>
+              <div style="padding : 4px 10px 8px 10px; display: flex; align-items: center; gap: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="11" viewBox="0 0 10 11" fill="none">
+                  <circle cx="5" cy="5.5" r="5" fill="${color}"/>
+                </svg>
+                <p>${name} : <b style="color: ${color}">${(data as any).value} %<b></p>
+              </div>
             </div>
-            <div style="padding : 4px 10px 8px 10px; display: flex; align-items: center; gap: 10px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="11" viewBox="0 0 10 11" fill="none">
-                <circle cx="5" cy="5.5" r="5" fill="${params.color}"/>
-              </svg>
-              <p>${params.name} : <b style="color: ${params.color}">${data.value} %<b></p>
-            </div>
-          </div>
-        `;
+          `;
         },
       },
     };
