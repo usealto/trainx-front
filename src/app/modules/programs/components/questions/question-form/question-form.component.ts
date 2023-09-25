@@ -16,6 +16,7 @@ import {
   PatchQuestionSubmittedDtoApiStatusEnumApi,
   ProgramDtoApi,
   QuestionDtoApi,
+  QuestionSubmittedDtoApi,
   QuestionTypeEnumApi,
   TagDtoApi,
 } from '@usealto/sdk-ts-angular';
@@ -41,6 +42,7 @@ export class QuestionFormComponent implements OnInit {
 
   @Input() program: ProgramDtoApi | undefined;
   @Input() question?: QuestionDtoApi;
+  @Input() questionSubmitted?: QuestionSubmittedDtoApi;
   @Input() isSubmitted = false;
   @Input() isProgramEdit = false;
   @Input() stayOpen = false;
@@ -110,21 +112,19 @@ export class QuestionFormComponent implements OnInit {
 
       if (this.question) {
         this.isEdit = true;
-        if (this.isSubmitted) {
-          this.questionForm.patchValue({
-            title: this.question.title,
-          });
-        } else {
-          this.questionForm.patchValue({
-            title: this.question.title,
-            tags: this.question.tags?.map((t) => t.id),
-            programs: this.question.programs?.map((p) => p.id),
-            explanation: this.question.explanation,
-            link: this.question.link,
-          });
-          this.questionForm.controls.answersAccepted.patchValue(this.question.answersAccepted);
-          this.questionForm.controls.answersWrong.patchValue(this.question.answersWrong);
-        }
+        this.questionForm.patchValue({
+          title: this.question.title,
+          tags: this.question.tags?.map((t) => t.id),
+          programs: this.question.programs?.map((p) => p.id),
+          explanation: this.question.explanation,
+          link: this.question.link,
+        });
+        this.questionForm.controls.answersAccepted.patchValue(this.question.answersAccepted);
+        this.questionForm.controls.answersWrong.patchValue(this.question.answersWrong);
+      } else if (this.questionSubmitted) {
+        this.questionForm.patchValue({
+          title: this.questionSubmitted.title,
+        });
       }
     }, 0);
   }
@@ -191,10 +191,10 @@ export class QuestionFormComponent implements OnInit {
   }
 
   changeStatus(status: PatchQuestionSubmittedDtoApiStatusEnumApi) {
-    if (this.question) {
+    if (this.questionSubmitted) {
       this.questionSubmittedRestService
         .update({
-          id: this.question.id,
+          id: this.questionSubmitted.id,
           patchQuestionSubmittedDtoApi: { status },
         })
         .pipe(
