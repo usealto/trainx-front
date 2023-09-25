@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AuthUserGet } from '../../admin-users/models/authuser.get';
+import { AuthUserGet } from '../models/authuser.get';
 import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 

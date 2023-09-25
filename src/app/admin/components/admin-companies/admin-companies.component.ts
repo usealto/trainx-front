@@ -9,7 +9,7 @@ import { DataService } from '../../admin-data.service';
 import {
   NgbdSortableHeaderDirective,
 } from 'src/app/core/utils/directives/ngbd-sortable-header.directive';
-import { AuthUserGet } from '../admin-users/models/authuser.get';
+import { AuthUserGet } from '../admin-company-user/models/authuser.get';
 import {
   FiltersCompaniesList,
 } from './admin-companies-filters-list/admin-companies-filters-list.component';

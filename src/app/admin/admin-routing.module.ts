@@ -5,9 +5,7 @@ import { AdminHomeComponent } from './components/admin-home/admin-home.component
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
 import { AdminCompanyComponent } from './components/admin-company/admin-company.component';
 import { AdminCompanyUsersComponent } from './components/admin-company-users/admin-company-users.component';
-import { AdminUserComponent } from './components/admin-user/admin-user.component';
 import { AdminUserCreateComponent } from './components/admin-user-create/admin-user-create.component';
-import { AdminUsersComponent } from './components/admin-users/admin-users.component';
 import { AdminUsersUploadComponent } from './components/admin-users-upload/admin-users-upload.component';
 import { AdminUnauthorizedComponent } from './components/admin-unauthorized/admin-unauthorized.component';
 import { AdminCompaniesCreateComponent } from './components/admin-companies-create/admin-companies-create.component';
@@ -60,17 +58,6 @@ const routes: Routes = [
       {
         path: 'companies/:id/users/upload',
         component: AdminUsersUploadComponent,
-      },
-      {
-        path: 'users',
-        component: AdminUsersComponent,
-      },
-      {
-        /**
-        * @deprecated
-        */
-        path: 'users/:id',
-        component: AdminUserComponent,
       },
       {
         path: 'unauthorized',

@@ -11,10 +11,8 @@ import { AdminCompaniesComponent } from './components/admin-companies/admin-comp
 import { AdminCompanyComponent } from './components/admin-company/admin-company.component';
 import { AdminMenuComponent } from './components/admin-layout/admin-menu/admin-menu.component';
 import { AdminCompanyUsersComponent } from './components/admin-company-users/admin-company-users.component';
-import { AdminUserComponent } from './components/admin-user/admin-user.component';
 import { AdminUserCreateComponent } from './components/admin-user-create/admin-user-create.component';
 import { AdminUserCreateFormComponent } from './components/admin-user-create/admin-user-create-form/admin-user-create-form.component';
-import { AdminUsersComponent } from './components/admin-users/admin-users.component';
 import { AdminUsersUploadComponent } from './components/admin-users-upload/admin-users-upload.component';
 import { SharedModule } from '../modules/shared/shared.module';
 import { AdminUnauthorizedComponent } from './components/admin-unauthorized/admin-unauthorized.component';
@@ -39,10 +37,8 @@ import { AdminCompanyUserComponent } from './components/admin-company-user/admin
     AdminCompanyComponent,
     AdminMenuComponent,
     AdminCompanyUsersComponent,
-    AdminUserComponent,
     AdminUserCreateComponent,
     AdminUserCreateFormComponent,
-    AdminUsersComponent,
     AdminUsersUploadComponent,
     AdminUnauthorizedComponent,
     AdminCompaniesCreateComponent,

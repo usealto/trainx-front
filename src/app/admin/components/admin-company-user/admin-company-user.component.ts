@@ -15,7 +15,7 @@ import {
   UsersApiService,
 } from '@usealto/sdk-ts-angular';
 import { UserForm } from '../admin-user-create/admin-user-create-form/models/user.form';
-import { AuthUserGet } from '../admin-users/models/authuser.get';
+import { AuthUserGet } from './models/authuser.get';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { MsgService } from 'src/app/core/message/msg.service';
