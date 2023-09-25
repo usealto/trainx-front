@@ -28,7 +28,7 @@ describe('Lead Programs', () => {
 
     cy.get('[data-cy="programSearch"]').clear();
     cy.get('[data-cy="programSearch"]').type(newProg);
-    cy.get('[data-cy="programABCDTEST"]').eq(1).click();
+    cy.get('[data-cy="programABCDTEST"]').click();
 
     cy.wait(500);
 
