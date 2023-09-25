@@ -78,21 +78,6 @@
   background-color: var(--alto-medium-grey);
 }
 
-.alto-badge-orange-light {
-  @extend .alto-badge;
-  color: #dc6803;
-  background-color: #fffaeb;
-}
-.alto-badge-red-light {
-  @extend .alto-badge;
-  color: #d92d20;
-  background-color: #fef3f2;
-}
-.alto-badge-green-light {
-  @extend .alto-badge;
-  color: #039855;
-  background-color: #ecfdf3;
-}
 .alto-badge-blue {
   @extend .alto-badge-big;
   color: var(--bs-primary);
