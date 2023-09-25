@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { AdminRoutingModule } from './admin-routing.module';
-import { AdminHomeComponent } from './components/admin-home/admin-home.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AdminLayoutComponent } from './components/admin-layout/admin-layout.component';
@@ -31,7 +30,6 @@ import { AdminCompanyUserComponent } from './components/admin-company-user/admin
 
 @NgModule({
   declarations: [
-    AdminHomeComponent,
     AdminLayoutComponent,
     AdminCompaniesComponent,
     AdminCompanyComponent,

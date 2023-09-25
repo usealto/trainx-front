@@ -179,7 +179,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
         .subscribe((company) => {
           this.uploadFormComponent.upload(company.data?.id);
           this.createTeams(company.data?.id);
-          this.router.navigate(['/admin/companies/']);
+          this.router.navigate(['/admin/home/']);
         });
     }
   }

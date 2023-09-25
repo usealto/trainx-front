@@ -6,7 +6,7 @@
     [breadcrumbs]="[
       {
         label: 'Companies',
-        url: '/admin/companies'
+        url: '/admin/home'
       },
       {
         label: company.name,
@@ -21,7 +21,7 @@
       [breadcrumbs]="[
         {
           label: 'Companies',
-          url: '/admin/companies'
+          url: '/admin/home'
         }
       ]"
     ></alto-admin-header
@@ -36,7 +36,7 @@
           </div>
           <div>
             <button
-              routerLink=".."
+              [routerLink]="'/admin/home'"
               type="button"
               class="btn btn-outline-secondary d-inline-flex align-items-center me-2"
             >
@@ -281,7 +281,7 @@
     <div class="d-flex justify-content-end">
       <div>
         <button
-          routerLink=".."
+          [routerLink]="'/admin/home'"
           type="button"
           class="btn btn-outline-secondary d-inline-flex align-items-center me-2"
         >
