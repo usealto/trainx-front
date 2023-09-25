@@ -26,7 +26,7 @@
       [routerLink]="['/admin', 'companies', company.id, 'users', user.id, 'edit']"
     >
     <i class="bi bi-pencil-square"></i>
-      Edit the user TODO
+      Edit the user
     </a>
     <button
       [disabled]="!user.email"
@@ -50,8 +50,8 @@
       <label for="name" class="col-5 mb-2 required">Name</label>
       <div class="col-7 form-group">
         <div class="d-flex gap-2">
-          <input type="text" class="form-control" placeholder="Firstname" formControlName="firstname" readonly/>
-          <input type="text" class="form-control" placeholder="Lastname" formControlName="lastname" readonly/>
+          <input type="text" class="form-control customDisable" placeholder="Firstname" formControlName="firstname" readonly/>
+          <input type="text" class="form-control customDisable" placeholder="Lastname" formControlName="lastname" readonly/>
         </div>
       </div>
     </div>
@@ -65,7 +65,7 @@
       <div class="col-7 form-group">
         <input
           type="text"
-          class="form-control"
+          class="form-control customDisable"
           placeholder="john.doe@email.com"
           formControlName="email"
           readonly
