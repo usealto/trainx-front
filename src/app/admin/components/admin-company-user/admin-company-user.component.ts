@@ -31,7 +31,6 @@ import { DataService } from '../../admin-data.service';
 })
 
 export class AdminCompanyUserComponent implements OnInit {
-  edit = false;
   companyId!: string;
   teams: TeamDtoApi[] = [];
   userForm!: IFormGroup<UserForm>;
@@ -74,7 +73,6 @@ export class AdminCompanyUserComponent implements OnInit {
       });
 
     if (this.userId) {
-      this.edit = true;
       this.usersRestService
         .getUsersFiltered({ ids: this.userId, includeSoftDeleted: true })
         .pipe(
@@ -110,45 +108,6 @@ export class AdminCompanyUserComponent implements OnInit {
         roles: [[RoleEnumApi.CompanyUser], []],
         slackId: ['', []],
       });
-    }
-  }
-
-  async submit() {
-    if (!this.userForm.value) return;
-
-    const { firstname, lastname, email, teamId, roles, slackId } = this.userForm.value;
-
-    if (this.edit) {
-      this.usersApiService
-        .patchUser({
-          id: this.user.id,
-          patchUserDtoApi: {
-            teamId: teamId,
-            firstname: firstname,
-            lastname: lastname,
-            roles: roles,
-            slackId: slackId,
-          },
-        })
-        .subscribe((q) => {
-          this.router.navigate(['/admin/companies/', this.companyId, 'users', this.userId]);
-        });
-    } else {
-      this.usersApiService
-        .createUser({
-          createUserDtoApi: {
-            email: email,
-            companyId: this.companyId,
-            teamId: teamId,
-            firstname: firstname,
-            lastname: lastname,
-            roles: roles,
-            slackId: slackId,
-          },
-        })
-        .subscribe((q) => {
-          this.router.navigate(['/admin/companies/', this.companyId, 'users']);
-        });
     }
   }
 

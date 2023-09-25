@@ -74,7 +74,7 @@
     </div>
   </div>
   <!-- Password -->
-  <div class="py-4 border-bottom" *ngIf="edit">
+  <div class="py-4 border-bottom" *ngIf="user && !user.deletedAt">
     <div class="w-80 row">
       <div class="col-5 mb-2">
         <label for="name" class="required">Password</label>
@@ -107,6 +107,7 @@
           [selectableGroup]="true"
           [closeOnSelect]="false"
           formControlName="teamId"
+          [readonly]="true"
         >
           <ng-template ng-label-tmp let-item="item">
             <div class="alto-badge fs-6b" [style]="item.id | teamColor">
@@ -142,6 +143,7 @@
           [selectableGroup]="true"
           [closeOnSelect]="false"
           formControlName="roles"
+          [readonly]="true"
         >
           <ng-template ng-label-tmp let-item="item" let-clear="clear">
             <div class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
@@ -235,7 +237,6 @@
 
 </form>
 <button
-  *ngIf="edit"
   type="button"
   class="btn btn-primary d-inline-flex align-items-center text-nowrap mt-4"
   (click)="showRawDataModal()"
