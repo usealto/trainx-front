@@ -6,9 +6,7 @@ describe('Lead Statistics', () => {
 
   it('Access Lead Statistics Page', function () {
     cy.get('[data-cy="leadMenuStatistics"]').click();
-  });
 
-  it('Should load statitics Page', () => {
     cy.get('[data-cy="leadStatisticsTitle"]').should('have.text', 'Statistiques');
   });
 });
