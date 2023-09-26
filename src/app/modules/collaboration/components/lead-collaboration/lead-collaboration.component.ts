@@ -1,4 +1,5 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   CommentDtoApi,
   QuestionSubmittedDtoApi,
@@ -9,20 +10,10 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import {
-  compareDesc,
-  differenceInDays,
-  isToday,
-  isSameWeek,
-  isSameMonth,
-  isAfter,
-  isBefore,
-  addDays,
-} from 'date-fns';
-import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { addDays, compareDesc, differenceInDays, isAfter, isBefore, isToday } from 'date-fns';
 
 enum ETabValue {
   PENDING = 'pending',
