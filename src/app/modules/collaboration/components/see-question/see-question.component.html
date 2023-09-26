@@ -1,0 +1,59 @@
+<div class="header-panel mb-7 d-flex align-items-center">
+  <img class="me-4" [src]="Emoji.PuzzlePiece | emoji" />
+  <div class="d-inline-block">
+    <h1 class="mb-3">{{ I18ns.collaboration.title }}</h1>
+    <p class="alto-grey fs-6">{{ I18ns.collaboration.subtitle }}</p>
+  </div>
+</div>
+<div class="mb-7">
+  <p class="fw-bold breadcrumb">
+    <span class="cursor-pointer" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.collaboration]">
+      {{
+        breadcrumbElem
+          ? I18ns.collaboration.seeQuestion.breadcrumb.awaiting
+          : I18ns.collaboration.seeQuestion.breadcrumb.seeAll
+      }}
+    </span>
+    <i class="bi bi-chevron-right fw-normal mx-3"></i>
+    <span class="fw-bold breadcrumb-link">
+      {{ I18ns.collaboration.seeQuestion.breadcrumb.seeQuestion }}
+    </span>
+  </p>
+</div>
+<ng-container *ngIf="!isLoading">
+  <div class="question-panel px-5 py-4 d-flex align-items-center mb-4">
+    <img class="me-4" [src]="Emoji.RedQuestionMark | emoji" />
+    <p class="fw-bold fs-5">
+      {{ questionTitle }}
+    </p>
+  </div>
+  <p class="alto-grey">{{ I18ns.collaboration.seeQuestion.discoverQuestionsAndComments }}</p>
+  <label class="alto-tab-btn mt-4 mb-7">
+    {{ I18ns.collaboration.seeQuestion.comments }}
+    <span class="ms-2 alto-badge pill-orange2">{{ comments.length }}</span>
+  </label>
+  <div *ngFor="let comment of comments">
+    <div class="comment-panel-header d-flex align-items-center">
+      <alto-img-badge
+        class="me-4 img-badge"
+        type="button"
+        [toggleTooltip]="false"
+        [user]="comment.createdByUser"
+        [size]="30"
+      >
+      </alto-img-badge>
+      <div class="d-inline-block">
+        <p class="fw-bold">{{ comment.createdByUser.firstname + comment.createdByUser.lastname }}</p>
+        <p class="alto-grey">{{ comment.createdAt | dateLabel }}</p>
+      </div>
+    </div>
+    <div class="comment-panel-content d-flex flex-column mb-5">
+      <p>
+        {{ comment.text }}
+      </p>
+      <button class="btn btn-outline-secondary align-self-end mt-4" (click)="archiveComment(comment.id)">
+        <i class="ms-2 bi bi-archive"></i> {{ I18ns.collaboration.seeQuestion.archiveComment }}
+      </button>
+    </div>
+  </div>
+</ng-container>

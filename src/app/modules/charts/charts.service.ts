@@ -16,15 +16,15 @@ export interface ITooltipParams {
 })
 export class ChartsService {
   defaultThemeColors = [
-    '#5470c6',
-    '#91cc75',
-    '#fac858',
-    '#ee6666',
-    '#73c0de',
-    '#3ba272',
-    '#fc8452',
-    '#9a60b4',
-    '#ea7ccc',
+    '#1570EF',
+    '#F04438',
+    '#12B76A',
+    '#FDB022',
+    '#7A5AF8',
+    '#EE46BC',
+    '#FB6514',
+    '#6172F3',
+    '#F63D68',
   ];
 
   @memoize()
@@ -66,59 +66,23 @@ export class ChartsService {
     };
 
     eChartsOption.grid = {
-      left: '6%',
+      left: '9%',
+      bottom: '22%',
       top: '30',
       right: '1%',
     };
     // we only want this option to be trigger if there is only one xAxis value
-    if(eChartsOption.xAxis && Array.isArray(eChartsOption.xAxis) &&  eChartsOption.xAxis.length === 1 ) {
+    if (eChartsOption.xAxis && Array.isArray(eChartsOption.xAxis) && eChartsOption.xAxis.length === 1) {
       eChartsOption.xAxis[0].axisPointer = {
-          show: true,
-          triggerTooltip : false,
-          type: 'line',
-          label: {
-            show: false,
-          },
-          triggerOn: 'mousemove|click',
-      }
+        show: true,
+        triggerTooltip: false,
+        type: 'line',
+        label: {
+          show: false,
+        },
+        triggerOn: 'mousemove|click',
+      };
     }
-
-
-    return eChartsOption;
-  }
-
-  altoFormattingBar(eChartsOption: EChartsOption): EChartsOption {
-    // replace null or 'n' values with 0 for every series begining with null or 'n'
-    if (eChartsOption.series && eChartsOption.series && Array.isArray(eChartsOption.series)) {
-      eChartsOption.series.forEach((serie) => {
-        if (serie.type === 'bar') {
-          serie.tooltip = {
-            valueFormatter: (value) => {
-              return (value as number) + ' %';
-            },
-          };
-        }
-      });
-    }
-
-    eChartsOption.tooltip = {
-      trigger: 'item',
-      padding: 0,
-      borderColor: '#EAECF0',
-      formatter: (params) => {
-        return this.tooltipFormatter(params as ITooltipParams, eChartsOption);
-      },
-    };
-    eChartsOption.legend = {
-      bottom: 0,
-      icon: 'circle',
-      itemWidth: 8,
-    };
-    eChartsOption.grid = {
-      left: '6%',
-      top: '30',
-      right: '1%',
-    };
 
     return eChartsOption;
   }

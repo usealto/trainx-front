@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import {
   CreateQuestionDtoApi,
+  GetQuestionByIdRequestParams,
   GetQuestionsRequestParams,
   PatchQuestionRequestParams,
   QuestionDtoApi,
@@ -14,6 +15,10 @@ import {
 })
 export class QuestionsRestService {
   constructor(private readonly questionApi: QuestionsApiService) {}
+
+  getQuestion(id: string): Observable<QuestionDtoApi | undefined> {
+    return this.questionApi.getQuestionById({ id: id }).pipe(map((r) => r.data));
+  }
 
   getQuestions(req?: GetQuestionsRequestParams): Observable<QuestionDtoApi[]> {
     const par = {
