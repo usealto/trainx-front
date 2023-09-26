@@ -1,7 +1,6 @@
 import { AuthApiService, AdminApiService, CompanyDtoApi } from '@usealto/sdk-ts-angular';
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { tap } from 'rxjs';
-import { DataService } from '../../admin-data.service';
 import {
   NgbdSortableHeaderDirective,
 } from 'src/app/core/utils/directives/ngbd-sortable-header.directive';
@@ -9,7 +8,6 @@ import { AuthUserGet } from '../admin-company-user/models/authuser.get';
 import {
   FiltersCompaniesList,
 } from './admin-companies-filters-list/admin-companies-filters-list.component';
-import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'alto-admin-companies',
@@ -38,8 +36,6 @@ export class AdminCompaniesComponent implements OnInit {
 
   constructor(
     private readonly adminApiService: AdminApiService,
-    private readonly offcanvasService: NgbOffcanvas,
-    private dataService: DataService,
     private readonly authApiService: AuthApiService,
   ) {}
 
