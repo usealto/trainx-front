@@ -365,13 +365,17 @@ export class ProgramsComponent implements OnInit {
     this.tagFilters.contributors = contributors;
     this.tagFilters.search = search;
     this.tagFilters.score = score;
-
+    console.log('t', this.tags);
     let output = this.tagsService.filterTags(this.tags, { programs, contributors, search }) as TagDisplay[];
 
     if (score) {
+      console.log('1', output);
+
       output.forEach((tag) => (tag.score = this.getTagScore(tag.id)));
       output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
+      console.log('2', output);
     }
+    console.log('3', output);
 
     this.isFilteredTags = true;
     this.changeTagsPage(output);
