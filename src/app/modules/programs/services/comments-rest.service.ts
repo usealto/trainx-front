@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
-import { CommentDtoApi, CommentsApiService, GetCommentsRequestParams } from '@usealto/sdk-ts-angular';
+import {
+  CommentDtoApi,
+  CommentDtoResponseApi,
+  CommentsApiService,
+  GetCommentsRequestParams,
+  PatchCommentDtoApi,
+  PatchCommentRequestParams,
+} from '@usealto/sdk-ts-angular';
 import { ProgramsStore } from '../programs.store';
 
 @Injectable({
@@ -12,21 +19,35 @@ export class CommentsRestService {
     private readonly programStore: ProgramsStore,
   ) {}
 
-  getComments(req?: GetCommentsRequestParams): Observable<CommentDtoApi[]> {
-    if (this.programStore.unreadComments.value.length) {
+  updateComment(req: PatchCommentRequestParams): Observable<CommentDtoApi | undefined> {
+    return this.commentApi.patchComment(req).pipe(map((r) => r.data));
+  }
+
+  getUnreadComments(req?: GetCommentsRequestParams, refresh = false): Observable<CommentDtoApi[]> {
+    if (this.programStore.unreadComments.value.length && refresh === false) {
       return this.programStore.unreadComments.value$;
     } else {
       const par = {
         ...req,
         page: req?.page ?? 1,
         itemsPerPage: req?.itemsPerPage ?? 300,
-        isRead: req?.isRead ?? false,
+        isRead: false,
       };
 
       return this.commentApi.getComments(par).pipe(
         map((r) => r.data ?? []),
-        tap((comments) => (this.programStore.unreadComments.value = comments.filter((c) => !c.isRead))),
+        tap((comments) => (this.programStore.unreadComments.value = comments)),
       );
     }
+  }
+
+  getComments(req?: GetCommentsRequestParams): Observable<CommentDtoApi[]> {
+    const par = {
+      ...req,
+      page: req?.page ?? 1,
+      itemsPerPage: req?.itemsPerPage ?? 400,
+    };
+
+    return this.commentApi.getComments(par).pipe(map((r) => r.data ?? []));
   }
 }

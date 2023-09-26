@@ -26,6 +26,7 @@ describe('L/Programs Questions Tab', () => {
     cy.get('[data-cy="programCreateNext"]').click();
 
     // Create a new question
+    cy.wait(500);
     cy.get('[data-cy="createNewQuestion"]').click();
     cy.get('[data-cy="questionCreateTitle"]').type(newQuestion);
     cy.get('[data-cy="goodAnswerInput"]').type(goodAnswer);
@@ -35,7 +36,7 @@ describe('L/Programs Questions Tab', () => {
     cy.get('.button-container > .btn-primary').click();
     cy.wait(500);
 
-    cy.get('.btn-close').click();
+    cy.get('.btn-close').first().click();
     cy.get('.btn-primary').eq(1).click();
     cy.wait(500);
     cy.reload();

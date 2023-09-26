@@ -5,10 +5,11 @@ import { PillColorPipe } from './pill-color.pipe';
 import { SliceWithDotsPipe } from './slice-with-dots.pipe';
 import { SortPipe } from './sort.pipe';
 import { DefaultOrderKeyvaluePipe } from './default-order-keyvalue.pipe';
+import { DateLabelPipe } from './date-label.pipe';
 
 @NgModule({
-  declarations: [Uuid2colorPipe, PillColorPipe, SliceWithDotsPipe, DefaultOrderKeyvaluePipe, SortPipe],
+  declarations: [Uuid2colorPipe, PillColorPipe, SliceWithDotsPipe, DefaultOrderKeyvaluePipe, SortPipe, DateLabelPipe],
   imports: [CommonModule],
-  exports: [Uuid2colorPipe, PillColorPipe, SliceWithDotsPipe, SortPipe],
+  exports: [Uuid2colorPipe, PillColorPipe, SliceWithDotsPipe, SortPipe, DateLabelPipe],
 })
 export class UtilsPipeModule {}

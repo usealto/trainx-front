@@ -3,6 +3,7 @@ import { map, Observable } from 'rxjs';
 import {
   CreateQuestionSubmittedDtoApiStatusEnumApi,
   GetQuestionsSubmittedRequestParams,
+  GetQuestionSubmittedByIdRequestParams,
   PatchQuestionSubmittedRequestParams,
   QuestionsSubmittedApiService,
   QuestionSubmittedDtoApi,
@@ -15,12 +16,15 @@ import {
 export class QuestionsSubmittedRestService {
   constructor(private readonly questionSubmittedApi: QuestionsSubmittedApiService) {}
 
+  getQuestion(id: string): Observable<QuestionSubmittedDtoApi | undefined> {
+    return this.questionSubmittedApi.getQuestionSubmittedById({ id }).pipe(map((r) => r.data));
+  }
+
   getQuestions(req?: GetQuestionsSubmittedRequestParams): Observable<QuestionSubmittedDtoApi[]> {
     const par = {
+      page: 1,
+      itemsPerPage: 300,
       ...req,
-      page: req?.page ?? 1,
-      itemsPerPage: req?.itemsPerPage ?? 300,
-      status: 'submitted',
     } as GetQuestionsSubmittedRequestParams;
 
     return this.questionSubmittedApi.getQuestionsSubmitted(par).pipe(map((r) => r.data ?? []));
@@ -30,10 +34,10 @@ export class QuestionsSubmittedRestService {
     req?: GetQuestionsSubmittedRequestParams,
   ): Observable<QuestionSubmittedDtoPaginatedResponseApi> {
     const par = {
-      ...req,
-      page: req?.page ?? 1,
-      itemsPerPage: req?.itemsPerPage ?? 10,
+      page: 1,
+      itemsPerPage: 10,
       status: 'submitted',
+      ...req,
     } as GetQuestionsSubmittedRequestParams;
 
     return this.questionSubmittedApi.getQuestionsSubmitted(par).pipe();

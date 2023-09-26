@@ -27,7 +27,7 @@ describe('Lead Team', () => {
       cy.get('.form-control').type(`${searchedText}`);
 
       // Check the initial team of the E2E User and collects its name
-
+      cy.wait(200);
       cy.contains('[data-cy="companyMembersTable"]', 'e2e testing2')
         .find('[data-cy="memberTeamName"]')
         .first()
