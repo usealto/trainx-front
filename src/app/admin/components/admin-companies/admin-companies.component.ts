@@ -1,10 +1,6 @@
-import { AuthApiService } from '@usealto/sdk-ts-angular';
+import { AuthApiService, AdminApiService, CompanyDtoApi } from '@usealto/sdk-ts-angular';
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { tap } from 'rxjs';
-import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import {
-  CompanyDtoApi,
-} from '@usealto/sdk-ts-angular';
 import { DataService } from '../../admin-data.service';
 import {
   NgbdSortableHeaderDirective,
@@ -41,7 +37,7 @@ export class AdminCompaniesComponent implements OnInit {
   };
 
   constructor(
-    private readonly companiesRestService: CompaniesRestService,
+    private readonly adminApiService: AdminApiService,
     private readonly offcanvasService: NgbOffcanvas,
     private dataService: DataService,
     private readonly authApiService: AuthApiService,
@@ -52,9 +48,9 @@ export class AdminCompaniesComponent implements OnInit {
       this.companyAdmins = q.data;
     });
 
-    this.companiesRestService
-      .getCompanies({itemsPerPage: 1000 })
-      .pipe(tap((companies) => (this.companies = companies)))
+    this.adminApiService
+      .adminGetCompanies({itemsPerPage: 1000 })
+      .pipe(tap((companies) => (this.companies = (companies?.data) ? companies?.data : [])))
       .subscribe(() => {
         this.pageCount = Math.ceil(this.companies.length / this.pageSize);
         this.refreshCompanies();

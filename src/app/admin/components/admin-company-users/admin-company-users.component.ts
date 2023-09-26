@@ -6,10 +6,8 @@ import {
   SortEvent,
   compare,
 } from 'src/app/core/utils/directives/ngbd-sortable-header.directive';
-import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { CompanyDtoApi, TeamDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
+import { AdminApiService, CompanyDtoApi, TeamDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import {
   AdminUsersFiltersListComponent,
@@ -40,8 +38,7 @@ export class AdminCompanyUsersComponent implements OnInit {
   };
 
   constructor(
-    private readonly companiesRestService: CompaniesRestService,
-    private readonly usersRestService: UsersRestService,
+    private readonly adminApiService: AdminApiService,
     private readonly teamsRestService: TeamsRestService,
     private route: ActivatedRoute,
     private readonly offcanvasService: NgbOffcanvas,
@@ -56,13 +53,15 @@ export class AdminCompanyUsersComponent implements OnInit {
   fetchAll() {
     combineLatest({
       teams: this.teamsRestService.getTeams({ companyId: this.id, itemsPerPage: 1000 }),
-      company: this.companiesRestService.getCompanyById(this.id as string),
-      users: this.usersRestService.getUsersFiltered({ companyId: this.id, itemsPerPage: 1000, includeSoftDeleted: true }),
+      company: this.adminApiService.adminGetCompanies({ ids: this.id }),
+      // .getCompanyById(this.id as string),
+      users: this.adminApiService.adminGetUsers({ companyId: this.id, itemsPerPage: 1000, includeSoftDeleted: true })
+      // .getUsersFiltered({ companyId: this.id, itemsPerPage: 1000, includeSoftDeleted: true }),
     })
       .pipe(take(1))
       .subscribe(({ company, users, teams }) => {
-        this.company = company;
-        this.users = users;
+        this.company = (company?.data) ? company.data[0] : {} as CompanyDtoApi;
+        this.users = users.data || [];
         this.teams = teams;
         this.pageCount = Math.ceil(this.users.length / this.pageSize);
         this.refreshUsers();
