@@ -129,16 +129,25 @@
 .header-panel {
   background-color: var(--primary-50);
   border-radius: 0.67rem;
-  padding: 1.14rem 1.7rem;
+  padding: 1.333rem 2rem;
   min-height: 5.333rem;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 3.333rem;
+  p {
+    margin-top: 0.667rem;
+    font-size: 1.1667rem;
+    color: var(--gray-500, #667085);
+  }
   h1 {
     margin: 0;
   }
-  .emoji {
-    height: 2rem;
-  }
-  p {
-    font-size: 1.1667rem;
+}
+
+@media screen and (max-width: 820px) {
+  .header-panel {
+    padding: 1.333rem;
   }
 }
 

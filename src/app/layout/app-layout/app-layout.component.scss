@@ -1,3 +1,11 @@
 .router {
   margin-left: 5rem;
 }
+.secret-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  z-index: 100;
+}
