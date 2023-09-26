@@ -17,7 +17,6 @@ import { UsersRestService } from 'src/app/modules/profile/services/users-rest.se
 import { QuestionSubmittedFormComponent } from 'src/app/modules/programs/components/questions/question-submitted-form/question-submitted-form.component';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
-import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { GuessesRestService } from '../../services/guesses-rest.service';
@@ -72,7 +71,6 @@ export class TrainingComponent implements OnInit {
     private readonly profileStore: ProfileStore,
     private readonly programsRestService: ProgramsRestService,
     private readonly programRunsRestService: ProgramRunsRestService,
-    private readonly questionsRestService: QuestionsRestService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
@@ -219,7 +217,6 @@ export class TrainingComponent implements OnInit {
     const selectedAnswers = this.currentAnswers.filter((a) => a.selected).map((a) => a.answer);
     this.guessRestService
       .postGuess({
-        programRunId: this.isContinuous ? undefined : this.programRun?.id,
         questionId: this.displayedQuestion.id,
         answers: selectedAnswers.length > 0 ? selectedAnswers : undefined,
         source: GuessSourceEnumApi.Web,
