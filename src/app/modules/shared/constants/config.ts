@@ -6,6 +6,9 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 
 export const xAxisDatesOptions: any = {
   type: 'category',
+  name: I18ns.charts.timeLabel,
+  nameLocation: 'middle',
+  nameGap: 35,
   axisPointer: {
     type: 'line',
   },
@@ -13,7 +16,7 @@ export const xAxisDatesOptions: any = {
 
 export const yAxisScoreOptions: any = {
   type: 'value',
-  name: 'Score (%)',
+  name: I18ns.charts.scoreLabel,
   nameLocation: 'middle',
   nameGap: 50,
   min: 0,

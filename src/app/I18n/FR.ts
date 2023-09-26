@@ -1047,4 +1047,8 @@ export const FR = {
       archiveComment: 'Archiver le commentaire',
     },
   },
+  charts: {
+    scoreLabel: 'Score (%)',
+    timeLabel: 'Période',
+  },
 };

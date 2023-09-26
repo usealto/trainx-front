@@ -154,7 +154,7 @@ export class PerformanceByThemesComponent implements OnChanges {
 
     this.teamsKnowledgeChartOption = {
       xAxis: [{ type: 'category', show: false }],
-      yAxis: [{ max: 100 }],
+      yAxis: [{ max: 100, name: I18ns.charts.scoreLabel, nameLocation: 'middle', nameGap: 50 }],
       series: [
         {
           type: 'bar',
@@ -255,6 +255,7 @@ export class PerformanceByThemesComponent implements OnChanges {
         name: d.label,
         data: d.data,
         type: 'line',
+        showSymbol: false,
         tooltip: {
           valueFormatter: (value: any) => {
             return (value as number) + '%';

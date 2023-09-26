@@ -160,6 +160,7 @@ export class LeadHomeComponent implements OnInit {
                 color: '#09479e',
                 data: points.map((p) => (p.y ? Math.round((p.y * 10000) / 100) : (p.y as number))),
                 type: 'line',
+                showSymbol: false,
                 tooltip: {
                   trigger: 'item',
                   valueFormatter: (value: any) => {
