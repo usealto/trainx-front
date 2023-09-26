@@ -129,6 +129,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
         name: d.label,
         data: d.data,
         type: 'line',
+        showSymbol: false,
         tooltip: {
           valueFormatter: (value: any) => {
             return (value as number) + '%';
@@ -142,6 +143,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
       name: I18ns.shared.global,
       data: globalPoints.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
       type: 'line',
+      showSymbol: false,
       tooltip: {
         valueFormatter: (value: any) => {
           return (value as number) + ' %';

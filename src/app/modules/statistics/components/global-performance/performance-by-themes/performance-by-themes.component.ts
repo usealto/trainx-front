@@ -154,7 +154,7 @@ export class PerformanceByThemesComponent implements OnChanges {
 
     this.teamsKnowledgeChartOption = {
       xAxis: [{ type: 'category', show: false }],
-      yAxis: [{ max: 100 }],
+      yAxis: [{ max: 100, name: I18ns.charts.scoreLabel, nameLocation: 'middle', nameGap: 50 }],
       series: [
         {
           type: 'bar',
@@ -180,13 +180,13 @@ export class PerformanceByThemesComponent implements OnChanges {
           return `
             <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10); border-radius: 4px;">
               <div style="color: #667085; background-color: #F9FAFB; padding : 8px 10px 4px 10px;">
-                ${I18ns.shared.score}
+                ${name}
               </div>
               <div style="padding : 4px 10px 8px 10px; display: flex; align-items: center; gap: 10px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="11" viewBox="0 0 10 11" fill="none">
                   <circle cx="5" cy="5.5" r="5" fill="${color}"/>
                 </svg>
-                <p>${name} : <b style="color: ${color}">${(data as any).value} %<b></p>
+                <p>${I18ns.shared.score} : <b style="color: ${color}">${(data as any).value} %<b></p>
               </div>
             </div>
           `;
@@ -255,6 +255,7 @@ export class PerformanceByThemesComponent implements OnChanges {
         name: d.label,
         data: d.data,
         type: 'line',
+        showSymbol: false,
         tooltip: {
           valueFormatter: (value: any) => {
             return (value as number) + '%';

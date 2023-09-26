@@ -275,6 +275,7 @@ export const FR = {
         title: 'Informations',
         subtitle: 'Informations générales du programme.',
         name: 'Nom du programme',
+        duplicateName: 'Un programme portant le même nom existe déjà.',
         nameSubtitle: 'Visible par tout le monde.',
         namePlaceholder: 'Exemple: Onboarding',
         description: 'Description',
@@ -1046,5 +1047,9 @@ export const FR = {
       comments: 'Commentaires',
       archiveComment: 'Archiver le commentaire',
     },
+  },
+  charts: {
+    scoreLabel: 'Score (%)',
+    timeLabel: 'Période',
   },
 };

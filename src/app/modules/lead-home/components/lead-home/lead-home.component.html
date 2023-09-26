@@ -1,15 +1,20 @@
-<div class="header-panel mb-4 row align-items-center">
-  <img class="col-1 p-0 me-5" [src]="Emoji.WavingHand | emoji" height="48" style="width: 48px !important" />
-  <div class="col ps-0">
-    <h1 id="welcome" class="mb-3">
+<div class="header-panel mb-4">
+  <img [src]="Emoji.WavingHand | emoji" height="48" />
+  <div>
+    <h1 id="welcome">
       {{ I18ns.leadHome.title + (profileStore.user.value.firstname | titlecase) + ' !' }}
     </h1>
-    <p class="alto-grey fs-6b">{{ I18ns.leadHome.subtitle }}</p>
+    <p>{{ I18ns.leadHome.subtitle }}</p>
   </div>
 </div>
-<div class="row">
+<div class="row m-0">
   <div class="col-6 ps-0">
-    <div *ngIf="commentsCount" [routerLink]="['/', AltoRoutes.lead , AltoRoutes.collaboration]" class="cursor-pointer" [class]="commentsCount ? 'warning-panel' : 'success-panel'">
+    <div
+      *ngIf="commentsCount"
+      [routerLink]="['/', AltoRoutes.lead, AltoRoutes.collaboration]"
+      class="cursor-pointer"
+      [class]="commentsCount ? 'warning-panel' : 'success-panel'"
+    >
       <alto-icon-badge
         [size]="5"
         icon="bi-chat"
@@ -27,10 +32,10 @@
       </div>
     </div>
   </div>
-  <div class="col-6 pe-0" >
+  <div class="col-6 pe-0">
     <div
       *ngIf="questionsCount"
-      [routerLink]="['/', AltoRoutes.lead , AltoRoutes.collaboration]"
+      [routerLink]="['/', AltoRoutes.lead, AltoRoutes.collaboration]"
       class="cursor-pointer"
       [class]="questionsCount ? 'warning-panel' : 'success-panel'"
       fragment="submittedQuestionsAnchor"
