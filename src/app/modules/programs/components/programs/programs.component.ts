@@ -117,6 +117,7 @@ export class ProgramsComponent implements OnInit {
 
   handleTabChange(value: any) {
     this.activeTab = value;
+    this.resetFilters();
   }
 
   deleteQuestion(question?: QuestionDtoApi) {
@@ -381,12 +382,6 @@ export class ProgramsComponent implements OnInit {
     this.filterTags((this.tagFilters = {}));
     this.selectedItems = [];
     this.isFilteredQuestions = false;
-    this.isFilteredTags = false;
-  }
-
-  resetTagsFilters() {
-    this.filterTags((this.tagFilters = {}));
-    this.selectedItems = [];
     this.isFilteredTags = false;
   }
 
