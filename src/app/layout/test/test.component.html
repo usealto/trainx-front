@@ -1,7 +1,11 @@
 <p class="build-time fs-8" title="Build Time">Version: {{ buildTime | date : 'medium' }}</p>
-
+<br />
+<br />
 <div class="row" *ngIf="isDev">
   <div class="col-6">
+    <p>Today is {{ today }}</p>
+    <br />
+    <br />
     <span class="fs-4">{{ I18ns.shared.smiley }}</span>
     <a [routerLink]="['/', AltoRoutes.notFound]">404 page</a>
     <br />
@@ -168,11 +172,3 @@
   </div>
 </div>
 <hr />
-<div class="row">
-  <alto-time-picker
-    class="time-picker2"
-    [duration]="statisticsDuration"
-    (durationSelected)="updateTimePicker($event)"
-  ></alto-time-picker>
-  <div *ngIf="chartOption" echarts [options]="chartOption" class="demo-chart"></div>
-</div>

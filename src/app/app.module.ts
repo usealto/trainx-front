@@ -6,7 +6,6 @@ import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ApiModule, BASE_PATH } from '@usealto/sdk-ts-angular';
-import { NgxEchartsModule } from 'ngx-echarts';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { ApiErrorInterceptor } from './core/interceptors/api-error.interceptor';
@@ -67,9 +66,6 @@ import { SharedModule } from './modules/shared/shared.module';
       httpInterceptor: {
         allowedList: [`${environment.apiURL}/*`],
       },
-    }),
-    NgxEchartsModule.forRoot({
-      echarts: () => import('echarts'),
     }),
     ToastComponent,
   ],

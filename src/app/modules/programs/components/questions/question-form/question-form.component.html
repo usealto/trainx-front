@@ -11,28 +11,10 @@
         : I18ns.questions.form.title.create
     }}
   </h2>
-  <!-- <p class="alto-grey">
-      {{
-        isSubmitted
-          ? question?.createdByUser?.firstname +
-            ' ' +
-            question?.createdByUser?.lastname +
-            I18ns.questions.form.subtitle.submitted
-          : I18ns.questions.form.subtitle.question
-      }}
-    </p> -->
 </div>
 <hr class="mb-0" />
 
 <div class="p-6 sidebar-body">
-  <div *ngIf="isSubmitted" class="mb-4 row">
-    <alto-profile-card class="col-7" [user]="question?.createdByUser"> </alto-profile-card>
-    <div class="col-5 text-end">
-      <a type="button" class="btn btn-outline-secondary" [href]="'mailto:' + question?.createdByUser?.email">
-        <i class="bi bi-reply-all-fill"></i> {{ I18ns.shared.reply }}
-      </a>
-    </div>
-  </div>
   <form *ngIf="questionForm" [formGroup]="questionForm">
     <label class="form-label required">{{ I18ns.questions.form.name }}</label>
 
@@ -191,20 +173,14 @@
       {{ I18ns.shared.cancel }}
     </a>
     <ng-container *ngIf="isSubmitted; else elseTemplate">
-      <input
+      <button
         type="submit"
         [disabled]="questionForm && !questionForm.valid"
         class="btn btn-primary float-end"
-        [value]="I18ns.shared.save"
         (click)="createQuestion()"
-      />
-
-      <button
-        type="button"
-        class="btn btn-danger me-3 float-end"
-        (click)="changeStatus(QuestionSubmittedStatusEnum.Declined)"
       >
-        {{ I18ns.shared.refuse }}
+        <i class="bi bi-plus"></i>
+        <span>{{ I18ns.shared.create }} </span>
       </button>
     </ng-container>
     <ng-template #elseTemplate>

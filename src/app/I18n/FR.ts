@@ -435,7 +435,7 @@ export const FR = {
       title: {
         create: 'Créer une question',
         edit: 'Modifier une question',
-        submitted: 'Question suggérée',
+        submitted: 'Créer la question',
       },
       subtitle: {
         question: 'Indiquer l’intitulé, les réponses possibles et les informations complémentaires.',
@@ -661,6 +661,7 @@ export const FR = {
     adminMode: 'Mode Administrateur',
     disconnect: 'Se déconnecter',
     feedback: 'Envoyer un feedback',
+    collaboration: 'Collaboration',
   },
   settings: {
     title: 'Paramètres',
@@ -959,5 +960,95 @@ export const FR = {
         submitQuestion: 'Suggérer une question',
       },
     },
+  },
+  collaboration: {
+    title: 'Collaboration',
+    subtitle: "Gérer l'ensemble des contributions de vos équipes.",
+    showMore: 'Afficher plus',
+    tabs: {
+      pending: 'En attente',
+      archived: 'Traités',
+      all: 'Tout voir',
+    },
+    filters: {
+      contributor: 'Contributeur',
+      filterType: 'Type de contribution',
+      types: {
+        comments: 'Commentaires',
+        questions: 'Questions',
+      },
+      period: 'Période',
+      periods: {
+        today: 'Aujourd’hui',
+        week: 'Cette semaine',
+        month: 'Ce mois-ci',
+        old: 'Plus de 30 jours',
+      },
+    },
+    topContributors: {
+      title: 'Tops contributeurs des 30 derniers jours',
+      contributionCount: 'A contribué {{}} fois.',
+      questions: '{{}} questions',
+      comments: '{{}} commentaires',
+    },
+    question: {
+      declined: 'Refusée',
+      accepted: 'Acceptée',
+      submitted: 'En attente',
+    },
+    comment: {
+      read: 'Archivé',
+      unread: 'En attente',
+    },
+    dateLabels: {
+      today: 'Aujourd’hui',
+      yesterday: 'Hier',
+      daysCount: 'Il y a {{}} jours',
+    },
+    questionCard: {
+      suggQuestion: 'Question suggérée',
+      denyQuestionTitle: 'Refuser une question',
+      denyQuestionSubtitle: 'Souhaitez-vous envoyer un message à {{}} pour expliquer votre choix ?',
+      deny: 'Refuser',
+      accept: 'Créer la question',
+      textArea: 'Réponse à {{}} (facultatif)',
+      suggQuestionDenied: 'La question a bien été refusée',
+      hasDenied: 'A refusé cette suggestion',
+      hasAccepted: 'A ajouté la question au programme',
+    },
+    commentCard: {
+      comment: 'Commentaire',
+      archiveCommentTitle: 'Archiver un commentaire',
+      archiveCommentSubtitle: 'Souhaitez-vous envoyer un message à {{}} en réponse à son commentaire ?',
+      deny: 'Annuler',
+      accept: 'Confirmer',
+      textArea: 'Réponse à {{}} (facultatif)',
+      archivedComment: 'Le commentaire a bien été archivé',
+      hasArchivedComment: 'La commentaire a bien été archivé.',
+      concerningQuestion: 'sur la question',
+      archive: 'Archiver',
+      seeQuestion: 'Voir la question',
+    },
+    modal: {
+      cancel: 'Annuler',
+      placeholder: 'Écrivez votre message...',
+    },
+    seeQuestion: {
+      breadcrumb: {
+        seeQuestion: 'Voir la question',
+        awaiting: 'En attente',
+        seeAll: 'Tout voir',
+      },
+      date: {
+        today: 'Aujourd’hui',
+      },
+      discoverQuestionsAndComments: 'Découvrez les réponses et commentaires associés à cette question.',
+      comments: 'Commentaires',
+      archiveComment: 'Archiver le commentaire',
+    },
+  },
+  charts: {
+    scoreLabel: 'Score (%)',
+    timeLabel: 'Période',
   },
 };
