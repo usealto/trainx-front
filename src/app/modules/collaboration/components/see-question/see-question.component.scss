@@ -1,0 +1,54 @@
+:host {
+  display: block;
+  padding: var(--alto-page-padding);
+}
+
+:host ::ng-deep {
+  .img-badge {
+    img {
+      vertical-align: middle;
+    }
+  }
+}
+
+.breadcrumb {
+  color: var(--gray-500);
+}
+
+.breadcrumb-link {
+  color: var(--primary-700);
+}
+
+.question-panel {
+  border-radius: 8px;
+  background-color: var(--indigo-25);
+}
+
+.comment-panel-header {
+  border-radius: 12px 12px 0px 0px;
+  background-color: var(--primary-25);
+  padding: 16px 20px;
+  min-height: 6.3333rem;
+}
+
+.comment-panel-content {
+  background-color: white;
+  border-radius: 0px 0px 12px 12px;
+  padding: 16px 20px;
+  min-height: 10.3333rem;
+
+  .btn {
+    margin-top: auto;
+  }
+}
+
+.alto-tab-btn {
+  display: inline-block;
+  height: 2.5rem;
+  margin-right: 1.33rem;
+  cursor: pointer;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px #175cd3 solid;
+  color: #175cd3;
+  font-weight: 600;
+}

@@ -1,0 +1,38 @@
+<div class="modal-body text-left p-5">
+  <alto-icon-badge [icon]="data.icon" [color]="data.color" [size]="4"></alto-icon-badge>
+  <h2 class="fw-semibold mb-4 mt-4">
+    {{ data.title }}
+  </h2>
+  <p class="mb-5 alto-grey">
+    {{ data.subtitle }}
+  </p>
+  <p class="fw-medium mb-3">
+    {{ data.textarea }}
+  </p>
+  <textarea
+    rows="5"
+    class="form-control"
+    [placeholder]="I18ns.collaboration.modal.placeholder"
+    [formControl]="response"
+  ></textarea>
+  <div class="row mt-6 text-center">
+    <div class="col-6">
+      <button
+        class="btn btn-outline-secondary w-100 justify-content-sm-center"
+        style="font-size: 1rem"
+        (click)="closeModal()"
+      >
+        {{ I18ns.collaboration.modal.cancel }}
+      </button>
+    </div>
+    <div class="col-6">
+      <button
+        class="btn btn-primary w-100 justify-content-sm-center"
+        style="font-size: 1rem"
+        (click)="confirm()"
+      >
+        {{ data.confirmButtonLabel }}
+      </button>
+    </div>
+  </div>
+</div>

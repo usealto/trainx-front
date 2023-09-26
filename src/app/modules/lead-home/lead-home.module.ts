@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { LeadHomeComponent } from './components/lead-home/lead-home.component';
@@ -10,5 +10,6 @@ import { ChartsModule } from '../charts/charts.module';
 @NgModule({
   declarations: [LeadHomeComponent, LeadHomeStatisticsComponent, LeadHomeScoreGraphComponent],
   imports: [CommonModule, LeadHomeRoutingModule, ChartsModule, SharedModule],
+  providers: [TitleCasePipe],
 })
 export class LeadHomeModule {}

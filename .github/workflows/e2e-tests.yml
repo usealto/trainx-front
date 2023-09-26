@@ -14,25 +14,26 @@ jobs:
   cypress-run:
     runs-on: ubuntu-22.04
     steps:
-    - name: Checkout code 
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Create cypress.env.json
-      run: |
-        echo -n '{
-          "auth_audience": "'${{ secrets.CYPRESS_AUTH_AUDIENCE }}'",
-          "auth_url": "'${{ secrets.CYPRESS_AUTH_URL }}'",
-          "auth_client_id": "'${{ secrets.CYPRESS_AUTH_CLIENT_ID }}'",
-          "auth_client_secret": "'${{ secrets.CYPRESS_AUTH_CLIENT_SECRET }}'",
-          "auth_username-admin": "'${{ secrets.CYPRESS_AUTH_USERNAME_ADMIN }}'",
-          "auth_password-admin": "'${{ secrets.CYPRESS_AUTH_PASSWORD_ADMIN }}'",
-          "auth_username": "'${{ secrets.CYPRESS_AUTH_USERNAME }}'",
-          "auth_password": "'${{ secrets.CYPRESS_AUTH_PASSWORD }}'",
-          "apiURL": "'${{ secrets.CYPRESS_API_URL }}'"
-        }' > cypress.env.json
-        
-    - name: Cypress run
-      uses: cypress-io/github-action@v6
-      with:
+      - name: Create cypress.env.json
+        run: |
+          echo -n '{
+            "auth_audience": "'${{ secrets.CYPRESS_AUTH_AUDIENCE }}'",
+            "auth_url": "'${{ secrets.CYPRESS_AUTH_URL }}'",
+            "auth_client_id": "'${{ secrets.CYPRESS_AUTH_CLIENT_ID }}'",
+            "auth_client_secret": "'${{ secrets.CYPRESS_AUTH_CLIENT_SECRET }}'",
+            "auth_username-admin": "'${{ secrets.CYPRESS_AUTH_USERNAME_ADMIN }}'",
+            "auth_password-admin": "'${{ secrets.CYPRESS_AUTH_PASSWORD_ADMIN }}'",
+            "auth_username": "'${{ secrets.CYPRESS_AUTH_USERNAME }}'",
+            "auth_password": "'${{ secrets.CYPRESS_AUTH_PASSWORD }}'",
+            "apiURL": "'${{ secrets.CYPRESS_API_URL }}'"
+          }' > cypress.env.json
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
           build: npm run build
           start: npm start
+          config-file: cypress/cypress-CICD.config.ts

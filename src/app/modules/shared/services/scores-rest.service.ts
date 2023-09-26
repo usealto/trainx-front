@@ -40,6 +40,7 @@ export class ScoresRestService {
     duration: ScoreDuration,
     isProgression?: boolean,
     id?: string,
+    sortBy?: string,
   ): Observable<UserStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
@@ -61,6 +62,7 @@ export class ScoresRestService {
         to: dateBefore,
         respondsRegularlyThreshold: 0.42,
         userId: id,
+        sortBy: sortBy,
       } as GetUsersStatsRequestParams)
       .pipe(map((r) => r.data || []));
   }

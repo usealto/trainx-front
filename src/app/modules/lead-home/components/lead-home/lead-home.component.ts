@@ -1,8 +1,10 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ChallengeDtoApi,
   ChallengeDtoApiTypeEnumApi,
+  QuestionSubmittedStatusEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   UserDtoApi,
@@ -80,6 +82,7 @@ export class LeadHomeComponent implements OnInit {
   chartOption: EChartsOption = {};
 
   constructor(
+    private readonly titleCasePipe: TitleCasePipe,
     private readonly commentsRestService: CommentsRestService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly scoresRestService: ScoresRestService,
@@ -97,8 +100,8 @@ export class LeadHomeComponent implements OnInit {
 
   ngOnInit(): void {
     combineLatest([
-      this.commentsRestService.getComments(),
-      this.questionsSubmittedRestService.getQuestions(),
+      this.commentsRestService.getUnreadComments(),
+      this.questionsSubmittedRestService.getQuestions({ status: QuestionSubmittedStatusEnumApi.Submitted }),
       this.challengesRestService.getChallenges({ itemsPerPage: 40, sortBy: 'endDate:desc' }),
     ])
       .pipe(
@@ -141,10 +144,12 @@ export class LeadHomeComponent implements OnInit {
           this.scoreCount = res.scores.length;
           const scores = this.scoreService.reduceLineChartData(res.scores);
           const points = this.statisticsServices.transformDataToPoint(scores[0]);
-          const labels = this.statisticsServices.formatLabel(
-            points.map((p) => p.x),
-            duration,
-          );
+          const labels = this.statisticsServices
+            .formatLabel(
+              points.map((p) => p.x),
+              duration,
+            )
+            .map((s) => this.titleCasePipe.transform(s));
 
           this.chartOption = {
             xAxis: [{ ...xAxisDatesOptions, data: labels }],

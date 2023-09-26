@@ -46,6 +46,26 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  &.orange {
+    color: var(--warning-600);
+    background-color: var(--warning-50);
+  }
+
+  &.red {
+    color: var(--error-600);
+    background-color: var(--error-50);
+  }
+
+  &.green {
+    color: var(--success-600);
+    background-color: var(--success-50);
+  }
+
+  &.gray {
+    color: var(--gray-600);
+    background-color: var(--gray-50);
+  }
 }
 
 .alto-badge-big {
@@ -57,6 +77,7 @@
   color: var(--gray-900);
   background-color: var(--alto-medium-grey);
 }
+
 .alto-badge-blue {
   @extend .alto-badge-big;
   color: var(--bs-primary);
@@ -196,14 +217,6 @@ h2 {
   border-left: 2px solid var(--alto-medium-grey);
   min-height: 2rem;
   vertical-align: middle;
-}
-
-.cancel-btn {
-  color: var(--gray-700);
-  font-size: 0.833rem;
-  font-weight: 600;
-  line-height: 3rem;
-  cursor: pointer;
 }
 
 // Used in modals

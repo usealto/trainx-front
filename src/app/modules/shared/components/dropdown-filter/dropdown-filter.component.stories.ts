@@ -104,6 +104,18 @@ export const DropdownWithPosition: Story = {
   },
 };
 
+export const DropdownWithSearchDisabled: Story = {
+  args: {
+    data: [
+      { id: 'AFE8238asdfr4', name: 'team 1' },
+      { id: 'FF1238asdfr4', name: 'team 2' },
+      { id: '9DAA38asdfr4', name: 'team 3' },
+      { id: 'AEE123qsd', name: 'team 4' },
+    ],
+    enableSearch: false,
+  }
+};
+
 export const DropdownDisabled: Story = {
   args: {
     data: [
