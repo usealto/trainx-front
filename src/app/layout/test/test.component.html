@@ -172,11 +172,3 @@
   </div>
 </div>
 <hr />
-<div class="row">
-  <alto-time-picker
-    class="time-picker2"
-    [duration]="statisticsDuration"
-    (durationSelected)="updateTimePicker($event)"
-  ></alto-time-picker>
-  <div *ngIf="chartOption" echarts [options]="chartOption" class="demo-chart"></div>
-</div>

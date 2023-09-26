@@ -338,6 +338,7 @@ export class ProgramsComponent implements OnInit {
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
         map((ids) => this.getUsersfromIds(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
+        tap(() => this.filterTags()),
         tap(() => (this.isTagsLoading = false)),
       )
       .subscribe();
@@ -366,9 +367,8 @@ export class ProgramsComponent implements OnInit {
 
     let output = this.tagsService.filterTags(this.tags, { programs, contributors, search }) as TagDisplay[];
 
-    output.forEach((tag) => (tag.score = this.getTagScore(tag.id)));
-
     if (score) {
+      output.forEach((tag) => (tag.score = this.getTagScore(tag.id)));
       output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
     }
 
