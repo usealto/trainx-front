@@ -4,6 +4,5 @@ export interface UserForm {
   firstname: string;
   lastname: string;
   email: string;
-  teamId?: string;
   roles: Array<RoleEnumApi>;
 }

@@ -85,7 +85,6 @@ export class AdminCompanyUserComponent implements OnInit {
                 firstname: [this.user.firstname || '', [Validators.required]],
                 lastname: [this.user.lastname || '', [Validators.required]],
                 email: [this.user.email || '', [Validators.required, Validators.email]],
-                teamId: [this.user.teamId || '', []],
                 roles: [this.user.roles as unknown as Array<RoleEnumApi>, []],
               });
             } else {
@@ -103,7 +102,6 @@ export class AdminCompanyUserComponent implements OnInit {
         firstname: ['', [Validators.required]],
         lastname: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
-        teamId: ['', []],
         roles: [[RoleEnumApi.CompanyUser], []],
       });
     }
