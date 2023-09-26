@@ -1,6 +1,6 @@
 <div class="header-panel2 mb-8">
   <img class="emoji-title me-4" [src]="EmojiName.Bullseye | emoji" />
-  <h1>{{ isEdit ? I18ns.programs.forms.edit : I18ns.programs.forms.create }}</h1>
+  <h1>{{ isEdit && !isNewProgram ? I18ns.programs.forms.edit : I18ns.programs.forms.create }}</h1>
 </div>
 
 <div class="mt-4 form-nav">

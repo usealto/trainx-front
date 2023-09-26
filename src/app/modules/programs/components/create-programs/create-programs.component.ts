@@ -165,6 +165,7 @@ export class CreateProgramsComponent implements OnInit {
         map((d) => d.data),
         tap((prog: ProgramDtoApi) => {
           this.isEdit = true;
+          this.isNewProgram = true;
           this.editedProgram = prog;
           this.programStore.programs.value = [];
           this.getAssociatedQuestions();
