@@ -27,7 +27,6 @@ import { DataService } from '../../admin-data.service';
   selector: 'alto-admin-company-user',
   templateUrl: './admin-company-user.component.html',
   styleUrls: ['./admin-company-user.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 
 export class AdminCompanyUserComponent implements OnInit {
