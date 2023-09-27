@@ -1,5 +1,5 @@
 import { ShowRawDataModalComponent } from './show-raw-data-modal/show-raw-data-modal.component';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, take, tap } from 'rxjs';

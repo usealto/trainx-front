@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, take, tap } from 'rxjs';
@@ -20,7 +20,6 @@ import { MsgService } from 'src/app/core/message/msg.service';
   selector: 'alto-admin-user-create-form',
   templateUrl: './admin-user-create-form.component.html',
   styleUrls: ['./admin-user-create-form.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class AdminUserCreateFormComponent implements OnInit {
   edit = false;

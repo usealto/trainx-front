@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CompanyForm } from './models/company.create';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
@@ -19,7 +19,6 @@ import { AdminUsersUploadFormComponent } from './admin-users-upload-form/admin-u
   selector: 'alto-admin-companies-create',
   templateUrl: './admin-companies-create.component.html',
   styleUrls: ['./admin-companies-create.component.scss'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class AdminCompaniesCreateComponent implements OnInit {
   @ViewChild(AdminTabsComponent) tabs!: AdminTabsComponent;
