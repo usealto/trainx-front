@@ -45,7 +45,7 @@
                 routerLinkActive="menu-selected"
               >
                 <span class="fw-bolder alto-grey">{{ company.name }}</span>
-                <div class="fw-lighter alto-grey">{{ company.domain }}</div>
+                <p class="fw-lighter alto-grey smaller">Created {{ company.createdAt| date : 'fullDate' }}, by {{ company.createdByUser.firstname }} {{company.createdByUser.lastname}} </p>
               </a>
               <ng-template #simpleName> {{ company.name }}</ng-template>
               <a 
