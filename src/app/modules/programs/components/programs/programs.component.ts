@@ -110,7 +110,6 @@ export class ProgramsComponent implements OnInit {
     this.getQuestions();
     this.getSubmittedQuestions();
     this.getTags();
-    this.isFilteredQuestions = false;
 
     combineLatest([this.getScoresFromTags(), this.getScoresfromQuestions()]).subscribe();
   }
@@ -354,12 +353,6 @@ export class ProgramsComponent implements OnInit {
             contributors,
             search,
           }) as TagDisplay[];
-          this.tagsCount = this.tags.length;
-          console.log(this.tags.length);
-          console.log(tags.length);
-          if (this.tags.length !== tags.length) {
-            this.tagsPage = 1;
-          }
           this.changeTagsPage(this.tags);
         }),
         map(() => this.tags.map((t) => t.createdBy) ?? []),
@@ -367,7 +360,6 @@ export class ProgramsComponent implements OnInit {
         map((ids) => this.getUsersfromIds(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
         tap(() => {
-          console.log('before filter score', this.tags.length);
           this.filterTagsByScore(this.tags as TagDisplay[], this.tagFilters.score);
           this.isTagsLoading = false;
         }),
@@ -378,17 +370,16 @@ export class ProgramsComponent implements OnInit {
 
   filterTagsByScore(tags: TagDisplay[], score?: string) {
     if (!score) return;
-
     tags.forEach((tag) => (tag.score = this.getTagScore(tag.id)));
     tags = this.scoreService.filterByScore(tags, score as ScoreFilter, true);
 
-    if (this.tags.length !== tags.length) {
-      this.tagsPage = 1;
-    }
     this.changeTagsPage(tags);
   }
 
   changeTagsPage(tags: TagDtoApi[]) {
+    if (this.tagsPage > Math.ceil(tags.length / this.tagsPageSize)) {
+      this.tagsPage = 1;
+    }
     this.tagsCount = tags.length;
     this.paginatedTags = tags.slice(
       (this.tagsPage - 1) * this.tagsPageSize,
