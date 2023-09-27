@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, take, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import {
+  AdminApiService,
   CompanyDtoApi,
   RoleEnumApi,
   TeamDtoApi,
@@ -12,7 +13,6 @@ import {
   UsersApiService,
 } from '@usealto/sdk-ts-angular';
 import { UserForm } from './models/user.form';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { MsgService } from 'src/app/core/message/msg.service';
 
@@ -37,7 +37,7 @@ export class AdminUserCreateFormComponent implements OnInit {
     private route: ActivatedRoute,
     private usersApiService: UsersApiService,
     readonly fob: UntypedFormBuilder,
-    private readonly usersRestService: UsersRestService,
+    private readonly adminApiService: AdminApiService,
     private readonly companiesRestService: CompaniesRestService,
     private readonly msg: MsgService,
   ) {
@@ -58,12 +58,12 @@ export class AdminUserCreateFormComponent implements OnInit {
 
     if (this.userId) {
       this.edit = true;
-      this.usersRestService
-        .getUsersFiltered({ ids: this.userId })
+      this.adminApiService
+        .adminGetUsers({ ids: this.userId })
         .pipe(
           tap((users) => {
-            if (users[0]) {
-              this.user = users[0];
+            if (users.data && users.data[0]) {
+              this.user = users.data[0];
 
               this.userForm = this.fb.group<UserForm>({
                 firstname: [this.user.firstname || '', [Validators.required]],

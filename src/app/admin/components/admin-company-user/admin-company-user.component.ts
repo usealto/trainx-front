@@ -6,6 +6,7 @@ import { combineLatest, take, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import {
+  AdminApiService,
   AuthApiService,
   CompanyDtoApi,
   RoleEnumApi,
@@ -15,7 +16,6 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { UserFormView } from '../admin-user-create/admin-user-create-form/models/user.form';
 import { AuthUserGet } from './models/authuser.get';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { MsgService } from 'src/app/core/message/msg.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -43,11 +43,11 @@ export class AdminCompanyUserComponent implements OnInit {
     private readonly teamsRestService: TeamsRestService,
     readonly fob: UntypedFormBuilder,
     private readonly authApiService: AuthApiService,
-    private readonly usersRestService: UsersRestService,
     private readonly companiesRestService: CompaniesRestService,
     private readonly msg: MsgService,
     private modalService: NgbModal,
     private readonly dataService: DataService,
+    private readonly adminApiService: AdminApiService,
   ) {
     this.fb = fob;
   }
@@ -67,12 +67,12 @@ export class AdminCompanyUserComponent implements OnInit {
       });
 
     if (this.userId) {
-      this.usersRestService
-        .getUsersFiltered({ ids: this.userId, includeSoftDeleted: true })
+      this.adminApiService
+        .adminGetUsers({ ids: this.userId, includeSoftDeleted: true })
         .pipe(
           tap((users) => {
-            if (users[0]) {
-              this.user = users[0];
+            if (users.data && users.data[0]) {
+              this.user = users.data[0];
               this.fetchAuth0Data(this.user.email);
 
               this.userForm = this.fb.group<UserFormView>({
