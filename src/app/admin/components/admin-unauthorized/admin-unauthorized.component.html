@@ -1,11 +1,11 @@
-<h2 class="text-danger">Accès interdit</h2>
+<h1 class="text-danger">Accès interdit</h1>
 <h3>Vous n'avez pas les droits suffisants pour accéder à cette page</h3>
 
-<p>Veuillez contacter romain@usealto.com</p>
-
+<p>Veuillez contacter un membre de l'équipe Alto</p>
 <br><br><br>
 <div *ngIf="user">
-<p>pour rappel, vous êtes : {{user.email}}</p>
+<p>Veuillez donner ces information à Alto pour apporter du contexte</p>
+<p>votre email : <strong>{{user.email}}</strong></p>
 <p>vos roles sont :</p>
 <pre>{{user.roles | json}}</pre>
 <button class="btn btn-primary" (click)="disconnect()">Se déconnecter</button>
