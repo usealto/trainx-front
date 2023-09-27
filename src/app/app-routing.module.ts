@@ -107,6 +107,18 @@ const routes: Routes = [
         path: AltoRoutes.notFound,
         component: NotFoundComponent,
       },
+      {
+        path: AltoRoutes.noAccess,
+        component: NoWebAccessComponent,
+      },
+      {
+        path: AltoRoutes.noCompany,
+        component: NoCompanyComponent,
+      },
+      {
+        path: AltoRoutes.noTeam,
+        component: NoTeamComponent,
+      },
     ],
     canActivate: [AuthGuard, noSmallScreen],
     canActivateChild: [AuthGuard],
@@ -126,18 +138,6 @@ const routes: Routes = [
     component: JwtComponent,
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
-  },
-  {
-    path: AltoRoutes.noAccess,
-    component: NoWebAccessComponent,
-  },
-  {
-    path: AltoRoutes.noCompany,
-    component: NoCompanyComponent,
-  },
-  {
-    path: AltoRoutes.noTeam,
-    component: NoTeamComponent,
   },
   {
     path: AltoRoutes.noSmallScreen,
