@@ -7,8 +7,29 @@
   background: var(--purple-25);
   padding: 1.143rem 1.429rem;
   align-self: stretch;
-  justify-content: space-between;
   min-height: 5.333rem;
+  display: flex;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+
+  .header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.333rem;
+    flex-grow: 1;
+    min-width: 0;
+    position: relative;
+    .alto-badge {
+      padding: 0.167rem 0.667rem;
+      position: absolute;
+      right: 0;
+    }
+  }
 }
 
 .middle {

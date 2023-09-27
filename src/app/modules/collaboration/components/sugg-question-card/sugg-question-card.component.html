@@ -1,19 +1,23 @@
-<div class="header d-flex flex-row">
-  <div class="d-flex flex-row align-items-center">
-    <alto-icon-badge [icon]="'bi-lightbulb'" [color]="'badge-double-purple'"></alto-icon-badge>
-    <span class="fw-semibold text-purple m-sm-2">{{ I18ns.collaboration.questionCard.suggQuestion }}</span>
-  </div>
-  <div
-    class="align-self-center alto-badge"
-    [ngClass]="
-      suggQuestion?.status === StatusEnum.Declined
-        ? 'red'
-        : suggQuestion?.status === StatusEnum.Accepted
-        ? 'green'
-        : 'orange'
-    "
-  >
-    {{ I18ns.collaboration.question[suggQuestion?.status || StatusEnum.Accepted] }}
+<div class="header">
+  <div class="header-container">
+    <div>
+      <alto-icon-badge [icon]="'bi-lightbulb'" [color]="'badge-double-purple'"></alto-icon-badge>
+    </div>
+    <div class="header-text">
+      <span class="fw-medium text-purple m-sm-2">{{ I18ns.collaboration.questionCard.suggQuestion }}</span>
+      <div
+        class="alto-badge"
+        [ngClass]="
+          suggQuestion?.status === StatusEnum.Declined
+            ? 'red'
+            : suggQuestion?.status === StatusEnum.Accepted
+            ? 'green'
+            : 'orange'
+        "
+      >
+        {{ I18ns.collaboration.question[suggQuestion?.status || StatusEnum.Accepted] }}
+      </div>
+    </div>
   </div>
 </div>
 
