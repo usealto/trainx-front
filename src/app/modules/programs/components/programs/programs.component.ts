@@ -329,20 +329,63 @@ export class ProgramsComponent implements OnInit {
     this.getSubmittedQuestions();
   }
 
-  getTags() {
+  getTags(
+    {
+      programs = this.tagFilters.programs,
+      contributors = this.tagFilters.contributors,
+      search = this.tagFilters.search,
+      score = this.tagFilters.score,
+    }: TagFilters = this.tagFilters,
+  ) {
+    this.isFilteredTags = true;
+    this.isTagsLoading = true;
+
+    this.tagFilters.programs = programs;
+    this.tagFilters.contributors = contributors;
+    this.tagFilters.search = search;
+    this.tagFilters.score = score;
+
     this.tagRestService
       .getTags()
       .pipe(
-        tap((tags) => (this.tags = tags)),
-        tap((tags) => this.changeTagsPage(tags)),
+        tap((tags) => {
+          this.tags = this.tagsService.filterTags(tags, {
+            programs,
+            contributors,
+            search,
+          }) as TagDisplay[];
+          this.tagsCount = this.tags.length;
+          console.log(this.tags.length);
+          console.log(tags.length);
+          if (this.tags.length !== tags.length) {
+            this.tagsPage = 1;
+          }
+          this.changeTagsPage(this.tags);
+        }),
         map(() => this.tags.map((t) => t.createdBy) ?? []),
         map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
         map((ids) => this.getUsersfromIds(ids)),
         tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
-        tap(() => this.filterTags()),
-        tap(() => (this.isTagsLoading = false)),
+        tap(() => {
+          console.log('before filter score', this.tags.length);
+          this.filterTagsByScore(this.tags as TagDisplay[], this.tagFilters.score);
+          this.isTagsLoading = false;
+        }),
+        untilDestroyed(this),
       )
       .subscribe();
+  }
+
+  filterTagsByScore(tags: TagDisplay[], score?: string) {
+    if (!score) return;
+
+    tags.forEach((tag) => (tag.score = this.getTagScore(tag.id)));
+    tags = this.scoreService.filterByScore(tags, score as ScoreFilter, true);
+
+    if (this.tags.length !== tags.length) {
+      this.tagsPage = 1;
+    }
+    this.changeTagsPage(tags);
   }
 
   changeTagsPage(tags: TagDtoApi[]) {
@@ -353,37 +396,9 @@ export class ProgramsComponent implements OnInit {
     );
   }
 
-  filterTags(
-    {
-      programs = this.tagFilters.programs,
-      contributors = this.tagFilters.contributors,
-      search = this.tagFilters.search,
-      score = this.tagFilters.score,
-    }: TagFilters = this.tagFilters,
-  ) {
-    this.tagFilters.programs = programs;
-    this.tagFilters.contributors = contributors;
-    this.tagFilters.search = search;
-    this.tagFilters.score = score;
-    console.log('t', this.tags);
-    let output = this.tagsService.filterTags(this.tags, { programs, contributors, search }) as TagDisplay[];
-
-    if (score) {
-      console.log('1', output);
-
-      output.forEach((tag) => (tag.score = this.getTagScore(tag.id)));
-      output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
-      console.log('2', output);
-    }
-    console.log('3', output);
-
-    this.isFilteredTags = true;
-    this.changeTagsPage(output);
-  }
-
   resetFilters() {
     this.getQuestions((this.questionFilters = {}));
-    this.filterTags((this.tagFilters = {}));
+    this.getTags((this.tagFilters = {}));
     this.selectedItems = [];
     this.isFilteredQuestions = false;
     this.isFilteredTags = false;
