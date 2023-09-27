@@ -13,14 +13,19 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 export class TopContributorsComponent implements OnInit {
   I18ns = I18ns;
 
-  usersStats: UserStatsDtoApi[] = [];
+  usersStats: UserStatsDtoApi[] | null = [];
 
   constructor(private readonly scoreRestService: ScoresRestService) {}
 
   ngOnInit(): void {
     this.scoreRestService
       .getUsersStats(ScoreDuration.Month, false, undefined, 'contributions:desc')
-      .pipe(tap((u) => (this.usersStats = u.filter((stat) => stat.contributions > 0).slice(0, 5))))
+      .pipe(
+        tap((u) => {
+          this.usersStats = u.filter((stat) => stat.contributions > 0).slice(0, 5);
+          this.usersStats = (this.usersStats?.length || 0) > 0 ? this.usersStats : null;
+        }),
+      )
       .subscribe();
   }
 }

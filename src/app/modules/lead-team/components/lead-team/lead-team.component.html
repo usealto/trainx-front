@@ -1,6 +1,6 @@
-<div class="header-panel d-flex align-items-center">
-  <img class="me-4" [src]="Emoji.BustsInSilhouette | emoji" />
-  <h1 data-cy="leadTeamTitle" class="d-inline-block">{{ I18ns.leadTeam.title }}</h1>
+<div class="header-panel">
+  <img [src]="Emoji.BustsInSilhouette | emoji" height="32" />
+  <h1 data-cy="leadTeamTitle">{{ I18ns.leadTeam.title }}</h1>
 </div>
 
 <!-- TEAMS -->
@@ -108,26 +108,24 @@
   <p class="alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
 </div>
 
-<div class="panel mb-5">
-  <div class="row align-items-start">
-    <div class="col border-end d-flex">
-      <alto-icon-badge [size]="4" icon="bi bi-people-fill" class="me-4"></alto-icon-badge>
-      <div class="d-inline-block">
-        <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.total }}</p>
-        <h1 class="mb-0">{{ absoluteUsersCount }}</h1>
-      </div>
+<div class="panel mb-5 align-items-center">
+  <div class="border-end">
+    <alto-icon-badge [size]="4" icon="bi bi-people-fill" class="me-4"></alto-icon-badge>
+    <div>
+      <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.total }}</p>
+      <h1 class="mb-0">{{ absoluteUsersCount }}</h1>
     </div>
-    <div class="col d-flex second-col">
-      <alto-icon-badge [size]="4" class="me-4" icon="bi-reply-all-fill"></alto-icon-badge>
+  </div>
+  <div class="second-col">
+    <alto-icon-badge [size]="4" class="me-4" icon="bi-reply-all-fill"></alto-icon-badge>
 
-      <div class="d-inline-block flex-grow-1">
-        <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
-        <h1 class="mb-0 d-inline-block">{{ getTotalQuestions(usersQuestionCount.size) }}</h1>
-        <alto-progression-badge
-          class="float-end"
-          [score]="getPercentageQuestions(usersQuestionCount.size)"
-        ></alto-progression-badge>
-      </div>
+    <div class="flex-grow-1">
+      <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
+      <h1 class="mb-0 d-inline-block">{{ getTotalQuestions(usersQuestionCount.size) }}</h1>
+      <alto-progression-badge
+        class="float-end"
+        [score]="getPercentageQuestions(usersQuestionCount.size)"
+      ></alto-progression-badge>
     </div>
   </div>
 </div>
