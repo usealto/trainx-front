@@ -57,7 +57,6 @@ export class AdminCompaniesCreateComponent implements OnInit {
       });
     this.companyForm = this.fb.group<CompanyForm>({
       name: ['', [Validators.required]],
-      domain: ['', []],
       teams: ['', []],
       newTeams: this.fb.array([]),
       slackDays: [[]],
@@ -73,7 +72,6 @@ export class AdminCompaniesCreateComponent implements OnInit {
         .subscribe((company) => {
           this.company = company;
           this.companyForm = this.fb.group<CompanyForm>({
-            domain: [this.company.domain || ''],
             name: [this.company.name, [Validators.required]],
             teams: [],
             newTeams: this.fb.array([]),
@@ -141,7 +139,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
   async submit() {
     if (!this.companyForm.value) return;
 
-    const { name, domain, slackDays, slackActive, slackQuestionsPerQuiz, slackAdmin } =
+    const { name, slackDays, slackActive, slackQuestionsPerQuiz, slackAdmin } =
       this.companyForm.value;
     const slackTimes = ['13h30'] as SlackTimeEnumApi[];
 
@@ -149,7 +147,6 @@ export class AdminCompaniesCreateComponent implements OnInit {
       this.companiesRestService
         .patchCompany(this.id, {
           name,
-          domain,
           slackDays: slackDays as WeekDayEnumApi[],
           slackQuestionsPerQuiz: slackQuestionsPerQuiz as number,
           slackTimes,
@@ -165,7 +162,6 @@ export class AdminCompaniesCreateComponent implements OnInit {
       this.companiesRestService
         .createCompany({
           name,
-          domain,
           slackDays: slackDays as WeekDayEnumApi[],
           slackQuestionsPerQuiz: slackQuestionsPerQuiz as number,
           slackTimes,
