@@ -1,8 +1,8 @@
 <div class="">
   <alto-admin-header
     *ngIf="company && edit; else createHeader"
-    title="Company {{ company.name }}"
-    subtitle="Information about this company"
+    title="Edit this company"
+    subtitle="Edit the information about {{ company.name }}"
     [breadcrumbs]="[
       {
         label: 'Companies',
@@ -16,8 +16,8 @@
   ></alto-admin-header>
   <ng-template #createHeader
     ><alto-admin-header
-      title="New company"
-      subtitle="Information about this company"
+      title="Create a new company"
+      subtitle="Enter the company information"
       [breadcrumbs]="[
         {
           label: 'Companies',
@@ -33,23 +33,6 @@
           <div>
             <h2>Informations</h2>
             <p class="fs-7">Fill in the general information about this company.</p>
-          </div>
-          <div>
-            <button
-              [routerLink]="'/admin/home'"
-              type="button"
-              class="btn btn-outline-secondary d-inline-flex align-items-center me-2"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              class="btn btn-primary d-inline-flex align-items-center"
-              (click)="nextTab()"
-            >
-              Next
-              <i class="bi bi-arrow-right ps-2"></i>
-            </button>
           </div>
         </div>
         <hr />
