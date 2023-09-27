@@ -156,6 +156,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
           this.uploadFormComponent.upload(this.id);
           this.createTeams(this.id);
           this.initComponent();
+          this.router.navigate(['/admin/home/']);
         });
     } else {
       this.companiesRestService
