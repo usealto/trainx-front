@@ -37,7 +37,7 @@
     </div>
   </div>
   <!-- Email -->
-  <div class="py-4 border-bottom">
+  <div *ngIf="!edit" class="py-4 border-bottom">
     <div class="w-80 row">
       <div class="col-5 mb-2">
         <label for="name" class="required">Email</label>
