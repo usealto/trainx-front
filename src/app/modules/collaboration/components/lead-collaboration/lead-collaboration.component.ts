@@ -5,15 +5,15 @@ import {
   QuestionSubmittedDtoApi,
   QuestionSubmittedDtoApiStatusEnumApi,
 } from '@usealto/sdk-ts-angular';
-import { combineLatest, tap } from 'rxjs';
+import { combineLatest, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 
-import { Location } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { addDays, compareDesc, differenceInDays, isAfter, isBefore, isToday } from 'date-fns';
+import { EmojiPipe } from 'src/app/core/utils/emoji/emoji.pipe';
 
 export enum ETypeValue {
   COMMENTS = 'comments',
@@ -51,7 +51,8 @@ interface IContribution {
 @Component({
   selector: 'alto-lead-collaboration',
   templateUrl: './lead-collaboration.component.html',
-  styleUrls: ['./lead-collaboration.component.scss'],
+  styleUrls: ['./lead-collaboration.component.scss', '../styles/collaboration-cards.scss'],
+  providers: [EmojiPipe],
 })
 export class LeadCollaborationComponent implements OnInit {
   itemsPerPage = 10;
@@ -59,7 +60,7 @@ export class LeadCollaborationComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
 
-  tabs: ITab[] = [
+  readonly tabs: ITab[] = [
     {
       label: I18ns.collaboration.tabs.pending,
       value: ETabValue.PENDING,
@@ -73,7 +74,7 @@ export class LeadCollaborationComponent implements OnInit {
     { label: I18ns.collaboration.tabs.all, value: ETabValue.ALL, index: 3 },
   ];
 
-  filters: { id: ETypeValue; name: string }[] = [
+  readonly filters: { id: ETypeValue; name: string }[] = [
     {
       id: ETypeValue.COMMENTS,
       name: I18ns.collaboration.filters.types.comments,
@@ -84,21 +85,21 @@ export class LeadCollaborationComponent implements OnInit {
     },
   ];
 
-  periods: { id: EPeriodValue; name: string }[] = [
+  readonly periods: { id: EPeriodValue; name: string }[] = [
     { id: EPeriodValue.TODAY, name: I18ns.collaboration.filters.periods.today },
     { id: EPeriodValue.WEEK, name: I18ns.collaboration.filters.periods.week },
     { id: EPeriodValue.MONTH, name: I18ns.collaboration.filters.periods.month },
     { id: EPeriodValue.OLD, name: I18ns.collaboration.filters.periods.old },
   ];
 
+  contributors: { id: string; name: string }[] = [];
+
   comments: CommentDtoApi[] = [];
   submittedQuestions: QuestionSubmittedDtoApi[] = [];
 
-  contributorsFilters: string[] = [];
-  typesFilters: ETypeValue[] = [];
-  periodsFilters: EPeriodValue[] = [];
-
   selectedTypesFilters: { id: ETypeValue; name: string }[] = [];
+  selectedContributorsFilters: { id: string; name: string }[] = [];
+  selectedPeriodsFilters: { id: EPeriodValue; name: string }[] = [];
 
   contributionsByPeriod: {
     period: EPeriodValue;
@@ -106,15 +107,22 @@ export class LeadCollaborationComponent implements OnInit {
   }[] = [];
 
   selectedTab!: ITab;
-  contributors: { id: string; name: string }[] = [];
   pendingCount = 0;
   showMoreButton = true;
 
+  emptyPlaceholderData?: {
+    emojiSrc: string;
+    title: string;
+    subtitle: string;
+    allowResetFilters: boolean;
+  };
+
   constructor(
     private readonly commentsRestService: CommentsRestService,
-    private readonly questionsSubmittedTestService: QuestionsSubmittedRestService,
+    private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly location: Location,
+    private readonly emojiPipe: EmojiPipe,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -123,13 +131,16 @@ export class LeadCollaborationComponent implements OnInit {
     this.activatedRoute.queryParams
       .pipe(
         tap((par) => {
-          console.log(this.tabs.map(({ index }) => index));
           this.selectedTab =
             par['tab'] && this.tabs.map(({ index }) => index.toFixed()).includes(par['tab'])
               ? this.tabs[+par['tab'] - 1]
               : this.tabs[0];
-          this.typesFilters = par['type'] ? (par['type'] instanceof Array ? par['type'] : [par['type']]) : [];
-          this.selectedTypesFilters = this.filters.filter(({ id }) => this.typesFilters.includes(id));
+          const typesFromParams = par['type']
+            ? par['type'] instanceof Array
+              ? par['type']
+              : [par['type']]
+            : [];
+          this.selectedTypesFilters = this.filters.filter(({ id }) => typesFromParams.includes(id));
 
           this.getCollaborationData();
         }),
@@ -139,20 +150,33 @@ export class LeadCollaborationComponent implements OnInit {
   }
 
   getCollaborationData(): void {
-    combineLatest([this.commentsRestService.getComments(), this.questionsSubmittedTestService.getQuestions()])
+    combineLatest([
+      this.commentsRestService.getCommentsCount(),
+      this.questionsSubmittedRestService.getQuestionsCount(),
+    ])
       .pipe(
+        switchMap(([commentsCount, questionsSubmittedCount]) => {
+          return combineLatest([
+            this.commentsRestService.getCommentsPaginated({
+              itemsPerPage: commentsCount ?? 0,
+            }),
+            this.questionsSubmittedRestService.getQuestionsPaginated({
+              itemsPerPage: questionsSubmittedCount ?? 0,
+            }),
+          ]);
+        }),
         tap(([comments, submittedQuestions]) => {
-          this.comments = comments;
-          this.submittedQuestions = submittedQuestions;
+          this.comments = [...(comments.data ?? [])];
+          this.submittedQuestions = [...(submittedQuestions.data ?? [])];
           this.pendingCount =
-            comments.filter((comment) => !comment.isRead).length +
-            submittedQuestions.filter(
+            this.comments.filter((comment) => !comment.isRead).length +
+            this.submittedQuestions.filter(
               ({ status }) => status === QuestionSubmittedDtoApiStatusEnumApi.Submitted,
             ).length;
 
           this.contributors = [
-            ...comments.map(({ createdByUser }) => createdByUser),
-            ...submittedQuestions.map(({ createdByUser }) => createdByUser),
+            ...this.comments.map(({ createdByUser }) => createdByUser),
+            ...this.submittedQuestions.map(({ createdByUser }) => createdByUser),
           ].reduce((acc, contributor) => {
             if (!acc.find(({ id }) => id === contributor.id)) {
               acc.push({
@@ -171,12 +195,6 @@ export class LeadCollaborationComponent implements OnInit {
       .subscribe();
   }
 
-  handleTabChange(tab: ITab): void {
-    this.location.replaceState(`${this.location.path().replace(/\?tab=(\d+)/, `?tab=${tab.index}`)}`);
-    this.selectedTab = tab;
-    this.getSelectedTabData(tab);
-  }
-
   private createContributionFromData(
     data: CommentDtoApi | QuestionSubmittedDtoApi,
     type: ETypeValue,
@@ -190,27 +208,27 @@ export class LeadCollaborationComponent implements OnInit {
     };
   }
 
-  private getSelectedTabData(tab: ITab): void {
+  private getSelectedTabData(): void {
     let data: IContribution[] = [];
     const today = new Date();
+    const includeComments =
+      this.selectedTypesFilters.length === 0 ||
+      this.selectedTypesFilters.some(({ id }) => id === ETypeValue.COMMENTS);
+    const includeQuestions =
+      this.selectedTypesFilters.length === 0 ||
+      this.selectedTypesFilters.some(({ id }) => id === ETypeValue.QUESTIONS);
 
-    switch (tab.value) {
+    switch (this.selectedTab.value) {
       case ETabValue.PENDING:
         data = [
           ...this.comments
             .filter((comment) => {
-              return (
-                (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS)) &&
-                !comment.isRead
-              );
+              return includeComments && !comment.isRead;
             })
             .map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
           ...this.submittedQuestions
             .filter(({ status }) => {
-              return (
-                (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS)) &&
-                status === QuestionSubmittedDtoApiStatusEnumApi.Submitted
-              );
+              return includeQuestions && status === QuestionSubmittedDtoApiStatusEnumApi.Submitted;
             })
             .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
@@ -219,41 +237,74 @@ export class LeadCollaborationComponent implements OnInit {
         data = [
           ...this.comments
             .filter((comment) => {
-              return (
-                (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS)) &&
-                comment.isRead
-              );
+              return includeComments && comment.isRead;
             })
             .map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
           ...this.submittedQuestions
             .filter(({ status }) => {
-              return (
-                (this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS)) &&
-                status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted
-              );
+              return includeQuestions && status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted;
             })
             .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
         break;
       case ETabValue.ALL:
         data = [
-          ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.COMMENTS)
-            ? this.comments
-            : []
-          ).map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
-          ...(this.typesFilters.length === 0 || this.typesFilters.includes(ETypeValue.QUESTIONS)
-            ? this.submittedQuestions
-            : []
-          ).map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
+          ...(includeComments ? this.comments : []).map((comment) =>
+            this.createContributionFromData(comment, ETypeValue.COMMENTS),
+          ),
+          ...(includeQuestions ? this.submittedQuestions : []).map((question) =>
+            this.createContributionFromData(question, ETypeValue.QUESTIONS),
+          ),
         ];
         break;
     }
 
     data.sort((a, b) => compareDesc(a.createdAt, b.createdAt));
-    data = this.filterByContributors(data, this.contributorsFilters);
-    data = this.filterByPeriod(data, this.periodsFilters);
+    data = this.filterByContributors(data, this.selectedContributorsFilters);
+    data = this.filterByPeriod(data, this.selectedPeriodsFilters);
 
     this.showMoreButton = data.length > this.itemsPerPage;
+
+    if (data.length === 0) {
+      if (this.comments.length > 0 || this.submittedQuestions.length > 0) {
+        this.emptyPlaceholderData = {
+          emojiSrc: this.emojiPipe.transform(EmojiName.MagnifyingGlassTiltedLeft),
+          title: I18ns.collaboration.placeholder.emptySearchTitle,
+          subtitle: I18ns.collaboration.placeholder.emptySearchSubtitle,
+          allowResetFilters: true,
+        };
+      } else {
+        switch (this.selectedTab.value) {
+          case ETabValue.PENDING:
+            this.emptyPlaceholderData = {
+              emojiSrc: this.emojiPipe.transform(EmojiName.SmilingFaceWithSunglasses),
+              title: I18ns.collaboration.placeholder.pendingTitle,
+              subtitle: I18ns.collaboration.placeholder.pendingSubtitle,
+              allowResetFilters: false,
+            };
+            break;
+          case ETabValue.ARCHIVED:
+            this.emptyPlaceholderData = {
+              emojiSrc: this.emojiPipe.transform(EmojiName.SleepingFace),
+              title: I18ns.collaboration.placeholder.archivedTitle,
+              subtitle: I18ns.collaboration.placeholder.archivedSubtitle,
+              allowResetFilters: false,
+            };
+            break;
+          case ETabValue.ALL:
+            this.emptyPlaceholderData = {
+              emojiSrc: this.emojiPipe.transform(EmojiName.SleepingFace),
+              title: I18ns.collaboration.placeholder.allTitle,
+              subtitle: I18ns.collaboration.placeholder.allSubtitle,
+              allowResetFilters: false,
+            };
+            break;
+        }
+      }
+    } else {
+      this.emptyPlaceholderData = undefined;
+    }
+
     data = data.slice(0, this.itemsPerPage);
 
     this.initContributionsByPeriod();
@@ -274,41 +325,67 @@ export class LeadCollaborationComponent implements OnInit {
     });
   }
 
-  private filterByContributors(data: IContribution[], contributorsIds: string[]): IContribution[] {
+  private filterByContributors(
+    data: IContribution[],
+    contributors: { id: string; name: string }[],
+  ): IContribution[] {
     return data.filter(
-      ({ contributorId }) => contributorsIds.length === 0 || contributorsIds.includes(contributorId),
+      ({ contributorId }) => contributors.length === 0 || contributors.some(({ id }) => id === contributorId),
     );
   }
 
-  private filterByPeriod(data: IContribution[], periods: EPeriodValue[]): IContribution[] {
+  private filterByPeriod(
+    data: IContribution[],
+    periods: { id: EPeriodValue; name: string }[],
+  ): IContribution[] {
     return data.filter(({ createdAt }) => {
       const date = new Date(createdAt);
       const today = new Date();
       return (
         periods.length === 0 ||
-        (periods.includes(EPeriodValue.TODAY) && isToday(date)) ||
-        (periods.includes(EPeriodValue.WEEK) && isBefore(date, today) && isAfter(date, addDays(today, -7))) ||
-        (periods.includes(EPeriodValue.MONTH) &&
+        (periods.some(({ id }) => id === EPeriodValue.TODAY) && isToday(date)) ||
+        (periods.some(({ id }) => id === EPeriodValue.WEEK) &&
+          isBefore(date, today) &&
+          isAfter(date, addDays(today, -7))) ||
+        (periods.some(({ id }) => id === EPeriodValue.MONTH) &&
           isBefore(date, today) &&
           isAfter(date, addDays(today, -30))) ||
-        (periods.includes(EPeriodValue.OLD) && differenceInDays(today, date) > 30)
+        (periods.some(({ id }) => id === EPeriodValue.OLD) && differenceInDays(today, date) > 30)
       );
     });
   }
 
+  handleTabChange(tab: ITab): void {
+    this.selectedTab = tab;
+    this.router.navigate([], {
+      replaceUrl: true,
+      queryParams: { tab: tab.index },
+      queryParamsHandling: 'merge',
+    });
+
+    this.getSelectedTabData();
+  }
+
   handleContributorChange(contributors: { id: string; name: string }[]): void {
-    this.contributorsFilters = contributors.map(({ id }) => id);
-    this.getSelectedTabData(this.selectedTab);
+    this.selectedContributorsFilters = [...contributors];
+    this.getSelectedTabData();
   }
 
   handleTypeChange(filters: { id: ETypeValue; name: string }[]): void {
-    this.typesFilters = filters.map(({ id }) => id);
-    this.getSelectedTabData(this.selectedTab);
+    this.selectedTypesFilters = [...filters];
+    this.router.navigate([], {
+      replaceUrl: true,
+      queryParams: {
+        type: filters.map(({ id }) => id),
+      },
+      queryParamsHandling: 'merge',
+    });
+    this.getSelectedTabData();
   }
 
   handlePeriodChange(periods: { id: EPeriodValue; name: string }[]): void {
-    this.periodsFilters = periods.map(({ id }) => id);
-    this.getSelectedTabData(this.selectedTab);
+    this.selectedPeriodsFilters = [...periods];
+    this.getSelectedTabData();
   }
 
   getQuestionFromContribution(contribution: IContribution): QuestionSubmittedDtoApi {
@@ -321,7 +398,15 @@ export class LeadCollaborationComponent implements OnInit {
 
   showMore(): void {
     this.itemsPerPage += 10;
-    this.getSelectedTabData(this.selectedTab);
+    this.getSelectedTabData();
+  }
+
+  resetFilters(): void {
+    this.selectedContributorsFilters = [];
+    this.selectedTypesFilters = [];
+    this.selectedPeriodsFilters = [];
+    this.emptyPlaceholderData = undefined;
+    this.getSelectedTabData();
   }
 
   initContributionsByPeriod() {

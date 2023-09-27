@@ -36,6 +36,7 @@
       <alto-dropdown-filter
         [placeholder]="I18ns.collaboration.filters.contributor"
         [data]="contributors"
+        [selectedItems]="selectedContributorsFilters"
         (selectChange)="handleContributorChange($event)"
       >
       </alto-dropdown-filter>
@@ -52,6 +53,7 @@
         <alto-dropdown-filter
           [placeholder]="I18ns.collaboration.filters.period"
           [data]="periods"
+          [selectedItems]="selectedPeriodsFilters"
           [enableSearch]="false"
           (selectChange)="handlePeriodChange($event)"
         >
@@ -59,33 +61,47 @@
       </div>
     </div>
 
-    <!-- CONTRIBUTIONS -->
-    <ng-container *ngFor="let data of contributionsByPeriod">
-      <div *ngIf="data.contributions.length > 0" class="time-separator">
-        <div class="line"></div>
-        <div class="centered-block">
-          {{ I18ns.collaboration.filters.periods[data.period] }}
+    <ng-container *ngIf="!emptyPlaceholderData; else emptyPlaceholder">
+      <!-- CONTRIBUTIONS -->
+      <ng-container *ngFor="let data of contributionsByPeriod">
+        <div *ngIf="data.contributions.length > 0" class="time-separator">
+          <div class="line"></div>
+          <div class="centered-block">
+            {{ I18ns.collaboration.filters.periods[data.period] }}
+          </div>
+          <div class="line"></div>
         </div>
-        <div class="line"></div>
-      </div>
-      <ng-container *ngFor="let contribution of data.contributions">
-        <ng-container *ngIf="contribution.type === 'comments'; else questionTemplate">
-          <alto-comment-card
-            [comment]="getCommentFromContribution(contribution)"
-            (refresh)="getCollaborationData()"
-            class="mb-5"
-          ></alto-comment-card>
+        <ng-container *ngFor="let contribution of data.contributions">
+          <ng-container *ngIf="contribution.type === 'comments'; else questionTemplate">
+            <alto-comment-card
+              [comment]="getCommentFromContribution(contribution)"
+              (refresh)="getCollaborationData()"
+              class="mb-5"
+            ></alto-comment-card>
+          </ng-container>
+          <ng-template #questionTemplate>
+            <alto-sugg-question-card
+              [suggQuestion]="getQuestionFromContribution(contribution)"
+              (refresh)="getCollaborationData()"
+              class="mb-5"
+            >
+            </alto-sugg-question-card>
+          </ng-template>
         </ng-container>
-        <ng-template #questionTemplate>
-          <alto-sugg-question-card
-            [suggQuestion]="getQuestionFromContribution(contribution)"
-            (refresh)="getCollaborationData()"
-            class="mb-5"
-          >
-          </alto-sugg-question-card>
-        </ng-template>
       </ng-container>
     </ng-container>
+
+    <ng-template #emptyPlaceholder>
+      <div class="nodata-placeholder text-center">
+        <img [src]="emptyPlaceholderData?.emojiSrc" height="24" />
+        <p class="mt-3">{{ emptyPlaceholderData?.title }}</p>
+        <span class="m3 d-block">{{ emptyPlaceholderData?.subtitle }}</span>
+        <button class="btn btn-primary mt-4" (click)="resetFilters()">
+          <i class="bi bi-arrow-clockwise"></i>
+          {{ I18ns.shared.resetFilters }}
+        </button>
+      </div>
+    </ng-template>
 
     <!-- SHOW MORE -->
     <div class="time-separator" *ngIf="showMoreButton">

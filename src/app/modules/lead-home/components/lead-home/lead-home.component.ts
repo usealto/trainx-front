@@ -103,13 +103,15 @@ export class LeadHomeComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([
       this.commentsRestService.getUnreadComments(),
-      this.questionsSubmittedRestService.getQuestions({ status: QuestionSubmittedStatusEnumApi.Submitted }),
+      this.questionsSubmittedRestService.getQuestionsCount({
+        status: QuestionSubmittedStatusEnumApi.Submitted,
+      }),
       this.challengesRestService.getChallenges({ itemsPerPage: 40, sortBy: 'endDate:desc' }),
     ])
       .pipe(
-        tap(([comments, questions, challenges]) => {
+        tap(([comments, submittedQuestionsCount, challenges]) => {
           this.commentsCount = comments.length;
-          this.questionsCount = questions.length;
+          this.questionsCount = submittedQuestionsCount;
           this.challengesByTeam = challenges
             .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByTeam)
             .slice(0, 5);
