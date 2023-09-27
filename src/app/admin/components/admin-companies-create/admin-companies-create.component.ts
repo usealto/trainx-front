@@ -13,7 +13,6 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { take } from 'rxjs';
-import { AdminTabsComponent } from '../admin-shared/admin-tabs/admin-tabs.component';
 import { AdminUsersUploadFormComponent } from './admin-users-upload-form/admin-users-upload-form.component';
 @Component({
   selector: 'alto-admin-companies-create',
@@ -21,14 +20,12 @@ import { AdminUsersUploadFormComponent } from './admin-users-upload-form/admin-u
   styleUrls: ['./admin-companies-create.component.scss'],
 })
 export class AdminCompaniesCreateComponent implements OnInit {
-  @ViewChild(AdminTabsComponent) tabs!: AdminTabsComponent;
   @ViewChild(AdminUsersUploadFormComponent) uploadFormComponent!: AdminUsersUploadFormComponent;
   edit = false;
   company!: CompanyDtoApi;
   companyForm!: IFormGroup<CompanyForm>;
   teams: TeamDtoApi[] = [];
   id: string | undefined;
-  tabNumber = 0;
   weekDayEnum = Object.keys(WeekDayEnumApi);
   private fb: IFormBuilder;
 
@@ -62,6 +59,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
       slackQuestionsPerQuiz: [undefined],
       slackActive: [false],
       slackAdmin: ['', []],
+      usersHaveWebAccess: [false],
     });
     if (this.id) {
       this.edit = true;
@@ -78,6 +76,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
             slackQuestionsPerQuiz: [this.company.slackQuestionsPerQuiz],
             slackActive: [this.company.isSlackActive],
             slackAdmin: [this.company.slackAdmin, []],
+            usersHaveWebAccess: [this.company.usersHaveWebAccess],
           });
         });
     }
@@ -104,11 +103,6 @@ export class AdminCompaniesCreateComponent implements OnInit {
     console.log(event);
   }
 
-  nextTab() {
-    if (this.tabs) {
-      this.tabs.selectNextTab();
-    }
-  }
 
   createTeams(companyId?: string): void {
     this.newTeams.value.forEach((team: CreateTeamDtoApi) => {
@@ -138,7 +132,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
   async submit() {
     if (!this.companyForm.value) return;
 
-    const { name, slackDays, slackActive, slackQuestionsPerQuiz, slackAdmin } =
+    const { name, slackDays, slackActive, slackQuestionsPerQuiz, slackAdmin, usersHaveWebAccess } =
       this.companyForm.value;
     const slackTimes = ['13h30'] as SlackTimeEnumApi[];
 
@@ -151,6 +145,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
           slackTimes,
           slackAdmin: slackAdmin ?? '',
           isSlackActive: slackActive,
+          usersHaveWebAccess: usersHaveWebAccess,
         })
         .subscribe(() => {
           this.uploadFormComponent.upload(this.id);
@@ -167,6 +162,7 @@ export class AdminCompaniesCreateComponent implements OnInit {
           slackTimes,
           slackAdmin: slackAdmin ?? '',
           isSlackActive: slackActive,
+          usersHaveWebAccess: usersHaveWebAccess,
         })
         .subscribe((company) => {
           this.uploadFormComponent.upload(company.data?.id);

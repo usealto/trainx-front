@@ -1,4 +1,4 @@
-import { CreateTeamDtoApi, WeekDayEnumApi } from '@usealto/sdk-ts-angular';
+import { CreateTeamDtoApi } from '@usealto/sdk-ts-angular';
 
 export interface CompanyForm {
   name: string;
@@ -8,4 +8,5 @@ export interface CompanyForm {
   slackQuestionsPerQuiz: number | undefined;
   slackActive?: boolean;
   slackAdmin?: string;
+  usersHaveWebAccess?: boolean;
 }

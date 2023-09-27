@@ -27,8 +27,7 @@
     ></alto-admin-header
   ></ng-template>
   <div class="tabs">
-    <alto-admin-tabs (activeNumberChanges)="tabNumber = $event">
-      <alto-admin-tab [tabTitle]="'Informations'" icon="bi-file-text">
+    
         <div class="d-flex justify-content-between">
           <div>
             <h2>Informations</h2>
@@ -40,7 +39,7 @@
           <!-- Name -->
           <div class="py-4 border-bottom">
             <div class="w-80 row">
-              <label for="name" class="col-5 mb-2 required">Corporate name</label>
+              <label for="name" class="col-5 mb-2 required">Company name</label>
               <div class="col-7 form-group">
                 <input type="text" class="form-control" placeholder="Example: Apple" formControlName="name" />
               </div>
@@ -59,35 +58,9 @@
             </div>
           </div>
         </form>
-      </alto-admin-tab>
+      
 
       <!-- SETTINGS TAB -->
-      <alto-admin-tab [tabTitle]="'Program settings'" icon="bi-gear">
-        <div class="d-flex justify-content-between">
-          <div>
-            <h2>Usage</h2>
-            <p class="fs-7">Configure how Alto will be used</p>
-          </div>
-          <div>
-            <button
-              routerLink=".."
-              type="button"
-              class="btn btn-outline-secondary d-inline-flex align-items-center me-2"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              class="btn btn-primary d-inline-flex align-items-center"
-              (click)="submit()"
-              [disabled]="isFormDisabled()"
-            >
-              Save
-              <i class="bi bi-save ps-2"></i>
-            </button>
-          </div>
-        </div>
-        <hr />
         <form *ngIf="companyForm" [formGroup]="companyForm">
           <!-- Slack account -->
           <div class="py-4 border-bottom">
@@ -107,7 +80,7 @@
               </div>
             </div>
           </div>
-          <!-- User admin -->
+          <!-- Slack admin -->
           <div class="py-4 border-bottom">
             <div class="w-80 row">
               <div class="col-5 mb-2">
@@ -119,9 +92,28 @@
               </div>
             </div>
           </div>
+          <!-- Web access -->
+          <div class="py-4">
+            <div class="w-80 row">
+              <div class="col-5 mb-2">
+                <label for="name">Web access</label>
+                <p class="fs-7">Choose if your user can access the web app</p>
+              </div>
+              <div class="col-7 form-group">
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input me-2"
+                    type="checkbox"
+                    role="switch"
+                    id="flexSwitchCheckDefault2"
+                    formControlName="usersHaveWebAccess"
+                  />
+                  <label class="form-check-label" for="flexSwitchCheckDefault2">Access authorized</label>
+                </div>
+              </div>
+            </div>
+          </div>
         </form>
-      </alto-admin-tab>
-    </alto-admin-tabs>
     <div class="d-flex justify-content-end">
       <div>
         <button
@@ -133,16 +125,6 @@
         </button>
         <button
           type="button"
-          *ngIf="tabNumber !== 1"
-          class="btn btn-primary d-inline-flex align-items-center"
-          (click)="nextTab()"
-        >
-          Next
-          <i class="bi bi-arrow-right ps-2"></i>
-        </button>
-        <button
-          type="button"
-          *ngIf="tabNumber === 1"
           class="btn btn-primary d-inline-flex align-items-center"
           (click)="submit()"
           [disabled]="isFormDisabled()"
@@ -153,7 +135,7 @@
       </div>
     </div>
     <div class="d-flex justify-content-end">
-      <p *ngIf="tabNumber === 1 && isFormDisabled() && !edit" class="alto-red">Missing data in "Informations" tab</p>
+      <p *ngIf="isFormDisabled() && !edit" class="alto-red">Missing data in "Informations" tab</p>
     </div>
   </div>
 </div>

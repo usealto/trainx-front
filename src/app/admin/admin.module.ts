@@ -16,8 +16,6 @@ import { SharedModule } from '../modules/shared/shared.module';
 import { AdminUnauthorizedComponent } from './components/admin-unauthorized/admin-unauthorized.component';
 import { AdminCompaniesCreateComponent } from './components/admin-companies-create/admin-companies-create.component';
 import { AdminHeaderComponent } from './components/admin-shared/admin-header/admin-header.component';
-import { AdminTabsComponent } from './components/admin-shared/admin-tabs/admin-tabs.component';
-import { AdminTabComponent } from './components/admin-shared/admin-tabs/admin-tab.component';
 import { AdminUsersUploadFormComponent } from './components/admin-companies-create/admin-users-upload-form/admin-users-upload-form.component';
 import { EditUserUploadFormComponent } from './components/admin-companies-create/edit-user-upload-form/edit-user-upload-form.component';
 import { AdminCompaniesFiltersListComponent } from './components/admin-companies/admin-companies-filters-list/admin-companies-filters-list.component';
@@ -41,8 +39,6 @@ import { Role2BackgroundColor } from './roleBackgroundColor.pipe';
     AdminUnauthorizedComponent,
     AdminCompaniesCreateComponent,
     AdminHeaderComponent,
-    AdminTabsComponent,
-    AdminTabComponent,
     AdminUsersUploadFormComponent,
     EditUserUploadFormComponent,
     AdminCompaniesFiltersListComponent,
