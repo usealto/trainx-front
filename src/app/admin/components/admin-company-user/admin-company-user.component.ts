@@ -14,7 +14,7 @@ import {
   UserDtoApiRolesEnumApi,
   UsersApiService,
 } from '@usealto/sdk-ts-angular';
-import { UserForm } from '../admin-user-create/admin-user-create-form/models/user.form';
+import { UserFormView } from '../admin-user-create/admin-user-create-form/models/user.form';
 import { AuthUserGet } from './models/authuser.get';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
@@ -32,7 +32,7 @@ import { DataService } from '../../admin-data.service';
 export class AdminCompanyUserComponent implements OnInit {
   companyId!: string;
   teams: TeamDtoApi[] = [];
-  userForm!: IFormGroup<UserForm>;
+  userForm!: IFormGroup<UserFormView>;
   private fb: IFormBuilder;
   rolesPossibleValues = Object.values(UserDtoApiRolesEnumApi);
   userId!: string;
@@ -68,7 +68,7 @@ export class AdminCompanyUserComponent implements OnInit {
       .pipe(take(1))
       .subscribe(({ company, teams }) => {
         this.company = company;
-        this.teams = teams;
+        this.teams = teams;        
       });
 
     if (this.userId) {
@@ -80,9 +80,10 @@ export class AdminCompanyUserComponent implements OnInit {
               this.user = users[0];
               this.fetchAuth0Data(this.user.email);
 
-              this.userForm = this.fb.group<UserForm>({
+              this.userForm = this.fb.group<UserFormView>({
                 firstname: [this.user.firstname || '', [Validators.required]],
                 lastname: [this.user.lastname || '', [Validators.required]],
+                teamId: [this.user.teamId || '', [Validators.required]],
                 email: [this.user.email || '', [Validators.required, Validators.email]],
                 roles: [this.user.roles as unknown as Array<RoleEnumApi>, []],
               });
@@ -97,9 +98,10 @@ export class AdminCompanyUserComponent implements OnInit {
           },
         });
     } else {
-      this.userForm = this.fb.group<UserForm>({
+      this.userForm = this.fb.group<UserFormView>({
         firstname: ['', [Validators.required]],
         lastname: ['', [Validators.required]],
+        teamId : ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         roles: [[RoleEnumApi.CompanyUser], []],
       });

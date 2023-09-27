@@ -6,3 +6,11 @@ export interface UserForm {
   email: string;
   roles: Array<RoleEnumApi>;
 }
+
+export interface UserFormView {
+  firstname: string;
+  lastname: string;
+  teamId: string;
+  email: string;
+  roles: Array<RoleEnumApi>;
+}
