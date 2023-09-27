@@ -1,7 +1,7 @@
 import { ShowRawDataModalComponent } from './show-raw-data-modal/show-raw-data-modal.component';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest, take, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
@@ -12,7 +12,6 @@ import {
   TeamDtoApi,
   UserDtoApi,
   UserDtoApiRolesEnumApi,
-  UsersApiService,
 } from '@usealto/sdk-ts-angular';
 import { UserFormView } from '../admin-user-create/admin-user-create-form/models/user.form';
 import { AuthUserGet } from './models/authuser.get';
@@ -20,7 +19,6 @@ import { UsersRestService } from 'src/app/modules/profile/services/users-rest.se
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { MsgService } from 'src/app/core/message/msg.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ToastService } from 'src/app/core/toast/toast.service';
 import { DataService } from '../../admin-data.service';
 
 @Component({
@@ -41,9 +39,7 @@ export class AdminCompanyUserComponent implements OnInit {
   company!: CompanyDtoApi;
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
-    private usersApiService: UsersApiService,
     private readonly teamsRestService: TeamsRestService,
     readonly fob: UntypedFormBuilder,
     private readonly authApiService: AuthApiService,
@@ -51,7 +47,6 @@ export class AdminCompanyUserComponent implements OnInit {
     private readonly companiesRestService: CompaniesRestService,
     private readonly msg: MsgService,
     private modalService: NgbModal,
-    private readonly toastService: ToastService,
     private readonly dataService: DataService,
   ) {
     this.fb = fob;
