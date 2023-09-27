@@ -44,6 +44,7 @@
         <alto-dropdown-filter
           [placeholder]="I18ns.collaboration.filters.filterType"
           [data]="filters"
+          [selectedItems]="selectedTypesFilters"
           [enableSearch]="false"
           (selectChange)="handleTypeChange($event)"
         >

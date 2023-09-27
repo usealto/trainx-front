@@ -12,6 +12,7 @@
     <div
       *ngIf="commentsCount"
       [routerLink]="['/', AltoRoutes.lead, AltoRoutes.collaboration]"
+      [queryParams]="{ tab: 1, type: ETypeValue.COMMENTS }"
       class="cursor-pointer"
       [class]="commentsCount ? 'warning-panel' : 'success-panel'"
     >
@@ -36,6 +37,7 @@
     <div
       *ngIf="questionsCount"
       [routerLink]="['/', AltoRoutes.lead, AltoRoutes.collaboration]"
+      [queryParams]="{ tab: 1, type: ETypeValue.QUESTIONS }"
       class="cursor-pointer"
       [class]="questionsCount ? 'warning-panel' : 'success-panel'"
       fragment="submittedQuestionsAnchor"

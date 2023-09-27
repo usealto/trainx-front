@@ -15,15 +15,15 @@ import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { addDays, compareDesc, differenceInDays, isAfter, isBefore, isToday } from 'date-fns';
 
+export enum ETypeValue {
+  COMMENTS = 'comments',
+  QUESTIONS = 'questions',
+}
+
 enum ETabValue {
   PENDING = 'pending',
   ARCHIVED = 'archived',
   ALL = 'all',
-}
-
-enum ETypeValue {
-  COMMENTS = 'comments',
-  QUESTIONS = 'questions',
 }
 
 enum EPeriodValue {
@@ -98,6 +98,8 @@ export class LeadCollaborationComponent implements OnInit {
   typesFilters: ETypeValue[] = [];
   periodsFilters: EPeriodValue[] = [];
 
+  selectedTypesFilters: { id: ETypeValue; name: string }[] = [];
+
   contributionsByPeriod: {
     period: EPeriodValue;
     contributions: IContribution[];
@@ -118,10 +120,17 @@ export class LeadCollaborationComponent implements OnInit {
   ngOnInit(): void {
     this.initContributionsByPeriod();
 
-    this.activatedRoute.params
+    this.activatedRoute.queryParams
       .pipe(
         tap((par) => {
-          this.selectedTab = par['tab'] ? this.tabs[+par['tab'] - 1] : this.tabs[0];
+          console.log(this.tabs.map(({ index }) => index));
+          this.selectedTab =
+            par['tab'] && this.tabs.map(({ index }) => index.toFixed()).includes(par['tab'])
+              ? this.tabs[+par['tab'] - 1]
+              : this.tabs[0];
+          this.typesFilters = par['type'] ? (par['type'] instanceof Array ? par['type'] : [par['type']]) : [];
+          this.selectedTypesFilters = this.filters.filter(({ id }) => this.typesFilters.includes(id));
+
           this.getCollaborationData();
         }),
         untilDestroyed(this),
@@ -163,9 +172,7 @@ export class LeadCollaborationComponent implements OnInit {
   }
 
   handleTabChange(tab: ITab): void {
-    this.location.replaceState(
-      '/' + this.location.path().split('/').slice(1, 3).join('/') + '/tab/' + tab.index,
-    );
+    this.location.replaceState(`${this.location.path().replace(/\?tab=(\d+)/, `?tab=${tab.index}`)}`);
     this.selectedTab = tab;
     this.getSelectedTabData(tab);
   }

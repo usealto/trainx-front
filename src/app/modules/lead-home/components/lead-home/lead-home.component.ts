@@ -15,6 +15,7 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { ChallengesRestService } from 'src/app/modules/challenges/services/challenges-rest.service';
+import { ETypeValue } from 'src/app/modules/collaboration/components/lead-collaboration/lead-collaboration.component';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
@@ -43,6 +44,7 @@ export class LeadHomeComponent implements OnInit {
   AltoRoutes = AltoRoutes;
   ScoreDuration = ScoreDuration;
   ScoreTypeEnum = ScoreTypeEnumApi;
+  ETypeValue = ETypeValue;
 
   userName = '';
 
