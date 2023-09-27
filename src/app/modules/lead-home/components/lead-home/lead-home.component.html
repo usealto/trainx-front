@@ -21,7 +21,7 @@
         [color]="commentsCount ? 'badge-double-warning' : 'badge-double-success'"
       ></alto-icon-badge>
 
-      <div class="d-inline-block ms-4">
+      <div class="ms-4">
         <p class="title fs-5 mb-3" [style]="commentsCount ? 'color: var(--orange-600)' : ''">
           {{ I18ns.leadHome.comments | plural : commentsCount }}
           <span *ngIf="questionsCount > 0" class="text-black">{{ I18ns.leadHome.awaiting }}</span>
