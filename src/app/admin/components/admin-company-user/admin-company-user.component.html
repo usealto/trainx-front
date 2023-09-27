@@ -1,5 +1,5 @@
 <alto-admin-header
-  *ngIf="user"
+  *ngIf="user && company"
   [title]="'User information'"
   subtitle="View all the user information"
   [divider]="true"
@@ -21,6 +21,7 @@
 <div class="d-flex justify-content-end align-items-center alto-grey fs-5 pb-4">
   <div *ngIf="userForm && user && !user.deletedAt">
     <a
+      *ngIf="company"
       type="button"
       class="btn btn-outline-secondary d-inline-flex align-items-center me-2"
       [routerLink]="['/admin', 'companies', company.id, 'users', user.id, 'edit']"
