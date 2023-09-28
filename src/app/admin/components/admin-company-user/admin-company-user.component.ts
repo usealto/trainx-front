@@ -17,9 +17,9 @@ import {
 import { UserFormView } from '../admin-user-create/admin-user-create-form/models/user.form';
 import { AuthUserGet } from './models/authuser.get';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { MsgService } from 'src/app/core/message/msg.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DataService } from '../../admin-data.service';
+import { ToastService } from 'src/app/core/toast/toast.service';
 
 @Component({
   selector: 'alto-admin-company-user',
@@ -44,7 +44,7 @@ export class AdminCompanyUserComponent implements OnInit {
     readonly fob: UntypedFormBuilder,
     private readonly authApiService: AuthApiService,
     private readonly companiesRestService: CompaniesRestService,
-    private readonly msg: MsgService,
+    private readonly toastService: ToastService,
     private modalService: NgbModal,
     private readonly dataService: DataService,
     private readonly adminApiService: AdminApiService,
@@ -133,7 +133,10 @@ export class AdminCompanyUserComponent implements OnInit {
           email: email,
         },
       })
-      .subscribe((res) => this.msg.add({ message: res.data, severity: 'success' }));
+      .subscribe((res) => this.toastService.show({
+        text: res.data,
+        type: 'success',
+      }));
   }
 
   impersonnate(email: string) {

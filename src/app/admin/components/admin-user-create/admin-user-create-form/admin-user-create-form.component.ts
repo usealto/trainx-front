@@ -14,7 +14,7 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { UserForm } from './models/user.form';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { MsgService } from 'src/app/core/message/msg.service';
+
 
 @Component({
   selector: 'alto-admin-user-create-form',
@@ -39,7 +39,6 @@ export class AdminUserCreateFormComponent implements OnInit {
     readonly fob: UntypedFormBuilder,
     private readonly adminApiService: AdminApiService,
     private readonly companiesRestService: CompaniesRestService,
-    private readonly msg: MsgService,
   ) {
     this.fb = fob;
   }
