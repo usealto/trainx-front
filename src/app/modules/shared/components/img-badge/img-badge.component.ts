@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UserDtoApi, UserLightDtoApi } from '@usealto/sdk-ts-angular';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
 
 @Component({
   selector: 'alto-img-badge',
@@ -9,21 +10,23 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 })
 export class ImgBadgeComponent implements OnChanges {
   @Input() user: UserDtoApi | UserLightDtoApi | null | undefined;
-  @Input() url: string | null | undefined = '';
+  @Input() url: string | null | undefined;
   @Input() size = 32;
   @Input() hasBorder = false;
   @Input() toggleTooltip = true;
 
-  thumb = '';
+  thumb: string | null | undefined = '';
 
   avatarsFolder = 'assets/avatars/';
   avatarsCount = 71;
 
+  I18ns = I18ns;
+
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['user']?.currentValue) {
+    if (changes['url']?.currentValue) {
+      this.thumb = this.url;
+    } else {
       this.thumb = this.getAvatar(this.user?.id);
-    } else if (changes['url']?.currentValue) {
-      this.thumb = this.url || '';
     }
   }
 
@@ -35,14 +38,14 @@ export class ImgBadgeComponent implements OnChanges {
   @memoize()
   getUserName(user: UserDtoApi | UserLightDtoApi | null | undefined) {
     if (!user) {
-      return '';
+      return I18ns.shared.deletedUsername;
     }
     return user?.firstname + ' ' + user?.lastname;
   }
 
   @memoize()
   getAvatar(id?: string) {
-    return this.avatarsFolder + this.extractNumber(id ?? '') + '.svg';
+    return this.avatarsFolder + `${id ? this.extractNumber(id) : '0'}` + '.svg';
   }
 
   @memoize()

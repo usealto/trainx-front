@@ -51,7 +51,7 @@ interface IContribution {
 @Component({
   selector: 'alto-lead-collaboration',
   templateUrl: './lead-collaboration.component.html',
-  styleUrls: ['./lead-collaboration.component.scss', '../styles/collaboration-cards.scss'],
+  styleUrls: ['./lead-collaboration.component.scss'],
   providers: [EmojiPipe],
 })
 export class LeadCollaborationComponent implements OnInit {
