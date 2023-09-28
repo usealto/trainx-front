@@ -1,3 +1,6 @@
 .contribution-text {
   line-height: 2rem;
+  &.text-truncate {
+    width: calc(100% - 7.5rem);
+  }
 }

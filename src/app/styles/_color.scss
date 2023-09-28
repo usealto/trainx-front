@@ -20,7 +20,9 @@
   --alto-dark-grey: #98a2b3;
 
   --bs-body-bg: #fcfcfd;
-  // --bs-body-bg: #344054; // Dark mode
+  body.dark-theme {
+    --bs-body-bg: #344054; // Dark mode
+  }
 
   --bs-body-color: var(--gray-900);
   --bs-border-color: var(--gray-200);

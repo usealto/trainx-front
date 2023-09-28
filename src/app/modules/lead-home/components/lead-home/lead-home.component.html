@@ -1,56 +1,93 @@
-<div class="header-panel mb-4 row align-items-center">
-  <img class="col-1 p-0 me-5" [src]="Emoji.WavingHand | emoji" height="48" style="width: 48px !important" />
-  <div class="col ps-0">
-    <h1 id="welcome" class="mb-3">
+<div class="header-panel mb-4">
+  <img [src]="Emoji.WavingHand | emoji" height="48" />
+  <div>
+    <h1 id="welcome">
       {{ I18ns.leadHome.title + (profileStore.user.value.firstname | titlecase) + ' !' }}
     </h1>
-    <p class="alto-grey fs-6b">{{ I18ns.leadHome.subtitle }}</p>
+    <p>{{ I18ns.leadHome.subtitle }}</p>
   </div>
 </div>
-<div class="row">
+<div class="row m-0">
   <div class="col-6 ps-0">
-    <div *ngIf="commentsCount" [routerLink]="['/', AltoRoutes.lead , AltoRoutes.collaboration]" class="cursor-pointer" [class]="commentsCount ? 'warning-panel' : 'success-panel'">
-      <alto-icon-badge
-        [size]="5"
-        icon="bi-chat"
-        [color]="commentsCount ? 'badge-double-warning' : 'badge-double-success'"
-      ></alto-icon-badge>
-
-      <div class="d-inline-block ms-4">
-        <p class="title fs-5 mb-3" [style]="commentsCount ? 'color: var(--orange-600)' : ''">
-          {{ I18ns.leadHome.comments | plural : commentsCount }}
-          <span *ngIf="questionsCount > 0" class="text-black">{{ I18ns.leadHome.awaiting }}</span>
-        </p>
-        <p class="alto-grey fs-6">
-          {{ I18ns.leadHome.subtitleComment | plural : commentsCount }}
-        </p>
+    <ng-container *ngIf="commentsCount; else noComments">
+      <div
+        [routerLink]="['/', AltoRoutes.lead, AltoRoutes.collaboration]"
+           
+      [queryParams]="{ tab: 1, type: ETypeValue.COMMENTS }"
+        class="cursor-pointer"
+        [class]="'warning-panel'"
+      >
+        <alto-icon-badge [size]="5" icon="bi-chat" [color]="'badge-double-warning'"></alto-icon-badge>
+        <div class="ms-4">
+          <p class="title fs-5 mb-3" [style]="'color: var(--orange-600)'">
+            {{ I18ns.leadHome.comments | plural : commentsCount }}
+            <span *ngIf="questionsCount > 0" class="text-black">{{ I18ns.leadHome.awaiting }}</span>
+          </p>
+          <p class="alto-grey fs-6">
+            {{ I18ns.leadHome.subtitleComment | plural : commentsCount }}
+          </p>
+        </div>
       </div>
-    </div>
+    </ng-container>
+    <ng-template #noComments>
+      <div [class]="'success-panel'">
+        <alto-icon-badge [size]="5" icon="bi-chat" [color]="'badge-double-success'"></alto-icon-badge>
+
+        <div class="ms-4">
+          <p class="title fs-5 mb-3">
+            {{ I18ns.leadHome.comments[0] }}
+          </p>
+          <p class="alto-grey fs-6">
+            {{ I18ns.leadHome.subtitleComment[0] }}
+          </p>
+        </div>
+      </div>
+    </ng-template>
   </div>
-  <div class="col-6 pe-0" >
-    <div
-      *ngIf="questionsCount"
-      [routerLink]="['/', AltoRoutes.lead , AltoRoutes.collaboration]"
-      class="cursor-pointer"
-      [class]="questionsCount ? 'warning-panel' : 'success-panel'"
-      fragment="submittedQuestionsAnchor"
-    >
-      <alto-icon-badge
-        [size]="5"
-        icon="bi-question-circle"
-        [color]="questionsCount ? 'badge-double-warning' : 'badge-double-success'"
-      ></alto-icon-badge>
 
-      <div class="d-inline-block ms-4">
-        <p class="title fs-5 mb-3" [style]="questionsCount ? 'color: var(--orange-600)' : ''">
-          {{ I18ns.leadHome.question | plural : questionsCount }}
-          <span *ngIf="questionsCount > 0" class="text-black">{{ I18ns.leadHome.awaiting }}</span>
-        </p>
-        <p class="alto-grey fs-6">
-          {{ I18ns.leadHome.subtitleQuestion | plural : questionsCount }}
-        </p>
+  <div class="col-6 pe-0">
+    <ng-container *ngIf="questionsCount; else noQuestions">
+      <div
+        [routerLink]="['/', AltoRoutes.lead, AltoRoutes.collaboration]"
+        [queryParams]="{ tab: 1, type: ETypeValue.QUESTIONS }"
+        class="cursor-pointer"
+        [class]="'warning-panel'"
+        fragment="submittedQuestionsAnchor"
+      >
+        <alto-icon-badge
+          [size]="5"
+          icon="bi-question-circle"
+          [color]="'badge-double-warning'"
+        ></alto-icon-badge>
+        <div class="d-inline-block ms-4">
+          <p class="title fs-5 mb-3" [style]="'color: var(--orange-600)'">
+            {{ I18ns.leadHome.question | plural : questionsCount }}
+            <span *ngIf="questionsCount > 0" class="text-black">{{ I18ns.leadHome.awaiting }}</span>
+          </p>
+          <p class="alto-grey fs-6">
+            {{ I18ns.leadHome.subtitleQuestion | plural : questionsCount }}
+          </p>
+        </div>
       </div>
-    </div>
+    </ng-container>
+    <ng-template #noQuestions>
+      <div [class]="'success-panel'">
+        <alto-icon-badge
+          [size]="5"
+          icon="bi-question-circle"
+          [color]="'badge-double-success'"
+        ></alto-icon-badge>
+
+        <div class="d-inline-block ms-4">
+          <p class="title fs-5 mb-3">
+            {{ I18ns.leadHome.question[0] }}
+          </p>
+          <p class="alto-grey fs-6">
+            {{ I18ns.leadHome.subtitleQuestion[0] }}
+          </p>
+        </div>
+      </div>
+    </ng-template>
   </div>
 </div>
 

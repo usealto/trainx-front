@@ -16,7 +16,6 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { UserFilters } from 'src/app/modules/profile/models/user.model';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
 import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
@@ -72,7 +71,6 @@ export class LeadTeamComponent implements OnInit {
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
     private readonly teamsRestService: TeamsRestService,
-    private readonly usersRestService: UsersRestService,
     private readonly usersService: UsersService,
     private readonly profileStore: ProfileStore,
     private readonly scoreRestService: ScoresRestService,
@@ -173,6 +171,8 @@ export class LeadTeamComponent implements OnInit {
     this.userFilters.teams = teams;
     this.userFilters.score = score;
     this.userFilters.search = search;
+
+    console.log(this.usersScores);
 
     let output = this.usersService.filterUsers(this.usersScores, { teams, search }) as UserDisplay[];
     if (score) {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '../utils/store/store';
 import { Msg, MsgType } from './msg.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,11 @@ export class MsgService {
   toasts = new Store<Msg[]>([]);
   private msgId = 1;
 
-  constructor() {}
+  constructor(private router: Router) {
+    this.router.events.subscribe(() => {
+      this.clear();
+    });
+  }
 
   add(msg: Msg) {
     // Default stickiness value

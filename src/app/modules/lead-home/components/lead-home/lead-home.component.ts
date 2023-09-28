@@ -15,6 +15,7 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { ChallengesRestService } from 'src/app/modules/challenges/services/challenges-rest.service';
+import { ETypeValue } from 'src/app/modules/collaboration/components/lead-collaboration/lead-collaboration.component';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
@@ -43,6 +44,7 @@ export class LeadHomeComponent implements OnInit {
   AltoRoutes = AltoRoutes;
   ScoreDuration = ScoreDuration;
   ScoreTypeEnum = ScoreTypeEnumApi;
+  ETypeValue = ETypeValue;
 
   userName = '';
 
@@ -101,13 +103,15 @@ export class LeadHomeComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([
       this.commentsRestService.getUnreadComments(),
-      this.questionsSubmittedRestService.getQuestions({ status: QuestionSubmittedStatusEnumApi.Submitted }),
+      this.questionsSubmittedRestService.getQuestionsCount({
+        status: QuestionSubmittedStatusEnumApi.Submitted,
+      }),
       this.challengesRestService.getChallenges({ itemsPerPage: 40, sortBy: 'endDate:desc' }),
     ])
       .pipe(
-        tap(([comments, questions, challenges]) => {
+        tap(([comments, submittedQuestionsCount, challenges]) => {
           this.commentsCount = comments.length;
-          this.questionsCount = questions.length;
+          this.questionsCount = submittedQuestionsCount;
           this.challengesByTeam = challenges
             .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByTeam)
             .slice(0, 5);
@@ -160,6 +164,7 @@ export class LeadHomeComponent implements OnInit {
                 color: '#09479e',
                 data: points.map((p) => (p.y ? Math.round((p.y * 10000) / 100) : (p.y as number))),
                 type: 'line',
+                showSymbol: false,
                 tooltip: {
                   trigger: 'item',
                   valueFormatter: (value: any) => {

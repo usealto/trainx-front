@@ -95,7 +95,7 @@ export const FR = {
     comments: ['Aucun commentaire', '{{}} commentaire', '{{}} commentaires'],
     awaiting: 'en attente',
     subtitleComment: [
-      'Vous avez traité toutes les commentaires écrits par vos collaborateurs.',
+      'Vous avez traité tous les commentaires laissés par vos collaborateurs.',
       'Consultez les commentaires écrits par vos collaborateurs.',
       'Consultez les commentaires écrits par vos collaborateurs.',
     ],
@@ -275,6 +275,7 @@ export const FR = {
         title: 'Informations',
         subtitle: 'Informations générales du programme.',
         name: 'Nom du programme',
+        duplicateName: 'Un programme portant le même nom existe déjà.',
         nameSubtitle: 'Visible par tout le monde.',
         namePlaceholder: 'Exemple: Onboarding',
         description: 'Description',
@@ -990,6 +991,8 @@ export const FR = {
       contributionCount: 'A contribué {{}} fois.',
       questions: '{{}} questions',
       comments: '{{}} commentaires',
+      placeholder:
+        "Vos collaborateurs n'ont pas encore fait de commentaires ou suggéré de nouvelles questions.",
     },
     question: {
       declined: 'Refusée',
@@ -1013,8 +1016,8 @@ export const FR = {
       accept: 'Créer la question',
       textArea: 'Réponse à {{}} (facultatif)',
       suggQuestionDenied: 'La question a bien été refusée',
-      hasDenied: 'A refusé cette suggestion',
-      hasAccepted: 'A ajouté la question au programme',
+      hasDenied: 'A refusé cette suggestion.',
+      hasAccepted: 'A créé la question.',
     },
     commentCard: {
       comment: 'Commentaire',
@@ -1023,11 +1026,21 @@ export const FR = {
       deny: 'Annuler',
       accept: 'Confirmer',
       textArea: 'Réponse à {{}} (facultatif)',
-      archivedComment: 'Le commentaire a bien été archivé',
-      hasArchivedComment: 'La commentaire a bien été archivé.',
+      commentArchived: 'Le commentaire a bien été archivé',
+      hasArchivedComment: 'A archivé ce commentaire.',
       concerningQuestion: 'sur la question',
       archive: 'Archiver',
       seeQuestion: 'Voir la question',
+    },
+    placeholder: {
+      pendingTitle: 'Aucune question ou commentaire en attente',
+      pendingSubtitle: `Vous avez traité l'ensemble des retours de vos utilisateurs !`,
+      archivedTitle: 'Aucune question ou commentaire archivé(e)',
+      archivedSubtitle: `Vous n'avez archivé aucun retour de vos utilisateurs`,
+      allTitle: `Aucune question ou commentaire`,
+      allSubtitle: `Vos utilisateurs n'ont fait aucun retour pour l'instant`,
+      emptySearchTitle: `Aucun résultat ne correspond aux filtres sélectionnés.`,
+      emptySearchSubtitle: `Essayez avec d'autres filtres`,
     },
     modal: {
       cancel: 'Annuler',
@@ -1046,5 +1059,9 @@ export const FR = {
       comments: 'Commentaires',
       archiveComment: 'Archiver le commentaire',
     },
+  },
+  charts: {
+    scoreLabel: 'Score (%)',
+    timeLabel: 'Période',
   },
 };
