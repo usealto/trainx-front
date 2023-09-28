@@ -95,7 +95,7 @@ export const FR = {
     comments: ['Aucun commentaire', '{{}} commentaire', '{{}} commentaires'],
     awaiting: 'en attente',
     subtitleComment: [
-      'Vous avez traité toutes les commentaires écrits par vos collaborateurs.',
+      'Vous avez traité tous les commentaires laissés par vos collaborateurs.',
       'Consultez les commentaires écrits par vos collaborateurs.',
       'Consultez les commentaires écrits par vos collaborateurs.',
     ],
