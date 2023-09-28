@@ -3,7 +3,6 @@ import { map, Observable } from 'rxjs';
 import {
   CreateQuestionSubmittedDtoApiStatusEnumApi,
   GetQuestionsSubmittedRequestParams,
-  GetQuestionSubmittedByIdRequestParams,
   PatchQuestionSubmittedRequestParams,
   QuestionsSubmittedApiService,
   QuestionSubmittedDtoApi,
@@ -20,14 +19,14 @@ export class QuestionsSubmittedRestService {
     return this.questionSubmittedApi.getQuestionSubmittedById({ id }).pipe(map((r) => r.data));
   }
 
-  getQuestions(req?: GetQuestionsSubmittedRequestParams): Observable<QuestionSubmittedDtoApi[]> {
+  getQuestionsCount(req?: GetQuestionsSubmittedRequestParams): Observable<number> {
     const par = {
       page: 1,
-      itemsPerPage: 300,
+      itemsPerPage: 1,
       ...req,
     } as GetQuestionsSubmittedRequestParams;
 
-    return this.questionSubmittedApi.getQuestionsSubmitted(par).pipe(map((r) => r.data ?? []));
+    return this.questionSubmittedApi.getQuestionsSubmitted(par).pipe(map((r) => r.meta.totalItems ?? 0));
   }
 
   getQuestionsPaginated(
@@ -35,8 +34,7 @@ export class QuestionsSubmittedRestService {
   ): Observable<QuestionSubmittedDtoPaginatedResponseApi> {
     const par = {
       page: 1,
-      itemsPerPage: 10,
-      status: 'submitted',
+      itemsPerPage: 25,
       ...req,
     } as GetQuestionsSubmittedRequestParams;
 
