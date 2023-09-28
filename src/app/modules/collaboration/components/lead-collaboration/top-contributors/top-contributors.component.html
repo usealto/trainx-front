@@ -1,19 +1,25 @@
 <p class="fw-bold mb-4">{{ I18ns.collaboration.topContributors.title }}</p>
 
-<div *ngFor="let s of usersStats">
-  <alto-img-badge [user]="s.user"></alto-img-badge>
-  <div class="d-inline-block">
-    <p class="fw-bold">{{ s.user.firstname + ' ' + s.user.lastname }}</p>
-    <p class="mb-3 alto-grey">
-      {{ I18ns.collaboration.topContributors.contributionCount | replaceInTranslation : s.contributions }}
-    </p>
-    <span *ngIf="s.questionsSubmittedCount > 0" class="alto-badge questions me-2">{{
-      I18ns.collaboration.topContributors.questions | replaceInTranslation : s.questionsSubmittedCount
-    }}</span>
-    <span *ngIf="s.commentsCount > 0" class="alto-badge comments">{{
-      I18ns.collaboration.topContributors.comments | replaceInTranslation : s.commentsCount
-    }}</span>
+<ng-container *ngFor="let s of usersStats">
+  <div class="d-flex">
+    <alto-img-badge [user]="s.user"></alto-img-badge>
+    <div>
+      <p class="fw-bold">{{ s.user.firstname + ' ' + s.user.lastname }}</p>
+      <p class="mb-3 alto-grey">
+        {{ I18ns.collaboration.topContributors.contributionCount | replaceInTranslation : s.contributions }}
+      </p>
+      <span *ngIf="s.questionsSubmittedCount > 0" class="alto-badge questions me-2">{{
+        I18ns.collaboration.topContributors.questions | replaceInTranslation : s.questionsSubmittedCount
+      }}</span>
+      <span *ngIf="s.commentsCount > 0" class="alto-badge comments">{{
+        I18ns.collaboration.topContributors.comments | replaceInTranslation : s.commentsCount
+      }}</span>
+    </div>
   </div>
 
   <hr class="my-4" />
+</ng-container>
+
+<div *ngIf="!usersStats">
+  {{ I18ns.collaboration.topContributors.placeholder }}
 </div>

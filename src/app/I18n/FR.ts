@@ -991,6 +991,8 @@ export const FR = {
       contributionCount: 'A contribué {{}} fois.',
       questions: '{{}} questions',
       comments: '{{}} commentaires',
+      placeholder:
+        "Vos collaborateurs n'ont pas encore fait de commentaires ou suggéré de nouvelles questions.",
     },
     question: {
       declined: 'Refusée',

@@ -47,6 +47,13 @@ h2 {
 
 .panel {
   height: 6.833rem;
+  padding: 0 1.667rem;
+  display: flex;
+  & > div {
+    flex: 1 0 0;
+    display: flex;
+    align-items: center;
+  }
   .second-col {
     padding-left: 1.667rem;
   }

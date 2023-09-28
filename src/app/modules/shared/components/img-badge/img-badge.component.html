@@ -3,24 +3,20 @@
   <br />
   {{ user?.email }}
 </ng-template>
-<div *ngIf="!broken === true">
-  <ng-container *ngIf="thumb">
-    <img
-      *ngIf="toggleTooltip; else noTooltip"
-      [ngbTooltip]="user && toolTip"
-      src="{{ thumb }}"
-      alt="Profile Picture"
-      [style]="getStyle(size)"
-      (error)="broken = true"
-      [ngClass]="{ 'white-border': hasBorder }"
-    />
-    <ng-template #noTooltip>
-      <img
-        src="{{ thumb }}"
-        alt="Profile Picture"
-        [style]="getStyle(size)"
-        [ngClass]="{ 'white-border': hasBorder }"
-      />
-    </ng-template>
-  </ng-container>
-</div>
+<ng-container *ngIf="thumb; else elseTemplate">
+  <img
+    [ngbTooltip]="toggleTooltip ? toolTip : null"
+    src="{{ thumb }}"
+    alt="Profile Picture"
+    [style]="getStyle(size)"
+    [ngClass]="{ 'white-border': hasBorder }"
+  />
+</ng-container>
+<ng-template #elseTemplate>
+  <div
+    [ngbTooltip]="user && toolTip"
+    class="d-inline-block empty-badge"
+    [ngClass]="{ 'white-border': hasBorder }"
+    [style]="getStyle(size)"
+  ></div>
+</ng-template>
