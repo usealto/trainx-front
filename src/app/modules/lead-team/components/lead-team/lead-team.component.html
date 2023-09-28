@@ -43,7 +43,8 @@
             </td>
             <td class="w-20 text-start">
               <div *ngIf="getTeamUsersCount(team.id) !== 0">
-                {{ I18ns.leadTeam.teams.table.users | plural : getTeamUsersCount(team.id) }} membres
+                {{ I18ns.leadTeam.teams.table.users | plural : getTeamUsersCount(team.id) }}
+                {{ I18ns.shared.members }}
               </div>
               <div *ngIf="getTeamUsersCount(team.id) === 0">
                 {{ I18ns.leadTeam.teams.table.noUsers }}
