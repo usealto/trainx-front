@@ -54,9 +54,7 @@ export class AdminCompanyUsersComponent implements OnInit {
     combineLatest({
       teams: this.teamsRestService.getTeams({ companyId: this.id, itemsPerPage: 1000 }),
       company: this.adminApiService.adminGetCompanies({ ids: this.id }),
-      // .getCompanyById(this.id as string),
-      users: this.adminApiService.adminGetUsers({ companyId: this.id, itemsPerPage: 1000, includeSoftDeleted: true })
-      // .getUsersFiltered({ companyId: this.id, itemsPerPage: 1000, includeSoftDeleted: true }),
+      users: this.adminApiService.adminGetUsers({ companyId: this.id, itemsPerPage: 1000, includeSoftDeleted: true, sortBy: 'deletedAt:desc,firstname:asc'  })
     })
       .pipe(take(1))
       .subscribe(({ company, users, teams }) => {
