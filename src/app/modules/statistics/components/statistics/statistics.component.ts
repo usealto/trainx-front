@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -9,7 +9,7 @@ import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
 })
-export class StatisticsComponent {
+export class StatisticsComponent implements OnInit {
   Altoroutes = AltoRoutes;
   I18ns = I18ns;
   EmojiName = EmojiName;
@@ -23,6 +23,10 @@ export class StatisticsComponent {
   ];
 
   constructor(private readonly router: Router) {}
+
+  ngOnInit(): void {
+    this.tabChange(this.tabs[0].value);
+  }
 
   tabChange(val: string) {
     this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, val]);
