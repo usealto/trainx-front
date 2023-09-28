@@ -271,6 +271,7 @@ export const FR = {
       create: 'Créer un programme',
       edit: 'Éditer un programme',
       questionCount: 'Nombre de questions',
+      abortWarning: 'Si vous quittez ce formulaire vous perdrez tout vos changements.',
       step1: {
         title: 'Informations',
         subtitle: 'Informations générales du programme.',

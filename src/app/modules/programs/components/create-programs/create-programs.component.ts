@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
@@ -61,6 +61,8 @@ export class CreateProgramsComponent implements OnInit {
   selectedTags: string[] = [];
   questionSearch = '';
   questionAssociatedSearch = '';
+
+  isFormSaved = false;
 
   constructor(
     readonly fob: UntypedFormBuilder,
@@ -264,15 +266,22 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   changeTab(num: number) {
-    if (this.currentStep === 1 && num === 2) {
-      this.displayToast();
-      this.saveProgram();
-    }
-    this.currentStep = num;
-    if (this.currentStep === 2) {
-      this.selectedTags = this.programForm.value?.tags ?? [];
-      this.getQuestions();
-      this.getAssociatedQuestions();
+    if (!this.isEdit) {
+      if (this.programForm.valid) {
+        this.saveProgram();
+        this.displayToast();
+        this.currentStep = num;
+      } else {
+        //? display message that say that the form miss informations
+        console.log('missing information in form')
+      }
+    } else {
+      if (this.currentStep === 2) {
+        this.selectedTags = this.programForm.value?.tags ?? [];
+        this.getQuestions();
+        this.getAssociatedQuestions();
+      }
+      this.currentStep = num;
     }
   }
 
@@ -353,6 +362,10 @@ export class CreateProgramsComponent implements OnInit {
         untilDestroyed(this),
       )
       .subscribe();
+  }
+
+  validateProgram() {
+    this.isFormSaved = true;
   }
 
   cancel() {
