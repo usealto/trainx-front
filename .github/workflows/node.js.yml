@@ -3,11 +3,11 @@
 
 name: Tests CI
 
-on:
-  push:
-    branches: ['develop']
-  pull_request:
-    branches: ['main']
+# on:
+#   push:
+#     branches: ['develop']
+#   pull_request:
+#     branches: ['main']
 
 jobs:
   build:
