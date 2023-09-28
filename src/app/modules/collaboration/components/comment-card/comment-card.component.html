@@ -46,7 +46,7 @@
     </div>
   </div>
 
-  <div *ngIf="comment?.response" class="text-container">
+  <div *ngIf="comment?.isRead" class="text-container">
     <alto-img-badge [size]="24" [user]="comment?.updatedByUser"></alto-img-badge>
 
     <div class="text-content">
@@ -62,7 +62,7 @@
       </div>
 
       <span class="light-text">{{ I18ns.collaboration.commentCard.hasArchivedComment }}</span>
-      <span class="light-text">"{{ comment?.response }}"</span>
+      <span *ngIf="comment?.response" class="light-text">"{{ comment?.response }}"</span>
     </div>
   </div>
 </div>

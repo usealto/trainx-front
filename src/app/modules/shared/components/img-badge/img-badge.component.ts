@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { UserDtoApi, UserLightDtoApi } from '@usealto/sdk-ts-angular';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -10,20 +10,24 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 })
 export class ImgBadgeComponent implements OnChanges {
   @Input() user: UserDtoApi | UserLightDtoApi | null | undefined;
-  @Input() url: string | null | undefined = '';
+  @Input() url: string | null | undefined;
   @Input() size = 32;
   @Input() hasBorder = false;
   @Input() toggleTooltip = true;
 
-  thumb = '';
+  thumb: string | null | undefined = '';
 
   avatarsFolder = 'assets/avatars/';
   avatarsCount = 71;
 
   I18ns = I18ns;
 
-  ngOnChanges(): void {
-    this.thumb = this.getAvatar(this.user?.id);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['url']?.currentValue) {
+      this.thumb = this.url;
+    } else {
+      this.thumb = this.getAvatar(this.user?.id);
+    }
   }
 
   @memoize()
