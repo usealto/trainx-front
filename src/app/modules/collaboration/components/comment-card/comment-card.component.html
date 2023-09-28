@@ -38,10 +38,25 @@
       </div>
 
       <div>
-        <span class="light-text">
-          {{ comment?.text }}
-        </span>
+        <span class="light-text">"{{ comment?.text }}"</span>
       </div>
+    </div>
+  </div>
+
+  <div *ngIf="comment?.response" class="text-container">
+    <alto-img-badge [size]="24" [user]="comment?.updatedByUser"></alto-img-badge>
+
+    <div class="text-content">
+      <div class="author">
+        <span class="fw-semibold"
+          >{{ comment?.updatedByUser?.firstname }}
+          {{ comment?.updatedByUser?.lastname }}
+        </span>
+        <span class="date-text">{{ comment?.updatedAt | dateLabel }}</span>
+      </div>
+
+      <span class="light-text">{{ I18ns.collaboration.commentCard.hasArchivedComment }}</span>
+      <span class="light-text">"{{ comment?.response }}"</span>
     </div>
   </div>
 </div>

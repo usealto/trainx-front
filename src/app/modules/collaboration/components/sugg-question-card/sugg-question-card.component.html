@@ -54,7 +54,6 @@
 
       <div [ngSwitch]="suggQuestion?.status">
         <div *ngSwitchCase="StatusEnum.Accepted" class="response">
-          <!-- TODO: add program name to the following text -->
           <span class="light-text">{{ I18ns.collaboration.questionCard.hasAccepted }}</span>
         </div>
         <div *ngSwitchCase="StatusEnum.Declined" class="response">

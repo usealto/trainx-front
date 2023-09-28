@@ -5,6 +5,7 @@ import {
   QuestionDtoApi,
   QuestionStatsDtoApi,
   QuestionSubmittedDtoApi,
+  QuestionSubmittedStatusEnumApi,
   TagDtoApi,
   TagStatsDtoApi,
   UserDtoApi,
@@ -311,6 +312,7 @@ export class ProgramsComponent implements OnInit {
       .getQuestionsPaginated({
         page: this.submittedQuestionsPage,
         itemsPerPage: this.submittedQuestionsPageSize,
+        status: QuestionSubmittedStatusEnumApi.Submitted,
       })
       .pipe(
         tap((q) => (this.submittedQuestions = q.data ?? [])),
