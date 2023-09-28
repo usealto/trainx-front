@@ -6,6 +6,7 @@ export default defineConfig({
     experimentalStudio: true,
     viewportWidth: 1400,
     viewportHeight: 860,
+    video: false,
   },
 
   component: {

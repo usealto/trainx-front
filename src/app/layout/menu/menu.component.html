@@ -10,6 +10,7 @@
   <div [hidden]="displayAdmin">
     <div ngbTooltip="{{ I18ns.menu.home }}" placement="right" tooltipClass="menu-tooltip-class">
       <a
+        data-cy="userMenuHome"
         class="module"
         [routerLink]="AltoRoutes.user + '/' + AltoRoutes.userHome"
         routerLinkActive="menu-selected"
@@ -19,6 +20,7 @@
     </div>
     <div ngbTooltip="{{ I18ns.menu.training }}" placement="right" tooltipClass="menu-tooltip-class">
       <a
+        data-cy="userMenuTraining"
         class="module"
         [routerLink]="AltoRoutes.user + '/' + AltoRoutes.training"
         routerLinkActive="menu-selected"
@@ -45,6 +47,7 @@
   <div [hidden]="!displayAdmin">
     <div ngbTooltip="{{ I18ns.menu.home }}" placement="right" tooltipClass="menu-tooltip-class">
       <a
+        data-cy="leadMenuHome"
         class="module"
         [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadHome"
         routerLinkActive="menu-selected"
@@ -54,6 +57,7 @@
     </div>
     <div ngbTooltip="{{ I18ns.menu.programs }}" placement="right" tooltipClass="menu-tooltip-class">
       <a
+        data-cy="leadMenuPrograms"
         class="module"
         [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.programs"
         routerLinkActive="menu-selected"
@@ -63,6 +67,7 @@
     </div>
     <div ngbTooltip="{{ I18ns.menu.statistics }}" placement="right" tooltipClass="menu-tooltip-class">
       <a
+        data-cy="leadMenuStatistics"
         class="module"
         [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.statistics"
         routerLinkActive="menu-selected"
@@ -72,6 +77,7 @@
     </div>
     <div ngbTooltip="{{ I18ns.menu.team }}" placement="right" tooltipClass="menu-tooltip-class">
       <a
+        data-cy="leadMenuTeams"
         class="module"
         [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadTeams"
         routerLinkActive="menu-selected"
@@ -79,9 +85,19 @@
         <i class="bi bi-people"></i>
       </a>
     </div>
+    <div ngbTooltip="{{ I18ns.menu.collaboration }}" placement="right" tooltipClass="menu-tooltip-class">
+      <a
+        class="module"
+        [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.collaboration"
+        routerLinkActive="menu-selected"
+      >
+        <i class="bi bi-puzzle"></i>
+      </a>
+    </div>
     <!-- 
     <div ngbTooltip="{{ I18ns.menu.challenges }}" placement="right" tooltipClass="menu-tooltip-class">
       <a
+        data-cy="leadMenuChallenges"
         class="module"
         [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.challenges"
         routerLinkActive="menu-selected"
@@ -95,6 +111,7 @@
     <div [hidden]="!displayAdmin">
       <div ngbTooltip="{{ I18ns.menu.settings }}" placement="right" tooltipClass="menu-tooltip-class">
         <a
+          data-cy="leadMenuSettings"
           class="module"
           [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.settings"
           routerLinkActive="menu-selected"

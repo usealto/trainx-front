@@ -5,21 +5,12 @@
 </ng-template>
 <ng-container *ngIf="thumb; else elseTemplate">
   <img
-    *ngIf="toggleTooltip; else noTooltip"
-    [ngbTooltip]="user && toolTip"
+    [ngbTooltip]="toggleTooltip ? toolTip : null"
     src="{{ thumb }}"
     alt="Profile Picture"
     [style]="getStyle(size)"
     [ngClass]="{ 'white-border': hasBorder }"
   />
-  <ng-template #noTooltip>
-    <img
-      src="{{ thumb }}"
-      alt="Profile Picture"
-      [style]="getStyle(size)"
-      [ngClass]="{ 'white-border': hasBorder }"
-    />
-  </ng-template>
 </ng-container>
 <ng-template #elseTemplate>
   <div

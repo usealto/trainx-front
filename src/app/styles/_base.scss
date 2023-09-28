@@ -1,10 +1,6 @@
 :root {
-  --bs-body-font-size: 12px;
-  --bs-border-radius: 0.333rem;
-  --bs-border-color: var(--gray-200);
   --alto-panel-padding-x: 1.7rem;
   --alto-panel-padding-y: 1.4rem;
-  --font-family: 'PlusJakartaSans', Arial;
   --alto-page-padding: 40px 42px;
   @media screen and (min-width: 768px) {
     --alto-page-padding: 40px 42px;
@@ -20,17 +16,8 @@
   }
 }
 
-body,
-html {
-  --bs-body-font-size: 12px;
-  font-family: var(--font-family);
-  color: var(--gray-900);
-}
-
 @media screen and (min-width: 1900px) {
-  :root,
-  body,
-  html {
+  :root {
     // --bs-body-font-size: 14px;
   }
   // table,
@@ -39,12 +26,15 @@ html {
   // }
 }
 
+body {
+  width: calc(100vw - 24px);
+}
+
 html,
 input,
 select,
 optgroup,
-textarea,
-p {
+textarea {
   font-size: var(--bs-body-font-size);
 }
 
@@ -54,15 +44,12 @@ a {
 }
 p {
   margin: 0;
-  font-family: var(--font-family);
 }
 h1 {
-  font-family: var(--font-family);
   font-size: 1.333rem;
   font-weight: 700;
 }
 h2 {
-  font-family: var(--font-family);
   font-size: 1.167rem;
   font-weight: 600;
 }
@@ -104,6 +91,12 @@ hr {
 }
 .text-orange {
   color: var(--bs-orange);
+}
+.text-purple {
+  color: var(--purple-700);
+}
+.text-blue {
+  color: var(--primary-700);
 }
 
 .w-33 {

@@ -1,0 +1,16 @@
+:host ::ng-deep {
+  alto-img-badge {
+    margin-right: 1rem;
+  }
+}
+.alto-badge {
+  padding: 0 0.667rem;
+}
+.questions {
+  color: var(--purple-600);
+  background: var(--purple-50);
+}
+.comments {
+  color: var(--primary-600);
+  background: var(--primary-50);
+}

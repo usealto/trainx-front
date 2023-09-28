@@ -1,0 +1,89 @@
+<div class="header">
+  <div class="header-container">
+    <div>
+      <alto-icon-badge [icon]="'bi-lightbulb'" [color]="'badge-double-purple'"></alto-icon-badge>
+    </div>
+    <div class="header-text">
+      <span class="fw-medium text-purple m-sm-2">{{ I18ns.collaboration.questionCard.suggQuestion }}</span>
+      <div
+        class="alto-badge"
+        [ngClass]="
+          suggQuestion?.status === StatusEnum.Declined
+            ? 'red'
+            : suggQuestion?.status === StatusEnum.Accepted
+            ? 'green'
+            : 'orange'
+        "
+      >
+        {{ I18ns.collaboration.question[suggQuestion?.status || StatusEnum.Accepted] }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content-container" [class.footer]="suggQuestion?.status !== StatusEnum.Submitted">
+  <div class="text-container">
+    <div class="badge-with-connector">
+      <alto-img-badge [size]="24" [user]="suggQuestion?.createdByUser"></alto-img-badge>
+      <div *ngIf="suggQuestion?.status !== StatusEnum.Submitted" class="connector"></div>
+    </div>
+
+    <div class="text-content">
+      <div class="author">
+        <span class="fw-semibold"
+          >{{ suggQuestion?.createdByUser?.firstname }} {{ suggQuestion?.createdByUser?.lastname }}
+        </span>
+        <span class="date-text">{{ suggQuestion?.createdAt | dateLabel }}</span>
+      </div>
+      <div>
+        <span class="light-text">"{{ suggQuestion?.title }}"</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="suggQuestion?.status !== StatusEnum.Submitted" class="text-container">
+    <alto-img-badge [size]="24" [user]="suggQuestion?.updatedByUser"></alto-img-badge>
+
+    <div class="text-content">
+      <div class="author">
+        <span class="fw-semibold"
+          >{{ suggQuestion?.updatedByUser?.firstname }} {{ suggQuestion?.updatedByUser?.lastname }}
+        </span>
+        <span class="date-text">{{ suggQuestion?.updatedAt | dateLabel }}</span>
+      </div>
+
+      <div [ngSwitch]="suggQuestion?.status">
+        <div *ngSwitchCase="StatusEnum.Accepted" class="response">
+          <span class="light-text">{{ I18ns.collaboration.questionCard.hasAccepted }}</span>
+        </div>
+        <div *ngSwitchCase="StatusEnum.Declined" class="response">
+          <span class="light-text">{{ I18ns.collaboration.questionCard.hasDenied }}</span>
+          <span class="light-text" *ngIf="suggQuestion?.response">"{{ suggQuestion?.response }}"</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="suggQuestion?.status === StatusEnum.Submitted" class="bg-white rounded-4 rounded-top-0">
+  <div class="separator"></div>
+  <div class="footer">
+    <button
+      class="button gray"
+      (click)="refuseQuestion()"
+      *ngIf="suggQuestion?.status === StatusEnum.Submitted"
+    >
+      <i class="bi bi-x-lg"></i>
+      {{ I18ns.collaboration.questionCard.deny }}
+    </button>
+
+    <button
+      class="button blue"
+      (click)="createQuestion(suggQuestion)"
+      *ngIf="suggQuestion?.status === StatusEnum.Submitted"
+    >
+      <i class="bi bi-plus-lg"></i>
+      {{ I18ns.collaboration.questionCard.accept }}
+    </button>
+  </div>
+</div>

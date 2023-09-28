@@ -14,6 +14,8 @@ import { haveTeam } from './no-team.guard';
 import { NoCompanyComponent } from './layout/no-company/no-company.component';
 import { NoTeamComponent } from './layout/no-team/no-team.component';
 import { haveCompany } from './no-company.guard';
+import { noSmallScreen } from './no-small-screen.guard';
+import { NoSmallScreenComponent } from './layout/no-small-screen/no-small-screen.component';
 
 const routes: Routes = [
   {
@@ -94,14 +96,31 @@ const routes: Routes = [
             loadChildren: () =>
               import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
           },
+          {
+            path: AltoRoutes.collaboration,
+            loadChildren: () =>
+              import('./modules/collaboration/collaboration.module').then((m) => m.CollaborationModule),
+          },
         ],
       },
       {
         path: AltoRoutes.notFound,
         component: NotFoundComponent,
       },
+      {
+        path: AltoRoutes.noAccess,
+        component: NoWebAccessComponent,
+      },
+      {
+        path: AltoRoutes.noCompany,
+        component: NoCompanyComponent,
+      },
+      {
+        path: AltoRoutes.noTeam,
+        component: NoTeamComponent,
+      },
     ],
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, noSmallScreen],
     canActivateChild: [AuthGuard],
   },
   {
@@ -121,16 +140,8 @@ const routes: Routes = [
     canActivateChild: [AuthGuard],
   },
   {
-    path: AltoRoutes.noAccess,
-    component: NoWebAccessComponent,
-  },
-  {
-    path: AltoRoutes.noCompany,
-    component: NoCompanyComponent,
-  },
-  {
-    path: AltoRoutes.noTeam,
-    component: NoTeamComponent,
+    path: AltoRoutes.noSmallScreen,
+    component: NoSmallScreenComponent,
   },
   {
     path: '**',

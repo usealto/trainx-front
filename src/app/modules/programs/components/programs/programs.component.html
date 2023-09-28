@@ -1,8 +1,8 @@
-<div class="header-panel mb-5 d-flex align-items-center">
-  <img class="me-4" [src]="Emoji.Bullseye | emoji" />
-  <div class="d-inline-block">
-    <h1 class="mb-3">{{ I18ns.programs.title }}</h1>
-    <p class="alto-grey fs-6">{{ I18ns.programs.subtitle }}</p>
+<div class="header-panel mb-5">
+  <img [src]="Emoji.Bullseye | emoji" height="32" />
+  <div>
+    <h1>{{ I18ns.programs.title }}</h1>
+    <p>{{ I18ns.programs.subtitle }}</p>
   </div>
 </div>
 <div class="programs-tabs">
@@ -100,7 +100,7 @@
       ></alto-search>
     </div>
   </div>
-  <ng-container *ngIf="paginatedQuestions.length > 0; else noQuestions">
+  <ng-container *ngIf="paginatedQuestions && paginatedQuestions.length > 0; else noQuestions">
     <div class="table-panel">
       <table class="table">
         <thead>
@@ -154,7 +154,7 @@
                 ></i>
                 <i
                   data-cy="questionEditPen"
-                  class="cursor-pointer fs-4 bi bi-pencil"
+                  class="cursor-pointer fs-4 bi bi-pen"
                   (click)="openQuestionForm(question)"
                 ></i>
               </td>
@@ -197,7 +197,7 @@
 </div>
 
 <!-- TAGS -->
-<div *ngIf="activeTab === 'tags'" class="">
+<div *ngIf="activeTab === 'tags'">
   <button type="button" class="btn btn-primary float-end" (click)="openTagForm()">
     <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.tags.createTag }}</span>
   </button>
@@ -211,14 +211,14 @@
     <div class="d-inline-block float-end">
       <alto-score-filter
         [selectedItems]="selectedItems"
-        (selectChange)="filterTags({ score: $event })"
+        (selectChange)="getTags({ score: $event })"
       ></alto-score-filter>
     </div>
     <div class="d-inline-block">
       <alto-search
         class="search"
         [searchItems]="tagFilters.search"
-        (searchChange)="filterTags({ search: $event })"
+        (searchChange)="getTags({ search: $event })"
       ></alto-search>
     </div>
   </div>
@@ -246,7 +246,7 @@
             <td>{{ tag.questionsCount + I18ns.programs.tags.table.questions }}</td>
             <td class="text-end px-4">
               <i class="fs-4 bi bi-trash3 cursor-pointer me-4" (click)="deleteTag(tag)"></i>
-              <i class="fs-4 bi bi-pencil cursor-pointer" (click)="openTagForm(tag)"></i>
+              <i class="fs-4 bi bi-pen cursor-pointer" (click)="openTagForm(tag)"></i>
             </td>
           </tr>
         </tbody>
@@ -255,7 +255,7 @@
         class="mx-4 d-block"
         [collectionSize]="tagsCount"
         [(page)]="tagsPage"
-        (pageChange)="filterTags()"
+        (pageChange)="getTags()"
         [pageSize]="tagsPageSize"
         aria-label="Default pagination"
       ></alto-pagination>
@@ -275,7 +275,7 @@
         <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" />
         <p class="mt-3">{{ I18ns.shared.noData }}</p>
         <span class="mt-3 d-block">{{ I18ns.shared.noDataSubtitle }}</span>
-        <button class="btn btn-primary mt-4" (click)="resetTagsFilters()">
+        <button class="btn btn-primary mt-4" (click)="resetFilters()">
           <i class="bi bi-arrow-clockwise"></i>
           {{ I18ns.shared.resetFilters }}
         </button>

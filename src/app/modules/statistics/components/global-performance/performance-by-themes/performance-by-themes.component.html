@@ -16,7 +16,10 @@
   </p>
 
   <div class="chart-container">
-    <canvas id="themeScoreEvolution"></canvas>
+    <alto-chart-basicline
+      data-cy="chartBasiclineThemes"
+      [chartOption]="ScoreEvolutionChartOption"
+    ></alto-chart-basicline>
   </div>
 </div>
 <div [hidden]="scoreCount > 0" class="nodata-placeholder">
@@ -52,3 +55,51 @@
     </div>
   </div>
 </ng-template>
+
+<div [hidden]="!scoreCount" class="score-evolution-chart panel mt-5">
+  <alto-dropdown-filter
+    class="float-end mx-2"
+    [data]="teamsStore.teams.value"
+    [displayLabel]="'name'"
+    [selectedItems]="selectedTeamsKnowledgeScores"
+    [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.filters.teams"
+    (selectChange)="getTeamsKnowledgeScores($event)"
+  ></alto-dropdown-filter>
+  <alto-dropdown-filter
+    class="float-end mx-2"
+    [data]="programsStore.tags.value"
+    [displayLabel]="'name'"
+    [multiple]="false"
+    [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.filters.tags"
+    (selectChange)="filterTeamsKnowledgeTags($event)"
+  ></alto-dropdown-filter>
+  <h2>
+    {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.title }}
+  </h2>
+  <p class="alto-grey mb-4">
+    {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.subtitle }}
+  </p>
+  <div class="chart-container">
+    <alto-chart-bar
+      data-cy="barChart"
+      [chartOption]="teamsKnowledgeChartOption"
+      [isLoaded]="false"
+    ></alto-chart-bar>
+  </div>
+  <div class="d-flex justify-content-center">
+    <p *ngFor="let team of series" class="legend">
+      <span class="circle" [style.background]="team.itemStyle.color"></span> {{ team.name }}
+    </p>
+  </div>
+</div>
+<div [hidden]="this.series.length > 0" class="nodata-placeholder">
+  <h2 class="mb-5 fs-6">
+    {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.title }}
+  </h2>
+  <div class="text-center">
+    <img [src]="Emoji.FaceInClouds | emoji" height="24" />
+    <p class="mt-3">
+      {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.placeholderTitle }}
+    </p>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
+import { ScoreByTypeEnumApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import { ScoreDuration } from './score.model';
 
 export interface ChartFilters {
@@ -11,4 +11,6 @@ export interface ChartFilters {
   sortBy?: string;
   ids?: string[];
   tags?: string[];
+  scoredBy?: ScoreByTypeEnumApi;
+  scoredById?: string;
 }

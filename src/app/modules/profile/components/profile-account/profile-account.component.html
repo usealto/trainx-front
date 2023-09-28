@@ -1,7 +1,6 @@
 <div class="header-panel mb-8">
-  <img class="emoji me-4" [src]="EmojiName.Gear | emoji" />
-
-  <h1 class="m-0 d-inline-block">{{ I18ns.profile.profile.title }}</h1>
+  <img [src]="EmojiName.Gear | emoji" height="32" />
+  <h1>{{ I18ns.profile.profile.title }}</h1>
 </div>
 
 <form [formGroup]="userForm">

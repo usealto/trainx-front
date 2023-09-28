@@ -40,6 +40,7 @@ export class ScoresRestService {
     duration: ScoreDuration,
     isProgression?: boolean,
     id?: string,
+    sortBy?: string,
   ): Observable<UserStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
@@ -61,6 +62,8 @@ export class ScoresRestService {
         to: dateBefore,
         respondsRegularlyThreshold: 0.42,
         userId: id,
+        sortBy: sortBy,
+        itemsPerPage: 1000,
       } as GetUsersStatsRequestParams)
       .pipe(map((r) => r.data || []));
   }
@@ -166,7 +169,7 @@ export class ScoresRestService {
   }
 
   getScores(
-    { duration, type, team, timeframe, sortBy, user, ids }: ChartFilters,
+    { duration, type, team, timeframe, sortBy, user, ids, scoredBy, scoredById }: ChartFilters,
     isProgression = false,
   ): Observable<ScoresResponseDtoApi> {
     const par: GetScoresRequestParams = {
@@ -176,6 +179,8 @@ export class ScoresRestService {
       dateBefore: addDays(new Date(), 1), //! TEMPORARY FIX to get data from actual day
       fillValues: ScoreFillValuesEnumApi.Null,
       sortBy,
+      scoredBy,
+      scoredById,
     };
 
     if (isProgression) {

@@ -15,25 +15,27 @@ import {
 export class QuestionsSubmittedRestService {
   constructor(private readonly questionSubmittedApi: QuestionsSubmittedApiService) {}
 
-  getQuestions(req?: GetQuestionsSubmittedRequestParams): Observable<QuestionSubmittedDtoApi[]> {
+  getQuestion(id: string): Observable<QuestionSubmittedDtoApi | undefined> {
+    return this.questionSubmittedApi.getQuestionSubmittedById({ id }).pipe(map((r) => r.data));
+  }
+
+  getQuestionsCount(req?: GetQuestionsSubmittedRequestParams): Observable<number> {
     const par = {
+      page: 1,
+      itemsPerPage: 1,
       ...req,
-      page: req?.page ?? 1,
-      itemsPerPage: req?.itemsPerPage ?? 300,
-      status: 'submitted',
     } as GetQuestionsSubmittedRequestParams;
 
-    return this.questionSubmittedApi.getQuestionsSubmitted(par).pipe(map((r) => r.data ?? []));
+    return this.questionSubmittedApi.getQuestionsSubmitted(par).pipe(map((r) => r.meta.totalItems ?? 0));
   }
 
   getQuestionsPaginated(
     req?: GetQuestionsSubmittedRequestParams,
   ): Observable<QuestionSubmittedDtoPaginatedResponseApi> {
     const par = {
+      page: 1,
+      itemsPerPage: 25,
       ...req,
-      page: req?.page ?? 1,
-      itemsPerPage: req?.itemsPerPage ?? 10,
-      status: 'submitted',
     } as GetQuestionsSubmittedRequestParams;
 
     return this.questionSubmittedApi.getQuestionsSubmitted(par).pipe();

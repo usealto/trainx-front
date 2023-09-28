@@ -3,7 +3,7 @@ describe('L/Programs Questions Tab', () => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
     cy.visit('/');
 
-    cy.get('[ng-reflect-router-link="l/programs"]').click();
+    cy.get('[data-cy="leadMenuPrograms"]').click();
   });
 
   const newProg = 'ABCDTEST';
@@ -26,6 +26,7 @@ describe('L/Programs Questions Tab', () => {
     cy.get('[data-cy="programCreateNext"]').click();
 
     // Create a new question
+    cy.wait(500);
     cy.get('[data-cy="createNewQuestion"]').click();
     cy.get('[data-cy="questionCreateTitle"]').type(newQuestion);
     cy.get('[data-cy="goodAnswerInput"]').type(goodAnswer);
@@ -35,7 +36,7 @@ describe('L/Programs Questions Tab', () => {
     cy.get('.button-container > .btn-primary').click();
     cy.wait(500);
 
-    cy.get('.btn-close').click();
+    cy.get('.btn-close').first().click();
     cy.get('.btn-primary').eq(1).click();
     cy.wait(500);
     cy.reload();

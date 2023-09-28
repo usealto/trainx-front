@@ -1,0 +1,89 @@
+<div class="header">
+  <div class="header-container">
+    <div>
+      <alto-icon-badge icon="bi-chat" [color]="'badge-double-primary'"></alto-icon-badge>
+    </div>
+
+    <div class="header-text">
+      <span class="fw-medium text-blue">{{ I18ns.collaboration.commentCard.comment }}</span>
+      <div>
+        <span class="contribution-text d-inline-block">
+          {{ I18ns.collaboration.commentCard.concerningQuestion }} </span
+        >&nbsp;
+        <span class="contribution-text fw-medium d-inline-block text-truncate align-bottom fs-7"
+          >"{{ comment?.question?.title }}"</span
+        >
+      </div>
+      <div class="alto-badge" [ngClass]="comment?.isRead ? 'gray' : 'orange'">
+        {{ comment?.isRead ? I18ns.collaboration.comment.read : I18ns.collaboration.comment.unread }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="content-container" [class.footer]="comment?.isRead">
+  <div class="text-container">
+    <div class="badge-with-connector">
+      <alto-img-badge [size]="24" [user]="comment?.createdByUser"></alto-img-badge>
+      <div *ngIf="comment?.response" class="connector"></div>
+    </div>
+
+    <div class="text-content">
+      <div class="author">
+        <span class="fw-semibold"
+          >{{ comment?.createdByUser?.firstname }}
+          {{ comment?.createdByUser?.lastname }}
+        </span>
+        <span class="date-text">{{ comment?.createdAt | dateLabel }}</span>
+      </div>
+
+      <div>
+        <span class="light-text">"{{ comment?.text }}"</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="comment?.response" class="text-container">
+    <alto-img-badge [size]="24" [user]="comment?.updatedByUser"></alto-img-badge>
+
+    <div class="text-content">
+      <div class="author">
+        <span class="fw-semibold"
+          >{{ comment?.updatedByUser?.firstname }}
+          {{ comment?.updatedByUser?.lastname }}
+        </span>
+        <span class="date-text">{{ comment?.updatedAt | dateLabel }}</span>
+      </div>
+
+      <span class="light-text">{{ I18ns.collaboration.commentCard.hasArchivedComment }}</span>
+      <span class="light-text">"{{ comment?.response }}"</span>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!comment?.isRead" class="bg-white rounded-4 rounded-top-0">
+  <div class="separator"></div>
+  <div class="footer">
+    <button class="button gray" (click)="archiveComment()" *ngIf="!comment?.isRead">
+      <i class="bi bi-archive"></i>
+      {{ I18ns.collaboration.commentCard.archive }}
+    </button>
+
+    <a
+      class="button gray"
+      href="{{
+        '/' +
+          AltoRoutes.lead +
+          '/' +
+          AltoRoutes.collaboration +
+          '/' +
+          AltoRoutes.collaborationSeeQuestion +
+          '/' +
+          comment?.questionId
+      }}"
+    >
+      <i class="bi bi-eye"></i>
+      {{ I18ns.collaboration.commentCard.seeQuestion }}
+    </a>
+  </div>
+</div>

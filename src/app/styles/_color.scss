@@ -20,7 +20,12 @@
   --alto-dark-grey: #98a2b3;
 
   --bs-body-bg: #fcfcfd;
-  --bs-body-color: var(--alto-grey);
+  body.dark-theme {
+    --bs-body-bg: #344054; // Dark mode
+  }
+
+  --bs-body-color: var(--gray-900);
+  --bs-border-color: var(--gray-200);
 
   --alto-border: var(--gray-200);
 
@@ -220,6 +225,10 @@
 .pill-orange {
   background-color: var(--warning-50);
   color: var(--warning-600);
+}
+.pill-orange2 {
+  background-color: var(--orange-50);
+  color: var(--orange-600);
 }
 .pill-red {
   background-color: var(--error-50);

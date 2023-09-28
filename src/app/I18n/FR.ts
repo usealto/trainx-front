@@ -20,6 +20,7 @@ export const FR = {
     optional: '(facultatif)',
     noData: 'Aucun résultat ne correspond à votre recherche.',
     noDataSubtitle: 'Essayez avec d’autres filtres.',
+    noDataInt: '-%',
     resetFilters: 'Réinitialiser les filtres',
     reply: 'Répondre',
     search: 'Rechercher',
@@ -36,6 +37,7 @@ export const FR = {
     flop: 'Flop',
     waitingForNewResults: "Dans l'attente de nouveaux résultats.",
     days: ['jour', 'jours'],
+    score: 'Score',
     imageBadge: {
       userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],
     },
@@ -64,6 +66,10 @@ export const FR = {
       trimester: '3 mois',
       month: '1 mois',
     },
+    noSmallScreen: {
+      title: 'Alto n’est pas disponible sur votre taille d’écran.',
+      subtitle: 'Pour accéder au contenu de l’application, connectez-vous sur un ordinateur.',
+    },
     noWebAccess: {
       title: 'Félicitations ! Votre compte Alto est actif',
       subtitle:
@@ -81,6 +87,7 @@ export const FR = {
       subtitle: 'S’il s’agit d’une erreur, informez-en votre administrateur directement.',
       button: 'Envoyer un mail à mon administrateur',
     },
+    global: 'Global',
   },
   leadHome: {
     title: 'Bonjour ',
@@ -88,7 +95,7 @@ export const FR = {
     comments: ['Aucun commentaire', '{{}} commentaire', '{{}} commentaires'],
     awaiting: 'en attente',
     subtitleComment: [
-      'Vous avez traité toutes les commentaires écrits par vos collaborateurs.',
+      'Vous avez traité tous les commentaires laissés par vos collaborateurs.',
       'Consultez les commentaires écrits par vos collaborateurs.',
       'Consultez les commentaires écrits par vos collaborateurs.',
     ],
@@ -172,6 +179,11 @@ export const FR = {
     titleIcon: '🎯',
     title: 'Programmes',
     subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
+    tabs: {
+      programs: 'Programmes',
+      questions: 'Questions',
+      tags: 'Tags',
+    },
     activePrograms: {
       titleIcon: '🎯',
       title: 'Programmes en cours',
@@ -263,6 +275,7 @@ export const FR = {
         title: 'Informations',
         subtitle: 'Informations générales du programme.',
         name: 'Nom du programme',
+        duplicateName: 'Un programme portant le même nom existe déjà.',
         nameSubtitle: 'Visible par tout le monde.',
         namePlaceholder: 'Exemple: Onboarding',
         description: 'Description',
@@ -310,6 +323,7 @@ export const FR = {
           'Récapitulatif des informations essentielles du programme avant de le partager à vos équipes.',
         summary: 'Récapitulatif',
         summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
+        validateCreate: 'Le nouveau programme a bien été ajouté',
       },
     },
     delete: {
@@ -367,6 +381,15 @@ export const FR = {
           placeholderTitle: 'Les équipes sont en train de s’échauffer',
           placeholderSubtitle: 'Les premiers résultats ne devraient plus tarder !',
         },
+        teamsKnowledgeChart: {
+          title: 'Niveau de maîtrise de vos équipes par thématique',
+          subtitle: 'Aperçu du score moyen de vos équipes sur le tag sélectionné.',
+          placeholderTitle: 'Quelles thématiques déstabilisent vos équipes ? Vous le saurez prochainement',
+          filters: {
+            tags: 'Tags',
+            teams: 'Équipes',
+          },
+        },
         control: {
           title: 'Niveau de maîtrise des thématiques',
           subtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
@@ -413,7 +436,7 @@ export const FR = {
       title: {
         create: 'Créer une question',
         edit: 'Modifier une question',
-        submitted: 'Question suggérée',
+        submitted: 'Créer la question',
       },
       subtitle: {
         question: 'Indiquer l’intitulé, les réponses possibles et les informations complémentaires.',
@@ -639,6 +662,7 @@ export const FR = {
     adminMode: 'Mode Administrateur',
     disconnect: 'Se déconnecter',
     feedback: 'Envoyer un feedback',
+    collaboration: 'Collaboration',
   },
   settings: {
     title: 'Paramètres',
@@ -937,5 +961,107 @@ export const FR = {
         submitQuestion: 'Suggérer une question',
       },
     },
+  },
+  collaboration: {
+    title: 'Collaboration',
+    subtitle: "Gérer l'ensemble des contributions de vos équipes.",
+    showMore: 'Afficher plus',
+    tabs: {
+      pending: 'En attente',
+      archived: 'Traités',
+      all: 'Tout voir',
+    },
+    filters: {
+      contributor: 'Contributeur',
+      filterType: 'Type de contribution',
+      types: {
+        comments: 'Commentaires',
+        questions: 'Questions',
+      },
+      period: 'Période',
+      periods: {
+        today: 'Aujourd’hui',
+        week: 'Cette semaine',
+        month: 'Ce mois-ci',
+        old: 'Plus de 30 jours',
+      },
+    },
+    topContributors: {
+      title: 'Tops contributeurs des 30 derniers jours',
+      contributionCount: 'A contribué {{}} fois.',
+      questions: '{{}} questions',
+      comments: '{{}} commentaires',
+      placeholder:
+        "Vos collaborateurs n'ont pas encore fait de commentaires ou suggéré de nouvelles questions.",
+    },
+    question: {
+      declined: 'Refusée',
+      accepted: 'Acceptée',
+      submitted: 'En attente',
+    },
+    comment: {
+      read: 'Archivé',
+      unread: 'En attente',
+    },
+    dateLabels: {
+      today: 'Aujourd’hui',
+      yesterday: 'Hier',
+      daysCount: 'Il y a {{}} jours',
+    },
+    questionCard: {
+      suggQuestion: 'Question suggérée',
+      denyQuestionTitle: 'Refuser une question',
+      denyQuestionSubtitle: 'Souhaitez-vous envoyer un message à {{}} pour expliquer votre choix ?',
+      deny: 'Refuser',
+      accept: 'Créer la question',
+      textArea: 'Réponse à {{}} (facultatif)',
+      suggQuestionDenied: 'La question a bien été refusée',
+      hasDenied: 'A refusé cette suggestion.',
+      hasAccepted: 'A créé la question.',
+    },
+    commentCard: {
+      comment: 'Commentaire',
+      archiveCommentTitle: 'Archiver un commentaire',
+      archiveCommentSubtitle: 'Souhaitez-vous envoyer un message à {{}} en réponse à son commentaire ?',
+      deny: 'Annuler',
+      accept: 'Confirmer',
+      textArea: 'Réponse à {{}} (facultatif)',
+      commentArchived: 'Le commentaire a bien été archivé',
+      hasArchivedComment: 'A archivé ce commentaire.',
+      concerningQuestion: 'sur la question',
+      archive: 'Archiver',
+      seeQuestion: 'Voir la question',
+    },
+    placeholder: {
+      pendingTitle: 'Aucune question ou commentaire en attente',
+      pendingSubtitle: `Vous avez traité l'ensemble des retours de vos utilisateurs !`,
+      archivedTitle: 'Aucune question ou commentaire archivé(e)',
+      archivedSubtitle: `Vous n'avez archivé aucun retour de vos utilisateurs`,
+      allTitle: `Aucune question ou commentaire`,
+      allSubtitle: `Vos utilisateurs n'ont fait aucun retour pour l'instant`,
+      emptySearchTitle: `Aucun résultat ne correspond aux filtres sélectionnés.`,
+      emptySearchSubtitle: `Essayez avec d'autres filtres`,
+    },
+    modal: {
+      cancel: 'Annuler',
+      placeholder: 'Écrivez votre message...',
+    },
+    seeQuestion: {
+      breadcrumb: {
+        seeQuestion: 'Voir la question',
+        awaiting: 'En attente',
+        seeAll: 'Tout voir',
+      },
+      date: {
+        today: 'Aujourd’hui',
+      },
+      discoverQuestionsAndComments: 'Découvrez les réponses et commentaires associés à cette question.',
+      comments: 'Commentaires',
+      archiveComment: 'Archiver le commentaire',
+    },
+  },
+  charts: {
+    scoreLabel: 'Score (%)',
+    timeLabel: 'Période',
   },
 };

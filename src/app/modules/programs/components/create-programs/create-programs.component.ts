@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -27,6 +27,7 @@ import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../questions/question-form/question-form.component';
+import { ToastService } from 'src/app/core/toast/toast.service';
 
 @UntilDestroy()
 @Component({
@@ -42,6 +43,7 @@ export class CreateProgramsComponent implements OnInit {
   private fb: IFormBuilder;
 
   programForm!: IFormGroup<ProgramForm>;
+  programsNames: string[] = [];
   currentStep = 1;
   editedProgram?: ProgramDtoApi;
   isEdit = false;
@@ -67,6 +69,7 @@ export class CreateProgramsComponent implements OnInit {
     private readonly questionRestService: QuestionsRestService,
     private readonly route: ActivatedRoute,
     private readonly location: Location,
+    private readonly toastService: ToastService,
     public programStore: ProgramsStore,
     public teamStore: TeamStore,
     private modalService: NgbModal,
@@ -80,6 +83,7 @@ export class CreateProgramsComponent implements OnInit {
       .pipe(
         map((p) => {
           if (p['id'] === 'new') {
+            this.getProgramNames();
             this.initForm();
             this.isNewProgram = true;
             return null;
@@ -92,6 +96,7 @@ export class CreateProgramsComponent implements OnInit {
         switchMap((id) => this.programRestService.getProgram(id)),
         tap((p) => {
           this.editedProgram = p;
+          this.getProgramNames();
         }),
         tap((p) => this.initForm(p)),
         untilDestroyed(this),
@@ -99,15 +104,44 @@ export class CreateProgramsComponent implements OnInit {
       .subscribe();
   }
 
+  getProgramNames() {
+    this.programRestService
+      .getPrograms()
+      .pipe(
+        tap((d) => {
+          d.forEach((p) => {
+            this.programsNames.push(p.name.toLowerCase());
+          });
+        }),
+        tap(() => {
+          const programName = this.editedProgram?.name.toLowerCase();
+          const index = this.programsNames.indexOf(programName ?? '');
+          this.programsNames.splice(index, 1);
+        }),
+      )
+      .subscribe();
+  }
+
   initForm(program?: ProgramDtoApi) {
     this.programForm = this.fb.group<ProgramForm>({
-      name: [program?.name ?? '', [Validators.required]],
+      name: [program?.name ?? '', [Validators.required, this.uniqueNameValidation(this.programsNames)]],
       priority: [program?.priority ?? null, [Validators.required]],
       description: program?.description ?? '',
       expectation: [program?.expectation ?? 75, [Validators.required]],
       tags: [[]],
       teams: [program?.teams?.map((t) => t.id) ?? []],
     });
+  }
+
+  uniqueNameValidation(programs: string[]): ValidatorFn {
+    return (control: AbstractControl) => {
+      const typedName = control.value.toLowerCase();
+
+      if (programs && programs.includes(typedName)) {
+        return { nameNotAllowed: true };
+      }
+      return null;
+    };
   }
 
   saveProgram() {
@@ -215,11 +249,14 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   getAssociatedQuestions() {
+    if (!this.editedProgram?.id) {
+      return;
+    }
     this.questionRestService
       .getQuestionsPaginated({
         tagIds: this.selectedTags.join(','),
         itemsPerPage: this.questionPageSize,
-        programIds: this.editedProgram?.id ?? undefined,
+        programIds: this.editedProgram?.id,
         page: this.questionAssociatedPage,
         search: this.questionSearch,
       })
@@ -234,18 +271,11 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   changeTab(num: number) {
-    this.currentStep = num;
-    if (this.currentStep === 2) {
-      this.selectedTags = this.programForm.value?.tags ?? [];
-      this.getQuestions();
-      this.getAssociatedQuestions();
+    if (this.currentStep === 1 && num === 2) {
+      this.displayToast();
+      this.saveProgram();
     }
-    this.saveProgram();
-  }
-
-  goNext() {
-    this.saveProgram();
-    this.currentStep++;
+    this.currentStep = num;
     if (this.currentStep === 2) {
       this.selectedTags = this.programForm.value?.tags ?? [];
       this.getQuestions();
@@ -290,6 +320,15 @@ export class CreateProgramsComponent implements OnInit {
           untilDestroyed(this),
         )
         .subscribe();
+    }
+  }
+
+  displayToast() {
+    if (this.isEdit === false) {
+      this.toastService.show({
+        text: this.replaceInTranslationPipe.transform(I18ns.programs.forms.step3.validateCreate),
+        type: 'success',
+      });
     }
   }
 

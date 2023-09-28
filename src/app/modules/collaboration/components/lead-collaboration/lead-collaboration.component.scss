@@ -1,0 +1,68 @@
+:host {
+  display: block;
+  padding: var(--alto-page-padding);
+}
+
+.tabs-container {
+  display: flex;
+  gap: 0.5rem;
+  margin: 3.333rem 0;
+
+  .tab {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    height: 2.5rem;
+    cursor: pointer;
+    padding: 0 0.25rem 1rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--gray-500);
+
+    &.selected {
+      border-bottom: 2px var(--primary-700) solid;
+      color: var(--primary-700);
+      font-weight: 600;
+    }
+  }
+
+  .delimiter {
+    margin: 0 0.5rem;
+    width: 1px;
+    height: 20px;
+    background-color: var(--gray-300);
+  }
+}
+
+.fit-content {
+  width: fit-content;
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .header-end {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+}
+
+.time-separator {
+  display: flex;
+  align-items: center;
+  gap: 1.333rem;
+  align-self: stretch;
+  padding: 2rem 0;
+  .line {
+    height: 1px;
+    flex: 1 0 0;
+    background: var(--gray-200);
+  }
+  .centered-block {
+    text-align: center;
+    font-weight: 600;
+  }
+}

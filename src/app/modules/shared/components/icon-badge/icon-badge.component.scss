@@ -22,6 +22,10 @@
     color: var(--orange-600);
     background: radial-gradient(circle, var(--orange-100) 50%, var(--orange-50) 50%);
   }
+  &.badge-double-error {
+    color: var(--error-600);
+    background: radial-gradient(circle, var(--error-100) 50%, var(--error-50) 50%);
+  }
   &.badge-double-success {
     color: var(--success-600);
     background: radial-gradient(circle, var(--success-100) 50%, var(--success-50) 50%);
@@ -29,5 +33,9 @@
   &.badge-double-gray {
     color: var(--gray-600);
     background: radial-gradient(circle, var(--gray-100) 50%, var(--gray-50) 50%);
+  }
+  &.badge-double-purple {
+    color: var(--purple-600);
+    background: radial-gradient(circle, var(--purple-100) 50%, var(--purple-50) 50%);
   }
 }

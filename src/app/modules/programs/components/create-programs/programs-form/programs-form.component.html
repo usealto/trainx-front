@@ -15,6 +15,15 @@
         formControlName="name"
         placeholder="{{ I18ns.programs.forms.step1.namePlaceholder }}"
       />
+      <p
+        class="text-end mt-2"
+        [ngClass]="{
+        'text-danger': form.controls.name.errors?.['nameNotAllowed'],
+        invisible: !form.controls.name.errors?.['nameNotAllowed']
+      }"
+      >
+        {{ I18ns.programs.forms.step1.duplicateName }}
+      </p>
     </div>
   </div>
   <hr *ngIf="!isEdit" />
