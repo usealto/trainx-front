@@ -1,17 +1,32 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { StatisticsGlobalPerformanceComponent } from './components/global-performance/statistics-global-performance/statistics-global-performance.component';
+import { StatisticsGlobalEngagementComponent } from './components/statistics-global-engagement/statistics-global-engagement.component';
+import { StatisticsPerTeamsComponent } from './components/statistics-per-teams/statistics-per-teams.component';
 import { StatisticsComponent } from './components/statistics/statistics.component';
-import { PerformanceTeamsTableComponent } from './components/global-performance/performance-teams-table/performance-teams-table.component';
 
 const routes: Routes = [
   {
     path: '',
     component: StatisticsComponent,
-  },
-  {
-    // TODO: Remove
-    path: 'teams',
-    component: PerformanceTeamsTableComponent,
+    children: [
+      {
+        path: '',
+        component: StatisticsGlobalPerformanceComponent,
+      },
+      {
+        path: 'performance',
+        component: StatisticsGlobalPerformanceComponent,
+      },
+      {
+        path: 'engagement',
+        component: StatisticsGlobalEngagementComponent,
+      },
+      {
+        path: 'teams',
+        component: StatisticsPerTeamsComponent,
+      },
+    ],
   },
 ];
 

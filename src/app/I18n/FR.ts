@@ -337,7 +337,7 @@ export const FR = {
     title: 'Statistiques',
     subtitle: "Retrouvez l'ensemble des statistiques de vos équipes.",
     globalEngagement: {
-      title: 'Engagement global',
+      title: 'Engagement',
       subtitle: "Retrouvez l'engagement global de vos équipes.",
       activity: {
         activity: 'Activité',
@@ -350,7 +350,7 @@ export const FR = {
       },
     },
     globalPerformance: {
-      navbarTitle: 'Performance globale',
+      navbarTitle: 'Performance',
       perTeamPerformance: {
         title: 'Performance par équipes',
         subtitle: "Retrouvez une vue d' ensemble sur les résultats de vos équipes.",
