@@ -83,6 +83,7 @@ export class CreateProgramsComponent implements OnInit {
       .pipe(
         map((p) => {
           if (p['id'] === 'new') {
+            this.getProgramNames();
             this.initForm();
             this.isNewProgram = true;
             return null;
@@ -95,12 +96,15 @@ export class CreateProgramsComponent implements OnInit {
         switchMap((id) => this.programRestService.getProgram(id)),
         tap((p) => {
           this.editedProgram = p;
+          this.getProgramNames();
         }),
         tap((p) => this.initForm(p)),
         untilDestroyed(this),
       )
       .subscribe();
+  }
 
+  getProgramNames() {
     this.programRestService
       .getPrograms()
       .pipe(
@@ -109,7 +113,11 @@ export class CreateProgramsComponent implements OnInit {
             this.programsNames.push(p.name.toLowerCase());
           });
         }),
-        untilDestroyed(this),
+        tap(() => {
+          const programName = this.editedProgram?.name.toLowerCase();
+          const index = this.programsNames.indexOf(programName ?? '');
+          this.programsNames.splice(index, 1);
+        }),
       )
       .subscribe();
   }
