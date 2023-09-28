@@ -175,7 +175,7 @@ export class ApiErrorInterceptor implements HttpInterceptor {
         }
 
         this.msg.clear();
-        this.msg.add({ title: apiError.title, message: apiError.message, severity: apiError.level });
+        this.msg.add({ title: apiError.title, message: apiError.message, severity: apiError.level, sticky: false });
 
         return throwError(() => apiError);
       }),

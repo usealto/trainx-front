@@ -30,18 +30,39 @@
 
     <div class="text-content">
       <div class="author">
-        <span class="fw-semibold"
-          >{{ comment?.createdByUser?.firstname }}
-          {{ comment?.createdByUser?.lastname }}
+        <span [ngClass]="comment?.createdByUser ? 'fw-semibold' : 'light-text'"
+          >{{
+            comment?.createdByUser
+              ? comment?.createdByUser?.firstname + ' ' + comment?.createdByUser?.lastname
+              : I18ns.shared.deletedUsername
+          }}
         </span>
         <span class="date-text">{{ comment?.createdAt | dateLabel }}</span>
       </div>
 
       <div>
-        <span class="light-text">
-          {{ comment?.text }}
-        </span>
+        <span class="light-text">"{{ comment?.text }}"</span>
       </div>
+    </div>
+  </div>
+
+  <div *ngIf="comment?.isRead" class="text-container">
+    <alto-img-badge [size]="24" [user]="comment?.updatedByUser"></alto-img-badge>
+
+    <div class="text-content">
+      <div class="author">
+        <span [ngClass]="comment?.updatedByUser ? 'fw-semibold' : 'light-text'"
+          >{{
+            comment?.updatedByUser
+              ? comment?.updatedByUser?.firstname + ' ' + comment?.updatedByUser?.lastname
+              : I18ns.shared.deletedUsername
+          }}
+        </span>
+        <span class="date-text">{{ comment?.updatedAt | dateLabel }}</span>
+      </div>
+
+      <span class="light-text">{{ I18ns.collaboration.commentCard.hasArchivedComment }}</span>
+      <span *ngIf="comment?.response" class="light-text">"{{ comment?.response }}"</span>
     </div>
   </div>
 </div>

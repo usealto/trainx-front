@@ -63,6 +63,7 @@ export class ScoresRestService {
         respondsRegularlyThreshold: 0.42,
         userId: id,
         sortBy: sortBy,
+        itemsPerPage: 1000,
       } as GetUsersStatsRequestParams)
       .pipe(map((r) => r.data || []));
   }

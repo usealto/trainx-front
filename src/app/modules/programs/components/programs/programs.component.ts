@@ -5,6 +5,7 @@ import {
   QuestionDtoApi,
   QuestionStatsDtoApi,
   QuestionSubmittedDtoApi,
+  QuestionSubmittedStatusEnumApi,
   TagDtoApi,
   TagStatsDtoApi,
   UserDtoApi,
@@ -110,13 +111,13 @@ export class ProgramsComponent implements OnInit {
     this.getQuestions();
     this.getSubmittedQuestions();
     this.getTags();
-    this.isFilteredQuestions = false;
 
     combineLatest([this.getScoresFromTags(), this.getScoresfromQuestions()]).subscribe();
   }
 
   handleTabChange(value: any) {
     this.activeTab = value;
+    this.resetFilters();
   }
 
   deleteQuestion(question?: QuestionDtoApi) {
@@ -311,6 +312,7 @@ export class ProgramsComponent implements OnInit {
       .getQuestionsPaginated({
         page: this.submittedQuestionsPage,
         itemsPerPage: this.submittedQuestionsPageSize,
+        status: QuestionSubmittedStatusEnumApi.Submitted,
       })
       .pipe(
         tap((q) => (this.submittedQuestions = q.data ?? [])),
@@ -328,31 +330,7 @@ export class ProgramsComponent implements OnInit {
     this.getSubmittedQuestions();
   }
 
-  getTags() {
-    this.tagRestService
-      .getTags()
-      .pipe(
-        tap((tags) => (this.tags = tags)),
-        tap((tags) => this.changeTagsPage(tags)),
-        map(() => this.tags.map((t) => t.createdBy) ?? []),
-        map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
-        map((ids) => this.getUsersfromIds(ids)),
-        tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
-        tap(() => this.filterTags()),
-        tap(() => (this.isTagsLoading = false)),
-      )
-      .subscribe();
-  }
-
-  changeTagsPage(tags: TagDtoApi[]) {
-    this.tagsCount = tags.length;
-    this.paginatedTags = tags.slice(
-      (this.tagsPage - 1) * this.tagsPageSize,
-      this.tagsPage * this.tagsPageSize,
-    );
-  }
-
-  filterTags(
+  getTags(
     {
       programs = this.tagFilters.programs,
       contributors = this.tagFilters.contributors,
@@ -360,33 +338,62 @@ export class ProgramsComponent implements OnInit {
       score = this.tagFilters.score,
     }: TagFilters = this.tagFilters,
   ) {
+    this.isFilteredTags = true;
+    this.isTagsLoading = true;
+
     this.tagFilters.programs = programs;
     this.tagFilters.contributors = contributors;
     this.tagFilters.search = search;
     this.tagFilters.score = score;
 
-    let output = this.tagsService.filterTags(this.tags, { programs, contributors, search }) as TagDisplay[];
+    this.tagRestService
+      .getTags()
+      .pipe(
+        tap((tags) => {
+          this.tags = this.tagsService.filterTags(tags, {
+            programs,
+            contributors,
+            search,
+          }) as TagDisplay[];
+          this.changeTagsPage(this.tags);
+        }),
+        map(() => this.tags.map((t) => t.createdBy) ?? []),
+        map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
+        map((ids) => this.getUsersfromIds(ids)),
+        tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
+        tap(() => {
+          this.filterTagsByScore(this.tags as TagDisplay[], this.tagFilters.score);
+          this.isTagsLoading = false;
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
+  }
 
-    if (score) {
-      output.forEach((tag) => (tag.score = this.getTagScore(tag.id)));
-      output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
+  filterTagsByScore(tags: TagDisplay[], score?: string) {
+    if (!score) return;
+    tags.forEach((tag) => (tag.score = this.getTagScore(tag.id)));
+    tags = this.scoreService.filterByScore(tags, score as ScoreFilter, true);
+
+    this.changeTagsPage(tags);
+  }
+
+  changeTagsPage(tags: TagDtoApi[]) {
+    if (this.tagsPage > Math.ceil(tags.length / this.tagsPageSize)) {
+      this.tagsPage = 1;
     }
-
-    this.isFilteredTags = true;
-    this.changeTagsPage(output);
+    this.tagsCount = tags.length;
+    this.paginatedTags = tags.slice(
+      (this.tagsPage - 1) * this.tagsPageSize,
+      this.tagsPage * this.tagsPageSize,
+    );
   }
 
   resetFilters() {
     this.getQuestions((this.questionFilters = {}));
-    this.filterTags((this.tagFilters = {}));
+    this.getTags((this.tagFilters = {}));
     this.selectedItems = [];
     this.isFilteredQuestions = false;
-    this.isFilteredTags = false;
-  }
-
-  resetTagsFilters() {
-    this.filterTags((this.tagFilters = {}));
-    this.selectedItems = [];
     this.isFilteredTags = false;
   }
 

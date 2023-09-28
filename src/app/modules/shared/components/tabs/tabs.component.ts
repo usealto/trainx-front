@@ -11,6 +11,7 @@ export class TabsComponent {
   I18ns = I18ns;
 
   @Input() labels: string[] = [];
+  @Input() selectedValue: any;
   @Input() data: { label: string; value: any }[] = [];
   @Output() tabChanged = new EventEmitter<any>();
 
@@ -23,5 +24,14 @@ export class TabsComponent {
   @memoize()
   getId(i: number): number {
     return Math.round(Math.random() * 1000);
+  }
+
+  isChecked(i: number, itemValue: any): boolean {
+    if (this.selectedValue) {
+      return this.data[i].value === itemValue;
+    } else if (i === 0) {
+      return true;
+    }
+    return false;
   }
 }
