@@ -30,9 +30,12 @@
 
     <div class="text-content">
       <div class="author">
-        <span class="fw-semibold"
-          >{{ comment?.createdByUser?.firstname }}
-          {{ comment?.createdByUser?.lastname }}
+        <span [ngClass]="comment?.createdByUser ? 'fw-semibold' : 'light-text'"
+          >{{
+            comment?.createdByUser
+              ? comment?.createdByUser?.firstname + ' ' + comment?.createdByUser?.lastname
+              : I18ns.shared.deletedUsername
+          }}
         </span>
         <span class="date-text">{{ comment?.createdAt | dateLabel }}</span>
       </div>
@@ -48,9 +51,12 @@
 
     <div class="text-content">
       <div class="author">
-        <span class="fw-semibold"
-          >{{ comment?.updatedByUser?.firstname }}
-          {{ comment?.updatedByUser?.lastname }}
+        <span [ngClass]="comment?.updatedByUser ? 'fw-semibold' : 'light-text'"
+          >{{
+            comment?.updatedByUser
+              ? comment?.updatedByUser?.firstname + ' ' + comment?.updatedByUser?.lastname
+              : I18ns.shared.deletedUsername
+          }}
         </span>
         <span class="date-text">{{ comment?.updatedAt | dateLabel }}</span>
       </div>
