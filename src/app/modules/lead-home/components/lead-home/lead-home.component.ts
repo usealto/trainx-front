@@ -166,7 +166,6 @@ export class LeadHomeComponent implements OnInit {
                 type: 'line',
                 showSymbol: false,
                 tooltip: {
-                  trigger: 'item',
                   valueFormatter: (value: any) => {
                     return value ? (value as number) + '%' : '';
                   },
