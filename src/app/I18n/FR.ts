@@ -88,6 +88,7 @@ export const FR = {
       button: 'Envoyer un mail à mon administrateur',
     },
     global: 'Global',
+    deletedUsername: 'Utilisateur supprimé',
   },
   leadHome: {
     title: 'Bonjour ',
