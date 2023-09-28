@@ -1,16 +1,11 @@
 <alto-loading></alto-loading>
 <div class="container-gl">
 
-  <alto-admin-menu *ngIf="authorized"></alto-admin-menu>
+  <alto-admin-menu></alto-admin-menu>
     
-  <div class="router" *ngIf="authorized">
+  <div class="router">
     <alto-admin-header-remove-impersonation></alto-admin-header-remove-impersonation>
     <router-outlet></router-outlet>
-  </div>
-
-  <div *ngIf="!authorized">
-    <alto-admin-header-remove-impersonation></alto-admin-header-remove-impersonation>
-    <alto-admin-unauthorized></alto-admin-unauthorized>
   </div>
 
 </div>

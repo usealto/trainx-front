@@ -9,6 +9,7 @@ import { AdminUnauthorizedComponent } from './components/admin-unauthorized/admi
 import { AdminCompaniesCreateComponent } from './components/admin-companies-create/admin-companies-create.component';
 import { AdminCompanyQuestionsComponent } from './components/admin-company-questions/admin-company-questions.component';
 import { AdminCompanyUserComponent } from './components/admin-company-user/admin-company-user.component';
+import { canAccessAdmin } from './admin.guard';
 
 const routes: Routes = [
   {
@@ -16,6 +17,7 @@ const routes: Routes = [
     // adding a layout to this route called AdminLayoutComponent
     // this layout will be used for all the routes under this path
     component: AdminLayoutComponent,
+    canActivate: [canAccessAdmin],
     children: [
       {
         path: 'home',
@@ -53,11 +55,11 @@ const routes: Routes = [
         path: 'companies/:id/users/upload',
         component: AdminUsersUploadComponent,
       },
-      {
-        path: 'unauthorized',
-        component: AdminUnauthorizedComponent,
-      },
     ],
+  },
+  {
+    path: 'unauthorized',
+    component: AdminUnauthorizedComponent,
   },
 ];
 
