@@ -24,6 +24,7 @@ export class PerTeamsTableComponent implements OnChanges {
       this.paginate(1);
     }
 
+ 
   }
 
   paginate(page: number) {
