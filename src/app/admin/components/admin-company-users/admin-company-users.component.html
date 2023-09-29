@@ -1,61 +1,33 @@
 <alto-admin-header
   *ngIf="company"
-  title="Users of {{company.name}}"
+  title="Users"
   subtitle="Find here the members of the company."
   [divider]="true"
   [breadcrumbs]="[
     {
       label: 'Companies',
-      url: '/admin/companies'
+      url: '/admin/home'
     },
     {
       label: company.name,
-      url: ['/', 'admin', 'companies', company.id, 'users']
+      url: ['/', 'admin', 'companies', company.id]
     }
   ]"
 ></alto-admin-header>
-<h2></h2>
 <div *ngIf="company" class="d-flex justify-content-between align-items-center alto-grey fs-5 pb-4">
   <div class="d-flex flex-column">
-    <span class="alto-text">{{ company.name }}</span>
     <span class="fs-6">{{ users.length }} user accounts</span>
   </div>
-  <div class="d-flex align-items-center gap-3" *ngIf="selectedUsers.length === 0; else selectedBtn">
-    <button type="button" disabled (click)="addSelectedUsersToPrograms()" class="btn btn-outline-secondary">
-      <i class="bi bi-cloud-upload"></i>
-      Assign teams to programs
-    </button>
-    <button type="button" (click)="uploadUsersToTeam()" class="btn btn-outline-secondary">
-      <i class="bi bi-cloud-upload"></i>
-      Assign users to teams
-    </button>
+  <div class="d-flex align-items-center gap-3">
     <a
       [routerLink]="['/', 'admin', 'companies', company.id, 'users', 'create']"
       routerLinkActive="menu-selected"
       class="btn btn-primary my-2 align-middle"
     >
       <i class="bi bi-plus-lg pe-2"></i>
-      Créer un utilisateur
+      Create
     </a>
   </div>
-  <ng-template #selectedBtn>
-    <div class="d-flex align-items-center gap-3">
-      <button type="button" disabled (click)="addSelectedUsersToPrograms()" class="btn btn-outline-secondary">
-        <i class="bi bi-trash"></i>
-        Delete program data of selected users
-      </button>
-      <button type="button" (click)="addSelectedUsersToTeams()" class="btn btn-outline-secondary">
-        <i class="bi bi-people"></i>
-        Assign selected users to teams
-      </button>
-      <ng-template #mixedSelected>
-        <button disabled type="button" class="btn btn-primary" (click)="changeStatusSelectedUsers()">
-          <i class="bi bi-power"></i>
-          Change status of selected users
-        </button>
-      </ng-template>
-    </div>
-  </ng-template>
 </div>
 <div *ngIf="users.length > 0; else elseBlock">
   <div class="d-flex justify-content-end gap-2 pb-4">
@@ -65,111 +37,46 @@
     </button>
   </div>
   <div class="table-container table-panel mb-5">
-    <table class="table">
+    <table class="table table-hover">
       <thead>
         <tr>
-          <th scope="col">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                (change)="selectAll($event)"
-                [ngModel]="selectedUsers.length === users.length"
-                id="flexCheckDefault"
-              />
-            </div>
-          </th>
-          <th scope="col"></th>
           <th scope="col" sortable="lastname" (sort)="onSort($event)">
             <i class="bi bi-arrow-up-short"></i>Name
           </th>
-          <th scope="col"></th>
           <th scope="col" sortable="email" (sort)="onSort($event)">
             <i class="bi bi-arrow-up-short"></i>Email
           </th>
-          <th scope="col" sortable="teamId" (sort)="onSort($event)">
-            <i class="bi bi-arrow-up-short"></i>Team
-          </th>
           <th scope="col">Role</th>
-          <th scope="col" sortable="slackId" (sort)="onSort($event)">
-            <i class="bi bi-arrow-up-short"></i>ID Slack
-          </th>
-          <th scope="col" class="w-5"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let user of displayedUsers">
-          <td>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                (change)="selectUser(user)"
-                [ngModel]="isUserSelected(user)"
-                id="flexCheckDefault"
-              />
-            </div>
-          </td>
-          <td>
-            <alto-img-badge *ngIf="user.pictureUrl" [url]="user.pictureUrl"></alto-img-badge>
-            <div *ngIf="!user.pictureUrl" class="float-start alto-badge-big">
-              <i class="fs-4 bi bi-person"></i>
-            </div>
-          </td>
           <th scope="row">
             <div class="d-flex align-items-center name-cell">
               <a
                 [routerLink]="['/', 'admin', 'companies', company.id, 'users', user.id]"
                 routerLinkActive="menu-selected"
               >
-                {{ user.firstname }} {{ user.lastname }}
+                {{ user.firstname }} {{ user.lastname }} 
+                <alto-colored-pill-list 
+                  *ngIf="user.deletedAt" 
+                  class="mx-3"
+                  [data]="[{name: 'Deleted', id: 'FF1238asdfr4'}]"
+                  [hasDynamicColor]="true"
+                  [limit]="0"
+                ></alto-colored-pill-list>
               </a>
             </div>
           </th>
-          <td>
-            <div class="d-flex">
-              <a
-                *ngIf="user.roles.includes(eRolesEnum.CompanyAdmin)"
-                class="btn float-start mx-3 alto-badge-big incognito-btn"
-                (click)="setImpersonation(user.email)"
-                ><i class="bi bi-incognito fs-5 text-white"></i
-              ></a>
-            </div>
-          </td>
           <td>{{ user.email }}</td>
-          <td>
-            <div class="d-flex gap-1">
-              <alto-colored-pill-list
-                [hasDynamicColor]="true"
-                [data]="user.team ? [user.team] : []"
-                [limit]="3"
-              ></alto-colored-pill-list>
-            </div>
-          </td>
           <td>
             <span
               *ngFor="let role of user.roles"
               class="alto-badge text-white me-1 mb-1"
-              [style.backgroundColor]="role | uuid2color"
+              [style.backgroundColor]="role | role2BackgroundColor"
+              [style.color]="role | role2color"
               >{{ role }}</span
             >
-          </td>
-          <td>{{ user.slackId }}</td>
-          <td class="action-btn-list-container">
-            <div class="shaddow"></div>
-            <div class="d-flex action-btn-list align-items-center gap-2 px-3 w-100 justify-content-evenly">
-              <a
-                [routerLink]="['/', 'admin', 'companies', company.id, 'users', user.id]"
-                routerLinkActive="menu-selected"
-                role="button"
-                class="btn btn-link"
-              >
-                <i class="alto-second-grey bi bi-pencil"></i>
-              </a>
-              <button disabled type="button" class="btn btn-link">
-                <i class="alto-second-grey bi bi-trash"></i>
-              </button>
-            </div>
           </td>
         </tr>
       </tbody>
@@ -215,26 +122,3 @@
     </div>
   </div>
 </ng-template>
-
-<!-- <table class="table" *ngIf="users">
-  <thead>
-    <tr>
-      <th scope="col">Nom</th>
-      <th scope="col">email</th>
-      <th scope="col">slack</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let user of users">
-      <th scope="row">{{ user.username }}</th>
-      <td>{{user.email}}</td>
-      <td>{{user.slackId}}</td>
-      <td>
-        <a [routerLink]="['/', 'admin', 'users',user.id]" routerLinkActive="menu-selected" class="btn btn-primary">
-          Voir
-        </a>
-      </td>
-    </tr>
-  </tbody>
-</table> -->

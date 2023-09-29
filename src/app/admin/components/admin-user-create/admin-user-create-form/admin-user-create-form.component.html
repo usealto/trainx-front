@@ -1,12 +1,8 @@
 <alto-admin-header
   [title]="edit ? 'Edit a user' : 'Create a user'"
-  subtitle="Find here the members of the company."
+  [subtitle]="edit ? 'Edit the user information.' : 'Enter user information to create an account.' "
 ></alto-admin-header>
-<div class="d-flex justify-content-between">
-  <div>
-    <h2>Informations</h2>
-    <p class="fs-7">Fill in the general information about this user.</p>
-  </div>
+<div class="d-flex justify-content-end">
   <div *ngIf="userForm">
     <button
       type="button"
@@ -41,7 +37,7 @@
     </div>
   </div>
   <!-- Email -->
-  <div class="py-4 border-bottom">
+  <div *ngIf="!edit" class="py-4 border-bottom">
     <div class="w-80 row">
       <div class="col-5 mb-2">
         <label for="name" class="required">Email</label>
@@ -56,56 +52,6 @@
       </div>
     </div>
   </div>
-  <!-- Password -->
-  <div class="py-4 border-bottom" *ngIf="edit">
-    <div class="w-80 row">
-      <div class="col-5 mb-2">
-        <label for="name" class="required">Password</label>
-      </div>
-      <div class="col-7 form-group">
-        <button
-          type="button"
-          class="btn btn-primary d-inline-flex align-items-center text-nowrap"
-          (click)="sendResetPassword()"
-        >
-          Send reset password email
-        </button>
-      </div>
-    </div>
-  </div>
-  <!-- Team -->
-  <div class="py-4 border-bottom">
-    <div class="w-80 row">
-      <div class="col-5 mb-2">
-        <label for="name">Team</label>
-      </div>
-      <div class="col-7 form-group">
-        <ng-select
-          class="w-100"
-          [items]="teams"
-          [multiple]="false"
-          bindValue="id"
-          bindLabel="shortName"
-          placeholder="Search a team"
-          [selectableGroup]="true"
-          [closeOnSelect]="false"
-          formControlName="teamId"
-        >
-          <ng-template ng-label-tmp let-item="item">
-            <div class="alto-badge fs-6b" [style]="item.id | teamColor">
-              <span>{{ item.shortName }}</span>
-            </div>
-          </ng-template>
-          <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-            <span class="alto-badge fs-6b" [style]="item.id | teamColor">
-              {{ item.shortName }} - {{ item.longName }}
-            </span>
-          </ng-template>
-        </ng-select>
-      </div>
-    </div>
-  </div>
-
   <!-- Roles -->
   <div class="py-4 border-bottom">
     <div class="w-80 row">
@@ -127,7 +73,7 @@
           formControlName="roles"
         >
           <ng-template ng-label-tmp let-item="item" let-clear="clear">
-            <div class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
+            <div class="badge rounded-pill p-2" [style.backgroundColor]="item | role2BackgroundColor" [style.color]="item | role2color">
               <span
                 *ngIf="item !== 'company-user'"
                 class="cursor-pointer me-1"
@@ -140,7 +86,7 @@
             </div>
           </ng-template>
           <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-            <span class="badge rounded-pill p-2" [style.backgroundColor]="item | uuid2color">
+            <span class="badge rounded-pill p-2" [style.backgroundColor]="item | role2BackgroundColor" [style.color]="item | role2color">
               {{ item }}
             </span>
           </ng-template>
@@ -148,91 +94,7 @@
       </div>
     </div>
   </div>
-  <!-- Slack ID -->
-  <div class="py-4 border-bottom">
-    <div class="w-80 row">
-      <div class="col-5 mb-2">
-        <label for="name">ID Slack</label>
-      </div>
-      <div class="col-7 form-group">
-        <div class="d-flex gap-3">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Example: U0G9QF9C6"
-            formControlName="slackId"
-          />
-          <button
-            *ngIf="edit"
-            type="button"
-            class="btn btn-primary d-inline-flex align-items-center text-nowrap"
-            (click)="resetSlackId()"
-          >
-            Reset ID
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="py-4 border-bottom" *ngIf="edit">
-    <div class="w-80 row">
-      <div class="col-5 mb-2">
-        <label for="name">Auth0</label>
-      </div>
-      <div class="col-7 form-group">
-        <div class="d-flex flex-column gap-2 fw-bolder">
-          <div class="w-100 d-flex justify-content-between">
-            <span class="alto-grey">Connected to Auth0:</span>
-            <span *ngIf="userAuth0; else connectedElse"
-              ><i class="bi bi-check-circle-fill fs-4 fw-bolder alto-success"></i
-            ></span>
-            <ng-template #connectedElse>
-              <span><i class="bi bi-x-circle-fill fs-4 fw-bolder alto-red"></i></span>
-            </ng-template>
-          </div>
-          <hr />
-          <ng-container *ngIf="userAuth0">
-            <div class="w-100 d-flex justify-content-between">
-              <span class="alto-grey">Last connection to Auth0:</span
-              ><span *ngIf="userAuth0.last_login; else never">{{
-                userAuth0.last_login | date : 'fullDate'
-              }}</span>
-              <ng-template #never><span>Never</span></ng-template>
-            </div>
-            <hr />
-            <div class="w-100 d-flex justify-content-between">
-              <span class="alto-grey">Verified email on Auth0:</span>
-              <span *ngIf="userAuth0.email_verified; else emailVerifiedElse"
-                ><i class="bi bi-check-circle-fill fs-4 fw-bolder alto-success"></i
-              ></span>
-              <ng-template #emailVerifiedElse>
-                <span><i class="bi bi-x-circle-fill fs-4 fw-bolder alto-red"></i></span>
-              </ng-template>
-            </div>
-            <hr />
-            <div class="w-100 d-flex justify-content-between">
-              <span class="alto-grey">Logins count</span>
-              <span class="alto-badge fw-bolder">{{ userAuth0.logins_count || 0 }}</span>
-            </div>
-            <hr />
-            <div class="w-100 d-flex justify-content-between">
-              <span class="alto-grey">Deleted</span>{{ user.deletedAt }}
-            </div>
-            <hr />
-          </ng-container>
-        </div>
-      </div>
-    </div>
-  </div>
 </form>
-<button
-  *ngIf="edit"
-  type="button"
-  class="btn btn-primary d-inline-flex align-items-center text-nowrap mt-4"
-  (click)="showRawDataModal()"
->
-  Show raw data
-</button>
 <div *ngIf="userForm" class="d-flex justify-content-end pt-4">
   <div class="d-flex align-items-center">
     <button

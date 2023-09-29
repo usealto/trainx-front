@@ -62,9 +62,10 @@ export class AdminMenuComponent implements OnInit {
     this.impersonatedUser =
       localStorage.getItem('impersonatedUser') !== '' && localStorage.getItem('impersonatedUser');
     if (localStorage.getItem('impersonatedUser') === '') {
-      this.router.navigate(['/admin/companies/']).then(() => window.location.reload());
+      this.router.navigate(['/admin/home/']).then(() => window.location.reload());
     } else {
-      window.location.reload();
+      // window.location.reload();
+      this.router.navigate(['/l/home/']).then(() => window.location.reload());
     }
   }
 }

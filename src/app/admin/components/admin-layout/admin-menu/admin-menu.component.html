@@ -11,37 +11,13 @@
           <i class="bi bi-house-door"></i>
         </a>
       </div>
-      <div ngbTooltip="All Companies">
-        <a
-          [routerLink]="'companies'"
-          routerLinkActive="menu-selected"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="module"
-        >
-          <i class="bi bi-buildings alto-grey"></i>
-        </a>
-      </div>
-      <div ngbTooltip="All users" placement="right">
-        <a [routerLink]="'users'" routerLinkActive="menu-selected" class="module">
-          <i class="bi bi-people alto-grey"></i>
-        </a>
-      </div>
-      <div *ngIf="user && impersonatedUser" ngbTooltip="Company's home" placement="right">
-        <a
-          [routerLink]="['/', 'admin', 'companies', user.company.id]"
-          routerLinkActive="menu-selected"
-          class="module"
-        >
-          <i class="bi bi-building-fill-exclamation"></i>
-        </a>
-      </div>
       <div *ngIf="user && impersonatedUser" ngbTooltip="Company's users" placement="right">
         <a
           [routerLink]="['/', 'admin', 'companies', user.company.id, 'users']"
           routerLinkActive="menu-selected"
           class="module"
         >
-          <i class="bi bi-people-fill"></i>
+          <i class="bi bi-people"></i>
         </a>
       </div>
       <div *ngIf="user && impersonatedUser" ngbTooltip="Company's questions" placement="right">
@@ -50,7 +26,7 @@
           routerLinkActive="menu-selected"
           class="module"
         >
-          <i class="bi bi-question-circle-fill"></i>
+          <i class="bi bi-question-circle"></i>
         </a>
       </div>
     </div>

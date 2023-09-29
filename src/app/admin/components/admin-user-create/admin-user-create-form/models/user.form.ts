@@ -4,7 +4,13 @@ export interface UserForm {
   firstname: string;
   lastname: string;
   email: string;
-  teamId?: string;
   roles: Array<RoleEnumApi>;
-  slackId: string;
+}
+
+export interface UserFormView {
+  firstname: string;
+  lastname: string;
+  teamId: string;
+  email: string;
+  roles: Array<RoleEnumApi>;
 }

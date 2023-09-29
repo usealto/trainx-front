@@ -1,7 +1,7 @@
 <div>
   <alto-admin-header
     title="Companies"
-    subtitle="All of our customers"
+    subtitle="Find all of our clients here"
     [divider]="true"
     [breadcrumbs]="[
       {
@@ -14,124 +14,44 @@
   <div class="d-flex justify-content-between align-items-center alto-grey fs-5 pb-4">
     <span>{{ companies.length }} company account</span>
     <a
-      *ngIf="selectedIds.length === 0; else deleteBtn"
       [routerLink]="['/', 'admin', 'companies', 'create']"
       routerLinkActive="menu-selected"
       class="btn btn-primary my-2 align-middle"
     >
       <i class="bi bi-plus-lg pe-2"></i>
-      Create a company
+      Create
     </a>
-    <ng-template #deleteBtn>
-      <button disabled class="btn btn-danger my-2 align-middle" (click)="deleteSelectedCompanies()">
-        <i class="bi bi-trash"></i> Delete
-      </button>
-    </ng-template>
   </div>
   <div *ngIf="companies.length > 0; else elseBlock">
     <div class="d-flex justify-content-end gap-2 pb-4">
       <alto-search (searchChange)="onSearch($event)"></alto-search>
-      <button type="button" class="btn btn-outline-secondary" (click)="openFilterCanvas()">
-        <i class="bi bi-filter"></i> Filters
-      </button>
     </div>
     <div class="table-container table-panel mb-5">
-      <table class="table">
+      <table class="table table-hover">
         <thead>
           <tr>
             <th scope="col">
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  (change)="selectAll($event)"
-                  [ngModel]="selectedIds.length === companies.length"
-                  id="flexCheckDefault"
-                />
-              </div>
+              Company name
             </th>
-            <th scope="col" sortable="name" (sort)="onSort($event)">
-              <i class="bi bi-arrow-up-short"></i> Corporate name
-            </th>
-            <th scope="col" sortable="domain" (sort)="onSort($event)">
-              <i class="bi bi-arrow-up-short"></i> Domain
-            </th>
-
-            <th scope="col">User admin</th>
-            <th scope="col">Sending days</th>
-            <th scope="col" sortable="slackQuestionsPerQuiz" (sort)="onSort($event)">
-              <i class="bi bi-arrow-up-short"></i> Nb of questions
-            </th>
-            <th scope="col" class="w-5"></th>
           </tr>
         </thead>
         <tbody>
           <tr
-            *ngFor="let company of displayedCompanies"
-            [style.backgroundColor]="
-              isImpersonnatedAsCompanyAdminOfthisCompanyUpdate(company.admins) ? '#E3F2FD' : ''
-            "
-          >
-            <td>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  (change)="selectCompany(company.id)"
-                  [ngModel]="selectedIds.includes(company.id)"
-                  id="flexCheckDefault"
-                />
-              </div>
-            </td>
-            <td scope="row">
+            *ngFor="let company of displayedCompanies">
+            <td scope="row" 
+              class="d-flex justify-content-between align-items-center">
               <a
-                *ngIf="isImpersonnatedAsCompanyAdminOfthisCompanyUpdate(company.admins); else simpleName"
                 [routerLink]="['/', 'admin', 'companies', company.id, 'users']"
                 routerLinkActive="menu-selected"
-                class="fw-bolder"
               >
-                {{ company.name }}
+                <span class="fw-bolder alto-grey">{{ company.name }}</span>
+                <p class="fw-lighter alto-grey smaller">Created {{ company.createdAt| date : 'fullDate' }}, by {{ company.createdByUser.firstname }} {{company.createdByUser.lastname}} </p>
               </a>
               <ng-template #simpleName> {{ company.name }}</ng-template>
-            </td>
-            <td>{{ company.domain }}</td>
-
-            <td>
-              <div class="d-flex" *ngIf="company?.admins?.length ?? 0 > 0">
-                <a
-                  class="btn btn-primary float-start me-3"
-                  (click)="setImpersonation(company?.admins?.[0]?.email ?? '' )"
-                  ><i class="bi bi-incognito fs-5 text-white"></i
-                ></a>
-                <div class="d-flex flex-column gap-1">
-                  <span
-                    class="name alto-text"
-                    >{{(company?.admins?.[0]?.firstname ?? '') + (company?.admins?.[0]?.lastname ?? '') }}</span
-                  >
-                  <span class="alto-grey">{{company?.admins?.[0]?.email ?? '' }}</span>
-                </div>
-              </div>
-            </td>
-            <td>{{ company.slackDays }}</td>
-            <td>{{ company.slackQuestionsPerQuiz }}</td>
-            <td
-              class="action-btn-list-container"
-              *ngIf="isImpersonnatedAsCompanyAdminOfthisCompanyUpdate(company.admins)"
-            >
-              <div class="shaddow"></div>
-              <div class="d-flex flex-row-reverse action-btn-list align-items-center w-100">
-                <button type="button" disabled class="btn btn-link">
-                  <i class="alto-second-grey bi bi-trash"></i>
-                </button>
-                <a
-                  [routerLink]="['/', 'admin', 'companies', company.id]"
-                  routerLinkActive="menu-selected"
-                  role="button"
-                  class="btn btn-link"
-                >
-                  <i class="alto-second-grey bi bi-pencil"></i>
-                </a>
-              </div>
+              <a 
+                [routerLink]="['/','admin','companies', company.id]">
+                <i class="bi bi-pencil mx-4"></i>
+              </a>
             </td>
           </tr>
         </tbody>

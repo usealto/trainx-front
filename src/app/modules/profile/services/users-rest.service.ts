@@ -29,6 +29,7 @@ export class UsersRestService {
     } else {
       return this.userApi.getUsers({ page: 1, itemsPerPage: 1000 }).pipe(
         map((r) => r.data ?? []),
+        tap((data) => console.log(data.filter((u) => u.teamId === 'cbecb898-a0a8-43c4-b2b6-1e993f88bb8a'))),
         tap((users) => (this.userStore.users.value = users)),
       );
     }

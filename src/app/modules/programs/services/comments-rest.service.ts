@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 import {
   CommentDtoApi,
-  CommentDtoResponseApi,
+  CommentDtoPaginatedResponseApi,
   CommentsApiService,
   GetCommentsRequestParams,
-  PatchCommentDtoApi,
   PatchCommentRequestParams,
 } from '@usealto/sdk-ts-angular';
 import { ProgramsStore } from '../programs.store';
@@ -41,13 +40,23 @@ export class CommentsRestService {
     }
   }
 
-  getComments(req?: GetCommentsRequestParams): Observable<CommentDtoApi[]> {
+  getCommentsCount(req?: GetCommentsRequestParams): Observable<number> {
     const par = {
+      page: 1,
+      itemsPerPage: 1,
       ...req,
-      page: req?.page ?? 1,
-      itemsPerPage: req?.itemsPerPage ?? 400,
+    } as GetCommentsRequestParams;
+
+    return this.commentApi.getComments(par).pipe(map((r) => r.meta.totalItems ?? 0));
+  }
+
+  getCommentsPaginated(req?: GetCommentsRequestParams): Observable<CommentDtoPaginatedResponseApi> {
+    const par = {
+      page: 1,
+      itemsPerPage: 25,
+      ...req,
     };
 
-    return this.commentApi.getComments(par).pipe(map((r) => r.data ?? []));
+    return this.commentApi.getComments(par);
   }
 }

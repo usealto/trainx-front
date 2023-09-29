@@ -16,8 +16,13 @@ export class AdminUnauthorizedComponent implements OnInit {
   ngOnInit() { 
     this.usersRestService.getMe().subscribe((user)=> {
       this.user = user
+      // redirect to the hoe admin page if the user is an admin
+      // or if the user is impersonnated
+      if (/alto-admin/.test(this.user.roles.toString())
+        || (localStorage.getItem('impersonatedUser') !== '' && localStorage.getItem('impersonatedUser'))) {
+        this.router.navigate(['admin', 'home']);
+      }
     })
-    
   }
 
   disconnect() {
