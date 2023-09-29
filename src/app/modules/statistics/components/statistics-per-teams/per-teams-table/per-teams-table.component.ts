@@ -9,8 +9,8 @@ interface DataForTable {
   answeredQuestionsProgression: number;
   commentsCount: number;
   commentsProgression: number;
-  suggeredQuestionsCount: number;
-  suggeredQuestionsProgression: number;
+  submittedQuestionsCount: number;
+  submittedQuestionsProgression: number;
   leastMasteredTags: string[];
 }
 
@@ -37,11 +37,11 @@ export class PerTeamsTableComponent implements OnInit {
       answeredQuestionsProgression: 23,
       commentsCount: 54,
       commentsProgression: 92,
-      suggeredQuestionsCount: 2,
-      suggeredQuestionsProgression: 300,
+      submittedQuestionsCount: 2,
+      submittedQuestionsProgression: 300,
       leastMasteredTags: ['tag1', 'tag2', 'tag3'],
-    } as DataForTable
-  ]
+    } as DataForTable,
+  ];
 
   fakeData2 = [
     {
@@ -55,14 +55,14 @@ export class PerTeamsTableComponent implements OnInit {
       answeredQuestionsProgression: 23,
       commentsCount: 54,
       commentsProgression: 92,
-      suggeredQuestionsCount: 2,
-      suggeredQuestionsProgression: 300,
+      submittedQuestionsCount: 2,
+      submittedQuestionsProgression: 300,
       leastMasteredTags: ['tag1', 'tag2', 'tag3'],
-    } as DataForTable
-  ]
+    } as DataForTable,
+  ];
 
   ngOnInit(): void {
-    this.data = this.fakeData2
+    this.data = this.fakeData2;
     return;
   }
 }
