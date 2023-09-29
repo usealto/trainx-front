@@ -29,6 +29,7 @@ export class StatisticsComponent implements OnInit {
   }
 
   tabChange(val: string) {
-    this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, this.selectedTab]);
+    const selectedTab = this.tabs.find((t) => t.value === val)?.value || this.tabs[0].value;
+    this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, selectedTab]);
   }
 }
