@@ -89,11 +89,17 @@ export class StatisticsPerTeamsComponent implements OnInit {
       team: t.team,
       globalScore: t.score,
       answeredQuestionsCount: t.totalGuessesCount,
-      answeredQuestionsProgression: 0, // tProg?.totalGuessesCount - t.totalGuessesCount
-      commentsCount: 0,
-      commentsProgression: 0,
-      submittedQuestionsCount: 0,
-      submittedQuestionsProgression: 0,
+      answeredQuestionsProgression: this.scoreService.getProgression(
+        t.totalGuessesCount,
+        tProg?.totalGuessesCount,
+      ),
+      commentsCount: t.commentsCount,
+      commentsProgression: this.scoreService.getProgression(t.commentsCount, tProg?.commentsCount),
+      submittedQuestionsCount: t.questionsSubmittedCount,
+      submittedQuestionsProgression: this.scoreService.getProgression(
+        t.questionsSubmittedCount,
+        tProg?.questionsSubmittedCount,
+      ),
       leastMasteredTags: t.tags
         ?.filter((ta) => (ta.score ?? 0) < 50)
         .sort((a, b) => (a.score || 0) - (b.score || 0))
