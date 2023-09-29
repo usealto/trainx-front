@@ -1,68 +1,33 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-
-interface DataForTable {
-  owner: UserDtoApi | TeamDtoApi;
-  globalScore: number;
-  answeredQuestionsCount: number;
-  answeredQuestionsProgression: number;
-  commentsCount: number;
-  commentsProgression: number;
-  suggeredQuestionsCount: number;
-  suggeredQuestionsProgression: number;
-  leastMasteredTags: string[];
-}
+import { DataForTable } from '../../../models/statistics.model';
 
 @Component({
   selector: 'alto-per-teams-table',
   templateUrl: './per-teams-table.component.html',
   styleUrls: ['./per-teams-table.component.scss'],
 })
-export class PerTeamsTableComponent implements OnInit {
+export class PerTeamsTableComponent implements OnChanges {
   I18ns = I18ns;
 
   @Input() data: DataForTable[] = [];
+  @Input() type!: 'team' | 'user';
 
-  @Input() type!: string;
+  pageSize = 5;
+  page = 1;
+  displayedData: DataForTable[] = [];
 
-  fakeData1 = [
-    {
-      owner: {
-        name: 'Manager',
-        id: 'cbecb898-a0a8-43c4-b2b6-1e993f88bb8a',
-      } as TeamDtoApi,
-      globalScore: 12,
-      answeredQuestionsCount: 15,
-      answeredQuestionsProgression: 23,
-      commentsCount: 54,
-      commentsProgression: 92,
-      suggeredQuestionsCount: 2,
-      suggeredQuestionsProgression: 300,
-      leastMasteredTags: ['tag1', 'tag2', 'tag3'],
-    } as DataForTable
-  ]
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['data']){
 
-  fakeData2 = [
-    {
-      owner: {
-        firstname: 'Hugo',
-        lastname: 'Poisot',
-        id: '8517b813-fa25-46b2-b517-34b5ff37ec97',
-      } as UserDtoApi,
-      globalScore: 12,
-      answeredQuestionsCount: 15,
-      answeredQuestionsProgression: 23,
-      commentsCount: 54,
-      commentsProgression: 92,
-      suggeredQuestionsCount: 2,
-      suggeredQuestionsProgression: 300,
-      leastMasteredTags: ['tag1', 'tag2', 'tag3'],
-    } as DataForTable
-  ]
+      this.paginate(1);
+    }
 
-  ngOnInit(): void {
-    this.data = this.fakeData2
-    return;
+  }
+
+  paginate(page: number) {
+    this.page = page;
+    this.displayedData = this.data.slice((page - 1) * this.pageSize, page * this.pageSize);
   }
 }

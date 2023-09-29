@@ -4,26 +4,26 @@
       <tr>
         <th scope="col" class="w-10">
           {{
-            type === 'teams' ? I18ns.statistics.perTeams.table.team : I18ns.statistics.perTeams.table.member
+            type === 'team' ? I18ns.statistics.perTeams.table.team : I18ns.statistics.perTeams.table.member
           }}
         </th>
         <th scope="col" class="w-5 text-center">{{ I18ns.statistics.perTeams.table.globalScore }}</th>
         <th scope="col" class="w-5 text-center">{{ I18ns.statistics.perTeams.table.answeredQuestions }}</th>
         <th scope="col" class="w-5 text-center">{{ I18ns.statistics.perTeams.table.comments }}</th>
         <th scope="col" class="w-5 text-center">{{ I18ns.statistics.perTeams.table.suggestedQuestions }}</th>
-        <th scope="col" class="w-20">{{ I18ns.statistics.perTeams.table.leastMasteredTags }}</th>
+        <th scope="col" class="w-15">{{ I18ns.statistics.perTeams.table.leastMasteredTags }}</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of data" class="align-middle">
+      <tr *ngFor="let item of displayedData" class="align-middle">
         <td>
-          <span *ngIf="type === 'team'" class="alto-badge" [style]="item.owner.id | teamColor">{{
-            'Manager'
-          }}</span>
+          <span *ngIf="type === 'team'" class="alto-badge" [style]="item.team?.id | teamColor">
+            {{ item.team?.name }}
+          </span>
           <alto-profile-card *ngIf="type === 'user'" [user]="item.owner"></alto-profile-card>
         </td>
         <td class="text-center">
-          <span class="alto-score" [class]="item.globalScore | pillColor">{{ item.globalScore }} %</span>
+          <span class="alto-score" [class]="item.globalScore  | pillColor">{{ item.globalScore | percent}} </span>
         </td>
         <td class="alto-grey text-center">
           {{ item.answeredQuestionsCount }}
@@ -40,10 +40,10 @@
           ></alto-progression-badge>
         </td>
         <td class="alto-grey text-center">
-          {{ item.suggeredQuestionsCount }}
+          {{ item.submittedQuestionsCount }}
           <alto-progression-badge
             class="ms-3 d-inline-block"
-            [score]="item.suggeredQuestionsProgression / 100"
+            [score]="item.submittedQuestionsProgression / 100"
           ></alto-progression-badge>
         </td>
         <td>
@@ -55,4 +55,11 @@
       </tr>
     </tbody>
   </table>
+  <alto-pagination
+  class="mx-4 d-block"
+  [collectionSize]="data.length"
+  [pageSize]="pageSize"
+  [page]="page"
+  (pageChange)="paginate($event)"
+  ></alto-pagination>
 </div>

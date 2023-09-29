@@ -428,8 +428,15 @@ export const FR = {
     },
     perTeams: {
       title: 'Par équipe',
+      sections : {
+        teams : "Équipes",
+        teamsSubtitle:"Découvrez les statistiques d'engagement et de performance de chacune de vos équipes. ",
+        members: "Membres",
+        membersSubtitle: "Découvrez les statistiques d'engagement et de performance de chacun de vos membres."
+      },
       globalTooltip:
         '% de questions justes sur le nombre de questions répondues et variation sur la période passée',
+      teamsFilter: 'Équipes',
       table: {
         globalScore: 'Score global',
         answeredQuestions: 'Questions répondues',
