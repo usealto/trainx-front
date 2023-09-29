@@ -1,5 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { DataForTable } from '../../../models/statistics.model';
 
@@ -19,12 +18,9 @@ export class PerTeamsTableComponent implements OnChanges {
   displayedData: DataForTable[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes['data']){
-
+    if (changes['data']) {
       this.paginate(1);
     }
-
- 
   }
 
   paginate(page: number) {

@@ -3,12 +3,12 @@ import { TeamDtoApi, TeamStatsDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-an
 import { combineLatest, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { UserFilters } from 'src/app/modules/profile/models/user.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { DataForTable } from '../../models/statistics.model';
-import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { DataForTable } from '../../models/statistics.model';
 
 @Component({
   selector: 'alto-statistics-per-teams',
@@ -56,7 +56,7 @@ export class StatisticsPerTeamsComponent implements OnInit {
             const userProg = usersProg.find((tp) => tp.user.id === u.user.id);
             return this.dataForMembersTableMapper(u, userProg);
           });
-          this.members = this.membersDisplay
+          this.members = this.membersDisplay;
         }),
       )
       .subscribe();
@@ -114,7 +114,10 @@ export class StatisticsPerTeamsComponent implements OnInit {
       commentsCount: u.commentsCount,
       commentsProgression: this.scoreService.getProgression(u.commentsCount, uProg?.commentsCount),
       submittedQuestionsCount: u.questionsSubmittedCount,
-      submittedQuestionsProgression: this.scoreService.getProgression(u.questionsSubmittedCount, uProg?.questionsSubmittedCount),
+      submittedQuestionsProgression: this.scoreService.getProgression(
+        u.questionsSubmittedCount,
+        uProg?.questionsSubmittedCount,
+      ),
       leastMasteredTags: u.tags
         ?.filter((ta) => (ta.score ?? 0) < 50)
         .sort((a, b) => (a.score || 0) - (b.score || 0))
