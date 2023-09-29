@@ -41,7 +41,6 @@ import { StatusPillComponent } from './components/status-pill/status-pill.compon
 import { TabsComponent } from './components/tabs/tabs.component';
 import { TextCounterComponent } from './components/text-counter/text-counter.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
-import { TopFlopComponent } from './components/top-flop/top-flop.component';
 import { TrainingCardComponent } from './components/training-card/training-card.component';
 import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
@@ -75,7 +74,6 @@ import { PlaceholderManagerComponent } from './components/placeholder-manager/pl
     ButtonGroupComponent,
     TextCounterComponent,
     QuestionDeleteModalComponent,
-    TopFlopComponent,
     IconBadgeComponent,
     DeleteModalComponent,
     RangeComponent,
@@ -140,7 +138,6 @@ import { PlaceholderManagerComponent } from './components/placeholder-manager/pl
     TextCounterComponent,
     QuestionDeleteModalComponent,
     EmojiPipe,
-    TopFlopComponent,
     RangeComponent,
     DeleteModalComponent,
     LeaderboardComponent,
