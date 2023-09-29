@@ -77,16 +77,16 @@
 
     <a
       class="button gray"
-      href="{{
+      [routerLink]="
         '/' +
-          AltoRoutes.lead +
-          '/' +
-          AltoRoutes.collaboration +
-          '/' +
-          AltoRoutes.collaborationSeeQuestion +
-          '/' +
-          comment?.questionId
-      }}"
+        AltoRoutes.lead +
+        '/' +
+        AltoRoutes.collaboration +
+        '/' +
+        AltoRoutes.collaborationSeeQuestion +
+        '/' +
+        comment?.questionId
+      "
     >
       <i class="bi bi-eye"></i>
       {{ I18ns.collaboration.commentCard.seeQuestion }}
