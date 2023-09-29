@@ -9,7 +9,20 @@
 </h2>
 <p class="mb-5 alto-grey">{{ I18ns.leadTeam.teams.subtitle }}</p>
 
-<alto-per-teams-table [type]="'team'" [data]="teamsDisplay"></alto-per-teams-table>
+<alto-placeholder-manager [status]="teamsDataStatus">
+  <alto-per-teams-table [type]="'team'" [data]="teamsDisplay"></alto-per-teams-table>
+  <div class="nodata-placeholder" noData>
+    <div class="text-center">
+      <img [src]="Emoji.FlexedBiceps | emoji" height="24" />
+      <p class="mt-3">
+        {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderTitle }}
+      </p>
+      <span class="d-inline-block mt-3">
+        {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderSubtitle }}
+      </span>
+    </div>
+  </div>
+</alto-placeholder-manager>
 
 <!-- MEMBERS -->
 <div class="mt-6">
@@ -31,5 +44,22 @@
     (selectChange)="filterMembers({ teams: $event })"
   ></alto-dropdown-filter>
   <alto-search class="mb-5" (searchChange)="filterMembers({ search: $event })"></alto-search>
-  <alto-per-teams-table [type]="'user'" [data]="membersDisplay"></alto-per-teams-table>
+
+  <alto-placeholder-manager [status]="membersDataStatus">
+    <alto-per-teams-table [type]="'user'" [data]="membersDisplay"></alto-per-teams-table>
+    <div class="nodata-placeholder text-center" noResult>
+      <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.shared.noData }}</p>
+      <span class="mt-3 d-block">{{ I18ns.shared.noDataSubtitle }}</span>
+    </div>
+    <div class="text-center nodata-placeholder" noData>
+      <img [src]="Emoji.FourOclock | emoji" height="24" />
+      <p class="mt-3">
+        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderTitle }}
+      </p>
+      <span class="d-inline-block mt-3">
+        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderSubtitle }}
+      </span>
+    </div>
+  </alto-placeholder-manager>
 </div>

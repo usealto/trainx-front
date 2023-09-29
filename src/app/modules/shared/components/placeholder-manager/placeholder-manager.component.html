@@ -1,0 +1,15 @@
+<ng-container [ngSwitch]="status">
+  <ng-container *ngSwitchCase="'good'">
+    <ng-content></ng-content>
+  </ng-container>
+  <ng-container *ngSwitchCase="'noResult'">
+    <ng-content select="[noResult]"></ng-content>
+  </ng-container>
+  <ng-container *ngSwitchCase="'noData'">
+    <ng-content select="[noData]"></ng-content>
+  </ng-container>
+  <ng-container *ngSwitchCase="'empty'">
+    <ng-content select="[empty]"></ng-content>
+  </ng-container>
+  <ng-container *ngSwitchDefault> </ng-container>
+</ng-container>
