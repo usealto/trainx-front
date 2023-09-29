@@ -46,6 +46,7 @@ import { TrainingCardComponent } from './components/training-card/training-card.
 import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
+import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     IconBadgeComponent,
     DeleteModalComponent,
     RangeComponent,
+    LeaderboardComponent,
   ],
   imports: [
     CommonModule,
@@ -139,6 +141,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     TopFlopComponent,
     RangeComponent,
     DeleteModalComponent,
+    LeaderboardComponent,
   ],
   providers: [NgbActiveModal],
 })
