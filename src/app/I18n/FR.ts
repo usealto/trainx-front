@@ -338,7 +338,7 @@ export const FR = {
     title: 'Statistiques',
     subtitle: "Retrouvez l'ensemble des statistiques de vos équipes.",
     globalEngagement: {
-      title: 'Engagement global',
+      title: 'Engagement',
       subtitle: "Retrouvez l'engagement global de vos équipes.",
       activity: {
         activity: 'Activité',
@@ -351,7 +351,7 @@ export const FR = {
       },
     },
     globalPerformance: {
-      navbarTitle: 'Performance globale',
+      navbarTitle: 'Performance',
       perTeamPerformance: {
         title: 'Performance par équipes',
         subtitle: "Retrouvez une vue d' ensemble sur les résultats de vos équipes.",
@@ -428,8 +428,24 @@ export const FR = {
     },
     perTeams: {
       title: 'Par équipe',
+      sections : {
+        teams : "Équipes",
+        teamsSubtitle:"Découvrez les statistiques d'engagement et de performance de chacune de vos équipes. ",
+        members: "Membres",
+        membersSubtitle: "Découvrez les statistiques d'engagement et de performance de chacun de vos membres."
+      },
       globalTooltip:
         '% de questions justes sur le nombre de questions répondues et variation sur la période passée',
+      teamsFilter: 'Équipes',
+      table: {
+        globalScore: 'Score global',
+        answeredQuestions: 'Questions répondues',
+        comments: 'Commentaires',
+        suggestedQuestions: 'Questions suggérées',
+        leastMasteredTags: 'Tags les moins maîtrisés',
+        team: 'Équipe',
+        member: 'Membres',
+      },
     },
   },
   questions: {
