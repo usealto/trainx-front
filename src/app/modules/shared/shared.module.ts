@@ -47,6 +47,7 @@ import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe'
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
+import { PlaceholderManagerComponent } from './components/placeholder-manager/placeholder-manager.component';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
     DeleteModalComponent,
     RangeComponent,
     LeaderboardComponent,
+    PlaceholderManagerComponent,
   ],
   imports: [
     CommonModule,
@@ -142,6 +144,7 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
     RangeComponent,
     DeleteModalComponent,
     LeaderboardComponent,
+    PlaceholderManagerComponent,
   ],
   providers: [NgbActiveModal],
 })

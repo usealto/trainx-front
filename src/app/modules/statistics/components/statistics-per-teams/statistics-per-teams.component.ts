@@ -9,6 +9,7 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { DataForTable } from '../../models/statistics.model';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 
 @Component({
   selector: 'alto-statistics-per-teams',
@@ -25,7 +26,10 @@ export class StatisticsPerTeamsComponent implements OnInit {
   members: DataForTable[] = [];
 
   membersDisplay: DataForTable[] = [];
+  membersDataStatus: PlaceholderDataStatus = 'good';
+
   teamsDisplay: DataForTable[] = [];
+  teamsDataStatus: PlaceholderDataStatus = 'good';
 
   constructor(
     private readonly scoreRestService: ScoresRestService,
@@ -52,11 +56,14 @@ export class StatisticsPerTeamsComponent implements OnInit {
             const teamProg = teamsProg.find((tp) => tp.team.id === t.team.id);
             return this.dataForTeamTableMapper(t, teamProg);
           });
+          this.teamsDataStatus = teams.length === 0 ? 'noData' : 'good';
+
           this.membersDisplay = users.map((u) => {
             const userProg = usersProg.find((tp) => tp.user.id === u.user.id);
             return this.dataForMembersTableMapper(u, userProg);
           });
           this.members = this.membersDisplay;
+          this.membersDataStatus = users.length === 0 ? 'noData' : 'good';
         }),
       )
       .subscribe();
@@ -77,6 +84,7 @@ export class StatisticsPerTeamsComponent implements OnInit {
     }
 
     this.membersDisplay = output;
+    this.membersDataStatus = output.length === 0 ? 'noResult' : 'good';
   }
 
   changeDuration(duration: string) {
