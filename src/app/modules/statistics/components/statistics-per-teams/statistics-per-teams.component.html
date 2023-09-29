@@ -1,5 +1,5 @@
 <!-- TEAMS -->
-<alto-time-picker (durationSelected)="changeDuration($event)" class="float-end"></alto-time-picker>
+<alto-time-picker [duration]="duration" (durationSelected)="changeDuration($event)" class="float-end"></alto-time-picker>
 <h2 id="teamsAnchor" class="me-3">
   <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" /> {{ I18ns.statistics.perTeams.sections.teams }}
 </h2>
@@ -9,7 +9,7 @@
 
 <!-- MEMBERS -->
 <div class="mt-6">
-  <alto-time-picker (durationSelected)="changeDuration($event)" class="float-end"></alto-time-picker>
+  <alto-time-picker [duration]="duration" (durationSelected)="changeDuration($event)" class="float-end"></alto-time-picker>
   <h2 id="membersAnchor">
     <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" />
     {{ I18ns.statistics.perTeams.sections.members }}
