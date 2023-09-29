@@ -10,10 +10,8 @@ import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
   styleUrls: ['./statistics.component.scss'],
 })
 export class StatisticsComponent implements OnInit {
-  Altoroutes = AltoRoutes;
   I18ns = I18ns;
   EmojiName = EmojiName;
-  activeTab = 1;
 
   tabs = [
     { label: I18ns.statistics.globalPerformance.navbarTitle, value: AltoRoutes.performance },
@@ -21,14 +19,17 @@ export class StatisticsComponent implements OnInit {
     // { label: I18ns.statistics.globalEngagement.title, value: AltoRoutes.engagement },
     { label: I18ns.statistics.perTeams.title, value: AltoRoutes.teams },
   ];
+  selectedTab = '';
 
   constructor(private readonly router: Router) {}
 
   ngOnInit(): void {
-    this.tabChange(this.tabs[0].value);
+    this.selectedTab =
+      this.tabs.find(({ value }) => this.router.url.split('/').includes(value))?.value ?? this.tabs[0].value;
   }
 
   tabChange(val: string) {
-    this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, val]);
+    this.selectedTab = this.tabs.find((t) => t.value === val)?.value || this.tabs[0].value;
+    this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, this.selectedTab]);
   }
 }

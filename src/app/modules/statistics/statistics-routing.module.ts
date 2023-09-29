@@ -4,6 +4,7 @@ import { StatisticsGlobalPerformanceComponent } from './components/global-perfor
 import { StatisticsGlobalEngagementComponent } from './components/statistics-global-engagement/statistics-global-engagement.component';
 import { StatisticsPerTeamsComponent } from './components/statistics-per-teams/statistics-per-teams.component';
 import { StatisticsComponent } from './components/statistics/statistics.component';
+import { AltoRoutes } from '../shared/constants/routes';
 
 const routes: Routes = [
   {
@@ -12,18 +13,19 @@ const routes: Routes = [
     children: [
       {
         path: '',
+        redirectTo: AltoRoutes.performance,
+        pathMatch: 'full',
+      },
+      {
+        path: AltoRoutes.performance,
         component: StatisticsGlobalPerformanceComponent,
       },
       {
-        path: 'performance',
-        component: StatisticsGlobalPerformanceComponent,
-      },
-      {
-        path: 'engagement',
+        path: AltoRoutes.engagement,
         component: StatisticsGlobalEngagementComponent,
       },
       {
-        path: 'teams',
+        path: AltoRoutes.teams,
         component: StatisticsPerTeamsComponent,
       },
     ],

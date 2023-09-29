@@ -26,9 +26,9 @@ export class TabsComponent {
     return Math.round(Math.random() * 1000);
   }
 
-  isChecked(i: number, itemValue: any): boolean {
+  isChecked(i: number): boolean {
     if (this.selectedValue) {
-      return this.data[i].value === itemValue;
+      return this.data[i].value === this.selectedValue;
     } else if (i === 0) {
       return true;
     }
