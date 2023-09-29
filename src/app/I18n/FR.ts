@@ -430,6 +430,15 @@ export const FR = {
       title: 'Par équipe',
       globalTooltip:
         '% de questions justes sur le nombre de questions répondues et variation sur la période passée',
+      table: {
+        globalScore: 'Score global',
+        answeredQuestions: 'Questions répondues',
+        comments: 'Commentaires',
+        suggestedQuestions: 'Questions suggérées',
+        leastMasteredTags: 'Tags les moins maîtrisés',
+        team: 'Équipe',
+        member: 'Membres',
+      },
     },
   },
   questions: {
