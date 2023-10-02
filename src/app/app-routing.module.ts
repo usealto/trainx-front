@@ -114,9 +114,6 @@ const routes: Routes = [
   {
     path: '',
     canActivate: [AuthGuard],
-    resolve: {
-      appData: appResolver,
-    },
     children: [
       {
         path: AltoRoutes.noAccess,
