@@ -29,13 +29,13 @@
 </div>
 
 <ng-container *ngIf="teamsLeaderboardCount > 0; else noTopFlopTeams">
-  <alto-top-flop
+  <alto-leaderboard
     [title]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title"
     [subtitle]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.subtitle"
     [leaderboard]="teamsLeaderboard"
-    [size]="5"
+    [size]="3"
   >
-  </alto-top-flop>
+  </alto-leaderboard>
 </ng-container>
 <ng-template #noTopFlopTeams>
   <div class="nodata-placeholder">
