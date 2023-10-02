@@ -122,10 +122,10 @@
 
     <div class="flex-grow-1">
       <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
-      <h1 class="mb-0 d-inline-block">{{ getTotalQuestions(usersQuestionCount.size) }}</h1>
+      <h1 class="mb-0 d-inline-block">{{ usersTotalQuestions }}</h1>
       <alto-progression-badge
         class="float-end"
-        [score]="getPercentageQuestions(usersQuestionCount.size)"
+        [score]="usersTotalQuestionsProgression"
       ></alto-progression-badge>
     </div>
   </div>
@@ -185,7 +185,7 @@
       <tbody>
         <tr *ngFor="let user of paginatedUsers" class="align-middle" data-cy="companyMembersTable">
           <td>
-            <alto-profile-card data-cy="profileCard" [user]="user"></alto-profile-card>
+            <alto-profile-card data-cy="profileCard" [user]="user.user"></alto-profile-card>
           </td>
           <td>
             <span data-cy="memberTeamName" class="alto-badge" [style]="user.teamId || '' | teamColor">
@@ -193,7 +193,7 @@
             </span>
           </td>
           <td class="text-center">
-            <ng-container *ngIf="user.score; else elseTemplate">
+            <ng-container *ngIf="(user.totalGuessesCount || 0) > 0; else elseTemplate">
               <span data-cy="progressBadge" class="alto-score" [class]="(user.score || 0) * 100 | pillColor">
                 {{ user.score | percent }}
               </span>
@@ -203,10 +203,10 @@
             </ng-template>
           </td>
           <td>
-            {{ getQuestionsByUser(user.id)[0] }}
+            {{ user.totalGuessesCount }}
             <alto-progression-badge
               class="d-inline-block ms-3"
-              [score]="getQuestionsByUser(user.id)[2]"
+              [score]="getQuestionsByUser(user.id, user.totalGuessesCount)"
             ></alto-progression-badge>
           </td>
           <td>
