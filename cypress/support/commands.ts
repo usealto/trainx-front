@@ -62,7 +62,6 @@ function loginViaAuth0Ui(username: string, password: string) {
   cy.origin(Cypress.env('auth_url'), { args: { username, password } }, ({ username, password }) => {
     cy.get('input#username').type(username);
     cy.get('input#password').type(password, { log: false });
-    // cy.contains('button[value=default]', 'Continue').click();
     cy.get('button[name=action]').last().click();
   });
 }

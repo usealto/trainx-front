@@ -5,7 +5,7 @@ name: Tests CI
 
 on:
   push:
-    branches: ['develop']
+    branches: ['test-cypress']
   pull_request:
     branches: ['main']
 
