@@ -203,7 +203,9 @@
             </ng-template>
           </td>
           <td>
-            {{ user.totalGuessesCount }}
+            <span class="w-10 d-inline-block">
+              {{ user.totalGuessesCount }}
+            </span>
             <alto-progression-badge
               class="d-inline-block ms-3"
               [score]="getQuestionsByUser(user.id, user.totalGuessesCount)"
