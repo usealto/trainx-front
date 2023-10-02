@@ -107,6 +107,17 @@ const routes: Routes = [
         path: AltoRoutes.notFound,
         component: NotFoundComponent,
       },
+    ],
+    canActivate: [AuthGuard, noSmallScreen],
+    canActivateChild: [AuthGuard],
+  },
+  {
+    path: '',
+    canActivate: [AuthGuard],
+    resolve: {
+      appData: appResolver,
+    },
+    children: [
       {
         path: AltoRoutes.noAccess,
         component: NoWebAccessComponent,
@@ -120,8 +131,6 @@ const routes: Routes = [
         component: NoTeamComponent,
       },
     ],
-    canActivate: [AuthGuard, noSmallScreen],
-    canActivateChild: [AuthGuard],
   },
   {
     path: AltoRoutes.admin,
