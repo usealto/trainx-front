@@ -26,6 +26,7 @@ import { ProgramsRestService } from 'src/app/modules/programs/services/programs-
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration, ScoreFilters } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
@@ -45,6 +46,11 @@ export class LeadHomeComponent implements OnInit {
   ScoreDuration = ScoreDuration;
   ScoreTypeEnum = ScoreTypeEnumApi;
   ETypeValue = ETypeValue;
+  programDataStatus: PlaceholderDataStatus = 'good';
+  isData = false;
+  chartDataStatus: PlaceholderDataStatus = 'good';
+  usersLeaderboardDataStatus: PlaceholderDataStatus = 'good';
+  teamsLeaderboardDataStatus: PlaceholderDataStatus = 'good';
 
   userName = '';
 
@@ -123,10 +129,18 @@ export class LeadHomeComponent implements OnInit {
         tap(() => this.getProgramsStats(this.globalFilters)),
         tap(() => this.getGuessesCount(this.globalFilters.duration as ScoreDuration)),
         switchMap(() => this.getTopFlop(this.globalFilters.duration as ScoreDuration)),
+        tap(() => this.getProgramDataStatus()),
         untilDestroyed(this),
       )
       .subscribe();
     this.createChart(this.globalFilters.duration as ScoreDuration);
+  }
+
+  getProgramDataStatus() {
+    if (this.averageScore || (this.programsCount || this.expectedGuessCount) > 0) {
+      this.isData = true;
+    }
+    this.programDataStatus = this.isData ? 'good' : 'noData';
   }
 
   createChart(duration: ScoreDuration) {
@@ -146,6 +160,7 @@ export class LeadHomeComponent implements OnInit {
       .pipe(
         tap((res) => {
           this.scoreCount = res.scores.length;
+          this.chartDataStatus = this.scoreCount === 0 ? 'noData' : 'good';
           const scores = this.scoreService.reduceLineChartData(res.scores);
           const points = this.statisticsServices.transformDataToPoint(scores[0]);
           const labels = this.statisticsServices
@@ -193,7 +208,9 @@ export class LeadHomeComponent implements OnInit {
           score: u.score ?? 0,
         }));
         this.teamsLeaderboardCount = this.teamsLeaderboard.length;
+        this.teamsLeaderboardDataStatus = this.teamsLeaderboardCount === 0 ? 'noData' : 'good';
         this.usersLeaderboardCount = this.usersLeaderboard.length;
+        this.usersLeaderboardDataStatus = this.usersLeaderboardCount === 0 ? 'noData' : 'good';
         this.topflopLoaded = true;
       }),
     );
