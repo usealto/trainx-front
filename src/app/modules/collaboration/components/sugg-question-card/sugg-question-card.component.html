@@ -30,8 +30,12 @@
 
     <div class="text-content">
       <div class="author">
-        <span class="fw-semibold"
-          >{{ suggQuestion?.createdByUser?.firstname }} {{ suggQuestion?.createdByUser?.lastname }}
+        <span [ngClass]="suggQuestion?.createdByUser ? 'fw-semibold' : 'light-text'"
+          >{{
+            suggQuestion?.createdByUser
+              ? suggQuestion?.createdByUser?.firstname + ' ' + suggQuestion?.createdByUser?.lastname
+              : I18ns.shared.deletedUsername
+          }}
         </span>
         <span class="date-text">{{ suggQuestion?.createdAt | dateLabel }}</span>
       </div>
@@ -46,8 +50,12 @@
 
     <div class="text-content">
       <div class="author">
-        <span class="fw-semibold"
-          >{{ suggQuestion?.updatedByUser?.firstname }} {{ suggQuestion?.updatedByUser?.lastname }}
+        <span [ngClass]="suggQuestion?.updatedByUser ? 'fw-semibold' : 'light-text'"
+          >{{
+            suggQuestion?.updatedByUser
+              ? suggQuestion?.updatedByUser?.firstname + ' ' + suggQuestion?.updatedByUser?.lastname
+              : I18ns.shared.deletedUsername
+          }}
         </span>
         <span class="date-text">{{ suggQuestion?.updatedAt | dateLabel }}</span>
       </div>

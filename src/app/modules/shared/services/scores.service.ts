@@ -205,4 +205,14 @@ export class ScoresService {
     }
     return [date, this.getStartDate(duration as ScoreDuration)];
   }
+
+  /**
+   * Calculate progression between NUMBERS not PERCENTAGES
+   */
+  getProgression(value?: number, previousValue?: number) {
+    if (!value || !previousValue) {
+      return null;
+    }
+    return ((value - previousValue) * 100) / previousValue;
+  }
 }
