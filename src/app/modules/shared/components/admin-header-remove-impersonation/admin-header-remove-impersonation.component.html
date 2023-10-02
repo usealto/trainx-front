@@ -11,9 +11,16 @@
         Stop the impersonation
       </div>            
       <div
+        *ngIf="isAdmin"
         class="btn btn-light mt-2"
         [routerLink]="'/admin/home'"> 
         <i class="bi bi-house"></i> Admin
+      </div>
+      <div
+        *ngIf="!isAdmin"
+        class="mt-2"> 
+        Not impersonnated as Alto Admin. 
+        <br> Stop impersonation to go to <strong>The Office</strong>
       </div>
     </div>
   </div>
