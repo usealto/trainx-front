@@ -123,6 +123,7 @@ export class ProgramCardListComponent implements OnInit {
     this.filterPrograms((this.programFilters = {}));
     this.selectedItems = [];
     this.isSearchResult = false;
+    this.ongoingProgramsDataStatus = 'good';
   }
 
   getPrograms() {
