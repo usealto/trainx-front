@@ -339,10 +339,9 @@ export const FR = {
     subtitle: "Retrouvez l'ensemble des statistiques de vos équipes.",
     globalEngagement: {
       title: 'Engagement',
-      subtitle: "Retrouvez l'engagement global de vos équipes.",
       activity: {
-        activity: 'Activité',
-        activitySubtitle: "Suivez l'évolution du nombre de questions auxquelles répondent vos équipes.",
+        title: "Activité de l'entreprise",
+        subtitle: "Retrouvez une vue d'ensemble de l'activité des équipes.",
         teamFilter: 'Équipe',
       },
       contributon: {
@@ -428,11 +427,13 @@ export const FR = {
     },
     perTeams: {
       title: 'Par équipe',
-      sections : {
-        teams : "Équipes",
-        teamsSubtitle:"Découvrez les statistiques d'engagement et de performance de chacune de vos équipes. ",
-        members: "Membres",
-        membersSubtitle: "Découvrez les statistiques d'engagement et de performance de chacun de vos membres."
+      sections: {
+        teams: 'Équipes',
+        teamsSubtitle:
+          "Découvrez les statistiques d'engagement et de performance de chacune de vos équipes. ",
+        members: 'Membres',
+        membersSubtitle:
+          "Découvrez les statistiques d'engagement et de performance de chacun de vos membres.",
       },
       globalTooltip:
         '% de questions justes sur le nombre de questions répondues et variation sur la période passée',

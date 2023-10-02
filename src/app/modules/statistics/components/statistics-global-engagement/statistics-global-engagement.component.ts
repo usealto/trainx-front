@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 
@@ -9,15 +10,11 @@ import { TeamStore } from 'src/app/modules/lead-team/team.store';
 })
 export class StatisticsGlobalEngagementComponent implements OnInit {
   I18ns = I18ns;
-  timePicker = '';
+  EmojiName = EmojiName;
 
   constructor(public readonly teamStore: TeamStore) {}
 
   ngOnInit(): void {
     return;
-  }
-
-  updateTimePicker(event: any): void {
-    this.timePicker = event.target.id;
   }
 }
