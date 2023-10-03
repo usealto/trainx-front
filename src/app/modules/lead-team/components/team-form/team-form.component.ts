@@ -82,7 +82,7 @@ export class TeamFormComponent implements OnInit {
               this.isEdit = true;
               const { name, programs } = this.team;
               this.userFilters.teams.push(this.team);
-              const filteredUsers = this.userService.filterUsers(this.users, this.userFilters);
+              const filteredUsers = this.userService.filterUsers<UserDtoApi[]>(this.users, this.userFilters);
 
               this.teamForm.patchValue({
                 name,
