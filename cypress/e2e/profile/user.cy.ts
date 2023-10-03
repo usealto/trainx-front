@@ -2,12 +2,11 @@ describe('User Profile', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username'), Cypress.env('auth_password'));
     cy.visit('/');
-    cy.wait(1000);
   });
 
   const lastname1 = 'testing1';
   const lastname2 = 'testing2';
-  it('changes lastname', function () {
+  it('changes lastname', () => {
     cy.get('[data-cy="profileImgBadge"]').click();
     cy.get('[data-cy="profile"]').click();
 
@@ -18,8 +17,15 @@ describe('User Profile', () => {
     // changes lastname to lastname1
 
     cy.get('[data-cy="lastname"]').type(lastname1);
+
+    cy.intercept('PATCH', Cypress.env('apiURL') + '/v1/users/0bc16460-6030-425c-a7f8-456d2c9ff110').as(
+      'userUpdate',
+    );
     cy.get('[data-cy="save-button"]').click();
+
+    cy.wait('@userUpdate');
     cy.reload();
+
     cy.get('[data-cy="lastname"]').should('have.value', lastname1);
 
     cy.get('[data-cy="lastname"]').clear();
@@ -28,6 +34,8 @@ describe('User Profile', () => {
 
     cy.get('[data-cy="lastname"]').type(lastname2);
     cy.get('[data-cy="save-button"]').click();
+    cy.wait('@userUpdate');
+
     cy.reload();
     cy.get('[data-cy="lastname"]').should('have.value', lastname2);
   });
