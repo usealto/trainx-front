@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ProgramDtoApi, TagDtoApi, TeamDtoApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
+import { ProgramDtoApi, TagDtoApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';

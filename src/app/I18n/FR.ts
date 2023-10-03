@@ -353,6 +353,18 @@ export const FR = {
         contribution: 'Contribution',
         contributionSubtitle: 'Retrouver les équipes ayant suggéré ou commenté des questions.',
       },
+      teamsTable: {
+        title: 'Équipes',
+        subtitle: 'Retrouvez les statistiques détaillées d’engagement pour chacune de vos équipes.',
+        placeholderTitle: 'Nous n’avons pas encore de données à afficher',
+        placeholderSubtitle: 'Les équipes s’activent pour fournir les premiers résultats !',
+        columns: {
+          team: 'Équipe',
+          answeredQuestions: 'Questions répondues',
+          suggestedQuestions: 'Questions suggérées',
+          comments: 'Commentaires',
+        },
+      },
     },
     globalPerformance: {
       navbarTitle: 'Performance',
