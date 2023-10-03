@@ -35,3 +35,4 @@ jobs:
         with:
           start: npm start
           config-file: cypress/cypress-CICD.config.ts
+          wait-on: 'http://localhost:4200'
