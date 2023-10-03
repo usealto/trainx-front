@@ -16,7 +16,7 @@ export class StatisticsService {
   formatLabel(dates: Date[], duration: ScoreDuration): string[] {
     switch (duration) {
       case ScoreDuration.Year:
-        return dates.map((date) => date.toLocaleDateString(this.locale, { month: 'long' }));
+        return dates.map((date) => date.toLocaleDateString(this.locale, { month: 'short' }));
       default:
         return dates.map((date) =>
           date.toLocaleDateString(this.locale, { month: '2-digit', day: '2-digit' }),
