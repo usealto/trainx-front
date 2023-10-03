@@ -49,8 +49,6 @@ export class LeadHomeComponent implements OnInit {
   programDataStatus: PlaceholderDataStatus = 'good';
   isData = false;
   chartDataStatus: PlaceholderDataStatus = 'good';
-  usersLeaderboardDataStatus: PlaceholderDataStatus = 'good';
-  teamsLeaderboardDataStatus: PlaceholderDataStatus = 'good';
 
   userName = '';
 
@@ -76,7 +74,9 @@ export class LeadHomeComponent implements OnInit {
   guessCountProgression = 0;
 
   commentsCount = 0;
+  commentsDataStatus: PlaceholderDataStatus = 'good';
   questionsCount = 0;
+  questionsDataStatus: PlaceholderDataStatus = 'good';
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
   //
   challengesByTeam: ChallengeDtoApi[] = [];
@@ -84,8 +84,10 @@ export class LeadHomeComponent implements OnInit {
   //
   teamsLeaderboard: { name: string; score: number }[] = [];
   teamsLeaderboardCount = 0;
+  teamsLeaderboardDataStatus: PlaceholderDataStatus = 'good';
   usersLeaderboard: { name: string; score: number }[] = [];
   usersLeaderboardCount = 0;
+  usersLeaderboardDataStatus: PlaceholderDataStatus = 'good';
   topflopLoaded = false;
   chartOption: EChartsOption = {};
 
@@ -117,7 +119,10 @@ export class LeadHomeComponent implements OnInit {
       .pipe(
         tap(([comments, submittedQuestionsCount, challenges]) => {
           this.commentsCount = comments.length;
+          this.commentsDataStatus = comments.length === 0 ? 'noData' : 'good';
           this.questionsCount = submittedQuestionsCount;
+          this.questionsDataStatus = submittedQuestionsCount === 0 ? 'noData' : 'good';
+
           this.challengesByTeam = challenges
             .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByTeam)
             .slice(0, 5);

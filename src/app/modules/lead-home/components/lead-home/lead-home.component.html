@@ -9,7 +9,7 @@
 </div>
 <div class="row m-0">
   <div class="col-6 ps-0">
-    <ng-container *ngIf="commentsCount; else noComments">
+    <alto-placeholder-manager [status]="commentsDataStatus">
       <div
         [routerLink]="['/', AltoRoutes.lead, AltoRoutes.collaboration]"
         [queryParams]="{ tab: 1, type: ETypeValue.COMMENTS }"
@@ -27,9 +27,7 @@
           </p>
         </div>
       </div>
-    </ng-container>
-    <ng-template #noComments>
-      <div [class]="'success-panel'">
+      <div [class]="'success-panel'" noData>
         <alto-icon-badge [size]="5" icon="bi-chat" [color]="'badge-double-success'"></alto-icon-badge>
 
         <div class="ms-4">
@@ -41,11 +39,11 @@
           </p>
         </div>
       </div>
-    </ng-template>
+    </alto-placeholder-manager>
   </div>
 
   <div class="col-6 pe-0">
-    <ng-container *ngIf="questionsCount; else noQuestions">
+    <alto-placeholder-manager [status]="questionsDataStatus">
       <div
         [routerLink]="['/', AltoRoutes.lead, AltoRoutes.collaboration]"
         [queryParams]="{ tab: 1, type: ETypeValue.QUESTIONS }"
@@ -68,9 +66,7 @@
           </p>
         </div>
       </div>
-    </ng-container>
-    <ng-template #noQuestions>
-      <div [class]="'success-panel'">
+      <div [class]="'success-panel'" noData>
         <alto-icon-badge
           [size]="5"
           icon="bi-question-circle"
@@ -86,7 +82,7 @@
           </p>
         </div>
       </div>
-    </ng-template>
+    </alto-placeholder-manager>
   </div>
 </div>
 

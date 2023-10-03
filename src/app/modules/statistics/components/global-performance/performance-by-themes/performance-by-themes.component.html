@@ -1,43 +1,46 @@
-<div [hidden]="!scoreCount" class="score-evolution-chart panel mb-5">
-  <alto-dropdown-filter
-    *ngIf="items.length >= 7"
-    class="float-end mx-2"
-    [data]="items"
-    [displayLabel]="'label'"
-    [selectedItems]="selectedItems"
-    [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.tags"
-    (selectChange)="filterTagsAndPrograms($event)"
-  ></alto-dropdown-filter>
-  <h2>
-    {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}
-  </h2>
-  <p class="alto-grey mb-4">
-    {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.subtitle }}
-  </p>
-
-  <div class="chart-container">
-    <alto-chart-basicline
-      data-cy="chartBasiclineThemes"
-      [chartOption]="ScoreEvolutionChartOption"
-    ></alto-chart-basicline>
-  </div>
-</div>
-<div [hidden]="scoreCount > 0" class="nodata-placeholder">
-  <h2 class="mb-5 fs-6">
-    {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}
-  </h2>
-  <div class="text-center">
-    <img [src]="Emoji.FourOclock | emoji" height="24" />
-    <p class="mt-3">
-      {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderTitle }}
+<alto-placeholder-manager [status]="scoreDataStatus">
+  <div class="score-evolution-chart panel mb-5">
+    <alto-dropdown-filter
+      *ngIf="items.length >= 7"
+      class="float-end mx-2"
+      [data]="items"
+      [displayLabel]="'label'"
+      [selectedItems]="selectedItems"
+      [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.tags"
+      (selectChange)="filterTagsAndPrograms($event)"
+    ></alto-dropdown-filter>
+    <h2>
+      {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}
+    </h2>
+    <p class="alto-grey mb-4">
+      {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.subtitle }}
     </p>
-    <span class="d-inline-block mt-3">
-      {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderSubtitle }}
-    </span>
-  </div>
-</div>
 
-<ng-container *ngIf="tagsLeaderboard.length > 0; else noTopFlopTags">
+    <div class="chart-container">
+      <alto-chart-basicline
+        data-cy="chartBasiclineThemes"
+        [chartOption]="ScoreEvolutionChartOption"
+      ></alto-chart-basicline>
+    </div>
+  </div>
+
+  <div class="nodata-placeholder" noData>
+    <h2 class="mb-5 fs-6">
+      {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}
+    </h2>
+    <div class="text-center">
+      <img [src]="Emoji.FourOclock | emoji" height="24" />
+      <p class="mt-3">
+        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderTitle }}
+      </p>
+      <span class="d-inline-block mt-3">
+        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderSubtitle }}
+      </span>
+    </div>
+  </div>
+</alto-placeholder-manager>
+
+<alto-placeholder-manager [status]="tagsDataStatus">
   <alto-top-flop
     [title]="I18ns.statistics.globalPerformance.perThemePerformance.control.title"
     [subtitle]="I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle"
@@ -45,61 +48,63 @@
     [size]="5"
   >
   </alto-top-flop>
-</ng-container>
-<ng-template #noTopFlopTags>
-  <div class="nodata-placeholder">
+
+  <div class="nodata-placeholder" noData>
     <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
     <div class="text-center">
       <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" />
       <p class="mt-3">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.placeholder }}</p>
     </div>
   </div>
-</ng-template>
+</alto-placeholder-manager>
 
-<div [hidden]="!scoreCount" class="score-evolution-chart panel mt-5">
-  <alto-dropdown-filter
-    class="float-end mx-2"
-    [data]="teamsStore.teams.value"
-    [displayLabel]="'name'"
-    [selectedItems]="selectedTeamsKnowledgeScores"
-    [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.filters.teams"
-    (selectChange)="getTeamsKnowledgeScores($event)"
-  ></alto-dropdown-filter>
-  <alto-dropdown-filter
-    class="float-end mx-2"
-    [data]="programsStore.tags.value"
-    [displayLabel]="'name'"
-    [multiple]="false"
-    [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.filters.tags"
-    (selectChange)="filterTeamsKnowledgeTags($event)"
-  ></alto-dropdown-filter>
-  <h2>
-    {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.title }}
-  </h2>
-  <p class="alto-grey mb-4">
-    {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.subtitle }}
-  </p>
-  <div class="chart-container">
-    <alto-chart-bar
-      data-cy="barChart"
-      [chartOption]="teamsKnowledgeChartOption"
-      [isLoaded]="false"
-    ></alto-chart-bar>
-  </div>
-  <div class="d-flex justify-content-center">
-    <p *ngFor="let team of series" class="legend">
-      <span class="circle" [style.background]="team.itemStyle.color"></span> {{ team.name }}
+<alto-placeholder-manager [status]="seriesDataStatus">
+  <div class="score-evolution-chart panel mt-5">
+    <alto-dropdown-filter
+      class="float-end mx-2"
+      [data]="teamsStore.teams.value"
+      [displayLabel]="'name'"
+      [selectedItems]="selectedTeamsKnowledgeScores"
+      [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.filters.teams"
+      (selectChange)="getTeamsKnowledgeScores($event)"
+    ></alto-dropdown-filter>
+    <alto-dropdown-filter
+      class="float-end mx-2"
+      [data]="programsStore.tags.value"
+      [displayLabel]="'name'"
+      [multiple]="false"
+      [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.filters.tags"
+      (selectChange)="filterTeamsKnowledgeTags($event)"
+    ></alto-dropdown-filter>
+    <h2>
+      {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.title }}
+    </h2>
+    <p class="alto-grey mb-4">
+      {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.subtitle }}
     </p>
+    <div class="chart-container">
+      <alto-chart-bar
+        data-cy="barChart"
+        [chartOption]="teamsKnowledgeChartOption"
+        [isLoaded]="false"
+      ></alto-chart-bar>
+    </div>
+    <div class="d-flex justify-content-center">
+      <p *ngFor="let team of series" class="legend">
+        <span class="circle" [style.background]="team.itemStyle.color"></span> {{ team.name }}
+      </p>
+    </div>
   </div>
-</div>
-<div [hidden]="this.series.length > 0" class="nodata-placeholder">
-  <h2 class="mb-5 fs-6">
-    {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.title }}
-  </h2>
-  <div class="text-center">
-    <img [src]="Emoji.FaceInClouds | emoji" height="24" />
-    <p class="mt-3">
-      {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.placeholderTitle }}
-    </p>
+
+  <div class="nodata-placeholder" noData>
+    <h2 class="mb-5 fs-6">
+      {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.title }}
+    </h2>
+    <div class="text-center">
+      <img [src]="Emoji.FaceInClouds | emoji" height="24" />
+      <p class="mt-3">
+        {{ I18ns.statistics.globalPerformance.perThemePerformance.teamsKnowledgeChart.placeholderTitle }}
+      </p>
+    </div>
   </div>
-</div>
+</alto-placeholder-manager>
