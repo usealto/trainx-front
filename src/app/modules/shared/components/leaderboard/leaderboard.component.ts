@@ -20,7 +20,6 @@ export class LeaderboardComponent implements OnChanges {
   flop: { name: string; score: number, progression?: number }[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.leaderboard)
     if (changes['leaderboard']) {
       const temp = [...this.leaderboard];
       this.top = temp.splice(0, this.size);
