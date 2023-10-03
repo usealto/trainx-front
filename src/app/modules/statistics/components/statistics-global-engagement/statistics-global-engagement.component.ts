@@ -40,7 +40,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
           previousStats = previousStats.filter((t) => t.score && t.score >= 0);
           this.leaderboard = currentStats.map((t) => {
             const previousScore = previousStats.find((p) => p.team.id === t.team.id)?.score;
-            const progression = this.scoresService.getProgression(t.score, previousScore)
+            const progression = this.scoresService.getProgression(t.score, previousScore);
             return {
               name: t.team.name,
               score: t.totalGuessesCount ? t.totalGuessesCount / 100 : 0,
