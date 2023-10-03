@@ -41,16 +41,16 @@ describe('User Team', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username'), Cypress.env('auth_password'));
     cy.visit('/');
-    cy.wait(1000);
   });
 
-  it('not load lead teams from the menu', function () {
+  it('not load lead teams from the menu', () => {
     cy.get('[data-cy="leadMenuTeams"]').should('be.hidden');
   });
 
-  it('not load lead teams from url', function () {
-    cy.visit('/l/teams');
-    cy.url().should('not.include', '/l/teams');
-    cy.url().should('include', '/u/home');
+  it('not load lead teams from url', () => {
+    cy.visit('/l/teams').then(() => {
+      cy.url().should('not.include', '/l/teams');
+      cy.url().should('include', '/u/home');
+    });
   });
 });

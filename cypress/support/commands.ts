@@ -56,13 +56,13 @@ declare namespace Cypress {
 
 function loginViaAuth0Ui(username: string, password: string) {
   // App landing page redirects to Auth0.
-  cy.visit('/');
-
-  // Login on Auth0.
-  cy.origin(Cypress.env('auth_url'), { args: { username, password } }, ({ username, password }) => {
-    cy.get('input#username').type(username);
-    cy.get('input#password').type(password, { log: false });
-    cy.get('button[name=action]').last().click();
+  cy.visit('/').then(() => {
+    // Login on Auth0.
+    cy.origin(Cypress.env('auth_url'), { args: { username, password } }, ({ username, password }) => {
+      cy.get('input#username').type(username);
+      cy.get('input#password').type(password, { log: false });
+      cy.get('button[name=action]').last().click();
+    });
   });
 }
 
