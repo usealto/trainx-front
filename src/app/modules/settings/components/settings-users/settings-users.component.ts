@@ -78,7 +78,7 @@ export class SettingsUsersComponent implements OnInit {
       .getUsersFiltered({ isCompanyAdmin: true })
       .pipe(
         tap((users) => {
-          const filteredUsers = this.usersService.filterUsers(users, { search });
+          const filteredUsers = this.usersService.filterUsers<UserDtoApi[]>(users, { search });
           this.adminsCount = filteredUsers.length;
           this.adminsDisplay = filteredUsers;
           this.changeAdminsPage(this.adminsDisplay, 1);
@@ -95,7 +95,7 @@ export class SettingsUsersComponent implements OnInit {
       .getUsersFiltered({ isCompanyAdmin: false })
       .pipe(
         tap((users) => {
-          const filteredUsers = this.usersService.filterUsers(users, { search });
+          const filteredUsers = this.usersService.filterUsers<UserDtoApi[]>(users, { search });
           this.usersCount = filteredUsers.length;
           this.usersDisplay = filteredUsers;
           this.changeUsersPage(this.usersDisplay, 1);

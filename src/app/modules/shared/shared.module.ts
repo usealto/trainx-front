@@ -44,11 +44,11 @@ import { StatusPillComponent } from './components/status-pill/status-pill.compon
 import { TabsComponent } from './components/tabs/tabs.component';
 import { TextCounterComponent } from './components/text-counter/text-counter.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
-import { TopFlopComponent } from './components/top-flop/top-flop.component';
 import { TrainingCardComponent } from './components/training-card/training-card.component';
 import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
+import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { PlaceholderManagerComponent } from './components/placeholder-manager/placeholder-manager.component';
 import { AdminHeaderRemoveImpersonationComponent } from './components/admin-header-remove-impersonation/admin-header-remove-impersonation.component';
 
@@ -79,11 +79,11 @@ import { AdminHeaderRemoveImpersonationComponent } from './components/admin-head
     ButtonGroupComponent,
     TextCounterComponent,
     QuestionDeleteModalComponent,
-    TopFlopComponent,
     IconBadgeComponent,
     DeleteModalComponent,
     RangeComponent,
     AdminHeaderRemoveImpersonationComponent,
+    LeaderboardComponent,
     PlaceholderManagerComponent,
   ],
   imports: [
@@ -148,11 +148,11 @@ import { AdminHeaderRemoveImpersonationComponent } from './components/admin-head
     TextCounterComponent,
     QuestionDeleteModalComponent,
     EmojiPipe,
-    TopFlopComponent,
     RangeComponent,
     DeleteModalComponent,
     NgbPopoverModule,
     AdminHeaderRemoveImpersonationComponent,
+    LeaderboardComponent,
     PlaceholderManagerComponent,
   ],
   providers: [NgbActiveModal],

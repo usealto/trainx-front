@@ -213,6 +213,6 @@ export class ScoresService {
     if (!value || !previousValue) {
       return null;
     }
-    return ((value - previousValue) * 100) / previousValue;
+    return (value - previousValue) / previousValue;
   }
 }
