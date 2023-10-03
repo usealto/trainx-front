@@ -48,7 +48,9 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   }
 
   private getEngagementData(): void {
-    combineLatest([this.getGuessesScores(), this.getCompanyActivty()]).pipe(untilDestroyed(this)).subscribe();
+    combineLatest([this.getGuessesScores(), this.getCompanyActivity()])
+      .pipe(untilDestroyed(this))
+      .subscribe();
   }
   private getGuessesScores(): Observable<ScoresResponseDtoApi> {
     return this.scoresRestService
@@ -101,7 +103,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
       );
   }
 
-  private getCompanyActivty(): Observable<[TeamStatsDtoApi[], TeamStatsDtoApi[]]> {
+  private getCompanyActivity(): Observable<[TeamStatsDtoApi[], TeamStatsDtoApi[]]> {
     return combineLatest([
       this.scoresRestService.getTeamsStats(this.duration, false, 'totalGuessesCount:desc'),
       this.scoresRestService.getTeamsStats(this.duration, true, 'totalGuessesCount:desc'),
