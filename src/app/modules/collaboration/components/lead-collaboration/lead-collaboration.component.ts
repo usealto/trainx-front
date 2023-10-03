@@ -1,19 +1,19 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   CommentDtoApi,
   QuestionSubmittedDtoApi,
   QuestionSubmittedDtoApiStatusEnumApi,
 } from '@usealto/sdk-ts-angular';
+import { addDays, compareDesc, differenceInDays, isAfter, isBefore, isToday } from 'date-fns';
 import { combineLatest, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { EmojiPipe } from 'src/app/core/utils/emoji/emoji.pipe';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
-
-import { ActivatedRoute, Router } from '@angular/router';
-import { addDays, compareDesc, differenceInDays, isAfter, isBefore, isToday } from 'date-fns';
-import { EmojiPipe } from 'src/app/core/utils/emoji/emoji.pipe';
 
 export enum ETypeValue {
   COMMENTS = 'comments',
@@ -51,7 +51,7 @@ interface IContribution {
 @Component({
   selector: 'alto-lead-collaboration',
   templateUrl: './lead-collaboration.component.html',
-  styleUrls: ['./lead-collaboration.component.scss', '../styles/collaboration-cards.scss'],
+  styleUrls: ['./lead-collaboration.component.scss'],
   providers: [EmojiPipe],
 })
 export class LeadCollaborationComponent implements OnInit {
@@ -123,6 +123,7 @@ export class LeadCollaborationComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private readonly emojiPipe: EmojiPipe,
     private readonly router: Router,
+    private readonly location: Location,
   ) {}
 
   ngOnInit(): void {
@@ -357,12 +358,15 @@ export class LeadCollaborationComponent implements OnInit {
 
   handleTabChange(tab: ITab): void {
     this.selectedTab = tab;
-    this.router.navigate([], {
-      replaceUrl: true,
-      queryParams: { tab: tab.index },
-      queryParamsHandling: 'merge',
-    });
 
+    this.location.replaceState(
+      this.router.serializeUrl(
+        this.router.createUrlTree([], {
+          queryParams: { tab: tab.index },
+          queryParamsHandling: 'merge',
+        }),
+      ),
+    );
     this.getSelectedTabData();
   }
 
@@ -373,13 +377,17 @@ export class LeadCollaborationComponent implements OnInit {
 
   handleTypeChange(filters: { id: ETypeValue; name: string }[]): void {
     this.selectedTypesFilters = [...filters];
-    this.router.navigate([], {
-      replaceUrl: true,
-      queryParams: {
-        type: filters.map(({ id }) => id),
-      },
-      queryParamsHandling: 'merge',
-    });
+
+    this.location.replaceState(
+      this.router.serializeUrl(
+        this.router.createUrlTree([], {
+          queryParams: {
+            type: filters.map(({ id }) => id),
+          },
+          queryParamsHandling: 'merge',
+        }),
+      ),
+    );
     this.getSelectedTabData();
   }
 

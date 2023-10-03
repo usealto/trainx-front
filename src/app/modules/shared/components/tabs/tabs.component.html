@@ -6,7 +6,7 @@
     (click)="switchTab(item.value)"
     [id]="'btnradio' + getId(i + ID)"
     autocomplete="off"
-    [checked]="i === 0"
+    [checked]="isChecked(i)"
   />
   <label data-cy="selectedTab" class="alto-tab-btn" [for]="'btnradio' + getId(i + ID)">
     {{ item.label }}

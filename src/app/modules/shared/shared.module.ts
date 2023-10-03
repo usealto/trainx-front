@@ -49,6 +49,7 @@ import { TrainingCardComponent } from './components/training-card/training-card.
 import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
+import { PlaceholderManagerComponent } from './components/placeholder-manager/placeholder-manager.component';
 import { AdminHeaderRemoveImpersonationComponent } from './components/admin-header-remove-impersonation/admin-header-remove-impersonation.component';
 
 @NgModule({
@@ -83,6 +84,7 @@ import { AdminHeaderRemoveImpersonationComponent } from './components/admin-head
     DeleteModalComponent,
     RangeComponent,
     AdminHeaderRemoveImpersonationComponent,
+    PlaceholderManagerComponent,
   ],
   imports: [
     NgbdSortableHeaderDirective,
@@ -151,6 +153,7 @@ import { AdminHeaderRemoveImpersonationComponent } from './components/admin-head
     DeleteModalComponent,
     NgbPopoverModule,
     AdminHeaderRemoveImpersonationComponent,
+    PlaceholderManagerComponent,
   ],
   providers: [NgbActiveModal],
 })
