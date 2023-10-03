@@ -11,11 +11,18 @@
 
   <!-- TOP -->
   <div *ngFor="let item of top" class="leaderboard-item">
-    <alto-progression-badge class="ms-2 float-end" [hidden]="item.progression === undefined" [score]="item.progression"></alto-progression-badge>
-    <span [hidden]="item.progression !== undefined" class="float-end alto-score" [class]="item.score * 100 | pillColor">{{
-      item.score | percent
-    }}</span>
-    <span [hidden]="item.progression === undefined" class="float-end">{{item.score * 100}}</span>
+    <alto-progression-badge
+      class="ms-2 float-end"
+      [hidden]="item.progression === undefined"
+      [score]="item.progression"
+    ></alto-progression-badge>
+    <span
+      [hidden]="item.progression !== undefined"
+      class="float-end alto-score"
+      [class]="item.score * 100 | pillColor"
+      >{{ item.score | percent }}</span
+    >
+    <span [hidden]="item.progression === undefined" class="float-end">{{ item.score * 100 }}</span>
     <p class="d-inline-block me-2 fw-bold" [class]="getScoreColor(item.score * 100)">
       {{ getPosition(item.name) + '/' + leaderboard.length }}
     </p>
@@ -26,11 +33,18 @@
 
   <!-- FLOP -->
   <div *ngFor="let item of flop" class="leaderboard-item">
-    <alto-progression-badge class="ms-2 float-end" [hidden]="item.progression === undefined" [score]="item.progression"></alto-progression-badge>
-    <span [hidden]="item.progression !== undefined" class="float-end alto-score" [class]="item.score * 100 | pillColor">{{
-      item.score | percent
-    }}</span>
-    <span [hidden]="item.progression === undefined" class="float-end">{{item.score * 100}}</span>
+    <alto-progression-badge
+      class="ms-2 float-end"
+      [hidden]="item.progression === undefined"
+      [score]="item.progression"
+    ></alto-progression-badge>
+    <span
+      [hidden]="item.progression !== undefined"
+      class="float-end alto-score"
+      [class]="item.score * 100 | pillColor"
+      >{{ item.score | percent }}</span
+    >
+    <span [hidden]="item.progression === undefined" class="float-end">{{ item.score * 100 }}</span>
     <p class="d-inline-block me-2 fw-bold" [class]="getScoreColor(item.score * 100)">
       {{ getPosition(item.name) + '/' + leaderboard.length }}
     </p>
