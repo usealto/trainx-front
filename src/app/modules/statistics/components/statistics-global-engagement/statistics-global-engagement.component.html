@@ -16,7 +16,15 @@
 </div>
 
 <div class="panel mb-5">
-  <alto-chart-basicline data-cy="chartBasicline" [chartOption]="guessChartOptions"></alto-chart-basicline>
+  <alto-placeholder-manager [status]="guessesDataStatus">
+    <alto-chart-basicline data-cy="chartBasicline" [chartOption]="guessChartOptions"></alto-chart-basicline>
+
+    <div class="nodata-placeholder" noData>
+      <div class="text-center">
+        <img [src]="" />
+      </div>
+    </div>
+  </alto-placeholder-manager>
 </div>
 
 <alto-leaderboard

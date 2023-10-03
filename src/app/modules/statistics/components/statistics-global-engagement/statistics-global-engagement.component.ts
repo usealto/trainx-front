@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subscription, combineLatest, tap } from 'rxjs';
+import { Observable, combineLatest, filter, tap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ScoreTimeframeEnumApi,
@@ -17,6 +17,7 @@ import { StatisticsService } from '../../services/statistics.service';
 import { TitleCasePipe } from '@angular/common';
 
 import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 
 @UntilDestroy()
 @Component({
@@ -32,6 +33,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   leaderboard: { name: string; score: number; progression: number }[] = [];
 
   guessChartOptions: any = {};
+  guessesDataStatus: PlaceholderDataStatus = 'good';
 
   constructor(
     private readonly titleCasePipe: TitleCasePipe,
@@ -48,28 +50,6 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   private getEngagementData(): void {
     combineLatest([this.getGuessesScores(), this.getCompanyActivty()]).pipe(untilDestroyed(this)).subscribe();
   }
-
-  private getCompanyActivty(): Observable<[TeamStatsDtoApi[], TeamStatsDtoApi[]]> {
-    return combineLatest([
-      this.scoresRestService.getTeamsStats(this.duration, false, 'totalGuessesCount:desc'),
-      this.scoresRestService.getTeamsStats(this.duration, true, 'totalGuessesCount:desc'),
-    ]).pipe(
-      tap(([currentStats, previousStats]) => {
-        currentStats = currentStats.filter((t) => t.score && t.score >= 0);
-        previousStats = previousStats.filter((t) => t.score && t.score >= 0);
-        this.leaderboard = currentStats.map((t) => {
-          const previousScore = previousStats.find((p) => p.team.id === t.team.id)?.score;
-          const progression = this.scoresService.getProgression(t.score, previousScore);
-          return {
-            name: t.team.name,
-            score: t.totalGuessesCount ? t.totalGuessesCount / 100 : 0,
-            progression: progression ? progression : 0,
-          };
-        });
-      }),
-    );
-  }
-
   private getGuessesScores(): Observable<ScoresResponseDtoApi> {
     return this.scoresRestService
       .getScores({
@@ -83,6 +63,8 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             : ScoreTimeframeEnumApi.Day,
       })
       .pipe(
+        tap(({ scores }) => (this.guessesDataStatus = scores.length === 0 ? 'noData' : 'good')),
+        filter(({ scores }) => scores.length > 0),
         tap(({ scores }) => {
           const reducedScores = this.scoresService.reduceLineChartData(scores);
           const aggregatedData = this.statisticsServices.transformDataToPoint(reducedScores[0]);
@@ -117,6 +99,27 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
           };
         }),
       );
+  }
+
+  private getCompanyActivty(): Observable<[TeamStatsDtoApi[], TeamStatsDtoApi[]]> {
+    return combineLatest([
+      this.scoresRestService.getTeamsStats(this.duration, false, 'totalGuessesCount:desc'),
+      this.scoresRestService.getTeamsStats(this.duration, true, 'totalGuessesCount:desc'),
+    ]).pipe(
+      tap(([currentStats, previousStats]) => {
+        currentStats = currentStats.filter((t) => t.score && t.score >= 0);
+        previousStats = previousStats.filter((t) => t.score && t.score >= 0);
+        this.leaderboard = currentStats.map((t) => {
+          const previousScore = previousStats.find((p) => p.team.id === t.team.id)?.score;
+          const progression = this.scoresService.getProgression(t.score, previousScore);
+          return {
+            name: t.team.name,
+            score: t.totalGuessesCount ? t.totalGuessesCount / 100 : 0,
+            progression: progression ? progression : 0,
+          };
+        });
+      }),
+    );
   }
 
   updateTimePicker(event: any): void {
