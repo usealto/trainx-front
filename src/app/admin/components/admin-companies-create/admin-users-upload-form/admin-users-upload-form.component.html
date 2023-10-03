@@ -60,8 +60,8 @@
   </button>
 </div>
 
-<div *ngIf="usersFailed.length > 0">
-  <br /><br /><br />
-  <p>Incorrect users</p>
-  <pre>{{ usersFailed | json }}</pre>
+<div *ngIf="usersFailed.length > 0" class="table-panel mt-4 p-4 pill-red">
+  <h5 class="alto-red">Users Failed</h5>
+  <p class="alto-grey mb-3">We encountered issues with these users. Please make sure they follow  the CSV format :</p>  
+  <ul *ngFor="let us of usersFailed" class="mb-1">{{us}}</ul>
 </div>
