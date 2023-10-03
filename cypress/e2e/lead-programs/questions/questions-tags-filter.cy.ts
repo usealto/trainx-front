@@ -25,15 +25,11 @@ describe('L/Programs Questions Tab', () => {
 
     cy.get('.ng-dropdown-header > input').clear();
 
-    cy.intercept(
-      'GET',
-      Cypress.env('apiURL') +
-        '/v1/questions?tagIds=e850e29e-c1a7-4f15-a2ef-decccf008ace&page=1&itemsPerPage=600',
-    ).as('tagSearch');
+    cy.intercept('GET', '/v1/questions?tagIds=*').as('tagSearch');
 
     cy.get('.ng-dropdown-header > input').type(`${tagTruncName}{enter}`);
 
-    cy.wait('@tagSearch');
+    cy.wait('@tagSearch').wait(100);
 
     cy.get('[data-cy="questionsTagsList"]')
       .first()
