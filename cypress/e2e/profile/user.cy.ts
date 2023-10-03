@@ -2,7 +2,7 @@ describe('User Profile', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username'), Cypress.env('auth_password'));
     cy.visit('/');
-    cy.wait(1500);
+    cy.wait(1000);
   });
 
   const lastname1 = 'testing1';
