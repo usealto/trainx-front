@@ -191,12 +191,13 @@
   <div class="row h-100">
     <div class="col pe-4">
       <alto-placeholder-manager [status]="teamsLeaderboardDataStatus">
-        <alto-top-flop
+        <alto-leaderboard
           *ngIf="topflopLoaded"
-          [title]="I18ns.leadHome.topFlop.teams.title"
-          [subtitle]="I18ns.leadHome.topFlop.teams.subtitle"
+          [title]="I18ns.leadHome.leaderboard.teams.title"
+          [subtitle]="I18ns.leadHome.leaderboard.teams.subtitle"
           [leaderboard]="teamsLeaderboard"
-        ></alto-top-flop>
+        ></alto-leaderboard>
+      
         <div class="nodata-placeholder m-0" noData>
           <h2 class="mb-5 fs-6">{{ I18ns.leadHome.topFlop.teams.title }}</h2>
           <div class="text-center">
@@ -211,12 +212,13 @@
     </div>
     <div class="col ps-0">
       <alto-placeholder-manager [status]="usersLeaderboardDataStatus">
-        <alto-top-flop
+        <alto-leaderboard
           *ngIf="topflopLoaded"
-          [title]="I18ns.leadHome.topFlop.users.title"
-          [subtitle]="I18ns.leadHome.topFlop.users.subtitle"
+          [title]="I18ns.leadHome.leaderboard.users.title"
+          [subtitle]="I18ns.leadHome.leaderboard.users.subtitle"
           [leaderboard]="usersLeaderboard"
-        ></alto-top-flop>
+        ></alto-leaderboard>
+        
         <div class="nodata-placeholder m-0" noData>
           <h2 class="mb-5 fs-6">{{ I18ns.leadHome.topFlop.users.title }}</h2>
           <div class="text-center">

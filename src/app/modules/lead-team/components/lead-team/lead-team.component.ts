@@ -1,14 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import {
-  ScoreTimeframeEnumApi,
-  ScoreTypeEnumApi,
-  ScoresResponseDtoApi,
-  TeamDtoApi,
-  TeamStatsDtoApi,
-  UserDtoApi,
-} from '@usealto/sdk-ts-angular';
+import { TeamDtoApi, TeamStatsDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { combineLatest, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -32,9 +25,6 @@ interface TeamDisplay extends TeamDtoApi {
   totalGuessesCount?: number;
   validGuessesCount?: number;
   questionsPushedCount?: number;
-}
-interface UserDisplay extends UserDtoApi {
-  score?: number;
 }
 
 @UntilDestroy()
@@ -60,16 +50,18 @@ export class LeadTeamComponent implements OnInit {
   usersCount = 0;
   usersDataStatus: PlaceholderDataStatus = 'good';
   usersMap = new Map<string, string>();
-  users: UserDtoApi[] = [];
-  paginatedUsers: UserDisplay[] = [];
+  users: UserStatsDtoApi[] = [];
+  previousUsersStats: UserStatsDtoApi[] = [];
+  paginatedUsers: UserStatsDtoApi[] = [];
   usersPage = 1;
   usersPageSize = 5;
-  filteredUsers: UserDisplay[] = [];
-  usersScores: UserDisplay[] = [];
-  usersQuestionCount = new Map<string, number[]>();
+  filteredUsers: UserStatsDtoApi[] = [];
+  usersTotalQuestions = 0;
+  usersTotalQuestionsProgression: number | null = 0;
+  usersQuestionProgression = new Map<string, number>();
   userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
   isFilteredUsers = false;
-  selectedItems: UserDisplay[] = [];
+  selectedItems: UserStatsDtoApi[] = [];
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -104,55 +96,28 @@ export class LeadTeamComponent implements OnInit {
             questionsPushedCount: teamStat.questionsPushedCount,
           }));
 
-          this.users = usersStats.map((userStat) => userStat.user);
-          this.absoluteUsersCount = this.users.length;
+          this.users = usersStats;
+          this.usersTotalQuestions = usersStats.reduce(
+            (prev, curr) => prev + (curr.totalGuessesCount || 0),
+            0,
+          );
 
-          usersStats.forEach((u) => {
-            this.usersQuestionCount.set(u.id, [u.totalGuessesCount || 0]);
-          });
-          previousUsersStats.forEach((u) => {
-            if (this.usersQuestionCount.has(u.id)) {
-              const data = this.usersQuestionCount.get(u.id);
-              if (data) {
-                if (data[0] === 0) {
-                  data.push(0);
-                } else {
-                  u.totalGuessesCount
-                    ? data.push(u.totalGuessesCount, (data[0] - u.totalGuessesCount) / u.totalGuessesCount)
-                    : data.push(0, 0);
-                }
-                this.usersQuestionCount.set(u.id, data);
-              }
-            }
-          });
+          this.usersTotalQuestionsProgression = this.scoreService.getProgression(
+            this.usersTotalQuestions,
+            previousUsersStats.reduce((prev, curr) => prev + (curr.totalGuessesCount || 0), 0),
+          );
+          this.previousUsersStats = previousUsersStats;
+          this.absoluteUsersCount = this.users.length;
 
           this.users.forEach((user) => {
             const member = this.teams.find((team) => team.id === user.teamId);
             this.usersMap.set(user.id, member ? member.name : '');
           });
         }),
-        switchMap(() => {
-          return this.scoreRestService.getScores({
-            duration: ScoreDuration.Month,
-            timeframe: ScoreTimeframeEnumApi.Day,
-            type: ScoreTypeEnumApi.User,
-          });
-        }),
-        tap(({ scores }: ScoresResponseDtoApi) => {
-          this.usersScores = this.users.map((u) => {
-            const score = scores.find((s) => s.id === u.id);
-            if (score) {
-              return { ...u, score: this.scoreService.reduceWithoutNull(score.averages) ?? undefined };
-            } else {
-              return u;
-            }
-          });
-          this.usersScores.sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
-        }),
         tap(() => this.changeTeamsPage(1)),
         tap(() => {
-          this.filteredUsers = this.usersScores;
-          this.changeUsersPage(this.usersScores, 1);
+          this.filteredUsers = this.users;
+          this.changeUsersPage(this.users, 1);
         }),
         untilDestroyed(this),
       )
@@ -176,9 +141,7 @@ export class LeadTeamComponent implements OnInit {
     this.userFilters.score = score;
     this.userFilters.search = search;
 
-    console.log(this.usersScores);
-
-    let output = this.usersService.filterUsers(this.usersScores, { teams, search }) as UserDisplay[];
+    let output = this.usersService.filterUsers<UserStatsDtoApi[]>(this.users, { teams, search });
     if (score) {
       output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
     }
@@ -193,7 +156,7 @@ export class LeadTeamComponent implements OnInit {
     this.isFilteredUsers = false;
   }
 
-  changeUsersPage(users: UserDisplay[], page: number) {
+  changeUsersPage(users: UserStatsDtoApi[], page: number) {
     this.usersPage = page;
     this.usersCount = users.length;
     this.paginatedUsers = this.filteredUsers.slice(
@@ -239,13 +202,13 @@ export class LeadTeamComponent implements OnInit {
       .subscribe();
   }
 
-  openUserEditionForm(user: UserDtoApi) {
+  openUserEditionForm(user: UserStatsDtoApi) {
     const canvasRef = this.offcanvasService.open(UserEditFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
     });
 
-    canvasRef.componentInstance.user = user;
+    canvasRef.componentInstance.user = user.user;
     canvasRef.closed.pipe(tap(() => this.loadData())).subscribe();
   }
 
@@ -255,34 +218,11 @@ export class LeadTeamComponent implements OnInit {
   }
 
   @memoize()
-  getQuestionsByUser(id: string): number[] {
-    return this.usersQuestionCount.get(id) || [0, 0];
-  }
-
-  @memoize()
-  getTotalQuestions(num: number): number {
-    let totalQuestions = 0;
-
-    this.usersQuestionCount.forEach((values) => {
-      if (values && values.length > 0) {
-        totalQuestions += values[0];
-      }
-    });
-
-    return totalQuestions;
-  }
-
-  @memoize()
-  getPercentageQuestions(num: number): number {
-    let variation = 0;
-
-    this.usersQuestionCount.forEach((values) => {
-      if (values && values.length > 1) {
-        variation += values[1];
-      }
-    });
-
-    return (this.getTotalQuestions(num) - variation) / variation;
+  getQuestionsByUser(id: string, guessCount = 0): number | null {
+    return this.scoreService.getProgression(
+      guessCount,
+      this.previousUsersStats.find((u) => u.user.id === id)?.totalGuessesCount,
+    );
   }
 
   airtableRedirect() {
