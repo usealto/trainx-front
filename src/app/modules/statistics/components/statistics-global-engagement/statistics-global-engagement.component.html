@@ -32,4 +32,22 @@
   [title]="I18ns.statistics.globalEngagement.activity.leaderboard.title"
   [subtitle]="I18ns.statistics.globalEngagement.activity.leaderboard.subtitle"
 ></alto-leaderboard>
-<alto-team-engagement-table></alto-team-engagement-table>
+
+<div class="mt-5 position-relative">
+  <div class="col-6">
+    <h2 class>
+      <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
+      {{ I18ns.statistics.globalEngagement.teamsTable.title }}
+    </h2>
+    <p class="mb-4 alto-grey">{{ I18ns.statistics.globalEngagement.teamsTable.subtitle }}</p>
+  </div>
+  <div class="col-6 text-end">
+    <alto-time-picker
+      class="time-picker"
+      [duration]="duration"
+      (durationSelected)="updateTimePicker($event)"
+    ></alto-time-picker>
+  </div>
+</div>
+
+<alto-team-engagement-table [duration]="duration"></alto-team-engagement-table>
