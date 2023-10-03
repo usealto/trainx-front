@@ -34,5 +34,4 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           auto-cancel-after-failures: 1
-          build: npm run cypress:run
           config-file: cypress/cypress-CICD.config.ts
