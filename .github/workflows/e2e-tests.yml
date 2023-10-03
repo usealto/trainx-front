@@ -33,6 +33,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          build: npm run cy:run
-          wait-on: http://localhost:4200
+          auto-cancel-after-failures: 1
+          build: npm run cypress:run
           config-file: cypress/cypress-CICD.config.ts
