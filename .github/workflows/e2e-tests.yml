@@ -33,6 +33,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          start: npm run cypress:run
+          build: npm run cy:run
+          wait-on: http://localhost:4200
           config-file: cypress/cypress-CICD.config.ts
-          browser: chrome
