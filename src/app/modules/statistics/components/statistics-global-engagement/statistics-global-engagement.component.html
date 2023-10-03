@@ -1,4 +1,9 @@
-<header>
+<header class="mb-4">
   <img [src]="EmojiName.Locomotive | emoji" height="18" />
   <h2 class="d-inline-block">{{ I18ns.statistics.globalEngagement.activity.title }}</h2>
 </header>
+<alto-leaderboard
+  [leaderboard]="leaderboard"
+  [title]="I18ns.statistics.globalEngagement.activity.leaderboard.title"
+  [subtitle]="I18ns.statistics.globalEngagement.activity.leaderboard.subtitle"
+></alto-leaderboard>

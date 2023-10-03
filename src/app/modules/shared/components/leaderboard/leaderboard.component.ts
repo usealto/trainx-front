@@ -11,15 +11,16 @@ export class LeaderboardComponent implements OnChanges {
   Emoji = EmojiName;
   I18ns = I18ns;
 
-  @Input() leaderboard!: { name: string; score: number }[];
+  @Input() leaderboard!: { name: string; score: number, progression?: number }[];
   @Input() size = 3;
   @Input() title!: string;
   @Input() subtitle!: string;
 
-  top: { name: string; score: number }[] = [];
-  flop: { name: string; score: number }[] = [];
+  top: { name: string; score: number, progression?: number }[] = [];
+  flop: { name: string; score: number, progression?: number }[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.leaderboard)
     if (changes['leaderboard']) {
       const temp = [...this.leaderboard];
       this.top = temp.splice(0, this.size);
