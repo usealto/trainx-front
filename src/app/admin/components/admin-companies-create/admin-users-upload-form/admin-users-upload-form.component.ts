@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DropzoneChangeEvent } from 'src/app/modules/shared/components/dropzone/dropzone.component';
 import * as Papa from 'papaparse';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
@@ -7,17 +7,24 @@ import { RoleEnumApi, UserDtoCreatedResponseApi, UsersApiService } from '@usealt
 import { UntypedFormGroup } from '@angular/forms';
 import { Observable, catchError, combineLatest, of, take } from 'rxjs';
 
+interface User {
+  firstname: string;
+  lastname: string;
+  email: string;
+  roles: string[];
+}
+
 @Component({
   selector: 'alto-admin-users-upload-form',
   templateUrl: './admin-users-upload-form.component.html',
   styleUrls: ['./admin-users-upload-form.component.scss'],
 })
-export class AdminUsersUploadFormComponent {
+export class AdminUsersUploadFormComponent implements OnInit{
   @Input() form?: UntypedFormGroup;
 
-  displayedUsers: any[] = [];
+  displayedUsers: User[] = [];
   pageSize = 5;
-  csvData: any[] = [];
+  csvData: User[] = [];
   usersFailed: string[] = [];
   reg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   page = 1;
@@ -84,6 +91,17 @@ export class AdminUsersUploadFormComponent {
       (this.page - 1) * this.pageSize,
       (this.page - 1) * this.pageSize + this.pageSize,
     );
+  }
+
+  addUser() {
+    const user = {
+      firstname: 'test',
+      lastname: 'test',
+      email: 'test@test.com',
+      roles: ['company-admin','company-user'],
+    };
+    this.csvData.push(user);
+    this.refreshUsers();
   }
 
   private onFileSelected(file: File) {

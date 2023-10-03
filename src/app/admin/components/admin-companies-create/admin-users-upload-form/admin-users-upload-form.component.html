@@ -1,3 +1,10 @@
+<div class="d-flex justify-content-center mb-4">
+  <button class="btn btn-primary" (click)="addUser()"> <i class="bi bi-plus ps-2"></i> Create a user</button>
+</div>
+<div class="d-flex justify-content-center mb-4">
+  Or
+</div>
+
 <alto-dropzone [multiple]="false" (change)="onSelectUser($event)">
   <span subtitle class="fs-7">Following the CSV format : <i>firstname, lastname, email, role</i></span>
 </alto-dropzone>
