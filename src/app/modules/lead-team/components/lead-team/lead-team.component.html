@@ -12,7 +12,8 @@
     <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" /> {{ I18ns.leadTeam.teams.title }}
   </h2>
   <p class="mb-5 alto-grey">{{ I18ns.leadTeam.teams.subtitle }}</p>
-  <ng-container *ngIf="paginatedTeams.length > 0; else noTeams">
+
+  <alto-placeholder-manager [status]="teamsDataStatus">
     <div class="table-panel">
       <table class="table team-table">
         <thead>
@@ -78,9 +79,8 @@
         [page]="teamsPage"
       ></alto-pagination>
     </div>
-  </ng-container>
-  <ng-template #noTeams>
-    <div class="nodata-placeholder text-center">
+
+    <div class="nodata-placeholder text-center" noData>
       <img [src]="Emoji.Eyes | emoji" height="24" />
       <p class="mt-3">{{ I18ns.leadTeam.teams.table.placeholderTitle }}</p>
       <span class="mt-3 d-block">{{ I18ns.leadTeam.teams.table.placeholderSubtitle }}</span>
@@ -88,7 +88,7 @@
         <i class="bi bi-plus-lg"></i>{{ I18ns.leadTeam.createTeam }}
       </button>
     </div>
-  </ng-template>
+  </alto-placeholder-manager>
 </div>
 
 <!-- MEMBERS -->
@@ -162,7 +162,7 @@
   </div>
 </div>
 
-<ng-container *ngIf="paginatedUsers.length > 0; else noUsers">
+<alto-placeholder-manager [status]="usersDataStatus">
   <div class="table-panel">
     <table class="table members-table">
       <thead>
@@ -228,9 +228,8 @@
       [page]="usersPage"
     ></alto-pagination>
   </div>
-</ng-container>
-<ng-template #noUsers>
-  <div *ngIf="!isFilteredUsers" class="nodata-placeholder text-center">
+
+  <div *ngIf="!isFilteredUsers" class="nodata-placeholder text-center" noData>
     <img [src]="Emoji.Eyes | emoji" height="24" />
     <p class="mt-3">{{ I18ns.leadTeam.members.table.placeholderTitle }}</p>
     <span class="mt-3 d-block">{{ I18ns.leadTeam.members.table.placeholderSubtitle }}</span>
@@ -238,7 +237,7 @@
       <i class="bi bi-plus-lg"></i>{{ I18ns.leadTeam.createTeam }}
     </button>
   </div>
-  <div *ngIf="isFilteredUsers" class="nodata-placeholder text-center">
+  <div *ngIf="isFilteredUsers" class="nodata-placeholder text-center" noResult>
     <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" />
     <p class="mt-3">{{ I18ns.shared.noData }}</p>
     <span class="mt-3 d-block">{{ I18ns.shared.noDataSubtitle }}</span>
@@ -247,4 +246,4 @@
       {{ I18ns.shared.resetFilters }}
     </button>
   </div>
-</ng-template>
+</alto-placeholder-manager>

@@ -25,6 +25,7 @@ import { environment } from 'src/environments/environment';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 
 interface TeamDisplay extends TeamDtoApi {
   score?: number;
@@ -50,12 +51,14 @@ export class LeadTeamComponent implements OnInit {
   teams: TeamDtoApi[] = [];
   teamsStats: TeamStatsDtoApi[] = [];
   paginatedTeams: TeamDisplay[] = [];
+  teamsDataStatus: PlaceholderDataStatus = 'good';
   teamsPage = 1;
   teamsPageSize = 5;
   teamsScores: TeamDisplay[] = [];
   // Users
   absoluteUsersCount = 0;
   usersCount = 0;
+  usersDataStatus: PlaceholderDataStatus = 'good';
   usersMap = new Map<string, string>();
   users: UserDtoApi[] = [];
   paginatedUsers: UserDisplay[] = [];
@@ -159,6 +162,7 @@ export class LeadTeamComponent implements OnInit {
   changeTeamsPage(page: number) {
     this.teamsPage = page;
     this.paginatedTeams = this.teamsScores.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
+    this.teamsDataStatus = this.paginatedTeams.length === 0 ? 'noData' : 'good';
   }
 
   filterUsers(
@@ -196,6 +200,8 @@ export class LeadTeamComponent implements OnInit {
       (page - 1) * this.usersPageSize,
       page * this.usersPageSize,
     );
+    this.usersDataStatus =
+      this.paginatedUsers.length === 0 ? (this.isFilteredUsers ? 'noResult' : 'noData') : 'good';
   }
 
   openTeamForm(team?: TeamDtoApi) {
