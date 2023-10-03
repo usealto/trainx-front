@@ -344,6 +344,10 @@ export const FR = {
         title: "Activité de l'entreprise",
         subtitle: "Retrouvez une vue d'ensemble de l'activité des équipes.",
         teamFilter: 'Équipe',
+        leaderboard: {
+          title: 'Leaderboard',
+          subtitle: 'Classement de vos équipes selon leur nombre de réponses aux questions.',
+        },
       },
       contributon: {
         contribution: 'Contribution',

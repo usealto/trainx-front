@@ -4,15 +4,18 @@
     <p class="alto-grey">{{ subtitle }}</p>
   </div>
 
-  <!-- TOP -->
   <div class="leaderboard-header">
     <img class="me-2" [src]="Emoji.Trophy | emoji" height="16" />
     <h4 class="d-inline-block">{{ I18ns.shared.leaderboard }}</h4>
   </div>
+
+  <!-- TOP -->
   <div *ngFor="let item of top" class="leaderboard-item">
-    <span class="float-end alto-score" [class]="item.score * 100 | pillColor">{{
+    <alto-progression-badge class="ms-2 float-end" [hidden]="item.progression === undefined" [score]="item.progression"></alto-progression-badge>
+    <span [hidden]="item.progression !== undefined" class="float-end alto-score" [class]="item.score * 100 | pillColor">{{
       item.score | percent
     }}</span>
+    <span [hidden]="item.progression === undefined" class="float-end">{{item.score * 100}}</span>
     <p class="d-inline-block me-2 fw-bold" [class]="getScoreColor(item.score * 100)">
       {{ getPosition(item.name) + '/' + leaderboard.length }}
     </p>
@@ -23,9 +26,11 @@
 
   <!-- FLOP -->
   <div *ngFor="let item of flop" class="leaderboard-item">
-    <span class="float-end alto-score" [class]="item.score * 100 | pillColor">{{
+    <alto-progression-badge class="ms-2 float-end" [hidden]="item.progression === undefined" [score]="item.progression"></alto-progression-badge>
+    <span [hidden]="item.progression !== undefined" class="float-end alto-score" [class]="item.score * 100 | pillColor">{{
       item.score | percent
     }}</span>
+    <span [hidden]="item.progression === undefined" class="float-end">{{item.score * 100}}</span>
     <p class="d-inline-block me-2 fw-bold" [class]="getScoreColor(item.score * 100)">
       {{ getPosition(item.name) + '/' + leaderboard.length }}
     </p>

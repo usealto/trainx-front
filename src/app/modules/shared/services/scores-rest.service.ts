@@ -99,7 +99,7 @@ export class ScoresRestService {
       .pipe(map((r) => r.data || []));
   }
 
-  getTeamsStats(duration: ScoreDuration, isProgression = false): Observable<TeamStatsDtoApi[]> {
+  getTeamsStats(duration: ScoreDuration, isProgression = false, sortBy?: string): Observable<TeamStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
 
@@ -116,6 +116,7 @@ export class ScoresRestService {
 
     return this.statsApi
       .getTeamsStats({
+        sortBy: sortBy,
         page: 1,
         itemsPerPage: 400,
         from: dateAfter,
