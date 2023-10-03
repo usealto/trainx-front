@@ -1086,5 +1086,7 @@ export const FR = {
   charts: {
     scoreLabel: 'Score (%)',
     timeLabel: 'Période',
+    answerCountLabel: 'Nombre de questions répondues',
+    answeredQuestions: 'Questions répondues',
   },
 };

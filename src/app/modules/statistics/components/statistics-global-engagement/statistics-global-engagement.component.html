@@ -1,7 +1,24 @@
-<header class="mb-4">
-  <img [src]="EmojiName.Locomotive | emoji" height="18" />
-  <h2 class="d-inline-block">{{ I18ns.statistics.globalEngagement.activity.title }}</h2>
-</header>
+<div class="mb-5 position-relative">
+  <div class="col-6">
+    <h2 class>
+      <img class="emoji" [src]="EmojiName.Locomotive | emoji" />
+      {{ I18ns.statistics.globalEngagement.activity.title }}
+    </h2>
+    <p class="mb-4 alto-grey">{{ I18ns.statistics.globalEngagement.activity.subtitle }}</p>
+  </div>
+  <div class="col-6 text-end">
+    <alto-time-picker
+      class="time-picker"
+      [duration]="duration"
+      (durationSelected)="updateTimePicker($event)"
+    ></alto-time-picker>
+  </div>
+</div>
+
+<div class="panel mb-5">
+  <alto-chart-basicline data-cy="chartBasicline" [chartOption]="guessChartOptions"></alto-chart-basicline>
+</div>
+
 <alto-leaderboard
   [leaderboard]="leaderboard"
   [title]="I18ns.statistics.globalEngagement.activity.leaderboard.title"
