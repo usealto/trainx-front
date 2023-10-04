@@ -76,7 +76,12 @@ export class UserHomeComponent implements OnInit {
               reducedGuesses.push(guess);
             }
           });
-          this.continuousSessionUsers = reducedGuesses.map((g) => g.createdByUser ?? {} as UserLightDtoApi);
+          this.continuousSessionUsers = reducedGuesses.reduce((users, guess) => {
+            if (guess.createdByUser) {
+              users.push(guess.createdByUser);
+            }
+            return users;
+          }, [] as UserLightDtoApi[]);
         }),
       )
       .subscribe();

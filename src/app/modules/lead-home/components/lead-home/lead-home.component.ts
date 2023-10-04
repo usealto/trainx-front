@@ -297,7 +297,7 @@ export class LeadHomeComponent implements OnInit {
   }
 
   @memoize()
-  getUser(id: string): Observable<UserDtoApi | undefined> {
+  getUser(id?: string): Observable<UserDtoApi | undefined> {
     if (!id) {
       return of(undefined);
     }
