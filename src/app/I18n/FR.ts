@@ -359,6 +359,9 @@ export const FR = {
         inactiveTeams: "Vos équipes n'ont pas encore été actives",
         inactiveTeamsTitle: 'Nombre de questions répondues',
         inactiveTeamsSubtitle: 'Elles se préparent en coulisses',
+        noDataYet: 'Nous n’avons pas encore de données à afficher',
+        noDataYetTitle: 'Collaboration',
+        noDataYetSubtitle: 'Cela ne devrait plus tarder !',
       },
     },
     globalPerformance: {
