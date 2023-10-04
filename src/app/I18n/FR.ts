@@ -349,9 +349,11 @@ export const FR = {
           subtitle: 'Classement de vos équipes selon leur nombre de réponses aux questions.',
         },
       },
-      contributon: {
-        contribution: 'Contribution',
-        contributionSubtitle: 'Retrouver les équipes ayant suggéré ou commenté des questions.',
+      engagement: {
+        title: 'Engagement de vos équipes',
+        subtitle: 'Évolution du nombre de questions et de commentaires remontés par vos équipes',
+        comments: 'Commentaires',
+        suggQuestions: 'Questions suggérées',
       },
       teamsTable: {
         title: 'Équipes',
@@ -368,6 +370,9 @@ export const FR = {
         inactiveTeams: "Vos équipes n'ont pas encore été actives",
         inactiveTeamsTitle: 'Nombre de questions répondues',
         inactiveTeamsSubtitle: 'Elles se préparent en coulisses',
+        noDataYet: 'Nous n’avons pas encore de données à afficher',
+        noDataYetTitle: 'Collaboration',
+        noDataYetSubtitle: 'Cela ne devrait plus tarder !',
       },
     },
     globalPerformance: {
@@ -1103,6 +1108,7 @@ export const FR = {
     scoreLabel: 'Score (%)',
     timeLabel: 'Période',
     answerCountLabel: 'Nombre de questions répondues',
+    collaborationCountLabel: 'Nombre de collaborations',
     answeredQuestions: 'Questions répondues',
   },
 };

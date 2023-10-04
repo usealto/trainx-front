@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { combineLatest, filter, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, filter, map, switchMap, tap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
+import { ScoreTimeframeEnumApi, ScoreTypeEnumApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -30,6 +30,9 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   guessChartOptions: any = {};
   guessesDataStatus: PlaceholderDataStatus = 'good';
 
+  collaborationChartOptions: any = {};
+  collaborationDataStatus: PlaceholderDataStatus = 'good';
+
   constructor(
     private readonly titleCasePipe: TitleCasePipe,
     public readonly teamStore: TeamStore,
@@ -39,11 +42,17 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getEngagementData();
+    this.getAllData();
   }
 
-  private getEngagementData(): void {
-    this.scoresRestService
+  private getAllData(): void {
+    combineLatest([this.getActivityData(), this.getTeamEngagementData()])
+      .pipe(untilDestroyed(this))
+      .subscribe();
+  }
+
+  private getActivityData(): Observable<[TeamStatsDtoApi[], TeamStatsDtoApi[]]> {
+    return this.scoresRestService
       .getScores({
         duration: this.duration,
         type: ScoreTypeEnumApi.Guess,
@@ -119,13 +128,98 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             };
           });
         }),
-        untilDestroyed(this),
-      )
-      .subscribe();
+      );
+  }
+
+  private getTeamEngagementData() {
+    return combineLatest([
+      this.scoresRestService.getScores({
+        duration: this.duration,
+        type: ScoreTypeEnumApi.Comment,
+        timeframe:
+          this.duration === ScoreDuration.Year
+            ? ScoreTimeframeEnumApi.Month
+            : this.duration === ScoreDuration.Trimester
+            ? ScoreTimeframeEnumApi.Week
+            : ScoreTimeframeEnumApi.Day,
+      }),
+      this.scoresRestService.getScores({
+        duration: this.duration,
+        type: ScoreTypeEnumApi.QuestionSubmitted,
+        timeframe:
+          this.duration === ScoreDuration.Year
+            ? ScoreTimeframeEnumApi.Month
+            : this.duration === ScoreDuration.Trimester
+            ? ScoreTimeframeEnumApi.Week
+            : ScoreTimeframeEnumApi.Day,
+      }),
+    ]).pipe(
+      map(([comments, questionsSubmitted]) => {
+        return [comments.scores, questionsSubmitted.scores];
+      }),
+      tap(([comments, questionsSubmitted]) => {
+        this.collaborationDataStatus =
+          comments.length === 0 && questionsSubmitted.length === 0 ? 'noData' : 'good';
+      }),
+      filter(([comments, questionsSubmitted]) => comments.length > 0 || questionsSubmitted.length > 0),
+      tap(([comments, questionsSubmitted]) => {
+        const reducedComments = this.scoresService.reduceLineChartData(comments);
+        const reducedQuestionsSubmitted = this.scoresService.reduceLineChartData(questionsSubmitted);
+        const aggregatedComments = this.statisticsServices.transformDataToPointByCounts(reducedComments[0]);
+        const aggregatedQuestionsSubmitted = this.statisticsServices.transformDataToPointByCounts(
+          reducedQuestionsSubmitted[0],
+        );
+        const labels = this.statisticsServices
+          .formatLabel(
+            aggregatedComments.map((d) => d.x),
+            this.duration,
+          )
+          .map((s) => this.titleCasePipe.transform(s));
+
+        const dataset = [
+          {
+            label: I18ns.statistics.globalEngagement.engagement.comments,
+            data: aggregatedComments.map((d) => d.y),
+          },
+          {
+            label: I18ns.statistics.globalEngagement.engagement.suggQuestions,
+            data: aggregatedQuestionsSubmitted.map((d) => d.y),
+          },
+        ];
+
+        const series = dataset.map((d) => {
+          return {
+            name: d.label,
+            data: d.data,
+            type: 'line',
+            showSymbol: false,
+          };
+        });
+
+        this.collaborationChartOptions = {
+          xAxis: [
+            {
+              ...xAxisDatesOptions,
+              data: labels,
+            },
+          ],
+          yAxis: [
+            {
+              ...yAxisScoreOptions,
+              max: undefined,
+              interval: undefined,
+              name: I18ns.charts.collaborationCountLabel,
+            },
+          ],
+          series: series,
+          legend: { show: false },
+        };
+      }),
+    );
   }
 
   updateTimePicker(event: any): void {
     this.duration = event;
-    this.getEngagementData();
+    this.getAllData();
   }
 }

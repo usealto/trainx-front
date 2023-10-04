@@ -58,4 +58,12 @@ export class StatisticsService {
     });
     return res;
   }
+
+  transformDataToPointByCounts(score: ScoreDtoApi) {
+    const res: Point[] = [];
+    score.dates.forEach((date, index) => {
+      res.push({ x: date, y: score.counts[index] });
+    });
+    return res;
+  }
 }

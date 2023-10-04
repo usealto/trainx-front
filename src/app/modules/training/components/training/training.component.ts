@@ -7,6 +7,7 @@ import {
   GuessSourceEnumApi,
   ProgramDtoApi,
   ProgramRunApi,
+  ProgramRunDtoApi,
   QuestionApi,
   QuestionDtoApi,
 } from '@usealto/sdk-ts-angular';
@@ -51,7 +52,7 @@ export class TrainingComponent implements OnInit {
 
   programId = '';
   program?: ProgramDtoApi;
-  programRun?: ProgramRunApi;
+  programRun?: ProgramRunDtoApi;
   score = 0;
 
   remainingQuestions: QuestionDtoApi[] = [];
