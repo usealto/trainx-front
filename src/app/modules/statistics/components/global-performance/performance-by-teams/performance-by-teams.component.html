@@ -1,34 +1,39 @@
-<div [hidden]="!scoreCount" class="panel mb-5">
-  <alto-dropdown-filter
-    class="float-end mx-2"
-    [data]="teams"
-    [selectedItems]="selectedTeams"
-    [displayLabel]="'label'"
-    [placeholder]="I18ns.statistics.globalPerformance.perTeamPerformance.teamFilter"
-    (selectChange)="filterTeams($event)"
-  ></alto-dropdown-filter>
-  <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}</h2>
-  <p class="alto-grey mb-4">
-    {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.subtitle }}
-  </p>
-  <div class="chart-container">
-    <alto-chart-basicline data-cy="chartBasicline" [chartOption]="chartOption"></alto-chart-basicline>
-  </div>
-</div>
-<div [hidden]="scoreCount > 0" class="nodata-placeholder">
-  <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}</h2>
-  <div class="text-center">
-    <img [src]="Emoji.FlexedBiceps | emoji" height="24" />
-    <p class="mt-3">
-      {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderTitle }}
+<alto-placeholder-manager [status]="scoreDataStatus">
+  <div class="panel mb-5">
+    <alto-dropdown-filter
+      class="float-end mx-2"
+      [data]="teams"
+      [selectedItems]="selectedTeams"
+      [displayLabel]="'label'"
+      [placeholder]="I18ns.statistics.globalPerformance.perTeamPerformance.teamFilter"
+      (selectChange)="filterTeams($event)"
+    ></alto-dropdown-filter>
+    <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}</h2>
+    <p class="alto-grey mb-4">
+      {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.subtitle }}
     </p>
-    <span class="d-inline-block mt-3">
-      {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderSubtitle }}
-    </span>
+    <div class="chart-container">
+      <alto-chart-basicline data-cy="chartBasicline" [chartOption]="chartOption"></alto-chart-basicline>
+    </div>
   </div>
-</div>
 
-<ng-container *ngIf="teamsLeaderboardCount > 0; else noTopFlopTeams">
+  <div class="nodata-placeholder" noData>
+    <h2 class="mb-5 fs-6">
+      {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}
+    </h2>
+    <div class="text-center">
+      <img [src]="Emoji.FlexedBiceps | emoji" height="24" />
+      <p class="mt-3">
+        {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderTitle }}
+      </p>
+      <span class="d-inline-block mt-3">
+        {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderSubtitle }}
+      </span>
+    </div>
+  </div>
+</alto-placeholder-manager>
+
+<alto-placeholder-manager [status]="teamsLeaderboardDataStatus">
   <alto-leaderboard
     [title]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title"
     [subtitle]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.subtitle"
@@ -36,13 +41,13 @@
     [size]="3"
   >
   </alto-leaderboard>
-</ng-container>
-<ng-template #noTopFlopTeams>
-  <div class="nodata-placeholder">
+    
+  <div class="nodata-placeholder" noData>
     <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}</h2>
     <div class="text-center">
       <img [src]="Emoji.Rocket | emoji" height="24" />
       <p class="mt-3">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.placeholder }}</p>
     </div>
   </div>
-</ng-template>
+  <alto-placeholder-manager [status]="scoreDataStatus"> </alto-placeholder-manager
+></alto-placeholder-manager>
