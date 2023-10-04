@@ -195,7 +195,6 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             showSymbol: false,
           };
         });
-        console.log(series);
 
         this.collaborationChartOptions = {
           xAxis: [
