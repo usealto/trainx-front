@@ -39,3 +39,25 @@
     </div>
   </div>
 </alto-placeholder-manager>
+
+<div class="mt-5 mb-5 position-relative">
+  <div class="col-6">
+    <h2 class>
+      <img class="emoji" [src]="EmojiName.NerdFace | emoji" />
+      {{ I18ns.statistics.globalEngagement.engagement.title }}
+    </h2>
+    <p class="mb-4 alto-grey">{{ I18ns.statistics.globalEngagement.engagement.subtitle }}</p>
+  </div>
+  <div class="col-6 text-end">
+    <alto-time-picker
+      class="time-picker"
+      [duration]="duration"
+      (durationSelected)="updateTimePicker($event)"
+    ></alto-time-picker>
+  </div>
+</div>
+
+<alto-placeholder-manager [status]="collaborationDataStatus">
+  <alto-chart-basicline class="panel mb-5" data-cy="chartBasicLine" [chartOption]="collaborationChartOptions">
+  </alto-chart-basicline>
+</alto-placeholder-manager>
