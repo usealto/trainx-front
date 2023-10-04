@@ -60,4 +60,13 @@
 <alto-placeholder-manager [status]="collaborationDataStatus">
   <alto-chart-basicline class="panel mb-5" data-cy="chartBasicLine" [chartOption]="collaborationChartOptions">
   </alto-chart-basicline>
+
+  <div class="nodata-placeholder" noData>
+    <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalEngagement.placeholders.noDataYetTitle }}</h2>
+    <div class="text-center">
+      <img [src]="EmojiName.BeachWithUmbrella | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.statistics.globalEngagement.placeholders.noDataYet }}</p>
+      <span class="mt-3 d-block">{{ I18ns.statistics.globalEngagement.placeholders.noDataYetSubtitle }}</span>
+    </div>
+  </div>
 </alto-placeholder-manager>
