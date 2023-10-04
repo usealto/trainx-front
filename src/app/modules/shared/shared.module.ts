@@ -47,7 +47,6 @@ import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { PlaceholderManagerComponent } from './components/placeholder-manager/placeholder-manager.component';
-import { TeamEngagementTableComponent } from './components/team-engagement-table/team-engagement-table/team-engagement-table.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +79,6 @@ import { TeamEngagementTableComponent } from './components/team-engagement-table
     RangeComponent,
     LeaderboardComponent,
     PlaceholderManagerComponent,
-    TeamEngagementTableComponent,
   ],
   imports: [
     CommonModule,
@@ -144,7 +142,6 @@ import { TeamEngagementTableComponent } from './components/team-engagement-table
     DeleteModalComponent,
     LeaderboardComponent,
     PlaceholderManagerComponent,
-    TeamEngagementTableComponent,
   ],
   providers: [NgbActiveModal],
 })

@@ -1,4 +1,4 @@
-<div class="mb-5 position-relative">
+<div class="mt-6 mb-5 position-relative">
   <div class="col-6">
     <h2 data-cy="statEngagementTitle1">
       <img class="emoji" [src]="EmojiName.Locomotive | emoji" />
@@ -16,11 +16,11 @@
 </div>
 
 <alto-placeholder-manager [status]="guessesDataStatus">
-  <alto-chart-basicline
-    class="panel mb-5"
-    data-cy="chartBasicline"
-    [chartOption]="guessChartOptions"
-  ></alto-chart-basicline>
+  <div class="panel mb-5">
+    <h2>{{ I18ns.statistics.globalEngagement.activity.chartTitle }}</h2>
+    <p>{{ I18ns.statistics.globalEngagement.activity.chartSubtitle }}</p>
+    <alto-chart-basicline data-cy="chartBasicline" [chartOption]="guessChartOptions"></alto-chart-basicline>
+  </div>
 
   <alto-leaderboard
     [leaderboard]="leaderboard"
@@ -28,7 +28,7 @@
     [subtitle]="I18ns.statistics.globalEngagement.activity.leaderboard.subtitle"
   ></alto-leaderboard>
 
-    <div class="nodata-placeholder" noData>
+  <div class="nodata-placeholder" noData>
     <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalEngagement.placeholders.inactiveTeamsTitle }}</h2>
     <div class="text-center">
       <img [src]="EmojiName.SleepingFace | emoji" height="24" />
@@ -40,7 +40,7 @@
   </div>
 </alto-placeholder-manager>
 
-<div class="mt-5 mb-5 position-relative">
+<div class="mt-6 mb-5 position-relative">
   <div class="col-6">
     <h2 class>
       <img class="emoji" [src]="EmojiName.NerdFace | emoji" />
@@ -58,8 +58,12 @@
 </div>
 
 <alto-placeholder-manager [status]="collaborationDataStatus">
-  <alto-chart-basicline class="panel mb-5" data-cy="chartBasicLine" [chartOption]="collaborationChartOptions">
-  </alto-chart-basicline>
+  <div class="panel mb-5">
+    <h2>{{ I18ns.statistics.globalEngagement.engagement.chartTitle }}</h2>
+    <p>{{ I18ns.statistics.globalEngagement.engagement.chartSubtitle }}</p>
+    <alto-chart-basicline data-cy="chartBasicLine" [chartOption]="collaborationChartOptions">
+    </alto-chart-basicline>
+  </div>
 
   <div class="nodata-placeholder" noData>
     <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalEngagement.placeholders.noDataYetTitle }}</h2>
@@ -71,5 +75,85 @@
   </div>
 </alto-placeholder-manager>
 
-<alto-team-engagement-table [duration]="duration"></alto-team-engagement-table>
+<div class="mt-5 mb-5 position-relative">
+  <div class="col-6">
+    <h2 class>
+      <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
+      {{ I18ns.statistics.globalEngagement.teamsTable.title }}
+    </h2>
+    <p class="mb-4 alto-grey">{{ I18ns.statistics.globalEngagement.teamsTable.subtitle }}</p>
+  </div>
+  <div class="col-6 text-end">
+    <alto-time-picker
+      class="time-picker"
+      [duration]="duration"
+      (durationSelected)="updateTimePicker($event)"
+    ></alto-time-picker>
+  </div>
+</div>
 
+<alto-placeholder-manager [status]="teamsDataStatus">
+  <div class="table-panel">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" class="w-25">{{ I18ns.statistics.globalEngagement.teamsTable.columns.team }}</th>
+          <th scope="col" class="w-25 text-center">
+            {{ I18ns.statistics.globalEngagement.teamsTable.columns.answeredQuestions }}
+          </th>
+          <th scope="col" class="w-25 text-center">
+            {{ I18ns.statistics.globalEngagement.teamsTable.columns.suggestedQuestions }}
+          </th>
+          <th scope="col" class="w-25 text-center">
+            {{ I18ns.statistics.globalEngagement.teamsTable.columns.comments }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let team of paginatedTeams" class="align-middle">
+          <td>
+            <span class="alto-badge" [style]="team.team?.id | teamColor">{{ team.team?.name }}</span>
+          </td>
+          <td class="alto-grey text-center">
+            {{ team.answeredQuestionsCount }}
+            <alto-progression-badge
+              class="ms-3 d-inline-block"
+              [score]="team.answeredQuestionsProgression"
+            ></alto-progression-badge>
+          </td>
+          <td class="text-center">
+            {{ team.submittedQuestionsCount }}
+            <alto-progression-badge
+              class="ms-3 d-inline-block"
+              [score]="team.submittedQuestionsProgression"
+            ></alto-progression-badge>
+          </td>
+          <td class="text-center">
+            {{ team.commentsCount }}
+            <alto-progression-badge
+              class="ms-3 d-inline-block"
+              [score]="team.commentsProgression"
+            ></alto-progression-badge>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <alto-pagination
+      class="mx-4 d-block"
+      [collectionSize]="teamsDisplay.length"
+      (pageChange)="changeTeamsPage($event)"
+      [pageSize]="teamsPageSize"
+      [page]="teamsPage"
+    ></alto-pagination>
+  </div>
+
+  <div class="nodata-placeholder" noData>
+    <div class="text-center">
+      <img [src]="EmojiName.Rocket | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.statistics.globalEngagement.teamsTable.placeholderTitle }}</p>
+      <span class="mt-3 d-inline-block">{{
+        I18ns.statistics.globalEngagement.teamsTable.placeholderSubtitle
+      }}</span>
+    </div>
+  </div>
+</alto-placeholder-manager>

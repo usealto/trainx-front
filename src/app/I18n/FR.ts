@@ -343,6 +343,8 @@ export const FR = {
       activity: {
         title: "Activité de l'entreprise",
         subtitle: "Retrouvez une vue d'ensemble de l'activité des équipes.",
+        chartTitle: 'Nombre de questions répondues',
+        chartSubtitle: "Évolution du nombre total de questions répondues au sein de l'entreprise.",
         teamFilter: 'Équipe',
         leaderboard: {
           title: 'Leaderboard',
@@ -351,9 +353,11 @@ export const FR = {
       },
       engagement: {
         title: 'Engagement de vos équipes',
-        subtitle: 'Évolution du nombre de questions et de commentaires remontés par vos équipes',
+        subtitle: 'Retrouvez une vue d’ensemble des questions et commentaires remontés par vos équipes.',
         comments: 'Commentaires',
         suggQuestions: 'Questions suggérées',
+        chartTitle: 'Collaboration',
+        chartSubtitle: 'Évolution du nombre de questions et de commentaires remontés par vos équipes.',
       },
       teamsTable: {
         title: 'Équipes',
@@ -1109,7 +1113,7 @@ export const FR = {
     scoreLabel: 'Score (%)',
     timeLabel: 'Période',
     answerCountLabel: 'Nombre de questions répondues',
-    collaborationCountLabel: 'Nombre de collaborations',
+    collaborationCountLabel: 'Nombre de contributions',
     answeredQuestions: 'Questions répondues',
   },
 };

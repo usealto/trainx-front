@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, combineLatest, filter, map, switchMap, tap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ScoreTimeframeEnumApi, ScoreTypeEnumApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
+import {
+  ScoreTimeframeEnumApi,
+  ScoreTypeEnumApi,
+  TeamDtoApi,
+  TeamStatsDtoApi,
+} from '@usealto/sdk-ts-angular';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -13,6 +18,7 @@ import { TitleCasePipe } from '@angular/common';
 
 import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
+import { DataForTable } from '../../models/statistics.model';
 
 @UntilDestroy()
 @Component({
@@ -33,6 +39,13 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   collaborationChartOptions: any = {};
   collaborationDataStatus: PlaceholderDataStatus = 'good';
 
+  teamsDataStatus: PlaceholderDataStatus = 'good';
+  teams: TeamDtoApi[] = [];
+  teamsDisplay: DataForTable[] = [];
+  paginatedTeams: DataForTable[] = [];
+  teamsPage = 1;
+  teamsPageSize = 5;
+
   constructor(
     private readonly titleCasePipe: TitleCasePipe,
     public readonly teamStore: TeamStore,
@@ -46,7 +59,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   }
 
   private getAllData(): void {
-    combineLatest([this.getActivityData(), this.getTeamEngagementData()])
+    combineLatest([this.getActivityData(), this.getTeamEngagementData(), this.getTeamDataForTable()])
       .pipe(untilDestroyed(this))
       .subscribe();
   }
@@ -212,8 +225,29 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             },
           ],
           series: series,
-          legend: { show: false },
+          legend: { show: true },
         };
+      }),
+    );
+  }
+
+  private getTeamDataForTable(): Observable<[TeamStatsDtoApi[], TeamStatsDtoApi[]]> {
+    return combineLatest([
+      this.scoresRestService.getTeamsStats(this.duration),
+      this.scoresRestService.getTeamsStats(this.duration, true),
+    ]).pipe(
+      tap(([teams]) => {
+        this.teamsDataStatus = teams.length === 0 ? 'noData' : 'good';
+      }),
+      filter(([teams]) => teams.length > 0),
+      tap(([teams, teamsProg]) => {
+        this.teams = teams.map((t) => t.team);
+
+        this.teamsDisplay = teams.map((t) => {
+          const teamProg = teamsProg.find((tp) => tp.team.id === t.team.id);
+          return this.dataForTeamTableMapper(t, teamProg);
+        });
+        this.changeTeamsPage(1);
       }),
     );
   }
@@ -221,5 +255,34 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   updateTimePicker(event: any): void {
     this.duration = event;
     this.getAllData();
+  }
+
+  changeTeamsPage(page: number) {
+    this.teamsPage = page;
+    this.paginatedTeams = this.teamsDisplay.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
+  }
+
+  private dataForTeamTableMapper(t: TeamStatsDtoApi, tProg?: TeamStatsDtoApi): DataForTable {
+    return {
+      team: t.team,
+      globalScore: t.score,
+      answeredQuestionsCount: t.totalGuessesCount,
+      answeredQuestionsProgression: this.scoresService.getProgression(
+        t.totalGuessesCount,
+        tProg?.totalGuessesCount,
+      ),
+      commentsCount: t.commentsCount,
+      commentsProgression: this.scoresService.getProgression(t.commentsCount, tProg?.commentsCount),
+      submittedQuestionsCount: t.questionsSubmittedCount,
+      submittedQuestionsProgression: this.scoresService.getProgression(
+        t.questionsSubmittedCount,
+        tProg?.questionsSubmittedCount,
+      ),
+      leastMasteredTags: t.tags
+        ?.filter((ta) => (ta.score ?? 0) < 50)
+        .sort((a, b) => (a.score || 0) - (b.score || 0))
+        .slice(0, 3)
+        .map((t) => t.tag.name),
+    } as DataForTable;
   }
 }
