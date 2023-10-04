@@ -8,6 +8,7 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { QuestionFilters } from 'src/app/modules/programs/models/question.model';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
@@ -35,7 +36,7 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
   questionsPreviousPeriod: QuestionStatsDtoApi[] = [];
   questionsDisplay: QuestionStatsDtoApi[] = [];
   paginatedQuestions: QuestionStatsDtoApi[] = [];
-  paginatedQuestionsCount = 0;
+  questionsDataStatus: PlaceholderDataStatus = 'good';
   questionsPage = 1;
   questionsPageSize = 5;
 
@@ -113,7 +114,7 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
       (page - 1) * this.questionsPageSize,
       page * this.questionsPageSize,
     );
-    this.paginatedQuestionsCount = this.paginatedQuestions.length;
+    this.questionsDataStatus = this.paginatedQuestions.length === 0 ? 'noData' : 'good';
   }
 
   @memoize()

@@ -9,6 +9,7 @@ import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { TeamsStatsFilters } from 'src/app/modules/shared/models/stats.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
@@ -36,7 +37,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   teamsPreviousPeriod: TeamStatsDtoApi[] = [];
   teamsDisplay: TeamStatsDtoApi[] = [];
   paginatedTeams: TeamStatsDtoApi[] = [];
-  paginatedTeamsCount = 0;
+  teamsDataStatus: PlaceholderDataStatus = 'good';
   teamsPage = 1;
   teamsPageSize = 5;
 
@@ -126,7 +127,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   changeTeamsPage(page: number) {
     this.teamsPage = page;
     this.paginatedTeams = this.teamsDisplay.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
-    this.paginatedTeamsCount = this.paginatedTeams.length;
+    this.teamsDataStatus = this.paginatedTeams.length === 0 ? 'noData' : 'good';
   }
 
   @memoize()

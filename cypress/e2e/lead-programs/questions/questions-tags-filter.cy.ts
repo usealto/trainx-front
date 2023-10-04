@@ -24,9 +24,12 @@ describe('L/Programs Questions Tab', () => {
     cy.get('[data-cy="questionsTagFilter"]').click();
 
     cy.get('.ng-dropdown-header > input').clear();
+
+    cy.intercept('GET', '/v1/questions?tagIds=*').as('tagSearch');
+
     cy.get('.ng-dropdown-header > input').type(`${tagTruncName}{enter}`);
 
-    cy.wait(500);
+    cy.wait('@tagSearch').wait(100);
 
     cy.get('[data-cy="questionsTagsList"]')
       .first()

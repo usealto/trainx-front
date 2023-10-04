@@ -1,14 +1,10 @@
 name: Cypress Tests
 
-on:
-  push:
-    branches:
-      - develop
-      - main
-  pull_request:
-    branches:
-      - develop
-      - main
+on: [pull_request]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
   cypress-run:
@@ -34,6 +30,6 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          build: npm run build
           start: npm start
           config-file: cypress/cypress-CICD.config.ts
+          wait-on: 'http://localhost:4200'

@@ -364,6 +364,10 @@ export const FR = {
           suggestedQuestions: 'Questions suggérées',
           comments: 'Commentaires',
         },
+      placeholders: {
+        inactiveTeams: "Vos équipes n'ont pas encore été actives",
+        inactiveTeamsTitle: 'Nombre de questions répondues',
+        inactiveTeamsSubtitle: 'Elles se préparent en coulisses',
       },
     },
     globalPerformance: {

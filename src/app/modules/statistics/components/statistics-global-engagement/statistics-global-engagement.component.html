@@ -15,23 +15,30 @@
   </div>
 </div>
 
-<div class="panel mb-5">
-  <alto-placeholder-manager [status]="guessesDataStatus">
-    <alto-chart-basicline data-cy="chartBasicline" [chartOption]="guessChartOptions"></alto-chart-basicline>
+<alto-placeholder-manager [status]="guessesDataStatus">
+  <alto-chart-basicline
+    class="panel mb-5"
+    data-cy="chartBasicline"
+    [chartOption]="guessChartOptions"
+  ></alto-chart-basicline>
+
+  <alto-leaderboard
+    [leaderboard]="leaderboard"
+    [title]="I18ns.statistics.globalEngagement.activity.leaderboard.title"
+    [subtitle]="I18ns.statistics.globalEngagement.activity.leaderboard.subtitle"
+  ></alto-leaderboard>
 
     <div class="nodata-placeholder" noData>
-      <div class="text-center">
-        <img [src]="" />
-      </div>
+    <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalEngagement.placeholders.inactiveTeamsTitle }}</h2>
+    <div class="text-center">
+      <img [src]="EmojiName.SleepingFace | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.statistics.globalEngagement.placeholders.inactiveTeams }}</p>
+      <span class="mt-3 d-block">{{
+        I18ns.statistics.globalEngagement.placeholders.inactiveTeamsSubtitle
+      }}</span>
     </div>
-  </alto-placeholder-manager>
-</div>
-
-<alto-leaderboard
-  [leaderboard]="leaderboard"
-  [title]="I18ns.statistics.globalEngagement.activity.leaderboard.title"
-  [subtitle]="I18ns.statistics.globalEngagement.activity.leaderboard.subtitle"
-></alto-leaderboard>
+  </div>
+</alto-placeholder-manager>
 
 <div class="mt-5 position-relative">
   <div class="col-6">
