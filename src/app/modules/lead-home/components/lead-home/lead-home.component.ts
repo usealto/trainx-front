@@ -142,10 +142,9 @@ export class LeadHomeComponent implements OnInit {
   }
 
   getProgramDataStatus() {
-    if (this.averageScore || (this.programsCount || this.expectedGuessCount) > 0) {
-      this.isData = true;
+    if (!(this.averageScore || (this.programsCount || this.expectedGuessCount) > 0)) {
+      this.programDataStatus = 'noData';
     }
-    this.programDataStatus = this.isData ? 'good' : 'noData';
   }
 
   createChart(duration: ScoreDuration) {
