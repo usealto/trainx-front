@@ -7,6 +7,7 @@ import {
   GetTeamsStatsRequestParams,
   GetUsersStatsRequestParams,
   ProgramRunApi,
+  ProgramRunDtoApi,
   ProgramRunsApiService,
   QuestionStatsDtoApi,
   ScoreByTypeEnumApi,
@@ -208,7 +209,7 @@ export class ScoresRestService {
     );
   }
 
-  getCompletion(filt: ScoreFilters, isProgression: boolean): Observable<ProgramRunApi[]> {
+  getCompletion(filt: ScoreFilters, isProgression: boolean): Observable<ProgramRunDtoApi[]> {
     const par = {
       page: 1,
       itemPerPage: 300,
@@ -228,6 +229,6 @@ export class ScoresRestService {
       par.createdBefore = this.service.getYesterday();
     }
 
-    return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));
+    return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunDtoApi[])));
   }
 }

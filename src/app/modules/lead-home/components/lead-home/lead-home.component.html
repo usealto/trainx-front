@@ -357,7 +357,7 @@
               >
                 <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
                 <td>
-                  <alto-img-badge [user]="getUser(chal.createdBy) | async"></alto-img-badge>
+                  <alto-img-badge [user]="getUser(chal.createdBy || '') | async"></alto-img-badge>
                 </td>
                 <td>
                   <alto-colored-pill-list

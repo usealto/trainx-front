@@ -176,10 +176,10 @@ export class LeadCollaborationComponent implements OnInit {
             ).length;
 
           this.contributors = [
-            ...this.comments.map(({ createdByUser }) => createdByUser),
-            ...this.submittedQuestions.map(({ createdByUser }) => createdByUser),
+            ...this.comments.map(({ author }) => author),
+            ...this.submittedQuestions.map(({ author }) => author),
           ].reduce((acc, contributor) => {
-            if (!acc.find(({ id }) => id === contributor.id)) {
+            if (contributor && !acc.find(({ id }) => id === contributor.id)) {
               acc.push({
                 id: contributor.id,
                 name: `${contributor.firstname} ${contributor.lastname}`,
@@ -201,7 +201,7 @@ export class LeadCollaborationComponent implements OnInit {
     type: ETypeValue,
   ): IContribution {
     return {
-      contributorId: data.createdBy,
+      contributorId: data.author.id,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       type,

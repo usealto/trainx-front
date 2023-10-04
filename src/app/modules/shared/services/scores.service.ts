@@ -123,7 +123,7 @@ export class ScoresService {
 
     let firstIndex = scores[0].dates.length;
     scores.forEach((s) => {
-      s.averages.forEach((a, i) => {
+      s.counts.forEach((a, i) => {
         if (a && i < firstIndex) {
           firstIndex = i;
         }
