@@ -18,9 +18,7 @@ describe('User Profile', () => {
 
     cy.get('[data-cy="lastname"]').type(lastname1);
 
-    cy.intercept('PATCH', Cypress.env('apiURL') + '/v1/users/0bc16460-6030-425c-a7f8-456d2c9ff110').as(
-      'userUpdate',
-    );
+    cy.intercept('PATCH', '/v1/users/**').as('userUpdate');
     cy.get('[data-cy="save-button"]').click();
 
     cy.wait('@userUpdate');
