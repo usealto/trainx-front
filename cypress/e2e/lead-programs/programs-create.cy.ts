@@ -19,6 +19,8 @@ describe('Lead Programs', () => {
     cy.get('[data-cy="programPriority"]').click();
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
 
+    cy.wait(100);
+
     cy.get('[data-cy="programCreateNext"]').click();
     cy.get('.btn-primary').eq(1).click();
 
