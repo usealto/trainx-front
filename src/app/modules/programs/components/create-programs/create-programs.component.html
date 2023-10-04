@@ -64,8 +64,11 @@
           data-cy="programCreateNext"
           [disabled]="programForm && !programForm.valid"
         >
-          <span>
+          <span *ngIf="isEdit">
             {{ I18ns.shared.next }}
+          </span>
+          <span *ngIf="!isEdit">
+            {{ I18ns.programs.forms.step1.create }}
           </span>
           <i class="bi bi-arrow-right-short"></i>
         </button>
@@ -273,7 +276,7 @@
       </div>
       <div class="col-6 text-end">
         <a class="btn btn-primary float-end" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]">{{
-          I18ns.shared.submit
+          I18ns.programs.forms.step3.validate
         }}</a>
       </div>
     </div>

@@ -93,7 +93,7 @@ export const FR = {
   },
   leadHome: {
     title: 'Bonjour ',
-    subtitle: "Retrouvez une vue d'ensemble sur votre training.",
+    subtitle: 'Retrouvez une vue d’ensemble sur vos équipes.',
     comments: ['Aucun commentaire', '{{}} commentaire', '{{}} commentaires'],
     awaiting: 'en attente',
     subtitleComment: [
@@ -125,7 +125,7 @@ export const FR = {
     globalEvolution: {
       title: 'Évolution globale',
       score: 'Score moyen de vos équipes',
-      chartSubtitle: 'Évolution du score moyen de vos équipes dans le temps.',
+      chartSubtitle: 'Évolution du taux de bonnes réponses de vos équipes dans le temps.',
       tabs: {
         program: 'Programmes',
         tag: 'Tags',
@@ -295,6 +295,7 @@ export const FR = {
         priorityPlaceholder: 'Choisir un niveau',
         expectation: 'Score attendu',
         expectationSubtitle: 'Déterminez le score que vos équipes sont censées atteindre à ce programme.',
+        create: 'Créer le programme',
       },
       step2: {
         title: 'Questions',
@@ -326,6 +327,7 @@ export const FR = {
         summary: 'Récapitulatif',
         summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
         validateCreate: 'Le nouveau programme a bien été ajouté',
+        validate: 'Finaliser la création du programme',
       },
     },
     delete: {
@@ -429,11 +431,13 @@ export const FR = {
     },
     perTeams: {
       title: 'Par équipe',
-      sections : {
-        teams : "Équipes",
-        teamsSubtitle:"Découvrez les statistiques d'engagement et de performance de chacune de vos équipes. ",
-        members: "Membres",
-        membersSubtitle: "Découvrez les statistiques d'engagement et de performance de chacun de vos membres."
+      sections: {
+        teams: 'Équipes',
+        teamsSubtitle:
+          "Découvrez les statistiques d'engagement et de performance de chacune de vos équipes. ",
+        members: 'Membres',
+        membersSubtitle:
+          "Découvrez les statistiques d'engagement et de performance de chacun de vos membres.",
       },
       globalTooltip:
         '% de questions justes sur le nombre de questions répondues et variation sur la période passée',

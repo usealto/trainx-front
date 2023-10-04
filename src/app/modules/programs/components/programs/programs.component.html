@@ -11,12 +11,20 @@
 
 <!-- PROGRAMS -->
 <div *ngIf="activeTab === 'programs'" class="active-programs">
-  <div>
-    <h2>
-      <img class="emoji" [src]="Emoji.Bullseye | emoji" />
-      {{ I18ns.programs.activePrograms.title }}
-    </h2>
-    <p class="subtitle alto-grey">{{ I18ns.programs.activePrograms.subtitle }}</p>
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+      <h2>
+        <img class="emoji" [src]="Emoji.Bullseye | emoji" />
+        {{ I18ns.programs.activePrograms.title }}
+      </h2>
+      <p class="subtitle alto-grey">{{ I18ns.programs.activePrograms.subtitle }}</p>
+    </div>
+    <a type="button" class="btn btn-primary" [routerLink]="AltoRoutes.programsCreate">
+      <i class="bi bi-plus-lg"></i>
+      <div>
+        {{ I18ns.programs.programs.createProgram }}
+      </div>
+    </a>
   </div>
 
   <alto-program-card-list
