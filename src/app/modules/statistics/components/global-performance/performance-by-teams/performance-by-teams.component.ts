@@ -18,6 +18,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { TitleCasePipe } from '@angular/common';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -34,10 +35,11 @@ export class PerformanceByTeamsComponent implements OnChanges {
   teams: ScoreDtoApi[] = [];
   selectedTeams: ScoreDtoApi[] = [];
   scoredTeams: { label: string; score: number | null; progression: number | null }[] = [];
-  scoreCount = 0;
+  scoreDataStatus: PlaceholderDataStatus = 'good';
 
   teamsLeaderboard: { name: string; score: number }[] = [];
   teamsLeaderboardCount = 0;
+  teamsLeaderboardDataStatus: PlaceholderDataStatus = 'good';
   chartOption: any = {};
 
   constructor(
@@ -59,7 +61,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
           tap(([, teams]) => {
             teams = teams.filter((t) => t.score && t.score >= 0);
             this.teamsLeaderboard = teams.map((t) => ({ name: t.team.name, score: t.score ?? 0 }));
-            this.teamsLeaderboardCount = this.teamsLeaderboard.length;
+            this.teamsLeaderboardDataStatus = this.teamsLeaderboard.length === 0 ? 'noData' : 'good';
           }),
           tap(([, current, previous]) => {
             this.getTeamsScores(current, previous);
@@ -102,8 +104,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
 
   createScoreEvolutionChart(scores: ScoreDtoApi[], globalScore: ScoreDtoApi, duration: ScoreDuration) {
     scores = this.scoresServices.reduceLineChartData(scores);
-    this.scoreCount = scores.length;
-
+    this.scoreDataStatus = scores.length === 0 ? 'noData' : 'good';
     // Aligns Global with Score's Length so thay start on the same month
     const globalPoints = this.statisticsServices
       .transformDataToPoint(globalScore)

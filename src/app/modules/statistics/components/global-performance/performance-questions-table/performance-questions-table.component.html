@@ -19,7 +19,7 @@
   </div>
 </div>
 
-<ng-container *ngIf="paginatedQuestionsCount > 0; else noQuestionsTable">
+<alto-placeholder-manager [status]="questionsDataStatus">
   <div class="table-panel">
     <table class="table">
       <thead>
@@ -98,12 +98,11 @@
       [page]="questionsPage"
     ></alto-pagination>
   </div>
-</ng-container>
-<ng-template #noQuestionsTable>
-  <div class="col nodata-placeholder d-flex justify-content-center align-items-center">
+
+  <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noData>
     <div class="text-center">
       <img [src]="Emoji.Collision | emoji" height="24" />
       <p class="mt-3">{{ I18ns.statistics.globalPerformance.questionsTable.placeholder }}</p>
     </div>
   </div>
-</ng-template>
+</alto-placeholder-manager>
