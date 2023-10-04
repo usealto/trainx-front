@@ -10,7 +10,7 @@
   </div>
 
   <!-- TOP -->
-  <div *ngFor="let item of top" class="leaderboard-item">
+  <div *ngFor="let item of top; let i = index" class="leaderboard-item" data-cy="leaderboard-line">
     <alto-progression-badge
       class="ms-2 float-end"
       [hidden]="item.progression === undefined"
@@ -22,7 +22,9 @@
       [class]="item.score * 100 | pillColor"
       >{{ item.score | percent }}</span
     >
-    <span [hidden]="item.progression === undefined" class="float-end">{{ item.score * 100 }}</span>
+    <span [hidden]="item.progression === undefined" data-cy="line-score" class="float-end">{{
+      item.score * 100
+    }}</span>
     <p class="d-inline-block me-2 fw-bold" [class]="getScoreColor(item.score * 100)">
       {{ getPosition(item.name) + '/' + leaderboard.length }}
     </p>
@@ -32,7 +34,7 @@
   <p [hidden]="leaderboard.length < size * 2" class="mt-3">...</p>
 
   <!-- FLOP -->
-  <div *ngFor="let item of flop" class="leaderboard-item">
+  <div *ngFor="let item of flop; let i = index" class="leaderboard-item" data-cy="leaderboard-line">
     <alto-progression-badge
       class="ms-2 float-end"
       [hidden]="item.progression === undefined"

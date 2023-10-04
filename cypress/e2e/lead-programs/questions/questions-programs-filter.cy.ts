@@ -22,6 +22,7 @@ describe('L/Programs Questions Tab', () => {
 
     cy.get('[data-cy="programPriority"]').click();
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
+    cy.get('[data-cy="programCreateNext"]').should('be.enabled');
 
     cy.get('[data-cy="programCreateNext"]').click();
 
