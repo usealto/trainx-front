@@ -355,6 +355,17 @@ export const FR = {
         comments: 'Commentaires',
         suggQuestions: 'Questions suggérées',
       },
+      teamsTable: {
+        title: 'Équipes',
+        subtitle: 'Retrouvez les statistiques détaillées d’engagement pour chacune de vos équipes.',
+        placeholderTitle: 'Nous n’avons pas encore de données à afficher',
+        placeholderSubtitle: 'Les équipes s’activent pour fournir les premiers résultats !',
+        columns: {
+          team: 'Équipe',
+          answeredQuestions: 'Questions répondues',
+          suggestedQuestions: 'Questions suggérées',
+          comments: 'Commentaires',
+        },
       placeholders: {
         inactiveTeams: "Vos équipes n'ont pas encore été actives",
         inactiveTeamsTitle: 'Nombre de questions répondues',

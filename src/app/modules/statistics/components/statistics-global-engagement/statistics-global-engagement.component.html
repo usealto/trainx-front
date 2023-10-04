@@ -28,7 +28,7 @@
     [subtitle]="I18ns.statistics.globalEngagement.activity.leaderboard.subtitle"
   ></alto-leaderboard>
 
-  <div class="nodata-placeholder" noData>
+    <div class="nodata-placeholder" noData>
     <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalEngagement.placeholders.inactiveTeamsTitle }}</h2>
     <div class="text-center">
       <img [src]="EmojiName.SleepingFace | emoji" height="24" />
@@ -70,3 +70,6 @@
     </div>
   </div>
 </alto-placeholder-manager>
+
+<alto-team-engagement-table [duration]="duration"></alto-team-engagement-table>
+
