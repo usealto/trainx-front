@@ -2,6 +2,8 @@
 
 [![Tests CI](https://github.com/usealto/assessment-front/actions/workflows/node.js.yml/badge.svg)](https://github.com/usealto/assessment-front/actions/workflows/node.js.yml)
 
+[![Cypress Tests](https://github.com/usealto/assessment-front/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/usealto/assessment-front/actions/workflows/e2e-tests.yml)
+
 == With Angular 15 and VS Code, you need this version of Node ==
 
     https://nodejs.org/dist/v18.10.0/
