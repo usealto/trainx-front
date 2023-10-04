@@ -16,15 +16,15 @@ export interface ITooltipParams {
 })
 export class ChartsService {
   defaultThemeColors = [
-    '#1570EF',
-    '#F04438',
-    '#12B76A',
+    '#53b1fd',
+    '#f97066',
+    '#32d583',
     '#FDB022',
-    '#7A5AF8',
-    '#EE46BC',
-    '#FB6514',
-    '#6172F3',
-    '#F63D68',
+    '#9b8afb',
+    '#f670c7',
+    '#fd853a',
+    '#8098f9',
+    '#fd6f8e',
   ];
 
   @memoize()

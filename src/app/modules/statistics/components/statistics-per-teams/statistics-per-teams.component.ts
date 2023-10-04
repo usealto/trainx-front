@@ -3,13 +3,12 @@ import { TeamDtoApi, TeamStatsDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-an
 import { combineLatest, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { UserFilters } from 'src/app/modules/profile/models/user.model';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { DataForTable } from '../../models/statistics.model';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 
 @Component({
   selector: 'alto-statistics-per-teams',
@@ -34,7 +33,6 @@ export class StatisticsPerTeamsComponent implements OnInit {
   constructor(
     private readonly scoreRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
-    private readonly teamsRestService: TeamsRestService,
   ) {}
 
   ngOnInit(): void {

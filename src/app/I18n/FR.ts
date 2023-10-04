@@ -35,6 +35,7 @@ export const FR = {
     members: 'membres',
     top: 'Top',
     flop: 'Flop',
+    leaderboard: 'Aperçu du classement',
     waitingForNewResults: "Dans l'attente de nouveaux résultats.",
     days: ['jour', 'jours'],
     score: 'Score',
@@ -132,15 +133,15 @@ export const FR = {
         member: 'Membre',
       },
     },
-    topFlop: {
+    leaderboard: {
       teams: {
         title: 'Niveau de connaissance de vos équipes',
-        subtitle: 'Aperçu du niveau de maîtrise de vos équipes par thématiques.',
+        subtitle: 'Classement selon le taux de bonnes réponses.',
         placeholder: 'Envie de découvrir le niveau de connaissance de vos équipes ?',
       },
       users: {
         title: 'Niveau de connaissance de vos collaborateurs',
-        subtitle: 'Aperçu du niveau de maîtrise de vos collaborateurs.',
+        subtitle: 'Classement selon le taux de bonnes réponses.',
         placeholder: 'Envie de découvrir le niveau de connaissance de vos collaborateurs ?',
       },
     },
