@@ -115,6 +115,8 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             yAxis: [
               {
                 ...yAxisScoreOptions,
+                max: undefined,
+                interval: undefined,
                 name: I18ns.charts.answerCountLabel,
               },
             ],

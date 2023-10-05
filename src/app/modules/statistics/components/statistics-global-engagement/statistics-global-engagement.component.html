@@ -19,15 +19,12 @@
   <div class="panel mb-5">
     <h2>{{ I18ns.statistics.globalEngagement.activity.chartTitle }}</h2>
     <p>{{ I18ns.statistics.globalEngagement.activity.chartSubtitle }}</p>
-    <alto-chart-basicline data-cy="chartBasicline" [chartOption]="guessChartOptions"></alto-chart-basicline>
+    <alto-chart-basicline
+      class="chart-container"
+      data-cy="chartBasicline"
+      [chartOption]="guessChartOptions"
+    ></alto-chart-basicline>
   </div>
-
-  <alto-leaderboard
-    [config]="['count', 'progress']"
-    [leaderboard]="leaderboard"
-    [title]="I18ns.statistics.globalEngagement.activity.leaderboard.title"
-    [subtitle]="I18ns.statistics.globalEngagement.activity.leaderboard.subtitle"
-  ></alto-leaderboard>
 
   <div class="nodata-placeholder" noData>
     <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalEngagement.placeholders.inactiveTeamsTitle }}</h2>
@@ -37,6 +34,23 @@
       <span class="mt-3 d-block">{{
         I18ns.statistics.globalEngagement.placeholders.inactiveTeamsSubtitle
       }}</span>
+    </div>
+  </div>
+</alto-placeholder-manager>
+
+<alto-placeholder-manager [status]="guessesDataStatus">
+  <alto-leaderboard
+    [config]="['count', 'progress']"
+    [leaderboard]="leaderboard"
+    [title]="I18ns.statistics.globalEngagement.leaderboard.title"
+    [subtitle]="I18ns.statistics.globalEngagement.leaderboard.subtitle"
+  ></alto-leaderboard>
+
+  <div class="nodata-placeholder" noData>
+    <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalEngagement.leaderboard.title }}</h2>
+    <div class="text-center">
+      <img [src]="EmojiName.Trophy | emoji" height="24" />
+      <p class="mt-3">{{ I18ns.statistics.globalEngagement.placeholders.noLeaderboard }}</p>
     </div>
   </div>
 </alto-placeholder-manager>
@@ -62,7 +76,11 @@
   <div class="panel mb-5">
     <h2>{{ I18ns.statistics.globalEngagement.engagement.chartTitle }}</h2>
     <p>{{ I18ns.statistics.globalEngagement.engagement.chartSubtitle }}</p>
-    <alto-chart-basicline data-cy="chartBasicLine" [chartOption]="collaborationChartOptions">
+    <alto-chart-basicline
+      class="chart-container"
+      data-cy="chartBasicLine"
+      [chartOption]="collaborationChartOptions"
+    >
     </alto-chart-basicline>
   </div>
 

@@ -346,10 +346,6 @@ export const FR = {
         chartTitle: 'Nombre de questions répondues',
         chartSubtitle: "Évolution du nombre total de questions répondues au sein de l'entreprise.",
         teamFilter: 'Équipe',
-        leaderboard: {
-          title: 'Leaderboard',
-          subtitle: 'Classement de vos équipes selon leur nombre de réponses aux questions.',
-        },
       },
       engagement: {
         title: 'Engagement de vos équipes',
@@ -358,6 +354,10 @@ export const FR = {
         suggQuestions: 'Questions suggérées',
         chartTitle: 'Collaboration',
         chartSubtitle: 'Évolution du nombre de questions et de commentaires remontés par vos équipes.',
+      },
+      leaderboard: {
+        title: 'Leaderboard',
+        subtitle: 'Classement de vos équipes selon leur nombre de réponses aux questions.',
       },
       teamsTable: {
         title: 'Équipes',
@@ -378,6 +378,7 @@ export const FR = {
         noDataYet: 'Nous n’avons pas encore de données à afficher',
         noDataYetTitle: 'Collaboration',
         noDataYetSubtitle: 'Cela ne devrait plus tarder !',
+        noLeaderboard: 'Aucun classement à afficher pour le moment',
       },
     },
     globalPerformance: {
