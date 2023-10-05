@@ -52,6 +52,7 @@ export class ProgramsComponent implements OnInit {
   AltoRoutes = AltoRoutes;
   //
   programsCount = 0;
+  activeProgramCount = 0;
   //
   questions: QuestionDtoApi[] = [];
   paginatedQuestions!: QuestionDtoApi[];

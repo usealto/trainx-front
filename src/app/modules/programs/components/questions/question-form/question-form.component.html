@@ -130,7 +130,7 @@
       </ng-container>
     </ng-container>
     <p class="add-field" *ngIf="answersAccepted.controls.length < 4" (click)="addGoodAnwswer()">
-      <i class="bi bi-arrow-right-short"></i> {{ I18ns.questions.form.addGoodAnswer }}
+      <i class="bi bi-plus-lg"></i> {{ I18ns.questions.form.addGoodAnswer }}
     </p>
 
     <label class="form-label required mb-1">{{ I18ns.questions.form.badAnswer }}</label>
@@ -161,7 +161,7 @@
     </ng-container>
 
     <p class="add-field" *ngIf="answersWrong.controls.length < 6" (click)="addBadAnwswer()">
-      <i class="bi bi-arrow-right-short"></i> {{ I18ns.questions.form.addBadAnswer }}
+      <i class="bi bi-plus-lg"></i> {{ I18ns.questions.form.addBadAnswer }}
     </p>
   </form>
 </div>
