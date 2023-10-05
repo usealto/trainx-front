@@ -50,7 +50,12 @@ describe('L/Programs Questions Tab', () => {
     cy.get('[data-cy="questionsProgramFilter"]').click();
 
     cy.get('.ng-dropdown-header > input').clear();
-    cy.get('.ng-dropdown-header > input').type(`${newProg}{enter}`).wait(500);
+
+    cy.intercept('GET', '/v1/questions?programIds=*').as('questionSearch');
+
+    cy.get('.ng-dropdown-header > input').type(`${newProg}{enter}`);
+
+    cy.wait('@questionSearch').wait(100);
 
     cy.get('[data-cy="questionEditPen"]').first().click();
 

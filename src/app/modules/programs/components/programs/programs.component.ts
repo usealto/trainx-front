@@ -66,7 +66,6 @@ export class ProgramsComponent implements OnInit {
   selectedItems: QuestionDtoApi[] = [];
   isFilteredQuestions = false;
   //
-  userCache = new Map<string, UserDtoApi>();
   pillsRowDisplayLimit = 3;
   submittedQuestions: QuestionSubmittedDtoApi[] = [];
   submittedQuestionsPage = 1;
@@ -234,12 +233,6 @@ export class ProgramsComponent implements OnInit {
             this.questionsPage = 1;
           }
           this.changeQuestionsPage(questions);
-        }),
-        map(() => this.questions.map((q) => q.createdBy) ?? []),
-        map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
-        map((ids) => this.getUsersfromIds(ids)),
-        tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
-        tap(() => {
           this.filterQuestionsByScore(this.questions as QuestionDisplay[], this.questionFilters.score);
           this.isQuestionsLoading = false;
         }),
@@ -256,11 +249,6 @@ export class ProgramsComponent implements OnInit {
     questions = this.scoreService.filterByScore(questions, score as ScoreFilter, true);
 
     this.changeQuestionsPage(questions);
-  }
-
-  getUsersfromIds(ids: string[]): UserDtoApi[] {
-    const filter = ids.filter((i) => !this.userCache.has(i));
-    return this.profileStore.users.value.filter((u) => filter.some((i) => i === u.id));
   }
 
   getScoresfromQuestions(): Observable<QuestionStatsDtoApi[]> {
@@ -292,11 +280,6 @@ export class ProgramsComponent implements OnInit {
   }
 
   @memoize()
-  getUser(id: string) {
-    return this.userCache.get(id);
-  }
-
-  @memoize()
   getQuestionScore(id: string): number {
     const output = this.questionsScore.get(id) || 0;
     return isNaN(output) ? 0 : output;
@@ -316,13 +299,10 @@ export class ProgramsComponent implements OnInit {
         status: QuestionSubmittedStatusEnumApi.Submitted,
       })
       .pipe(
-        tap((q) => (this.submittedQuestions = q.data ?? [])),
-        tap((q) => (this.submittedQuestionsCount = q.meta.itemsPerPage ?? 0)),
-        map((questions) => questions.data?.map((q) => q.createdBy) ?? []),
-        map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
-        map((ids) => this.getUsersfromIds(ids)),
-        tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
-        tap(() => (this.isSubmittedQuestionsLoading = false)),
+        tap((q) => {
+          this.submittedQuestions = q.data ?? [];
+          this.submittedQuestionsCount = q.meta.itemsPerPage ?? 0
+        }),
       )
       .subscribe();
   }
@@ -357,12 +337,6 @@ export class ProgramsComponent implements OnInit {
             search,
           }) as TagDisplay[];
           this.changeTagsPage(this.tags);
-        }),
-        map(() => this.tags.map((t) => t.createdBy) ?? []),
-        map((userIds) => userIds.filter((x, y) => userIds.indexOf(x) === y)),
-        map((ids) => this.getUsersfromIds(ids)),
-        tap((users) => users.forEach((u) => this.userCache.set(u.id, u))),
-        tap(() => {
           this.filterTagsByScore(this.tags as TagDisplay[], this.tagFilters.score);
           this.isTagsLoading = false;
         }),
@@ -396,10 +370,5 @@ export class ProgramsComponent implements OnInit {
     this.selectedItems = [];
     this.isFilteredQuestions = false;
     this.isFilteredTags = false;
-  }
-
-  @memoize()
-  getFullname(user: UserDtoApi) {
-    return user?.firstname + ' ' + user?.lastname;
   }
 }

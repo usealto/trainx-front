@@ -1,0 +1,31 @@
+header {
+  display: flex;
+  align-items: center;
+  gap: 0.667rem;
+  h2 {
+    margin: 0;
+  }
+}
+
+.time-picker {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.chart-container {
+  height: 400px;
+}
+
+.table {
+  table-layout: fixed;
+}
+
+thead tr th {
+  color: var(--gray-500);
+}
+
+tbody tr {
+  font-size: 0.833rem;
+  height: 4.333rem;
+}
