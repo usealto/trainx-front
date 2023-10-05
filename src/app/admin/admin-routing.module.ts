@@ -55,6 +55,11 @@ const routes: Routes = [
         path: 'companies/:id/users/upload',
         component: AdminUsersUploadComponent,
       },
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full',
+      }
     ],
   },
   {
