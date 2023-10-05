@@ -24,8 +24,9 @@ import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
-import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
+import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration, ScoreFilters } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
@@ -45,6 +46,9 @@ export class LeadHomeComponent implements OnInit {
   ScoreDuration = ScoreDuration;
   ScoreTypeEnum = ScoreTypeEnumApi;
   ETypeValue = ETypeValue;
+  programDataStatus: PlaceholderDataStatus = 'good';
+  isData = false;
+  chartDataStatus: PlaceholderDataStatus = 'good';
 
   userName = '';
 
@@ -70,7 +74,9 @@ export class LeadHomeComponent implements OnInit {
   guessCountProgression = 0;
 
   commentsCount = 0;
+  commentsDataStatus: PlaceholderDataStatus = 'good';
   questionsCount = 0;
+  questionsDataStatus: PlaceholderDataStatus = 'good';
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
   //
   challengesByTeam: ChallengeDtoApi[] = [];
@@ -78,8 +84,10 @@ export class LeadHomeComponent implements OnInit {
   //
   teamsLeaderboard: { name: string; score: number }[] = [];
   teamsLeaderboardCount = 0;
+  teamsLeaderboardDataStatus: PlaceholderDataStatus = 'good';
   usersLeaderboard: { name: string; score: number }[] = [];
   usersLeaderboardCount = 0;
+  usersLeaderboardDataStatus: PlaceholderDataStatus = 'good';
   topflopLoaded = false;
   chartOption: EChartsOption = {};
 
@@ -111,7 +119,10 @@ export class LeadHomeComponent implements OnInit {
       .pipe(
         tap(([comments, submittedQuestionsCount, challenges]) => {
           this.commentsCount = comments.length;
+          this.commentsDataStatus = comments.length === 0 ? 'noData' : 'good';
           this.questionsCount = submittedQuestionsCount;
+          this.questionsDataStatus = submittedQuestionsCount === 0 ? 'noData' : 'good';
+
           this.challengesByTeam = challenges
             .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByTeam)
             .slice(0, 5);
@@ -123,10 +134,17 @@ export class LeadHomeComponent implements OnInit {
         tap(() => this.getProgramsStats(this.globalFilters)),
         tap(() => this.getGuessesCount(this.globalFilters.duration as ScoreDuration)),
         switchMap(() => this.getTopFlop(this.globalFilters.duration as ScoreDuration)),
+        tap(() => this.getProgramDataStatus()),
         untilDestroyed(this),
       )
       .subscribe();
     this.createChart(this.globalFilters.duration as ScoreDuration);
+  }
+
+  getProgramDataStatus() {
+    if (!(this.averageScore || (this.programsCount || this.expectedGuessCount) > 0)) {
+      this.programDataStatus = 'noData';
+    }
   }
 
   createChart(duration: ScoreDuration) {
@@ -146,6 +164,7 @@ export class LeadHomeComponent implements OnInit {
       .pipe(
         tap((res) => {
           this.scoreCount = res.scores.length;
+          this.chartDataStatus = this.scoreCount === 0 ? 'noData' : 'good';
           const scores = this.scoreService.reduceLineChartData(res.scores);
           const points = this.statisticsServices.transformDataToPoint(scores[0]);
           const labels = this.statisticsServices
@@ -172,6 +191,7 @@ export class LeadHomeComponent implements OnInit {
                 },
               },
             ],
+            legend: legendOptions,
           };
         }),
         untilDestroyed(this),
@@ -193,7 +213,9 @@ export class LeadHomeComponent implements OnInit {
           score: u.score ?? 0,
         }));
         this.teamsLeaderboardCount = this.teamsLeaderboard.length;
+        this.teamsLeaderboardDataStatus = this.teamsLeaderboardCount === 0 ? 'noData' : 'good';
         this.usersLeaderboardCount = this.usersLeaderboard.length;
+        this.usersLeaderboardDataStatus = this.usersLeaderboardCount === 0 ? 'noData' : 'good';
         this.topflopLoaded = true;
       }),
     );
@@ -276,7 +298,7 @@ export class LeadHomeComponent implements OnInit {
   }
 
   @memoize()
-  getUser(id: string): Observable<UserDtoApi | undefined> {
+  getUser(id?: string): Observable<UserDtoApi | undefined> {
     if (!id) {
       return of(undefined);
     }

@@ -32,7 +32,7 @@
   </div>
 </div>
 
-<ng-container *ngIf="paginatedTeamsCount > 0; else noTeamsTable">
+<alto-placeholder-manager [status]="teamsDataStatus">
   <div class="table-panel">
     <table class="table">
       <thead>
@@ -78,8 +78,8 @@
           </td>
           <td>
             <!-- <ng-template #programsTooltip>
-              <ng-container *ngFor="let prog of team.programs">{{ prog.label }}<br /></ng-container>
-            </ng-template>-->
+                <ng-container *ngFor="let prog of team.programs">{{ prog.label }}<br /></ng-container>
+              </ng-template>-->
 
             <ng-container *ngIf="team.programs">
               <alto-colored-pill-list
@@ -90,8 +90,8 @@
           </td>
           <td>
             <!-- <ng-template #tagsTooltip>
-              <ng-container *ngFor="let tag of team.tags">{{ tag.label }}<br /></ng-container>
-            </ng-template>-->
+                <ng-container *ngFor="let tag of team.tags">{{ tag.label }}<br /></ng-container>
+              </ng-template>-->
 
             <ng-container *ngIf="team.tags">
               <alto-colored-pill-list
@@ -111,12 +111,11 @@
       [page]="teamsPage"
     ></alto-pagination>
   </div>
-</ng-container>
-<ng-template #noTeamsTable>
-  <div class="col nodata-placeholder d-flex justify-content-center align-items-center">
+
+  <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noData>
     <div class="text-center">
       <img [src]="Emoji.Eyes | emoji" height="24" />
       <p class="mt-3">{{ I18ns.statistics.globalPerformance.teamsTable.placeholder }}</p>
     </div>
   </div>
-</ng-template>
+</alto-placeholder-manager>

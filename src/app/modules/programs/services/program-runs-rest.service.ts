@@ -3,7 +3,7 @@ import {
   CreateProgramRunDtoApi,
   GetAllProgramRunQuestionsPaginatedRequestParams,
   GetProgramRunsRequestParams,
-  ProgramRunPaginatedResponseApi,
+  ProgramRunDtoPaginatedResponseApi,
   ProgramRunsApiService,
   QuestionDtoPaginatedResponseApi,
   UserDtoApi,
@@ -29,7 +29,7 @@ export class ProgramRunsRestService {
     private readonly usersService: UsersRestService,
   ) {}
 
-  getProgramRunsPaginated(req: GetProgramRunsRequestParams): Observable<ProgramRunPaginatedResponseApi> {
+  getProgramRunsPaginated(req: GetProgramRunsRequestParams): Observable<ProgramRunDtoPaginatedResponseApi> {
     const par = {
       ...req,
       page: req?.page ?? 1,

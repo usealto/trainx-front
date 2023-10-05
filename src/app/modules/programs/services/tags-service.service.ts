@@ -13,7 +13,7 @@ export class TagsServiceService {
       output = output.filter((t: TagDtoApi) => t.programs.some((p) => programs.some((pr) => pr === p.id)));
     }
     if (contributors?.length) {
-      output = output.filter((t: TagDtoApi) => contributors.includes(t.createdBy));
+      output = output.filter((t: TagDtoApi) => t.createdBy && contributors.includes(t.createdBy));
     }
     if (search) {
       output = output.filter((t: TagDtoApi) => t.name.toLowerCase().includes(search.toLowerCase()));

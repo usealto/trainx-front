@@ -9,11 +9,10 @@
 </div>
 <div class="row m-0">
   <div class="col-6 ps-0">
-    <ng-container *ngIf="commentsCount; else noComments">
+    <alto-placeholder-manager [status]="commentsDataStatus">
       <div
         [routerLink]="['/', AltoRoutes.lead, AltoRoutes.collaboration]"
-           
-      [queryParams]="{ tab: 1, type: ETypeValue.COMMENTS }"
+        [queryParams]="{ tab: 1, type: ETypeValue.COMMENTS }"
         class="cursor-pointer"
         [class]="'warning-panel'"
       >
@@ -28,9 +27,7 @@
           </p>
         </div>
       </div>
-    </ng-container>
-    <ng-template #noComments>
-      <div [class]="'success-panel'">
+      <div [class]="'success-panel'" noData>
         <alto-icon-badge [size]="5" icon="bi-chat" [color]="'badge-double-success'"></alto-icon-badge>
 
         <div class="ms-4">
@@ -42,11 +39,11 @@
           </p>
         </div>
       </div>
-    </ng-template>
+    </alto-placeholder-manager>
   </div>
 
   <div class="col-6 pe-0">
-    <ng-container *ngIf="questionsCount; else noQuestions">
+    <alto-placeholder-manager [status]="questionsDataStatus">
       <div
         [routerLink]="['/', AltoRoutes.lead, AltoRoutes.collaboration]"
         [queryParams]="{ tab: 1, type: ETypeValue.QUESTIONS }"
@@ -69,9 +66,7 @@
           </p>
         </div>
       </div>
-    </ng-container>
-    <ng-template #noQuestions>
-      <div [class]="'success-panel'">
+      <div [class]="'success-panel'" noData>
         <alto-icon-badge
           [size]="5"
           icon="bi-question-circle"
@@ -87,7 +82,7 @@
           </p>
         </div>
       </div>
-    </ng-template>
+    </alto-placeholder-manager>
   </div>
 </div>
 
@@ -101,7 +96,8 @@
     {{ I18ns.leadHome.statistics.title }}
   </h2>
   <p class="subtitle">{{ I18ns.leadHome.statistics.subtitle }}</p>
-  <ng-container *ngIf="averageScore || (programsCount || expectedGuessCount) > 0; else noProgram">
+
+  <alto-placeholder-manager [status]="programDataStatus">
     <div class="panel px-0 py-4 mt-5">
       <div class="row">
         <div class="col border-end">
@@ -161,85 +157,83 @@
         </div>
       </div>
     </div>
-  </ng-container>
-
-  <ng-template #noProgram>
-    <div class="nodata-placeholder text-center">
+    <div class="nodata-placeholder text-center" noData>
       <img [src]="Emoji.CowboyHatFace | emoji" height="24" />
       <p class="mt-3">{{ I18ns.leadHome.statistics.placeholder }}</p>
       <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
         <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
       </a>
     </div>
-  </ng-template>
+  </alto-placeholder-manager>
 
   <!-- CHARTS -->
-  <div [hidden]="!scoreCount" class="panel h-100 my-5">
-    <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
-    <p class="alto-grey mb-4">{{ I18ns.leadHome.globalEvolution.chartSubtitle }}</p>
-    <div>
-      <alto-chart-basicline data-cy="chartBasicline" [chartOption]="chartOption"></alto-chart-basicline>
+  <alto-placeholder-manager [status]="chartDataStatus">
+    <div class="panel h-100 my-5">
+      <h2>{{ I18ns.leadHome.globalEvolution.score }}</h2>
+      <p class="alto-grey mb-4">{{ I18ns.leadHome.globalEvolution.chartSubtitle }}</p>
+      <div>
+        <alto-chart-basicline data-cy="chartBasicline" [chartOption]="chartOption"></alto-chart-basicline>
+      </div>
     </div>
-  </div>
 
-  <div [hidden]="scoreCount > 0" class="nodata-placeholder">
-    <h2 class="mb-5 fs-6">{{ I18ns.leadHome.globalEvolution.score }}</h2>
-    <div class="text-center">
-      <img [src]="Emoji.Rocket | emoji" height="24" />
-      <p class="mt-3">{{ I18ns.leadHome.graph.placeholder }}</p>
-      <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
-        <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
-      </a>
+    <div class="nodata-placeholder" noData>
+      <h2 class="mb-5 fs-6">{{ I18ns.leadHome.globalEvolution.score }}</h2>
+      <div class="text-center">
+        <img [src]="Emoji.Rocket | emoji" height="24" />
+        <p class="mt-3">{{ I18ns.leadHome.graph.placeholder }}</p>
+        <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
+          <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+        </a>
+      </div>
     </div>
-  </div>
+  </alto-placeholder-manager>
   <!-- TOP / FLOP -->
   <div class="row h-100">
     <div class="col pe-4">
-      <ng-container *ngIf="teamsLeaderboardCount > 0; else noTopFlopTeams">
-        <alto-top-flop
+      <alto-placeholder-manager [status]="teamsLeaderboardDataStatus">
+        <alto-leaderboard
+          [config]="['score']"
           *ngIf="topflopLoaded"
-          [title]="I18ns.leadHome.topFlop.teams.title"
-          [subtitle]="I18ns.leadHome.topFlop.teams.subtitle"
-          [leaderboard]="teamsLeaderboard"
-        ></alto-top-flop>
-      </ng-container>
+          [title]="I18ns.leadHome.leaderboard.teams.title"
+          [subtitle]="I18ns.leadHome.leaderboard.teams.subtitle"
+          [data]="teamsLeaderboard"
+        ></alto-leaderboard>
+
+        <div class="nodata-placeholder m-0" noData>
+          <h2 class="mb-5 fs-6">{{ I18ns.leadHome.leaderboard.teams.title }}</h2>
+          <div class="text-center">
+            <img [src]="Emoji.BustsInSilhouette | emoji" height="24" />
+            <p class="mt-3">{{ I18ns.leadHome.leaderboard.teams.placeholder }}</p>
+            <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
+              <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+            </a>
+          </div>
+        </div>
+      </alto-placeholder-manager>
     </div>
     <div class="col ps-0">
-      <ng-container *ngIf="usersLeaderboardCount > 0; else noTopFlopUsers">
-        <alto-top-flop
+      <alto-placeholder-manager [status]="usersLeaderboardDataStatus">
+        <alto-leaderboard
+          [config]="['score']"
           *ngIf="topflopLoaded"
-          [title]="I18ns.leadHome.topFlop.users.title"
-          [subtitle]="I18ns.leadHome.topFlop.users.subtitle"
-          [leaderboard]="usersLeaderboard"
-        ></alto-top-flop>
-      </ng-container>
+          [title]="I18ns.leadHome.leaderboard.users.title"
+          [subtitle]="I18ns.leadHome.leaderboard.users.subtitle"
+          [data]="usersLeaderboard"
+        ></alto-leaderboard>
+
+        <div class="nodata-placeholder m-0" noData>
+          <h2 class="mb-5 fs-6">{{ I18ns.leadHome.leaderboard.users.title }}</h2>
+          <div class="text-center">
+            <img [src]="Emoji.BustsInSilhouette | emoji" height="24" />
+            <p class="mt-3">{{ I18ns.leadHome.leaderboard.users.placeholder }}</p>
+            <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
+              <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+            </a>
+          </div>
+        </div>
+      </alto-placeholder-manager>
     </div>
   </div>
-
-  <ng-template #noTopFlopTeams>
-    <div class="nodata-placeholder">
-      <h2 class="mb-5 fs-6">{{ I18ns.leadHome.topFlop.teams.title }}</h2>
-      <div class="text-center">
-        <img [src]="Emoji.BustsInSilhouette | emoji" height="24" />
-        <p class="mt-3">{{ I18ns.leadHome.topFlop.teams.placeholder }}</p>
-        <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
-          <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
-        </a>
-      </div>
-    </div>
-  </ng-template>
-  <ng-template #noTopFlopUsers>
-    <div class="nodata-placeholder">
-      <h2 class="mb-5 fs-6">{{ I18ns.leadHome.topFlop.users.title }}</h2>
-      <div class="text-center">
-        <img [src]="Emoji.BustsInSilhouette | emoji" height="24" />
-        <p class="mt-3">{{ I18ns.leadHome.topFlop.users.placeholder }}</p>
-        <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
-          <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
-        </a>
-      </div>
-    </div>
-  </ng-template>
   <!-- ONGOING PROGRAMS -->
   <div class="mt-6 mb-5">
     <button

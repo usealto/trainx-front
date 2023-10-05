@@ -247,5 +247,8 @@
   color: var(--error-600);
 }
 .alto-neutral {
-  color: #d0d5dd;
+  color: var(--gray-600);
+}
+.alto-warning {
+  color: var(--warning-600);
 }

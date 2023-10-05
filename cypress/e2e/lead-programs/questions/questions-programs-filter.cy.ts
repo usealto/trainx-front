@@ -22,6 +22,7 @@ describe('L/Programs Questions Tab', () => {
 
     cy.get('[data-cy="programPriority"]').click();
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
+    cy.get('[data-cy="programCreateNext"]').should('be.enabled');
 
     cy.get('[data-cy="programCreateNext"]').click();
 
@@ -49,7 +50,12 @@ describe('L/Programs Questions Tab', () => {
     cy.get('[data-cy="questionsProgramFilter"]').click();
 
     cy.get('.ng-dropdown-header > input').clear();
-    cy.get('.ng-dropdown-header > input').type(`${newProg}{enter}`).wait(500);
+
+    cy.intercept('GET', '/v1/questions?programIds=*').as('questionSearch');
+
+    cy.get('.ng-dropdown-header > input').type(`${newProg}{enter}`);
+
+    cy.wait('@questionSearch').wait(100);
 
     cy.get('[data-cy="questionEditPen"]').first().click();
 

@@ -1,0 +1,7 @@
+:host ::ng-deep {
+  .ng-select .ng-dropdown-panel.ng-select-bottom,
+  .ng-select .ng-dropdown-panel.ng-select-top {
+    right: 0;
+    left: -100px;
+  }
+}

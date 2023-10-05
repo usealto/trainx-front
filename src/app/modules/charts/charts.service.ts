@@ -16,15 +16,15 @@ export interface ITooltipParams {
 })
 export class ChartsService {
   defaultThemeColors = [
-    '#1570EF',
-    '#F04438',
-    '#12B76A',
+    '#53b1fd',
+    '#f97066',
+    '#32d583',
     '#FDB022',
-    '#7A5AF8',
-    '#EE46BC',
-    '#FB6514',
-    '#6172F3',
-    '#F63D68',
+    '#9b8afb',
+    '#f670c7',
+    '#fd853a',
+    '#8098f9',
+    '#fd6f8e',
   ];
 
   @memoize()
@@ -58,11 +58,13 @@ export class ChartsService {
       formatter: (params) => {
         return this.tooltipFormatter(params as ITooltipParams, eChartsOption);
       },
+      ...eChartsOption.tooltip,
     };
     eChartsOption.legend = {
       bottom: 0,
       icon: 'circle',
       itemWidth: 8,
+      ...eChartsOption.legend,
     };
 
     eChartsOption.grid = {
@@ -70,6 +72,7 @@ export class ChartsService {
       bottom: '22%',
       top: '30',
       right: '1%',
+      ...eChartsOption.grid,
     };
     // we only want this option to be trigger if there is only one xAxis value
     if (eChartsOption.xAxis && Array.isArray(eChartsOption.xAxis) && eChartsOption.xAxis.length === 1) {

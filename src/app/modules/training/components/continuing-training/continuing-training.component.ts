@@ -86,7 +86,12 @@ export class ContinuingTrainingComponent implements OnInit {
               reducedGuesses.push(guess);
             }
           });
-          this.continuousSessionUsers = reducedGuesses.map((g) => g.createdByUser ?? '');
+          this.continuousSessionUsers = reducedGuesses.reduce((users, guess) => {
+            if (guess.createdByUser) {
+              return [...users, guess.createdByUser];
+            }
+            return users;
+          }, [] as UserLightDtoApi[]);
         }),
       )
       .subscribe();

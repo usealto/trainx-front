@@ -15,11 +15,11 @@ import { StatisticsService } from 'src/app/modules/statistics/services/statistic
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
 
 @Component({
-  selector: 'alto-statistics',
-  templateUrl: './statistics.component.html',
-  styleUrls: ['./statistics.component.scss'],
+  selector: 'alto-user-home-statistics',
+  templateUrl: './user-home-statistics.component.html',
+  styleUrls: ['./user-home-statistics.component.scss'],
 })
-export class StatisticsComponent implements OnInit {
+export class UserHomeStatisticsComponent implements OnInit {
   I18ns = I18ns;
   statisticsDuration = ScoreDuration.Trimester;
 
