@@ -7,7 +7,7 @@
 <h2 id="teamsAnchor" class="me-3">
   <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" /> {{ I18ns.statistics.perTeams.sections.teams }}
 </h2>
-<p class="mb-5 alto-grey">{{ I18ns.leadTeam.teams.subtitle }}</p>
+<p class="mb-5 alto-grey">{{ I18ns.statistics.perTeams.sections.teamsSubtitle }}</p>
 
 <alto-placeholder-manager [status]="teamsDataStatus">
   <alto-per-teams-table [type]="'team'" [data]="teamsDisplay"></alto-per-teams-table>
@@ -35,7 +35,7 @@
     <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" />
     {{ I18ns.statistics.perTeams.sections.members }}
   </h2>
-  <p class="alto-grey mb-4">{{ I18ns.leadTeam.members.subtitle }}</p>
+  <p class="alto-grey mb-4">{{ I18ns.statistics.perTeams.sections.membersSubtitle }}</p>
   <alto-dropdown-filter
     class="float-end"
     [placeholder]="I18ns.statistics.perTeams.teamsFilter"
