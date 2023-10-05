@@ -25,9 +25,9 @@
     <span *ngIf="config.includes('count')" data-cy="line-score" class="float-end">{{ item.score }}</span>
     <p
       class="d-inline-block me-2 fw-bold"
-      [class]="config.includes('count') ? getPositionColor(item.name) : getScoreColor(item.score)"
+      [class]="config.includes('count') ? getPositionColor(item.index) : getScoreColor(item.score)"
     >
-      {{ getPosition(item.name) + '/' + leaderboard.length }}
+      {{ item.index + '/' + leaderboard.length }}
     </p>
     <p class="d-inline-block">{{ item.name }}</p>
   </div>
@@ -50,9 +50,9 @@
     <span *ngIf="config.includes('count')" class="float-end">{{ item.score }}</span>
     <p
       class="d-inline-block me-2 fw-bold"
-      [class]="config.includes('count') ? getPositionColor(item.name) : getScoreColor(item.score)"
+      [class]="config.includes('count') ? getPositionColor(item.index) : getScoreColor(item.score)"
     >
-      {{ getPosition(item.name) + '/' + leaderboard.length }}
+      {{ item.index + '/' + leaderboard.length }}
     </p>
     <p class="d-inline-block">{{ item.name }}</p>
   </div>

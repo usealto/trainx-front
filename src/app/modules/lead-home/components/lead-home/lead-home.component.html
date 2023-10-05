@@ -196,7 +196,7 @@
           *ngIf="topflopLoaded"
           [title]="I18ns.leadHome.leaderboard.teams.title"
           [subtitle]="I18ns.leadHome.leaderboard.teams.subtitle"
-          [leaderboard]="teamsLeaderboard"
+          [data]="teamsLeaderboard"
         ></alto-leaderboard>
 
         <div class="nodata-placeholder m-0" noData>
@@ -218,7 +218,7 @@
           *ngIf="topflopLoaded"
           [title]="I18ns.leadHome.leaderboard.users.title"
           [subtitle]="I18ns.leadHome.leaderboard.users.subtitle"
-          [leaderboard]="usersLeaderboard"
+          [data]="usersLeaderboard"
         ></alto-leaderboard>
 
         <div class="nodata-placeholder m-0" noData>
