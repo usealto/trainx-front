@@ -340,15 +340,45 @@ export const FR = {
     subtitle: "Retrouvez l'ensemble des statistiques de vos équipes.",
     globalEngagement: {
       title: 'Engagement',
-      subtitle: "Retrouvez l'engagement global de vos équipes.",
       activity: {
-        activity: 'Activité',
-        activitySubtitle: "Suivez l'évolution du nombre de questions auxquelles répondent vos équipes.",
+        title: "Activité de l'entreprise",
+        subtitle: "Retrouvez une vue d'ensemble de l'activité des équipes.",
+        chartTitle: 'Nombre de questions répondues',
+        chartSubtitle: "Évolution du nombre total de questions répondues au sein de l'entreprise.",
         teamFilter: 'Équipe',
       },
-      contributon: {
-        contribution: 'Contribution',
-        contributionSubtitle: 'Retrouver les équipes ayant suggéré ou commenté des questions.',
+      engagement: {
+        title: 'Engagement de vos équipes',
+        subtitle: 'Retrouvez une vue d’ensemble des questions et commentaires remontés par vos équipes.',
+        comments: 'Commentaires',
+        suggQuestions: 'Questions suggérées',
+        chartTitle: 'Collaboration',
+        chartSubtitle: 'Évolution du nombre de questions et de commentaires remontés par vos équipes.',
+      },
+      leaderboard: {
+        title: 'Leaderboard',
+        subtitle: 'Classement de vos équipes selon leur nombre de réponses aux questions.',
+      },
+      teamsTable: {
+        title: 'Équipes',
+        subtitle: 'Retrouvez les statistiques détaillées d’engagement pour chacune de vos équipes.',
+        placeholderTitle: 'Nous n’avons pas encore de données à afficher',
+        placeholderSubtitle: 'Les équipes s’activent pour fournir les premiers résultats !',
+        columns: {
+          team: 'Équipe',
+          answeredQuestions: 'Questions répondues',
+          suggestedQuestions: 'Questions suggérées',
+          comments: 'Commentaires',
+        },
+      },
+      placeholders: {
+        inactiveTeams: "Vos équipes n'ont pas encore été actives",
+        inactiveTeamsTitle: 'Nombre de questions répondues',
+        inactiveTeamsSubtitle: 'Elles se préparent en coulisses',
+        noDataYet: 'Nous n’avons pas encore de données à afficher',
+        noDataYetTitle: 'Collaboration',
+        noDataYetSubtitle: 'Cela ne devrait plus tarder !',
+        noLeaderboard: 'Aucun classement à afficher pour le moment',
       },
     },
     globalPerformance: {
@@ -429,11 +459,13 @@ export const FR = {
     },
     perTeams: {
       title: 'Par équipe',
-      sections : {
-        teams : "Équipes",
-        teamsSubtitle:"Découvrez les statistiques d'engagement et de performance de chacune de vos équipes. ",
-        members: "Membres",
-        membersSubtitle: "Découvrez les statistiques d'engagement et de performance de chacun de vos membres."
+      sections: {
+        teams: 'Équipes',
+        teamsSubtitle:
+          "Découvrez les statistiques d'engagement et de performance de chacune de vos équipes. ",
+        members: 'Membres',
+        membersSubtitle:
+          "Découvrez les statistiques d'engagement et de performance de chacun de vos membres.",
       },
       globalTooltip:
         '% de questions justes sur le nombre de questions répondues et variation sur la période passée',
@@ -1081,5 +1113,8 @@ export const FR = {
   charts: {
     scoreLabel: 'Score (%)',
     timeLabel: 'Période',
+    answerCountLabel: 'Nombre de questions répondues',
+    collaborationCountLabel: 'Nombre de contributions',
+    answeredQuestions: 'Questions répondues',
   },
 };

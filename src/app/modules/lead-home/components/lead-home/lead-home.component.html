@@ -192,6 +192,7 @@
     <div class="col pe-4">
       <alto-placeholder-manager [status]="teamsLeaderboardDataStatus">
         <alto-leaderboard
+          [config]="['score']"
           *ngIf="topflopLoaded"
           [title]="I18ns.leadHome.leaderboard.teams.title"
           [subtitle]="I18ns.leadHome.leaderboard.teams.subtitle"
@@ -213,6 +214,7 @@
     <div class="col ps-0">
       <alto-placeholder-manager [status]="usersLeaderboardDataStatus">
         <alto-leaderboard
+          [config]="['score']"
           *ngIf="topflopLoaded"
           [title]="I18ns.leadHome.leaderboard.users.title"
           [subtitle]="I18ns.leadHome.leaderboard.users.subtitle"

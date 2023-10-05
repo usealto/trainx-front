@@ -4,16 +4,29 @@
     <p class="alto-grey">{{ subtitle }}</p>
   </div>
 
-  <!-- TOP -->
   <div class="leaderboard-header">
     <img class="me-2" [src]="Emoji.Trophy | emoji" height="16" />
     <h4 class="d-inline-block">{{ I18ns.shared.leaderboard }}</h4>
   </div>
-  <div *ngFor="let item of top" class="leaderboard-item">
-    <span class="float-end alto-score" [class]="item.score * 100 | pillColor">{{
-      item.score | percent
-    }}</span>
-    <p class="d-inline-block me-2 fw-bold" [class]="getScoreColor(item.score * 100)">
+
+  <!-- TOP -->
+  <div *ngFor="let item of top; let i = index" class="leaderboard-item" data-cy="leaderboard-line">
+    <alto-progression-badge
+      class="ms-2 float-end"
+      *ngIf="config.includes('progress')"
+      [score]="item.progression"
+    ></alto-progression-badge>
+    <span
+      *ngIf="config.includes('score')"
+      class="float-end alto-score"
+      [class]="item.score * 100 | pillColor"
+      >{{ item.score | percent }}</span
+    >
+    <span *ngIf="config.includes('count')" data-cy="line-score" class="float-end">{{ item.score }}</span>
+    <p
+      class="d-inline-block me-2 fw-bold"
+      [class]="config.includes('count') ? getPositionColor(item.name) : getScoreColor(item.score)"
+    >
       {{ getPosition(item.name) + '/' + leaderboard.length }}
     </p>
     <p class="d-inline-block">{{ item.name }}</p>
@@ -22,11 +35,23 @@
   <p [hidden]="leaderboard.length < size * 2" class="mt-3">...</p>
 
   <!-- FLOP -->
-  <div *ngFor="let item of flop" class="leaderboard-item">
-    <span class="float-end alto-score" [class]="item.score * 100 | pillColor">{{
-      item.score | percent
-    }}</span>
-    <p class="d-inline-block me-2 fw-bold" [class]="getScoreColor(item.score * 100)">
+  <div *ngFor="let item of flop; let i = index" class="leaderboard-item" data-cy="leaderboard-line">
+    <alto-progression-badge
+      class="ms-2 float-end"
+      *ngIf="config.includes('progress')"
+      [score]="item.progression"
+    ></alto-progression-badge>
+    <span
+      *ngIf="config.includes('score')"
+      class="float-end alto-score"
+      [class]="item.score * 100 | pillColor"
+      >{{ item.score | percent }}</span
+    >
+    <span *ngIf="config.includes('count')" class="float-end">{{ item.score }}</span>
+    <p
+      class="d-inline-block me-2 fw-bold"
+      [class]="config.includes('count') ? getPositionColor(item.name) : getScoreColor(item.score)"
+    >
       {{ getPosition(item.name) + '/' + leaderboard.length }}
     </p>
     <p class="d-inline-block">{{ item.name }}</p>

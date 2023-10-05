@@ -15,8 +15,7 @@ export class StatisticsComponent implements OnInit {
 
   tabs = [
     { label: I18ns.statistics.globalPerformance.navbarTitle, value: AltoRoutes.performance },
-    // TODO uncomment when implementing Engagement Tab
-    // { label: I18ns.statistics.globalEngagement.title, value: AltoRoutes.engagement },
+    { label: I18ns.statistics.globalEngagement.title, value: AltoRoutes.engagement },
     { label: I18ns.statistics.perTeams.title, value: AltoRoutes.teams },
   ];
   selectedTab = '';

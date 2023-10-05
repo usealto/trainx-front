@@ -58,11 +58,13 @@ export class ChartsService {
       formatter: (params) => {
         return this.tooltipFormatter(params as ITooltipParams, eChartsOption);
       },
+      ...eChartsOption.tooltip,
     };
     eChartsOption.legend = {
       bottom: 0,
       icon: 'circle',
       itemWidth: 8,
+      ...eChartsOption.legend,
     };
 
     eChartsOption.grid = {
@@ -70,6 +72,7 @@ export class ChartsService {
       bottom: '22%',
       top: '30',
       right: '1%',
+      ...eChartsOption.grid,
     };
     // we only want this option to be trigger if there is only one xAxis value
     if (eChartsOption.xAxis && Array.isArray(eChartsOption.xAxis) && eChartsOption.xAxis.length === 1) {

@@ -37,7 +37,7 @@ export class SuggQuestionCardComponent {
   ) {}
 
   refuseQuestion() {
-    const fullname = `${this.suggQuestion?.createdByUser.firstname} ${this.suggQuestion?.createdByUser.lastname}`;
+    const fullname = `${this.suggQuestion?.author.firstname} ${this.suggQuestion?.author.lastname}`;
 
     const modalRef = this.modalService.open(CollaborationModalComponent, {
       centered: true,
