@@ -27,7 +27,7 @@
       <alto-search (searchChange)="onSearch($event)"></alto-search>
     </div>
     <div class="table-container table-panel mb-5">
-      <table class="table table-hover">
+      <table class="table table-hover mb-0">
         <thead>
           <tr>
             <th scope="col">
@@ -40,18 +40,22 @@
             *ngFor="let company of displayedCompanies">
             <td scope="row" 
               class="d-flex justify-content-between align-items-center">
-              <a
-                [routerLink]="['/', 'admin', 'companies', company.id, 'users']"
-                routerLinkActive="menu-selected"
-              >
-                <span class="fw-bolder alto-grey">{{ company.name }}</span>
-                <p class="fw-lighter alto-grey smaller">Created {{ company.createdAt| date : 'fullDate' }}, by {{ company.createdByUser.firstname }} {{company.createdByUser.lastname}} </p>
-              </a>
-              <ng-template #simpleName> {{ company.name }}</ng-template>
-              <a 
-                [routerLink]="['/','admin','companies', company.id]">
-                <i class="bi bi-pencil mx-4"></i>
-              </a>
+              <div class="col-10">
+                <a
+                  [routerLink]="['/', 'admin', 'companies', company.id, 'users']"
+                  routerLinkActive="menu-selected"
+                >
+                  <span class="fw-bolder alto-grey">{{ company.name }}</span>
+                  <p class="fw-lighter alto-grey smaller">Created {{ company.createdAt| date : 'fullDate' }}, by {{ company.createdByUser?.firstname }} {{company.createdByUser?.lastname}} </p>
+                </a>
+              </div>
+              <div class="col-2 d-flex justify-content-end">
+                <a 
+                [routerLink]="['/','admin','companies', company.id]"
+                class="btn btn-light bg-white">
+                  <i class="bi bi-pencil mx-4"></i>
+                </a>
+              </div>
             </td>
           </tr>
         </tbody>
