@@ -18,7 +18,7 @@
 <alto-placeholder-manager [status]="guessesDataStatus">
   <div class="panel mb-5">
     <h2>{{ I18ns.statistics.globalEngagement.activity.chartTitle }}</h2>
-    <p>{{ I18ns.statistics.globalEngagement.activity.chartSubtitle }}</p>
+    <p class="alto-grey">{{ I18ns.statistics.globalEngagement.activity.chartSubtitle }}</p>
     <alto-chart-basicline
       class="chart-container"
       data-cy="chartBasicline"
@@ -41,7 +41,7 @@
 <alto-placeholder-manager [status]="guessesDataStatus">
   <alto-leaderboard
     [config]="['count', 'progress']"
-    [leaderboard]="leaderboard"
+    [data]="leaderboard"
     [title]="I18ns.statistics.globalEngagement.leaderboard.title"
     [subtitle]="I18ns.statistics.globalEngagement.leaderboard.subtitle"
   ></alto-leaderboard>
@@ -75,7 +75,7 @@
 <alto-placeholder-manager [status]="collaborationDataStatus">
   <div class="panel mb-5">
     <h2>{{ I18ns.statistics.globalEngagement.engagement.chartTitle }}</h2>
-    <p>{{ I18ns.statistics.globalEngagement.engagement.chartSubtitle }}</p>
+    <p class="alto-grey">{{ I18ns.statistics.globalEngagement.engagement.chartSubtitle }}</p>
     <alto-chart-basicline
       class="chart-container"
       data-cy="chartBasicLine"

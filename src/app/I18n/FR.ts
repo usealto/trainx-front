@@ -359,7 +359,7 @@ export const FR = {
       },
       leaderboard: {
         title: 'Leaderboard',
-        subtitle: 'Classement de vos équipes selon leur nombre de réponses aux questions.',
+        subtitle: 'Classement de vos équipes selon leur nombre de questions répondues.',
       },
       teamsTable: {
         title: 'Équipes',
@@ -479,7 +479,10 @@ export const FR = {
         suggestedQuestions: 'Questions suggérées',
         leastMasteredTags: 'Tags les moins maîtrisés',
         team: 'Équipe',
-        member: 'Membres',
+        member: 'Membre',
+        noGuess: 'Aucune réponse',
+        noComments: 'Aucun commentaire',
+        noSuggestion: 'Aucune suggestion',
       },
     },
   },

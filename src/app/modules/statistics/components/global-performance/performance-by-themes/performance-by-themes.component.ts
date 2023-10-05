@@ -17,7 +17,7 @@ import { ChartsService, ITooltipParams } from 'src/app/modules/charts/charts.ser
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
-import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
+import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
@@ -275,6 +275,7 @@ export class PerformanceByThemesComponent implements OnChanges {
       xAxis: [{ ...xAxisDatesOptions, data: labels }],
       yAxis: [{ ...yAxisScoreOptions }],
       series: series,
+      legend: legendOptions,
     };
   }
 

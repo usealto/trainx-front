@@ -5,6 +5,16 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 export type DataDisplay = 'count' | 'progress' | 'score';
 
+export interface LeaderboardData {
+  name: string;
+  score: number;
+  progression?: number;
+}
+
+interface LeaderboardDataDisplay extends LeaderboardData {
+  index: number;
+}
+
 @Component({
   selector: 'alto-leaderboard',
   templateUrl: './leaderboard.component.html',
@@ -14,17 +24,20 @@ export class LeaderboardComponent implements OnChanges {
   Emoji = EmojiName;
   I18ns = I18ns;
 
-  @Input() leaderboard!: { name: string; score: number; progression?: number }[];
+  @Input() data!: LeaderboardData[];
   @Input() size = 3;
   @Input() title!: string;
   @Input() subtitle!: string;
   @Input() config: DataDisplay[] = [];
 
-  top: { name: string; score: number; progression?: number }[] = [];
-  flop: { name: string; score: number; progression?: number }[] = [];
+  top: LeaderboardDataDisplay[] = [];
+  flop: LeaderboardDataDisplay[] = [];
+
+  leaderboard: LeaderboardDataDisplay[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['leaderboard']) {
+    if (changes['data']) {
+      this.leaderboard = this.data.map((e, i) => ({ ...e, index: i + 1 }));
       const temp = [...this.leaderboard];
       this.top = temp.splice(0, this.size);
       this.flop = temp.splice(temp.length - (temp.length < this.size ? temp.length : this.size), this.size);
@@ -46,18 +59,13 @@ export class LeaderboardComponent implements OnChanges {
   }
 
   @memoize()
-  getPositionColor(name: string) {
-    if (this.getPosition(name) === 1) {
+  getPositionColor(i: number) {
+    if (i === 1) {
       return 'alto-green';
-    } else if (this.getPosition(name) === this.leaderboard.length) {
+    } else if (i === this.leaderboard.length) {
       return 'alto-red';
     } else {
       return 'alto-warning';
     }
-  }
-
-  @memoize()
-  getPosition(label: string): number {
-    return this.leaderboard.findIndex((item) => item.name === label) + 1;
   }
 }

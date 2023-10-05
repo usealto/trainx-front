@@ -16,7 +16,7 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../services/statistics.service';
 import { TitleCasePipe } from '@angular/common';
 
-import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
+import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { DataForTable } from '../../models/statistics.model';
 
@@ -102,6 +102,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
               data: d.data,
               type: 'line',
               showSymbol: false,
+              color: '#53b1fd',
             };
           });
 
@@ -195,10 +196,12 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
           {
             label: I18ns.statistics.globalEngagement.engagement.comments,
             data: aggregatedComments.map((d) => d.y),
+            color: '#53b1fd',
           },
           {
             label: I18ns.statistics.globalEngagement.engagement.suggQuestions,
             data: aggregatedQuestionsSubmitted.map((d) => d.y),
+            color: '#9b8afb',
           },
         ];
 
@@ -208,6 +211,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             data: d.data,
             type: 'line',
             showSymbol: false,
+            color: d.color,
           };
         });
 
@@ -227,7 +231,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             },
           ],
           series: series,
-          legend: { show: true },
+          legend: legendOptions,
         };
       }),
     );
