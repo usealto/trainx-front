@@ -16,7 +16,7 @@ export const FR = {
     showAll: 'Tout voir',
     minutes: 'minutes',
     seconds: 'secondes',
-    noTeam: "Pas d'équipes pour l'instant.",
+    noTeam: 'Pas d’équipes pour l’instant. Embarquez-les !',
     optional: '(facultatif)',
     noData: 'Aucun résultat ne correspond à votre recherche.',
     noDataSubtitle: 'Essayez avec d’autres filtres.',
@@ -354,7 +354,7 @@ export const FR = {
       },
     },
     globalPerformance: {
-      navbarTitle: 'Performance',
+      navbarTitle: 'Performances',
       perTeamPerformance: {
         title: 'Performance par équipes',
         subtitle: "Retrouvez une vue d' ensemble sur les résultats de vos équipes.",
@@ -430,7 +430,7 @@ export const FR = {
       },
     },
     perTeams: {
-      title: 'Par équipe',
+      title: 'Par équipes',
       sections: {
         teams: 'Équipes',
         teamsSubtitle:
@@ -538,7 +538,7 @@ export const FR = {
         iregularMembersTooltip: 'Nombre de membres ayant répondu à moins de 50% des questions envoyées',
         active: 'Membres réguliers',
         inactive: 'Membres irréguliers',
-        totalAnswers: 'Nombre total de réponses',
+        totalAnswers: 'Nombre total de réponses (30 derniers jours)',
       },
       table: {
         name: 'Nom',

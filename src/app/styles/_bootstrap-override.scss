@@ -39,18 +39,17 @@ textarea.form-control:focus {
   padding: 0 1.167rem;
   line-height: 34px;
   display: inline-flex;
-  font-size: 0.833rem;
-
+  font-size: 1rem;
   i {
     font-size: 1.15rem;
     line-height: 34px;
   }
 
   & :first-child:is(i) {
-    padding-right: 0.667rem;
+    padding-right: 0.33rem;
   }
   & :last-child:is(i) {
-    padding-left: 0.667rem;
+    padding-left: 0.33rem;
   }
 }
 .offcanvas {
