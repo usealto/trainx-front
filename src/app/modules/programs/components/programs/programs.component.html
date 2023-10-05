@@ -11,16 +11,24 @@
 
 <!-- PROGRAMS -->
 <div *ngIf="activeTab === 'programs'" class="active-programs">
-  <div>
-    <h2>
-      <img class="emoji" [src]="Emoji.Bullseye | emoji" />
-      {{ I18ns.programs.activePrograms.title }}
-    </h2>
-    <p class="subtitle alto-grey">{{ I18ns.programs.activePrograms.subtitle }}</p>
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+      <h2>
+        <img class="emoji" [src]="Emoji.Bullseye | emoji" />
+        {{ I18ns.programs.activePrograms.title }} ({{ activeProgramCount }})
+      </h2>
+      <p class="subtitle alto-grey">{{ I18ns.programs.activePrograms.subtitle }}</p>
+    </div>
+    <a type="button" class="btn btn-primary" [routerLink]="AltoRoutes.programsCreate">
+      <i class="bi bi-plus-lg"></i>
+      <div>
+        {{ I18ns.programs.programs.createProgram }}
+      </div>
+    </a>
   </div>
 
   <alto-program-card-list
-    (programTotal)="(null)"
+    (programTotal)="activeProgramCount = $event"
     [place]="'program'"
     [isActive]="true"
   ></alto-program-card-list>
@@ -30,7 +38,7 @@
     <div>
       <h2 id="programsAnchor">
         <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" />
-        {{ I18ns.programs.programs.title }}
+        {{ I18ns.programs.programs.title }} ({{ programsCount }})
       </h2>
       <p class="mt-2 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
     </div>
@@ -63,7 +71,7 @@
     <img class="emoji" [src]="Emoji.RedQuestionMark | emoji" />
     {{ I18ns.programs.questions.title }}
   </h2>
-  <p class="mt-3 mb-5 alto-grey">{{ I18ns.programs.questions.subtitle }}</p>
+  <p class="mt-3 mb-3 alto-grey">{{ I18ns.programs.questions.subtitle }}</p>
 
   <div class="mb-5">
     <div class="d-inline-block float-end">
@@ -205,7 +213,7 @@
     <img class="emoji" [src]="Emoji.Label | emoji" />
     {{ I18ns.programs.tags.title }}
   </h2>
-  <p class="mt-3 mb-5 alto-grey">{{ I18ns.programs.tags.subtitle }}</p>
+  <p class="mt-3 mb-3 alto-grey">{{ I18ns.programs.tags.subtitle }}</p>
 
   <div class="mb-5">
     <div class="d-inline-block float-end">
