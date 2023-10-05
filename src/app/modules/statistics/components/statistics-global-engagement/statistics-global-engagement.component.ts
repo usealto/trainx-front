@@ -136,7 +136,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             const progression = this.scoresService.getProgression(t.score, previousScore);
             return {
               name: t.team.name,
-              score: t.totalGuessesCount ? t.totalGuessesCount / 100 : 0,
+              score: t.totalGuessesCount ? t.totalGuessesCount : 0,
               progression: progression ? progression : 0,
             };
           });
