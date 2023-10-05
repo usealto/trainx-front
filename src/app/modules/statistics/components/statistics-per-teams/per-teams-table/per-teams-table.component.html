@@ -23,7 +23,7 @@
           <alto-profile-card *ngIf="type === 'user'" [user]="item.owner"></alto-profile-card>
         </td>
         <td class="text-center">
-          <span class="alto-score" [class]="item.globalScore | pillColor"
+          <span class="alto-score" [class]="(item.globalScore || 0) * 100 | pillColor"
             >{{ item.globalScore | percent }}
           </span>
         </td>
