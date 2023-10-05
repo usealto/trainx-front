@@ -23,7 +23,10 @@
       >{{ item.score | percent }}</span
     >
     <span *ngIf="config.includes('count')" data-cy="line-score" class="float-end">{{ item.score }}</span>
-    <p class="d-inline-block me-2 fw-bold" [class]="getScoreColor(item.score)">
+    <p
+      class="d-inline-block me-2 fw-bold"
+      [class]="config.includes('count') ? getPositionColor(item.name) : getScoreColor(item.score)"
+    >
       {{ getPosition(item.name) + '/' + leaderboard.length }}
     </p>
     <p class="d-inline-block">{{ item.name }}</p>
@@ -45,7 +48,10 @@
       >{{ item.score | percent }}</span
     >
     <span *ngIf="config.includes('count')" class="float-end">{{ item.score }}</span>
-    <p class="d-inline-block me-2 fw-bold" [class]="getScoreColor(item.score)">
+    <p
+      class="d-inline-block me-2 fw-bold"
+      [class]="config.includes('count') ? getPositionColor(item.name) : getScoreColor(item.score)"
+    >
       {{ getPosition(item.name) + '/' + leaderboard.length }}
     </p>
     <p class="d-inline-block">{{ item.name }}</p>

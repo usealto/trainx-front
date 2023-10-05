@@ -45,6 +45,18 @@ export class LeaderboardComponent implements OnChanges {
     return 'alto-grey';
   }
 
+  @memoize()
+  getPositionColor(name: string) {
+    if (this.getPosition(name) === 1) {
+      return 'alto-green';
+    } else if (this.getPosition(name) === this.leaderboard.length) {
+      return 'alto-red';
+    } else {
+      return 'alto-warning';
+    }
+  }
+
+  @memoize()
   getPosition(label: string): number {
     return this.leaderboard.findIndex((item) => item.name === label) + 1;
   }
