@@ -31,6 +31,11 @@ export const yAxisScoreOptions: any = {
   nameTextStyle: { fontWeight: 600, fontFamily: 'PlusJakartaSans' },
 };
 
+export const legendOptions: any = {
+  show: true,
+  textStyle: { color: '#667085' },
+};
+
 // ! DEPRECATED for V3.2
 export const chartDefaultOptions: ChartOptions = {
   maintainAspectRatio: false,
