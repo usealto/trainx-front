@@ -95,17 +95,13 @@ export class StatisticsPerTeamsComponent implements OnInit {
       team: t.team,
       globalScore: t.score,
       answeredQuestionsCount: t.totalGuessesCount,
-      answeredQuestionsProgression: this.scoreService.getProgression(
-        t.totalGuessesCount,
-        tProg?.totalGuessesCount,
-      ),
+      answeredQuestionsProgression:
+        this.scoreService.getProgression(t.totalGuessesCount, tProg?.totalGuessesCount) ?? 0,
       commentsCount: t.commentsCount,
-      commentsProgression: this.scoreService.getProgression(t.commentsCount, tProg?.commentsCount),
+      commentsProgression: this.scoreService.getProgression(t.commentsCount, tProg?.commentsCount) ?? 0,
       submittedQuestionsCount: t.questionsSubmittedCount,
-      submittedQuestionsProgression: this.scoreService.getProgression(
-        t.questionsSubmittedCount,
-        tProg?.questionsSubmittedCount,
-      ),
+      submittedQuestionsProgression:
+        this.scoreService.getProgression(t.questionsSubmittedCount, tProg?.questionsSubmittedCount) ?? 0,
       leastMasteredTags: t.tags
         ?.filter((ta) => (ta.score ?? 0) < 50)
         .sort((a, b) => (a.score || 0) - (b.score || 0))
@@ -119,17 +115,13 @@ export class StatisticsPerTeamsComponent implements OnInit {
       owner: u.user,
       globalScore: u.score,
       answeredQuestionsCount: u.totalGuessesCount,
-      answeredQuestionsProgression: this.scoreService.getProgression(
-        u.totalGuessesCount,
-        uProg?.totalGuessesCount,
-      ),
+      answeredQuestionsProgression:
+        this.scoreService.getProgression(u.totalGuessesCount, uProg?.totalGuessesCount) ?? 0,
       commentsCount: u.commentsCount,
-      commentsProgression: this.scoreService.getProgression(u.commentsCount, uProg?.commentsCount),
+      commentsProgression: this.scoreService.getProgression(u.commentsCount, uProg?.commentsCount) ?? 0,
       submittedQuestionsCount: u.questionsSubmittedCount,
-      submittedQuestionsProgression: this.scoreService.getProgression(
-        u.questionsSubmittedCount,
-        uProg?.questionsSubmittedCount,
-      ),
+      submittedQuestionsProgression:
+        this.scoreService.getProgression(u.questionsSubmittedCount, uProg?.questionsSubmittedCount) ?? 0,
       leastMasteredTags: u.tags
         ?.filter((ta) => (ta.score ?? 0) < 50)
         .sort((a, b) => (a.score || 0) - (b.score || 0))

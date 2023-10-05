@@ -17,6 +17,10 @@ export class ProgressionBadgeComponent {
 
   @memoize()
   scoreDisplay(score: number | null | undefined) {
-    return score ? (score > 9.99 ? '>999%' : formatPercent(Math.abs(score), this.locale)) : score;
+    return score !== null && score !== undefined
+      ? score > 9.99
+        ? '>999%'
+        : formatPercent(Math.abs(score), this.locale)
+      : score;
   }
 }

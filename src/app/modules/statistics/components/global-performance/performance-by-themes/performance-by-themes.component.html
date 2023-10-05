@@ -42,13 +42,14 @@
 
 <alto-placeholder-manager [status]="tagsDataStatus">
   <alto-leaderboard
+    [config]="['score']"
     [title]="I18ns.statistics.globalPerformance.perThemePerformance.control.title"
     [subtitle]="I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle"
-    [leaderboard]="tagsLeaderboard"
+    [data]="tagsLeaderboard"
     [size]="3"
   >
   </alto-leaderboard>
-  
+
   <div class="nodata-placeholder" noData>
     <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
     <div class="text-center">

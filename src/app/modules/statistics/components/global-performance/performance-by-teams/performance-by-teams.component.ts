@@ -11,7 +11,7 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
+import { xAxisDatesOptions, yAxisScoreOptions, legendOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
@@ -159,6 +159,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
       xAxis: [{ ...xAxisDatesOptions, data: labels }],
       yAxis: [{ ...yAxisScoreOptions }],
       series: series,
+      legend: legendOptions,
     };
   }
 

@@ -55,11 +55,12 @@ hr {
 }
 .add-field {
   cursor: pointer;
-  color: var(--primary-600);
+  color: var(--primary-700);
   font-weight: 600;
   margin-bottom: 1.333rem;
+  line-height: 1.66667rem;
   i {
-    font-size: 2rem;
+    font-size: 1rem;
     line-height: 1rem;
     vertical-align: middle;
   }
