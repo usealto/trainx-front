@@ -1,6 +1,6 @@
 # AssessmentFront
 
-[![Tests CI](https://github.com/usealto/assessment-front/actions/workflows/node.js.yml/badge.svg)](https://github.com/usealto/assessment-front/actions/workflows/node.js.yml)
+[![Tests CI](https://github.com/usealto/assessment-front/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/usealto/assessment-front/actions/workflows/unit-tests.yml)
 
 [![Cypress Tests](https://github.com/usealto/assessment-front/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/usealto/assessment-front/actions/workflows/e2e-tests.yml)
 
