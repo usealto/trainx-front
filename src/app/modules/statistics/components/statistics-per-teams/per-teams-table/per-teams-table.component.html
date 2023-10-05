@@ -20,7 +20,12 @@
           <span *ngIf="type === 'team'" class="alto-badge" [style]="item.team?.id | teamColor">
             {{ item.team?.name }}
           </span>
-          <alto-profile-card *ngIf="type === 'user'" [user]="item.owner"></alto-profile-card>
+          <div class="user-profile" *ngIf="type === 'user'">
+            <alto-img-badge [user]="item.owner" [size]="24" class="d-inline-block"></alto-img-badge>
+            <span class="fw-medium fs-7 alto-text">
+              {{ item.owner?.firstname + ' ' + item.owner?.lastname }}
+            </span>
+          </div>
         </td>
         <td class="text-center">
           <span class="alto-score" [class]="(item.globalScore || 0) * 100 | pillColor"
