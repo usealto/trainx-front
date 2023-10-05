@@ -272,18 +272,14 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     return {
       team: t.team,
       globalScore: t.score,
-      answeredQuestionsCount: t.totalGuessesCount,
-      answeredQuestionsProgression: this.scoresService.getProgression(
-        t.totalGuessesCount,
-        tProg?.totalGuessesCount,
-      ),
+      answeredQuestionsCount: t.totalGuessesCount ?? 0,
+      answeredQuestionsProgression:
+        this.scoresService.getProgression(t.totalGuessesCount, tProg?.totalGuessesCount) ?? 0,
       commentsCount: t.commentsCount,
-      commentsProgression: this.scoresService.getProgression(t.commentsCount, tProg?.commentsCount),
+      commentsProgression: this.scoresService.getProgression(t.commentsCount, tProg?.commentsCount) ?? 0,
       submittedQuestionsCount: t.questionsSubmittedCount,
-      submittedQuestionsProgression: this.scoresService.getProgression(
-        t.questionsSubmittedCount,
-        tProg?.questionsSubmittedCount,
-      ),
+      submittedQuestionsProgression:
+        this.scoresService.getProgression(t.questionsSubmittedCount, tProg?.questionsSubmittedCount) ?? 0,
       leastMasteredTags: t.tags
         ?.filter((ta) => (ta.score ?? 0) < 50)
         .sort((a, b) => (a.score || 0) - (b.score || 0))

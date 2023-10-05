@@ -137,7 +137,7 @@
             {{ team.answeredQuestionsCount }}
             <alto-progression-badge
               class="ms-3 d-inline-block"
-              [score]="team.answeredQuestionsProgression"
+              [score]="team.answeredQuestionsProgression ?? 0"
             ></alto-progression-badge>
           </td>
           <td class="text-center">
