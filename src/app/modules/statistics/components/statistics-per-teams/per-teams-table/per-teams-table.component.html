@@ -33,25 +33,40 @@
           </span>
         </td>
         <td class="alto-grey text-center">
-          {{ item.answeredQuestionsCount }}
-          <alto-progression-badge
-            class="ms-3 d-inline-block"
-            [score]="item.answeredQuestionsProgression"
-          ></alto-progression-badge>
+          <ng-container *ngIf="item.answeredQuestionsCount > 0; else noGuess">
+            {{ item.answeredQuestionsCount }}
+            <alto-progression-badge
+              class="ms-3 d-inline-block"
+              [score]="item.answeredQuestionsProgression"
+            ></alto-progression-badge>
+          </ng-container>
+          <ng-template #noGuess>
+            {{ I18ns.statistics.perTeams.table.noGuess }}
+          </ng-template>
         </td>
         <td class="alto-grey text-center">
-          {{ item.commentsCount }}
-          <alto-progression-badge
-            class="ms-3 d-inline-block"
-            [score]="item.commentsProgression"
-          ></alto-progression-badge>
+          <ng-container *ngIf="item.commentsCount > 0; else noComments">
+            {{ item.commentsCount }}
+            <alto-progression-badge
+              class="ms-3 d-inline-block"
+              [score]="item.commentsProgression"
+            ></alto-progression-badge>
+          </ng-container>
+          <ng-template #noComments>
+            {{ I18ns.statistics.perTeams.table.noComments }}
+          </ng-template>
         </td>
         <td class="alto-grey text-center">
-          {{ item.submittedQuestionsCount }}
-          <alto-progression-badge
-            class="ms-3 d-inline-block"
-            [score]="item.submittedQuestionsProgression"
-          ></alto-progression-badge>
+          <ng-container *ngIf="item.submittedQuestionsCount > 0; else noSuggestion">
+            {{ item.submittedQuestionsCount }}
+            <alto-progression-badge
+              class="ms-3 d-inline-block"
+              [score]="item.submittedQuestionsProgression"
+            ></alto-progression-badge>
+          </ng-container>
+          <ng-template #noSuggestion>
+            {{ I18ns.statistics.perTeams.table.noSuggestion }}
+          </ng-template>
         </td>
         <td>
           <alto-colored-pill-list
