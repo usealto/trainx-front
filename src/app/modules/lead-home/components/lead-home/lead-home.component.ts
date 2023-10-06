@@ -74,7 +74,7 @@ export class LeadHomeComponent implements OnInit {
   guessCountProgression = 0;
 
   commentsCount = 0;
-  commentsDataStatus: PlaceholderDataStatus = 'good';
+  commentsDataStatus: PlaceholderDataStatus = 'loading';
   questionsCount = 0;
   questionsDataStatus: PlaceholderDataStatus = 'good';
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
@@ -119,9 +119,9 @@ export class LeadHomeComponent implements OnInit {
       .pipe(
         tap(([comments, submittedQuestionsCount, challenges]) => {
           this.commentsCount = comments.length;
-          this.commentsDataStatus = comments.length === 0 ? 'noData' : 'good';
+          // this.commentsDataStatus = comments.length === 0 ? 'noData' : 'good';
           this.questionsCount = submittedQuestionsCount;
-          this.questionsDataStatus = submittedQuestionsCount === 0 ? 'noData' : 'good';
+          // this.questionsDataStatus = submittedQuestionsCount === 0 ? 'noData' : 'good';
 
           this.challengesByTeam = challenges
             .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByTeam)
