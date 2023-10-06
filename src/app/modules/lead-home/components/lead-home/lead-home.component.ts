@@ -44,9 +44,9 @@ export class LeadHomeComponent implements OnInit {
   ScoreDuration = ScoreDuration;
   ScoreTypeEnum = ScoreTypeEnumApi;
   ETypeValue = ETypeValue;
-  programDataStatus: PlaceholderDataStatus = 'good';
+  programDataStatus: PlaceholderDataStatus = 'loading';
   isData = false;
-  chartDataStatus: PlaceholderDataStatus = 'good';
+  chartDataStatus: PlaceholderDataStatus = 'loading';
 
   userName = '';
 
@@ -74,7 +74,7 @@ export class LeadHomeComponent implements OnInit {
   commentsCount = 0;
   commentsDataStatus: PlaceholderDataStatus = 'loading';
   questionsCount = 0;
-  questionsDataStatus: PlaceholderDataStatus = 'good';
+  questionsDataStatus: PlaceholderDataStatus = 'loading';
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
   //
   challengesByTeam: ChallengeDtoApi[] = [];
@@ -82,10 +82,10 @@ export class LeadHomeComponent implements OnInit {
   //
   teamsLeaderboard: { name: string; score: number }[] = [];
   teamsLeaderboardCount = 0;
-  teamsLeaderboardDataStatus: PlaceholderDataStatus = 'good';
+  teamsLeaderboardDataStatus: PlaceholderDataStatus = 'loading';
   usersLeaderboard: { name: string; score: number }[] = [];
   usersLeaderboardCount = 0;
-  usersLeaderboardDataStatus: PlaceholderDataStatus = 'good';
+  usersLeaderboardDataStatus: PlaceholderDataStatus = 'loading';
   topflopLoaded = false;
   chartOption: EChartsOption = {};
 
@@ -115,9 +115,9 @@ export class LeadHomeComponent implements OnInit {
       .pipe(
         tap(([comments, submittedQuestionsCount]) => {
           this.commentsCount = comments.length;
-          // this.commentsDataStatus = comments.length === 0 ? 'noData' : 'good';
+          this.commentsDataStatus = comments.length === 0 ? 'noData' : 'good';
           this.questionsCount = submittedQuestionsCount;
-          // this.questionsDataStatus = submittedQuestionsCount === 0 ? 'noData' : 'good';
+          this.questionsDataStatus = submittedQuestionsCount === 0 ? 'noData' : 'good';
 
           // this.challengesByTeam = challenges
           //   .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByTeam)
@@ -140,6 +140,8 @@ export class LeadHomeComponent implements OnInit {
   getProgramDataStatus() {
     if (!(this.averageScore || (this.programsCount || this.expectedGuessCount || 0) > 0)) {
       this.programDataStatus = 'noData';
+    } else {
+      this.programDataStatus = 'good';
     }
   }
 
