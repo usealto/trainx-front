@@ -189,6 +189,8 @@ export class LeadCollaborationComponent implements OnInit {
             return acc;
           }, [] as { id: string; name: string }[]);
 
+          console.log('selectedTAb', this.selectedTab);
+
           this.handleTabChange(this.selectedTab);
         }),
         untilDestroyed(this),
@@ -376,6 +378,8 @@ export class LeadCollaborationComponent implements OnInit {
         }),
       ),
     );
+    console.log('getSelectedTabData');
+
     this.getSelectedTabData();
   }
 
