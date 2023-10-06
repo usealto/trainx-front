@@ -61,7 +61,7 @@
       </div>
     </div>
 
-    <ng-container *ngIf="!emptyPlaceholderData; else emptyPlaceholder">
+    <ng-container *ngIf="emptyPlaceholderData === undefined; else emptyPlaceholder">
       <!-- CONTRIBUTIONS -->
       <ng-container *ngFor="let data of contributionsByPeriod">
         <div *ngIf="data.contributions.length > 0" class="time-separator">
