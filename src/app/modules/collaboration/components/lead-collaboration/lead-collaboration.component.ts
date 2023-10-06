@@ -219,11 +219,8 @@ export class LeadCollaborationComponent implements OnInit {
       this.selectedTypesFilters.length === 0 ||
       this.selectedTypesFilters.some(({ id }) => id === ETypeValue.QUESTIONS);
 
-    console.log('a');
     switch (this.selectedTab.value) {
       case ETabValue.PENDING:
-        console.log('aa');
-
         data = [
           ...this.comments
             .filter((comment) => {
@@ -236,7 +233,6 @@ export class LeadCollaborationComponent implements OnInit {
             })
             .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
-        console.log('data', data);
 
         break;
       case ETabValue.ARCHIVED:
@@ -266,17 +262,12 @@ export class LeadCollaborationComponent implements OnInit {
       default:
         break;
     }
-    console.log('b');
-    console.log('data length', data.length);
 
     data.sort((a, b) => compareDesc(a.createdAt, b.createdAt));
     data = this.filterByContributors(data, this.selectedContributorsFilters);
     data = this.filterByPeriod(data, this.selectedPeriodsFilters);
 
     this.showMoreButton = data.length > this.itemsPerPage;
-
-    console.log('c');
-    console.log('data length', data.length);
 
     if (data.length === 0) {
       if (this.comments.length > 0 || this.submittedQuestions.length > 0) {
@@ -321,24 +312,16 @@ export class LeadCollaborationComponent implements OnInit {
     data = data.slice(0, this.itemsPerPage);
 
     this.initContributionsByPeriod();
-    console.log('data length', data.length);
 
     data.forEach((item) => {
-      console.log(item);
-
       // today
       if (isToday(item.createdAt)) {
-        console.log('today');
-
         this.contributionsByPeriod[0].contributions.push(item);
         // week
       } else if (isAfter(item.createdAt, addDays(today, -7))) {
-        console.log('week');
-
         this.contributionsByPeriod[1].contributions.push(item);
         // month
       } else if (isBefore(item.createdAt, today) && isAfter(item.createdAt, addDays(today, -30))) {
-        console.log('month');
         this.contributionsByPeriod[2].contributions.push(item);
         //old
       } else {
