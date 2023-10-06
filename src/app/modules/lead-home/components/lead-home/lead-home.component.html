@@ -226,7 +226,11 @@
           <div class="text-center">
             <img [src]="Emoji.BustsInSilhouette | emoji" height="24" />
             <p class="mt-3">{{ I18ns.leadHome.leaderboard.users.placeholder }}</p>
-            <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
+            <a
+              type="button"
+              class="btn btn-primary mt-4"
+              [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsCreate]"
+            >
               <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
             </a>
           </div>
@@ -253,6 +257,7 @@
 
   <alto-program-card-list [place]="'home'" [isActive]="true"></alto-program-card-list>
   <!-- CHALLENGES -->
+  <!-- 
   <div class="row mt-6 mb-4" hidden>
     <div class="col-5">
       <h2 class="title">{{ I18ns.leadHome.ongoingChallenges.title }}</h2>
@@ -385,4 +390,5 @@
       </div>
     </div>
   </div>
+   -->
 </div>
