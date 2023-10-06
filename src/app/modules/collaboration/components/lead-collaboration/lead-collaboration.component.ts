@@ -108,7 +108,7 @@ export class LeadCollaborationComponent implements OnInit {
 
   selectedTab!: ITab;
   pendingCount = 0;
-  showMoreButton = true;
+  showMoreButton = false;
 
   emptyPlaceholderData?: {
     emojiSrc: string;
@@ -189,8 +189,6 @@ export class LeadCollaborationComponent implements OnInit {
             return acc;
           }, [] as { id: string; name: string }[]);
 
-          console.log('selectedTAb', this.selectedTab);
-
           this.handleTabChange(this.selectedTab);
         }),
         untilDestroyed(this),
@@ -221,6 +219,7 @@ export class LeadCollaborationComponent implements OnInit {
       this.selectedTypesFilters.length === 0 ||
       this.selectedTypesFilters.some(({ id }) => id === ETypeValue.QUESTIONS);
 
+    console.log('a');
     switch (this.selectedTab.value) {
       case ETabValue.PENDING:
         data = [
@@ -260,13 +259,20 @@ export class LeadCollaborationComponent implements OnInit {
           ),
         ];
         break;
+      default:
+        break;
     }
+    console.log('b');
+    console.log('data length', data.length);
 
     data.sort((a, b) => compareDesc(a.createdAt, b.createdAt));
     data = this.filterByContributors(data, this.selectedContributorsFilters);
     data = this.filterByPeriod(data, this.selectedPeriodsFilters);
 
     this.showMoreButton = data.length > this.itemsPerPage;
+
+    console.log('c');
+    console.log('data length', data.length);
 
     if (data.length === 0) {
       if (this.comments.length > 0 || this.submittedQuestions.length > 0) {
@@ -378,8 +384,6 @@ export class LeadCollaborationComponent implements OnInit {
         }),
       ),
     );
-    console.log('getSelectedTabData');
-
     this.getSelectedTabData();
   }
 
