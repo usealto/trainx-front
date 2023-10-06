@@ -201,7 +201,7 @@ export class LeadCollaborationComponent implements OnInit {
     type: ETypeValue,
   ): IContribution {
     return {
-      contributorId: data.author.id,
+      contributorId: data.author?.id,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       type,
@@ -222,6 +222,8 @@ export class LeadCollaborationComponent implements OnInit {
     console.log('a');
     switch (this.selectedTab.value) {
       case ETabValue.PENDING:
+        console.log('aa');
+
         data = [
           ...this.comments
             .filter((comment) => {
@@ -234,6 +236,8 @@ export class LeadCollaborationComponent implements OnInit {
             })
             .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
+        console.log('data', data);
+
         break;
       case ETabValue.ARCHIVED:
         data = [
