@@ -309,15 +309,24 @@ export class LeadCollaborationComponent implements OnInit {
     data = data.slice(0, this.itemsPerPage);
 
     this.initContributionsByPeriod();
+    console.log('data length', data.length);
+
     data.forEach((item) => {
+      console.log(item);
+
       // today
       if (isToday(item.createdAt)) {
+        console.log('today');
+
         this.contributionsByPeriod[0].contributions.push(item);
         // week
       } else if (isAfter(item.createdAt, addDays(today, -7))) {
+        console.log('week');
+
         this.contributionsByPeriod[1].contributions.push(item);
         // month
       } else if (isBefore(item.createdAt, today) && isAfter(item.createdAt, addDays(today, -30))) {
+        console.log('month');
         this.contributionsByPeriod[2].contributions.push(item);
         //old
       } else {
