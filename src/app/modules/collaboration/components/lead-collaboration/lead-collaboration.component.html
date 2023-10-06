@@ -64,6 +64,9 @@
     <ng-container *ngIf="emptyPlaceholderData === undefined; else emptyPlaceholder">
       <!-- CONTRIBUTIONS -->
       <ng-container *ngFor="let data of contributionsByPeriod">
+        <div [hidden]="true">
+          <pre>{{ data | json }}</pre>
+        </div>
         <div *ngIf="data.contributions.length > 0" class="time-separator">
           <div class="line"></div>
           <div class="centered-block">
@@ -72,6 +75,9 @@
           <div class="line"></div>
         </div>
         <ng-container *ngFor="let contribution of data.contributions">
+          <div [hidden]="true">
+            <pre>{{ contribution | json }}</pre>
+          </div>
           <ng-container *ngIf="contribution.type === 'comments'; else questionTemplate">
             <alto-comment-card
               [comment]="getCommentFromContribution(contribution)"
