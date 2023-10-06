@@ -96,4 +96,15 @@
       ><i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
     </a>
   </div>
+  <div class="row mb-4" loading>
+    <div *ngFor="let key of [1, 2, 3]" class="mb-4 col-4">
+      <div class="skeleton-panel" style="height: 226px"></div>
+    </div>
+    <alto-pagination
+    [collectionSize]="count"
+    [(page)]="page"
+    [pageSize]="pageSize"
+    aria-label="Default pagination"
+  ></alto-pagination>
+  </div>
 </alto-placeholder-manager>
