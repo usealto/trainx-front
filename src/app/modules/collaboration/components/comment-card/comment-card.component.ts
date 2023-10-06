@@ -32,7 +32,9 @@ export class CommentCardComponent {
   ) {}
 
   archiveComment(): void {
-    const fullname = `${this.comment?.author.firstname} ${this.comment?.author.lastname}`;
+    const fullname = this.comment?.author
+      ? `${this.comment?.author.firstname} ${this.comment?.author.lastname}`
+      : I18ns.shared.deletedUsername;
 
     const modalRef = this.modalService.open(CollaborationModalComponent, { centered: true, size: 'md' });
 

@@ -24,16 +24,16 @@
 <div class="content-container" [class.footer]="suggQuestion?.status !== StatusEnum.Submitted">
   <div class="text-container">
     <div class="badge-with-connector">
-      <alto-img-badge [size]="24" [user]="suggQuestion?.createdByUser"></alto-img-badge>
+      <alto-img-badge [size]="24" [user]="suggQuestion?.author"></alto-img-badge>
       <div *ngIf="suggQuestion?.status !== StatusEnum.Submitted" class="connector"></div>
     </div>
 
     <div class="text-content">
       <div class="author">
-        <span [ngClass]="suggQuestion?.createdByUser ? 'fw-semibold' : 'light-text'"
+        <span [ngClass]="suggQuestion?.author ? 'fw-semibold' : 'light-text'"
           >{{
-            suggQuestion?.createdByUser
-              ? suggQuestion?.createdByUser?.firstname + ' ' + suggQuestion?.createdByUser?.lastname
+            suggQuestion?.author
+              ? suggQuestion?.author?.firstname + ' ' + suggQuestion?.author?.lastname
               : I18ns.shared.deletedUsername
           }}
         </span>

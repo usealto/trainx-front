@@ -77,7 +77,9 @@ export class SeeQuestionComponent implements OnInit {
 
     const componentInstance = modalRef.componentInstance as CollaborationModalComponent;
     const comment = this.comments.find((c) => c.id === id);
-    const fullname = `${comment?.author.firstname} ${comment?.author.lastname}`;
+    const fullname = comment?.author
+      ? `${comment?.author.firstname} ${comment?.author.lastname}`
+      : I18ns.shared.deletedUsername;
 
     componentInstance.data = {
       title: I18ns.collaboration.commentCard.archiveCommentTitle,
