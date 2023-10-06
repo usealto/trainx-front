@@ -30,7 +30,7 @@ import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 import { TagsServiceService } from '../../services/tags-service.service';
-import { QuestionFormComponent } from '../questions/question-form/question-form.component';
+import { QuestionFormComponent } from '../../../shared/components/question-form/question-form.component';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
 
 interface TagDisplay extends TagDtoApi {
@@ -301,7 +301,7 @@ export class ProgramsComponent implements OnInit {
       .pipe(
         tap((q) => {
           this.submittedQuestions = q.data ?? [];
-          this.submittedQuestionsCount = q.meta.itemsPerPage ?? 0
+          this.submittedQuestionsCount = q.meta.itemsPerPage ?? 0;
         }),
       )
       .subscribe();

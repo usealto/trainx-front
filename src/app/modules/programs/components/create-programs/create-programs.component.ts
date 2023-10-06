@@ -26,7 +26,7 @@ import { QuestionDisplay } from '../../models/question.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
-import { QuestionFormComponent } from '../questions/question-form/question-form.component';
+import { QuestionFormComponent } from '../../../shared/components/question-form/question-form.component';
 import { ToastService } from 'src/app/core/toast/toast.service';
 
 @UntilDestroy()
