@@ -1,19 +1,23 @@
-<div class="header d-flex flex-row">
-  <div class="d-flex flex-row align-items-center">
-    <alto-icon-badge [icon]="'bi-lightbulb'" [color]="'badge-double-purple'"></alto-icon-badge>
-    <span class="fw-semibold text-purple m-sm-2">{{ I18ns.collaboration.questionCard.suggQuestion }}</span>
-  </div>
-  <div
-    class="align-self-center alto-badge"
-    [ngClass]="
-      suggQuestion?.status === StatusEnum.Declined
-        ? 'red'
-        : suggQuestion?.status === StatusEnum.Accepted
-        ? 'green'
-        : 'orange'
-    "
-  >
-    {{ I18ns.collaboration.question[suggQuestion?.status || StatusEnum.Accepted] }}
+<div class="header">
+  <div class="header-container">
+    <div>
+      <alto-icon-badge [icon]="'bi-lightbulb'" [color]="'badge-double-purple'"></alto-icon-badge>
+    </div>
+    <div class="header-text">
+      <span class="fw-medium text-purple m-sm-2">{{ I18ns.collaboration.questionCard.suggQuestion }}</span>
+      <div
+        class="alto-badge"
+        [ngClass]="
+          suggQuestion?.status === StatusEnum.Declined
+            ? 'red'
+            : suggQuestion?.status === StatusEnum.Accepted
+            ? 'green'
+            : 'orange'
+        "
+      >
+        {{ I18ns.collaboration.question[suggQuestion?.status || StatusEnum.Accepted] }}
+      </div>
+    </div>
   </div>
 </div>
 
@@ -26,8 +30,12 @@
 
     <div class="text-content">
       <div class="author">
-        <span class="fw-semibold"
-          >{{ suggQuestion?.createdByUser?.firstname }} {{ suggQuestion?.createdByUser?.lastname }}
+        <span [ngClass]="suggQuestion?.createdByUser ? 'fw-semibold' : 'light-text'"
+          >{{
+            suggQuestion?.createdByUser
+              ? suggQuestion?.createdByUser?.firstname + ' ' + suggQuestion?.createdByUser?.lastname
+              : I18ns.shared.deletedUsername
+          }}
         </span>
         <span class="date-text">{{ suggQuestion?.createdAt | dateLabel }}</span>
       </div>
@@ -42,15 +50,18 @@
 
     <div class="text-content">
       <div class="author">
-        <span class="fw-semibold"
-          >{{ suggQuestion?.updatedByUser?.firstname }} {{ suggQuestion?.updatedByUser?.lastname }}
+        <span [ngClass]="suggQuestion?.updatedByUser ? 'fw-semibold' : 'light-text'"
+          >{{
+            suggQuestion?.updatedByUser
+              ? suggQuestion?.updatedByUser?.firstname + ' ' + suggQuestion?.updatedByUser?.lastname
+              : I18ns.shared.deletedUsername
+          }}
         </span>
         <span class="date-text">{{ suggQuestion?.updatedAt | dateLabel }}</span>
       </div>
 
       <div [ngSwitch]="suggQuestion?.status">
         <div *ngSwitchCase="StatusEnum.Accepted" class="response">
-          <!-- TODO: add program name to the following text -->
           <span class="light-text">{{ I18ns.collaboration.questionCard.hasAccepted }}</span>
         </div>
         <div *ngSwitchCase="StatusEnum.Declined" class="response">

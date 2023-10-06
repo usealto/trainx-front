@@ -1,19 +1,10 @@
 :host {
   display: block;
   padding: var(--alto-page-padding);
-  padding-top: 3.33rem;
 }
 
-.header-panel {
-  padding: 1.3333rem 2rem;
-  .emoji {
-    height: 2.6667rem;
-    vertical-align: sub;
-  }
-}
 .subtitle {
   margin-top: 0.67rem;
-  margin-bottom: 2rem;
 }
 
 .programs-tabs {
@@ -29,5 +20,5 @@ h2 {
 }
 
 .search {
-  width: 319.9994px
+  width: 319.9994px;
 }

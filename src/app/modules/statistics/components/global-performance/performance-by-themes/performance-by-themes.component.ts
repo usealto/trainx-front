@@ -17,13 +17,14 @@ import { ChartsService, ITooltipParams } from 'src/app/modules/charts/charts.ser
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
-import { xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
+import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { TitleCasePipe } from '@angular/common';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 
 @UntilDestroy()
 @Component({
@@ -43,8 +44,10 @@ export class PerformanceByThemesComponent implements OnChanges {
   items: ScoreDtoApi[] = [];
   selectedItems: ScoreDtoApi[] = [];
   tagsLeaderboard: { name: string; score: number }[] = [];
+  tagsDataStatus: PlaceholderDataStatus = 'good';
 
   scoreCount = 0;
+  scoreDataStatus: PlaceholderDataStatus = 'good';
 
   ScoreEvolutionChartOption: any = {};
 
@@ -53,6 +56,7 @@ export class PerformanceByThemesComponent implements OnChanges {
   teamsKnowledgeFilteredScores: ScoreDtoApi[] = [];
   teamsKnowledgeChartOption: any = {};
   series: any[] = [];
+  seriesDataStatus: PlaceholderDataStatus = 'good';
 
   constructor(
     private titleCasePipe: TitleCasePipe,
@@ -83,6 +87,7 @@ export class PerformanceByThemesComponent implements OnChanges {
           tap((res) => {
             const output = res.filter((t) => t.score && t.score >= 0);
             this.tagsLeaderboard = output.map((t) => ({ name: t.tag.name, score: t.score ?? 0 }));
+            this.tagsDataStatus = this.tagsLeaderboard.length === 0 ? 'noData' : 'good';
           }),
           tap(() => {
             this.getTeamsKnowledgeScores();
@@ -151,6 +156,7 @@ export class PerformanceByThemesComponent implements OnChanges {
         },
       };
     });
+    this.seriesDataStatus = this.series.length === 0 ? 'noData' : 'good';
 
     this.teamsKnowledgeChartOption = {
       xAxis: [{ type: 'category', show: false }],
@@ -230,6 +236,7 @@ export class PerformanceByThemesComponent implements OnChanges {
   createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
     scores = this.scoresServices.reduceLineChartData(scores);
     this.scoreCount = scores.length;
+    this.scoreDataStatus = scores.length === 0 ? 'noData' : 'good';
     const aggregateData = this.statisticsServices.transformDataToPoint(scores[0]);
     const labels = this.statisticsServices
       .formatLabel(
@@ -268,6 +275,7 @@ export class PerformanceByThemesComponent implements OnChanges {
       xAxis: [{ ...xAxisDatesOptions, data: labels }],
       yAxis: [{ ...yAxisScoreOptions }],
       series: series,
+      legend: legendOptions,
     };
   }
 

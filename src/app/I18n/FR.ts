@@ -16,7 +16,7 @@ export const FR = {
     showAll: 'Tout voir',
     minutes: 'minutes',
     seconds: 'secondes',
-    noTeam: "Pas d'équipes pour l'instant.",
+    noTeam: 'Pas d’équipes pour l’instant. Embarquez-les !',
     optional: '(facultatif)',
     noData: 'Aucun résultat ne correspond à votre recherche.',
     noDataSubtitle: 'Essayez avec d’autres filtres.',
@@ -35,6 +35,7 @@ export const FR = {
     members: 'membres',
     top: 'Top',
     flop: 'Flop',
+    leaderboard: 'Aperçu du classement',
     waitingForNewResults: "Dans l'attente de nouveaux résultats.",
     days: ['jour', 'jours'],
     score: 'Score',
@@ -88,14 +89,15 @@ export const FR = {
       button: 'Envoyer un mail à mon administrateur',
     },
     global: 'Global',
+    deletedUsername: 'Utilisateur supprimé',
   },
   leadHome: {
     title: 'Bonjour ',
-    subtitle: "Retrouvez une vue d'ensemble sur votre training.",
+    subtitle: 'Retrouvez une vue d’ensemble sur vos équipes.',
     comments: ['Aucun commentaire', '{{}} commentaire', '{{}} commentaires'],
     awaiting: 'en attente',
     subtitleComment: [
-      'Vous avez traité toutes les commentaires écrits par vos collaborateurs.',
+      'Vous avez traité tous les commentaires laissés par vos collaborateurs.',
       'Consultez les commentaires écrits par vos collaborateurs.',
       'Consultez les commentaires écrits par vos collaborateurs.',
     ],
@@ -123,7 +125,7 @@ export const FR = {
     globalEvolution: {
       title: 'Évolution globale',
       score: 'Score moyen de vos équipes',
-      chartSubtitle: 'Évolution du score moyen de vos équipes dans le temps.',
+      chartSubtitle: 'Évolution du taux de bonnes réponses de vos équipes dans le temps.',
       tabs: {
         program: 'Programmes',
         tag: 'Tags',
@@ -131,15 +133,15 @@ export const FR = {
         member: 'Membre',
       },
     },
-    topFlop: {
+    leaderboard: {
       teams: {
         title: 'Niveau de connaissance de vos équipes',
-        subtitle: 'Aperçu du niveau de maîtrise de vos équipes par thématiques.',
+        subtitle: 'Classement selon le taux de bonnes réponses.',
         placeholder: 'Envie de découvrir le niveau de connaissance de vos équipes ?',
       },
       users: {
         title: 'Niveau de connaissance de vos collaborateurs',
-        subtitle: 'Aperçu du niveau de maîtrise de vos collaborateurs.',
+        subtitle: 'Classement selon le taux de bonnes réponses.',
         placeholder: 'Envie de découvrir le niveau de connaissance de vos collaborateurs ?',
       },
     },
@@ -294,6 +296,7 @@ export const FR = {
         priorityPlaceholder: 'Choisir un niveau',
         expectation: 'Score attendu',
         expectationSubtitle: 'Déterminez le score que vos équipes sont censées atteindre à ce programme.',
+        create: 'Créer le programme',
       },
       step2: {
         title: 'Questions',
@@ -325,6 +328,7 @@ export const FR = {
         summary: 'Récapitulatif',
         summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
         validateCreate: 'Le nouveau programme a bien été ajouté',
+        validate: 'Finaliser la création du programme',
       },
     },
     delete: {
@@ -338,20 +342,50 @@ export const FR = {
     title: 'Statistiques',
     subtitle: "Retrouvez l'ensemble des statistiques de vos équipes.",
     globalEngagement: {
-      title: 'Engagement global',
-      subtitle: "Retrouvez l'engagement global de vos équipes.",
+      title: 'Engagement',
       activity: {
-        activity: 'Activité',
-        activitySubtitle: "Suivez l'évolution du nombre de questions auxquelles répondent vos équipes.",
+        title: "Activité de l'entreprise",
+        subtitle: "Retrouvez une vue d'ensemble de l'activité des équipes.",
+        chartTitle: 'Nombre de questions répondues',
+        chartSubtitle: "Évolution du nombre total de questions répondues au sein de l'entreprise.",
         teamFilter: 'Équipe',
       },
-      contributon: {
-        contribution: 'Contribution',
-        contributionSubtitle: 'Retrouver les équipes ayant suggéré ou commenté des questions.',
+      engagement: {
+        title: 'Engagement de vos équipes',
+        subtitle: 'Retrouvez une vue d’ensemble des questions et commentaires remontés par vos équipes.',
+        comments: 'Commentaires',
+        suggQuestions: 'Questions suggérées',
+        chartTitle: 'Collaboration',
+        chartSubtitle: 'Évolution du nombre de questions et de commentaires remontés par vos équipes.',
+      },
+      leaderboard: {
+        title: 'Leaderboard',
+        subtitle: 'Classement de vos équipes selon leur nombre de questions répondues.',
+      },
+      teamsTable: {
+        title: 'Équipes',
+        subtitle: 'Retrouvez les statistiques détaillées d’engagement pour chacune de vos équipes.',
+        placeholderTitle: 'Nous n’avons pas encore de données à afficher',
+        placeholderSubtitle: 'Les équipes s’activent pour fournir les premiers résultats !',
+        columns: {
+          team: 'Équipe',
+          answeredQuestions: 'Questions répondues',
+          suggestedQuestions: 'Questions suggérées',
+          comments: 'Commentaires',
+        },
+      },
+      placeholders: {
+        inactiveTeams: "Vos équipes n'ont pas encore été actives",
+        inactiveTeamsTitle: 'Nombre de questions répondues',
+        inactiveTeamsSubtitle: 'Elles se préparent en coulisses',
+        noDataYet: 'Nous n’avons pas encore de données à afficher',
+        noDataYetTitle: 'Collaboration',
+        noDataYetSubtitle: 'Cela ne devrait plus tarder !',
+        noLeaderboard: 'Aucun classement à afficher pour le moment',
       },
     },
     globalPerformance: {
-      navbarTitle: 'Performance globale',
+      navbarTitle: 'Performances',
       perTeamPerformance: {
         title: 'Performance par équipes',
         subtitle: "Retrouvez une vue d' ensemble sur les résultats de vos équipes.",
@@ -427,9 +461,30 @@ export const FR = {
       },
     },
     perTeams: {
-      title: 'Par équipe',
+      title: 'Par équipes',
+      sections: {
+        teams: 'Équipes',
+        teamsSubtitle:
+          "Découvrez les statistiques d'engagement et de performance de chacune de vos équipes. ",
+        members: 'Membres',
+        membersSubtitle:
+          "Découvrez les statistiques d'engagement et de performance de chacun de vos membres.",
+      },
       globalTooltip:
         '% de questions justes sur le nombre de questions répondues et variation sur la période passée',
+      teamsFilter: 'Équipes',
+      table: {
+        globalScore: 'Score global',
+        answeredQuestions: 'Questions répondues',
+        comments: 'Commentaires',
+        suggestedQuestions: 'Questions suggérées',
+        leastMasteredTags: 'Tags les moins maîtrisés',
+        team: 'Équipe',
+        member: 'Membre',
+        noGuess: 'Aucune réponse',
+        noComments: 'Aucun commentaire',
+        noSuggestion: 'Aucune suggestion',
+      },
     },
   },
   questions: {
@@ -517,7 +572,7 @@ export const FR = {
         iregularMembersTooltip: 'Nombre de membres ayant répondu à moins de 50% des questions envoyées',
         active: 'Membres réguliers',
         inactive: 'Membres irréguliers',
-        totalAnswers: 'Nombre total de réponses',
+        totalAnswers: 'Nombre total de réponses (30 derniers jours)',
       },
       table: {
         name: 'Nom',
@@ -992,6 +1047,8 @@ export const FR = {
       contributionCount: 'A contribué {{}} fois.',
       questions: '{{}} questions',
       comments: '{{}} commentaires',
+      placeholder:
+        "Vos collaborateurs n'ont pas encore fait de commentaires ou suggéré de nouvelles questions.",
     },
     question: {
       declined: 'Refusée',
@@ -1015,8 +1072,8 @@ export const FR = {
       accept: 'Créer la question',
       textArea: 'Réponse à {{}} (facultatif)',
       suggQuestionDenied: 'La question a bien été refusée',
-      hasDenied: 'A refusé cette suggestion',
-      hasAccepted: 'A ajouté la question au programme',
+      hasDenied: 'A refusé cette suggestion.',
+      hasAccepted: 'A créé la question.',
     },
     commentCard: {
       comment: 'Commentaire',
@@ -1025,11 +1082,21 @@ export const FR = {
       deny: 'Annuler',
       accept: 'Confirmer',
       textArea: 'Réponse à {{}} (facultatif)',
-      archivedComment: 'Le commentaire a bien été archivé',
-      hasArchivedComment: 'La commentaire a bien été archivé.',
+      commentArchived: 'Le commentaire a bien été archivé',
+      hasArchivedComment: 'A archivé ce commentaire.',
       concerningQuestion: 'sur la question',
       archive: 'Archiver',
       seeQuestion: 'Voir la question',
+    },
+    placeholder: {
+      pendingTitle: 'Aucune question ou commentaire en attente',
+      pendingSubtitle: `Vous avez traité l'ensemble des retours de vos utilisateurs !`,
+      archivedTitle: 'Aucune question ou commentaire archivé(e)',
+      archivedSubtitle: `Vous n'avez archivé aucun retour de vos utilisateurs`,
+      allTitle: `Aucune question ou commentaire`,
+      allSubtitle: `Vos utilisateurs n'ont fait aucun retour pour l'instant`,
+      emptySearchTitle: `Aucun résultat ne correspond aux filtres sélectionnés.`,
+      emptySearchSubtitle: `Essayez avec d'autres filtres`,
     },
     modal: {
       cancel: 'Annuler',
@@ -1052,5 +1119,8 @@ export const FR = {
   charts: {
     scoreLabel: 'Score (%)',
     timeLabel: 'Période',
+    answerCountLabel: 'Nombre de questions répondues',
+    collaborationCountLabel: 'Nombre de contributions',
+    answeredQuestions: 'Questions répondues',
   },
 };

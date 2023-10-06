@@ -1,20 +1,11 @@
 <div class="header-panel">
-  <img class="me-4" [src]="EmojiName.ChartIncreasing | emoji" />
-  <h1 data-cy="leadStatisticsTitle" class="d-inline-block">{{ I18ns.statistics.title }}</h1>
+  <img [src]="EmojiName.ChartIncreasing | emoji" height="32" />
+  <h1 data-cy="leadStatisticsTitle">{{ I18ns.statistics.title }}</h1>
 </div>
-<!-- <alto-tabs
+<alto-tabs
   class="mb-4 d-block fw-bold"
   (tabChanged)="tabChange($event)"
-  [data]="[
-    { label: I18ns.statistics.globalEngagement.title, value: 1 },
-    { label: I18ns.statistics.globalPerformance.navbarTitle, value: 2 },
-    { label: I18ns.statistics.perTeams.title, value: 3 }
-  ]"
+  [data]="tabs"
+  [selectedValue]="selectedTab"
 ></alto-tabs>
-<span [ngSwitch]="activeTab">
-  <alto-statistics-global-engagement *ngSwitchCase="1"></alto-statistics-global-engagement>
-  <alto-statistics-global-performance *ngSwitchCase="2"></alto-statistics-global-performance>
-  <alto-statistics-per-teams *ngSwitchCase="3"></alto-statistics-per-teams>
-</span> -->
-
-<alto-statistics-global-performance></alto-statistics-global-performance>
+<router-outlet> </router-outlet>

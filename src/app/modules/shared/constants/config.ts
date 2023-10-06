@@ -12,6 +12,9 @@ export const xAxisDatesOptions: any = {
   axisPointer: {
     type: 'line',
   },
+  axisTick: { show: false },
+  axisLine: { show: false },
+  nameTextStyle: { fontWeight: 600, fontFamily: 'PlusJakartaSans' },
 };
 
 export const yAxisScoreOptions: any = {
@@ -25,6 +28,12 @@ export const yAxisScoreOptions: any = {
   axisLabel: {
     formatter: '{value}',
   },
+  nameTextStyle: { fontWeight: 600, fontFamily: 'PlusJakartaSans' },
+};
+
+export const legendOptions: any = {
+  show: true,
+  textStyle: { color: '#667085' },
 };
 
 // ! DEPRECATED for V3.2

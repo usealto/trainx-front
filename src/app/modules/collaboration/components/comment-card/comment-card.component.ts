@@ -32,7 +32,7 @@ export class CommentCardComponent {
   ) {}
 
   archiveComment(): void {
-    const fullname = `${this.comment?.createdByUser.firstname} ${this.comment?.createdByUser.lastname}`;
+    const fullname = `${this.comment?.author.firstname} ${this.comment?.author.lastname}`;
 
     const modalRef = this.modalService.open(CollaborationModalComponent, { centered: true, size: 'md' });
 
@@ -64,7 +64,7 @@ export class CommentCardComponent {
           modalRef.close();
           this.refresh.emit(true);
           this.toastService.show({
-            text: I18ns.collaboration.commentCard.hasArchivedComment,
+            text: I18ns.collaboration.commentCard.commentArchived,
             type: 'success',
           });
         }),

@@ -1,6 +1,8 @@
 # AssessmentFront
 
-[![Tests CI](https://github.com/usealto/assessment-front/actions/workflows/node.js.yml/badge.svg)](https://github.com/usealto/assessment-front/actions/workflows/node.js.yml)
+[![Tests CI](https://github.com/usealto/assessment-front/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/usealto/assessment-front/actions/workflows/unit-tests.yml)
+
+[![Cypress Tests](https://github.com/usealto/assessment-front/actions/workflows/e2e-tests.yml/badge.svg)](https://github.com/usealto/assessment-front/actions/workflows/e2e-tests.yml)
 
 == With Angular 15 and VS Code, you need this version of Node ==
 
@@ -89,7 +91,7 @@ Merge `develop` branch into `admin`
 
 - Per default, back-end send us scores in decimal nor in percentage (exemple: 0.88 instead of 88). Make sure to use directly percente pipe.
 - To get variation between percentages: we take only differences (exemple: 10% and 20%, the variation will be +10%).
-- To get variation between numbers: We use this formula: ( A - B) / A (exemple: (20 - 10) / 10 that give us +100% of variation).
+- To get variation between numbers: We use this formula: ( A - B) / A (exemple: (20 - 10) / 10 that give us +100% of variation). **Available in score.service getProgression**
 - We try to put maximum of calculations in the backend to provide any errors of "manual" calculations.
 - During testing, make sure all cases are tested and sounds good.
 - As much as you can, use score/stats services to help you.

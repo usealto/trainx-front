@@ -9,7 +9,7 @@
   [(ngModel)]="selectedItems"
   [searchable]="false"
   (change)="selectChange.emit(selectedItems)"
-  [class]="position"
+  [dropdownPosition]="position"
   [appendTo]="appendTo"
   #select
 >

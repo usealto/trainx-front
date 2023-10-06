@@ -112,6 +112,24 @@ const routes: Routes = [
     canActivateChild: [AuthGuard],
   },
   {
+    path: '',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: AltoRoutes.noAccess,
+        component: NoWebAccessComponent,
+      },
+      {
+        path: AltoRoutes.noCompany,
+        component: NoCompanyComponent,
+      },
+      {
+        path: AltoRoutes.noTeam,
+        component: NoTeamComponent,
+      },
+    ],
+  },
+  {
     path: AltoRoutes.admin,
     loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule),
     canActivate: [AuthGuard],
@@ -126,18 +144,6 @@ const routes: Routes = [
     component: JwtComponent,
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
-  },
-  {
-    path: AltoRoutes.noAccess,
-    component: NoWebAccessComponent,
-  },
-  {
-    path: AltoRoutes.noCompany,
-    component: NoCompanyComponent,
-  },
-  {
-    path: AltoRoutes.noTeam,
-    component: NoTeamComponent,
   },
   {
     path: AltoRoutes.noSmallScreen,

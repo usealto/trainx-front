@@ -17,6 +17,8 @@ describe('L/Teams Members Section', () => {
         cy.get('.ng-dropdown-panel > .ng-dropdown-panel-items > div > .ng-option').first().click();
       });
 
+    cy.wait(200);
+
     cy.get('[data-cy="memberTeamName"]').first().should('have.text', ' Manager ');
   });
 });

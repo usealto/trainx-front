@@ -1,6 +1,6 @@
-<div class="header-panel d-flex align-items-center">
-  <img class="me-4" [src]="Emoji.BustsInSilhouette | emoji" />
-  <h1 data-cy="leadTeamTitle" class="d-inline-block">{{ I18ns.leadTeam.title }}</h1>
+<div class="header-panel">
+  <img [src]="Emoji.BustsInSilhouette | emoji" height="32" />
+  <h1 data-cy="leadTeamTitle">{{ I18ns.leadTeam.title }}</h1>
 </div>
 
 <!-- TEAMS -->
@@ -12,7 +12,8 @@
     <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" /> {{ I18ns.leadTeam.teams.title }}
   </h2>
   <p class="mb-5 alto-grey">{{ I18ns.leadTeam.teams.subtitle }}</p>
-  <ng-container *ngIf="paginatedTeams.length > 0; else noTeams">
+
+  <alto-placeholder-manager [status]="teamsDataStatus">
     <div class="table-panel">
       <table class="table team-table">
         <thead>
@@ -43,7 +44,8 @@
             </td>
             <td class="w-20 text-start">
               <div *ngIf="getTeamUsersCount(team.id) !== 0">
-                {{ I18ns.leadTeam.teams.table.users | plural : getTeamUsersCount(team.id) }} membres
+                {{ I18ns.leadTeam.teams.table.users | plural : getTeamUsersCount(team.id) }}
+                {{ I18ns.shared.members }}
               </div>
               <div *ngIf="getTeamUsersCount(team.id) === 0">
                 {{ I18ns.leadTeam.teams.table.noUsers }}
@@ -77,9 +79,8 @@
         [page]="teamsPage"
       ></alto-pagination>
     </div>
-  </ng-container>
-  <ng-template #noTeams>
-    <div class="nodata-placeholder text-center">
+
+    <div class="nodata-placeholder text-center" noData>
       <img [src]="Emoji.Eyes | emoji" height="24" />
       <p class="mt-3">{{ I18ns.leadTeam.teams.table.placeholderTitle }}</p>
       <span class="mt-3 d-block">{{ I18ns.leadTeam.teams.table.placeholderSubtitle }}</span>
@@ -87,7 +88,7 @@
         <i class="bi bi-plus-lg"></i>{{ I18ns.leadTeam.createTeam }}
       </button>
     </div>
-  </ng-template>
+  </alto-placeholder-manager>
 </div>
 
 <!-- MEMBERS -->
@@ -108,26 +109,24 @@
   <p class="alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
 </div>
 
-<div class="panel mb-5">
-  <div class="row align-items-start">
-    <div class="col border-end d-flex">
-      <alto-icon-badge [size]="4" icon="bi bi-people-fill" class="me-4"></alto-icon-badge>
-      <div class="d-inline-block">
-        <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.total }}</p>
-        <h1 class="mb-0">{{ absoluteUsersCount }}</h1>
-      </div>
+<div class="panel mb-5 align-items-center">
+  <div class="border-end">
+    <alto-icon-badge [size]="4" icon="bi bi-people-fill" class="me-4"></alto-icon-badge>
+    <div>
+      <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.total }}</p>
+      <h1 class="mb-0">{{ absoluteUsersCount }}</h1>
     </div>
-    <div class="col d-flex second-col">
-      <alto-icon-badge [size]="4" class="me-4" icon="bi-reply-all-fill"></alto-icon-badge>
+  </div>
+  <div class="second-col">
+    <alto-icon-badge [size]="4" class="me-4" icon="bi-reply-all-fill"></alto-icon-badge>
 
-      <div class="d-inline-block flex-grow-1">
-        <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
-        <h1 class="mb-0 d-inline-block">{{ getTotalQuestions(usersQuestionCount.size) }}</h1>
-        <alto-progression-badge
-          class="float-end"
-          [score]="getPercentageQuestions(usersQuestionCount.size)"
-        ></alto-progression-badge>
-      </div>
+    <div class="flex-grow-1">
+      <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
+      <h1 class="mb-0 d-inline-block">{{ usersTotalQuestions }}</h1>
+      <alto-progression-badge
+        class="float-end"
+        [score]="usersTotalQuestionsProgression"
+      ></alto-progression-badge>
     </div>
   </div>
 </div>
@@ -163,7 +162,7 @@
   </div>
 </div>
 
-<ng-container *ngIf="paginatedUsers.length > 0; else noUsers">
+<alto-placeholder-manager [status]="usersDataStatus">
   <div class="table-panel">
     <table class="table members-table">
       <thead>
@@ -186,7 +185,7 @@
       <tbody>
         <tr *ngFor="let user of paginatedUsers" class="align-middle" data-cy="companyMembersTable">
           <td>
-            <alto-profile-card data-cy="profileCard" [user]="user"></alto-profile-card>
+            <alto-profile-card data-cy="profileCard" [user]="user.user"></alto-profile-card>
           </td>
           <td>
             <span data-cy="memberTeamName" class="alto-badge" [style]="user.teamId || '' | teamColor">
@@ -194,7 +193,7 @@
             </span>
           </td>
           <td class="text-center">
-            <ng-container *ngIf="user.score; else elseTemplate">
+            <ng-container *ngIf="(user.totalGuessesCount || 0) > 0; else elseTemplate">
               <span data-cy="progressBadge" class="alto-score" [class]="(user.score || 0) * 100 | pillColor">
                 {{ user.score | percent }}
               </span>
@@ -204,10 +203,12 @@
             </ng-template>
           </td>
           <td>
-            {{ getQuestionsByUser(user.id)[0] }}
+            <span class="w-10 d-inline-block">
+              {{ user.totalGuessesCount }}
+            </span>
             <alto-progression-badge
               class="d-inline-block ms-3"
-              [score]="getQuestionsByUser(user.id)[2]"
+              [score]="getQuestionsByUser(user.id, user.totalGuessesCount)"
             ></alto-progression-badge>
           </td>
           <td>
@@ -229,9 +230,8 @@
       [page]="usersPage"
     ></alto-pagination>
   </div>
-</ng-container>
-<ng-template #noUsers>
-  <div *ngIf="!isFilteredUsers" class="nodata-placeholder text-center">
+
+  <div *ngIf="!isFilteredUsers" class="nodata-placeholder text-center" noData>
     <img [src]="Emoji.Eyes | emoji" height="24" />
     <p class="mt-3">{{ I18ns.leadTeam.members.table.placeholderTitle }}</p>
     <span class="mt-3 d-block">{{ I18ns.leadTeam.members.table.placeholderSubtitle }}</span>
@@ -239,7 +239,7 @@
       <i class="bi bi-plus-lg"></i>{{ I18ns.leadTeam.createTeam }}
     </button>
   </div>
-  <div *ngIf="isFilteredUsers" class="nodata-placeholder text-center">
+  <div *ngIf="isFilteredUsers" class="nodata-placeholder text-center" noResult>
     <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" />
     <p class="mt-3">{{ I18ns.shared.noData }}</p>
     <span class="mt-3 d-block">{{ I18ns.shared.noDataSubtitle }}</span>
@@ -248,4 +248,4 @@
       {{ I18ns.shared.resetFilters }}
     </button>
   </div>
-</ng-template>
+</alto-placeholder-manager>

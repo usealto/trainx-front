@@ -20,11 +20,12 @@ describe('L/Programs Questions Tab', () => {
   });
 
   it('Searches the collected question by its title', () => {
+    cy.intercept('GET', '/v1/questions?tagIds=&programIds=*').as('fullQuestionList');
     cy.get('[data-cy="selectedTab"]').eq(1).click();
 
-    cy.get('[data-cy="searchFilter"]').type(`${questionTitle}{enter}`);
+    cy.wait('@fullQuestionList').wait(100);
 
-    cy.wait(500);
+    cy.get('[data-cy="searchFilter"]').type(`${questionTitle}{enter}`);
 
     cy.get('[data-cy="questionsList"]').should('contain', questionTitle);
   });

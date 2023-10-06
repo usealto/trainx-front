@@ -1,0 +1,87 @@
+<div class="table-panel">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col" class="w-10">
+          {{
+            type === 'team' ? I18ns.statistics.perTeams.table.team : I18ns.statistics.perTeams.table.member
+          }}
+        </th>
+        <th scope="col" class="w-5 text-center">{{ I18ns.statistics.perTeams.table.globalScore }}</th>
+        <th scope="col" class="w-5 text-center">{{ I18ns.statistics.perTeams.table.answeredQuestions }}</th>
+        <th scope="col" class="w-5 text-center">{{ I18ns.statistics.perTeams.table.comments }}</th>
+        <th scope="col" class="w-5 text-center">{{ I18ns.statistics.perTeams.table.suggestedQuestions }}</th>
+        <th scope="col" class="w-15">{{ I18ns.statistics.perTeams.table.leastMasteredTags }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of displayedData" class="align-middle">
+        <td>
+          <span *ngIf="type === 'team'" class="alto-badge" [style]="item.team?.id | teamColor">
+            {{ item.team?.name }}
+          </span>
+          <div class="user-profile" *ngIf="type === 'user'">
+            <alto-img-badge [user]="item.owner" [size]="24" class="d-inline-block"></alto-img-badge>
+            <span class="fw-medium fs-7 alto-text">
+              {{ item.owner?.firstname + ' ' + item.owner?.lastname }}
+            </span>
+          </div>
+        </td>
+        <td class="text-center">
+          <span class="alto-score" [class]="(item.globalScore || 0) * 100 | pillColor"
+            >{{ item.globalScore | percent }}
+          </span>
+        </td>
+        <td class="alto-grey text-center">
+          <ng-container *ngIf="item.answeredQuestionsCount > 0; else noGuess">
+            {{ item.answeredQuestionsCount }}
+            <alto-progression-badge
+              class="ms-3 d-inline-block"
+              [score]="item.answeredQuestionsProgression"
+            ></alto-progression-badge>
+          </ng-container>
+          <ng-template #noGuess>
+            {{ I18ns.statistics.perTeams.table.noGuess }}
+          </ng-template>
+        </td>
+        <td class="alto-grey text-center">
+          <ng-container *ngIf="item.commentsCount > 0; else noComments">
+            {{ item.commentsCount }}
+            <alto-progression-badge
+              class="ms-3 d-inline-block"
+              [score]="item.commentsProgression"
+            ></alto-progression-badge>
+          </ng-container>
+          <ng-template #noComments>
+            {{ I18ns.statistics.perTeams.table.noComments }}
+          </ng-template>
+        </td>
+        <td class="alto-grey text-center">
+          <ng-container *ngIf="item.submittedQuestionsCount > 0; else noSuggestion">
+            {{ item.submittedQuestionsCount }}
+            <alto-progression-badge
+              class="ms-3 d-inline-block"
+              [score]="item.submittedQuestionsProgression"
+            ></alto-progression-badge>
+          </ng-container>
+          <ng-template #noSuggestion>
+            {{ I18ns.statistics.perTeams.table.noSuggestion }}
+          </ng-template>
+        </td>
+        <td>
+          <alto-colored-pill-list
+            [textLimit]="15"
+            [data]="item.leastMasteredTags | slice : 0 : 3"
+          ></alto-colored-pill-list>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <alto-pagination
+    class="mx-4 d-block"
+    [collectionSize]="data.length"
+    [pageSize]="pageSize"
+    [page]="page"
+    (pageChange)="paginate($event)"
+  ></alto-pagination>
+</div>

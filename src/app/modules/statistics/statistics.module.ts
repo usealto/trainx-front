@@ -12,6 +12,7 @@ import { StatisticsComponent } from './components/statistics/statistics.componen
 import { StatisticsRoutingModule } from './statistics-routing.module';
 import { ChartsModule } from '../charts/charts.module';
 import { TitleCasePipe } from '@angular/common';
+import { PerTeamsTableComponent } from './components/statistics-per-teams/per-teams-table/per-teams-table.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { TitleCasePipe } from '@angular/common';
     PerformanceByThemesComponent,
     PerformanceTeamsTableComponent,
     PerformanceQuestionsTableComponent,
+    PerTeamsTableComponent,
   ],
   imports: [CommonModule, StatisticsRoutingModule, ChartsModule, SharedModule],
   providers: [TitleCasePipe],

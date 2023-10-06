@@ -23,7 +23,10 @@ export class TeamColorPipe implements PipeTransform {
   ];
 
   @memoize()
-  transform(id: string): string {
+  transform(id?: string): string {
+    if(!id) {
+      return `background-color: ${this.colorCodes[0].bg}; color: ${this.colorCodes[0].color}`;
+    }
     const num = this.extractNumber(id);
     return `background-color: ${this.colorCodes[num].bg}; color: ${this.colorCodes[num].color}`;
   }

@@ -7,6 +7,7 @@ import {
   GetTeamsStatsRequestParams,
   GetUsersStatsRequestParams,
   ProgramRunApi,
+  ProgramRunDtoApi,
   ProgramRunsApiService,
   QuestionStatsDtoApi,
   ScoreByTypeEnumApi,
@@ -63,6 +64,7 @@ export class ScoresRestService {
         respondsRegularlyThreshold: 0.42,
         userId: id,
         sortBy: sortBy,
+        itemsPerPage: 1000,
       } as GetUsersStatsRequestParams)
       .pipe(map((r) => r.data || []));
   }
@@ -98,7 +100,7 @@ export class ScoresRestService {
       .pipe(map((r) => r.data || []));
   }
 
-  getTeamsStats(duration: ScoreDuration, isProgression = false): Observable<TeamStatsDtoApi[]> {
+  getTeamsStats(duration: ScoreDuration, isProgression = false, sortBy?: string): Observable<TeamStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
 
@@ -115,6 +117,7 @@ export class ScoresRestService {
 
     return this.statsApi
       .getTeamsStats({
+        sortBy: sortBy,
         page: 1,
         itemsPerPage: 400,
         from: dateAfter,
@@ -206,7 +209,7 @@ export class ScoresRestService {
     );
   }
 
-  getCompletion(filt: ScoreFilters, isProgression: boolean): Observable<ProgramRunApi[]> {
+  getCompletion(filt: ScoreFilters, isProgression: boolean): Observable<ProgramRunDtoApi[]> {
     const par = {
       page: 1,
       itemPerPage: 300,
@@ -226,6 +229,6 @@ export class ScoresRestService {
       par.createdBefore = this.service.getYesterday();
     }
 
-    return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunApi[])));
+    return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunDtoApi[])));
   }
 }

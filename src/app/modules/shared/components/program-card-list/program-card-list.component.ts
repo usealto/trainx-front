@@ -11,6 +11,7 @@ import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.
 import { AltoRoutes } from '../../constants/routes';
 import { ScoresRestService } from '../../services/scores-rest.service';
 import { ScoresService } from '../../services/scores.service';
+import { PlaceholderDataStatus } from '../../models/placeholder.model';
 
 @UntilDestroy()
 @Component({
@@ -43,6 +44,7 @@ export class ProgramCardListComponent implements OnInit {
   displayToggle = false;
   isSearchResult = false;
   selectedItems: ProgramDtoApi[] = [];
+  ongoingProgramsDataStatus: PlaceholderDataStatus = 'good';
 
   constructor(
     private readonly scoreService: ScoresService,
@@ -112,12 +114,16 @@ export class ProgramCardListComponent implements OnInit {
     });
     this.count = this.programsDisplay.length;
     this.isSearchResult = true;
+    if (this.count === 0 && this.isSearchResult === true) {
+      this.ongoingProgramsDataStatus = 'noResult';
+    }
   }
 
   resetFilters() {
     this.filterPrograms((this.programFilters = {}));
     this.selectedItems = [];
     this.isSearchResult = false;
+    this.ongoingProgramsDataStatus = 'good';
   }
 
   getPrograms() {
@@ -146,6 +152,8 @@ export class ProgramCardListComponent implements OnInit {
           this.programs = p.map((x) => x.program);
           this.programsDisplay = this.programs;
           this.count = this.programs.length;
+          this.ongoingProgramsDataStatus = this.count === 0 ? 'noData' : 'good';
+
           this.isSearchResult = false;
           p.forEach((x) => {
             this.programsScores.set(x.program.id, x.score ?? 0);

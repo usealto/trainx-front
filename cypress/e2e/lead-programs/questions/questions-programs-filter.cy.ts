@@ -22,6 +22,7 @@ describe('L/Programs Questions Tab', () => {
 
     cy.get('[data-cy="programPriority"]').click();
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
+    cy.get('[data-cy="programCreateNext"]').should('be.enabled');
 
     cy.get('[data-cy="programCreateNext"]').click();
 
@@ -49,7 +50,12 @@ describe('L/Programs Questions Tab', () => {
     cy.get('[data-cy="questionsProgramFilter"]').click();
 
     cy.get('.ng-dropdown-header > input').clear();
-    cy.get('.ng-dropdown-header > input').type(`${newProg}{enter}`).wait(500);
+
+    cy.intercept('GET', '/v1/questions?programIds=*').as('questionSearch');
+
+    cy.get('.ng-dropdown-header > input').type(`${newProg}{enter}`);
+
+    cy.wait('@questionSearch').wait(100);
 
     cy.get('[data-cy="questionEditPen"]').first().click();
 
@@ -67,6 +73,16 @@ describe('L/Programs Questions Tab', () => {
 
     cy.get('[data-cy="selectedTab"]').eq(1).click();
     cy.get('[data-cy="deleteQuestionTrash"]').first().click();
+    cy.intercept('delete', 'v1/questions/**').as('questionDelete');
     cy.get('[data-cy="buttonDeleteQuestion"] ').click();
+    cy.wait('@questionDelete');
   });
+
+  // it.only('test', () => {
+  //   cy.intercept('DELETE', 'v1/questions/**').as('questionDelete');
+  //   cy.get('[data-cy="selectedTab"]').eq(1).click();
+  //   cy.get('[data-cy="deleteQuestionTrash"]').first().click();
+  //   cy.get('[data-cy="buttonDeleteQuestion"] ').click();
+  //   cy.wait('@questionDelete');
+  // });
 });

@@ -1,25 +1,23 @@
-<div class="header d-flex flex-row">
-  <div class="d-flex flex-row align-items-center">
-    <alto-icon-badge icon="bi-chat" [color]="'badge-double-primary'"></alto-icon-badge>
+<div class="header">
+  <div class="header-container">
+    <div>
+      <alto-icon-badge icon="bi-chat" [color]="'badge-double-primary'"></alto-icon-badge>
+    </div>
 
-    <div class="m-sm-2">
-      <span class="fw-semibold text-blue">{{ I18ns.collaboration.commentCard.comment }}</span>
+    <div class="header-text">
+      <span class="fw-medium text-blue">{{ I18ns.collaboration.commentCard.comment }}</span>
       <div>
         <span class="contribution-text d-inline-block">
-          {{ I18ns.collaboration.commentCard.concerningQuestion }} "
-        </span>
-        <!-- <span class="fw-semibold">{{ comment?.question?.title }}</span
-      >" -->
-        <span
-          class="contribution-text fw-semibold d-inline-block text-truncate align-bottom fs-7"
-          style="min-width: calc(100% - 200px)"
-          >{{ comment?.question?.title }}</span
-        >"
+          {{ I18ns.collaboration.commentCard.concerningQuestion }} </span
+        >&nbsp;
+        <span class="contribution-text fw-medium d-inline-block text-truncate align-bottom fs-7"
+          >"{{ comment?.question?.title }}"</span
+        >
+      </div>
+      <div class="alto-badge" [ngClass]="comment?.isRead ? 'gray' : 'orange'">
+        {{ comment?.isRead ? I18ns.collaboration.comment.read : I18ns.collaboration.comment.unread }}
       </div>
     </div>
-  </div>
-  <div class="align-self-center alto-badge" [ngClass]="comment?.isRead ? 'gray' : 'orange'">
-    {{ comment?.isRead ? I18ns.collaboration.comment.read : I18ns.collaboration.comment.unread }}
   </div>
 </div>
 
@@ -32,18 +30,39 @@
 
     <div class="text-content">
       <div class="author">
-        <span class="fw-semibold"
-          >{{ comment?.createdByUser?.firstname }}
-          {{ comment?.createdByUser?.lastname }}
+        <span [ngClass]="comment?.createdByUser ? 'fw-semibold' : 'light-text'"
+          >{{
+            comment?.createdByUser
+              ? comment?.createdByUser?.firstname + ' ' + comment?.createdByUser?.lastname
+              : I18ns.shared.deletedUsername
+          }}
         </span>
         <span class="date-text">{{ comment?.createdAt | dateLabel }}</span>
       </div>
 
       <div>
-        <span class="light-text">
-          {{ comment?.text }}
-        </span>
+        <span class="light-text">"{{ comment?.text }}"</span>
       </div>
+    </div>
+  </div>
+
+  <div *ngIf="comment?.isRead" class="text-container">
+    <alto-img-badge [size]="24" [user]="comment?.updatedByUser"></alto-img-badge>
+
+    <div class="text-content">
+      <div class="author">
+        <span [ngClass]="comment?.updatedByUser ? 'fw-semibold' : 'light-text'"
+          >{{
+            comment?.updatedByUser
+              ? comment?.updatedByUser?.firstname + ' ' + comment?.updatedByUser?.lastname
+              : I18ns.shared.deletedUsername
+          }}
+        </span>
+        <span class="date-text">{{ comment?.updatedAt | dateLabel }}</span>
+      </div>
+
+      <span class="light-text">{{ I18ns.collaboration.commentCard.hasArchivedComment }}</span>
+      <span *ngIf="comment?.response" class="light-text">"{{ comment?.response }}"</span>
     </div>
   </div>
 </div>
@@ -58,16 +77,16 @@
 
     <a
       class="button gray"
-      href="{{
+      [routerLink]="
         '/' +
-          AltoRoutes.lead +
-          '/' +
-          AltoRoutes.collaboration +
-          '/' +
-          AltoRoutes.collaborationSeeQuestion +
-          '/' +
-          comment?.questionId
-      }}"
+        AltoRoutes.lead +
+        '/' +
+        AltoRoutes.collaboration +
+        '/' +
+        AltoRoutes.collaborationSeeQuestion +
+        '/' +
+        comment?.questionId
+      "
     >
       <i class="bi bi-eye"></i>
       {{ I18ns.collaboration.commentCard.seeQuestion }}
