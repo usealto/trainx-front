@@ -277,14 +277,11 @@ export class CreateProgramsComponent implements OnInit {
     if (!this.isEdit) {
       if (this.programForm.valid) {
         this.saveProgram();
-        this.displayToast();
+        this.displayToast(1);
         this.currentStep = num;
-      } else {
-        //? display message that say that the form miss informations
-        console.log('missing information in form')
       }
     } else {
-      if (this.currentStep === 2) {
+      if (num === 2) {
         this.selectedTags = this.programForm.value?.tags ?? [];
         this.getQuestions();
         this.getAssociatedQuestions();
@@ -333,13 +330,14 @@ export class CreateProgramsComponent implements OnInit {
     }
   }
 
-  displayToast() {
-    if (this.isEdit === false) {
-      this.toastService.show({
-        text: this.replaceInTranslationPipe.transform(I18ns.programs.forms.step3.validateCreate),
-        type: 'success',
-      });
-    }
+  displayToast(step: number) {
+    this.toastService.show({
+      text:
+        step === 1
+          ? this.replaceInTranslationPipe.transform(I18ns.programs.forms.step3.createdToast)
+          : this.replaceInTranslationPipe.transform(I18ns.programs.forms.step3.validatedToast),
+      type: 'success',
+    });
   }
 
   delete() {
@@ -374,6 +372,7 @@ export class CreateProgramsComponent implements OnInit {
 
   validateProgram() {
     this.isFormSaved = true;
+    this.displayToast(2);
   }
 
   cancel() {
