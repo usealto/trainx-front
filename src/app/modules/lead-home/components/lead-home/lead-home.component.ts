@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ChallengeDtoApi,
-  ChallengeDtoApiTypeEnumApi,
   QuestionSubmittedStatusEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
@@ -14,7 +13,6 @@ import { Observable, combineLatest, map, of, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { ChallengesRestService } from 'src/app/modules/challenges/services/challenges-rest.service';
 import { ETypeValue } from 'src/app/modules/collaboration/components/lead-collaboration/lead-collaboration.component';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -97,7 +95,6 @@ export class LeadHomeComponent implements OnInit {
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
-    private readonly challengesRestService: ChallengesRestService,
     private readonly userService: UsersRestService,
     private readonly statisticsServices: StatisticsService,
     public readonly teamStore: TeamStore,
@@ -114,21 +111,20 @@ export class LeadHomeComponent implements OnInit {
       this.questionsSubmittedRestService.getQuestionsCount({
         status: QuestionSubmittedStatusEnumApi.Submitted,
       }),
-      this.challengesRestService.getChallenges({ itemsPerPage: 40, sortBy: 'endDate:desc' }),
     ])
       .pipe(
-        tap(([comments, submittedQuestionsCount, challenges]) => {
+        tap(([comments, submittedQuestionsCount]) => {
           this.commentsCount = comments.length;
           this.commentsDataStatus = comments.length === 0 ? 'noData' : 'good';
           this.questionsCount = submittedQuestionsCount;
           this.questionsDataStatus = submittedQuestionsCount === 0 ? 'noData' : 'good';
 
-          this.challengesByTeam = challenges
-            .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByTeam)
-            .slice(0, 5);
-          this.challengesByUser = challenges
-            .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByUser)
-            .slice(0, 5);
+          // this.challengesByTeam = challenges
+          //   .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByTeam)
+          //   .slice(0, 5);
+          // this.challengesByUser = challenges
+          //   .filter((c) => c.type === ChallengeDtoApiTypeEnumApi.ByUser)
+          //   .slice(0, 5);
         }),
         tap(() => this.getAverageScore(this.globalFilters.duration as ScoreDuration)),
         tap(() => this.getProgramsStats(this.globalFilters)),
