@@ -72,13 +72,13 @@ export class UserHomeComponent implements OnInit {
         tap((guesses = []) => {
           const reducedGuesses = [] as GuessDtoApi[];
           guesses.forEach((guess) => {
-            if (!reducedGuesses.some((g) => g.createdBy === guess.createdBy)) {
+            if (!reducedGuesses.some((g) => g.author === guess.author)) {
               reducedGuesses.push(guess);
             }
           });
           this.continuousSessionUsers = reducedGuesses.reduce((users, guess) => {
-            if (guess.createdByUser) {
-              users.push(guess.createdByUser);
+            if (guess.author) {
+              users.push(guess.author);
             }
             return users;
           }, [] as UserLightDtoApi[]);
