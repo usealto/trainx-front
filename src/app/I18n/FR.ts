@@ -393,7 +393,7 @@ export const FR = {
         teamFilter: 'Équipes',
         scoreEvolution: {
           title: 'Évolution du score de vos équipes',
-          subtitle: 'Evolution du niveau de maitrise global de vos équipes par tags/programmes',
+          subtitle: 'Évolution du score moyen de vos équipes dans le temps.',
           placeholderTitle: 'Aucune donnée à afficher pour le moment',
           placeholderSubtitle: 'Les équipes s’activent pour fournir les premiers résultats !',
         },
@@ -406,7 +406,7 @@ export const FR = {
         },
       },
       perThemePerformance: {
-        title: 'Performance par thèmatiques',
+        title: 'Performance par thématiques',
         subtitle: "Retrouvez une vue d'ensemble sur les résultats de vos équipes selon leurs thématiques.",
         filters: {
           tags: 'Tags',
