@@ -11,11 +11,9 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
-import { haveCompany } from './no-company.guard';
 import { noSmallScreen } from './no-small-screen.guard';
-import { haveTeam } from './no-team.guard';
 import { canActivateLead } from './roles.guard';
-import { canHaveWebAccess } from './web-access.guard';
+import { startup } from './startup.guard';
 
 const routes: Routes = [
   {
@@ -31,7 +29,7 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.user,
-        canActivate: [canHaveWebAccess, haveTeam, haveCompany],
+        canActivate: [startup],
         children: [
           { path: '', redirectTo: AltoRoutes.userHome, pathMatch: 'full' },
           {
@@ -57,7 +55,7 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.lead,
-        canActivate: [canActivateLead, haveTeam, haveCompany],
+        canActivate: [canActivateLead, startup],
         resolve: {
           appData: leadResolver,
         },
