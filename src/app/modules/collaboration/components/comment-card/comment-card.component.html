@@ -24,16 +24,16 @@
 <div class="content-container" [class.footer]="comment?.isRead">
   <div class="text-container">
     <div class="badge-with-connector">
-      <alto-img-badge [size]="24" [user]="comment?.createdByUser"></alto-img-badge>
+      <alto-img-badge [size]="24" [user]="comment?.author"></alto-img-badge>
       <div *ngIf="comment?.response" class="connector"></div>
     </div>
 
     <div class="text-content">
       <div class="author">
-        <span [ngClass]="comment?.createdByUser ? 'fw-semibold' : 'light-text'"
+        <span [ngClass]="comment?.author ? 'fw-semibold' : 'light-text'"
           >{{
-            comment?.createdByUser
-              ? comment?.createdByUser?.firstname + ' ' + comment?.createdByUser?.lastname
+            comment?.author
+              ? comment?.author?.firstname + ' ' + comment?.author?.lastname
               : I18ns.shared.deletedUsername
           }}
         </span>

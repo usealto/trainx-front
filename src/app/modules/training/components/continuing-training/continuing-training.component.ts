@@ -82,13 +82,13 @@ export class ContinuingTrainingComponent implements OnInit {
         tap((guesses = []) => {
           const reducedGuesses = [] as GuessDtoApi[];
           guesses.forEach((guess) => {
-            if (!reducedGuesses.some((g) => g.createdBy === guess.createdBy)) {
+            if (!reducedGuesses.some((g) => g.author?.id === guess.author?.id)) {
               reducedGuesses.push(guess);
             }
           });
           this.continuousSessionUsers = reducedGuesses.reduce((users, guess) => {
-            if (guess.createdByUser) {
-              return [...users, guess.createdByUser];
+            if (guess.author) {
+              return [...users, guess.author];
             }
             return users;
           }, [] as UserLightDtoApi[]);
