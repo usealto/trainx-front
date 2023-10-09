@@ -81,7 +81,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
         filter(({ scores }) => scores.length > 0),
         tap(({ scores }) => {
           const reducedScores = this.scoresService.reduceLineChartData(scores);
-          const aggregatedData = this.statisticsServices.transformDataToPoint(reducedScores[0]);
+          const aggregatedData = this.statisticsServices.transformDataToPointByCounts(reducedScores[0]);
           const labels = this.statisticsServices
             .formatLabel(
               aggregatedData.map((d) => d.x),
@@ -89,10 +89,10 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             )
             .map((s) => this.titleCasePipe.transform(s));
           const dataset = reducedScores.map((s) => {
-            const d = this.statisticsServices.transformDataToPoint(s);
+            const d = this.statisticsServices.transformDataToPointByCounts(s);
             return {
               label: s.label,
-              data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
+              data: d.map((d) => (d.y)),
             };
           });
 
