@@ -40,15 +40,14 @@
             *ngFor="let company of displayedCompanies">
             <td scope="row" 
               class="d-flex justify-content-between align-items-center">
-              <div class="col-10">
-                <a
-                  [routerLink]="['/', 'admin', 'companies', company.id, 'users']"
-                  routerLinkActive="menu-selected"
-                >
-                  <span class="fw-bolder alto-grey">{{ company.name }}</span>
-                  <p class="fw-lighter alto-grey smaller">Created {{ company.createdAt| date : 'fullDate' }}, by {{ company.createdByUser?.firstname }} {{company.createdByUser?.lastname}} </p>
-                </a>
-              </div>
+              <a
+                [routerLink]="['/', 'admin', 'companies', company.id, 'users']"
+                routerLinkActive="menu-selected"
+                class="col-10"
+              >
+                <span class="fw-bolder alto-grey">{{ company.name }}</span>
+                <p class="fw-lighter alto-grey smaller">Created {{ company.createdAt| date : 'fullDate' }}, by {{ company.createdByUser?.firstname }} {{company.createdByUser?.lastname}} </p>
+              </a>
               <div class="col-2 d-flex justify-content-end">
                 <a 
                 [routerLink]="['/','admin','companies', company.id]"
