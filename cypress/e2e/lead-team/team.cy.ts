@@ -12,28 +12,30 @@ describe('Lead Team', () => {
 
   describe('Teams section', () => {
     // TODO: Uncomment the following lines after fix the team deletion test.
-    // describe('Team creating', () => {
-    //   it('Should create a team', () => {
-    //     cy.get('[data-cy="createTeam"]').click();
-    //     cy.get('[data-cy="editLongnameInput"]').click().wait(3000).clear().type('NewTeam');
-    //     cy.get('[data-cy="editShortnameInput"]').click().wait(3000).clear().type('NT');
-    //     cy.get('[data-cy="btnSave"]').click();
-    //     cy.wait(5000);
+    //   const uuid = () => Cypress._.random(0, 1e6);
+    //   const id = uuid();
+    //   const testname = `testname${id}`;
+    //   describe('Team creating', () => {
+    //     it('Should create a team', () => {
+    //       cy.get('[data-cy="createTeam"]').click();
+    //       cy.get('[data-cy="editLongnameInput"]').click().wait(3000).clear().type(`${testname}`);
+    //       cy.get('[data-cy="btnSave"]').click();
+    //       cy.wait(5000);
+    //     });
     //   });
-    // });
-    // TODO: Find a way to delete a team that is not on the 1st page.
-    // describe('Team deleting', () => {
-    //   it('Should delete the team', () => {
-    //     // Delete the team
-    //     cy.visit('/l/teams');
-    //     cy.get('[data-cy="deleteNewTeam"]').should('be.visible').click();
-    //     cy.get('.row > :nth-child(2) > .btn').should('be.visible').click();
-    //     cy.wait(5000);
-    //     // check that the deleted team no longer exists.
-    //     cy.visit('/l/teams');
-    //     cy.get('[data-cy="deleteNewTeam"]').should('not.exist');
+    //   // TODO: Find a way to delete a team that is not on the 1st page.
+    //   describe('Team deleting', () => {
+    //     it('Should delete the team', () => {
+    //       // Delete the team
+    //       cy.visit('/l/teams');
+    //       cy.get(`[data-cy="delete${testname}"]`).should('be.visible').click();
+    //       cy.get('.row > :nth-child(2) > .btn').should('be.visible').click();
+    //       cy.wait(5000);
+    //       // check that the deleted team no longer exists.
+    //       cy.visit('/l/teams');
+    //       cy.get('[data-cy="deleteNewTeam"]').should('not.exist');
+    //     });
     //   });
-    // });
   });
 });
 
