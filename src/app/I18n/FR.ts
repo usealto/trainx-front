@@ -273,6 +273,7 @@ export const FR = {
       create: 'Créer un programme',
       edit: 'Éditer un programme',
       questionCount: 'Nombre de questions',
+      abortWarning: 'Si vous quittez ce formulaire vous perdrez tout vos changements.',
       step1: {
         title: 'Informations',
         subtitle: 'Informations générales du programme.',
@@ -326,7 +327,8 @@ export const FR = {
           'Récapitulatif des informations essentielles du programme avant de le partager à vos équipes.',
         summary: 'Récapitulatif',
         summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
-        validateCreate: 'Le nouveau programme a bien été ajouté',
+        createdToast: 'Votre programme a bien été créé',
+        validatedToast: 'Vous avez bien finalisé la création de votre programme',
         validate: 'Finaliser la création du programme',
       },
     },
