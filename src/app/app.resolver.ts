@@ -6,6 +6,11 @@ import { UsersRestService } from './modules/profile/services/users-rest.service'
 import { ProgramsRestService } from './modules/programs/services/programs-rest.service';
 import { TagsRestService } from './modules/programs/services/tags-rest.service';
 import { EmojiMap, emojiData } from './core/utils/emoji/data';
+import { CommentsRestService } from './modules/programs/services/comments-rest.service';
+import { QuestionsSubmittedRestService } from './modules/programs/services/questions-submitted-rest.service';
+import { QuestionSubmittedStatusEnumApi } from '@usealto/sdk-ts-angular';
+import { ScoresRestService } from './modules/shared/services/scores-rest.service';
+import { ScoreDuration } from './modules/shared/models/score.model';
 
 export const appResolver: ResolveFn<any> = () => {
   emojiData.forEach((d) => EmojiMap.set(d.id, d));
@@ -14,6 +19,18 @@ export const appResolver: ResolveFn<any> = () => {
     inject(TagsRestService).getTags(),
     inject(TeamsRestService).getTeams(),
     inject(UsersRestService).getMe(),
+  ]).pipe(take(1));
+};
+
+export const homeResolver: ResolveFn<any> = () => {
+  return combineLatest([
+    inject(UsersRestService).getUsers(),
+    inject(CommentsRestService).getUnreadComments(),
+    inject(QuestionsSubmittedRestService).getQuestionsCount({
+      status: QuestionSubmittedStatusEnumApi.Submitted,
+    }),
+    inject(ScoresRestService).getTeamsStats(ScoreDuration.Trimester),
+    inject(ScoresRestService).getTeamsStats(ScoreDuration.Trimester, true),
   ]).pipe(take(1));
 };
 

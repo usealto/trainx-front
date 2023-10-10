@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
-import { appResolver, leadResolver, programResolver, trainingResolver } from './app.resolver';
+import { appResolver, homeResolver, leadResolver, programResolver, trainingResolver } from './app.resolver';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { JwtComponent } from './layout/jwt/jwt.component';
 import { NoCompanyComponent } from './layout/no-company/no-company.component';
@@ -63,6 +63,9 @@ const routes: Routes = [
           { path: '', redirectTo: AltoRoutes.leadHome, pathMatch: 'full' },
           {
             path: AltoRoutes.leadHome,
+            resolve: {
+              appData: homeResolver,
+            },
             loadChildren: () => import('./modules/lead-home/lead-home.module').then((m) => m.LeadHomeModule),
           },
           {
