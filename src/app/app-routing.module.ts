@@ -14,6 +14,7 @@ import { AltoRoutes } from './modules/shared/constants/routes';
 import { noSmallScreen } from './no-small-screen.guard';
 import { canActivateLead } from './roles.guard';
 import { startup } from './startup.guard';
+import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
 
 const routes: Routes = [
   {
@@ -159,7 +160,7 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {})],
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: FlagBasedPreloadingStrategy })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

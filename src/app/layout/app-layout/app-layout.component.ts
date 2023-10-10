@@ -14,7 +14,7 @@ export class AppLayoutComponent implements OnInit {
       () => {
         document.getElementsByClassName('first-loader').item(0)?.remove();
       },
-      environment.production ? 500 : 0,
+      environment.production ? 500 : 500,
     );
   }
 

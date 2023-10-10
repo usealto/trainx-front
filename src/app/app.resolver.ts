@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-import { combineLatest, take } from 'rxjs';
+import { combineLatest, take, tap } from 'rxjs';
 import { TeamsRestService } from './modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from './modules/profile/services/users-rest.service';
 import { ProgramsRestService } from './modules/programs/services/programs-rest.service';
@@ -11,6 +11,7 @@ import { QuestionsSubmittedRestService } from './modules/programs/services/quest
 import { QuestionSubmittedStatusEnumApi } from '@usealto/sdk-ts-angular';
 import { ScoresRestService } from './modules/shared/services/scores-rest.service';
 import { ScoreDuration } from './modules/shared/models/score.model';
+import { ProgramsStore } from './modules/programs/programs.store';
 
 export const appResolver: ResolveFn<any> = () => {
   emojiData.forEach((d) => EmojiMap.set(d.id, d));
@@ -35,9 +36,7 @@ export const homeResolver: ResolveFn<any> = () => {
 };
 
 export const programResolver: ResolveFn<any> = () => {
-  return combineLatest([inject(UsersRestService).getUsers(), inject(ProgramsRestService).getPrograms()]).pipe(
-    take(1),
-  );
+  return combineLatest([inject(UsersRestService).getUsers()]).pipe(take(1));
 };
 
 export const trainingResolver: ResolveFn<any> = () => {
@@ -45,5 +44,15 @@ export const trainingResolver: ResolveFn<any> = () => {
 };
 
 export const leadResolver: ResolveFn<any> = () => {
-  return combineLatest([inject(UsersRestService).getUsers()]).pipe(take(1));
+  const progStore = inject(ProgramsStore);
+
+  return combineLatest([
+    inject(UsersRestService).getUsers(),
+    inject(ProgramsRestService).getPrograms(),
+    inject(ScoresRestService)
+      .getProgramsStats(ScoreDuration.All, false, {
+        sortBy: 'updatedAt:desc',
+      })
+      .pipe(tap((stats) => (progStore.programsInitCardList.value = stats))),
+  ]).pipe(take(1));
 };
