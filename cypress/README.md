@@ -1,6 +1,15 @@
 ## Install
 
-You need to have the project up and running on port 4200 ⇒ https://github.com/usealto/assessment-front/blob/develop/README.md
+You need to have the project up and running on port 4200 => [see README](https://github.com/usealto/assessment-front/blob/main/README.md#required)
+
+
+### Global Cypress Run
+
+In case you want to run all your tests at once and get a global picture you can use
+
+```jsx
+npm run cypress:run
+```
 
 ## Run Cypress
 
@@ -40,17 +49,7 @@ And there you go, you can run all your spec files manually just by clicking them
 
 ---
 
-### Global Run
-
-In case you want to run all your tests at once and get a global picture you can use
-
-```jsx
-npm run cypress:run
-```
-
 ## Write Cypress Tests
-
-### With details
 
 1. Run only one test at a time
 2. Use proper selectors
