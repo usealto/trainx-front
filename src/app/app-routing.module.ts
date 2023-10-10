@@ -3,19 +3,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { appResolver, leadResolver, programResolver, trainingResolver } from './app.resolver';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
+import { JwtComponent } from './layout/jwt/jwt.component';
+import { NoCompanyComponent } from './layout/no-company/no-company.component';
+import { NoSmallScreenComponent } from './layout/no-small-screen/no-small-screen.component';
+import { NoTeamComponent } from './layout/no-team/no-team.component';
+import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.component';
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
-import { canActivateLead } from './roles.guard';
-import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.component';
-import { canHaveWebAccess } from './web-access.guard';
-import { JwtComponent } from './layout/jwt/jwt.component';
-import { haveTeam } from './no-team.guard';
-import { NoCompanyComponent } from './layout/no-company/no-company.component';
-import { NoTeamComponent } from './layout/no-team/no-team.component';
-import { haveCompany } from './no-company.guard';
 import { noSmallScreen } from './no-small-screen.guard';
-import { NoSmallScreenComponent } from './layout/no-small-screen/no-small-screen.component';
+import { canActivateLead } from './roles.guard';
+import { startup } from './startup.guard';
 
 const routes: Routes = [
   {
@@ -31,7 +29,7 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.user,
-        canActivate: [canHaveWebAccess, haveTeam, haveCompany],
+        canActivate: [startup],
         children: [
           { path: '', redirectTo: AltoRoutes.userHome, pathMatch: 'full' },
           {
@@ -57,7 +55,7 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.lead,
-        canActivate: [canActivateLead, haveTeam, haveCompany],
+        canActivate: [canActivateLead, startup],
         resolve: {
           appData: leadResolver,
         },
@@ -73,6 +71,9 @@ const routes: Routes = [
               appData: programResolver,
             },
             loadChildren: () => import('./modules/programs/programs.module').then((m) => m.ProgramsModule),
+            data: {
+              preload: true,
+            },
           },
           {
             path: AltoRoutes.leadTeams,
@@ -154,14 +155,8 @@ const routes: Routes = [
     redirectTo: AltoRoutes.notFound,
   },
 ];
-
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, {
-      anchorScrolling: 'disabled',
-      scrollPositionRestoration: 'top',
-    }),
-  ],
+  imports: [RouterModule.forRoot(routes, {})],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

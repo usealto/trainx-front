@@ -10,7 +10,6 @@ import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
-import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { buildTime } from 'src/build-time';
 import { environment } from 'src/environments/environment';

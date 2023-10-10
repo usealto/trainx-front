@@ -1,7 +1,10 @@
-<span class="alto-badge" [class]="score | pillProgression">
-  <ng-container *ngIf="arrow === true"
-    ><span [innerHTML]="score | progressionPillArrow"></span>
-  </ng-container>
+<alto-placeholder-manager [status]="status">
+  <span class="alto-badge" [class]="score | pillProgression">
+    <ng-container *ngIf="arrow === true"
+      ><span [innerHTML]="score | progressionPillArrow"></span>
+    </ng-container>
 
-  <span class="fw-medium">{{ scoreDisplay(score) }}</span>
-</span>
+    <span class="fw-medium">{{ scoreDisplay(score) }}</span>
+  </span>
+  <span class="alto-badge" loading></span>
+</alto-placeholder-manager>

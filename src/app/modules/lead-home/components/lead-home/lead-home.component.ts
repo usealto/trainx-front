@@ -44,9 +44,9 @@ export class LeadHomeComponent implements OnInit {
   ScoreDuration = ScoreDuration;
   ScoreTypeEnum = ScoreTypeEnumApi;
   ETypeValue = ETypeValue;
-  programDataStatus: PlaceholderDataStatus = 'good';
+  programDataStatus: PlaceholderDataStatus = 'loading';
   isData = false;
-  chartDataStatus: PlaceholderDataStatus = 'good';
+  chartDataStatus: PlaceholderDataStatus = 'loading';
 
   userName = '';
 
@@ -59,22 +59,22 @@ export class LeadHomeComponent implements OnInit {
   scoreCount = 0;
 
   averageScore = 0;
-  averageScoreProgression = 0;
+  averageScoreProgression?: number;
 
   programsCount = 0;
   startedProgramsCount = 0;
   finishedProgramsCount = 0;
   averageFinishedPrograms = 0;
-  averageFinishedProgramsProgression = 0;
+  averageFinishedProgramsProgression?: number;
 
   guessCount = 0;
   expectedGuessCount = 0;
-  guessCountProgression = 0;
+  guessCountProgression?: number;
 
   commentsCount = 0;
-  commentsDataStatus: PlaceholderDataStatus = 'good';
+  commentsDataStatus: PlaceholderDataStatus = 'loading';
   questionsCount = 0;
-  questionsDataStatus: PlaceholderDataStatus = 'good';
+  questionsDataStatus: PlaceholderDataStatus = 'loading';
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
   //
   challengesByTeam: ChallengeDtoApi[] = [];
@@ -82,10 +82,10 @@ export class LeadHomeComponent implements OnInit {
   //
   teamsLeaderboard: { name: string; score: number }[] = [];
   teamsLeaderboardCount = 0;
-  teamsLeaderboardDataStatus: PlaceholderDataStatus = 'good';
+  teamsLeaderboardDataStatus: PlaceholderDataStatus = 'loading';
   usersLeaderboard: { name: string; score: number }[] = [];
   usersLeaderboardCount = 0;
-  usersLeaderboardDataStatus: PlaceholderDataStatus = 'good';
+  usersLeaderboardDataStatus: PlaceholderDataStatus = 'loading';
   topflopLoaded = false;
   chartOption: EChartsOption = {};
 
@@ -138,8 +138,10 @@ export class LeadHomeComponent implements OnInit {
   }
 
   getProgramDataStatus() {
-    if (!(this.averageScore || (this.programsCount || this.expectedGuessCount) > 0)) {
+    if (!(this.averageScore || (this.programsCount || this.expectedGuessCount || 0) > 0)) {
       this.programDataStatus = 'noData';
+    } else {
+      this.programDataStatus = 'good';
     }
   }
 
