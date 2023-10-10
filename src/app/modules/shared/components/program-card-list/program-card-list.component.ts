@@ -44,7 +44,7 @@ export class ProgramCardListComponent implements OnInit {
   displayToggle = false;
   isSearchResult = false;
   selectedItems: ProgramDtoApi[] = [];
-  ongoingProgramsDataStatus: PlaceholderDataStatus = 'good';
+  ongoingProgramsDataStatus: PlaceholderDataStatus = 'loading';
 
   constructor(
     private readonly scoreService: ScoresService,

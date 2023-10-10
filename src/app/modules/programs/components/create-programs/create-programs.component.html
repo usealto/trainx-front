@@ -1,6 +1,6 @@
 <div class="header-panel2 mb-8">
   <img class="emoji-title me-4" [src]="EmojiName.Bullseye | emoji" />
-  <h1>{{ isEdit ? I18ns.programs.forms.edit : I18ns.programs.forms.create }}</h1>
+  <h1>{{ isEdit && !isNewProgram ? I18ns.programs.forms.edit : I18ns.programs.forms.create }}</h1>
 </div>
 
 <div class="mt-4 form-nav">
@@ -11,7 +11,7 @@
       'cursor-pointer': isEdit,
       'highlight-step': currentStep === 1
     }"
-    (click)="isEdit && changeTab(1)"
+    (click)="changeTab(1)"
   >
     <i class="fs-5 tab-icon me-3 bi bi-file-text"></i>
     <span>{{ I18ns.programs.forms.step1.title }}</span>
@@ -23,7 +23,7 @@
       'cursor-pointer': isEdit,
       'highlight-step': currentStep === 2
     }"
-    (click)="isEdit && changeTab(2)"
+    (click)="changeTab(2)"
   >
     <i class="fs-5 tab-icon me-3 bi bi-question-circle"></i>
     <span>{{ I18ns.programs.forms.step2.title }}</span>
@@ -32,7 +32,7 @@
     data-cy="recapTab"
     class="step"
     [ngClass]="{ 'cursor-pointer': isEdit, 'highlight-step': currentStep === 3 }"
-    (click)="isEdit && changeTab(3)"
+    (click)="changeTab(3)"
   >
     <i class="fs-5 tab-icon me-3 bi bi-share"></i>
     <span>{{ I18ns.programs.forms.step3.title }}</span>
@@ -158,7 +158,6 @@
     </div>
 
     <!-- QUESTION LIST -->
-
     <alto-questions-table
       [data]="questionsDisplay"
       [isChecked]="false"
@@ -275,9 +274,12 @@
         </button>
       </div>
       <div class="col-6 text-end">
-        <a class="btn btn-primary float-end" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]">{{
-          I18ns.programs.forms.step3.validate
-        }}</a>
+        <a
+          class="btn btn-primary float-end"
+          (click)="validateProgram()"
+          [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
+          >{{ I18ns.programs.forms.step3.validate }}</a
+        >
       </div>
     </div>
   </div>

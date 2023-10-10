@@ -1,20 +1,28 @@
 import { formatPercent } from '@angular/common';
-import { Component, Inject, Input, LOCALE_ID } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, OnChanges, SimpleChanges } from '@angular/core';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { PlaceholderDataStatus } from '../../models/placeholder.model';
 
 @Component({
   selector: 'alto-progression-badge',
   templateUrl: './progression-badge.component.html',
   styleUrls: ['./progression-badge.component.scss'],
 })
-export class ProgressionBadgeComponent {
+export class ProgressionBadgeComponent implements OnChanges {
   I18ns = I18ns;
   @Input() score?: number | null;
   @Input() arrow = true;
 
+  status: PlaceholderDataStatus = 'loading';
+
   constructor(@Inject(LOCALE_ID) private readonly locale: string) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['score'] && this.score !== undefined) {
+      this.status = 'good';
+    }
+  }
   @memoize()
   scoreDisplay(score: number | null | undefined) {
     return score !== null && score !== undefined
