@@ -1,25 +1,34 @@
 <p class="fw-bold mb-4">{{ I18ns.collaboration.topContributors.title }}</p>
-
-<ng-container *ngFor="let s of usersStats">
-  <div class="d-flex">
-    <alto-img-badge [user]="s.user"></alto-img-badge>
-    <div>
-      <p class="fw-bold">{{ s.user.firstname + ' ' + s.user.lastname }}</p>
-      <p class="mb-3 alto-grey">
-        {{ I18ns.collaboration.topContributors.contributionCount | replaceInTranslation : s.contributions }}
-      </p>
-      <span *ngIf="s.questionsSubmittedCount > 0" class="alto-badge questions me-2">{{
-        I18ns.collaboration.topContributors.questions | replaceInTranslation : s.questionsSubmittedCount
-      }}</span>
-      <span *ngIf="s.commentsCount > 0" class="alto-badge comments">{{
-        I18ns.collaboration.topContributors.comments | replaceInTranslation : s.commentsCount
-      }}</span>
+<alto-placeholder-manager [status]="usersStatsDataStatus">
+  <ng-container *ngFor="let s of usersStats">
+    <div class="d-flex">
+      <alto-img-badge [user]="s.user"></alto-img-badge>
+      <div>
+        <p class="fw-bold">{{ s.user.firstname + ' ' + s.user.lastname }}</p>
+        <p class="mb-3 alto-grey">
+          {{ I18ns.collaboration.topContributors.contributionCount | replaceInTranslation : s.contributions }}
+        </p>
+        <span *ngIf="s.questionsSubmittedCount > 0" class="alto-badge questions me-2">{{
+          I18ns.collaboration.topContributors.questions | replaceInTranslation : s.questionsSubmittedCount
+        }}</span>
+        <span *ngIf="s.commentsCount > 0" class="alto-badge comments">{{
+          I18ns.collaboration.topContributors.comments | replaceInTranslation : s.commentsCount
+        }}</span>
+      </div>
     </div>
+
+    <hr class="my-4" />
+  </ng-container>
+
+  <div loading>
+    <div class="skeleton-panel" style="height: 64px"></div>
+    <hr class="my-4" />
+    <div class="skeleton-panel" style="height: 64px"></div>
+    <hr class="my-4" />
+    <div class="skeleton-panel" style="height: 64px"></div>
   </div>
 
-  <hr class="my-4" />
-</ng-container>
-
-<div *ngIf="!usersStats">
-  {{ I18ns.collaboration.topContributors.placeholder }}
-</div>
+  <div noData>
+    {{ I18ns.collaboration.topContributors.placeholder }}
+  </div>
+</alto-placeholder-manager>
