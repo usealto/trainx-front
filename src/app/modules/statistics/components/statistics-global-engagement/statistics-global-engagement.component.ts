@@ -34,12 +34,13 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   leaderboard: { name: string; score: number; progression: number }[] = [];
 
   guessChartOptions: any = {};
-  guessesDataStatus: PlaceholderDataStatus = 'good';
+  guessesDataStatus: PlaceholderDataStatus = 'loading';
+  guessesLeaderboardDataStatus: PlaceholderDataStatus = 'loading';
 
   collaborationChartOptions: any = {};
-  collaborationDataStatus: PlaceholderDataStatus = 'good';
+  collaborationDataStatus: PlaceholderDataStatus = 'loading';
 
-  teamsDataStatus: PlaceholderDataStatus = 'good';
+  teamsDataStatus: PlaceholderDataStatus = 'loading';
   teams: TeamDtoApi[] = [];
   teamsDisplay: DataForTable[] = [];
   paginatedTeams: DataForTable[] = [];
@@ -92,7 +93,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             const d = this.statisticsServices.transformDataToPointByCounts(s);
             return {
               label: s.label,
-              data: d.map((d) => (d.y)),
+              data: d.map((d) => d.y),
             };
           });
 
@@ -131,6 +132,10 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             this.scoresRestService.getTeamsStats(this.duration, true, 'totalGuessesCount:desc'),
           ]);
         }),
+        tap(
+          ([currentsStats]) =>
+            (this.guessesLeaderboardDataStatus = currentsStats.length === 0 ? 'noData' : 'good'),
+        ),
         tap(([currentStats, previousStats]) => {
           currentStats = currentStats.filter((t) => t.score && t.score >= 0);
           previousStats = previousStats.filter((t) => t.score && t.score >= 0);

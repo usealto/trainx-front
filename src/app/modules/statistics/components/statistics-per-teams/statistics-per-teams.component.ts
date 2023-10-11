@@ -25,10 +25,10 @@ export class StatisticsPerTeamsComponent implements OnInit {
   members: DataForTable[] = [];
 
   membersDisplay: DataForTable[] = [];
-  membersDataStatus: PlaceholderDataStatus = 'good';
+  membersDataStatus: PlaceholderDataStatus = 'loading';
 
   teamsDisplay: DataForTable[] = [];
-  teamsDataStatus: PlaceholderDataStatus = 'good';
+  teamsDataStatus: PlaceholderDataStatus = 'loading';
 
   constructor(
     private readonly scoreRestService: ScoresRestService,
