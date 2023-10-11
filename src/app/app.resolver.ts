@@ -63,7 +63,7 @@ export const removeSplashScreenResolver: ResolveFn<any> = () => {
     () => {
       document.getElementsByClassName('first-loader').item(0)?.remove();
     },
-    environment.production ? 500 : 500,
+    environment.production ? 1000 : 500,
   );
 };
 
