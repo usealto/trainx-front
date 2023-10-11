@@ -7,7 +7,6 @@ import {
   leadResolver,
   noSplashScreenResolver,
   programResolver,
-  removeSplashScreenResolver,
   trainingResolver,
 } from './app.resolver';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
@@ -30,7 +29,6 @@ const routes: Routes = [
     component: AppLayoutComponent,
     resolve: {
       storedData: appResolver,
-      splashscreen: removeSplashScreenResolver,
     },
     children: [
       {
