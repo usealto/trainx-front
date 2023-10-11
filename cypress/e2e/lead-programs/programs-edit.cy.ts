@@ -35,9 +35,15 @@ describe('Lead Programs', () => {
     // Create a new question
 
     cy.get('[data-cy="createNewQuestion"]').click();
-    cy.get('[data-cy="questionCreateTitle"]').type(newQuestion);
-    cy.get('[data-cy="goodAnswerInput"]').type(goodAnswer);
-    cy.get('[data-cy="badAnswerInput"]').type(badAnswer);
+    cy.get('[data-cy="questionCreateTitle"]').children('textarea').clear();
+    cy.get('[data-cy="questionCreateTitle"]').children('textarea').type(newQuestion);
+
+    cy.get('[data-cy="goodAnswerInput"]').children('textarea').clear();
+    cy.get('[data-cy="goodAnswerInput"]').children('textarea').type(goodAnswer);
+
+    cy.get('[data-cy="badAnswerInput"]').children('textarea').clear();
+    cy.get('[data-cy="badAnswerInput"]').children('textarea').type(badAnswer);
+
     cy.get('[data-cy="tagSelectDropdown"]').click();
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
 
@@ -47,10 +53,15 @@ describe('Lead Programs', () => {
     cy.get('a[aria-label="Close"]').first().click();
 
     // Create a new question with a different tag
+    cy.get('[data-cy="questionCreateTitle"]').children('textarea').clear();
+    cy.get('[data-cy="questionCreateTitle"]').children('textarea').type(newQuestion2);
 
-    cy.get('[data-cy="questionCreateTitle"]').type(newQuestion2);
-    cy.get('[data-cy="goodAnswerInput"]').type(goodAnswer2);
-    cy.get('[data-cy="badAnswerInput"]').type(badAnswer2);
+    cy.get('[data-cy="goodAnswerInput"]').children('textarea').clear();
+    cy.get('[data-cy="goodAnswerInput"]').children('textarea').type(goodAnswer2);
+
+    cy.get('[data-cy="badAnswerInput"]').children('textarea').clear();
+    cy.get('[data-cy="badAnswerInput"]').children('textarea').type(badAnswer2);
+
     cy.get('[data-cy="tagSelectDropdown"]').click();
     cy.get('.ng-dropdown-panel-items .ng-option').eq(1).click();
 
