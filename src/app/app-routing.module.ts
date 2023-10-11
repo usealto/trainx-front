@@ -1,7 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
-import { appResolver, leadResolver, programResolver, trainingResolver } from './app.resolver';
+import {
+  appResolver,
+  homeResolver,
+  leadResolver,
+  noSplashScreenResolver,
+  programResolver,
+  trainingResolver,
+} from './app.resolver';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { JwtComponent } from './layout/jwt/jwt.component';
 import { NoCompanyComponent } from './layout/no-company/no-company.component';
@@ -14,14 +21,15 @@ import { AltoRoutes } from './modules/shared/constants/routes';
 import { noSmallScreen } from './no-small-screen.guard';
 import { canActivateLead } from './roles.guard';
 import { startup } from './startup.guard';
+import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
 
 const routes: Routes = [
   {
     path: '',
-    resolve: {
-      appData: appResolver,
-    },
     component: AppLayoutComponent,
+    resolve: {
+      storedData: appResolver,
+    },
     children: [
       {
         path: 'test',
@@ -63,6 +71,9 @@ const routes: Routes = [
           { path: '', redirectTo: AltoRoutes.leadHome, pathMatch: 'full' },
           {
             path: AltoRoutes.leadHome,
+            resolve: {
+              appData: homeResolver,
+            },
             loadChildren: () => import('./modules/lead-home/lead-home.module').then((m) => m.LeadHomeModule),
           },
           {
@@ -96,6 +107,9 @@ const routes: Routes = [
             path: AltoRoutes.statistics,
             loadChildren: () =>
               import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
+            data: {
+              preload: true,
+            },
           },
           {
             path: AltoRoutes.collaboration,
@@ -115,6 +129,9 @@ const routes: Routes = [
   {
     path: '',
     canActivate: [AuthGuard],
+    resolve: {
+      splashscreen: noSplashScreenResolver,
+    },
     children: [
       {
         path: AltoRoutes.noAccess,
@@ -128,10 +145,21 @@ const routes: Routes = [
         path: AltoRoutes.noTeam,
         component: NoTeamComponent,
       },
+      {
+        path: 'jwt',
+        component: JwtComponent,
+      },
+      {
+        path: AltoRoutes.noSmallScreen,
+        component: NoSmallScreenComponent,
+      },
     ],
   },
   {
     path: AltoRoutes.admin,
+    resolve: {
+      splashscreen: noSplashScreenResolver,
+    },
     loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule),
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
@@ -141,22 +169,12 @@ const routes: Routes = [
     loadChildren: () => import('./core/utils/i18n/translation.module').then((m) => m.TranslationModule),
   },
   {
-    path: 'jwt',
-    component: JwtComponent,
-    canActivate: [AuthGuard],
-    canActivateChild: [AuthGuard],
-  },
-  {
-    path: AltoRoutes.noSmallScreen,
-    component: NoSmallScreenComponent,
-  },
-  {
     path: '**',
     redirectTo: AltoRoutes.notFound,
   },
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {})],
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: FlagBasedPreloadingStrategy })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

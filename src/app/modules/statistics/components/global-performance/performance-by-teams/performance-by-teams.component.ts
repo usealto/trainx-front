@@ -35,11 +35,11 @@ export class PerformanceByTeamsComponent implements OnChanges {
   teams: ScoreDtoApi[] = [];
   selectedTeams: ScoreDtoApi[] = [];
   scoredTeams: { label: string; score: number | null; progression: number | null }[] = [];
-  scoreDataStatus: PlaceholderDataStatus = 'good';
+  scoreDataStatus: PlaceholderDataStatus = 'loading';
 
   teamsLeaderboard: { name: string; score: number }[] = [];
   teamsLeaderboardCount = 0;
-  teamsLeaderboardDataStatus: PlaceholderDataStatus = 'good';
+  teamsLeaderboardDataStatus: PlaceholderDataStatus = 'loading';
   chartOption: any = {};
 
   constructor(

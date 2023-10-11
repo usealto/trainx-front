@@ -41,14 +41,14 @@ export class LeadTeamComponent implements OnInit {
   teams: TeamDtoApi[] = [];
   teamsStats: TeamStatsDtoApi[] = [];
   paginatedTeams: TeamDisplay[] = [];
-  teamsDataStatus: PlaceholderDataStatus = 'good';
+  teamsDataStatus: PlaceholderDataStatus = 'loading';
   teamsPage = 1;
   teamsPageSize = 5;
   teamsScores: TeamDisplay[] = [];
   // Users
   absoluteUsersCount = 0;
   usersCount = 0;
-  usersDataStatus: PlaceholderDataStatus = 'good';
+  usersDataStatus: PlaceholderDataStatus = 'loading';
   usersMap = new Map<string, string>();
   users: UserStatsDtoApi[] = [];
   previousUsersStats: UserStatsDtoApi[] = [];

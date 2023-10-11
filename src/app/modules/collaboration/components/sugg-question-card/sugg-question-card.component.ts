@@ -96,6 +96,12 @@ export class SuggQuestionCardComponent {
     instance.questionSubmitted = question;
     instance.isSubmitted = true;
 
-    canvasRef.componentInstance.createdQuestion.pipe().subscribe();
+    canvasRef.componentInstance.createdQuestion
+      .pipe(
+        tap((createdQuestion) => {
+          this.refresh.emit(!!createdQuestion);
+        }),
+      )
+      .subscribe();
   }
 }

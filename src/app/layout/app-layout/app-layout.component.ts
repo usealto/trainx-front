@@ -8,13 +8,14 @@ import { environment } from 'src/environments/environment';
 })
 export class AppLayoutComponent implements OnInit {
   i = true;
+
   ngOnInit(): void {
     // Removes Splashscreen
     setTimeout(
       () => {
         document.getElementsByClassName('first-loader').item(0)?.remove();
       },
-      environment.production ? 500 : 0,
+      environment.production ? 500 : 500,
     );
   }
 
