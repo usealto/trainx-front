@@ -247,12 +247,14 @@ export class LeadCollaborationComponent implements OnInit {
             .filter((comment) => {
               return includeComments && comment.isRead;
             })
+            .sort((a, b) => compareDesc(a.updatedAt, b.updatedAt))
             .map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
           ...this.submittedQuestions
             .filter(({ status }) => {
               return includeQuestions && status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted;
             })
-            .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
+            .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS))
+            .sort((a, b) => compareDesc(a.updatedAt, b.updatedAt)),
         ];
         break;
       case ETabValue.ALL:
