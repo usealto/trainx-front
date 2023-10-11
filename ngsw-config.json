@@ -14,7 +14,18 @@
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
-        "files": ["/assets/**", "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"]
+        "files": [
+          "/assets/icons/**",
+          "/assets/img/**",
+          "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ]
+      }
+    },
+    {
+      "name": "avatars",
+      "installMode": "prefetch",
+      "resources": {
+        "files": ["/assets/avatars/**"]
       }
     }
   ],
@@ -25,7 +36,47 @@
       "cacheConfig": {
         "strategy": "performance",
         "maxAge": "24h",
-        "maxSize": 1000,
+        "maxSize": 2000,
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "tags",
+      "urls": ["/v1/tags"],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxAge": "10m",
+        "maxSize": 2000,
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "questions",
+      "urls": ["/v1/questions"],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxAge": "1h",
+        "maxSize": 2000,
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "teams",
+      "urls": ["/v1/teams"],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxAge": "10m",
+        "maxSize": 2000,
+        "timeout": "10s"
+      }
+    },
+    {
+      "name": "programs",
+      "urls": ["/v1/programs"],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxAge": "10m",
+        "maxSize": 2000,
         "timeout": "10s"
       }
     },
@@ -37,6 +88,16 @@
         "maxAge": "10m",
         "maxSize": 10,
         "timeout": "10s"
+      }
+    },
+    {
+      "name": "SVG",
+      "urls": ["/fluentui-emoji"],
+      "cacheConfig": {
+        "strategy": "performance",
+        "maxAge": "10d",
+        "maxSize": 200,
+        "timeout": "5s"
       }
     }
   ]
