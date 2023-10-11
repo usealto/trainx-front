@@ -241,11 +241,11 @@ h2 {
 
 .skeleton-panel {
   background-color: white;
-  background: linear-gradient(110deg, white 8%, var(--gray-100) 18%, white 33%);
+  background: linear-gradient(110deg, white 8%, var(--gray-75) 18%, white 33%);
   background-size: 200% 100%;
   border-radius: 0.667rem;
   padding: 1.667rem;
-  animation: 1.5s shine linear infinite;
+  animation: 5s shine linear infinite;
 }
 
 @keyframes shine {

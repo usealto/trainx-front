@@ -70,11 +70,11 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## E2E testing
 
+[see ReadMe](https://github.com/usealto/assessment-front/blob/main/cypress/README.md)
+
 Using Cypress
 
 - Ask a friend
-
-`npm run e2e`
 
 ## Push to Staging
 

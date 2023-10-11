@@ -8,20 +8,19 @@ import {
   QuestionSubmittedStatusEnumApi,
   TagDtoApi,
   TagStatsDtoApi,
-  UserDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { Observable, combineLatest, map, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { QuestionDeleteModalComponent } from 'src/app/modules/shared/components/question-delete-modal/question-delete-modal.component';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
+import { QuestionFormComponent } from '../../../shared/components/question-form/question-form.component';
 import { ScoreDuration, ScoreFilter } from '../../../shared/models/score.model';
 import { QuestionFilters } from '../../models/question.model';
 import { TagFilters } from '../../models/tag.model';
@@ -30,7 +29,6 @@ import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 import { TagsServiceService } from '../../services/tags-service.service';
-import { QuestionFormComponent } from '../../../shared/components/question-form/question-form.component';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
 
 interface TagDisplay extends TagDtoApi {
@@ -100,7 +98,6 @@ export class ProgramsComponent implements OnInit {
     private readonly tagRestService: TagsRestService,
     private readonly tagsService: TagsServiceService,
     public readonly teamStore: TeamStore,
-    private readonly profileStore: ProfileStore,
     public readonly programsStore: ProgramsStore,
     private modalService: NgbModal,
     private readonly scoreService: ScoresService,
@@ -108,11 +105,13 @@ export class ProgramsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getQuestions();
-    this.getSubmittedQuestions();
-    this.getTags();
+    setTimeout(() => {
+      this.getQuestions();
+      this.getSubmittedQuestions();
+      this.getTags();
 
-    combineLatest([this.getScoresFromTags(), this.getScoresfromQuestions()]).subscribe();
+      combineLatest([this.getScoresFromTags(), this.getScoresfromQuestions()]).subscribe();
+    }, 1000);
   }
 
   handleTabChange(value: any) {
