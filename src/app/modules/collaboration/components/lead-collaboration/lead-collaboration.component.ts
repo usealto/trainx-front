@@ -14,6 +14,7 @@ import { EmojiPipe } from 'src/app/core/utils/emoji/emoji.pipe';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 
 export enum ETypeValue {
   COMMENTS = 'comments',
@@ -117,6 +118,8 @@ export class LeadCollaborationComponent implements OnInit {
     allowResetFilters: boolean;
   };
 
+  contributionDataStatus: PlaceholderDataStatus = 'loading';
+
   constructor(
     private readonly commentsRestService: CommentsRestService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
@@ -179,7 +182,12 @@ export class LeadCollaborationComponent implements OnInit {
             ...this.comments.map(({ author }) => author),
             ...this.submittedQuestions.map(({ author }) => author),
           ].reduce((acc, contributor) => {
-            if (contributor && !acc.find(({ id }) => id === contributor.id)) {
+            if (!contributor && !acc.find(({ id }) => id === I18ns.shared.deletedUsername)) {
+              acc.push({
+                id: I18ns.shared.deletedUsername,
+                name: I18ns.shared.deletedUsername,
+              });
+            } else if (contributor && !acc.find(({ id }) => id === contributor.id)) {
               acc.push({
                 id: contributor.id,
                 name: `${contributor.firstname} ${contributor.lastname}`,
@@ -188,7 +196,6 @@ export class LeadCollaborationComponent implements OnInit {
 
             return acc;
           }, [] as { id: string; name: string }[]);
-
           this.handleTabChange(this.selectedTab);
         }),
         untilDestroyed(this),
@@ -201,7 +208,7 @@ export class LeadCollaborationComponent implements OnInit {
     type: ETypeValue,
   ): IContribution {
     return {
-      contributorId: data.author?.id,
+      contributorId: data.author?.id ?? I18ns.shared.deletedUsername,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       type,
@@ -241,12 +248,14 @@ export class LeadCollaborationComponent implements OnInit {
             .filter((comment) => {
               return includeComments && comment.isRead;
             })
+            .sort((a, b) => compareDesc(a.updatedAt, b.updatedAt))
             .map((comment) => this.createContributionFromData(comment, ETypeValue.COMMENTS)),
           ...this.submittedQuestions
             .filter(({ status }) => {
               return includeQuestions && status !== QuestionSubmittedDtoApiStatusEnumApi.Submitted;
             })
-            .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
+            .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS))
+            .sort((a, b) => compareDesc(a.updatedAt, b.updatedAt)),
         ];
         break;
       case ETabValue.ALL:
@@ -269,6 +278,7 @@ export class LeadCollaborationComponent implements OnInit {
 
     this.showMoreButton = data.length > this.itemsPerPage;
 
+    this.contributionDataStatus = data.length === 0 ? 'noData' : 'good';
     if (data.length === 0) {
       if (this.comments.length > 0 || this.submittedQuestions.length > 0) {
         this.emptyPlaceholderData = {

@@ -37,7 +37,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   teamsPreviousPeriod: TeamStatsDtoApi[] = [];
   teamsDisplay: TeamStatsDtoApi[] = [];
   paginatedTeams: TeamStatsDtoApi[] = [];
-  teamsDataStatus: PlaceholderDataStatus = 'good';
+  teamsDataStatus: PlaceholderDataStatus = 'loading';
   teamsPage = 1;
   teamsPageSize = 5;
 

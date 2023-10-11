@@ -26,6 +26,9 @@
   // }
 }
 
+body {
+  width: calc(100vw - 17px);
+}
 html,
 input,
 select,

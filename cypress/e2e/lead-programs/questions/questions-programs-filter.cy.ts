@@ -73,6 +73,16 @@ describe('L/Programs Questions Tab', () => {
 
     cy.get('[data-cy="selectedTab"]').eq(1).click();
     cy.get('[data-cy="deleteQuestionTrash"]').first().click();
+    cy.intercept('delete', 'v1/questions/**').as('questionDelete');
     cy.get('[data-cy="buttonDeleteQuestion"] ').click();
+    cy.wait('@questionDelete');
   });
+
+  // it.only('test', () => {
+  //   cy.intercept('DELETE', 'v1/questions/**').as('questionDelete');
+  //   cy.get('[data-cy="selectedTab"]').eq(1).click();
+  //   cy.get('[data-cy="deleteQuestionTrash"]').first().click();
+  //   cy.get('[data-cy="buttonDeleteQuestion"] ').click();
+  //   cy.wait('@questionDelete');
+  // });
 });

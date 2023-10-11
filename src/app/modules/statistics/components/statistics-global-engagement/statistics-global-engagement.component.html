@@ -36,9 +36,10 @@
       }}</span>
     </div>
   </div>
+  <div class="skeleton-panel mb-5" style="height: 483px" loading></div>
 </alto-placeholder-manager>
 
-<alto-placeholder-manager [status]="guessesDataStatus">
+<alto-placeholder-manager [status]="guessesLeaderboardDataStatus">
   <alto-leaderboard
     [config]="['count', 'progress']"
     [data]="leaderboard"
@@ -53,6 +54,7 @@
       <p class="mt-3">{{ I18ns.statistics.globalEngagement.placeholders.noLeaderboard }}</p>
     </div>
   </div>
+  <div class="skeleton-panel" style="height: 278px" loading></div>
 </alto-placeholder-manager>
 
 <div class="mt-6 mb-5 position-relative">
@@ -92,6 +94,7 @@
       <span class="mt-3 d-block">{{ I18ns.statistics.globalEngagement.placeholders.noDataYetSubtitle }}</span>
     </div>
   </div>
+  <div class="skeleton-panel mb-5" style="height: 483px" loading></div>
 </alto-placeholder-manager>
 
 <div class="mt-5 mb-5 position-relative">
@@ -175,4 +178,5 @@
       }}</span>
     </div>
   </div>
+  <div class="skeleton-panel" style="height: 357px" loading></div>
 </alto-placeholder-manager>
