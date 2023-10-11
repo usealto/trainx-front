@@ -89,16 +89,6 @@
         "maxSize": 10,
         "timeout": "10s"
       }
-    },
-    {
-      "name": "SVG",
-      "urls": ["/fluentui-emoji"],
-      "cacheConfig": {
-        "strategy": "performance",
-        "maxAge": "10d",
-        "maxSize": 200,
-        "timeout": "5s"
-      }
     }
   ]
 }
