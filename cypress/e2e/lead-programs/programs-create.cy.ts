@@ -21,7 +21,10 @@ describe('Lead Programs', () => {
 
     cy.wait(100);
 
+    cy.intercept('POST', '').as('newProgram');
     cy.get('[data-cy="programCreateNext"]').click();
+    cy.wait('@newProgram').wait(100);
+
     cy.get('.btn-primary').eq(1).click();
 
     // Delete the program
@@ -29,6 +32,7 @@ describe('Lead Programs', () => {
     cy.get('[data-cy="leadMenuPrograms"]').click();
 
     cy.get('[data-cy="programSearch"]').clear();
+
     cy.get('[data-cy="programSearch"]').type(newProg);
     cy.get('[data-cy="programABCDTEST"]').click();
 

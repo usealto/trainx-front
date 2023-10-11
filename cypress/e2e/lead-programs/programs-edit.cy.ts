@@ -28,7 +28,10 @@ describe('Lead Programs', () => {
     cy.get('[data-cy="programPriority"]').click();
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
 
+    cy.intercept('POST', '').as('newProgram');
     cy.get('[data-cy="programCreateNext"]').click();
+    cy.wait('@newProgram').wait(100);
+
     // Create a new question
 
     cy.get('[data-cy="createNewQuestion"]').click();
