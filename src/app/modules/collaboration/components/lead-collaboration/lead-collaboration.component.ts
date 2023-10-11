@@ -109,7 +109,7 @@ export class LeadCollaborationComponent implements OnInit {
 
   selectedTab!: ITab;
   pendingCount = 0;
-  showMoreButton = true;
+  showMoreButton = false;
 
   emptyPlaceholderData?: {
     emojiSrc: string;
@@ -240,6 +240,7 @@ export class LeadCollaborationComponent implements OnInit {
             })
             .map((question) => this.createContributionFromData(question, ETypeValue.QUESTIONS)),
         ];
+
         break;
       case ETabValue.ARCHIVED:
         data = [
@@ -266,6 +267,8 @@ export class LeadCollaborationComponent implements OnInit {
             this.createContributionFromData(question, ETypeValue.QUESTIONS),
           ),
         ];
+        break;
+      default:
         break;
     }
 
@@ -319,6 +322,7 @@ export class LeadCollaborationComponent implements OnInit {
     data = data.slice(0, this.itemsPerPage);
 
     this.initContributionsByPeriod();
+
     data.forEach((item) => {
       // today
       if (isToday(item.createdAt)) {
