@@ -88,6 +88,7 @@
         <i class="bi bi-plus-lg"></i>{{ I18ns.leadTeam.createTeam }}
       </button>
     </div>
+    <div class="skeleton-panel" style="height: 296px" loading></div>
   </alto-placeholder-manager>
 </div>
 
@@ -109,60 +110,60 @@
   <p class="alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
 </div>
 
-<div class="panel mb-5 align-items-center">
-  <div class="border-end">
-    <alto-icon-badge [size]="4" icon="bi bi-people-fill" class="me-4"></alto-icon-badge>
-    <div>
-      <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.total }}</p>
-      <h1 class="mb-0">{{ absoluteUsersCount }}</h1>
-    </div>
-  </div>
-  <div class="second-col">
-    <alto-icon-badge [size]="4" class="me-4" icon="bi-reply-all-fill"></alto-icon-badge>
-
-    <div class="flex-grow-1">
-      <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
-      <h1 class="mb-0 d-inline-block">{{ usersTotalQuestions }}</h1>
-      <alto-progression-badge
-        class="float-end"
-        [score]="usersTotalQuestionsProgression"
-      ></alto-progression-badge>
-    </div>
-  </div>
-</div>
-
-<div class="row mb-5">
-  <div class="col-6">
-    <alto-search
-      data-cy="filterBySearch"
-      class="float-start"
-      [searchItems]="userFilters.search"
-      (searchChange)="filterUsers({ search: $event })"
-    ></alto-search>
-  </div>
-
-  <div class="col-6 text-end">
-    <alto-dropdown-filter
-      data-cy="filterByTeam"
-      class="me-3 text-start"
-      [data]="teams"
-      [displayLabel]="'name'"
-      [isColored]="true"
-      [placeholder]="I18ns.leadTeam.members.filters.teams"
-      [selectedItems]="selectedItems"
-      (selectChange)="filterUsers({ teams: $event })"
-    ></alto-dropdown-filter>
-
-    <alto-score-filter
-      class="text-start"
-      data-cy="filterByScore"
-      [selectedItems]="selectedItems"
-      (selectChange)="filterUsers({ score: $event })"
-    ></alto-score-filter>
-  </div>
-</div>
-
 <alto-placeholder-manager [status]="usersDataStatus">
+  <div class="panel mb-5 align-items-center">
+    <div class="border-end">
+      <alto-icon-badge [size]="4" icon="bi bi-people-fill" class="me-4"></alto-icon-badge>
+      <div>
+        <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.total }}</p>
+        <h1 class="mb-0">{{ absoluteUsersCount }}</h1>
+      </div>
+    </div>
+    <div class="second-col">
+      <alto-icon-badge [size]="4" class="me-4" icon="bi-reply-all-fill"></alto-icon-badge>
+
+      <div class="flex-grow-1">
+        <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
+        <h1 class="mb-0 d-inline-block">{{ usersTotalQuestions }}</h1>
+        <alto-progression-badge
+          class="float-end"
+          [score]="usersTotalQuestionsProgression"
+        ></alto-progression-badge>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-6">
+      <alto-search
+        data-cy="filterBySearch"
+        class="float-start"
+        [searchItems]="userFilters.search"
+        (searchChange)="filterUsers({ search: $event })"
+      ></alto-search>
+    </div>
+
+    <div class="col-6 text-end">
+      <alto-dropdown-filter
+        data-cy="filterByTeam"
+        class="me-3 text-start"
+        [data]="teams"
+        [displayLabel]="'name'"
+        [isColored]="true"
+        [placeholder]="I18ns.leadTeam.members.filters.teams"
+        [selectedItems]="selectedItems"
+        (selectChange)="filterUsers({ teams: $event })"
+      ></alto-dropdown-filter>
+
+      <alto-score-filter
+        class="text-start"
+        data-cy="filterByScore"
+        [selectedItems]="selectedItems"
+        (selectChange)="filterUsers({ score: $event })"
+      ></alto-score-filter>
+    </div>
+  </div>
+
   <div class="table-panel">
     <table class="table members-table">
       <thead>
@@ -247,5 +248,19 @@
       <i class="bi bi-arrow-clockwise"></i>
       {{ I18ns.shared.resetFilters }}
     </button>
+  </div>
+  <div style="height: 542px" loading>
+    <div class="skeleton-panel mb-5" style="height: 82px" loading></div>
+    <div class="row mb-5">
+      <div class="col-6">
+        <alto-search class="float-start"></alto-search>
+      </div>
+      <div class="col-6 text-end">
+        <alto-dropdown-filter class="me-3 text-start"></alto-dropdown-filter>
+
+        <alto-score-filter class="text-start"></alto-score-filter>
+      </div>
+    </div>
+    <div class="skeleton-panel" style="height: 356px"></div>
   </div>
 </alto-placeholder-manager>

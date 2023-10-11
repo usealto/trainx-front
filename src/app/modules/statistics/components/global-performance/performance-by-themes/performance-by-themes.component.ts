@@ -44,10 +44,10 @@ export class PerformanceByThemesComponent implements OnChanges {
   items: ScoreDtoApi[] = [];
   selectedItems: ScoreDtoApi[] = [];
   tagsLeaderboard: { name: string; score: number }[] = [];
-  tagsDataStatus: PlaceholderDataStatus = 'good';
+  tagsDataStatus: PlaceholderDataStatus = 'loading';
 
   scoreCount = 0;
-  scoreDataStatus: PlaceholderDataStatus = 'good';
+  scoreDataStatus: PlaceholderDataStatus = 'loading';
 
   ScoreEvolutionChartOption: any = {};
 
@@ -56,7 +56,7 @@ export class PerformanceByThemesComponent implements OnChanges {
   teamsKnowledgeFilteredScores: ScoreDtoApi[] = [];
   teamsKnowledgeChartOption: any = {};
   series: any[] = [];
-  seriesDataStatus: PlaceholderDataStatus = 'good';
+  seriesDataStatus: PlaceholderDataStatus = 'loading';
 
   constructor(
     private titleCasePipe: TitleCasePipe,
