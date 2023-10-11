@@ -6,22 +6,37 @@
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="assets/img/favicon.png" />
+    <style>
+      .first-loader {
+        position: absolute;
+      }
+      .menu-load {
+        background-color: #101828;
+        height: 100vh;
+        color: #f2f4f7;
+        width: 5rem;
+      }
+      .body-load {
+        text-align: center;
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+      }
+      .body-load img {
+        margin-top: 250px;
+        margin-bottom: 24px;
+      }
+    </style>
   </head>
   <body>
-    <!-- <h1
-      style="
-        display: block;
-        text-align: center;
-        margin-top: 10rem;
-        position: absolute;
-        width: 100%;
-        color: #afafaf;
-      "
-    >
-      <img width="100px" src="assets/img/logo.png" />
-      <br />
-      <br />
-    </h1> -->
+    <div class="first-loader">
+      <div class="menu-load"></div>
+      <div class="body-load">
+        <img width="57px" src="assets/img/logo.png" />
+        <p>Nous préparons votre espace de travail...</p>
+      </div>
+    </div>
     <alto-root></alto-root>
   </body>
 

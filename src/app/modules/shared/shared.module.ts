@@ -51,6 +51,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { PlaceholderManagerComponent } from './components/placeholder-manager/placeholder-manager.component';
 import { AdminHeaderRemoveImpersonationComponent } from './components/admin-header-remove-impersonation/admin-header-remove-impersonation.component';
+import { QuestionFormComponent } from './components/question-form/question-form.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { AdminHeaderRemoveImpersonationComponent } from './components/admin-head
     AdminHeaderRemoveImpersonationComponent,
     LeaderboardComponent,
     PlaceholderManagerComponent,
+    QuestionFormComponent,
   ],
   imports: [
     NgbdSortableHeaderDirective,
@@ -154,6 +156,7 @@ import { AdminHeaderRemoveImpersonationComponent } from './components/admin-head
     AdminHeaderRemoveImpersonationComponent,
     LeaderboardComponent,
     PlaceholderManagerComponent,
+    QuestionFormComponent,
   ],
   providers: [NgbActiveModal],
 })

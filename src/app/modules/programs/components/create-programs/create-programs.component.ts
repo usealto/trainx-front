@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
@@ -26,7 +26,7 @@ import { QuestionDisplay } from '../../models/question.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
-import { QuestionFormComponent } from '../questions/question-form/question-form.component';
+import { QuestionFormComponent } from '../../../shared/components/question-form/question-form.component';
 import { ToastService } from 'src/app/core/toast/toast.service';
 
 @UntilDestroy()
@@ -61,6 +61,8 @@ export class CreateProgramsComponent implements OnInit {
   selectedTags: string[] = [];
   questionSearch = '';
   questionAssociatedSearch = '';
+
+  isFormSaved = false;
 
   constructor(
     readonly fob: UntypedFormBuilder,
@@ -173,6 +175,7 @@ export class CreateProgramsComponent implements OnInit {
         map((d) => d.data),
         tap((prog: ProgramDtoApi) => {
           this.isEdit = true;
+          this.isNewProgram = true;
           this.editedProgram = prog;
           this.programStore.programs.value = [];
           this.getAssociatedQuestions();
@@ -271,15 +274,19 @@ export class CreateProgramsComponent implements OnInit {
   }
 
   changeTab(num: number) {
-    if (this.currentStep === 1 && num === 2) {
-      this.displayToast();
-      this.saveProgram();
-    }
-    this.currentStep = num;
-    if (this.currentStep === 2) {
-      this.selectedTags = this.programForm.value?.tags ?? [];
-      this.getQuestions();
-      this.getAssociatedQuestions();
+    if (!this.isEdit) {
+      if (this.programForm.valid) {
+        this.saveProgram();
+        this.displayToast(1);
+        this.currentStep = num;
+      }
+    } else {
+      if (num === 2) {
+        this.selectedTags = this.programForm.value?.tags ?? [];
+        this.getQuestions();
+        this.getAssociatedQuestions();
+      }
+      this.currentStep = num;
     }
   }
 
@@ -323,13 +330,14 @@ export class CreateProgramsComponent implements OnInit {
     }
   }
 
-  displayToast() {
-    if (this.isEdit === false) {
-      this.toastService.show({
-        text: this.replaceInTranslationPipe.transform(I18ns.programs.forms.step3.validateCreate),
-        type: 'success',
-      });
-    }
+  displayToast(step: number) {
+    this.toastService.show({
+      text:
+        step === 1
+          ? this.replaceInTranslationPipe.transform(I18ns.programs.forms.step3.createdToast)
+          : this.replaceInTranslationPipe.transform(I18ns.programs.forms.step3.validatedToast),
+      type: 'success',
+    });
   }
 
   delete() {
@@ -360,6 +368,11 @@ export class CreateProgramsComponent implements OnInit {
         untilDestroyed(this),
       )
       .subscribe();
+  }
+
+  validateProgram() {
+    this.isFormSaved = true;
+    this.displayToast(2);
   }
 
   cancel() {

@@ -11,5 +11,8 @@
   <ng-container *ngSwitchCase="'empty'">
     <ng-content select="[empty]"></ng-content>
   </ng-container>
+  <ng-container *ngSwitchCase="'loading'">
+    <ng-content select="[loading]"></ng-content>
+  </ng-container>
   <ng-container *ngSwitchDefault> </ng-container>
 </ng-container>

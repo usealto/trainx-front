@@ -273,6 +273,7 @@ export const FR = {
       create: 'Créer un programme',
       edit: 'Éditer un programme',
       questionCount: 'Nombre de questions',
+      abortWarning: 'Si vous quittez ce formulaire vous perdrez tout vos changements.',
       step1: {
         title: 'Informations',
         subtitle: 'Informations générales du programme.',
@@ -326,7 +327,8 @@ export const FR = {
           'Récapitulatif des informations essentielles du programme avant de le partager à vos équipes.',
         summary: 'Récapitulatif',
         summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
-        validateCreate: 'Le nouveau programme a bien été ajouté',
+        createdToast: 'Votre programme a bien été créé',
+        validatedToast: 'Vous avez bien finalisé la création de votre programme',
         validate: 'Finaliser la création du programme',
       },
     },
@@ -391,7 +393,7 @@ export const FR = {
         teamFilter: 'Équipes',
         scoreEvolution: {
           title: 'Évolution du score de vos équipes',
-          subtitle: 'Evolution du niveau de maitrise global de vos équipes par tags/programmes',
+          subtitle: 'Évolution du score moyen de vos équipes dans le temps.',
           placeholderTitle: 'Aucune donnée à afficher pour le moment',
           placeholderSubtitle: 'Les équipes s’activent pour fournir les premiers résultats !',
         },
@@ -404,7 +406,7 @@ export const FR = {
         },
       },
       perThemePerformance: {
-        title: 'Performance par thèmatiques',
+        title: 'Performance par thématiques',
         subtitle: "Retrouvez une vue d'ensemble sur les résultats de vos équipes selon leurs thématiques.",
         filters: {
           tags: 'Tags',

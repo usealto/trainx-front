@@ -12,7 +12,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
-import { QuestionFormComponent } from 'src/app/modules/programs/components/questions/question-form/question-form.component';
+import { QuestionFormComponent } from 'src/app/modules/shared/components/question-form/question-form.component';
 
 @UntilDestroy()
 @Component({
@@ -96,14 +96,6 @@ export class SuggQuestionCardComponent {
     instance.questionSubmitted = question;
     instance.isSubmitted = true;
 
-    canvasRef.componentInstance.createdQuestion
-      .pipe(
-        tap(() => {
-          // this.getQuestions();
-          // this.tagRestService.resetTags();
-          // this.getTags();
-        }),
-      )
-      .subscribe();
+    canvasRef.componentInstance.createdQuestion.pipe().subscribe();
   }
 }

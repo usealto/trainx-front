@@ -36,7 +36,7 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
   questionsPreviousPeriod: QuestionStatsDtoApi[] = [];
   questionsDisplay: QuestionStatsDtoApi[] = [];
   paginatedQuestions: QuestionStatsDtoApi[] = [];
-  questionsDataStatus: PlaceholderDataStatus = 'good';
+  questionsDataStatus: PlaceholderDataStatus = 'loading';
   questionsPage = 1;
   questionsPageSize = 5;
 

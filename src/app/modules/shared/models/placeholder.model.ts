@@ -1,1 +1,1 @@
-export type PlaceholderDataStatus = 'good' | 'noResult' | 'noData' | 'empty';
+export type PlaceholderDataStatus = 'good' | 'noResult' | 'noData' | 'empty' | 'loading';
