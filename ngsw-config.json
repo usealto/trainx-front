@@ -31,61 +31,11 @@
   ],
   "dataGroups": [
     {
-      "name": "stats",
-      "urls": ["/v1/stats/**"],
-      "cacheConfig": {
-        "strategy": "performance",
-        "maxAge": "24h",
-        "maxSize": 2000,
-        "timeout": "10s"
-      }
-    },
-    {
-      "name": "tags",
-      "urls": ["/v1/tags"],
-      "cacheConfig": {
-        "strategy": "performance",
-        "maxAge": "10m",
-        "maxSize": 2000,
-        "timeout": "10s"
-      }
-    },
-    {
-      "name": "questions",
-      "urls": ["/v1/questions"],
-      "cacheConfig": {
-        "strategy": "performance",
-        "maxAge": "1h",
-        "maxSize": 2000,
-        "timeout": "10s"
-      }
-    },
-    {
-      "name": "teams",
-      "urls": ["/v1/teams"],
-      "cacheConfig": {
-        "strategy": "performance",
-        "maxAge": "10m",
-        "maxSize": 2000,
-        "timeout": "10s"
-      }
-    },
-    {
-      "name": "programs",
-      "urls": ["/v1/programs"],
-      "cacheConfig": {
-        "strategy": "performance",
-        "maxAge": "10m",
-        "maxSize": 2000,
-        "timeout": "10s"
-      }
-    },
-    {
       "name": "user",
       "urls": ["/v1/users/me"],
       "cacheConfig": {
         "strategy": "performance",
-        "maxAge": "10m",
+        "maxAge": "30s",
         "maxSize": 10,
         "timeout": "10s"
       }
