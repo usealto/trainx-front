@@ -118,6 +118,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
               {
                 ...yAxisScoreOptions,
                 max: function (value: any) {
+                // increase max value by 10% to have a better visual
                   return Math.round((value.max + value.max * (10 / 100)) / 10) * 10;
                 },
                 interval: undefined,
@@ -233,6 +234,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             {
               ...yAxisScoreOptions,
               max: function (value: any) {
+                // increase max value by 10% to have a better visual
                 return Math.round((value.max + value.max * (10 / 100)) / 10) * 10;
               },
               interval: undefined,
