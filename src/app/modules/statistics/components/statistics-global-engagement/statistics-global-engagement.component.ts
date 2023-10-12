@@ -117,7 +117,9 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             yAxis: [
               {
                 ...yAxisScoreOptions,
-                max: undefined,
+                max: function (value: any) {
+                  return Math.round((value.max + value.max * (10 / 100)) / 10) * 10;
+                },
                 interval: undefined,
                 name: I18ns.charts.answerCountLabel,
               },
@@ -219,7 +221,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             color: d.color,
           };
         });
-
+        console.log(series);
         this.collaborationChartOptions = {
           xAxis: [
             {
@@ -230,7 +232,9 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
           yAxis: [
             {
               ...yAxisScoreOptions,
-              max: undefined,
+              max: function (value: any) {
+                return Math.round((value.max + value.max * (10 / 100)) / 10) * 10;
+              },
               interval: undefined,
               name: I18ns.charts.collaborationCountLabel,
             },
