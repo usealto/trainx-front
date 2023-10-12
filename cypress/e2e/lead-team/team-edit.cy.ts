@@ -23,7 +23,7 @@ describe('Team edition', () => {
 
           cy.get('[data-cy="editTeam"]').first().click();
 
-          cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(teamLongname);
+          cy.get('[data-cy="editLongnameInput"]').click().wait(500).clear().type(teamLongname);
           cy.get('[data-cy="btnSave"').should('be.disabled');
 
           cy.get('[data-cy="closeEditTeamPanel"]').click();
@@ -32,35 +32,36 @@ describe('Team edition', () => {
 
     it('Should edit team longname and check it worked', () => {
       let oldLongname: string;
+      cy.intercept('GET', '/v1/teams/*').as('team');
 
-      cy.get('[data-cy="editTeam"]')
-        .first()
-        .click()
-        .wait(1000)
-        .then(() => {
-          cy.get('[data-cy="editLongnameInput"]').then(($input) => {
-            oldLongname = $input.val() as string;
+      cy.get('[data-cy="editTeam"]').first().click();
 
-            const newLongName = 'Updated Longname';
+      cy.wait('@team');
 
-            // Update team longname
-            cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(newLongName);
-            cy.get('[data-cy="btnSave"').click();
-            cy.get('[data-cy="closeEditTeamPanel"]').click().wait(3000);
+      cy.get('[data-cy="editLongnameInput"]').then(($input) => {
+        oldLongname = $input.val() as string;
 
-            // Check that it's work
-            cy.get('[data-cy="teamLongname"').first().should('contain.text', newLongName);
+        const newLongName = 'Updated Longname' + Math.floor(Math.random() * 1000);
 
-            // Reset team longname
-            cy.get('[data-cy="editTeam"]').first().click();
-            cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(oldLongname);
-            cy.get('[data-cy="btnSave"').click();
-            cy.get('[data-cy="closeEditTeamPanel"]').click().wait(3000);
+        cy.intercept('GET', '/v1/stats/teams*').as('statsTeams');
+        // Update team longname
+        cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(newLongName);
+        cy.get('[data-cy="btnSave"').click();
+        cy.get('[data-cy="closeEditTeamPanel"]').click().wait('@statsTeams');
 
-            // Check that it's work
-            cy.get('[data-cy="teamLongname"').first().should('contain.text', oldLongname);
-          });
-        });
+        // Check that it's work
+        cy.get('[data-cy="teamLongname"').first().should('contain.text', newLongName);
+
+        // Reset team longname
+        cy.get('[data-cy="editTeam"]').first().click();
+        cy.wait('@team');
+        cy.get('[data-cy="editLongnameInput"]').click().wait(1000).clear().type(oldLongname);
+        cy.get('[data-cy="btnSave"').click();
+        cy.get('[data-cy="closeEditTeamPanel"]').click().wait('@statsTeams');
+
+        // Check that it's work
+        cy.get('[data-cy="teamLongname"').first().should('contain.text', oldLongname);
+      });
     });
   });
 

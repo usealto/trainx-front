@@ -58,15 +58,6 @@ export const leadResolver: ResolveFn<any> = () => {
   ]).pipe(take(1));
 };
 
-// export const removeSplashScreenResolver: ResolveFn<any> = () => {
-//   setTimeout(
-//     () => {
-//       document.getElementsByClassName('first-loader').item(0)?.remove();
-//     },
-//     environment.production ? 1000 : 500,
-//   );
-// };
-
 export const noSplashScreenResolver: ResolveFn<any> = () => {
   document.getElementsByClassName('first-loader').item(0)?.remove();
 };

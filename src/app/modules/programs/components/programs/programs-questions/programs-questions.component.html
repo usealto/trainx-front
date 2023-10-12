@@ -1,0 +1,134 @@
+<button type="button" class="btn btn-primary float-end" (click)="openQuestionForm()">
+  <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.questions.createQuestion }}</span>
+</button>
+<h2 id="questionsAnchor">
+  <img class="emoji" [src]="Emoji.RedQuestionMark | emoji" />
+  {{ I18ns.programs.questions.title }}
+</h2>
+<p class="mt-3 mb-3 alto-grey">{{ I18ns.programs.questions.subtitle }}</p>
+
+<div class="mb-5">
+  <div class="d-inline-block float-end">
+    <alto-dropdown-filter
+      class="me-3"
+      data-cy="questionsProgramFilter"
+      [data]="programsStore.programs.value"
+      [displayLabel]="'name'"
+      [returnValue]="'id'"
+      [placeholder]="I18ns.programs.questions.filters.programs"
+      [selectedItems]="selectedItems"
+      (selectChange)="getQuestions({ programs: $event }, true)"
+    ></alto-dropdown-filter>
+    <alto-dropdown-filter
+      class="me-3"
+      data-cy="questionsTagFilter"
+      [data]="programsStore.tags.value"
+      [returnValue]="'id'"
+      [displayLabel]="'name'"
+      [placeholder]="I18ns.programs.questions.filters.tags"
+      [selectedItems]="selectedItems"
+      (selectChange)="getQuestions({ tags: $event }, true)"
+    ></alto-dropdown-filter>
+    <alto-score-filter
+      [selectedItems]="selectedItems"
+      (selectChange)="filterQuestionsByScore($event)"
+    ></alto-score-filter>
+  </div>
+  <div class="d-inline-block">
+    <alto-search
+      class="search"
+      [searchItems]="questionFilters.search"
+      (searchChange)="getQuestions({ search: $event }, true)"
+    ></alto-search>
+  </div>
+</div>
+<alto-placeholder-manager [status]="questionListStatus">
+  <div class="table-panel">
+    <table class="table">
+      <thead>
+        <tr *ngVar="I18ns.programs.questions.table as headers">
+          <th scope="col" class="w-20">{{ headers.question }}</th>
+          <th scope="col" class="w-10 text-center">
+            {{ headers.score }}
+          </th>
+          <th scope="col" class="w-30">{{ headers.tags }}</th>
+          <th scope="col" class="w-30">{{ headers.programs }}</th>
+          <th class="w-20"></th>
+        </tr>
+      </thead>
+      <tbody [style.height]="53 * paginatedQuestions.length + 'px'">
+        <tr *ngFor="let question of paginatedQuestions">
+          <td class="alto-text fs-7" data-cy="questionsList">
+            {{ question.title }}
+          </td>
+          <td class="w-10 text-center">
+            <span class="alto-score" [class]="(question.score || 0) * 100 | pillColor">
+              {{ question.score | percent }}
+            </span>
+          </td>
+          <ng-container *ngIf="question.tags && question.tags.length > 0; else elseQuestionTag">
+            <td>
+              <alto-colored-pill-list
+                data-cy="questionsTagsList"
+                [data]="question.tags"
+                [limit]="3"
+              ></alto-colored-pill-list>
+            </td>
+          </ng-container>
+          <ng-template #elseQuestionTag>
+            <td>-</td>
+          </ng-template>
+
+          <td *ngIf="question.programs && question.programs.length > 0">
+            <alto-colored-pill-list
+              [textLimit]="30"
+              [data]="question.programs"
+              [limit]="2"
+            ></alto-colored-pill-list>
+          </td>
+          <td *ngIf="!question.programs || question.programs.length < 1">-</td>
+          <td class="px-4 text-end">
+            <i
+              data-cy="deleteQuestionTrash"
+              class="cursor-pointer fs-4 bi bi-trash3 me-4"
+              (click)="deleteQuestion(question)"
+            ></i>
+            <i
+              data-cy="questionEditPen"
+              class="cursor-pointer fs-4 bi bi-pen"
+              (click)="openQuestionForm(question)"
+            ></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <alto-pagination
+      class="mx-4 d-block"
+      [collectionSize]="questionsCount"
+      [(page)]="questionsPage"
+      (pageChange)="questionPageChange()"
+      [pageSize]="questionsPageSize"
+      aria-label="Default pagination"
+    ></alto-pagination>
+  </div>
+
+  <div class="nodata-placeholder text-center" noData>
+    <img [src]="Emoji.NerdFace | emoji" height="24" />
+    <p class="mt-3">{{ I18ns.programs.questions.table.placeholder }}</p>
+    <button type="button" class="btn btn-primary mt-4" (click)="openQuestionForm()">
+      <i class="bi bi-plus-lg"></i>
+      {{ I18ns.programs.questions.createQuestion }}
+    </button>
+  </div>
+
+  <div class="nodata-placeholder text-center" noResult>
+    <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" />
+    <p class="mt-3">{{ I18ns.shared.noData }}</p>
+    <span class="mt-3 d-block">{{ I18ns.shared.noDataSubtitle }}</span>
+    <button class="btn btn-primary mt-4" (click)="resetFilters()">
+      <i class="bi bi-arrow-clockwise"></i>
+      {{ I18ns.shared.resetFilters }}
+    </button>
+  </div>
+</alto-placeholder-manager>
