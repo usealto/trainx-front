@@ -120,3 +120,7 @@ You then, have to set the height and width with CSS
 ```
   <img [src]="EmojiName.Gear | emoji" loading="lazy" />
 ```
+
+## Service workers
+
+They are used to cache some data in the browser. The config file is located at the root of the project `ngsw-config.json`.
