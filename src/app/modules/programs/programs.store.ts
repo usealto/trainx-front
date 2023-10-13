@@ -10,5 +10,5 @@ export class ProgramsStore {
   tags: Store<TagDtoApi[]> = new Store<TagDtoApi[]>([]);
 
   programsInitCardList: Store<ProgramStatsDtoApi[]> = new Store<ProgramStatsDtoApi[]>([]);
-  questionsInitList: Store<QuestionDisplay[]> = new Store<QuestionDisplay[]>([]);
+  questionsInitList: Store<QuestionDisplay[]> = new Store<QuestionDisplay[]>();
 }

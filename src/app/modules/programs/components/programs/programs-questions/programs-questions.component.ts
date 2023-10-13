@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { QuestionDtoApi } from '@usealto/sdk-ts-angular';
-import { map, switchMap, tap, take } from 'rxjs';
+import { map, switchMap, tap, take, filter } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -51,7 +51,10 @@ export class ProgramsQuestionsComponent implements OnInit {
   ngOnInit(): void {
     this.programsStore.questionsInitList.value$
       .pipe(
+        filter((x) => !!x),
         tap((quests) => {
+          console.log(quests);
+
           quests.forEach((q) => this.questionsScore.set(q.id, q.score || 0));
           this.getQuestions();
         }),
