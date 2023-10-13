@@ -9,6 +9,6 @@ export class ProgramsStore {
   unreadComments: Store<CommentDtoApi[]> = new Store<CommentDtoApi[]>([]);
   tags: Store<TagDtoApi[]> = new Store<TagDtoApi[]>([]);
 
-  programsInitCardList: Store<ProgramStatsDtoApi[]> = new Store<ProgramStatsDtoApi[]>();
+  programsInitCardList: Store<ProgramStatsDtoApi[]> = new Store<ProgramStatsDtoApi[]>([]);
   questionsInitList: Store<QuestionDisplay[]> = new Store<QuestionDisplay[]>([]);
 }
