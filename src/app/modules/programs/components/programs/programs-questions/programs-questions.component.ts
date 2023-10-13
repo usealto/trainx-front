@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { QuestionDtoApi, QuestionStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Observable, switchMap, tap } from 'rxjs';
+import { QuestionDtoApi } from '@usealto/sdk-ts-angular';
+import { map, switchMap, tap, take } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -11,16 +11,11 @@ import { QuestionDeleteModalComponent } from 'src/app/modules/shared/components/
 import { QuestionFormComponent } from 'src/app/modules/shared/components/question-form/question-form.component';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
-import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { QuestionFilters } from '../../../models/question.model';
+import { QuestionDisplay, QuestionFilters } from '../../../models/question.model';
 import { ProgramsStore } from '../../../programs.store';
 import { QuestionsRestService } from '../../../services/questions-rest.service';
-
-interface QuestionDisplay extends QuestionDtoApi {
-  score?: number;
-}
 
 @UntilDestroy()
 @Component({
@@ -28,13 +23,13 @@ interface QuestionDisplay extends QuestionDtoApi {
   templateUrl: './programs-questions.component.html',
   styleUrls: ['./programs-questions.component.scss'],
 })
-export class ProgramsQuestionsComponent {
+export class ProgramsQuestionsComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   //
   questions: QuestionDisplay[] = [];
-  paginatedQuestions!: QuestionDisplay[];
+  paginatedQuestions: QuestionDisplay[] = [];
   questionsPage = 1;
   questionsCount = 0;
   questionsPageSize = 10;
@@ -46,7 +41,6 @@ export class ProgramsQuestionsComponent {
 
   constructor(
     private readonly questionsService: QuestionsRestService,
-    private readonly scoresRestServices: ScoresRestService,
     private readonly offcanvasService: NgbOffcanvas,
     public readonly teamStore: TeamStore,
     public readonly programsStore: ProgramsStore,
@@ -54,87 +48,84 @@ export class ProgramsQuestionsComponent {
     private readonly scoreService: ScoresService,
   ) {}
 
+  ngOnInit(): void {
+    this.programsStore.questionsInitList.value$
+      .pipe(
+        tap((quests) => {
+          quests.forEach((q) => this.questionsScore.set(q.id, q.score || 0));
+          this.getQuestions();
+        }),
+        take(1),
+      )
+      .subscribe();
+  }
+
   getQuestions(
     {
       programs = this.questionFilters.programs,
       tags = this.questionFilters.tags,
-      // score = this.questionFilters.score,
+      score = this.questionFilters.score,
       search = this.questionFilters.search,
     }: QuestionFilters = this.questionFilters,
     refreshPagination = false,
   ) {
     this.questionFilters.programs = programs;
     this.questionFilters.tags = tags;
-    // this.questionFilters.score = score;
+    this.questionFilters.score = score;
 
     this.questionFilters.search = search;
 
-    this.questionsService
-      .getQuestions({
-        programIds: programs?.join(','),
-        tagIds: tags?.join(','),
-        search,
-      })
+    let obs$;
+
+    if (this.isFiltersEmpty || this.onlyScoreFilter) {
+      obs$ = this.programsStore.questionsInitList.value$;
+    } else {
+      obs$ = this.questionsService
+        .getQuestions({
+          programIds: programs?.join(','),
+          tagIds: tags?.join(','),
+          search,
+        })
+        .pipe(
+          map((questions) => {
+            const output = questions as QuestionDisplay[];
+            output.forEach((question) => (question.score = this.getQuestionScore(question.id)));
+            return output;
+          }),
+        );
+    }
+
+    obs$
       .pipe(
         tap((questions) => {
-          const output = questions as QuestionDisplay[];
-          output.forEach((question) => (question.score = this.getQuestionScore(question.id)));
-
-          this.questions = output;
-          this.questionListStatus = output.length === 0 ? 'noData' : 'good';
+          this.questions = questions;
+          this.questionListStatus = questions.length === 0 ? 'noData' : 'good';
 
           if (refreshPagination) {
             this.questionsPage = 1;
           }
 
-          // this.paginatedQuestions = questions.slice(
-          //   (this.questionsPage - 1) * this.questionsPageSize,
-          //   this.questionsPage * this.questionsPageSize,
-          // );
-          if (this.questionFilters.score) {
-            this.filterQuestionsByScore(this.questionFilters.score);
-          } else {
-            this.questionPageChange();
+          if (score) {
+            this.questions = this.scoreService.filterByScore(this.questions, score as ScoreFilter, true);
           }
-          this.questionsCount = questions.length;
 
-          console.log(this.questionFilters);
-          if (
-            this.questionsCount === 0 &&
-            Object.values(this.questionFilters).filter((x) => !!x).length !== 0
-          ) {
+          this.questionPageChange();
+
+          if (this.questionsCount === 0 && !this.isFiltersEmpty) {
             this.questionListStatus = 'noResult';
           }
         }),
-        untilDestroyed(this),
+        take(1),
       )
       .subscribe();
   }
 
   questionPageChange() {
+    this.questionsCount = this.questions.length;
+
     this.paginatedQuestions = this.questions.slice(
       (this.questionsPage - 1) * this.questionsPageSize,
       this.questionsPage * this.questionsPageSize,
-    );
-  }
-
-  filterQuestionsByScore(score: string) {
-    this.questionsPage = 1;
-    this.questionFilters.score = score;
-
-    if (score) {
-      this.questions = this.scoreService.filterByScore(this.questions, score as ScoreFilter, true);
-    }
-    this.questionPageChange();
-  }
-
-  getScoresfromQuestions(): Observable<QuestionStatsDtoApi[]> {
-    return this.scoresRestServices.getQuestionsStats(ScoreDuration.All, false).pipe(
-      tap((stats) => {
-        stats.forEach((stat) => {
-          this.questionsScore.set(stat.question.id, stat.score || 0);
-        });
-      }),
     );
   }
 
@@ -149,6 +140,7 @@ export class ProgramsQuestionsComponent {
         tap(() => {
           this.getQuestions();
         }),
+        untilDestroyed(this),
       )
       .subscribe();
   }
@@ -177,6 +169,18 @@ export class ProgramsQuestionsComponent {
 
   resetFilters() {
     this.questionFilters = {};
+    this.getQuestions();
     this.selectedItems = [];
+  }
+
+  get isFiltersEmpty(): boolean {
+    return Object.values(this.questionFilters).filter((x) => !!x && x.length > 0).length === 0;
+  }
+
+  get onlyScoreFilter(): boolean {
+    return (
+      Object.values(this.questionFilters).filter((x) => !!x && x.length > 0).length === 1 &&
+      !!this.questionFilters.score
+    );
   }
 }

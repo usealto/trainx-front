@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { QuestionSubmittedDtoApi, TagDtoApi, TagStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Observable, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -13,8 +13,10 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
 import { ScoreDuration, ScoreFilter } from '../../../shared/models/score.model';
+import { QuestionDisplay } from '../../models/question.model';
 import { TagFilters } from '../../models/tag.model';
 import { ProgramsStore } from '../../programs.store';
+import { QuestionsRestService } from '../../services/questions-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 import { TagsServiceService } from '../../services/tags-service.service';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
@@ -72,6 +74,7 @@ export class ProgramsComponent implements OnInit {
     private readonly tagsService: TagsServiceService,
     public readonly teamStore: TeamStore,
     public readonly programsStore: ProgramsStore,
+    private readonly questionsService: QuestionsRestService,
     private modalService: NgbModal,
     private readonly scoreService: ScoresService,
     private replaceInTranslationPipe: ReplaceInTranslationPipe,
@@ -79,14 +82,22 @@ export class ProgramsComponent implements OnInit {
 
   ngOnInit(): void {
     setTimeout(() => {
-      // combineLatest([this.getScoresFromTags(), this.getScoresfromQuestions()])
-      //   .pipe(
-      //     tap(() => {
-      //       this.getQuestions();
-      //       this.getTags();
-      //     }),
-      //   )
-      //   .subscribe();
+      combineLatest([
+        this.questionsService.getQuestions(),
+        this.scoresRestServices.getQuestionsStats(ScoreDuration.All, false),
+      ])
+        .pipe(
+          tap(([questions, questionScores]) => {
+            this.programsStore.questionsInitList.value = questions.map((q) => {
+              return {
+                ...q,
+                score: questionScores.find((qs) => qs.id === q.id)?.score || 0,
+              } as QuestionDisplay;
+            });
+          }),
+          untilDestroyed(this),
+        )
+        .subscribe();
     }, 1000);
   }
 

@@ -31,7 +31,7 @@
     ></alto-dropdown-filter>
     <alto-score-filter
       [selectedItems]="selectedItems"
-      (selectChange)="filterQuestionsByScore($event)"
+      (selectChange)="getQuestions({ score: $event }, true)"
     ></alto-score-filter>
   </div>
   <div class="d-inline-block">

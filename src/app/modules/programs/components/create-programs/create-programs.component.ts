@@ -24,7 +24,7 @@ import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
 import { QuestionFormComponent } from '../../../shared/components/question-form/question-form.component';
 import { ProgramForm } from '../../models/programs.form';
-import { QuestionDisplay } from '../../models/question.model';
+import { QuestionDisplayLight } from '../../models/question.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
@@ -184,7 +184,7 @@ export class CreateProgramsComponent implements OnInit {
       .subscribe();
   }
 
-  openQuestionForm(question?: QuestionDisplay) {
+  openQuestionForm(question?: QuestionDisplayLight) {
     let isQuestionEdit = false;
     const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
       position: 'end',

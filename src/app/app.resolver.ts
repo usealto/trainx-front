@@ -1,18 +1,17 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
+import { QuestionSubmittedStatusEnumApi } from '@usealto/sdk-ts-angular';
 import { combineLatest, take, tap } from 'rxjs';
+import { EmojiMap, emojiData } from './core/utils/emoji/data';
 import { TeamsRestService } from './modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from './modules/profile/services/users-rest.service';
-import { ProgramsRestService } from './modules/programs/services/programs-rest.service';
-import { TagsRestService } from './modules/programs/services/tags-rest.service';
-import { EmojiMap, emojiData } from './core/utils/emoji/data';
-import { CommentsRestService } from './modules/programs/services/comments-rest.service';
-import { QuestionsSubmittedRestService } from './modules/programs/services/questions-submitted-rest.service';
-import { QuestionSubmittedStatusEnumApi } from '@usealto/sdk-ts-angular';
-import { ScoresRestService } from './modules/shared/services/scores-rest.service';
-import { ScoreDuration } from './modules/shared/models/score.model';
 import { ProgramsStore } from './modules/programs/programs.store';
-import { environment } from 'src/environments/environment';
+import { CommentsRestService } from './modules/programs/services/comments-rest.service';
+import { ProgramsRestService } from './modules/programs/services/programs-rest.service';
+import { QuestionsSubmittedRestService } from './modules/programs/services/questions-submitted-rest.service';
+import { TagsRestService } from './modules/programs/services/tags-rest.service';
+import { ScoreDuration } from './modules/shared/models/score.model';
+import { ScoresRestService } from './modules/shared/services/scores-rest.service';
 
 export const appResolver: ResolveFn<any> = () => {
   emojiData.forEach((d) => EmojiMap.set(d.id, d));
