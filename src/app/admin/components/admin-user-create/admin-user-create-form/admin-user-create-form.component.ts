@@ -1,3 +1,4 @@
+import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -39,6 +40,7 @@ export class AdminUserCreateFormComponent implements OnInit {
     readonly fob: UntypedFormBuilder,
     private readonly adminApiService: AdminApiService,
     private readonly companiesRestService: CompaniesRestService,
+    private readonly teamsRestService: TeamsRestService,
   ) {
     this.fb = fob;
   }
@@ -49,10 +51,12 @@ export class AdminUserCreateFormComponent implements OnInit {
 
     combineLatest({
       company: this.companiesRestService.getCompanyById(this.companyId),
+      teams: this.teamsRestService.getTeams({ itemsPerPage: 1000 }),
     })
       .pipe(take(1))
-      .subscribe(({ company }) => {
+      .subscribe(({ company, teams }) => {
         this.company = company;
+        this.teams = teams;
       });
 
     if (this.userId) {
@@ -69,6 +73,7 @@ export class AdminUserCreateFormComponent implements OnInit {
                 lastname: [this.user.lastname || '', [Validators.required]],
                 email: [this.user.email || '', [Validators.required, Validators.email]],
                 roles: [this.user.roles as unknown as Array<RoleEnumApi>, []],
+                team: [this.user.team, [Validators.required]],
               });
             } else {
               throw new Error('User not found');
@@ -86,6 +91,7 @@ export class AdminUserCreateFormComponent implements OnInit {
         lastname: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         roles: [[RoleEnumApi.CompanyUser], []],
+        team: [undefined, [Validators.required]],
       });
     }
   }
@@ -93,7 +99,7 @@ export class AdminUserCreateFormComponent implements OnInit {
   async submit() {
     if (!this.userForm.value) return;
 
-    const { firstname, lastname, email, roles } = this.userForm.value;
+    const { firstname, lastname, email, roles, team } = this.userForm.value;
 
     if (this.edit) {
       this.usersApiService
@@ -103,6 +109,7 @@ export class AdminUserCreateFormComponent implements OnInit {
             firstname: firstname,
             lastname: lastname,
             roles: roles,
+            teamId: team?.id,
           },
         })
         .subscribe((q) => {
@@ -117,6 +124,7 @@ export class AdminUserCreateFormComponent implements OnInit {
             firstname: firstname,
             lastname: lastname,
             roles: roles,
+            teamId: team?.id,
           },
         })
         .subscribe((q) => {
