@@ -15,7 +15,7 @@ export const startup: CanActivateFn = (route) => {
         if (!user.company || !user.companyId) {
           router.navigate(['/', AltoRoutes.noCompany]);
           return false;
-        } else if (!user.team || !user.team.id) {
+        } else if ((!user.team || !user.team.id) && route.url[0].path === AltoRoutes.user) {
           router.navigate(['/', AltoRoutes.noTeam]);
           return false;
         } else if (!user.company.usersHaveWebAccess && route.url[0].path === AltoRoutes.user) {
