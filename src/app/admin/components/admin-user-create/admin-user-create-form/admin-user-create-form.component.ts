@@ -56,7 +56,9 @@ export class AdminUserCreateFormComponent implements OnInit {
       .pipe(take(1))
       .subscribe(({ company, teams }) => {
         this.company = company;
-        this.teams = teams;
+        // Be very careful here : we are not impersonating the user, so we need to
+        // filter by the company id to avoid leaking data. TODO : dev smth more robust
+        this.teams = teams.filter((t) => t.companyId === this.companyId);
       });
 
     if (this.userId) {
