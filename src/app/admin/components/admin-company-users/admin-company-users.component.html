@@ -50,13 +50,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of displayedUsers">
+        <tr *ngFor="let user of displayedUsers" 
+          [routerLink]="['/', 'admin', 'companies', company.id, 'users', user.id]" 
+          routerLinkActive="menu-selected">
           <th scope="row">
             <div class="d-flex align-items-center name-cell">
-              <a
-                [routerLink]="['/', 'admin', 'companies', company.id, 'users', user.id]"
-                routerLinkActive="menu-selected"
-              >
                 {{ user.firstname }} {{ user.lastname }} 
                 <alto-colored-pill-list 
                   *ngIf="user.deletedAt" 
@@ -64,8 +62,7 @@
                   [data]="[{name: 'Deleted', id: 'FF1238asdfr4'}]"
                   [hasDynamicColor]="true"
                   [limit]="0"
-                ></alto-colored-pill-list>
-              </a>
+                ></alto-colored-pill-list>              
             </div>
           </th>
           <td>{{ user.email }}</td>
