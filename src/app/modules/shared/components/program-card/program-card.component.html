@@ -16,7 +16,7 @@
     <p class="title" [ngClass]="{ 'w-100': !displayToggle }">{{ program.name }}</p>
     <ng-container *ngIf="program.teams.length > 0; else elseTeams">
       <p class="d-inline-block me-2">
-        <img class="pe-2 mb-2" [src]="Emoji.BustsInSilhouette | emoji" height="16" />
+        <img class="pe-2 mb-2" [src]="Emoji.BustsInSilhouette | emoji" height="16" width="16" />
         {{ (I18ns.shared.teams | titlecase) + ' : ' }}
       </p>
       <span class="alto-badge teams">{{
@@ -29,7 +29,7 @@
     <hr />
     <p class="score">
       <span>
-        <img class="pe-1 mb-2" [src]="Emoji.PlayButton | emoji" height="14" />
+        <img class="pe-1 mb-2" [src]="Emoji.PlayButton | emoji" height="14" width="14" />
         {{ I18ns.programs.programs.involvement }}
       </span>
       <span class="float-end alto-score" [class]="(participation ? participation * 100 : '') | pillColor">{{
@@ -38,7 +38,7 @@
     </p>
     <p class="score">
       <span>
-        <img class="pe-1 mb-2" [src]="Emoji.RollerCoaster | emoji" height="14" />
+        <img class="pe-1 mb-2" [src]="Emoji.RollerCoaster | emoji" height="14" width="14" />
         {{ I18ns.programs.programs.progress }}
       </span>
       <span class="float-end alto-score" [class]="(progress ? progress * 100 : '') | pillColor">
@@ -47,7 +47,7 @@
     </p>
     <p class="score">
       <span>
-        <img class="pe-1 mb-2" [src]="Emoji.SportsMedal | emoji" height="14" />
+        <img class="pe-1 mb-2" [src]="Emoji.SportsMedal | emoji" height="14" width="14" />
         {{ I18ns.programs.programs.score }}
       </span>
       <span class="float-end alto-score" [class]="(score ? score * 100 : '') | pillColor">
@@ -56,7 +56,7 @@
     </p>
     <p class="score">
       <span>
-        <img class="pe-1 mb-2" [src]="Emoji.CheckMarkButton | emoji" height="14" />
+        <img class="pe-1 mb-2" [src]="Emoji.CheckMarkButton | emoji" height="14" width="14" />
         {{ I18ns.programs.programs.membersHaveValidated }}
       </span>
       <span

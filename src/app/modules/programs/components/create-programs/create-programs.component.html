@@ -1,5 +1,5 @@
 <div class="header-panel2 mb-8">
-  <img class="emoji-title me-4" [src]="EmojiName.Bullseye | emoji" />
+  <img class="emoji-title me-4" [src]="EmojiName.Bullseye | emoji" width="28" height="28"/>
   <h1>{{ isEdit && !isNewProgram ? I18ns.programs.forms.edit : I18ns.programs.forms.create }}</h1>
 </div>
 
@@ -86,7 +86,7 @@
       <div class="row">
         <div class="col-6">
           <h2>
-            <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" />
+            <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" width="16" height="16"/>
             {{ I18ns.programs.forms.step2.associatedQuestions.title }}
           </h2>
           <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.associatedQuestions.subtitle }}</p>
@@ -125,7 +125,7 @@
 
     <ng-container *ngIf="(questionsAssociatedDisplay?.data?.length || 0) > 0; else noAssociatedQuestions2">
       <h2>
-        <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" />
+        <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" width="16" height="16"/>
         {{ I18ns.programs.forms.step2.existing2.title }}
       </h2>
       <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.existing2.subtitle }}</p>
@@ -133,7 +133,7 @@
 
     <ng-template #noAssociatedQuestions2>
       <h2>
-        <img class="emoji" [src]="EmojiName.Memo | emoji" />
+        <img class="emoji" [src]="EmojiName.Memo | emoji" width="16" height="16"/>
         {{ I18ns.programs.forms.step2.existing.title }}
       </h2>
       <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.existing.subtitle }}</p>
@@ -191,7 +191,7 @@
       <span class="">{{ I18ns.programs.forms.step3.subtitle }}</span>
     </div>
     <h2 class="mb-5">
-      <img class="emoji" [src]="EmojiName.PageFacingUp | emoji" />
+      <img class="emoji" [src]="EmojiName.PageFacingUp | emoji" width="18" height="18"/>
       {{ I18ns.programs.forms.step3.title2 }}
     </h2>
 
@@ -201,7 +201,7 @@
     <div class="panel recap-panel">
       <div class="row mb-4">
         <div class="col-3">
-          <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
+          <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="20" height="20"/>
           {{ I18ns.programs.forms.step1.teams }}
         </div>
         <div class="col-9 p-0 text-end">
@@ -217,7 +217,7 @@
       </div>
       <div class="row mb-4">
         <div class="col-5">
-          <img class="emoji" [src]="EmojiName.SportsMedal | emoji" />
+          <img class="emoji" [src]="EmojiName.SportsMedal | emoji" width="20" height="20"/>
           {{ I18ns.programs.forms.step1.expectation }}
         </div>
         <div class="col-7 p-0 d-flex align-items-center justify-content-end">
@@ -231,7 +231,7 @@
       </div>
       <div class="row mb-4">
         <div class="col-5">
-          <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" />
+          <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" width="20" height="20"/>
           {{ I18ns.programs.forms.questionCount }}
         </div>
         <div class="col-7 p-0 d-flex align-items-center justify-content-end">
@@ -243,7 +243,7 @@
       </div>
       <div class="row">
         <div class="col-5">
-          <img class="emoji" [src]="EmojiName.Warning | emoji" />
+          <img class="emoji" [src]="EmojiName.Warning | emoji" width="20" height="20"/>
           {{ I18ns.programs.forms.step1.priority }}
         </div>
         <div class="col-7 p-0 d-flex align-items-center justify-content-end">
