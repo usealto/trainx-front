@@ -1,7 +1,7 @@
 <form *ngIf="form" [formGroup]="form">
   <div class="row">
     <div class="col-left">
-      <img class="emoji" [src]="EmojiName.PageFacingUp | emoji" />
+      <img class="emoji" [src]="EmojiName.PageFacingUp | emoji" width="20" height="20"/>
       <div>
         <label class="form-label required">{{ I18ns.programs.forms.step1.name }}</label>
         <p class="">{{ I18ns.programs.forms.step1.nameSubtitle }}</p>
@@ -29,7 +29,7 @@
   <hr *ngIf="!isEdit" />
   <div *ngIf="!isEdit" class="row">
     <div class="col-left">
-      <img class="emoji" [src]="EmojiName.Label | emoji" />
+      <img class="emoji" [src]="EmojiName.Label | emoji" width="20" height="20"/>
       <div>
         <label class="form-label">{{ I18ns.programs.forms.step1.tags }}</label>
         <p>{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
@@ -65,7 +65,7 @@
   <hr />
   <div class="row">
     <div class="col-left">
-      <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" />
+      <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="20" height="20"/>
       <div>
         <label class="form-label">{{ I18ns.programs.forms.step1.teams }}</label>
         <p>{{ I18ns.programs.forms.step1.teamsSubtitle }}</p>
@@ -100,7 +100,7 @@
   <hr />
   <div class="row">
     <div class="col-left">
-      <img class="emoji" [src]="EmojiName.Warning | emoji" />
+      <img class="emoji" [src]="EmojiName.Warning | emoji" width="20" height="20"/>
       <div>
         <label class="form-label required">{{ I18ns.programs.forms.step1.priority }}</label>
         <p>{{ I18ns.programs.forms.step1.prioritySubtitle }}</p>
@@ -124,7 +124,7 @@
   <hr />
   <div class="row">
     <div class="col-left">
-      <img class="emoji" [src]="EmojiName.SportsMedal | emoji" />
+      <img class="emoji" [src]="EmojiName.SportsMedal | emoji" width="20" height="20"/>
 
       <div>
         <label class="form-label required">{{ I18ns.programs.forms.step1.expectation }}</label>

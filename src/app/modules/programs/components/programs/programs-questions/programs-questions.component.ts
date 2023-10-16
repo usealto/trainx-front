@@ -53,8 +53,6 @@ export class ProgramsQuestionsComponent implements OnInit {
       .pipe(
         filter((x) => !!x),
         tap((quests) => {
-          console.log(quests);
-
           quests.forEach((q) => this.questionsScore.set(q.id, q.score || 0));
           this.getQuestions();
         }),
