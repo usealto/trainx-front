@@ -5,7 +5,9 @@ describe('Lead Programs', () => {
     cy.visit('/');
   });
   it('create and edit a program while testing all cases of question creation', function () {
-    const newProg = 'ABCDTEST';
+    const uuid = () => Cypress._.random(0, 1e6);
+    const id = uuid();
+    const newProg = `ABCDTEST${id}`;
     const newQuestion = 'testQuestion';
     const goodAnswer = 'goodAnswer';
     const badAnswer = 'badAnswer';
