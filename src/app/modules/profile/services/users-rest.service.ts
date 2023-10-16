@@ -72,7 +72,14 @@ export class UsersRestService {
   }
 
   patchUser(id: string, patchUserDtoApi: PatchUserDtoApi): Observable<UserDtoApi> {
-    return this.userApi.patchUser({ id, patchUserDtoApi }).pipe(map((u) => u.data || ({} as UserDtoApi)));
+    return this.userApi.patchUser({ id, patchUserDtoApi }).pipe(
+      map((u) => u.data || ({} as UserDtoApi)),
+      tap((u) => {
+        if (this.userStore.user.value.id === id) {
+          this.userStore.user.value = u;
+        }
+      }),
+    );
   }
 
   getNextQuestionsPaginated(

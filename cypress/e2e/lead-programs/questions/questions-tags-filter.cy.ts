@@ -4,6 +4,9 @@ describe('L/Programs Questions Tab', () => {
     cy.visit('/');
 
     cy.get('[data-cy="leadMenuPrograms"]').click();
+
+    cy.intercept('GET', '/v1/questions*').as('questionsList');
+
     cy.get('[data-cy="selectedTab"]').eq(1).click();
   });
 
@@ -11,6 +14,8 @@ describe('L/Programs Questions Tab', () => {
   let tagTruncName = '';
 
   it('Collects a tag name', () => {
+    cy.wait('@questionsList').wait(100);
+
     cy.get('[data-cy="questionsTagsList"]')
       .last()
       .children()

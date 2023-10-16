@@ -53,7 +53,12 @@ export class ProgramsRestService {
   }
 
   updateProgram(id: string, patchProgramDtoApi: PatchProgramDtoApi): Observable<ProgramDtoResponseApi> {
-    return this.programApi.patchProgram({ id, patchProgramDtoApi });
+    return this.programApi.patchProgram({ id, patchProgramDtoApi }).pipe(
+      tap(() => {
+        this.programStore.programsInitCardList.reset();
+        this.programStore.programs.reset();
+      }),
+    );
   }
 
   getPrograms(): Observable<ProgramDtoApi[]> {
@@ -94,11 +99,22 @@ export class ProgramsRestService {
   }
 
   createProgram(createProgramDtoApi: CreateProgramDtoApi) {
-    return this.programApi.createProgram({ createProgramDtoApi });
+    return this.programApi.createProgram({ createProgramDtoApi }).pipe(
+      tap(() => {
+        this.programStore.programsInitCardList.reset();
+        this.programStore.programs.reset();
+      }),
+    );
   }
 
   deleteProgram(id: string): Observable<DeleteResponseApi> {
-    return this.programApi.deleteProgram({ id });
+    return this.programApi.deleteProgram({ id }).pipe(
+      tap(() => {
+        this.programStore.programsInitCardList.value = this.programStore.programsInitCardList.value.filter(
+          (p) => p.program.id !== id,
+        );
+      }),
+    );
   }
 
   addOrRemoveQuestion(
