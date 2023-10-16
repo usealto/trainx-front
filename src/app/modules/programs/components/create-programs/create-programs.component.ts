@@ -175,7 +175,6 @@ export class CreateProgramsComponent implements OnInit {
         map((d) => d.data),
         tap((prog: ProgramDtoApi) => {
           this.isEdit = true;
-          this.isNewProgram = true;
           this.editedProgram = prog;
           this.getAssociatedQuestions();
         }),
@@ -277,16 +276,18 @@ export class CreateProgramsComponent implements OnInit {
       if (this.programForm.valid) {
         this.saveProgram();
         this.displayToast(1);
-        this.currentStep = num;
       }
     } else {
+      if (this.currentStep === 1 && num === 2) {
+        this.saveProgram();
+      }
       if (num === 2) {
         this.selectedTags = this.programForm.value?.tags ?? [];
         this.getQuestions();
         this.getAssociatedQuestions();
       }
-      this.currentStep = num;
     }
+    this.currentStep = num;
   }
 
   searchQuestions(value: string) {
