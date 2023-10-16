@@ -51,11 +51,9 @@ describe('L/Programs Questions Tab', () => {
 
     cy.get('.ng-dropdown-header > input').clear();
 
-    cy.intercept('GET', '/v1/questions?programIds=*').as('questionSearch');
-
     cy.get('.ng-dropdown-header > input').type(`${newProg}{enter}`);
 
-    cy.wait('@questionSearch').wait(100);
+    cy.wait(500);
 
     cy.get('[data-cy="questionEditPen"]').first().click();
 
@@ -72,10 +70,18 @@ describe('L/Programs Questions Tab', () => {
     cy.get('[data-cy="deleteButton"]').click();
 
     cy.get('[data-cy="selectedTab"]').eq(1).click();
-    cy.get('[data-cy="deleteQuestionTrash"]').first().click();
-    cy.intercept('delete', 'v1/questions/**').as('questionDelete');
-    cy.get('[data-cy="buttonDeleteQuestion"] ').click();
-    cy.wait('@questionDelete');
+
+    cy.get('[data-cy="questionsList"]')
+      .first()
+      .invoke('text')
+      .then(($data) => {
+        expect($data.trim()).to.equal(newQuestion);
+
+        cy.get('[data-cy="deleteQuestionTrash"]').first().click();
+        cy.intercept('delete', 'v1/questions/**').as('questionDelete');
+        cy.get('[data-cy="buttonDeleteQuestion"] ').click();
+        cy.wait('@questionDelete');
+      });
   });
 
   // it.only('test', () => {

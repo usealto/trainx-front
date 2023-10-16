@@ -244,24 +244,6 @@
       </alto-placeholder-manager>
     </div>
   </div>
-  <!-- ONGOING PROGRAMS -->
-  <div class="mt-6 mb-5">
-    <button
-      [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs]"
-      class="float-end btn btn-outline-secondary align-bottom"
-    >
-      {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
-    </button>
-    <div class="align-items-center">
-      <h2 class="d-inline-block">
-        <img class="me-3 emoji" [src]="Emoji.Bullseye | emoji" height="20" width="20" />
-        {{ I18ns.leadHome.ongoingPrograms.title }}
-      </h2>
-      <p class="subtitle fs-6b">{{ I18ns.leadHome.ongoingPrograms.subtitle }}</p>
-    </div>
-  </div>
-
-  <alto-program-card-list [place]="'home'" [isActive]="true"></alto-program-card-list>
   <!-- CHALLENGES -->
   <!--
   <div class="row mt-6 mb-4" hidden>

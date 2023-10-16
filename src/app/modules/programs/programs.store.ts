@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Store } from 'src/app/core/utils/store/store';
 import { CommentDtoApi, ProgramDtoApi, ProgramStatsDtoApi, TagDtoApi } from '@usealto/sdk-ts-angular';
+import { Store } from 'src/app/core/utils/store/store';
+import { QuestionDisplay } from './models/question.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProgramsStore {
@@ -8,5 +9,6 @@ export class ProgramsStore {
   unreadComments: Store<CommentDtoApi[]> = new Store<CommentDtoApi[]>([]);
   tags: Store<TagDtoApi[]> = new Store<TagDtoApi[]>([]);
 
-  programsInitCardList: Store<ProgramStatsDtoApi[]> = new Store<ProgramStatsDtoApi[]>();
+  programsInitCardList: Store<ProgramStatsDtoApi[]> = new Store<ProgramStatsDtoApi[]>([]);
+  questionsInitList: Store<QuestionDisplay[]> = new Store<QuestionDisplay[]>();
 }

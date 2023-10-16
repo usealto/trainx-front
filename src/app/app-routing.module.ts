@@ -174,7 +174,12 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { preloadingStrategy: FlagBasedPreloadingStrategy })],
+  imports: [
+    RouterModule.forRoot(routes, {
+      preloadingStrategy: FlagBasedPreloadingStrategy,
+      scrollPositionRestoration: 'top',
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
