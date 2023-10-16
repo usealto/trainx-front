@@ -96,11 +96,18 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
               data: d.map((d) => d.y),
             };
           });
+          console.log(dataset);
 
+          const a:number[] = [];
+          for (let index = 0; index < 10; index++) {
+            a.push((229 + Math.round(Math.random() * 20)) );
+          }
+          console.log(a)
           const series = dataset.map((d) => {
             return {
               name: I18ns.charts.answeredQuestions,
-              data: d.data,
+              // data: d.data,
+              data: a,
               type: 'line',
               showSymbol: false,
               color: '#53b1fd',
@@ -117,10 +124,12 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             yAxis: [
               {
                 ...yAxisScoreOptions,
-                max: function (value: any) {
-                // increase max value by 10% and round to ten to have a better visual
-                  return Math.round((value.max + value.max * 0.1) / 10) * 10;
-                },
+                // max: function (value: any) {
+                //   // increase max value by 10% and round to ten to have a better visual
+                //   return Math.ceil((value.max+1) / 10) * 10;
+                // },
+                max: undefined,
+
                 interval: undefined,
                 name: I18ns.charts.answerCountLabel,
               },
