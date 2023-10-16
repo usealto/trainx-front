@@ -4,7 +4,9 @@ describe('Lead Programs', () => {
     cy.visit('/');
   });
   it('Creates and delete a program', function () {
-    const newProg = 'ABCDTEST';
+    const uuid = () => Cypress._.random(0, 1e6);
+    const id = uuid();
+    const newProg = `ABCDTEST${id}`;
     cy.get('[data-cy="leadMenuPrograms"]').click();
     cy.wait(500);
     cy.get('[data-cy="createNewProgram"]').click();
@@ -53,6 +55,6 @@ describe('Lead Programs', () => {
     cy.get('[data-cy="programSearch"]').clear();
     cy.get('[data-cy="programSearch"]').type(newProg);
 
-    cy.get('[data-cy="programABCDTEST"]').should('not.exist');
+    cy.get(`[data-cy="program${newProg}"]`).should('not.exist');
   });
 });
