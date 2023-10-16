@@ -55,16 +55,6 @@
         <i class="bi bi-house-door"></i>
       </a>
     </div>
-    <div ngbTooltip="{{ I18ns.menu.programs }}" placement="right" tooltipClass="menu-tooltip-class">
-      <a
-        data-cy="leadMenuPrograms"
-        class="module"
-        [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.programs"
-        routerLinkActive="menu-selected"
-      >
-        <i class="bi bi-check2-square"></i>
-      </a>
-    </div>
     <div ngbTooltip="{{ I18ns.menu.statistics }}" placement="right" tooltipClass="menu-tooltip-class">
       <a
         data-cy="leadMenuStatistics"
@@ -94,7 +84,7 @@
         <i class="bi bi-puzzle"></i>
       </a>
     </div>
-    <!-- 
+    <!--
     <div ngbTooltip="{{ I18ns.menu.challenges }}" placement="right" tooltipClass="menu-tooltip-class">
       <a
         data-cy="leadMenuChallenges"
@@ -105,6 +95,16 @@
         <i class="bi bi-puzzle"></i>
       </a>
     </div> -->
+    <div ngbTooltip="{{ I18ns.menu.programs }}" placement="right" tooltipClass="menu-tooltip-class">
+      <a
+        data-cy="leadMenuPrograms"
+        class="module"
+        [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.programs"
+        routerLinkActive="menu-selected"
+      >
+        <i class="bi bi-check2-square"></i>
+      </a>
+    </div>
   </div>
 
   <div class="bottom-block">

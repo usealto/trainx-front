@@ -146,9 +146,6 @@ export const FR = {
       },
     },
     ongoingPrograms: {
-      title: 'Programmes en cours',
-      subtitle: 'Retrouvez les programmes que vos équipes sont en train de réaliser.',
-      involvement: 'Participation',
       progress: 'Avancement',
       noData: 'Aucun programme en cours',
       noDataSubtitle:
