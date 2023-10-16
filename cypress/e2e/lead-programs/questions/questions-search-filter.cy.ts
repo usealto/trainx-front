@@ -20,7 +20,7 @@ describe('L/Programs Questions Tab', () => {
   });
 
   it('Searches the collected question by its title', () => {
-    cy.intercept('GET', '/v1/questions?tagIds=&programIds=*').as('fullQuestionList');
+    cy.intercept('GET', '/v1/questions*').as('fullQuestionList');
     cy.get('[data-cy="selectedTab"]').eq(1).click();
 
     cy.wait('@fullQuestionList').wait(100);

@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
@@ -14,6 +14,7 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { Observable, filter, map, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
+import { ToastService } from 'src/app/core/toast/toast.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns, getTranslation } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -21,13 +22,12 @@ import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
+import { QuestionFormComponent } from '../../../shared/components/question-form/question-form.component';
 import { ProgramForm } from '../../models/programs.form';
-import { QuestionDisplay } from '../../models/question.model';
+import { QuestionDisplayLight } from '../../models/question.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
-import { QuestionFormComponent } from '../../../shared/components/question-form/question-form.component';
-import { ToastService } from 'src/app/core/toast/toast.service';
 
 @UntilDestroy()
 @Component({
@@ -177,7 +177,6 @@ export class CreateProgramsComponent implements OnInit {
           this.isEdit = true;
           this.isNewProgram = true;
           this.editedProgram = prog;
-          this.programStore.programs.value = [];
           this.getAssociatedQuestions();
         }),
         untilDestroyed(this),
@@ -185,7 +184,7 @@ export class CreateProgramsComponent implements OnInit {
       .subscribe();
   }
 
-  openQuestionForm(question?: QuestionDisplay) {
+  openQuestionForm(question?: QuestionDisplayLight) {
     let isQuestionEdit = false;
     const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
       position: 'end',
