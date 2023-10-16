@@ -41,12 +41,15 @@ export class Store<T> {
     this.updateDate();
   }
 
-  isExpired(): boolean {
-    const check = (new Date().valueOf() - this.createdAt) / 60_000 >= this.expire;
+  // isExpired(): boolean {
+  //   const check = (new Date().valueOf() - this.createdAt) / 60_000 >= this.expire;
 
-    return check;
-  }
+  //   return check;
+  // }
 
+  /**
+   * Sets the store to its default value (usually null or [])
+   */
   reset() {
     this.value = this.initValue;
   }

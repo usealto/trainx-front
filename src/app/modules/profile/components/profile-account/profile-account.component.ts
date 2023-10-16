@@ -56,7 +56,6 @@ export class ProfileAccountComponent implements OnInit {
         lastname: this.userForm.value?.lastname,
       })
       .pipe(
-        tap((u) => (this.userStore.user.value = u)),
         tap((u) => (this.user = u)),
         tap(() => {
           this.toastService.show({

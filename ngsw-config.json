@@ -31,12 +31,12 @@
   ],
   "dataGroups": [
     {
-      "name": "user",
-      "urls": ["/v1/users/me"],
+      "name": "scores",
+      "urls": ["/v1/scores"],
       "cacheConfig": {
         "strategy": "performance",
-        "maxAge": "30s",
-        "maxSize": 10,
+        "maxAge": "18h",
+        "maxSize": 2000,
         "timeout": "10s"
       }
     }
