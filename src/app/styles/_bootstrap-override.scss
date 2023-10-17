@@ -11,6 +11,7 @@
 .form-control {
   background: #fff;
 }
+input[type='email'].form-control,
 input[type='text'].form-control {
   height: 3.167rem;
   color: var(--gray-900);

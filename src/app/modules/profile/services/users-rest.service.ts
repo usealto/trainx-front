@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  CreateUserDtoApi,
   GetNextQuestionsForUserRequestParams,
   GetScoresRequestParams,
   GetUsersRequestParams,
@@ -97,5 +98,9 @@ export class UsersRestService {
 
   deleteUser(id: string) {
     return this.userApi.deleteUser({ id });
+  }
+
+  createUser(user: CreateUserDtoApi) {
+    return this.userApi.createUser({ createUserDtoApi: user });
   }
 }

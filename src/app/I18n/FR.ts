@@ -748,6 +748,15 @@ export const FR = {
       addUsers: {
         add: 'Ajouter des collaborateurs',
         invite: 'Inviter des collaborateurs',
+        firstName: 'Nom',
+        firstNamePlaceholder: 'Exemple: Baker',
+        lastname: 'Prénom',
+        lastnamePlaceholder: 'Exemple: Phoenix',
+        email: 'Adresse email',
+        emailPlaceholder: 'prenom@usealto.com',
+        team: 'Équipe',
+        teamPlaceholder: 'Sélectionnez une équipe...',
+        addLine: 'Ajouter une ligne',
       },
     },
     continuousSession: {
