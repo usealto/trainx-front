@@ -30,7 +30,7 @@
 
     <div class="text-content">
       <div class="author">
-        <span [ngClass]="comment?.author ? 'fw-semibold' : 'light-text'"
+        <span [ngClass]="comment?.author ? 'fw-semibold' : 'light-text'" data-cy="collaboratorName"
           >{{
             comment?.author
               ? comment?.author?.firstname + ' ' + comment?.author?.lastname
