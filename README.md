@@ -113,7 +113,7 @@ Figma => fluent-emoji:waving-hand
 EmojiName => EmojiName.WavingHand
 ```
 
-You can use the `emoji` pipe to to transform the Enum to an SVG
+You can use the `emoji` pipe to transform the Enum to an SVG
 
 You then, have to set the height and width with CSS
 
@@ -124,3 +124,5 @@ You then, have to set the height and width with CSS
 ## Service workers
 
 They are used to cache some data in the browser. The config file is located at the root of the project `ngsw-config.json`.
+
+They only work in production config.
