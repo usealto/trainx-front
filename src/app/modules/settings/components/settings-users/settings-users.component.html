@@ -96,91 +96,96 @@
   </div>
 </div>
 
-<div class="mt-5">
-  <h2>
-    <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="14" height="14" />
-    {{ I18ns.settings.users.users }}
-  </h2>
-  <p class="alto-grey descriptions">
-    {{ I18ns.settings.users.usersDesc }}
-  </p>
+<div class="mt-5"></div>
 
-  <div class="row">
-    <alto-search
-      data-cy="filterBySearch"
-      class="float-end d-inline-block"
-      (searchChange)="filterUsers({ search: $event })"
-    ></alto-search>
-
-    <div class="col mt-5 px-0">
-      <div class="table-panel">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col" class="w-35 px-4">
-                {{ I18ns.settings.users.table.name }}
-              </th>
-              <th scope="col" class="w-15">
-                {{ I18ns.settings.users.table.createdAt }}
-              </th>
-              <th scope="col" class="w-15">
-                {{ I18ns.settings.users.table.lastConnection }}
-              </th>
-              <th scope="col" class="w-15">
-                {{ I18ns.settings.users.table.integration }}
-              </th>
-              <th class="w-15 px-4"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let user of paginatedUsers" class="align-middle">
-              <td class="px-4">
-                <alto-profile-card [user]="user"></alto-profile-card>
-              </td>
-              <td title="{{ user.createdAt | date : 'short' }}" class="fs-7">
-                {{ user.createdAt | date : 'shortDate' }}
-              </td>
-              <td title="{{ user.updatedAt | date : 'short' }}" class="fs-7">
-                {{ user.updatedAt | date : 'shortDate' }}
-              </td>
-              <td>
-                <div
-                  class="alto-badge"
-                  [ngStyle]="{
-                    'background-color': user.slackId ? '#ECFDF3' : '#F8F9FC',
-                    color: user.slackId ? '#039855' : '#363F72'
-                  }"
-                >
-                  <div class="d-flex align-items-center">
-                    <img
-                      *ngIf="user.slackId"
-                      src="assets/img/slack-logo.svg"
-                      width="16"
-                      height="16"
-                      alt="Slack Logo"
-                      class="me-2"
-                    />
-                    <span *ngIf="user.slackId">{{ I18ns.settings.users.enable }}</span>
-                    <span *ngIf="!user.slackId">{{ I18ns.settings.users.disable }}</span>
-                  </div>
-                </div>
-              </td>
-              <td class="px-4 text-center">
-                <i class="cursor-pointer fs-5 bi bi-trash3 me-4" (click)="deleteUser(user)"></i>
-                <i class="cursor-pointer fs-5 bi bi-pen" (click)="openUserEditionForm(user)"></i>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <alto-pagination
-          class="mx-4 d-block"
-          [collectionSize]="usersCount"
-          [(page)]="usersPage"
-          (pageChange)="changeUsersPage(usersDisplay, $event)"
-          [pageSize]="usersPageSize"
-        ></alto-pagination>
-      </div>
+<div class="table-title">
+  <div>
+    <div>
+      <h2>
+        <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="14" height="14" />
+        {{ I18ns.settings.users.users }}
+      </h2>
+      <p class="alto-grey descriptions">
+        {{ I18ns.settings.users.usersDesc }}
+      </p>
     </div>
+    <button class="btn btn-primary" (click)="openUsersForm()">
+      <i class="bi bi-plus-lg"></i>{{ I18ns.settings.users.addUsers.add }}
+    </button>
   </div>
+
+  <alto-search
+    data-cy="filterBySearch"
+    class="w-50 d-inline-block"
+    (searchChange)="filterUsers({ search: $event })"
+  ></alto-search>
+</div>
+
+<div class="table-panel">
+  <table class="table mt-5">
+    <thead>
+      <tr>
+        <th scope="col" class="w-35 px-4">
+          {{ I18ns.settings.users.table.name }}
+        </th>
+        <th scope="col" class="w-15">
+          {{ I18ns.settings.users.table.createdAt }}
+        </th>
+        <th scope="col" class="w-15">
+          {{ I18ns.settings.users.table.lastConnection }}
+        </th>
+        <th scope="col" class="w-15">
+          {{ I18ns.settings.users.table.integration }}
+        </th>
+        <th class="w-15 px-4"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of paginatedUsers" class="align-middle">
+        <td class="px-4">
+          <alto-profile-card [user]="user"></alto-profile-card>
+        </td>
+        <td title="{{ user.createdAt | date : 'short' }}" class="fs-7">
+          {{ user.createdAt | date : 'shortDate' }}
+        </td>
+        <td title="{{ user.updatedAt | date : 'short' }}" class="fs-7">
+          {{ user.updatedAt | date : 'shortDate' }}
+        </td>
+        <td>
+          <div
+            class="alto-badge"
+            [ngStyle]="{
+              'background-color': user.slackId ? '#ECFDF3' : '#F8F9FC',
+              color: user.slackId ? '#039855' : '#363F72'
+            }"
+          >
+            <div class="d-flex align-items-center">
+              <img
+                *ngIf="user.slackId"
+                src="assets/img/slack-logo.svg"
+                width="16"
+                height="16"
+                alt="Slack Logo"
+                class="me-2"
+              />
+              <span *ngIf="user.slackId">{{ I18ns.settings.users.enable }}</span>
+              <span *ngIf="!user.slackId">{{ I18ns.settings.users.disable }}</span>
+            </div>
+          </div>
+        </td>
+        <td class="px-4 text-center">
+          <i class="cursor-pointer fs-5 bi bi-trash3 me-4" (click)="deleteUser(user)"></i>
+          <i class="cursor-pointer fs-5 bi bi-pen" (click)="openUserEditionForm(user)"></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <alto-pagination
+    class="mx-4 d-block"
+    [collectionSize]="usersCount"
+    [(page)]="usersPage"
+    (pageChange)="changeUsersPage(usersDisplay, $event)"
+    [pageSize]="usersPageSize"
+  ></alto-pagination>
 </div>

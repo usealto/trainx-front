@@ -2,16 +2,38 @@
   padding: 0.75rem;
 }
 
+.table-title {
+  display: flex;
+  padding: 0 0.833rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  align-self: stretch;
+  margin-bottom: 2rem;
+
+  & > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    & > div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 4px;
+      flex: 1 0 0;
+    }
+  }
+}
+
 .table tbody tr {
   height: 4.667rem;
 }
 
 .table tbody td,
 .table thead th {
-  padding-top: 0.6667rem;
-  padding-bottom: 0.6667rem;
-  padding-right: 1.3333rem;
-  padding-left: 0rem;
+  padding-top: 0.6667rem 1.3333rem 0.6667rem 0rem;
 }
 
 .disabled-icon {
@@ -34,12 +56,6 @@ p {
   padding-left: 0.8333rem;
   padding-right: 0.8333rem;
   margin-bottom: 1rem;
-}
-
-alto-search {
-  padding-left: 0.8333rem;
-  padding-right: 0.8333rem;
-  margin-bottom: 0.8333rem;
 }
 
 :host ::ng-deep {

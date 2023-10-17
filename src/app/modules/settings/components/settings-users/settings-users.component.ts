@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
-import { switchMap, tap } from 'rxjs';
+import { filter, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { UserEditFormComponent } from 'src/app/modules/lead-team/components/user-edit-form/user-edit-form.component';
 import { UserFilters } from 'src/app/modules/profile/models/user.model';
@@ -11,6 +11,7 @@ import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
+import { AddUsersComponent } from './add-users/add-users.component';
 
 @UntilDestroy()
 @Component({
@@ -126,6 +127,26 @@ export class SettingsUsersComponent implements OnInit {
           this.getUsers();
         }),
         untilDestroyed(this),
+      )
+      .subscribe();
+  }
+
+  openUsersForm() {
+    const canvasRef = this.offcanvasService.open(AddUsersComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto users-form',
+    });
+    const instance = canvasRef.componentInstance as AddUsersComponent;
+    // instance.createdQuestion;
+    // instance.questionSubmitted = question;
+    // instance.isSubmitted = true;
+
+    instance.createdUsers
+      .pipe(
+        filter((x) => !!x),
+        tap((userCreated) => {
+          this.getUsers();
+        }),
       )
       .subscribe();
   }

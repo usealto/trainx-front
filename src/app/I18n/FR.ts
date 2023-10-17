@@ -745,6 +745,10 @@ export const FR = {
       successEdit: 'Le collaborateur {{}} a bien été modifié',
       deleteAdminTooltip:
         'Pour supprimer un administrateur, transformez-le d’abord en utilisateur standard. Vous pourrez ensuite procéder à la suppression',
+      addUsers: {
+        add: 'Ajouter des collaborateurs',
+        invite: 'Inviter des collaborateurs',
+      },
     },
     continuousSession: {
       title: 'Session continue',

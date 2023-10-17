@@ -1,0 +1,18 @@
+<div class="text-end px-4 mt-3">
+  <button
+    data-cy="closeEditTeamPanel"
+    type="button"
+    class="btn-close float-end"
+    aria-label="Close"
+    (click)="activeOffcanvas.dismiss()"
+  ></button>
+</div>
+<div class="mx-5 my-4 d-flex align-items-center">
+  <alto-icon-badge [size]="4" icon="bi-people" class="me-4"></alto-icon-badge>
+
+  <h2 class="d-inline-block m-0">
+    {{ I18ns.settings.users.addUsers.invite }}
+  </h2>
+</div>
+
+<hr />

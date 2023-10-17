@@ -59,6 +59,14 @@ textarea.form-control:focus {
   --bs-offcanvas-bg: white;
 }
 
+.offcanvas.users-form {
+  --bs-offcanvas-width: calc(100vw - 18.4rem);
+
+  @media (max-width: 880px) {
+    --bs-offcanvas-width: calc(100vw - 5rem);
+  }
+}
+
 .progress {
   --bs-progress-height: 0.571rem;
   --bs-progress-bg: #f2f4f7;
