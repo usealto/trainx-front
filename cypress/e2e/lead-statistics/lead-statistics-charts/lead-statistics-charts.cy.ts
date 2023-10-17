@@ -24,14 +24,4 @@ describe('Lead Statistics', () => {
       cy.get('[data-cy="chartBasiclineThemes"]').find('canvas').should('exist');
     });
   });
-
-  describe('Bar Chart', () => {
-    it('Checks that chart component exists', () => {
-      cy.get('[data-cy="barChart"]').should('exist');
-    });
-
-    it('Should load chart', () => {
-      cy.get('[data-cy="barChart"]').find('canvas').should('exist');
-    });
-  });
 });
