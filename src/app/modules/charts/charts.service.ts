@@ -98,14 +98,14 @@ export class ChartsService {
 
     return `
     <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10); border-radius: 4px;">
-      <div style="color: #667085; background-color: #F9FAFB; padding : 8px 10px 4px 10px;">
+      <div style="color: #667085; background-color: #F9FAFB; padding : 8px 10px 4px 10px; font-weight: 600;">
         ${params.name}
       </div>
       <div style="padding : 4px 10px 8px 10px; display: flex; align-items: center; gap: 10px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="11" viewBox="0 0 10 11" fill="none">
           <circle cx="5" cy="5.5" r="5" fill="${params.color}"/>
         </svg>
-        <p>${params.seriesName} : <b style="color: ${params.color}">${formattedData}<b></p>
+        <p>${params.seriesName} : <b style="color: ${params.color};">${formattedData}<b></p>
       </div>
     </div>
   `;

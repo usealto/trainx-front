@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { QuestionDtoApi, QuestionDtoPaginatedResponseApi } from '@usealto/sdk-ts-angular';
-import { QuestionDisplay } from '../../../models/question.model';
+import { QuestionDisplayLight } from '../../../models/question.model';
 
 @Component({
   selector: 'alto-questions-table',
@@ -12,14 +12,14 @@ export class QuestionsTableComponent implements OnChanges {
   @Input() isChecked = false;
 
   @Output() changeQuestionAssociation = new EventEmitter<{ questionId: string; toDelete: boolean }>();
-  @Output() openQuestionForm = new EventEmitter<QuestionDisplay>();
+  @Output() openQuestionForm = new EventEmitter<QuestionDisplayLight>();
   @Output() pageChange = new EventEmitter<any>();
 
   questionsCount = 0;
   questionPage = 1;
   questionPageSize = 10;
 
-  questionsDisplay: QuestionDisplay[] = [];
+  questionsDisplay: QuestionDisplayLight[] = [];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']?.currentValue) {
@@ -28,7 +28,7 @@ export class QuestionsTableComponent implements OnChanges {
     }
   }
 
-  mapQuestionsToDisplay(questions: QuestionDtoApi[] | undefined): QuestionDisplay[] {
+  mapQuestionsToDisplay(questions: QuestionDtoApi[] | undefined): QuestionDisplayLight[] {
     if (!questions) {
       return [];
     }
@@ -43,7 +43,7 @@ export class QuestionsTableComponent implements OnChanges {
     this.changeQuestionAssociation.emit({ questionId, toDelete });
   }
 
-  openForm(question?: QuestionDisplay) {
+  openForm(question?: QuestionDisplayLight) {
     this.openQuestionForm.emit(question);
   }
   questionPageChange(e: number) {

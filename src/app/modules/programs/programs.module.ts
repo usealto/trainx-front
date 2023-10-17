@@ -8,6 +8,7 @@ import { ProgramsComponent } from './components/programs/programs.component';
 import { QuestionSubmittedFormComponent } from './components/questions/question-submitted-form/question-submitted-form.component';
 import { TagsFormComponent } from './components/tags/tag-form/tag-form.component';
 import { ProgramsRoutingModule } from './programs-routing.module';
+import { ProgramsQuestionsComponent } from './components/programs/programs-questions/programs-questions.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ProgramsRoutingModule } from './programs-routing.module';
     TagsFormComponent,
     QuestionSubmittedFormComponent,
     QuestionsTableComponent,
+    ProgramsQuestionsComponent,
   ],
   imports: [CommonModule, ProgramsRoutingModule, SharedModule],
 })

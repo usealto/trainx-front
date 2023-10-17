@@ -1,12 +1,12 @@
 <div class="header-panel mb-8">
-  <img [src]="EmojiName.Gear | emoji" height="32" />
+  <img [src]="EmojiName.Gear | emoji" height="32" width="32" />
   <h1>{{ I18ns.profile.profile.title }}</h1>
 </div>
 
 <form [formGroup]="userForm">
   <div class="row py-4name">
     <h3 class="col-4 required">
-      <img class="me-3" [src]="EmojiName.PageFacingUp | emoji" />
+      <img class="me-3" [src]="EmojiName.PageFacingUp | emoji" width="20" height="20" />
       {{ I18ns.profile.profile.name }}
     </h3>
     <div class="col">
@@ -23,7 +23,7 @@
 
   <div class="row py-4name">
     <h3 class="col-4 required">
-      <img class="me-3" [src]="EmojiName.PageFacingUp | emoji" /> {{ I18ns.profile.profile.firstName }}
+      <img class="me-3" [src]="EmojiName.PageFacingUp | emoji" width="20" height="20"/> {{ I18ns.profile.profile.firstName }}
     </h3>
     <div class="col">
       <input
@@ -49,7 +49,7 @@
 
   <div class="row py-4name">
     <h3 class="col-4">
-      <img class="me-3" [src]="EmojiName.LoveLetter | emoji" />{{ I18ns.profile.profile.email }}
+      <img class="me-3" [src]="EmojiName.LoveLetter | emoji" width="20" height="20"/>{{ I18ns.profile.profile.email }}
     </h3>
     <div class="col-7 form-group">
       <input type="email" disabled class="form-control" [value]="this.user.email" readonly />
@@ -59,7 +59,7 @@
 
   <div class="row py-4name">
     <h3 class="col-4">
-      <img class="me-3" [src]="EmojiName.OfficeBuilding | emoji" />{{ I18ns.profile.profile.company }}
+      <img class="me-3" [src]="EmojiName.OfficeBuilding | emoji" width="20" height="20"/>{{ I18ns.profile.profile.company }}
     </h3>
     <div class="col-7 form-group">
       <input type="text" class="form-control" [value]="user.company.name" disabled readonly />
@@ -69,7 +69,7 @@
 
   <div class="row py-4name">
     <h3 class="col-4">
-      <img class="me-3" [src]="EmojiName.BustsInSilhouette | emoji" />{{ I18ns.profile.profile.team }}
+      <img class="me-3" [src]="EmojiName.BustsInSilhouette | emoji" width="20" height="20"/>{{ I18ns.profile.profile.team }}
     </h3>
     <div class="col-7 form-group">
       <input type="text" class="form-control" [value]="user.team?.name" disabled readonly />
@@ -79,7 +79,7 @@
 
   <div class="row py-4name">
     <h3 class="col-4">
-      <img class="me-3" [src]="EmojiName.Label | emoji" />{{ I18ns.profile.profile.roles }}
+      <img class="me-3" [src]="EmojiName.Label | emoji" width="20" height="20"/>{{ I18ns.profile.profile.roles }}
     </h3>
     <div class="col-7 form-group">
       <input type="text" class="form-control" [value]="user.roles.join(' | ')" disabled readonly />

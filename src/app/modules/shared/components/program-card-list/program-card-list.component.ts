@@ -1,18 +1,18 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { ProgramDtoApi } from '@usealto/sdk-ts-angular';
-import { map, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProgramFilters } from 'src/app/modules/programs/models/program.model';
+import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { ProgramsService } from 'src/app/modules/programs/services/programs.service';
 import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { AltoRoutes } from '../../constants/routes';
+import { PlaceholderDataStatus } from '../../models/placeholder.model';
 import { ScoresRestService } from '../../services/scores-rest.service';
 import { ScoresService } from '../../services/scores.service';
-import { PlaceholderDataStatus } from '../../models/placeholder.model';
-import { ProgramsStore } from 'src/app/modules/programs/programs.store';
+import { tap } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -129,40 +129,54 @@ export class ProgramCardListComponent implements OnInit {
   }
 
   getPrograms() {
-    let data = this.programStore.programsInitCardList.value;
-    // If the place is 'active', filter out programs that are not active and that has no team
-    if (this.isActive) {
-      data = data?.filter((program) => program.program.isActive && program.teams.length !== 0) ?? [];
-    }
-    data?.sort((a, b) => {
-      if (a.program.isActive === b.program.isActive) {
-        // If both programs have the same active state, sort by updatedAt
-        return new Date(b.program.updatedAt).getTime() - new Date(a.program.updatedAt).getTime();
-      }
-      return a.program.isActive ? -1 : 1;
-    });
-    data.forEach((x) => {
-      x.program.teams = x.teams.map((t) => t.team);
-    });
-    this.programs = data.map((x) => x.program);
-    this.programsDisplay = this.programs;
-    this.count = this.programs.length;
-    this.ongoingProgramsDataStatus = this.count === 0 ? 'noData' : 'good';
+    const data$ =
+      this.programStore.programsInitCardList.value?.length > 0
+        ? this.programStore.programsInitCardList.value$
+        : this.scoresRestService
+            .getProgramsStats(ScoreDuration.All, false, {
+              sortBy: 'updatedAt:desc',
+            })
+            .pipe(tap((stats) => (this.programStore.programsInitCardList.value = stats)));
 
-    this.isSearchResult = false;
-    data.forEach((x) => {
-      this.programsScores.set(x.program.id, x.score ?? 0);
-      this.programsProgress.set(x.program.id, x.progress ?? 0);
-      this.programsInvolvement.set(x.program.id, x.participation ?? 0);
-      this.programsMemberHaveValidatedCount.set(
-        x.program.id,
-        x.userValidatedProgramCount + '/' + x.totalUsersCount,
-      );
-    });
+    data$
+      .pipe(
+        tap((data) => {
+          // If the place is 'active', filter out programs that are not active and that has no team
+          if (this.isActive) {
+            data = data?.filter((program) => program.program.isActive && program.teams.length !== 0) ?? [];
+          }
+          data?.sort((a, b) => {
+            if (a.program.isActive === b.program.isActive) {
+              // If both programs have the same active state, sort by updatedAt
+              return new Date(b.program.updatedAt).getTime() - new Date(a.program.updatedAt).getTime();
+            }
+            return a.program.isActive ? -1 : 1;
+          });
+          data.forEach((x) => {
+            x.program.teams = x.teams.map((t) => t.team);
+          });
+          this.programs = data.map((x) => x.program);
+          this.programsDisplay = this.programs;
+          this.count = this.programs.length;
+          this.ongoingProgramsDataStatus = this.count === 0 ? 'noData' : 'good';
 
-    setTimeout(() => {
-      this.programTotal.emit(this.count);
-    }, 100);
+          this.isSearchResult = false;
+          data.forEach((x) => {
+            this.programsScores.set(x.program.id, x.score ?? 0);
+            this.programsProgress.set(x.program.id, x.progress ?? 0);
+            this.programsInvolvement.set(x.program.id, x.participation ?? 0);
+            this.programsMemberHaveValidatedCount.set(
+              x.program.id,
+              x.userValidatedProgramCount + '/' + x.totalUsersCount,
+            );
+          });
+
+          setTimeout(() => {
+            this.programTotal.emit(this.count);
+          }, 0);
+        }),
+      )
+      .subscribe();
   }
 
   setPageSize() {
