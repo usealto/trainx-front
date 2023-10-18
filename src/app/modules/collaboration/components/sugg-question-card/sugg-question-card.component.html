@@ -4,7 +4,9 @@
       <alto-icon-badge [icon]="'bi-lightbulb'" [color]="'badge-double-purple'"></alto-icon-badge>
     </div>
     <div class="header-text">
-      <span class="fw-medium text-purple m-sm-2">{{ I18ns.collaboration.questionCard.suggQuestion }}</span>
+      <span data-cy="contributionType" class="fw-medium text-purple m-sm-2">{{
+        I18ns.collaboration.questionCard.suggQuestion
+      }}</span>
       <div
         class="alto-badge"
         [ngClass]="

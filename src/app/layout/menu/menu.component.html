@@ -77,6 +77,7 @@
     </div>
     <div ngbTooltip="{{ I18ns.menu.collaboration }}" placement="right" tooltipClass="menu-tooltip-class">
       <a
+      data-cy="leadMenuCollaboration"
         class="module"
         [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.collaboration"
         routerLinkActive="menu-selected"

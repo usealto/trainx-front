@@ -5,7 +5,9 @@
     </div>
 
     <div class="header-text">
-      <span class="fw-medium text-blue">{{ I18ns.collaboration.commentCard.comment }}</span>
+      <span data-cy="contributionType" class="fw-medium text-blue">{{
+        I18ns.collaboration.commentCard.comment
+      }}</span>
       <div>
         <span class="contribution-text d-inline-block">
           {{ I18ns.collaboration.commentCard.concerningQuestion }} </span
@@ -30,7 +32,7 @@
 
     <div class="text-content">
       <div class="author">
-        <span [ngClass]="comment?.author ? 'fw-semibold' : 'light-text'"
+        <span [ngClass]="comment?.author ? 'fw-semibold' : 'light-text'" data-cy="collaboratorName"
           >{{
             comment?.author
               ? comment?.author?.firstname + ' ' + comment?.author?.lastname
