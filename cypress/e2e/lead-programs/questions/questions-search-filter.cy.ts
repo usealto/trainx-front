@@ -9,7 +9,9 @@ describe('L/Programs Questions Tab', () => {
   let questionTitle = '';
 
   it('Collects an existing question', () => {
-    cy.get('[data-cy="programCard"]').first().click().wait(500);
+    cy.intercept('GET', '/v1/programs/**').as('getProgram')
+    cy.get('[data-cy="programCard"]').first().click().wait(500)
+    cy.wait('@getProgram').wait(100)
 
     cy.get('[data-cy="questionsTab"]').click();
     cy.get('[data-cy="questionTitle"]')
