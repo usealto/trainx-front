@@ -28,6 +28,7 @@ import { QuestionDisplayLight } from '../../models/question.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
+import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 
 @UntilDestroy()
 @Component({
@@ -72,6 +73,7 @@ export class CreateProgramsComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly location: Location,
     private readonly toastService: ToastService,
+    private readonly validationService: ValidationService,
     public programStore: ProgramsStore,
     public teamStore: TeamStore,
     private modalService: NgbModal,
@@ -126,24 +128,16 @@ export class CreateProgramsComponent implements OnInit {
 
   initForm(program?: ProgramDtoApi) {
     this.programForm = this.fb.group<ProgramForm>({
-      name: [program?.name ?? '', [Validators.required, this.uniqueNameValidation(this.programsNames)]],
+      name: [
+        program?.name ?? '',
+        [Validators.required, this.validationService.uniqueNameValidation(this.programsNames)],
+      ],
       priority: [program?.priority ?? null, [Validators.required]],
       description: program?.description ?? '',
       expectation: [program?.expectation ?? 75, [Validators.required]],
       tags: [[]],
       teams: [program?.teams?.map((t) => t.id) ?? []],
     });
-  }
-
-  uniqueNameValidation(programs: string[]): ValidatorFn {
-    return (control: AbstractControl) => {
-      const typedName = control.value.toLowerCase();
-
-      if (programs && programs.includes(typedName)) {
-        return { nameNotAllowed: true };
-      }
-      return null;
-    };
   }
 
   saveProgram() {

@@ -10,6 +10,7 @@ import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { TeamForm } from '../../model/team.form';
 import { TeamsRestService } from '../../services/teams-rest.service';
+import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 
 @Component({
   selector: 'alto-team-form',
@@ -26,7 +27,7 @@ export class TeamFormComponent implements OnInit {
   teamsNames: string[] = [];
 
   teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
-    name: ['', [Validators.required, this.uniqueNameValidation(this.teamsNames)]],
+    name: ['', [Validators.required, this.validationService.uniqueNameValidation(this.teamsNames)]],
     programs: [],
     invitationEmails: [],
   });
@@ -43,6 +44,7 @@ export class TeamFormComponent implements OnInit {
     private readonly userService: UsersService,
     private readonly programService: ProgramsRestService,
     private readonly teamsRestService: TeamsRestService,
+    private readonly validationService: ValidationService,
   ) {}
 
   ngOnInit(): void {
@@ -195,16 +197,5 @@ export class TeamFormComponent implements OnInit {
     });
 
     return output$;
-  }
-
-  uniqueNameValidation(teams: string[]): ValidatorFn {
-    return (control: AbstractControl) => {
-      const typedName = control.value.toLowerCase();
-
-      if (teams && teams.includes(typedName)) {
-        return { nameNotAllowed: true };
-      }
-      return null;
-    };
   }
 }
