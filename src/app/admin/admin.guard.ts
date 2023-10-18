@@ -14,11 +14,13 @@ export const canAccessAdmin: CanActivateFn = () => {
           (r) => r === UserDtoApiRolesEnumApi.AltoAdmin,
         ),
       ),
-      tap((isAdmin) => {
+      map((isAdmin) => {
         if (isAdmin) {
           return true
-        }else if(localStorage.getItem('impersonatedUser') !== '' && localStorage.getItem('impersonatedUser')){
-          return true
+        // here we can add more logic to check if the user is allowed to access the admin panel
+        // but we recommend to avoid not Admin in the admin panel, even impersonated users
+        // }else if(localStorage.getItem('impersonatedUser') !== '' && localStorage.getItem('impersonatedUser')){
+        //   return true
         }else{
           router.navigate(['admin', 'unauthorized']);
           return false

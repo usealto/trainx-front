@@ -7,7 +7,6 @@
     </li>
     <li *ngFor="let breadcrumb of breadcrumbs; first as first" class="breadcrumb-item">
       <a [routerLink]="breadcrumb.url" routerLinkActive="menu-selected">
-        <i *ngIf="!first" class="bi bi-chevron-right"></i>
         {{ breadcrumb.label }}
       </a>
     </li>
