@@ -110,8 +110,9 @@
 
     <ng-container formArrayName="answersAccepted">
       <ng-container *ngFor="let answer of answersAccepted.controls; let i = index">
-        <div class="d-flex align-items-center" data-cy="goodAnswerInput">
+        <div class="d-flex align-items-center">
           <alto-text-counter
+            data-cy="goodAnswerInput"
             class="flex-grow-1 ml-2"
             [control]="answer"
             [placeholder]="I18ns.questions.form.goodAnswerPlaceholder"
@@ -140,8 +141,9 @@
 
     <ng-container formArrayName="answersWrong">
       <ng-container *ngFor="let answer of answersWrong.controls; let i = index">
-        <div class="d-flex align-items-center" data-cy="badAnswerInput">
+        <div class="d-flex align-items-center">
           <alto-text-counter
+            data-cy="badAnswerInput"
             class="flex-grow-1 ml-2"
             [control]="answer"
             [placeholder]="I18ns.questions.form.badAnswerPlaceholder"
