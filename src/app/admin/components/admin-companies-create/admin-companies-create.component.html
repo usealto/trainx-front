@@ -112,11 +112,13 @@
           <div class="w-80 row">
             <div class="col-5 mb-2">
               <label for="name">Questions</label>
+              <p class="fs-7">Currently disabled. Ask Guillaume if needed</p>
             </div>
             <div class="col-7 form-group">
               <a
                 [routerLink]="['/', 'admin', 'companies', company.id, 'questions']"
-                class="btn btn-primary"
+                class="btn btn-primary disabled"
+                style="cursor: default; pointer-events: none;"
               > 
                 Upload questions
               </a>
