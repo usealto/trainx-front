@@ -705,10 +705,10 @@ export const FR = {
     },
   },
   menu: {
-    home: 'Accueil',
-    programs: 'Programmes',
+    home: 'Dashboard',
+    programs: 'Mes programmes',
     statistics: 'Statistiques',
-    team: 'Équipes',
+    team: 'Mes équipes',
     challenges: 'Challenges',
     settings: 'Paramètres',
     profile: 'Mon profil',
@@ -716,7 +716,7 @@ export const FR = {
     adminMode: 'Mode Administrateur',
     disconnect: 'Se déconnecter',
     feedback: 'Envoyer un feedback',
-    collaboration: 'Collaboration',
+    contribution: 'Contribution',
   },
   settings: {
     title: 'Paramètres',
@@ -1017,7 +1017,7 @@ export const FR = {
     },
   },
   collaboration: {
-    title: 'Collaboration',
+    title: 'Contribution',
     subtitle: "Gérer l'ensemble des contributions de vos équipes.",
     showMore: 'Afficher plus',
     tabs: {

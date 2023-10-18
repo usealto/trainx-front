@@ -65,6 +65,16 @@
         <i class="bi bi-bar-chart"></i>
       </a>
     </div>
+    <div ngbTooltip="{{ I18ns.menu.contribution }}" placement="right" tooltipClass="menu-tooltip-class">
+      <a
+      data-cy="leadMenuCollaboration"
+        class="module"
+        [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.collaboration"
+        routerLinkActive="menu-selected"
+      >
+        <i class="bi bi-puzzle"></i>
+      </a>
+    </div>
     <div ngbTooltip="{{ I18ns.menu.team }}" placement="right" tooltipClass="menu-tooltip-class">
       <a
         data-cy="leadMenuTeams"
@@ -73,16 +83,6 @@
         routerLinkActive="menu-selected"
       >
         <i class="bi bi-people"></i>
-      </a>
-    </div>
-    <div ngbTooltip="{{ I18ns.menu.collaboration }}" placement="right" tooltipClass="menu-tooltip-class">
-      <a
-      data-cy="leadMenuCollaboration"
-        class="module"
-        [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.collaboration"
-        routerLinkActive="menu-selected"
-      >
-        <i class="bi bi-puzzle"></i>
       </a>
     </div>
     <!--
