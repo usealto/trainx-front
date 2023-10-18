@@ -14,7 +14,12 @@
   #select
 >
   <ng-template *ngIf="enableSearch" ng-header-tmp>
-    <input style="width: 100%; line-height: 24px" type="text" (input)="search(select, $event)" />
+    <input
+      data-cy="dropdownInput"
+      style="width: 100%; line-height: 24px"
+      type="text"
+      (input)="search(select, $event)"
+    />
   </ng-template>
 
   <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
