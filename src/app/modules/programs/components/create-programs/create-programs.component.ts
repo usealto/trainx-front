@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -20,6 +20,7 @@ import { I18ns, getTranslation } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
 import { QuestionFormComponent } from '../../../shared/components/question-form/question-form.component';
@@ -28,7 +29,6 @@ import { QuestionDisplayLight } from '../../models/question.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
-import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 
 @UntilDestroy()
 @Component({
@@ -130,7 +130,7 @@ export class CreateProgramsComponent implements OnInit {
     this.programForm = this.fb.group<ProgramForm>({
       name: [
         program?.name ?? '',
-        [Validators.required, this.validationService.uniqueNameValidation(this.programsNames)],
+        [Validators.required, this.validationService.uniqueStringValidation(this.programsNames)],
       ],
       priority: [program?.priority ?? null, [Validators.required]],
       description: program?.description ?? '',

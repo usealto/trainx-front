@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, filter, of, switchMap, tap } from 'rxjs';
@@ -8,9 +8,9 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
+import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 import { TeamForm } from '../../model/team.form';
 import { TeamsRestService } from '../../services/teams-rest.service';
-import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 
 @Component({
   selector: 'alto-team-form',
@@ -27,7 +27,7 @@ export class TeamFormComponent implements OnInit {
   teamsNames: string[] = [];
 
   teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
-    name: ['', [Validators.required, this.validationService.uniqueNameValidation(this.teamsNames)]],
+    name: ['', [Validators.required, this.validationService.uniqueStringValidation(this.teamsNames)]],
     programs: [],
     invitationEmails: [],
   });

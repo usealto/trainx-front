@@ -5,7 +5,7 @@ import { AbstractControl, ValidatorFn } from '@angular/forms';
   providedIn: 'root',
 })
 export class ValidationService {
-  uniqueNameValidation(data: string[]): ValidatorFn {
+  uniqueStringValidation(data: string[]): ValidatorFn {
     return (control: AbstractControl) => {
       const typedName = control.value.toLowerCase();
 
