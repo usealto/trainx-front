@@ -94,6 +94,9 @@ export class AdminUserCreateFormComponent implements OnInit {
 
     const { firstname, lastname, email, roles } = this.userForm.value;
 
+    // adding company user role & removing potential duplicates
+    const rolesWithCompanyUser = [... new Set([...roles, RoleEnumApi.CompanyUser])]
+
     if (this.edit) {
       this.usersApiService
         .patchUser({
@@ -101,7 +104,7 @@ export class AdminUserCreateFormComponent implements OnInit {
           patchUserDtoApi: {
             firstname: firstname,
             lastname: lastname,
-            roles: roles,
+            roles: rolesWithCompanyUser,
           },
         })
         .subscribe((q) => {
@@ -115,7 +118,7 @@ export class AdminUserCreateFormComponent implements OnInit {
             companyId: this.companyId,
             firstname: firstname,
             lastname: lastname,
-            roles: roles,
+            roles: rolesWithCompanyUser,
           },
         })
         .subscribe((q) => {
