@@ -7,7 +7,7 @@ import { AddUsersForm } from '../../../models/user.model';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { TeamDtoApi, UserDtoCreatedResponseApi } from '@usealto/sdk-ts-angular';
-import { tap } from 'rxjs';
+import { catchError, combineLatest, of, pipe, tap } from 'rxjs';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 import { IAbstractControl } from 'src/app/core/form-types/i-abstract-control';
@@ -73,22 +73,39 @@ export class AddUsersComponent implements OnInit {
       check = !f.valid ? false : check;
     });
 
-    const userErrors: UserDtoCreatedResponseApi[] = [];
+    const validUsers: number[] = [];
     if (check) {
-      this.userForms.forEach((f) => {
+      const obs$ = this.userForms.map((f, index) => {
         if (f.value) {
-          this.usersRestService
+          return this.usersRestService
             .createUser({
               firstname: f.value.firstname ?? '',
               lastname: f.value.lastname ?? '',
               teamId: f.value.teamId ?? '',
               email: f.value.email ?? '',
-              companyId: f.value.companyId,
+              companyId: f.value.companyId + (index === 1 ? '33' : ''),
             })
-            .pipe(tap((u) => userErrors.push(u)))
-            .subscribe();
+            .pipe(
+              catchError((err) => {
+                return of(err);
+              }),
+              tap(() => {
+                validUsers.push(index);
+              }),
+            );
         }
+        return of(null);
       });
+      combineLatest(obs$)
+        .pipe(
+          tap(console.log),
+          tap(() => {
+            console.log(validUsers);
+
+            validUsers.forEach((i) => this.removeLine(i));
+          }),
+        )
+        .subscribe();
     }
   }
 

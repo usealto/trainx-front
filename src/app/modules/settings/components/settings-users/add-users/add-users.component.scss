@@ -1,6 +1,6 @@
 .form-line {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 0.667rem;
   align-self: stretch;
   margin: 0 2rem 2.333rem 2rem;
@@ -11,6 +11,10 @@
     align-items: flex-start;
     gap: 0.667rem;
     flex: 1 0 0;
+    & > div {
+      display: flex;
+      gap: 0.667rem;
+    }
   }
 
   .cross {
@@ -27,7 +31,9 @@
     border: 1px solid var(--gray-200);
   }
 }
-
+.offcanvas-body {
+  padding-bottom: 7rem;
+}
 .footer {
   background-color: white;
   position: fixed;
