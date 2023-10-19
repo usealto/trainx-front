@@ -9,6 +9,7 @@ import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.
 import { TeamDtoApi, UserDtoCreatedResponseApi } from '@usealto/sdk-ts-angular';
 import { tap } from 'rxjs';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
+import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 
 @Component({
   selector: 'alto-add-users',
@@ -31,6 +32,7 @@ export class AddUsersComponent implements OnInit {
     readonly fob: UntypedFormBuilder,
     private readonly teamService: TeamsRestService,
     private readonly usersRestService: UsersRestService,
+    private readonly validationService: ValidationService,
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +45,25 @@ export class AddUsersComponent implements OnInit {
       )
       .subscribe();
 
+    const test = this.userStore.users.value.forEach((u) => u.email);
+    console.log(test);
+
+    // .pipe(
+    //   tap((d) => {
+    //     d.forEach((t) => {
+    //       this.teamsNames.push(t.name.toLowerCase());
+    //     });
+    //   }),
+    //   tap(() => {
+    //     const teamName = this.team?.name.toLowerCase();
+    //     const index = this.teamsNames.indexOf(teamName ?? '');
+    //     if (teamName) {
+    //       this.teamsNames.splice(index, 1);
+    //     }
+    //   }),
+    // )
+    // .subscribe();
+
     this.addLine();
   }
 
@@ -51,7 +72,7 @@ export class AddUsersComponent implements OnInit {
       firstname: ['', [Validators.required]],
       lastname: ['', [Validators.required]],
       teamId: [undefined, [Validators.required]],
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required, this.validationService.uniqueStringValidation([])]],
       companyId: [this.userStore.user.value.companyId],
     });
   }

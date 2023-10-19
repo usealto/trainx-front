@@ -38,11 +38,21 @@ export class TeamsRestService {
   }
 
   createTeam(createTeamDtoApi: CreateTeamDtoApi): Observable<TeamDtoApi | undefined> {
-    return this.teamApi.createTeam({ createTeamDtoApi }).pipe(map((r) => r.data));
+    return this.teamApi.createTeam({ createTeamDtoApi }).pipe(
+      map((r) => r.data),
+      tap(() => {
+        this.teamStore.teams.reset();
+      }),
+    );
   }
 
   updateTeam(patchTeamRequestParams: PatchTeamRequestParams): Observable<TeamDtoApi | undefined> {
-    return this.teamApi.patchTeam(patchTeamRequestParams).pipe(map((r) => r.data));
+    return this.teamApi.patchTeam(patchTeamRequestParams).pipe(
+      map((r) => r.data),
+      tap(() => {
+        this.teamStore.teams.reset();
+      }),
+    );
   }
 
   deleteTeam(id: string): Observable<DeleteResponseApi | undefined> {

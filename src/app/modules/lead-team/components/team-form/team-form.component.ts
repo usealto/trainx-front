@@ -59,7 +59,9 @@ export class TeamFormComponent implements OnInit {
         tap(() => {
           const teamName = this.team?.name.toLowerCase();
           const index = this.teamsNames.indexOf(teamName ?? '');
-          this.teamsNames.splice(index, 1);
+          if (teamName) {
+            this.teamsNames.splice(index, 1);
+          }
         }),
       )
       .subscribe();
