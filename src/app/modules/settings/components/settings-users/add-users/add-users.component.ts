@@ -25,7 +25,6 @@ export class AddUsersComponent implements OnInit {
   private fb: IFormBuilder = this.fob;
 
   userForms: IFormGroup<AddUsersForm>[] = [];
-  // userForm: IFormGroup<AddUsersForm> | undefined;
   teams: TeamDtoApi[] = [];
   emails: string[] = [];
 
@@ -76,14 +75,14 @@ export class AddUsersComponent implements OnInit {
 
     const userErrors: UserDtoCreatedResponseApi[] = [];
     if (check) {
-      //   this.userForms.forEach((f) => {
-      //     if (f.value) {
-      //       this.usersRestService
-      //         .createUser(f.value)
-      //         .pipe(tap((u) => userErrors.push(u)))
-      //         .subscribe();
-      //     }
-      //   });
+      this.userForms.forEach((f) => {
+        if (f.value) {
+          this.usersRestService
+            .createUser(f.value)
+            .pipe(tap((u) => userErrors.push(u)))
+            .subscribe();
+        }
+      });
     }
   }
 
