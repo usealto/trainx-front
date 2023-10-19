@@ -109,7 +109,7 @@ export const FR = {
     ],
     statistics: {
       title: 'Les statistiques de vos équipes',
-      subtitle: 'Découvrez un aperçu des performances de vos équipes.',
+      subtitle: "écouvrez un aperçu des performances de vos équipes sur l'année en cours.",
       averageScore: 'Score moyen',
       terminatedPrograms: 'Programmes terminés',
       guessesCount: 'Nombre total de réponses ',

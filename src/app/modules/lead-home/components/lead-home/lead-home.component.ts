@@ -49,7 +49,7 @@ export class LeadHomeComponent implements OnInit {
   userName = '';
 
   globalFilters: ScoreFilters = {
-    duration: ScoreDuration.Trimester,
+    duration: ScoreDuration.Year,
     type: ScoreTypeEnumApi.Team,
     teams: [],
   };
@@ -134,12 +134,7 @@ export class LeadHomeComponent implements OnInit {
     const params = {
       duration: duration,
       type: ScoreTypeEnumApi.Guess,
-      timeframe:
-        duration === ScoreDuration.Year
-          ? ScoreTimeframeEnumApi.Month
-          : duration === ScoreDuration.Trimester
-          ? ScoreTimeframeEnumApi.Week
-          : ScoreTimeframeEnumApi.Day,
+      timeframe: ScoreTimeframeEnumApi.Month,
     };
 
     this.scoresRestService
@@ -163,7 +158,7 @@ export class LeadHomeComponent implements OnInit {
             series: [
               {
                 name: I18ns.shared.global,
-                color: '#09479e',
+                color: '#fdb022',
                 data: points.map((p) => (p.y ? Math.round((p.y * 10000) / 100) : (p.y as number))),
                 type: 'line',
                 showSymbol: false,
@@ -202,14 +197,6 @@ export class LeadHomeComponent implements OnInit {
         this.topflopLoaded = true;
       }),
     );
-  }
-
-  updateStatisticsDuration(duration: string) {
-    this.globalFilters.duration = duration as ScoreDuration;
-    this.getAverageScore(duration as ScoreDuration);
-    this.getProgramsStats(this.globalFilters);
-    this.getGuessesCount(duration as ScoreDuration);
-    this.createChart(duration as ScoreDuration);
   }
 
   getAverageScore(duration: ScoreDuration, [current, previous]: TeamStatsDtoApi[][] = []) {
