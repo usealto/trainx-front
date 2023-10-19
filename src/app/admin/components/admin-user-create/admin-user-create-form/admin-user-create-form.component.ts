@@ -8,7 +8,6 @@ import {
   AdminApiService,
   CompanyDtoApi,
   RoleEnumApi,
-  TeamDtoApi,
   UserDtoApi,
   UserDtoApiRolesEnumApi,
   UsersApiService,
@@ -25,7 +24,6 @@ import { CompaniesRestService } from 'src/app/modules/companies/service/companie
 export class AdminUserCreateFormComponent implements OnInit {
   edit = false;
   companyId!: string;
-  teams: TeamDtoApi[] = [];
   userForm!: IFormGroup<UserForm>;
   private fb: IFormBuilder;
   rolesPossibleValues = Object.values(UserDtoApiRolesEnumApi);
@@ -40,7 +38,6 @@ export class AdminUserCreateFormComponent implements OnInit {
     readonly fob: UntypedFormBuilder,
     private readonly adminApiService: AdminApiService,
     private readonly companiesRestService: CompaniesRestService,
-    private readonly teamsRestService: TeamsRestService,
   ) {
     this.fb = fob;
   }
@@ -51,14 +48,10 @@ export class AdminUserCreateFormComponent implements OnInit {
 
     combineLatest({
       company: this.companiesRestService.getCompanyById(this.companyId),
-      teams: this.teamsRestService.getTeams({ itemsPerPage: 1000 }),
     })
       .pipe(take(1))
-      .subscribe(({ company, teams }) => {
+      .subscribe(({ company }) => {
         this.company = company;
-        // Be very careful here : we are not impersonating the user, so we need to
-        // filter by the company id to avoid leaking data. TODO : dev smth more robust
-        this.teams = teams.filter((t) => t.companyId === this.companyId);
       });
 
     if (this.userId) {
@@ -75,7 +68,6 @@ export class AdminUserCreateFormComponent implements OnInit {
                 lastname: [this.user.lastname || '', [Validators.required]],
                 email: [this.user.email || '', [Validators.required, Validators.email]],
                 roles: [this.user.roles as unknown as Array<RoleEnumApi>, []],
-                team: [this.user.team, [Validators.required]],
               });
             } else {
               throw new Error('User not found');
@@ -93,7 +85,6 @@ export class AdminUserCreateFormComponent implements OnInit {
         lastname: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         roles: [[RoleEnumApi.CompanyUser], []],
-        team: [undefined, [Validators.required]],
       });
     }
   }
@@ -101,7 +92,7 @@ export class AdminUserCreateFormComponent implements OnInit {
   async submit() {
     if (!this.userForm.value) return;
 
-    const { firstname, lastname, email, roles, team } = this.userForm.value;
+    const { firstname, lastname, email, roles } = this.userForm.value;
 
     if (this.edit) {
       this.usersApiService
@@ -111,7 +102,6 @@ export class AdminUserCreateFormComponent implements OnInit {
             firstname: firstname,
             lastname: lastname,
             roles: roles,
-            teamId: team?.id,
           },
         })
         .subscribe((q) => {
@@ -126,7 +116,6 @@ export class AdminUserCreateFormComponent implements OnInit {
             firstname: firstname,
             lastname: lastname,
             roles: roles,
-            teamId: team?.id,
           },
         })
         .subscribe((q) => {

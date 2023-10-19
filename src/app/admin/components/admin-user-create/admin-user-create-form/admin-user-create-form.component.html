@@ -94,40 +94,6 @@
       </div>
     </div>
   </div>
-  <!-- Teams -->
-  <div class="py-4 border-bottom">
-    <div class="w-80 row">
-      <div class="col-5 mb-2">
-        <div class="col-5 mb-2">
-          <label for="name" class="required">Team</label>
-          <p>currently only working if you are impersonnated as someone from this company - work in progress</p>
-        </div>
-      </div>
-      <div class="col-7 form-group">
-        <ng-select
-          class="w-100"
-          required
-          [items]="teams"
-          [multiple]="false"
-          placeholder="Select a team"
-          [selectableGroup]="true"
-          [closeOnSelect]="true"
-          formControlName="team"
-        >
-          <ng-template ng-label-tmp let-item="item">
-            <div class="alto-badge fs-6b" [style]="item.id | teamColor">
-              <span>{{ item.name }}</span>
-            </div>
-          </ng-template>
-          <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-            <span  class="alto-badge fs-6b" [style]="item.id | teamColor">
-              {{ item.name }}
-            </span>
-          </ng-template>
-        </ng-select>
-      </div>
-    </div>
-  </div>
 </form>
 <div *ngIf="userForm" class="d-flex justify-content-end pt-4">
   <div class="d-flex align-items-center">

@@ -23,11 +23,12 @@
     <a
       *ngIf="company"
       type="button"
-      class="btn btn-outline-secondary d-inline-flex align-items-center me-2"
+      class="btn btn-outline-secondary d-inline-flex align-items-center me-2 disabled"
+      style="cursor: default; pointer-events: none;"
       [routerLink]="['/admin', 'companies', company.id, 'users', user.id, 'edit']"
     >
     <i class="bi bi-pencil-square"></i>
-      Edit the user
+      Edit the user [WIP]
     </a>
     <button
       [disabled]="!user.email"
