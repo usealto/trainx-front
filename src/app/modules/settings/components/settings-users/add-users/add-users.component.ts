@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { FormControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -10,6 +10,7 @@ import { TeamDtoApi, UserDtoCreatedResponseApi } from '@usealto/sdk-ts-angular';
 import { tap } from 'rxjs';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ValidationService } from 'src/app/modules/shared/services/validation.service';
+import { IAbstractControl } from 'src/app/core/form-types/i-abstract-control';
 
 @Component({
   selector: 'alto-add-users',
@@ -25,6 +26,7 @@ export class AddUsersComponent implements OnInit {
 
   userForms: IFormGroup<AddUsersForm>[] = [];
   teams: TeamDtoApi[] = [];
+  emails: string[] = [];
 
   constructor(
     private readonly userStore: ProfileStore,
@@ -45,36 +47,23 @@ export class AddUsersComponent implements OnInit {
       )
       .subscribe();
 
-    const test = this.userStore.users.value.forEach((u) => u.email);
-    console.log(test);
-
-    // .pipe(
-    //   tap((d) => {
-    //     d.forEach((t) => {
-    //       this.teamsNames.push(t.name.toLowerCase());
-    //     });
-    //   }),
-    //   tap(() => {
-    //     const teamName = this.team?.name.toLowerCase();
-    //     const index = this.teamsNames.indexOf(teamName ?? '');
-    //     if (teamName) {
-    //       this.teamsNames.splice(index, 1);
-    //     }
-    //   }),
-    // )
-    // .subscribe();
-
+    this.emails = this.userStore.users.value.map((u) => u.email);
     this.addLine();
   }
 
   getForm() {
-    return this.fb.group<AddUsersForm>({
-      firstname: ['', [Validators.required]],
-      lastname: ['', [Validators.required]],
+    const userForm = this.fb.group<AddUsersForm>({
+      firstname: [undefined, [Validators.required]],
+      lastname: [undefined, [Validators.required]],
       teamId: [undefined, [Validators.required]],
-      email: ['', [Validators.required, this.validationService.uniqueStringValidation([])]],
+      email: [
+        undefined,
+        [Validators.required, this.validationService.uniqueStringValidation(this.emails), Validators.email],
+      ],
       companyId: [this.userStore.user.value.companyId],
     });
+
+    return userForm;
   }
 
   sendForm() {
@@ -89,7 +78,13 @@ export class AddUsersComponent implements OnInit {
       this.userForms.forEach((f) => {
         if (f.value) {
           this.usersRestService
-            .createUser(f.value)
+            .createUser({
+              firstname: f.value.firstname ?? '',
+              lastname: f.value.lastname ?? '',
+              teamId: f.value.teamId ?? '',
+              email: f.value.email ?? '',
+              companyId: f.value.companyId,
+            })
             .pipe(tap((u) => userErrors.push(u)))
             .subscribe();
         }
@@ -103,5 +98,9 @@ export class AddUsersComponent implements OnInit {
 
   removeLine(index: number) {
     this.userForms.splice(index, 1);
+  }
+
+  isTouchedAndInvalid(control: IAbstractControl<string | undefined, AddUsersForm>) {
+    return control.touched && control.invalid;
   }
 }
