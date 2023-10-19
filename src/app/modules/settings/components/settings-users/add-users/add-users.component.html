@@ -19,6 +19,27 @@
 
 <form *ngFor="let userForm of userForms" [formGroup]="userForm" class="form-line">
   <div class="form-block">
+    <label for="firstname" class="form-label required fw-medium">{{
+      I18ns.settings.users.addUsers.firstname
+    }}</label>
+
+    <input
+      type="text"
+      id="firstname"
+      class="form-control"
+      formControlName="firstname"
+      placeholder="{{ I18ns.settings.users.addUsers.firstnamePlaceholder }}"
+    />
+    <span
+      [ngClass]="{
+        'text-danger': isTouchedAndInvalid(userForm.controls.firstname),
+        invisible: !isTouchedAndInvalid(userForm.controls.firstname)
+      }"
+    >
+      {{ I18ns.shared.noEmptyField }}
+    </span>
+  </div>
+  <div class="form-block">
     <label for="lastname" class="form-label required fw-medium">{{
       I18ns.settings.users.addUsers.lastname
     }}</label>
@@ -30,19 +51,14 @@
       formControlName="lastname"
       placeholder="{{ I18ns.settings.users.addUsers.lastnamePlaceholder }}"
     />
-  </div>
-  <div class="form-block">
-    <label for="firstname" class="form-label required fw-medium">{{
-      I18ns.settings.users.addUsers.firstName
-    }}</label>
-
-    <input
-      type="text"
-      id="firstname"
-      class="form-control"
-      formControlName="firstname"
-      placeholder="{{ I18ns.settings.users.addUsers.firstNamePlaceholder }}"
-    />
+    <span
+      [ngClass]="{
+        'text-danger': isTouchedAndInvalid(userForm.controls.lastname),
+        invisible: !isTouchedAndInvalid(userForm.controls.lastname)
+      }"
+    >
+      {{ I18ns.shared.noEmptyField }}
+    </span>
   </div>
   <div class="form-block">
     <label for="email" class="form-label required fw-medium">{{ I18ns.settings.users.addUsers.email }}</label>
@@ -54,7 +70,26 @@
       formControlName="email"
       placeholder="{{ I18ns.settings.users.addUsers.emailPlaceholder }}"
     />
+
+    <span
+      [ngClass]="{
+        'text-danger': isTouchedAndInvalid(userForm.controls.email),
+        invisible: !isTouchedAndInvalid(userForm.controls.email)
+      }"
+    >
+      <ng-container *ngIf="userForm.controls.email.errors?.['nameNotAllowed']">
+        {{ I18ns.settings.users.addUsers.duplicateEmail }}
+      </ng-container>
+      <ng-container *ngIf="userForm.controls.email.errors?.['required']">
+        {{ I18ns.shared.noEmptyField }}
+      </ng-container>
+      <ng-container *ngIf="userForm.controls.email.errors?.['email']">
+        {{ I18ns.settings.users.addUsers.invalidEmailFormat }}
+      </ng-container>
+      &nbsp;
+    </span>
   </div>
+
   <div class="form-block">
     <label class="form-label required fw-medium">{{ I18ns.settings.users.addUsers.team }}</label>
 
@@ -78,6 +113,14 @@
         <i class="bi bi-check-circle-fill"></i>
       </ng-template>
     </ng-select>
+    <span
+      [ngClass]="{
+        'text-danger': isTouchedAndInvalid(userForm.controls.teamId),
+        invisible: !isTouchedAndInvalid(userForm.controls.teamId)
+      }"
+    >
+      {{ I18ns.shared.noEmptyField }}
+    </span>
   </div>
 
   <button class="btn btn-outline-secondary cross" [disabled]="userForms.length <= 1">
