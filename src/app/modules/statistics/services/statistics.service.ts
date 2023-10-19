@@ -3,10 +3,12 @@ import { ScoreDuration } from '../../shared/models/score.model';
 import { startOfDay, startOfMonth, startOfWeek, format, parseISO } from 'date-fns';
 import { ScoreDtoApi } from '@usealto/sdk-ts-angular';
 import { ScoresService } from '../../shared/services/scores.service';
+
 export interface Point {
   x: Date;
   y: number | null;
 }
+
 @Injectable({
   providedIn: 'root',
 })
@@ -53,7 +55,7 @@ export class StatisticsService {
 
   transformDataToPoint(score: ScoreDtoApi) {
     const res: Point[] = [];
-    score.dates.forEach((date, index) => {
+    score?.dates.forEach((date, index) => {
       res.push({ x: date, y: score.averages[index] });
     });
     return res;
@@ -61,7 +63,7 @@ export class StatisticsService {
 
   transformDataToPointByCounts(score: ScoreDtoApi) {
     const res: Point[] = [];
-    score.dates.forEach((date, index) => {
+    score?.dates.forEach((date, index) => {
       res.push({ x: date, y: score.counts[index] });
     });
     return res;
