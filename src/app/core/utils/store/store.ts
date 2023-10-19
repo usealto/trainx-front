@@ -27,10 +27,27 @@ export class Store<T> {
     this.holder.next(v);
   }
 
+  /**
+   * Only for arrays
+   */
   add(v: unknown) {
     if (Array.isArray(this.holder.value)) {
       this.updateDate();
       this.holder.next([...this.holder.value, v] as unknown as T);
+    }
+  }
+
+  /**
+   * Only for arrays
+   */
+  patchWithId(data: any) {
+    if (Array.isArray(this.holder.value) && data.id) {
+      this.holder.value.indexOf(data);
+      this.holder.value.splice(
+        this.holder.value.findIndex((x) => x.id === data.id),
+        data,
+      );
+      this.holder.next(this.holder.value);
     }
   }
 
