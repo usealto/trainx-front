@@ -14,7 +14,7 @@ export const AltoRoutes = {
   leadTeams: 'teams',
   settings: 'settings',
   profile: 'profile',
-  collaboration: 'collaboration',
+  collaboration: 'contribution',
   collaborationSeeQuestion: 'question',
   //
   statistics: 'statistics',
