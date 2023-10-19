@@ -117,10 +117,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             yAxis: [
               {
                 ...yAxisScoreOptions,
-                max: function (value: any) {
-                // increase max value by 10% and round to ten to have a better visual
-                  return Math.round((value.max + value.max * 0.1) / 10) * 10;
-                },
+                max: undefined,
                 interval: undefined,
                 name: I18ns.charts.answerCountLabel,
               },
@@ -232,10 +229,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
           yAxis: [
             {
               ...yAxisScoreOptions,
-              max: function (value: any) {
-                // increase max value by 10% and round to ten to have a better visual
-                return Math.round((value.max + value.max * 0.1) / 10) * 10;
-              },
+              max: undefined,
               interval: undefined,
               name: I18ns.charts.collaborationCountLabel,
             },

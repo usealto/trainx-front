@@ -40,8 +40,10 @@ export class TeamsRestService {
   createTeam(createTeamDtoApi: CreateTeamDtoApi): Observable<TeamDtoApi | undefined> {
     return this.teamApi.createTeam({ createTeamDtoApi }).pipe(
       map((r) => r.data),
-      tap(() => {
-        this.teamStore.teams.reset();
+      tap((team) => {
+        if (team) {
+          this.teamStore.teams.add(team);
+        }
       }),
     );
   }
@@ -49,14 +51,20 @@ export class TeamsRestService {
   updateTeam(patchTeamRequestParams: PatchTeamRequestParams): Observable<TeamDtoApi | undefined> {
     return this.teamApi.patchTeam(patchTeamRequestParams).pipe(
       map((r) => r.data),
-      tap(() => {
-        this.teamStore.teams.reset();
+      tap((team) => {
+        if (team) {
+          this.teamStore.teams.patchWithId(team);
+        }
       }),
     );
   }
 
   deleteTeam(id: string): Observable<DeleteResponseApi | undefined> {
-    return this.teamApi.deleteTeam({ id });
+    return this.teamApi.deleteTeam({ id }).pipe(
+      tap(() => {
+        this.teamStore.teams.value = this.teamStore.teams.value.filter((x) => x.id !== id);
+      }),
+    );
   }
 
   resetCache() {
