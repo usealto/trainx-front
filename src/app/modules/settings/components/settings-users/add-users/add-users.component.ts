@@ -78,7 +78,13 @@ export class AddUsersComponent implements OnInit {
       this.userForms.forEach((f) => {
         if (f.value) {
           this.usersRestService
-            .createUser(f.value)
+            .createUser({
+              firstname: f.value.firstname ?? '',
+              lastname: f.value.lastname ?? '',
+              teamId: f.value.teamId ?? '',
+              email: f.value.email ?? '',
+              companyId: f.value.companyId,
+            })
             .pipe(tap((u) => userErrors.push(u)))
             .subscribe();
         }
