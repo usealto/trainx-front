@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, filter, of, switchMap, tap } from 'rxjs';
@@ -8,6 +8,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
+import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 import { TeamForm } from '../../model/team.form';
 import { TeamsRestService } from '../../services/teams-rest.service';
 
@@ -26,7 +27,7 @@ export class TeamFormComponent implements OnInit {
   teamsNames: string[] = [];
 
   teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
-    name: ['', [Validators.required, this.uniqueNameValidation(this.teamsNames)]],
+    name: ['', [Validators.required, this.validationService.uniqueStringValidation(this.teamsNames)]],
     programs: [],
     invitationEmails: [],
   });
@@ -43,6 +44,7 @@ export class TeamFormComponent implements OnInit {
     private readonly userService: UsersService,
     private readonly programService: ProgramsRestService,
     private readonly teamsRestService: TeamsRestService,
+    private readonly validationService: ValidationService,
   ) {}
 
   ngOnInit(): void {
@@ -57,7 +59,9 @@ export class TeamFormComponent implements OnInit {
         tap(() => {
           const teamName = this.team?.name.toLowerCase();
           const index = this.teamsNames.indexOf(teamName ?? '');
-          this.teamsNames.splice(index, 1);
+          if (teamName) {
+            this.teamsNames.splice(index, 1);
+          }
         }),
       )
       .subscribe();
@@ -195,16 +199,5 @@ export class TeamFormComponent implements OnInit {
     });
 
     return output$;
-  }
-
-  uniqueNameValidation(teams: string[]): ValidatorFn {
-    return (control: AbstractControl) => {
-      const typedName = control.value.toLowerCase();
-
-      if (teams && teams.includes(typedName)) {
-        return { nameNotAllowed: true };
-      }
-      return null;
-    };
   }
 }
