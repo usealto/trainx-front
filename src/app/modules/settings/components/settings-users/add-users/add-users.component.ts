@@ -102,6 +102,8 @@ export class AddUsersComponent implements OnInit {
           tap(() => {
             const tmpArr: number[] = [];
             validUsers.forEach((user, key) => tmpArr.push(key));
+
+            // We reverse keys order to remove lines from the end and keep the index
             tmpArr.reverse().forEach((key) => {
               this.removeLine(key);
             });
