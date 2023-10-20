@@ -162,10 +162,10 @@ export class LeadCollaborationComponent implements OnInit {
         switchMap(([commentsCount, questionsSubmittedCount]) => {
           return combineLatest([
             this.commentsRestService.getCommentsPaginated({
-              itemsPerPage: commentsCount ?? 1,
+              itemsPerPage: commentsCount || 1,
             }),
             this.questionsSubmittedRestService.getQuestionsPaginated({
-              itemsPerPage: questionsSubmittedCount ?? 1,
+              itemsPerPage: questionsSubmittedCount || 1,
             }),
           ]);
         }),
