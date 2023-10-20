@@ -1,39 +1,38 @@
-## Install
+# Cypress
 
-You need to have the project up and running on port 4200 => [see README](https://github.com/usealto/assessment-front/blob/main/README.md#required)
+### Prerequisites
+Ask a coworker environnement variables to fill the `cypress.env.json` file. See the example file `cypress.env.example.json`
 
+## Run
 
 ### Global Cypress Run
 
-In case you want to run all your tests at once and get a global picture you can use
+Run all tests at once and get a global picture :
 
 ```jsx
 npm run cypress:run
 ```
 
-## Run Cypress
+It's the simplest way, but also the longest one. It will run all your tests in a row and you will have to wait for the end of the process to see the results.
 
-If it’s the first time, you need to ask a coworker for the environnement file ⇒ `cypress.env.json` 
+## Manual Cypress Run
+
 
 ### With details
 
-1. Start the project
-2. Open Cypress
-3. Click on a test to run it
-
-Start a local server using 
+1. Start a local server
 
 ```jsx
 npm run start
 ```
 
----
-
-Open Cypress Desktop app using 
+2. Open Cypress on another terminal
 
 ```jsx
 npx cypress open
 ```
+
+3. Select and run your test
 
 Then you can select type testing (here we choose E2E Testing)
 
@@ -48,6 +47,23 @@ And there you go, you can run all your spec files manually just by clicking them
 ![Capture d’écran 2023-10-09 à 16 55 11](https://github.com/usealto/assessment-front/assets/107506961/6d3d38f0-6c12-436a-a4a8-5a0b8fc6c415)
 
 ---
+
+## Code coverage
+
+- Build a production version of your app
+`npm run build:preprod` or `npm run build:prod`
+
+- Add instrumentation to your code
+`npx nyc instrument dist dist --exclude-after-remap=false --complete-copy --in-place`
+- Run a local server `http-server -p 4200`
+
+- Execute tests, open cypress & 
+`npx cypress open` or `npm run cypress:run`
+
+Resource :
+- cypress [doc](https://docs.cypress.io/guides/tooling/code-coverage#Instrumenting-code)
+- run locally a [run server on a dist](https://codippa.com/run-dist-locally-angular/) and tips [if bug](https://github.com/AnandChowdhary/run-url/issues/1)
+- tips [on code coverage](https://stackoverflow.com/questions/59470540/code-coverage-for-angular-spa-application-with-e2e-in-selenium-java-or-cypress/59934710#59934710)
 
 ## Write Cypress Tests
 
