@@ -1,16 +1,17 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormControl, UntypedFormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { TeamDtoApi } from '@usealto/sdk-ts-angular';
+import { catchError, combineLatest, of, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
+import { IAbstractControl } from 'src/app/core/form-types/i-abstract-control';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { AddUsersForm } from '../../../models/user.model';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { TeamDtoApi, UserDtoCreatedResponseApi } from '@usealto/sdk-ts-angular';
-import { catchError, combineLatest, of, pipe, tap } from 'rxjs';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ValidationService } from 'src/app/modules/shared/services/validation.service';
-import { IAbstractControl } from 'src/app/core/form-types/i-abstract-control';
+import { AddUsersForm } from '../../../models/user.model';
+import { ToastService } from 'src/app/core/toast/toast.service';
 
 @Component({
   selector: 'alto-add-users',
@@ -35,6 +36,7 @@ export class AddUsersComponent implements OnInit {
     private readonly teamService: TeamsRestService,
     private readonly usersRestService: UsersRestService,
     private readonly validationService: ValidationService,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -73,24 +75,23 @@ export class AddUsersComponent implements OnInit {
       check = !f.valid ? false : check;
     });
 
-    const validUsers: number[] = [];
+    const validUsers: Map<number, AddUsersForm> = new Map();
     if (check) {
       const obs$ = this.userForms.map((f, index) => {
         if (f.value) {
+          validUsers.set(index, f.value);
           return this.usersRestService
             .createUser({
               firstname: f.value.firstname ?? '',
               lastname: f.value.lastname ?? '',
               teamId: f.value.teamId ?? '',
               email: f.value.email ?? '',
-              companyId: f.value.companyId + (index === 1 ? '33' : ''),
+              companyId: f.value.companyId,
             })
             .pipe(
               catchError((err) => {
+                validUsers.delete(index);
                 return of(err);
-              }),
-              tap(() => {
-                validUsers.push(index);
               }),
             );
         }
@@ -98,11 +99,23 @@ export class AddUsersComponent implements OnInit {
       });
       combineLatest(obs$)
         .pipe(
-          tap(console.log),
           tap(() => {
-            console.log(validUsers);
+            validUsers.forEach((user, key) => this.removeLine(key));
 
-            validUsers.forEach((i) => this.removeLine(i));
+            if (this.userForms.length > 0) {
+              this.toastService.show({
+                text: I18ns.settings.users.addUsers.APIerror,
+                type: 'danger',
+                autoHide: false,
+              });
+            } else {
+              this.toastService.show({
+                text: I18ns.settings.users.addUsers.success,
+                type: 'success',
+                autoHide: false,
+              });
+              this.activeOffcanvas.close();
+            }
           }),
         )
         .subscribe();

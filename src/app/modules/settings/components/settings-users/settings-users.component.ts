@@ -136,6 +136,13 @@ export class SettingsUsersComponent implements OnInit {
       position: 'end',
       panelClass: 'overflow-auto users-form',
     });
+    canvasRef.closed
+      .pipe(
+        tap(() => {
+          this.getUsers();
+        }),
+      )
+      .subscribe();
     const instance = canvasRef.componentInstance as AddUsersComponent;
     // instance.createdQuestion;
     // instance.questionSubmitted = question;
