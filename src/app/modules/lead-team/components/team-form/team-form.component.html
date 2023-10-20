@@ -67,7 +67,7 @@
         <div class="alto-badge">
           <span data-cy="programsNames">{{ item.name | sliceWithDots : 30 }}</span>
           <span class="cursor-pointer ms-2 align-middle" (click)="clear(item)" aria-hidden="true">
-            <i class="bi bi-x-lg"></i>
+            <i data-cy="deleteIcon" class="bi bi-x-lg"></i>
           </span>
         </div>
       </ng-template>

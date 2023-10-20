@@ -109,7 +109,7 @@ export const FR = {
     ],
     statistics: {
       title: 'Les statistiques de vos équipes',
-      subtitle: 'Découvrez un aperçu des performances de vos équipes.',
+      subtitle: "Découvrez un aperçu des performances de vos équipes sur l'année en cours.",
       averageScore: 'Score moyen',
       terminatedPrograms: 'Programmes terminés',
       guessesCount: 'Nombre total de réponses ',
@@ -368,8 +368,11 @@ export const FR = {
         columns: {
           team: 'Équipe',
           answeredQuestions: 'Questions répondues',
+          noAnsweredQuestions: 'Aucune réponse',
           suggestedQuestions: 'Questions suggérées',
+          noSuggeredQuestions: 'Aucune suggestion',
           comments: 'Commentaires',
+          noComments: 'Aucun commentaire',
         },
       },
       placeholders: {
@@ -440,9 +443,13 @@ export const FR = {
         columns: {
           team: 'Équipe',
           globalScore: 'Score global',
+          noScore: 'Aucun score',
           lessMasteredPrograms: 'Programmes les moins maitrîsés',
+          noPrograms: 'Aucun programme',
           lessMasteredTags: 'Tags les moins maitrîsés',
+          noTags: 'Aucun tag',
           scoreEvolution: 'Évolution du score',
+          noScoreEvolution: 'Aucune évolution',
         },
       },
       questionsTable: {
@@ -452,9 +459,13 @@ export const FR = {
         columns: {
           question: 'Intitulé de la question',
           globalScore: 'Score global',
+          noScore: 'Aucun score',
           scoreEvolution: 'Évolution du score',
+          noScoreEvolution: 'Aucune donnée',
           usersNumber: "Nombre d'utilisateurs ayant répondu",
+          noUsersCount: 'Aucune donnée',
           badTeams: 'Équipes en difficulté',
+          noBadTeams: 'Aucune équipe',
         },
       },
     },
@@ -473,10 +484,12 @@ export const FR = {
       teamsFilter: 'Équipes',
       table: {
         globalScore: 'Score global',
+        noScore: 'Aucun score',
         answeredQuestions: 'Questions répondues',
         comments: 'Commentaires',
         suggestedQuestions: 'Questions suggérées',
         leastMasteredTags: 'Tags les moins maîtrisés',
+        noTag: 'Aucun tag',
         team: 'Équipe',
         member: 'Membre',
         noGuess: 'Aucune réponse',
@@ -705,10 +718,10 @@ export const FR = {
     },
   },
   menu: {
-    home: 'Accueil',
-    programs: 'Programmes',
+    home: 'Dashboard',
+    programs: 'Mes programmes',
     statistics: 'Statistiques',
-    team: 'Équipes',
+    team: 'Mes équipes',
     challenges: 'Challenges',
     settings: 'Paramètres',
     profile: 'Mon profil',
@@ -716,7 +729,7 @@ export const FR = {
     adminMode: 'Mode Administrateur',
     disconnect: 'Se déconnecter',
     feedback: 'Envoyer un feedback',
-    collaboration: 'Collaboration',
+    contribution: 'Contribution',
   },
   settings: {
     title: 'Paramètres',
@@ -1017,7 +1030,7 @@ export const FR = {
     },
   },
   collaboration: {
-    title: 'Collaboration',
+    title: 'Contribution',
     subtitle: "Gérer l'ensemble des contributions de vos équipes.",
     showMore: 'Afficher plus',
     tabs: {
