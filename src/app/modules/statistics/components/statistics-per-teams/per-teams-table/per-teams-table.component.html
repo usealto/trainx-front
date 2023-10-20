@@ -28,9 +28,17 @@
           </div>
         </td>
         <td class="text-center">
-          <span class="alto-score" [class]="(item.globalScore || 0) * 100 | pillColor"
+          <span
+            *ngIf="item.globalScore; else noScore"
+            class="alto-score"
+            [class]="(item.globalScore || 0) * 100 | pillColor"
             >{{ item.globalScore | percent }}
           </span>
+          <ng-template #noScore>
+            <p class="alto-grey text-center">
+              {{ I18ns.statistics.perTeams.table.noScore }}
+            </p>
+          </ng-template>
         </td>
         <td class="alto-grey text-center">
           <ng-container *ngIf="item.answeredQuestionsCount > 0; else noGuess">
@@ -76,9 +84,15 @@
         </td>
         <td>
           <alto-colored-pill-list
+            *ngIf="item.leastMasteredTags.length > 0; else noTag"
             [textLimit]="15"
             [data]="item.leastMasteredTags | slice : 0 : 3"
           ></alto-colored-pill-list>
+          <ng-template #noTag>
+            <p class="alto-grey text-center">
+              {{ I18ns.statistics.perTeams.table.noTag }}
+            </p>
+          </ng-template>
         </td>
       </tr>
     </tbody>
