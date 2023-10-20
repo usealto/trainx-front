@@ -30,6 +30,7 @@ export class AdminUsersUploadFormComponent implements OnInit{
   page = 1;
   showUserList = true;
   id: any;
+  counter = 0;
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -97,11 +98,12 @@ export class AdminUsersUploadFormComponent implements OnInit{
     const user = {
       firstname: 'test',
       lastname: 'test',
-      email: 'test@test.com',
+      email: `test+${this.counter}@test.com`,
       roles: ['company-admin','company-user'],
     };
     this.csvData.push(user);
     this.refreshUsers();
+    this.counter++;
   }
 
   private onFileSelected(file: File) {
