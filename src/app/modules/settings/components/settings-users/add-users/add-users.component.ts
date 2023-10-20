@@ -78,8 +78,6 @@ export class AddUsersComponent implements OnInit {
     const validUsers: Map<number, AddUsersForm> = new Map();
     if (check) {
       const obs$ = this.userForms.map((f, index) => {
-        console.log(index);
-
         if (f.value) {
           validUsers.set(index, f.value);
           return this.usersRestService
@@ -105,8 +103,6 @@ export class AddUsersComponent implements OnInit {
             const tmpArr: number[] = [];
             validUsers.forEach((user, key) => tmpArr.push(key));
             tmpArr.reverse().forEach((key) => {
-              console.log('key', key);
-
               this.removeLine(key);
             });
 
