@@ -584,6 +584,7 @@ export const FR = {
         active: 'Membres réguliers',
         inactive: 'Membres irréguliers',
         totalAnswers: 'Nombre total de réponses (30 derniers jours)',
+        tooltip: 'Évolution sur les 30 derniers jours',
       },
       table: {
         name: 'Nom',
@@ -591,6 +592,7 @@ export const FR = {
         globalScore: 'Score global (30 derniers jours)',
         noScore: 'Aucun score',
         questionsPerMonth: 'Questions (30 derniers jours)',
+        noData: 'Aucune donnée',
         questionsPerMonthTooltip:
           'Nombre de questions répondues sur les 30 derniers jours et variation sur la dernière période',
         active: 'Actif',
@@ -627,6 +629,7 @@ export const FR = {
         noUsers: 'Aucun membre',
         users: ['Aucun', '{{}}', '{{}}'],
         globalScore: 'Score global',
+        assignatedQuestions: 'Nombre de questions assignées',
         activity: 'Activité  moyenne (30 derniers jours)',
         noScore: 'Aucun score',
         creationDate: 'Date de création',

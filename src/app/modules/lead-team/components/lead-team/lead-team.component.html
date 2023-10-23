@@ -9,7 +9,8 @@
     <i data-cy="createTeam" class="bi bi-plus-lg"></i><span>{{ I18ns.leadTeam.createTeam }}</span>
   </button>
   <h2 id="teamsAnchor" class="me-3">
-    <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" width="16" height="16" /> {{ I18ns.leadTeam.teams.title }}
+    <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" width="16" height="16" />
+    {{ I18ns.leadTeam.teams.title }}
   </h2>
   <p class="mb-5 alto-grey">{{ I18ns.leadTeam.teams.subtitle }}</p>
 
@@ -22,6 +23,7 @@
             <th scope="col" class="w-20 text-center">
               {{ I18ns.leadTeam.teams.table.globalScore }}
             </th>
+            <th scope="col" class="w-20 text-center">{{ I18ns.leadTeam.teams.table.assignatedQuestions }}</th>
             <th scope="col" class="w-20 text-start">{{ I18ns.leadTeam.teams.table.usersCount }}</th>
             <th scope="col" class="w-25 text-center">{{ I18ns.leadTeam.teams.table.activity }}</th>
             <th scope="col" class="w-10 text-start">{{ I18ns.leadTeam.teams.table.creationDate }}</th>
@@ -41,6 +43,9 @@
               <div class="text-center" *ngIf="!team.score">
                 {{ I18ns.leadTeam.teams.table.noScore }}
               </div>
+            </td>
+            <td class="text-center">
+              {{ team.totalGuessesCount }}
             </td>
             <td class="w-20 text-start">
               <div *ngIf="getTeamUsersCount(team.id) !== 0">
@@ -128,6 +133,7 @@
         <alto-progression-badge
           class="float-end"
           [score]="usersTotalQuestionsProgression"
+          ngbTooltip="{{ I18ns.leadTeam.members.statistics.tooltip }}"
         ></alto-progression-badge>
       </div>
     </div>
@@ -194,23 +200,28 @@
             </span>
           </td>
           <td class="text-center">
-            <ng-container *ngIf="(user.totalGuessesCount || 0) > 0; else elseTemplate">
+            <ng-container *ngIf="(user.totalGuessesCount || 0) > 0; else noScore">
               <span data-cy="progressBadge" class="alto-score" [class]="(user.score || 0) * 100 | pillColor">
                 {{ user.score | percent }}
               </span>
             </ng-container>
-            <ng-template #elseTemplate>
+            <ng-template #noScore>
               {{ I18ns.leadTeam.members.table.noScore }}
             </ng-template>
           </td>
           <td>
-            <span class="w-10 d-inline-block">
-              {{ user.totalGuessesCount }}
-            </span>
-            <alto-progression-badge
-              class="d-inline-block ms-3"
-              [score]="getQuestionsByUser(user.id, user.totalGuessesCount)"
-            ></alto-progression-badge>
+            <ng-container *ngIf="(user.totalGuessesCount ?? 0) > 0; else noData">
+              <span class="w-10 d-inline-block">
+                {{ user.totalGuessesCount }}
+              </span>
+              <alto-progression-badge
+                class="d-inline-block ms-3"
+                [score]="getQuestionsByUser(user.id, user.totalGuessesCount)"
+              ></alto-progression-badge>
+            </ng-container>
+            <ng-template #noData>
+              {{ I18ns.leadTeam.members.table.noData }}
+            </ng-template>
           </td>
           <td>
             <i
