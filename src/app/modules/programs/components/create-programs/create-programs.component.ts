@@ -273,18 +273,19 @@ export class CreateProgramsComponent implements OnInit {
       if (this.programForm.valid) {
         this.saveProgram();
         this.displayToast(1);
+        this.currentStep = num;
       }
     } else {
       if (this.currentStep === 1 && num === 2) {
         this.saveProgram();
       }
-      if (num === 2) {
-        this.selectedTags = this.programForm.value?.tags ?? [];
-        this.getQuestions();
-        this.getAssociatedQuestions();
-      }
+      this.currentStep = num;
     }
-    this.currentStep = num;
+    if (num === 2) {
+      this.selectedTags = this.programForm.value?.tags ?? [];
+      this.getQuestions();
+      this.getAssociatedQuestions();
+    }
   }
 
   searchQuestions(value: string) {
