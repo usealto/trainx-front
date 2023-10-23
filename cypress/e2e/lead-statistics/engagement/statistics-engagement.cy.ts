@@ -9,10 +9,13 @@ describe('Lead Statistics Engagement', () => {
   });
 
   it('Gets right leaderboard color', () => {
+    cy.wait(500);
     cy.get('[data-cy="leaderboard-line"] > p').first().should('have.class', 'alto-green');
   });
 
   it('Gets right leaderboard order', () => {
+    cy.wait(500);
+
     cy.get('[data-cy="leaderboard-line"] > [data-cy="line-score"]')
       .first()
       .then((data) => {
