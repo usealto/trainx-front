@@ -5,12 +5,12 @@ import { AbstractControl, ValidatorFn } from '@angular/forms';
   providedIn: 'root',
 })
 export class ValidationService {
-  uniqueStringValidation(data: string[]): ValidatorFn {
+  uniqueStringValidation(data: string[], error: string): ValidatorFn {
     return (control: AbstractControl) => {
       const typedName = control.value?.toLowerCase();
 
       if (data && typedName && data.includes(typedName)) {
-        return { nameNotAllowed: true };
+        return { [error]: true };
       }
       return null;
     };

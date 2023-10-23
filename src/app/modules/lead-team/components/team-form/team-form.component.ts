@@ -27,7 +27,10 @@ export class TeamFormComponent implements OnInit {
   teamsNames: string[] = [];
 
   teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
-    name: ['', [Validators.required, this.validationService.uniqueStringValidation(this.teamsNames)]],
+    name: [
+      '',
+      [Validators.required, this.validationService.uniqueStringValidation(this.teamsNames, 'nameNotAllowed')],
+    ],
     programs: [],
     invitationEmails: [],
   });

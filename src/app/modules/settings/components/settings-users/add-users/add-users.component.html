@@ -63,6 +63,9 @@
         placeholder="{{ I18ns.settings.users.addUsers.emailPlaceholder }}"
       />
       <span *ngIf="isTouchedAndInvalid(userForm.controls.email)" class="text-danger">
+        <ng-container *ngIf="userForm.controls.email.errors?.['emailDeleted']">
+          {{ I18ns.settings.users.addUsers.emailDeleted }}
+        </ng-container>
         <ng-container *ngIf="userForm.controls.email.errors?.['nameNotAllowed']">
           {{ I18ns.settings.users.addUsers.duplicateEmail }}
         </ng-container>

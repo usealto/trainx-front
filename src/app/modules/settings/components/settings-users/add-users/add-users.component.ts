@@ -28,6 +28,7 @@ export class AddUsersComponent implements OnInit {
   userForms: IFormGroup<AddUsersForm>[] = [];
   teams: TeamDtoApi[] = [];
   emails: string[] = [];
+  deletedEmails: string[] = [];
 
   constructor(
     private readonly userStore: ProfileStore,
@@ -40,17 +41,22 @@ export class AddUsersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.teamService
-      .getTeams()
+    combineLatest([
+      this.teamService.getTeams(),
+      this.usersRestService.getUsersFiltered({
+        includeSoftDeleted: true,
+        itemsPerPage: 1000,
+      }),
+    ])
       .pipe(
-        tap((teams) => {
+        tap(([teams, users]) => {
+          this.emails = users.filter((u) => !u.deletedAt).map((u) => u.email);
+          this.deletedEmails = users.filter((u) => u.deletedAt).map((u) => u.email);
           this.teams = teams;
+          this.addLine();
         }),
       )
       .subscribe();
-
-    this.emails = this.userStore.users.value.map((u) => u.email);
-    this.addLine();
   }
 
   getForm() {
@@ -60,7 +66,12 @@ export class AddUsersComponent implements OnInit {
       teamId: [undefined, [Validators.required]],
       email: [
         undefined,
-        [Validators.required, this.validationService.uniqueStringValidation(this.emails), Validators.email],
+        [
+          Validators.required,
+          this.validationService.uniqueStringValidation(this.emails, 'nameNotAllowed'),
+          this.validationService.uniqueStringValidation(this.deletedEmails, 'emailDeleted'),
+          Validators.email,
+        ],
       ],
       companyId: [this.userStore.user.value.companyId],
     });

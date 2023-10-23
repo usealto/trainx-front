@@ -130,7 +130,10 @@ export class CreateProgramsComponent implements OnInit {
     this.programForm = this.fb.group<ProgramForm>({
       name: [
         program?.name ?? '',
-        [Validators.required, this.validationService.uniqueStringValidation(this.programsNames)],
+        [
+          Validators.required,
+          this.validationService.uniqueStringValidation(this.programsNames, 'nameNotAllowed'),
+        ],
       ],
       priority: [program?.priority ?? null, [Validators.required]],
       description: program?.description ?? '',
