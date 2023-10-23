@@ -137,25 +137,46 @@
             <span class="alto-badge" [style]="team.team?.id | teamColor">{{ team.team?.name }}</span>
           </td>
           <td class="alto-grey text-center">
-            {{ team.answeredQuestionsCount }}
-            <alto-progression-badge
-              class="ms-3 d-inline-block"
-              [score]="team.answeredQuestionsProgression"
-            ></alto-progression-badge>
+            <span *ngIf="team.answeredQuestionsCount > 0; else noAnsweredQuestion">
+              {{ team.answeredQuestionsCount }}
+              <alto-progression-badge
+                class="ms-3 d-inline-block"
+                [score]="team.answeredQuestionsProgression"
+              ></alto-progression-badge>
+            </span>
+            <ng-template #noAnsweredQuestion>
+              <p class="alto-grey text-center">
+                {{ I18ns.statistics.globalEngagement.teamsTable.columns.noAnsweredQuestions }}
+              </p>
+            </ng-template>
           </td>
           <td class="text-center">
-            {{ team.submittedQuestionsCount }}
-            <alto-progression-badge
-              class="ms-3 d-inline-block"
-              [score]="team.submittedQuestionsProgression"
-            ></alto-progression-badge>
+            <span *ngIf="team.submittedQuestionsCount > 0; else noSubmittedQuestion">
+              {{ team.submittedQuestionsCount }}
+              <alto-progression-badge
+                class="ms-3 d-inline-block"
+                [score]="team.submittedQuestionsProgression"
+              ></alto-progression-badge>
+            </span>
+            <ng-template #noSubmittedQuestion>
+              <p class="alto-grey text-center">
+                {{ I18ns.statistics.globalEngagement.teamsTable.columns.noSuggeredQuestions }}
+              </p>
+            </ng-template>
           </td>
           <td class="text-center">
-            {{ team.commentsCount }}
-            <alto-progression-badge
-              class="ms-3 d-inline-block"
-              [score]="team.commentsProgression"
-            ></alto-progression-badge>
+            <span *ngIf="team.commentsCount > 0; else noComments">
+              {{ team.commentsCount }}
+              <alto-progression-badge
+                class="ms-3 d-inline-block"
+                [score]="team.commentsProgression"
+              ></alto-progression-badge>
+            </span>
+            <ng-template #noComments>
+              <p class="alto-grey text-center">
+                {{ I18ns.statistics.globalEngagement.teamsTable.columns.noComments }}
+              </p>
+            </ng-template>
           </td>
         </tr>
       </tbody>
