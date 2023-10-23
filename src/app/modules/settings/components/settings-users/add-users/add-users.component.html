@@ -24,6 +24,7 @@
       }}</label>
 
       <input
+        data-cy="firstname"
         type="text"
         id="firstname"
         class="form-control"
@@ -40,6 +41,7 @@
       }}</label>
 
       <input
+        data-cy="lastname"
         type="text"
         id="lastname"
         class="form-control"
@@ -56,6 +58,7 @@
       }}</label>
 
       <input
+        data-cy="email"
         type="email"
         id="email"
         class="form-control"
@@ -83,6 +86,7 @@
       <label class="form-label required fw-medium">{{ I18ns.settings.users.addUsers.team }}</label>
       <div>
         <ng-select
+          data-cy="team"
           class="alto-form"
           [items]="teams"
           [multiple]="false"
@@ -94,11 +98,11 @@
         >
           <ng-template ng-label-tmp let-item="item" let-clear="clear">
             <div class="alto-badge" [style]="item.id | teamColor">
-              <span data-cy="teamBadge">{{ item.name }}</span>
+              <span>{{ item.name }}</span>
             </div>
           </ng-template>
           <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-            <p class="alto-badge" [style]="item.id | teamColor">{{ item.name }}</p>
+            <p data-cy="team-badge" class="alto-badge" [style]="item.id | teamColor">{{ item.name }}</p>
             <i class="bi bi-check-circle-fill"></i>
           </ng-template>
         </ng-select>
@@ -118,7 +122,7 @@
   </form>
 
   <div class="text-center">
-    <button class="btn btn-primary" (click)="addLine()">
+    <button data-cy="add-line" class="btn btn-primary" (click)="addLine()">
       <i class="bi bi-plus-lg"></i> {{ I18ns.settings.users.addUsers.addLine }}
     </button>
   </div>
