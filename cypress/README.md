@@ -48,7 +48,7 @@ And there you go, you can run all your spec files manually just by clicking them
 
 ---
 
-## Code coverage
+## Code coverage (currently not working)
 
 - Build a production version of your app
 `npm run build:preprod` or `npm run build:prod`
