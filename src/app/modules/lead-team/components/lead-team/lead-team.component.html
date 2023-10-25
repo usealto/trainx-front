@@ -45,7 +45,21 @@
               </div>
             </td>
             <td class="text-center">
-              {{ team.totalGuessesCount }}
+              <span *ngIf="team.questionsPushedCount! > 20; else warning">
+                {{ team.questionsPushedCount }}
+              </span>
+              <ng-template #warning>
+                <div
+                  ngbTooltip="{{ I18ns.leadTeam.teams.table.notEnoughQuestions }}"
+                  class="alto-badge"
+                  [class]="team.questionsPushedCount || 0 | pillDanger"
+                >
+                  <img class="mb-2" [src]="Emoji.Warning | emoji" height="10" />
+                  <span>
+                    {{ ' ' + team.questionsPushedCount }}
+                  </span>
+                </div>
+              </ng-template>
             </td>
             <td class="w-20 text-start">
               <div *ngIf="getTeamUsersCount(team.id) !== 0">

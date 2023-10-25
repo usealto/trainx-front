@@ -630,6 +630,8 @@ export const FR = {
         users: ['Aucun', '{{}}', '{{}}'],
         globalScore: 'Score global',
         assignatedQuestions: 'Nombre de questions assignées',
+        notEnoughQuestions:
+          'Pour assurer une montée en compétences optimale, il est préférable que les équipes aient plus de 20 questions assignées.',
         activity: 'Activité  moyenne (30 derniers jours)',
         noScore: 'Aucun score',
         creationDate: 'Date de création',
