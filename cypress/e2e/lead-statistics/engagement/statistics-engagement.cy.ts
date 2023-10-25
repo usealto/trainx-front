@@ -9,14 +9,16 @@ describe('Lead Statistics Engagement', () => {
   });
 
   it('Gets right leaderboard color', () => {
-    cy.wait(500);
+    cy.intercept('GET', 'v1/stats/*').as('dataLoad');
+    cy.visit('/l/statistics/engagement', {});
+    cy.wait('@dataLoad').wait(100);
+
     cy.get('[data-cy="leaderboard-line"] > p').first().should('have.class', 'alto-green');
   });
 
-  it.only('Gets right leaderboard order', () => {
-    cy.intercept('GET', '').as('loadData');
+  it('Gets right leaderboard order', () => {
+    cy.intercept('GET', 'v1/stats/*').as('loadData');
     cy.visit('/l/statistics/engagement', {});
-
     cy.wait('@loadData').wait(100);
 
     cy.get('[data-cy="line-score"]')
