@@ -14,7 +14,10 @@ describe('Lead Statistics Engagement', () => {
   });
 
   it.only('Gets right leaderboard order', () => {
-    cy.wait(500);
+    cy.intercept('GET', '').as('loadData');
+    cy.visit('/l/statistics/engagement', {});
+
+    cy.wait('@loadData').wait(100);
 
     cy.get('[data-cy="line-score"]')
       .first()
