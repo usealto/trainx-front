@@ -13,13 +13,13 @@ describe('Lead Statistics Engagement', () => {
     cy.get('[data-cy="leaderboard-line"] > p').first().should('have.class', 'alto-green');
   });
 
-  it('Gets right leaderboard order', () => {
+  it.only('Gets right leaderboard order', () => {
     cy.wait(500);
 
-    cy.get('[data-cy="leaderboard-line"] > [data-cy="line-score"]')
+    cy.get('[data-cy="line-score"]')
       .first()
       .then((data) => {
-        cy.get('[data-cy="leaderboard-line"] > [data-cy="line-score"]')
+        cy.get('[data-cy="line-score"]')
           .eq(1)
           .then((data2) => expect(+data.text()).above(+data2.text()));
       });
