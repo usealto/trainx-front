@@ -16,9 +16,9 @@
 </div>
 
 <hr />
-<div class="offcanvas-body">
+<div data-cy="form-canva" class="offcanvas-body">
   <form *ngFor="let userForm of userForms; let i = index" [formGroup]="userForm" class="form-line">
-    <div class="form-block">
+    <div data-cy="form-row" class="form-block">
       <label for="firstname" class="form-label required fw-medium">{{
         I18ns.settings.users.addUsers.firstname
       }}</label>

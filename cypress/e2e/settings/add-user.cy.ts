@@ -91,16 +91,16 @@ describe('Add user form', () => {
   });
 
   it('Try to create user with empty fields', () => {
-    cy.get('[data-cy="firstname"]').click();
-    cy.get('[data-cy="lastname"]').click();
-    cy.get('[data-cy="email"]').click();
-    cy.get('[data-cy="team"]').click();
-    cy.get('[data-cy="btnSave"]').click();
+    cy.get('[data-cy="form-canva"]')
+      .find('[data-cy="form-row"]', { timeout: 5000 })
+      .then(() => {
+        cy.get('[data-cy="btnSave"]').click();
 
-    cy.get('[data-cy="firstname-error"]').should('contain.text', 'Ce champ doit être rempli.');
-    cy.get('[data-cy="lastname-error"]').should('contain.text', 'Ce champ doit être rempli.');
-    cy.get('[data-cy="email-error"]').should('contain.text', 'Ce champ doit être rempli.');
-    cy.get('[data-cy="team-error"]').should('contain.text', 'Ce champ doit être rempli.');
+        cy.get('[data-cy="firstname-error"]').should('contain.text', 'Ce champ doit être rempli.');
+        cy.get('[data-cy="lastname-error"]').should('contain.text', 'Ce champ doit être rempli.');
+        cy.get('[data-cy="email-error"]').should('contain.text', 'Ce champ doit être rempli.');
+        cy.get('[data-cy="team-error"]').should('contain.text', 'Ce champ doit être rempli.');
+      });
   });
 
   it('Try to create a user with incorrect email', () => {
