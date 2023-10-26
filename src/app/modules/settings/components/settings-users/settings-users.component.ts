@@ -144,9 +144,6 @@ export class SettingsUsersComponent implements OnInit {
       )
       .subscribe();
     const instance = canvasRef.componentInstance as AddUsersComponent;
-    // instance.createdQuestion;
-    // instance.questionSubmitted = question;
-    // instance.isSubmitted = true;
 
     instance.createdUsers
       .pipe(
