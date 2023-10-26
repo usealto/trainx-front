@@ -45,7 +45,7 @@ describe('Add user form', () => {
         cy.wait('@searchUser');
       });
     cy.wait(500);
-    cy.get('[data-cy="btnDelete"]').click();
+    cy.get('[data-cy="btnDelete"]').first().click();
     cy.intercept('DELETE', '').as('userDeleted');
     cy.get('[data-cy="deleteButton"]').click();
     cy.wait('@userDeleted').wait(100);
@@ -54,7 +54,9 @@ describe('Add user form', () => {
     cy.get('[data-cy="filterBySearch"]')
       .last()
       .within(() => {
+        cy.intercept('GET', '').as('searchUser');
         cy.get('.form-control').clear().type(`prénom+${id}`);
+        cy.wait('@searchUser');
       });
     cy.wait(500);
     cy.get('[data-cy="btnDelete"]').first().click();
@@ -90,7 +92,7 @@ describe('Add user form', () => {
 
   it('Try to create user with empty fields', () => {
     cy.get('[data-cy="btnSave"]').click();
-
+    cy.wait(500);
     cy.get('[data-cy="firstname-error"]').should('contain.text', 'Ce champ doit être rempli.');
     cy.get('[data-cy="lastname-error"]').should('contain.text', 'Ce champ doit être rempli.');
     cy.get('[data-cy="email-error"]').should('contain.text', 'Ce champ doit être rempli.');
