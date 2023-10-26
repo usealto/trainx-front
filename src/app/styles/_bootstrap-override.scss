@@ -11,6 +11,7 @@
 .form-control {
   background: #fff;
 }
+input[type='email'].form-control,
 input[type='text'].form-control {
   height: 3.167rem;
   color: var(--gray-900);
@@ -57,6 +58,14 @@ textarea.form-control:focus {
   --bs-offcanvas-border-width: 0;
   --bs-offcanvas-color: var(--gray-900);
   --bs-offcanvas-bg: white;
+}
+
+.offcanvas.users-form {
+  --bs-offcanvas-width: calc(100vw - 18.4rem);
+
+  @media (max-width: 880px) {
+    --bs-offcanvas-width: calc(100vw - 5rem);
+  }
 }
 
 .progress {
