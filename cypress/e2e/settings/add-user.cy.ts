@@ -57,7 +57,7 @@ describe('Add user form', () => {
         cy.get('.form-control').clear().type(`prénom+${id}`);
       });
     cy.wait(500);
-    cy.get('[data-cy="btnDelete"]').click();
+    cy.get('[data-cy="btnDelete"]').first().click();
     cy.get('[data-cy="deleteButton"]').click();
   });
 
