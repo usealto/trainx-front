@@ -91,12 +91,14 @@ describe('Team edition', () => {
             .should('contain', newProgramToAdd);
 
           // selects the previously added program and check for its siblings containing deletion  icon
+          cy.intercept('PATCH', '').as('editTeam');
           cy.get('[data-cy="editProgramSelector"] > .ng-select-container > .ng-value-container ')
             .contains(newProgramToAdd)
             .siblings()
             .children('[data-cy="deleteIcon"]')
             .click();
           cy.get('[data-cy="btnSave"]').click();
+          cy.wait('@editTeam');
           cy.get('.btn-close').click();
           cy.get('[data-cy="editTeam"]').first().click().wait(1000);
           cy.get('[data-cy="editProgramSelector"]').click();

@@ -1,7 +1,10 @@
 describe('Lead Statistics Engagement', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
+
+    cy.intercept('GET', 'v1/stats/*').as('loadData');
     cy.visit('/l/statistics/engagement', {});
+    cy.wait('@loadData').wait(100);
   });
 
   it('Access Lead Statistics Engagement Page', () => {
@@ -13,10 +16,10 @@ describe('Lead Statistics Engagement', () => {
   });
 
   it('Gets right leaderboard order', () => {
-    cy.get('[data-cy="leaderboard-line"] > [data-cy="line-score"]')
+    cy.get('[data-cy="line-score"]')
       .first()
       .then((data) => {
-        cy.get('[data-cy="leaderboard-line"] > [data-cy="line-score"]')
+        cy.get('[data-cy="line-score"]')
           .eq(1)
           .then((data2) => expect(+data.text()).above(+data2.text()));
       });
