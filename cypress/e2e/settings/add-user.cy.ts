@@ -91,8 +91,12 @@ describe('Add user form', () => {
   });
 
   it('Try to create user with empty fields', () => {
+    cy.get('[data-cy="firstname"]').click();
+    cy.get('[data-cy="lastname"]').click();
+    cy.get('[data-cy="email"]').click();
+    cy.get('[data-cy="team"]').click();
     cy.get('[data-cy="btnSave"]').click();
-    cy.wait(500);
+
     cy.get('[data-cy="firstname-error"]').should('contain.text', 'Ce champ doit être rempli.');
     cy.get('[data-cy="lastname-error"]').should('contain.text', 'Ce champ doit être rempli.');
     cy.get('[data-cy="email-error"]').should('contain.text', 'Ce champ doit être rempli.');
