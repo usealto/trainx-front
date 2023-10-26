@@ -40,7 +40,9 @@ describe('Add user form', () => {
     cy.get('[data-cy="filterBySearch"]')
       .last()
       .within(() => {
+        cy.intercept('GET', '').as('searchUser')
         cy.get('.form-control').clear().type(`prénom+${id2}`);
+        cy.wait('@searchUser');
       });
     cy.wait(500);
     cy.get('[data-cy="btnDelete"]').click();
