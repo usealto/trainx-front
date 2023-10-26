@@ -97,7 +97,7 @@ describe('Add user form', () => {
     cy.get('[data-cy="team-error"]').should('contain.text', 'Ce champ doit être rempli.');
   });
 
-  it.only('Try to create a user with incorrect email', () => {
+  it('Try to create a user with incorrect email', () => {
     cy.get('[data-cy="team"]').click();
     cy.get('[data-cy="team-badge"]').first().click();
 
