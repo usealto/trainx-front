@@ -774,7 +774,7 @@ export const FR = {
         email: 'Adresse email',
         emailPlaceholder: 'prenom@usealto.com',
         duplicateEmail: 'Une autre adresse email est identique.',
-        emailDeleted: 'Vous ne pouvez pas re-créer un utilisateur supprimé',
+        emailDeleted: 'Vous ne pouvez pas re-créer un utilisateur supprimé.',
         invalidEmailFormat: 'Le format de l’adresse email est incorrect.',
         team: 'Équipe',
         teamPlaceholder: 'Sélectionnez une équipe...',

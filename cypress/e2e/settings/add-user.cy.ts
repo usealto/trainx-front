@@ -6,7 +6,7 @@ describe('Add user form', () => {
     cy.get('[data-cy="open-user-form"]').click();
   });
 
-  it.only('add 2 user and delete them', () => {
+  it('add 2 user and delete them', () => {
     cy.get('[data-cy="add-line"]').click();
 
     // first user
@@ -40,7 +40,7 @@ describe('Add user form', () => {
     cy.get('[data-cy="filterBySearch"]')
       .last()
       .within(() => {
-        cy.intercept('GET', '').as('searchUser')
+        cy.intercept('GET', '').as('searchUser');
         cy.get('.form-control').clear().type(`prénom+${id2}`);
         cy.wait('@searchUser');
       });
@@ -59,5 +59,54 @@ describe('Add user form', () => {
     cy.wait(500);
     cy.get('[data-cy="btnDelete"]').click();
     cy.get('[data-cy="deleteButton"]').click();
+  });
+
+  it('Try to create a user with an existing email', () => {
+    cy.get('[data-cy="email"]').type(`romain@usealto.com`);
+
+    cy.get('[data-cy="team"]').click();
+    cy.get('[data-cy="team-badge"]').first().click();
+
+    cy.get('[data-cy="firstname"]').type(`e2e-testing`);
+    cy.get('[data-cy="lastname"]').type(`e2e-testing`);
+
+    cy.get('[data-cy="email-error"]').should('contain.text', 'Une autre adresse email est identique.');
+  });
+
+  it('Try to create a user with an deleted email', () => {
+    cy.get('[data-cy="email"]').type(`test@usealto.com`);
+
+    cy.get('[data-cy="team"]').click();
+    cy.get('[data-cy="team-badge"]').first().click();
+
+    cy.get('[data-cy="firstname"]').type(`e2e-testing`);
+    cy.get('[data-cy="lastname"]').type(`e2e-testing`);
+
+    cy.get('[data-cy="email-error"]').should(
+      'contain.text',
+      'Vous ne pouvez pas re-créer un utilisateur supprimé.',
+    );
+  });
+
+  it('Try to create user with empty fields', () => {
+    cy.get('[data-cy="btnSave"]').click();
+
+    cy.get('[data-cy="firstname-error"]').should('contain.text', 'Ce champ doit être rempli.');
+    cy.get('[data-cy="lastname-error"]').should('contain.text', 'Ce champ doit être rempli.');
+    cy.get('[data-cy="email-error"]').should('contain.text', 'Ce champ doit être rempli.');
+    cy.get('[data-cy="team-error"]').should('contain.text', 'Ce champ doit être rempli.');
+  });
+
+  it.only('Try to create a user with incorrect email', () => {
+    cy.get('[data-cy="team"]').click();
+    cy.get('[data-cy="team-badge"]').first().click();
+
+    cy.get('[data-cy="firstname"]').type(`e2e-testing`);
+    cy.get('[data-cy="lastname"]').type(`e2e-testing`);
+
+    cy.get('[data-cy="email"]').type(`testusealto.com`);
+    cy.get('[data-cy="btnSave"]').click();
+
+    cy.get('[data-cy="email-error"]').should('contain.text', 'Le format de l’adresse email est incorrect.');
   });
 });

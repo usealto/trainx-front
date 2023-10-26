@@ -31,7 +31,7 @@
         formControlName="firstname"
         placeholder="{{ I18ns.settings.users.addUsers.firstnamePlaceholder }}"
       />
-      <span *ngIf="isTouchedAndInvalid(userForm.controls.firstname)" class="text-danger">
+      <span data-cy="firstname-error" *ngIf="isTouchedAndInvalid(userForm.controls.firstname)" class="text-danger">
         {{ I18ns.shared.noEmptyField }}
       </span>
     </div>
@@ -48,7 +48,7 @@
         formControlName="lastname"
         placeholder="{{ I18ns.settings.users.addUsers.lastnamePlaceholder }}"
       />
-      <span *ngIf="isTouchedAndInvalid(userForm.controls.lastname)" class="text-danger">
+      <span data-cy="lastname-error" *ngIf="isTouchedAndInvalid(userForm.controls.lastname)" class="text-danger">
         {{ I18ns.shared.noEmptyField }}
       </span>
     </div>
@@ -65,7 +65,7 @@
         formControlName="email"
         placeholder="{{ I18ns.settings.users.addUsers.emailPlaceholder }}"
       />
-      <span *ngIf="isTouchedAndInvalid(userForm.controls.email)" class="text-danger">
+      <span data-cy="email-error" *ngIf="isTouchedAndInvalid(userForm.controls.email)" class="text-danger">
         <ng-container *ngIf="userForm.controls.email.errors?.['emailDeleted']">
           {{ I18ns.settings.users.addUsers.emailDeleted }}
         </ng-container>
@@ -115,7 +115,7 @@
         </button>
       </div>
 
-      <span *ngIf="isTouchedAndInvalid(userForm.controls.teamId)" class="text-danger">
+      <span data-cy="team-error" *ngIf="isTouchedAndInvalid(userForm.controls.teamId)" class="text-danger">
         {{ I18ns.shared.noEmptyField }}
       </span>
     </div>
