@@ -39,6 +39,10 @@ export class UsersRestService {
     this.userStore.users.value = [];
   }
 
+  getUsersCount(params: GetUsersRequestParams): Observable<number> {
+    return this.userApi.getUsers({ ...params, itemsPerPage: 1 }).pipe(map((r) => r.meta.totalItems ?? 0));
+  }
+
   getUsersFiltered(req: GetUsersRequestParams): Observable<UserDtoApi[]> {
     return this.userApi.getUsers({ ...req }).pipe(map((r) => r.data ?? []));
   }

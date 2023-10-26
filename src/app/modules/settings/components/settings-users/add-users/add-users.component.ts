@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { TeamDtoApi } from '@usealto/sdk-ts-angular';
-import { catchError, combineLatest, of, tap } from 'rxjs';
+import { catchError, combineLatest, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { IAbstractControl } from 'src/app/core/form-types/i-abstract-control';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -41,14 +41,20 @@ export class AddUsersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    combineLatest([
-      this.teamService.getTeams(),
-      this.usersRestService.getUsersFiltered({
-        includeSoftDeleted: true,
-        itemsPerPage: 1000,
-      }),
-    ])
+    this.usersRestService
+      .getUsersCount({ includeSoftDeleted: true })
       .pipe(
+        switchMap((count) => {
+          return combineLatest([
+            this.teamService.getTeams(),
+            count > 0
+              ? this.usersRestService.getUsersFiltered({
+                  includeSoftDeleted: true,
+                  itemsPerPage: count,
+                })
+              : of([]),
+          ]);
+        }),
         tap(([teams, users]) => {
           this.emails = users.filter((u) => !u.deletedAt).map((u) => u.email);
           this.deletedEmails = users.filter((u) => u.deletedAt).map((u) => u.email);
