@@ -6,7 +6,6 @@ import {
   GetScoresRequestParams,
   GetTeamsStatsRequestParams,
   GetUsersStatsRequestParams,
-  ProgramRunApi,
   ProgramRunDtoApi,
   ProgramRunsApiService,
   QuestionStatsDtoApi,
@@ -20,11 +19,11 @@ import {
   TeamStatsDtoApi,
   UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
+import { addDays } from 'date-fns';
 import { Observable, filter, map } from 'rxjs';
 import { ChartFilters } from '../../shared/models/chart.model';
 import { ScoreDuration, ScoreFilters } from '../models/score.model';
 import { ScoresService } from './scores.service';
-import { addDays } from 'date-fns';
 
 @Injectable({
   providedIn: 'root',
@@ -100,7 +99,11 @@ export class ScoresRestService {
       .pipe(map((r) => r.data || []));
   }
 
-  getTeamsStats(duration: ScoreDuration, isProgression = false, sortBy?: string): Observable<TeamStatsDtoApi[]> {
+  getTeamsStats(
+    duration: ScoreDuration,
+    isProgression = false,
+    sortBy?: string,
+  ): Observable<TeamStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
 
