@@ -21,6 +21,7 @@ export const FR = {
     noData: 'Aucun résultat ne correspond à votre recherche.',
     noDataSubtitle: 'Essayez avec d’autres filtres.',
     noDataInt: '-%',
+    noEmptyField: 'Ce champ doit être rempli.',
     resetFilters: 'Réinitialiser les filtres',
     reply: 'Répondre',
     search: 'Rechercher',
@@ -584,6 +585,7 @@ export const FR = {
         active: 'Membres réguliers',
         inactive: 'Membres irréguliers',
         totalAnswers: 'Nombre total de réponses (30 derniers jours)',
+        tooltip: 'Évolution sur les 30 derniers jours',
       },
       table: {
         name: 'Nom',
@@ -591,6 +593,7 @@ export const FR = {
         globalScore: 'Score global (30 derniers jours)',
         noScore: 'Aucun score',
         questionsPerMonth: 'Questions (30 derniers jours)',
+        noData: 'Aucune donnée',
         questionsPerMonthTooltip:
           'Nombre de questions répondues sur les 30 derniers jours et variation sur la dernière période',
         active: 'Actif',
@@ -627,6 +630,9 @@ export const FR = {
         noUsers: 'Aucun membre',
         users: ['Aucun', '{{}}', '{{}}'],
         globalScore: 'Score global',
+        assignatedQuestions: 'Nombre de questions assignées',
+        notEnoughQuestions:
+          'Pour assurer une montée en compétences optimale, il est préférable que les équipes aient plus de 20 questions assignées.',
         activity: 'Activité  moyenne (30 derniers jours)',
         noScore: 'Aucun score',
         creationDate: 'Date de création',
@@ -758,6 +764,25 @@ export const FR = {
       successEdit: 'Le collaborateur {{}} a bien été modifié',
       deleteAdminTooltip:
         'Pour supprimer un administrateur, transformez-le d’abord en utilisateur standard. Vous pourrez ensuite procéder à la suppression',
+      addUsers: {
+        add: 'Ajouter des collaborateurs',
+        invite: 'Inviter des collaborateurs',
+        lastname: 'Nom',
+        lastnamePlaceholder: 'Exemple: Baker',
+        firstname: 'Prénom',
+        firstnamePlaceholder: 'Exemple: Phoenix',
+        email: 'Adresse email',
+        emailPlaceholder: 'prenom@usealto.com',
+        duplicateEmail: 'Une autre adresse email est identique.',
+        emailDeleted: 'Vous ne pouvez pas re-créer un utilisateur supprimé.',
+        invalidEmailFormat: 'Le format de l’adresse email est incorrect.',
+        team: 'Équipe',
+        teamPlaceholder: 'Sélectionnez une équipe...',
+        addLine: 'Ajouter une ligne',
+        APIerror:
+          'Une erreur est survenue sur ces utilisateurs. Vérifiez la validité des champs avant de valider.',
+        success: 'Vos collaborateurs vont recevoir un mail d’invitation pour se connecter à l’application.',
+      },
     },
     continuousSession: {
       title: 'Session continue',

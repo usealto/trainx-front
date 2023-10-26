@@ -1,0 +1,146 @@
+<div class="text-end px-4 mt-3">
+  <button
+    data-cy="closeEditTeamPanel"
+    type="button"
+    class="btn-close float-end"
+    aria-label="Close"
+    (click)="activeOffcanvas.dismiss()"
+  ></button>
+</div>
+<div class="mx-5 my-4 d-flex align-items-center">
+  <alto-icon-badge [size]="4" icon="bi-people" class="me-4"></alto-icon-badge>
+
+  <h2 class="d-inline-block m-0">
+    {{ I18ns.settings.users.addUsers.invite }}
+  </h2>
+</div>
+
+<hr />
+<div data-cy="form-canva" class="offcanvas-body">
+  <form *ngFor="let userForm of userForms; let i = index" [formGroup]="userForm" class="form-line">
+    <div data-cy="form-row" class="form-block">
+      <label for="firstname" class="form-label required fw-medium">{{
+        I18ns.settings.users.addUsers.firstname
+      }}</label>
+
+      <input
+        data-cy="firstname"
+        type="text"
+        id="firstname"
+        class="form-control"
+        formControlName="firstname"
+        placeholder="{{ I18ns.settings.users.addUsers.firstnamePlaceholder }}"
+      />
+      <span data-cy="firstname-error" *ngIf="isTouchedAndInvalid(userForm.controls.firstname)" class="text-danger">
+        {{ I18ns.shared.noEmptyField }}
+      </span>
+    </div>
+    <div class="form-block">
+      <label for="lastname" class="form-label required fw-medium">{{
+        I18ns.settings.users.addUsers.lastname
+      }}</label>
+
+      <input
+        data-cy="lastname"
+        type="text"
+        id="lastname"
+        class="form-control"
+        formControlName="lastname"
+        placeholder="{{ I18ns.settings.users.addUsers.lastnamePlaceholder }}"
+      />
+      <span data-cy="lastname-error" *ngIf="isTouchedAndInvalid(userForm.controls.lastname)" class="text-danger">
+        {{ I18ns.shared.noEmptyField }}
+      </span>
+    </div>
+    <div class="form-block">
+      <label for="email" class="form-label required fw-medium">{{
+        I18ns.settings.users.addUsers.email
+      }}</label>
+
+      <input
+        data-cy="email"
+        type="email"
+        id="email"
+        class="form-control"
+        formControlName="email"
+        placeholder="{{ I18ns.settings.users.addUsers.emailPlaceholder }}"
+      />
+      <span data-cy="email-error" *ngIf="isTouchedAndInvalid(userForm.controls.email)" class="text-danger">
+        <ng-container *ngIf="userForm.controls.email.errors?.['emailDeleted']">
+          {{ I18ns.settings.users.addUsers.emailDeleted }}
+        </ng-container>
+        <ng-container *ngIf="userForm.controls.email.errors?.['nameNotAllowed']">
+          {{ I18ns.settings.users.addUsers.duplicateEmail }}
+        </ng-container>
+        <ng-container *ngIf="userForm.controls.email.errors?.['required']">
+          {{ I18ns.shared.noEmptyField }}
+        </ng-container>
+        <ng-container *ngIf="userForm.controls.email.errors?.['email']">
+          {{ I18ns.settings.users.addUsers.invalidEmailFormat }}
+        </ng-container>
+        &nbsp;
+      </span>
+    </div>
+
+    <div class="form-block">
+      <label class="form-label required fw-medium">{{ I18ns.settings.users.addUsers.team }}</label>
+      <div>
+        <ng-select
+          data-cy="team"
+          class="alto-form"
+          [items]="teams"
+          [multiple]="false"
+          bindLabel="name"
+          [placeholder]="I18ns.settings.users.addUsers.teamPlaceholder"
+          [closeOnSelect]="true"
+          bindValue="id"
+          formControlName="teamId"
+        >
+          <ng-template ng-label-tmp let-item="item" let-clear="clear">
+            <div class="alto-badge" [style]="item.id | teamColor">
+              <span>{{ item.name }}</span>
+            </div>
+          </ng-template>
+          <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+            <p data-cy="team-badge" class="alto-badge" [style]="item.id | teamColor">{{ item.name }}</p>
+            <i class="bi bi-check-circle-fill"></i>
+          </ng-template>
+        </ng-select>
+        <button
+          class="btn btn-outline-secondary cross"
+          (click)="removeLine(i)"
+          [disabled]="userForms.length <= 1"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <span data-cy="team-error" *ngIf="isTouchedAndInvalid(userForm.controls.teamId)" class="text-danger">
+        {{ I18ns.shared.noEmptyField }}
+      </span>
+    </div>
+  </form>
+
+  <div class="text-center">
+    <button data-cy="add-line" class="btn btn-primary" (click)="addLine()">
+      <i class="bi bi-plus-lg"></i> {{ I18ns.settings.users.addUsers.addLine }}
+    </button>
+  </div>
+</div>
+
+<div class="footer">
+  <hr class="m-0" />
+  <div class="button-container">
+    <button type="button" class="btn cancel-btn" aria-label="Close" (click)="activeOffcanvas.dismiss()">
+      {{ I18ns.shared.cancel }}
+    </button>
+
+    <input
+      data-cy="btnSave"
+      type="submit"
+      class="btn btn-primary float-end"
+      [value]="I18ns.settings.users.addUsers.invite"
+      (click)="sendForm()"
+    />
+  </div>
+</div>
