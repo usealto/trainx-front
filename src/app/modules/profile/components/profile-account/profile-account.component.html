@@ -92,9 +92,13 @@
     </h3>
     <div class="col-7 form-group">
       <div class="form-control roles-input d-flex align-items-center" disabled readonly>
-        <div class="alto-badge" *ngFor="let role of user.roles" [style]="role | teamColor">
-          <span>{{ role + ' ' }}</span>
-        </div>
+        <span class="alto-badge" [style]="user.roles[0] | teamColor">
+          {{
+            user.roles[0] === 'company-user'
+              ? I18ns.profile.profile.altoRoles.companyUser
+              : I18ns.profile.profile.altoRoles.companyAdmin
+          }}
+        </span>
       </div>
     </div>
   </div>

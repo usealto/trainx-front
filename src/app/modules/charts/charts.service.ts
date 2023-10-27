@@ -38,12 +38,15 @@ export class ChartsService {
       eChartsOption.series.forEach((serie) => {
         if (serie.type === 'line' && serie.data) {
           serie.data[0] = serie.data[0] === '-' ? 0 : serie.data[0] ?? 0;
-
-          serie.emphasis = {
-            scale: 4,
-            itemStyle: {
-              borderWidth: 3,
-            },
+          (serie.smooth = 0.3),
+            (serie.emphasis = {
+              scale: 4,
+              itemStyle: {
+                borderWidth: 3,
+              },
+            });
+          serie.lineStyle = {
+            width: 3,
           };
 
           serie.connectNulls = true;
