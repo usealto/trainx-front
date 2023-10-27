@@ -346,7 +346,7 @@ export const FR = {
         title: "Activité de l'entreprise",
         subtitle: "Retrouvez une vue d'ensemble de l'activité des équipes.",
         chartTitle: 'Nombre de questions répondues',
-        chartSubtitle: "Évolution du nombre total de questions répondues au sein de l'entreprise.",
+        chartSubtitle: "Évolution du nombre total de réponses au sein de l'entreprise.",
         teamFilter: 'Équipe',
       },
       engagement: {
@@ -354,12 +354,12 @@ export const FR = {
         subtitle: 'Retrouvez une vue d’ensemble des questions et commentaires remontés par vos équipes.',
         comments: 'Commentaires',
         suggQuestions: 'Questions suggérées',
-        chartTitle: 'Collaboration',
+        chartTitle: 'Contribution',
         chartSubtitle: 'Évolution du nombre de questions et de commentaires remontés par vos équipes.',
       },
       leaderboard: {
         title: 'Leaderboard',
-        subtitle: 'Classement de vos équipes selon leur nombre de questions répondues.',
+        subtitle: 'Classement de vos équipes selon leur nombre de réponses.',
       },
       teamsTable: {
         title: 'Équipes',
@@ -816,6 +816,10 @@ export const FR = {
       roles: 'Rôles',
       form: {
         success: 'Vos informations ont bien été modifiées',
+      },
+      altoRoles: {
+        companyUser: 'Utilisateur standard',
+        companyAdmin: 'Administrateur',
       },
     },
     password: {
