@@ -17,11 +17,9 @@
     <ng-container *ngIf="program.teams.length > 0; else elseTeams">
       <p class="d-inline-block me-2">
         <img class="pe-2 mb-2" [src]="Emoji.BustsInSilhouette | emoji" height="16" width="16" />
-        {{ (I18ns.shared.teams | titlecase) + ' : ' }}
+        {{ I18ns.shared.assignedTeams + ' : ' }}
       </p>
-      <span class="alto-badge teams">{{
-        program.teams.length + '/' + teamsCount + ' ' + I18ns.shared.teams
-      }}</span>
+      <span class="alto-badge teams">{{ program.teams.length }}</span>
     </ng-container>
     <ng-template #elseTeams>
       <div class="alto-badge">{{ I18ns.shared.noTeam }}</div>
@@ -38,20 +36,20 @@
     </p>
     <p class="score">
       <span>
-        <img class="pe-1 mb-2" [src]="Emoji.RollerCoaster | emoji" height="14" width="14" />
-        {{ I18ns.programs.programs.progress }}
-      </span>
-      <span class="float-end alto-score" [class]="(progress ? progress * 100 : '') | pillColor">
-        {{ progress ? (progress | percent) : '-' }}
-      </span>
-    </p>
-    <p class="score">
-      <span>
         <img class="pe-1 mb-2" [src]="Emoji.SportsMedal | emoji" height="14" width="14" />
         {{ I18ns.programs.programs.score }}
       </span>
       <span class="float-end alto-score" [class]="(score ? score * 100 : '') | pillColor">
         {{ score ? (score | percent) : '-' }}
+      </span>
+    </p>
+    <p class="score">
+      <span>
+        <img class="pe-1 mb-2" [src]="Emoji.RollerCoaster | emoji" height="14" width="14" />
+        {{ I18ns.programs.programs.progress }}
+      </span>
+      <span class="float-end alto-score" [class]="(progress ? progress * 100 : '') | pillColor">
+        {{ progress ? (progress | percent) : '-' }}
       </span>
     </p>
     <p class="score">

@@ -86,6 +86,7 @@
           <alto-colored-pill-list
             *ngIf="item.leastMasteredTags.length > 0; else noTag"
             [textLimit]="15"
+            color="primary"
             [data]="item.leastMasteredTags | slice : 0 : 3"
           ></alto-colored-pill-list>
           <ng-template #noTag>

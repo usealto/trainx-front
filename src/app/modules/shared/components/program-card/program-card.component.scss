@@ -61,7 +61,10 @@ h2 {
 .score {
   padding-bottom: 0.667rem;
   span {
-    font-size: 0.833rem;
+    font-size: 1rem;
+    @media (max-width: 840px) {
+      font-size: 0.8333rem;
+    }
     font-style: normal;
     font-weight: 600;
     &:not(.alto-score) {

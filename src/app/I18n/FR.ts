@@ -33,6 +33,7 @@ export const FR = {
     tags: 'tags',
     programs: 'programmes',
     teams: 'équipes',
+    assignedTeams: 'Équipes assignées',
     members: 'membres',
     top: 'Top',
     flop: 'Flop',
@@ -200,7 +201,7 @@ export const FR = {
       progress: 'Avancement',
       progressToolTip: 'Nombre de questions répondues par tout les membres sur le nombre total de questions',
       score: 'Score',
-      membersHaveValidated: 'membres ayant validé',
+      membersHaveValidated: 'Membres ayant validé',
       scoreToolTip: 'Score moyen du programme depuis sa création',
       teams: 'Équipes:',
       filters: {
