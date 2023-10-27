@@ -2,6 +2,7 @@ describe('Lead Routing', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
     cy.visit('/');
+    cy.get('[data-cy="main-div"]').find('alto-lead-home', { timeout: 10000 })
   });
 
   it('Access Lead Home from root redirects to Home', () => {

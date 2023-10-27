@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  CreateUserDtoApi,
   GetNextQuestionsForUserRequestParams,
   GetScoresRequestParams,
   GetUsersRequestParams,
@@ -36,6 +37,10 @@ export class UsersRestService {
 
   resetUsers() {
     this.userStore.users.value = [];
+  }
+
+  getUsersCount(params: GetUsersRequestParams): Observable<number> {
+    return this.userApi.getUsers({ ...params, itemsPerPage: 1 }).pipe(map((r) => r.meta.totalItems ?? 0));
   }
 
   getUsersFiltered(req: GetUsersRequestParams): Observable<UserDtoApi[]> {
@@ -97,5 +102,9 @@ export class UsersRestService {
 
   deleteUser(id: string) {
     return this.userApi.deleteUser({ id });
+  }
+
+  createUser(user: CreateUserDtoApi) {
+    return this.userApi.createUser({ createUserDtoApi: user });
   }
 }
