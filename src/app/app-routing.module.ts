@@ -155,15 +155,16 @@ const routes: Routes = [
       },
     ],
   },
-  {
-    path: AltoRoutes.admin,
-    resolve: {
-      splashscreen: noSplashScreenResolver,
-    },
-    loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule),
-    canActivate: [AuthGuard],
-    canActivateChild: [AuthGuard],
-  },
+  //! TO UNCOMMENT WHEN ON ADMIN BRANCH
+  // {
+  //   path: AltoRoutes.admin,
+  //   resolve: {
+  //     splashscreen: noSplashScreenResolver,
+  //   },
+  //   loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule),
+  //   canActivate: [AuthGuard],
+  //   canActivateChild: [AuthGuard],
+  // },
   {
     path: AltoRoutes.translation,
     loadChildren: () => import('./core/utils/i18n/translation.module').then((m) => m.TranslationModule),
