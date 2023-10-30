@@ -86,10 +86,11 @@
           <alto-colored-pill-list
             *ngIf="item.leastMasteredTags.length > 0; else noTag"
             [textLimit]="15"
+            color="primary"
             [data]="item.leastMasteredTags | slice : 0 : 3"
           ></alto-colored-pill-list>
           <ng-template #noTag>
-            <p class="alto-grey text-center">
+            <p class="alto-grey text-start">
               {{ I18ns.statistics.perTeams.table.noTag }}
             </p>
           </ng-template>

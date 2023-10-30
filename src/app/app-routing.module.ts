@@ -155,6 +155,7 @@ const routes: Routes = [
       },
     ],
   },
+  //! TO UNCOMMENT WHEN ON ADMIN BRANCH
   {
     path: AltoRoutes.admin,
     resolve: {

@@ -17,6 +17,7 @@ export class ColoredPillListComponent {
   /**  Choose if you want colors. Will be automatically assigned based on the "id" property from "data" using a pipe helper */
   @Input() hasDynamicColor = false;
   /**  Number maximum of data to diplay, then a `+X` will be shown */
+  @Input() color = '';
   @Input() limit = 0;
   /**  Number of maximum characters to be shown */
   @Input() textLimit = 100;

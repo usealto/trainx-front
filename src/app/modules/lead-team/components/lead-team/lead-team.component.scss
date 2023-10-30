@@ -58,3 +58,8 @@ h2 {
     padding-left: 1.667rem;
   }
 }
+
+.danger {
+  background-color: var(--error-50);
+  color: var(--error-600);
+}
