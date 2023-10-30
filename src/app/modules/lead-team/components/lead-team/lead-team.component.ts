@@ -224,8 +224,4 @@ export class LeadTeamComponent implements OnInit {
       this.previousUsersStats.find((u) => u.user.id === id)?.totalGuessesCount,
     );
   }
-
-  airtableRedirect() {
-    window.open(environment.airtableURL + this.profileStore.user.value.email, '_blank');
-  }
 }
