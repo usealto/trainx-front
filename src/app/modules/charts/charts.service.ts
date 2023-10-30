@@ -34,7 +34,7 @@ export class ChartsService {
 
   altoFormattingMultiline(eChartsOption: EChartsOption): EChartsOption {
     // replace null or 'n' values with 0 for every series begining with null or 'n'
-    if (eChartsOption.series && eChartsOption.series && Array.isArray(eChartsOption.series)) {
+    if (eChartsOption.series && Array.isArray(eChartsOption.series)) {
       eChartsOption.series.forEach((serie) => {
         if (serie.type === 'line' && serie.data) {
           serie.data[0] = serie.data[0] === '-' ? 0 : serie.data[0] ?? 0;
@@ -48,8 +48,10 @@ export class ChartsService {
           serie.lineStyle = {
             width: 3,
           };
-
           serie.connectNulls = true;
+          if (serie.data.length === 1) {
+            serie.showSymbol = true;
+          }
         }
       });
     }
