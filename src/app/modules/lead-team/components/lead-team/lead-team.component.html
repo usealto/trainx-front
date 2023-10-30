@@ -51,13 +51,16 @@
               <ng-template #warning>
                 <div
                   ngbTooltip="{{ I18ns.leadTeam.teams.table.notEnoughQuestions }}"
+                  tooltipClass="tooltip-class"
                   class="alto-badge"
                   [class]="team.questionsPushedCount || 0 | pillDanger"
                 >
-                  <img class="mb-2" [src]="Emoji.Warning | emoji" height="10" />
-                  <span>
-                    {{ ' ' + team.questionsPushedCount }}
-                  </span>
+                  <div class="d-flex align-items-center">
+                    <img class="mb-2 me-2" [src]="Emoji.Warning | emoji" height="12" />
+                    <p>
+                      {{ team.questionsPushedCount }}
+                    </p>
+                  </div>
                 </div>
               </ng-template>
             </td>
@@ -111,17 +114,11 @@
   </alto-placeholder-manager>
 </div>
 
+<hr class="my-7">
+
 <!-- MEMBERS -->
 
 <div class="mb-5 members">
-  <button
-    type="button"
-    class="btn btn-primary float-end d-flex align-items-center"
-    (click)="airtableRedirect()"
-  >
-    <i class="bi bi-person-plus me-2 fs-5"></i>
-    <span>{{ I18ns.leadTeam.members.invite }}</span>
-  </button>
   <h2 data-cy="companyMembersSection" id="membersAnchor">
     <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" width="16" height="16" />
     {{ I18ns.leadTeam.members.title }}
