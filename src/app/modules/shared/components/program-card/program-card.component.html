@@ -64,6 +64,7 @@
         {{ membersHaveValidatedCount }}
       </span>
     </p>
+    <p class="d-inline-block mt-5">{{ I18ns.shared.createdAt + ' ' + program.createdAt }}</p>
   </div>
   <div class="panel inactive" *ngIf="!program.isActive"></div>
 </ng-container>
