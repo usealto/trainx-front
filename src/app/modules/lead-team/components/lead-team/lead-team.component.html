@@ -114,14 +114,6 @@
 <!-- MEMBERS -->
 
 <div class="mb-5 members">
-  <button
-    type="button"
-    class="btn btn-primary float-end d-flex align-items-center"
-    (click)="airtableRedirect()"
-  >
-    <i class="bi bi-person-plus me-2 fs-5"></i>
-    <span>{{ I18ns.leadTeam.members.invite }}</span>
-  </button>
   <h2 data-cy="companyMembersSection" id="membersAnchor">
     <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" width="16" height="16" />
     {{ I18ns.leadTeam.members.title }}

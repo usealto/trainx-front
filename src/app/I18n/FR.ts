@@ -572,7 +572,6 @@ export const FR = {
       title: 'Vos membres',
       shortTitle: 'Membres',
       subtitle: 'Retrouvez l’ensemble des utilisateurs de votre entreprise.',
-      invite: 'Inviter des membres',
       filters: {
         activity: 'Activité',
         teams: 'Équipe',
