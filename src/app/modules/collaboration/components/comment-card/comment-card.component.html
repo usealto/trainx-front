@@ -22,7 +22,6 @@
     </div>
   </div>
 </div>
-
 <div class="content-container" [class.footer]="comment?.isRead">
   <div class="text-container">
     <div class="badge-with-connector">
@@ -38,6 +37,13 @@
               ? comment?.author?.firstname + ' ' + comment?.author?.lastname
               : I18ns.shared.deletedUsername
           }}
+        </span>
+        <span
+          *ngIf="comment && comment.author && getTeam(comment.author.id)"
+          class="alto-badge ms-3"
+          [style]="getTeam(comment.author.id)!.id | teamColor"
+        >
+          {{ getTeam(comment.author.id)!.name }}
         </span>
         <span class="date-text">{{ comment?.createdAt | dateLabel }}</span>
       </div>
@@ -59,6 +65,13 @@
               ? comment?.updatedByUser?.firstname + ' ' + comment?.updatedByUser?.lastname
               : I18ns.shared.deletedUsername
           }}
+        </span>
+        <span
+          *ngIf="comment && comment.updatedByUser && getTeam(comment.updatedByUser.id)"
+          class="alto-badge ms-3"
+          [style]="getTeam(comment.updatedByUser.id)!.id | teamColor"
+        >
+          {{ getTeam(comment.updatedByUser.id)!.name }}
         </span>
         <span class="date-text">{{ comment?.updatedAt | dateLabel }}</span>
       </div>

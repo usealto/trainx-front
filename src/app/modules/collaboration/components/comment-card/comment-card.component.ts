@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CommentDtoApi } from '@usealto/sdk-ts-angular';
+import { CommentDtoApi, TeamLightDtoApi } from '@usealto/sdk-ts-angular';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
@@ -9,6 +9,7 @@ import { CommentsRestService } from 'src/app/modules/programs/services/comments-
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
 
 @UntilDestroy()
 @Component({
@@ -29,6 +30,7 @@ export class CommentCardComponent {
     private readonly commentsRestService: CommentsRestService,
     private readonly toastService: ToastService,
     private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
+    private readonly userStore: ProfileStore,
   ) {}
 
   archiveComment(): void {
@@ -73,5 +75,10 @@ export class CommentCardComponent {
         untilDestroyed(this),
       )
       .subscribe();
+  }
+
+  getTeam(userId: string): TeamLightDtoApi | undefined {
+    const u = this.userStore.users.value.find((user) => user.id === userId);
+    return u?.team || undefined;
   }
 }
