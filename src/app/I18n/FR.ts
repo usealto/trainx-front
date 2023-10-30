@@ -1128,6 +1128,8 @@ export const FR = {
       concerningQuestion: 'sur la question',
       archive: 'Archiver',
       seeQuestion: 'Voir la question',
+      editQuestion: 'Modifier la question',
+      editQuestionToast: 'Question modifiée avec succès',
     },
     placeholder: {
       pendingTitle: 'Aucune question ou commentaire en attente',

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CommentDtoApi, TeamLightDtoApi } from '@usealto/sdk-ts-angular';
+import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { CommentDtoApi, QuestionDtoApi, QuestionLightDtoApi, TeamLightDtoApi } from '@usealto/sdk-ts-angular';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
@@ -10,6 +10,8 @@ import { ToastService } from 'src/app/core/toast/toast.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { QuestionFormComponent } from 'src/app/modules/shared/components/question-form/question-form.component';
+import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
 
 @UntilDestroy()
 @Component({
@@ -31,6 +33,8 @@ export class CommentCardComponent {
     private readonly toastService: ToastService,
     private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
     private readonly userStore: ProfileStore,
+    private readonly offcanvasService: NgbOffcanvas,
+    private readonly questionRestService: QuestionsRestService,
   ) {}
 
   archiveComment(): void {
@@ -80,5 +84,26 @@ export class CommentCardComponent {
   getTeam(userId: string): TeamLightDtoApi | undefined {
     const u = this.userStore.users.value.find((user) => user.id === userId);
     return u?.team || undefined;
+  }
+
+  openQuestionForm(question?: QuestionLightDtoApi) {
+    if (question) {
+      this.questionRestService
+        .getQuestion(question.id)
+        .pipe(
+          tap((q) => {
+            if (q) {
+              const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
+                position: 'end',
+                panelClass: 'overflow-auto',
+              });
+              canvasRef.componentInstance.question = q;
+              canvasRef.componentInstance.createdQuestion
+                .subscribe();
+            }
+          }),
+        )
+        .subscribe();
+    }
   }
 }

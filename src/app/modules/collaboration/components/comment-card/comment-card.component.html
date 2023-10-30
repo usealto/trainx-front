@@ -89,22 +89,27 @@
       <i class="bi bi-archive"></i>
       {{ I18ns.collaboration.commentCard.archive }}
     </button>
-
-    <a
-      class="button gray"
-      [routerLink]="
-        '/' +
-        AltoRoutes.lead +
-        '/' +
-        AltoRoutes.collaboration +
-        '/' +
-        AltoRoutes.collaborationSeeQuestion +
-        '/' +
-        comment?.questionId
-      "
-    >
-      <i class="bi bi-eye"></i>
-      {{ I18ns.collaboration.commentCard.seeQuestion }}
-    </a>
+    <div>
+      <a
+        class="button gray d-inline-block"
+        [routerLink]="
+          '/' +
+          AltoRoutes.lead +
+          '/' +
+          AltoRoutes.collaboration +
+          '/' +
+          AltoRoutes.collaborationSeeQuestion +
+          '/' +
+          comment?.questionId
+        "
+      >
+        <i class="bi bi-eye"></i>
+        {{ I18ns.collaboration.commentCard.seeQuestion }}
+      </a>
+      <button class="button blue d-inline-block" (click)="openQuestionForm(comment?.question)">
+        <i class="bi bi-pencil-square"></i>
+        {{ I18ns.collaboration.commentCard.editQuestion }}
+      </button>
+    </div>
   </div>
 </div>
