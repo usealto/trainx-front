@@ -17,7 +17,7 @@
 
 <alto-placeholder-manager [status]="guessesDataStatus">
   <div class="panel mb-5">
-    <h2>{{ I18ns.statistics.globalEngagement.activity.chartTitle }}</h2>
+    <h3>{{ I18ns.statistics.globalEngagement.activity.chartTitle }}</h3>
     <p class="alto-grey">{{ I18ns.statistics.globalEngagement.activity.chartSubtitle }}</p>
     <alto-chart-basicline
       class="chart-container"
@@ -27,7 +27,7 @@
   </div>
 
   <div class="nodata-placeholder" noData>
-    <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalEngagement.placeholders.inactiveTeamsTitle }}</h2>
+    <h3 class="mb-5 fs-6">{{ I18ns.statistics.globalEngagement.placeholders.inactiveTeamsTitle }}</h3>
     <div class="text-center">
       <img [src]="EmojiName.SleepingFace | emoji" height="24" width="24" />
       <p class="mt-3">{{ I18ns.statistics.globalEngagement.placeholders.inactiveTeams }}</p>
@@ -48,7 +48,7 @@
   ></alto-leaderboard>
 
   <div class="nodata-placeholder" noData>
-    <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalEngagement.leaderboard.title }}</h2>
+    <h3 class="mb-5 fs-6">{{ I18ns.statistics.globalEngagement.leaderboard.title }}</h3>
     <div class="text-center">
       <img [src]="EmojiName.Trophy | emoji" height="24" width="24" />
       <p class="mt-3">{{ I18ns.statistics.globalEngagement.placeholders.noLeaderboard }}</p>
@@ -77,7 +77,7 @@
 
 <alto-placeholder-manager [status]="collaborationDataStatus">
   <div class="panel mb-5">
-    <h2>{{ I18ns.statistics.globalEngagement.engagement.chartTitle }}</h2>
+    <h3>{{ I18ns.statistics.globalEngagement.engagement.chartTitle }}</h3>
     <p class="alto-grey">{{ I18ns.statistics.globalEngagement.engagement.chartSubtitle }}</p>
     <alto-chart-basicline
       class="chart-container"
@@ -88,7 +88,7 @@
   </div>
 
   <div class="nodata-placeholder" noData>
-    <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalEngagement.placeholders.noDataYetTitle }}</h2>
+    <h3 class="mb-5 fs-6">{{ I18ns.statistics.globalEngagement.placeholders.noDataYetTitle }}</h3>
     <div class="text-center">
       <img [src]="EmojiName.BeachWithUmbrella | emoji" height="24" width="24" />
       <p class="mt-3">{{ I18ns.statistics.globalEngagement.placeholders.noDataYet }}</p>
@@ -101,7 +101,7 @@
 
 <div class="mt-5 mb-5 position-relative">
   <div class="col-6">
-    <h2 class>
+    <h2>
       <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" height="16" width="16" />
       {{ I18ns.statistics.globalEngagement.teamsTable.title }}
     </h2>
