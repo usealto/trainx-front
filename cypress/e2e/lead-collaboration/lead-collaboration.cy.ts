@@ -8,5 +8,4 @@ describe('Lead Collaboration', () => {
     cy.get('[data-cy="leadMenuCollaboration"]').click();
     cy.get('[data-cy="leadCollaborationTitle"]').should('have.text', 'Contribution');
   });
-  // TODO WRITE A SWITCH TABS TEST
 });

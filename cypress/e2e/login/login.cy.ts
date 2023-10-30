@@ -1,10 +1,13 @@
 describe('App Connection Admin', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/');
+    cy.wait('@loadData', { timeout: 10000 });
   });
 
   it('Login', function () {
+    cy.get('[data-cy="main-div"]').find('alto-lead-home', { timeout: 10000 });
     cy.get('#welcome').contains('Bonjour E2e-admin');
     cy.get('[data-cy="profileImgBadge"]').click();
     cy.get('#adminSwitch').should('exist');
@@ -25,6 +28,8 @@ describe('App Connection', () => {
   });
 
   it('logs In', function () {
+    cy.get('[data-cy="main-div"]').find('alto-user-home', { timeout: 10000 });
+
     cy.get('#welcome').contains('Bonjour E2e');
     cy.get('[data-cy="profileImgBadge"]').click();
     cy.get('#adminSwitch').should('not.exist');
