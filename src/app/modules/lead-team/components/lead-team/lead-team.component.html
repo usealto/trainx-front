@@ -51,13 +51,16 @@
               <ng-template #warning>
                 <div
                   ngbTooltip="{{ I18ns.leadTeam.teams.table.notEnoughQuestions }}"
+                  tooltipClass="tooltip-class"
                   class="alto-badge"
                   [class]="team.questionsPushedCount || 0 | pillDanger"
                 >
-                  <img class="mb-2" [src]="Emoji.Warning | emoji" height="10" />
-                  <span>
-                    {{ ' ' + team.questionsPushedCount }}
-                  </span>
+                  <div class="d-flex align-items-center">
+                    <img class="mb-2 me-2" [src]="Emoji.Warning | emoji" height="12" />
+                    <p>
+                      {{ team.questionsPushedCount }}
+                    </p>
+                  </div>
                 </div>
               </ng-template>
             </td>
