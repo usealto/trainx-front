@@ -107,7 +107,11 @@
         </thead>
         <tbody [style.height]="53 * paginatedTags.length + 'px'" *ngIf="!isTagsLoading">
           <tr *ngFor="let tag of paginatedTags">
-            <td class="text-black">{{ tag.name }}</td>
+            <td>
+              <span class="alto-badge primary">
+                {{ tag.name }}
+              </span>
+            </td>
             <td class="text-center">
               <span class="alto-score" [class]="(getTagScore(tag.id) || 0) * 100 | pillColor">
                 {{ getTagScore(tag.id) | percent }}
