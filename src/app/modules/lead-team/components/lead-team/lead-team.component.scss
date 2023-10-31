@@ -9,8 +9,21 @@
       min-width: 26.6667rem;
     }
   }
+  .tooltip-class {
+    .tooltip-inner {
+      text-align: left;
+      margin: 0 0 0.3rem 0;
+    }
+    .tooltip-arrow {
+      margin: 0 0 0.3rem 0;
+    }
+  }
 }
 
+.alto-badge {
+  cursor: pointer;
+  padding: 0 0.67rem;
+}
 .team-table tbody tr {
   height: 3.333rem;
 }

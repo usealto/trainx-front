@@ -39,6 +39,13 @@
               : I18ns.shared.deletedUsername
           }}
         </span>
+        <span
+          *ngIf="suggQuestion && suggQuestion.author && getTeam(suggQuestion.author.id)"
+          class="alto-badge ms-3"
+          [style]="getTeam(suggQuestion.author.id)!.id | teamColor"
+        >
+          {{ getTeam(suggQuestion.author.id)!.name }}
+        </span>
         <span class="date-text">{{ suggQuestion?.createdAt | dateLabel }}</span>
       </div>
       <div>
@@ -58,6 +65,13 @@
               ? suggQuestion?.updatedByUser?.firstname + ' ' + suggQuestion?.updatedByUser?.lastname
               : I18ns.shared.deletedUsername
           }}
+        </span>
+        <span
+          *ngIf="suggQuestion && suggQuestion.updatedByUser && getTeam(suggQuestion.updatedByUser.id)"
+          class="alto-badge ms-3"
+          [style]="getTeam(suggQuestion.updatedByUser.id)!.id | teamColor"
+        >
+          {{ getTeam(suggQuestion.updatedByUser.id)!.name }}
         </span>
         <span class="date-text">{{ suggQuestion?.updatedAt | dateLabel }}</span>
       </div>
