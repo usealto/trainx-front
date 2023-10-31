@@ -5,6 +5,7 @@ import {
   PatchQuestionSubmittedDtoApiStatusEnumApi,
   QuestionSubmittedDtoApi,
   QuestionSubmittedDtoApiStatusEnumApi,
+  TeamLightDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { of, switchMap, tap } from 'rxjs';
 import { ToastService } from 'src/app/core/toast/toast.service';
@@ -13,6 +14,7 @@ import { QuestionsSubmittedRestService } from './../../../programs/services/ques
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
 import { QuestionFormComponent } from 'src/app/modules/shared/components/question-form/question-form.component';
+import { ProfileStore } from 'src/app/modules/profile/profile.store';
 
 @UntilDestroy()
 @Component({
@@ -34,6 +36,7 @@ export class SuggQuestionCardComponent {
     private readonly toastService: ToastService,
     private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
     private readonly offcanvasService: NgbOffcanvas,
+    private readonly userStore: ProfileStore,
   ) {}
 
   refuseQuestion() {
@@ -103,5 +106,10 @@ export class SuggQuestionCardComponent {
         }),
       )
       .subscribe();
+  }
+
+  getTeam(userId: string): TeamLightDtoApi | undefined {
+    const u = this.userStore.users.value.find((user) => user.id === userId);
+    return u?.team || undefined;
   }
 }

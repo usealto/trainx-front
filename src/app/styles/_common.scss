@@ -66,6 +66,11 @@
     color: var(--gray-600);
     background-color: var(--gray-50);
   }
+
+  &.primary {
+    color: var(--primary-700);
+    background-color: var(--primary-50);
+  }
 }
 
 .alto-badge-big {

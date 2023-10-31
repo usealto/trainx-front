@@ -81,6 +81,7 @@ export class ProgramsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getScoresFromTags().subscribe();
     setTimeout(() => {
       combineLatest([
         this.questionsService.getQuestions(),

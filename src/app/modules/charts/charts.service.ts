@@ -34,19 +34,24 @@ export class ChartsService {
 
   altoFormattingMultiline(eChartsOption: EChartsOption): EChartsOption {
     // replace null or 'n' values with 0 for every series begining with null or 'n'
-    if (eChartsOption.series && eChartsOption.series && Array.isArray(eChartsOption.series)) {
+    if (eChartsOption.series && Array.isArray(eChartsOption.series)) {
       eChartsOption.series.forEach((serie) => {
         if (serie.type === 'line' && serie.data) {
           serie.data[0] = serie.data[0] === '-' ? 0 : serie.data[0] ?? 0;
-
-          serie.emphasis = {
-            scale: 4,
-            itemStyle: {
-              borderWidth: 3,
-            },
+          (serie.smooth = 0.3),
+            (serie.emphasis = {
+              scale: 4,
+              itemStyle: {
+                borderWidth: 3,
+              },
+            });
+          serie.lineStyle = {
+            width: 3,
           };
-
           serie.connectNulls = true;
+          if (serie.data.length === 1) {
+            serie.showSymbol = true;
+          }
         }
       });
     }

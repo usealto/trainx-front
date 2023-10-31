@@ -2,7 +2,7 @@
 <div class="mx-6 my-4">
   <alto-icon-badge [size]="4" class="me-4"></alto-icon-badge>
 
-  <h2 class="d-inline-block">
+  <p class="title d-inline-block">
     {{
       isSubmitted
         ? I18ns.questions.form.title.submitted
@@ -10,7 +10,7 @@
         ? I18ns.questions.form.title.edit
         : I18ns.questions.form.title.create
     }}
-  </h2>
+  </p>
 </div>
 <hr class="mb-0" />
 
@@ -76,7 +76,7 @@
       formControlName="tags"
     >
       <ng-template ng-label-tmp let-item="item" let-clear="clear">
-        <div class="alto-badge">
+        <div class="alto-badge primary">
           <span>{{ item.name }}</span>
           <span class="cursor-pointer ms-2 align-middle" (click)="clear(item)" aria-hidden="true">
             <i class="bi bi-x-lg"></i>
@@ -84,7 +84,7 @@
         </div>
       </ng-template>
       <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-        <span class="alto-badge">{{ item.name }}</span>
+        <span class="alto-badge primary">{{ item.name }}</span>
         <i class="bi bi-check-circle-fill"></i>
       </ng-template>
     </ng-select>

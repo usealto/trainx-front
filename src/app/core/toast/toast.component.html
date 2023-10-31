@@ -1,7 +1,7 @@
 <ngb-toast
   *ngFor="let toast of toastService.toasts"
   [class]="(toast.className ?? '') + ' ' + toast.type"
-  [autohide]="toast.autoHide || true"
+  [autohide]="toast.autoHide === undefined ? true : toast.autoHide"
   [delay]="toast.delay || 5000"
   (hidden)="toastService.remove(toast)"
 >

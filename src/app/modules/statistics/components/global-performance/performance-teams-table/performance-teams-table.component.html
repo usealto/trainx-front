@@ -44,11 +44,11 @@
           <th scope="col" class="w-15 text-center">
             {{ I18ns.statistics.globalPerformance.teamsTable.columns.scoreEvolution }}
           </th>
-          <th scope="col" class="w-35">
-            {{ I18ns.statistics.globalPerformance.teamsTable.columns.lessMasteredPrograms }}
-          </th>
           <th scope="col" class="w-30">
             {{ I18ns.statistics.globalPerformance.teamsTable.columns.lessMasteredTags }}
+          </th>
+          <th scope="col" class="w-35">
+            {{ I18ns.statistics.globalPerformance.teamsTable.columns.lessMasteredPrograms }}
           </th>
         </tr>
       </thead>
@@ -64,41 +64,56 @@
               }}</span>
             </ng-container>
             <ng-template #elseTemplate>
-              <span class="alto-score" [class]="0 | pillColor">
-                {{ I18ns.shared.noDataInt }}
-              </span>
+              <p class="alto-grey text-center">
+                {{ I18ns.statistics.globalPerformance.teamsTable.columns.noScore }}
+              </p>
             </ng-template>
           </td>
           <td class="text-center">
             <alto-progression-badge
               class="d-inline-block"
               [score]="getTeamPreviousScore(team)"
-              *ngIf="!scoreIsLoading"
+              *ngIf="!scoreIsLoading && getTeamPreviousScore(team) !== 0; else noEvolution"
             ></alto-progression-badge>
+            <ng-template #noEvolution>
+              <p class="alto-grey text-center">
+                {{ I18ns.statistics.globalPerformance.teamsTable.columns.noScoreEvolution }}
+              </p>
+            </ng-template>
+          </td>
+          <td>
+            <!-- <ng-template #tagsTooltip>
+                <ng-container *ngFor="let tag of team.tags">{{ tag.label }}<br /></ng-container>
+              </ng-template>-->
+            <ng-container *ngIf="team.tags && team.tags.length > 0; else noTag">
+              <alto-colored-pill-list
+                [textLimit]="15"
+                color="primary"
+                [data]="team.tags | sort : 'asc' : 'score' | slice : 0 : 3"
+              ></alto-colored-pill-list>
+            </ng-container>
+            <ng-template #noTag>
+              <p class="alto-grey text-start">
+                {{ I18ns.statistics.globalPerformance.teamsTable.columns.noTags }}
+              </p>
+            </ng-template>
           </td>
           <td>
             <!-- <ng-template #programsTooltip>
                 <ng-container *ngFor="let prog of team.programs">{{ prog.label }}<br /></ng-container>
               </ng-template>-->
 
-            <ng-container *ngIf="team.programs">
+            <ng-container *ngIf="team.programs && team.programs.length > 0; else noProgram">
               <alto-colored-pill-list
                 [textLimit]="15"
                 [data]="team.programs || [] | sort : 'asc' : 'score' | slice : 0 : 3"
               ></alto-colored-pill-list>
             </ng-container>
-          </td>
-          <td>
-            <!-- <ng-template #tagsTooltip>
-                <ng-container *ngFor="let tag of team.tags">{{ tag.label }}<br /></ng-container>
-              </ng-template>-->
-
-            <ng-container *ngIf="team.tags">
-              <alto-colored-pill-list
-                [textLimit]="15"
-                [data]="team.tags | sort : 'asc' : 'score' | slice : 0 : 3"
-              ></alto-colored-pill-list>
-            </ng-container>
+            <ng-template #noProgram>
+              <p class="alto-grey text-start">
+                {{ I18ns.statistics.globalPerformance.teamsTable.columns.noPrograms }}
+              </p>
+            </ng-template>
           </td>
         </tr>
       </tbody>
@@ -114,7 +129,7 @@
 
   <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noData>
     <div class="text-center">
-      <img [src]="Emoji.Eyes | emoji" height="24" width="24"/>
+      <img [src]="Emoji.Eyes | emoji" height="24" width="24" />
       <p class="mt-3">{{ I18ns.statistics.globalPerformance.teamsTable.placeholder }}</p>
     </div>
   </div>

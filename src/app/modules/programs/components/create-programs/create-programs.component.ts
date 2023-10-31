@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormBuilder, ValidatorFn, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -20,6 +20,7 @@ import { I18ns, getTranslation } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
 import { QuestionFormComponent } from '../../../shared/components/question-form/question-form.component';
@@ -72,6 +73,7 @@ export class CreateProgramsComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly location: Location,
     private readonly toastService: ToastService,
+    private readonly validationService: ValidationService,
     public programStore: ProgramsStore,
     public teamStore: TeamStore,
     private modalService: NgbModal,
@@ -126,24 +128,19 @@ export class CreateProgramsComponent implements OnInit {
 
   initForm(program?: ProgramDtoApi) {
     this.programForm = this.fb.group<ProgramForm>({
-      name: [program?.name ?? '', [Validators.required, this.uniqueNameValidation(this.programsNames)]],
+      name: [
+        program?.name ?? '',
+        [
+          Validators.required,
+          this.validationService.uniqueStringValidation(this.programsNames, 'nameNotAllowed'),
+        ],
+      ],
       priority: [program?.priority ?? null, [Validators.required]],
       description: program?.description ?? '',
       expectation: [program?.expectation ?? 75, [Validators.required]],
       tags: [[]],
       teams: [program?.teams?.map((t) => t.id) ?? []],
     });
-  }
-
-  uniqueNameValidation(programs: string[]): ValidatorFn {
-    return (control: AbstractControl) => {
-      const typedName = control.value.toLowerCase();
-
-      if (programs && programs.includes(typedName)) {
-        return { nameNotAllowed: true };
-      }
-      return null;
-    };
   }
 
   saveProgram() {
@@ -276,18 +273,19 @@ export class CreateProgramsComponent implements OnInit {
       if (this.programForm.valid) {
         this.saveProgram();
         this.displayToast(1);
+        this.currentStep = num;
       }
     } else {
       if (this.currentStep === 1 && num === 2) {
         this.saveProgram();
       }
+      this.currentStep = num;
     }
     if (num === 2) {
       this.selectedTags = this.programForm.value?.tags ?? [];
       this.getQuestions();
       this.getAssociatedQuestions();
     }
-    this.currentStep = num;
   }
 
   searchQuestions(value: string) {

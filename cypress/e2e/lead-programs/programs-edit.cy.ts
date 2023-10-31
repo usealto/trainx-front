@@ -74,7 +74,7 @@ describe('Lead Programs', () => {
 
     // Closes question form
 
-    cy.get('.btn-close').click({ multiple: true});
+    cy.get('.btn-close').first().click();
 
     // Create the program and check that the questionCount is correct
     cy.get('.btn-primary').eq(1).click();

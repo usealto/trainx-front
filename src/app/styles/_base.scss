@@ -28,6 +28,7 @@
 
 body {
   width: calc(100vw - 17px);
+  padding: 0 !important;
 }
 html,
 input,
@@ -49,7 +50,7 @@ h1 {
   font-weight: 700;
 }
 h2 {
-  font-size: 1.167rem;
+  font-size: 1.3333rem;
   font-weight: 600;
 }
 h3 {
@@ -65,7 +66,10 @@ hr {
     font-size: 1.167rem;
   }
   h2 {
-    font-size: 1rem;
+    font-size: 1.1667rem;
+  }
+  h3 {
+    font-size: 0.8333rem;
   }
 }
 

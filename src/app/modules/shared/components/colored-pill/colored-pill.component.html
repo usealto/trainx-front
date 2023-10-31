@@ -1,9 +1,9 @@
 <ng-container *ngFor="let d of data | slice : 0 : limit || 50">
-  <span *ngIf="d" class="alto-badge me-3" [style]="hasDynamicColor ? (d.id | teamColor) : ''"
+  <span *ngIf="d" class="alto-badge me-3" [style]="hasDynamicColor ? (d.id | teamColor) : ''" [class]="color"
     >{{ getText(d) | slice : 0 : textLimit }}<span [hidden]="getText(d).length < textLimit">...</span>
   </span>
 </ng-container>
 
-<span [ngbTooltip]="tooltip" *ngIf="limit && data.length > limit" class="alto-badge"
+<span [ngbTooltip]="tooltip" *ngIf="limit && data.length > limit" class="alto-badge" [class]="color"
   >+{{ data.length - limit }}</span
 >

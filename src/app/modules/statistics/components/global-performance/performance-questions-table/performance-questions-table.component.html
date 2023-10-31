@@ -53,17 +53,22 @@
               }}</span>
             </ng-container>
             <ng-template #elseTemplate>
-              <span class="alto-score" [class]="0 | pillColor">
-                {{ I18ns.shared.noDataInt }}
-              </span>
+              <p class="alto-grey text-center">
+                {{ I18ns.statistics.globalPerformance.questionsTable.columns.noScore }}
+              </p>
             </ng-template>
           </td>
           <td class="text-center">
             <alto-progression-badge
               class="d-inline-block ms-3"
               [score]="getQuestionPreviousScore(quest)"
-              *ngIf="!scoreIsLoading"
+              *ngIf="!scoreIsLoading && getQuestionPreviousScore(quest) !== 0; else noScoreEvolution"
             ></alto-progression-badge>
+            <ng-template #noScoreEvolution>
+              <p class="alto-grey text-center">
+                {{ I18ns.statistics.globalPerformance.questionsTable.columns.noScoreEvolution }}
+              </p>
+            </ng-template>
           </td>
           <td class="text-center">
             <!-- todo when api is ready -->
@@ -75,10 +80,17 @@
             ></div>
           </div> -->
             <!-- {{ quest.usersCount }}/{{ quest.totalUsersCount }} -->
-            {{ quest.usersCount }}
+            <span *ngIf="quest.usersCount > 0; else noUsersCount">
+              {{ quest.usersCount }}
+            </span>
+            <ng-template #noUsersCount>
+              <p class="alto-grey text-center">
+                {{ I18ns.statistics.globalPerformance.questionsTable.columns.noUsersCount }}
+              </p>
+            </ng-template>
           </td>
           <td>
-            <ng-container *ngIf="quest.teams">
+            <ng-container *ngIf="quest.teams && getBadTeams(quest.teams).length > 0; else noBadTeam">
               <alto-colored-pill-list
                 [hasDynamicColor]="true"
                 [limit]="3"
@@ -86,6 +98,11 @@
                 [data]="getBadTeams(quest.teams)"
               ></alto-colored-pill-list>
             </ng-container>
+            <ng-template #noBadTeam>
+              <p class="alto-grey text-start">
+                {{ I18ns.statistics.globalPerformance.questionsTable.columns.noBadTeams }}
+              </p>
+            </ng-template>
           </td>
         </tr>
       </tbody>

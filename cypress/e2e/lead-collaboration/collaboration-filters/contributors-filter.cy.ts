@@ -4,10 +4,10 @@ describe('Collaboration contributor filter', () => {
     cy.visit('/', {});
 
     cy.get('[data-cy="leadMenuCollaboration"]').click();
+    cy.get('[data-cy="main-div"]').find('alto-lead-collaboration', { timeout: 10000 });
   });
 
   it('Filters by collaborator', function () {
-    cy.wait(500);
     cy.get('[data-cy="collaboratorName"]')
       .last()
       .then(($data) => {
