@@ -24,7 +24,9 @@ describe('App Connection Admin', () => {
 describe('App Connection', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username'), Cypress.env('auth_password'));
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/');
+    cy.wait('@loadData', { timeout: 10000 });
   });
 
   it('logs In', function () {

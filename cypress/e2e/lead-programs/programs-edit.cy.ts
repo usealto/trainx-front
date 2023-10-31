@@ -2,7 +2,9 @@
 describe('Lead Programs', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/');
+    cy.wait('@loadData');
   });
   it('create and edit a program while testing all cases of question creation', function () {
     const uuid = () => Cypress._.random(0, 1e6);
