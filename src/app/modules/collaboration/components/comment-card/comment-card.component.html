@@ -22,7 +22,6 @@
     </div>
   </div>
 </div>
-
 <div class="content-container" [class.footer]="comment?.isRead">
   <div class="text-container">
     <div class="badge-with-connector">
@@ -38,6 +37,13 @@
               ? comment?.author?.firstname + ' ' + comment?.author?.lastname
               : I18ns.shared.deletedUsername
           }}
+        </span>
+        <span
+          *ngIf="comment && comment.author && getTeam(comment.author.id)"
+          class="alto-badge ms-3"
+          [style]="getTeam(comment.author.id)!.id | teamColor"
+        >
+          {{ getTeam(comment.author.id)!.name }}
         </span>
         <span class="date-text">{{ comment?.createdAt | dateLabel }}</span>
       </div>
@@ -60,6 +66,13 @@
               : I18ns.shared.deletedUsername
           }}
         </span>
+        <span
+          *ngIf="comment && comment.updatedByUser && getTeam(comment.updatedByUser.id)"
+          class="alto-badge ms-3"
+          [style]="getTeam(comment.updatedByUser.id)!.id | teamColor"
+        >
+          {{ getTeam(comment.updatedByUser.id)!.name }}
+        </span>
         <span class="date-text">{{ comment?.updatedAt | dateLabel }}</span>
       </div>
 
@@ -76,22 +89,27 @@
       <i class="bi bi-archive"></i>
       {{ I18ns.collaboration.commentCard.archive }}
     </button>
-
-    <a
-      class="button gray"
-      [routerLink]="
-        '/' +
-        AltoRoutes.lead +
-        '/' +
-        AltoRoutes.collaboration +
-        '/' +
-        AltoRoutes.collaborationSeeQuestion +
-        '/' +
-        comment?.questionId
-      "
-    >
-      <i class="bi bi-eye"></i>
-      {{ I18ns.collaboration.commentCard.seeQuestion }}
-    </a>
+    <div>
+      <a
+        class="button gray d-inline-block"
+        [routerLink]="
+          '/' +
+          AltoRoutes.lead +
+          '/' +
+          AltoRoutes.collaboration +
+          '/' +
+          AltoRoutes.collaborationSeeQuestion +
+          '/' +
+          comment?.questionId
+        "
+      >
+        <i class="bi bi-eye"></i>
+        {{ I18ns.collaboration.commentCard.seeQuestion }}
+      </a>
+      <button class="button blue d-inline-block" (click)="openQuestionForm(comment?.question)">
+        <i class="bi bi-pencil-square"></i>
+        {{ I18ns.collaboration.commentCard.editQuestion }}
+      </button>
+    </div>
   </div>
 </div>

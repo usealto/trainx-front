@@ -8,7 +8,7 @@
       [placeholder]="I18ns.statistics.globalPerformance.perTeamPerformance.teamFilter"
       (selectChange)="filterTeams($event)"
     ></alto-dropdown-filter>
-    <h2>{{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}</h2>
+    <h3>{{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}</h3>
     <p class="alto-grey mb-4">
       {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.subtitle }}
     </p>
@@ -18,9 +18,9 @@
   </div>
 
   <div class="nodata-placeholder" noData>
-    <h2 class="mb-5 fs-6">
+    <h3 class="mb-5 fs-6">
       {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}
-    </h2>
+    </h3>
     <div class="text-center">
       <img [src]="Emoji.FlexedBiceps | emoji" height="24" width="24" />
       <p class="mt-3">

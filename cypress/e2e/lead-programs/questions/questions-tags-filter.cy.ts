@@ -32,7 +32,7 @@ describe('L/Programs Questions Tab', () => {
 
     cy.intercept('GET', '/v1/questions?tagIds=*').as('tagSearch');
 
-    cy.get('.ng-dropdown-header > input').type(`${tagTruncName}{enter}`);
+    cy.get('.ng-dropdown-header > input').click().type(`${tagTruncName}{enter}`);
 
     cy.wait('@tagSearch').wait(100);
 

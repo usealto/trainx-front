@@ -573,7 +573,6 @@ export const FR = {
       title: 'Vos membres',
       shortTitle: 'Membres',
       subtitle: 'Retrouvez l’ensemble des utilisateurs de votre entreprise.',
-      invite: 'Inviter des membres',
       filters: {
         activity: 'Activité',
         teams: 'Équipe',
@@ -1129,6 +1128,8 @@ export const FR = {
       concerningQuestion: 'sur la question',
       archive: 'Archiver',
       seeQuestion: 'Voir la question',
+      editQuestion: 'Modifier la question',
+      editQuestionToast: 'Question modifiée avec succès',
     },
     placeholder: {
       pendingTitle: 'Aucune question ou commentaire en attente',
