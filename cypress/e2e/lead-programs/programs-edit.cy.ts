@@ -32,7 +32,7 @@ describe('Lead Programs', () => {
     cy.get('[data-cy="programPriority"]').click();
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
 
-    cy.intercept('POST', '').as('newProgram');
+    cy.intercept('POST', '/v1/programs').as('newProgram');
     cy.get('[data-cy="programCreateNext"]').click();
     cy.wait('@newProgram').wait(100);
 
@@ -51,7 +51,7 @@ describe('Lead Programs', () => {
     cy.get('[data-cy="tagSelectDropdown"]').click();
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
 
-    cy.intercept('POST', '').as('newQuestion');
+    cy.intercept('POST', '/v1/questions').as('newQuestion');
     cy.get('.button-container > .btn-primary').click();
     cy.wait('@newQuestion').wait(100);
     cy.get('a[aria-label="Close"]').first().click();
@@ -69,7 +69,7 @@ describe('Lead Programs', () => {
     cy.get('[data-cy="tagSelectDropdown"]').click();
     cy.get('.ng-dropdown-panel-items .ng-option').eq(1).click();
 
-    cy.intercept('POST', '').as('newQuestion2');
+    cy.intercept('POST', '/v1/questions').as('newQuestion2');
     cy.get('.button-container > .btn-primary').click();
     cy.wait('@newQuestion2').wait(100);
     cy.get('a[aria-label="Close"]').first().click();
@@ -95,19 +95,19 @@ describe('Lead Programs', () => {
     // Delete the program and questions created
     cy.get('[data-cy="recapTab"]').click();
     cy.get('[data-cy="deleteProgram"]').click();
-    cy.intercept('DELETE', '').as('deleteProgram');
+    cy.intercept('DELETE', '/v1/programs/**').as('deleteProgram');
     cy.get('[data-cy="deleteButton"]').click();
     cy.wait('@deleteProgram').wait(100);
 
     cy.get('[data-cy="selectedTab"]').eq(1).click();
 
     cy.get('[data-cy="deleteQuestionTrash"]').first().click();
-    cy.intercept('DELETE', '').as('deleteQuestion1');
+    cy.intercept('DELETE', '/v1/questions/**').as('deleteQuestion1');
     cy.get('[data-cy="buttonDeleteQuestion"] ').click();
     cy.wait('@deleteQuestion1').wait(100);
 
     cy.get('[data-cy="deleteQuestionTrash"]').first().click();
-    cy.intercept('DELETE', '').as('deleteQuestion2');
+    cy.intercept('DELETE', '/v1/questions/**').as('deleteQuestion2');
     cy.get('[data-cy="buttonDeleteQuestion"] ').click();
     cy.wait('@deleteQuestion2').wait(100);
   });
