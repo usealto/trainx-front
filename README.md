@@ -96,12 +96,19 @@ Merge `develop` branch into `admin`
 - During testing, make sure all cases are tested and sounds good.
 - As much as you can, use score/stats services to help you.
 
-## Hotfix
+### Hotfix
 
 - Create a commit on `main` with the hotfix
 - Make a 'git cherry pick' to bring the hot fix on `develop`
 
-## EMOJIS
+### Storybook
+If you want to run our documentaion locally, you can run  
+
+```
+npm run storybook
+```
+
+### Emojis
 
 Demo page https://fluentemoji.com/
 
@@ -121,7 +128,7 @@ You then, have to set the height and width with CSS
   <img [src]="EmojiName.Gear | emoji" loading="lazy" />
 ```
 
-## Service workers
+### Service workers
 
 They are used to cache some data in the browser. The config file is located at the root of the project `ngsw-config.json`.
 

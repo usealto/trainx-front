@@ -20,6 +20,15 @@ export const ProgramCard: Story = {
   args: {
     program: {
       isActive: true,
+      owner: {
+          id: 'string',
+          email: 'string',
+          pictureUrl: 'string',
+          firstname: 'string',
+          lastname: 'string',
+          slackId: 'string',
+          isConnectorActive: true,
+      },
       name: 'programme 1',
       expectation: 90,
       priority: ProgramDtoApiPriorityEnumApi.High,
@@ -80,6 +89,15 @@ export const ProgramCardWithScore: Story = {
   args: {
     score: 0.8,
     program: {
+      owner: {
+        id: 'string',
+        email: 'string',
+        pictureUrl: 'string',
+        firstname: 'string',
+        lastname: 'string',
+        slackId: 'string',
+        isConnectorActive: true,
+      },
       isActive: true,
       name: 'programme 1',
       expectation: 90,
@@ -141,6 +159,15 @@ export const ProgramCardWithProgression: Story = {
   args: {
     progress: 0.9,
     program: {
+      owner: {
+        id: 'string',
+        email: 'string',
+        pictureUrl: 'string',
+        firstname: 'string',
+        lastname: 'string',
+        slackId: 'string',
+        isConnectorActive: true,
+      },
       isActive: true,
       name: 'programme 1',
       expectation: 90,
@@ -202,6 +229,15 @@ export const ProgramCardWithParicipation: Story = {
   args: {
     participation: 1,
     program: {
+      owner: {
+        id: 'string',
+        email: 'string',
+        pictureUrl: 'string',
+        firstname: 'string',
+        lastname: 'string',
+        slackId: 'string',
+        isConnectorActive: true,
+      },
       isActive: true,
       name: 'programme 1',
       expectation: 90,
@@ -263,6 +299,15 @@ export const ProgramCardWithDisplayCard: Story = {
   args: {
     displayToggle: true,
     program: {
+      owner: {
+        id: 'string',
+        email: 'string',
+        pictureUrl: 'string',
+        firstname: 'string',
+        lastname: 'string',
+        slackId: 'string',
+        isConnectorActive: true,
+      },
       isActive: true,
       name: 'programme 1',
       expectation: 90,
