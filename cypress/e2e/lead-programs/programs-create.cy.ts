@@ -1,8 +1,11 @@
 describe('Lead Programs', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/');
+    cy.wait('@loadData');
   });
+
   it('Creates and delete a program', function () {
     const uuid = () => Cypress._.random(0, 1e6);
     const id = uuid();

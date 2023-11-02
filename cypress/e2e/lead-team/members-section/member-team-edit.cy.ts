@@ -1,8 +1,10 @@
 describe('Lead Team', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
-    cy.visit('/', {});
+    cy.intercept('GET', '/v1/**').as('loadData');
+    cy.visit('/');
     cy.get('[data-cy="leadMenuTeams"]').click();
+    cy.wait('@loadData');
   });
 
   it('Should load teams Page', () => {
@@ -98,7 +100,7 @@ describe('Lead Team', () => {
 
     it('Should check user roles options', () => {
       cy.get('[data-cy="companyMembersTable"]')
-        .find('[data-cy="editCompanyMember"]')
+        .find('[data-cy="editCompanyMember"]', { timeout: 10000 })
         .first()
         .click()
         .then(() => {

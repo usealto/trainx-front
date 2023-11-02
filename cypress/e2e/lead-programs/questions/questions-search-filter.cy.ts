@@ -1,9 +1,10 @@
 describe('L/Programs Questions Tab', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/');
-
     cy.get('[data-cy="leadMenuPrograms"]').click();
+    cy.wait('@loadData');
   });
 
   let questionTitle = '';

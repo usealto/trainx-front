@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, combineLatest, filter, map, switchMap, tap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
+  CompanyDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   TeamDtoApi,
@@ -19,6 +20,8 @@ import { TitleCasePipe } from '@angular/common';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { DataForTable } from '../../models/statistics.model';
+import { CompaniesStore } from 'src/app/modules/companies/companies.store';
+import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 
 @UntilDestroy()
 @Component({
@@ -47,12 +50,15 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   teamsPage = 1;
   teamsPageSize = 5;
 
+  hasConnector = false;
+
   constructor(
     private readonly titleCasePipe: TitleCasePipe,
     public readonly teamStore: TeamStore,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly statisticsServices: StatisticsService,
+    private readonly companyRestService: CompaniesRestService,
   ) {}
 
   ngOnInit(): void {
@@ -241,16 +247,18 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     );
   }
 
-  private getTeamDataForTable(): Observable<[TeamStatsDtoApi[], TeamStatsDtoApi[]]> {
+  private getTeamDataForTable(): Observable<[TeamStatsDtoApi[], TeamStatsDtoApi[], CompanyDtoApi]> {
     return combineLatest([
       this.scoresRestService.getTeamsStats(this.duration),
       this.scoresRestService.getTeamsStats(this.duration, true),
+      this.companyRestService.getMyCompany(),
     ]).pipe(
       tap(([teams]) => {
         this.teamsDataStatus = teams.length === 0 ? 'noData' : 'good';
       }),
       filter(([teams]) => teams.length > 0),
-      tap(([teams, teamsProg]) => {
+      tap(([teams, teamsProg, company]) => {
+        this.hasConnector = company?.isSlackActive ?? false;
         this.teams = teams.map((t) => t.team);
 
         this.teamsDisplay = teams.map((t) => {
@@ -273,12 +281,19 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   }
 
   private dataForTeamTableMapper(t: TeamStatsDtoApi, tProg?: TeamStatsDtoApi): DataForTable {
+    const totalGuessCount = t.totalGuessesCount
+      ? t.totalGuessesCount > (t.questionsSubmittedCount ?? 0)
+        ? t.questionsSubmittedCount
+        : t.totalGuessesCount
+      : 0;
     return {
       team: t.team,
       globalScore: t.score,
-      answeredQuestionsCount: t.totalGuessesCount ?? 0,
+      answeredQuestionsCount: totalGuessCount,
       answeredQuestionsProgression:
-        this.scoresService.getProgression(t.totalGuessesCount, tProg?.totalGuessesCount) ?? 0,
+        totalGuessCount && t.questionsSubmittedCount
+          ? Math.round((totalGuessCount / t.questionsSubmittedCount) * 100)
+          : 0,
       commentsCount: t.commentsCount,
       commentsProgression: this.scoresService.getProgression(t.commentsCount, tProg?.commentsCount) ?? 0,
       submittedQuestionsCount: t.questionsSubmittedCount,

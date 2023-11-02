@@ -1,7 +1,9 @@
 describe('User Profile', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username'), Cypress.env('auth_password'));
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/');
+    cy.wait('@loadData');
   });
 
   const lastname1 = 'testing1';

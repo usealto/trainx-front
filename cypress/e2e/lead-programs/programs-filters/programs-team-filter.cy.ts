@@ -7,17 +7,19 @@ describe('Lead Programs', () => {
   });
 
   it('Access Lead Programs Page', function () {
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.get('[data-cy="leadMenuPrograms"]').click();
-    cy.wait(500);
+    cy.wait('@loadData');
     cy.get('[data-cy="main-div"]').find('alto-programs', { timeout: 10000 });
+
     cy.get('h1').should('have.text', 'Programmes');
   });
 
   it('Filters programs by team', function () {
     let teamShortname = '';
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.get('[data-cy="leadMenuPrograms"]').click();
-    cy.wait(500);
-
+    cy.wait('@loadData');
     cy.get('[data-cy="main-div"]').find('alto-programs', { timeout: 10000 });
 
     // Select a program card that already has at least one team

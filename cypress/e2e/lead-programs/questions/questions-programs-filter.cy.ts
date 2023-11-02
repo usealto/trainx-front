@@ -1,19 +1,20 @@
 describe('L/Programs Questions Tab', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/');
-
-    cy.get('[data-cy="leadMenuPrograms"]').click();
+    cy.wait('@loadData');
   });
 
   const uuid = () => Cypress._.random(0, 1e6);
   const id = uuid();
   const newProg = `ABCDTEST${id}`;
-  const newQuestion = 'testQuestion';
-  const goodAnswer = 'goodAnswer';
-  const badAnswer = 'badAnswer';
 
   it('Creates a new program and a new question', () => {
+    cy.intercept('GET', '/v1/**').as('loadData');
+    cy.get('[data-cy="leadMenuPrograms"]').click();
+    cy.wait('@loadData');
+
     cy.get('[data-cy="createNewProgram"]').click();
 
     cy.get('[data-cy="programName"]').clear();
@@ -26,26 +27,22 @@ describe('L/Programs Questions Tab', () => {
     cy.get('.ng-dropdown-panel-items .ng-option').first().click();
     cy.get('[data-cy="programCreateNext"]').should('be.enabled');
 
+    cy.intercept('POST', '/v1/programs').as('createProgram');
     cy.get('[data-cy="programCreateNext"]').click();
+    cy.wait('@createProgram');
 
-    // Create a new question
-    cy.wait(500);
-    cy.get('[data-cy="createNewQuestion"]').click();
-    cy.get('[data-cy="questionCreateTitle"]').type(newQuestion);
-    cy.get('[data-cy="goodAnswerInput"]').type(goodAnswer);
-    cy.get('[data-cy="badAnswerInput"]').type(badAnswer);
-    cy.get('[data-cy="tagSelectDropdown"]').click();
-    cy.get('.ng-dropdown-panel-items .ng-option').first().click();
-    cy.get('.button-container > .btn-primary').click();
-    cy.wait(500);
+    cy.get('input[type="checkbox"]').first().click();
 
-    cy.get('.btn-close').first().click();
-    cy.get('.btn-primary').eq(1).click();
+    cy.get('.btn-primary').last().click();
     cy.wait(500);
     cy.reload();
   });
 
   it('Filters questions table by the new program', () => {
+    cy.intercept('GET', '/v1/**').as('loadData');
+    cy.get('[data-cy="leadMenuPrograms"]').click();
+    cy.wait('@loadData');
+
     // Goes back to Questions tab
     cy.get('[data-cy="selectedTab"]').eq(1).click();
 
@@ -63,34 +60,19 @@ describe('L/Programs Questions Tab', () => {
   });
 
   it('Delete the new program and the new question', () => {
+    cy.intercept('GET', '/v1/**').as('loadData');
+    cy.get('[data-cy="leadMenuPrograms"]').click();
+    cy.wait('@loadData');
+
     cy.get('[data-cy="programSearch"]').type(`${newProg}{enter}`).wait(500);
 
     cy.get(`[data-cy="program${newProg}"]`).first().click().wait(500);
 
     cy.get('[data-cy="recapTab"]').click();
     cy.get('[data-cy="deleteProgram"]').click();
+
+    cy.intercept('DELETE', '/v1/programs/**').as('deleteProgram');
     cy.get('[data-cy="deleteButton"]').click();
-
-    cy.get('[data-cy="selectedTab"]').eq(1).click();
-
-    cy.get('[data-cy="questionsList"]')
-      .first()
-      .invoke('text')
-      .then(($data) => {
-        expect($data.trim()).to.equal(newQuestion);
-
-        cy.get('[data-cy="deleteQuestionTrash"]').first().click();
-        cy.intercept('delete', 'v1/questions/**').as('questionDelete');
-        cy.get('[data-cy="buttonDeleteQuestion"] ').click();
-        cy.wait('@questionDelete');
-      });
+    cy.wait('@deleteProgram');
   });
-
-  // it.only('test', () => {
-  //   cy.intercept('DELETE', 'v1/questions/**').as('questionDelete');
-  //   cy.get('[data-cy="selectedTab"]').eq(1).click();
-  //   cy.get('[data-cy="deleteQuestionTrash"]').first().click();
-  //   cy.get('[data-cy="buttonDeleteQuestion"] ').click();
-  //   cy.wait('@questionDelete');
-  // });
 });

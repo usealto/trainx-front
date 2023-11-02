@@ -1,8 +1,10 @@
 describe('L/Teams Members Section', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
-    cy.visit('/', {});
+    cy.intercept('GET', '/v1/**').as('loadData');
+    cy.visit('/');
     cy.get('[data-cy="leadMenuTeams"]').click();
+    cy.wait('@loadData');
   });
 
   it('Filters members by team', () => {
