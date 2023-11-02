@@ -197,6 +197,7 @@ export const FR = {
       title: 'Programmes de vos équipes',
       subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
       createProgram: 'Créer un programme',
+      programNameTooltip: 'Ici l’admin a nommé ce programme avec un titre vraiment très long',
       involvement: 'Taux de participation',
       involvementToolTip: 'Nombre de membres ayant commencé le programme sur le nombre de membres assignés',
       progress: 'Avancement',
