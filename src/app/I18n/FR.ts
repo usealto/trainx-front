@@ -786,9 +786,10 @@ export const FR = {
       },
     },
     continuousSession: {
-      title: 'Session continue',
+      title: 'Diffusion',
       subtitle: 'Canaux de communication',
-      description: 'Choisissez par quel(s) moyen(s) vous souhaitez communiquer avec vos collaborateurs.',
+      description:
+        'Choisissez via quel(s) moyen(s) vous souhaitez diffuser vos questions à vos collaborateurs.',
       integrations: {
         title: 'Intégrations',
         subtitle: 'Partagez directement les quizz dans vos canaux.',

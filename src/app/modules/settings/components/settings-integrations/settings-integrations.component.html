@@ -13,11 +13,6 @@
       [checked]="company?.isSlackActive"
     />
   </div>
-  <alto-icon-badge
-    [size]="3"
-    icon="bi bi-link-45deg"
-    [color]="slackCheck.checked ? 'badge-double-primary' : 'badge-double-gray'"
-  ></alto-icon-badge>
   <div class="d-grid">
     <span class="integration-titles" [ngStyle]="{ color: slackCheck.checked ? '#101828' : '#D0D5DD' }">
       {{ I18ns.settings.continuousSession.integrations.title }}
