@@ -1,16 +1,20 @@
 describe('Lead Routing', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/');
-    cy.get('[data-cy="main-div"]').find('alto-lead-home', { timeout: 10000 })
+    cy.wait('@loadData');
   });
 
   it('Access Lead Home from root redirects to Home', () => {
+    cy.wait('@loadData');
     cy.url().should('include', 'l/home');
   });
 
   it('Access Lead Home from /l redirects to Home', () => {
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/l');
+    cy.wait('@loadData');
 
     cy.url().should('include', 'l/home');
   });
@@ -19,14 +23,20 @@ describe('Lead Routing', () => {
 describe('User Routing', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username'), Cypress.env('auth_password'));
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/');
+    cy.wait('@loadData');
   });
+
   it('Access User Home from root redirects to Home', () => {
+    cy.wait('@loadData');
     cy.url().should('include', 'u/home');
   });
 
   it('Access User Home from /u redirects to Home', () => {
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/u');
+    cy.wait('@loadData');
 
     cy.url().should('include', 'u/home');
   });

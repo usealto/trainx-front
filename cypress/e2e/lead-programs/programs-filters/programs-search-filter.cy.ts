@@ -7,18 +7,18 @@ describe('Lead Programs', () => {
   });
 
   it('Access Lead Programs Page', function () {
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.get('[data-cy="leadMenuPrograms"]').click();
-    cy.wait(500);
-
+    cy.wait('@loadData');
     cy.get('[data-cy="main-div"]').find('alto-programs', { timeout: 10000 });
 
     cy.get('h1').should('have.text', 'Programmes');
   });
 
   it('Search Programs and check if title is right', () => {
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.get('[data-cy="leadMenuPrograms"]').click();
-    cy.wait(500);
-
+    cy.wait('@loadData');
     cy.get('[data-cy="main-div"]').find('alto-programs', { timeout: 10000 });
 
     cy.get('[data-cy="programCard"] > .panel > .title')

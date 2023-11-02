@@ -12,6 +12,7 @@ export const FR = {
     refuse: 'Refuser',
     share: 'Partager',
     clipboard: 'Copier dans le presse-papier',
+    createdAt: 'Créé le',
     showMore: 'Voir plus',
     showAll: 'Tout voir',
     minutes: 'minutes',
