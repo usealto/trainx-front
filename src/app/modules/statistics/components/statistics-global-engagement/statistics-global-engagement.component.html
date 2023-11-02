@@ -56,7 +56,7 @@
   </div>
   <div class="skeleton-panel" style="height: 278px" loading></div>
 </alto-placeholder-manager>
-<hr class="my-7">
+<hr class="my-7" />
 
 <div class="mt-6 mb-5 position-relative">
   <div class="col-6">
@@ -97,7 +97,7 @@
   </div>
   <div class="skeleton-panel mb-5" style="height: 483px" loading></div>
 </alto-placeholder-manager>
-<hr class="my-7">
+<hr class="my-7" />
 
 <div class="mt-5 mb-5 position-relative">
   <div class="col-6">
@@ -122,8 +122,14 @@
       <thead>
         <tr>
           <th scope="col" class="w-25">{{ I18ns.statistics.globalEngagement.teamsTable.columns.team }}</th>
-          <th scope="col" class="w-25 text-center">
+          <th *ngIf="hasConnector" scope="col" class="w-25 text-center">
             {{ I18ns.statistics.globalEngagement.teamsTable.columns.answeredQuestions }}
+          </th>
+          <th *ngIf="hasConnector" scope="col" class="w-25 text-center">
+            {{ I18ns.statistics.globalEngagement.teamsTable.columns.answers }}
+          </th>
+          <th *ngIf="hasConnector" scope="col" class="w-25 text-center">
+            {{ I18ns.statistics.globalEngagement.teamsTable.columns.questions }}
           </th>
           <th scope="col" class="w-25 text-center">
             {{ I18ns.statistics.globalEngagement.teamsTable.columns.suggestedQuestions }}
@@ -138,19 +144,28 @@
           <td>
             <span class="alto-badge" [style]="team.team?.id | teamColor">{{ team.team?.name }}</span>
           </td>
-          <td class="alto-grey text-center">
-            <span *ngIf="team.answeredQuestionsCount > 0; else noAnsweredQuestion">
-              {{ team.answeredQuestionsCount }}
-              <alto-progression-badge
-                class="ms-3 d-inline-block"
-                [score]="team.answeredQuestionsProgression"
-              ></alto-progression-badge>
-            </span>
-            <ng-template #noAnsweredQuestion>
+          <td *ngIf="hasConnector" class="alto-grey text-center">
+            <span
+              *ngIf="team.submittedQuestionsCount; else noQuestion"
+              class="alto-score"
+              [class]="team.answeredQuestionsProgression | pillColor"
+              >{{ team.answeredQuestionsProgression + '%' }}</span
+            >
+            <ng-template #noQuestion>
               <p class="alto-grey text-center">
-                {{ I18ns.statistics.globalEngagement.teamsTable.columns.noAnsweredQuestions }}
+                {{ I18ns.statistics.globalEngagement.teamsTable.columns.noQuestions }}
               </p>
             </ng-template>
+          </td>
+          <td *ngIf="hasConnector">
+            <p class="alto-grey text-center">
+              {{ team.answeredQuestionsCount }}
+            </p>
+          </td>
+          <td *ngIf="hasConnector">
+            <p class="alto-grey text-center">
+              {{ team.submittedQuestionsCount }}
+            </p>
           </td>
           <td class="text-center">
             <span *ngIf="team.submittedQuestionsCount > 0; else noSubmittedQuestion">
