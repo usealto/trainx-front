@@ -51,16 +51,16 @@
               <div
                 class="alto-badge"
                 [ngStyle]="{
-                  'background-color': getBadgeBackgroundColor(user.slackId ? 'active' : 'inactive'),
-                  'color': getBadgeColor(user.slackId ? 'active' : 'inactive')
+                  'background-color': getBadgeBackgroundColor(user.isConnectorActive ? 'active' : 'inactive'),
+                  'color': getBadgeColor(user.isConnectorActive ? 'active' : 'inactive')
                 }"
               >
-                <div *ngIf="!user.slackId" class="d-flex align-items-center" ngbTooltip="{{ I18ns.settings.users.usersInactiveTooltip }}" tooltipClass="menu-tooltip-class">
+                <div *ngIf="!user.isConnectorActive" class="d-flex align-items-center" ngbTooltip="{{ I18ns.settings.users.usersInactiveTooltip }}" tooltipClass="menu-tooltip-class">
                   <span >{{ I18ns.settings.users.disable }}</span>
                 </div>
-                <div *ngIf="user.slackId" class="d-flex align-items-center">
+                <div *ngIf="user.isConnectorActive" class="d-flex align-items-center">
                   <img
-                    *ngIf="company.connector === 'slack'"
+                    *ngIf="user.company.connector === 'slack'"
                     src="assets/img/slack-logo.svg"
                     width="16"
                     height="16"
@@ -68,7 +68,7 @@
                     class="me-2"
                   />
                   <img
-                    *ngIf="company.connector === 'google-chat'"
+                    *ngIf="user.company.connector === 'google-chat'"
                     src="assets/img/googlechat-logo.svg"
                     width="16"
                     height="16"

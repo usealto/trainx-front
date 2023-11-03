@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CompanyDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
+import { TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { filter, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { UserEditFormComponent } from 'src/app/modules/lead-team/components/user-edit-form/user-edit-form.component';
@@ -12,7 +12,6 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
 import { AddUsersComponent } from './add-users/add-users.component';
-import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 
 @UntilDestroy()
 @Component({
@@ -37,13 +36,11 @@ export class SettingsUsersComponent implements OnInit {
   adminsPageSize = 5;
   adminsPage = 1;
   adminsCount = 0;
-  company: CompanyDtoApi = {} as CompanyDtoApi;
-
+ 
   constructor(
     private readonly userRestService: UsersRestService,
     private readonly offcanvasService: NgbOffcanvas,
     private readonly usersService: UsersService,
-    private readonly companiesRestService: CompaniesRestService,
     private modalService: NgbModal,
     private replaceInTranslationPipe: ReplaceInTranslationPipe,
   ) {}
@@ -51,7 +48,6 @@ export class SettingsUsersComponent implements OnInit {
   ngOnInit(): void {
     this.getAdmins();
     this.getUsers();
-    this.getCompany();
   }
 
   getAdmins() {
@@ -75,13 +71,6 @@ export class SettingsUsersComponent implements OnInit {
         tap(() => this.changeUsersPage(this.usersDisplay, 1)),
         untilDestroyed(this),
       )
-      .subscribe();
-  }
-
-  getCompany() {
-    this.companiesRestService
-      .getMyCompany()
-      .pipe(tap((comp) => (this.company = comp)))
       .subscribe();
   }
 
