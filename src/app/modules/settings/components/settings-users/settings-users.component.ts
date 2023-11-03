@@ -1,7 +1,8 @@
+import { CompaniesRestService } from './../../../companies/service/companies-rest.service';
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
+import { CompanyDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { filter, switchMap, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { UserEditFormComponent } from 'src/app/modules/lead-team/components/user-edit-form/user-edit-form.component';
@@ -36,6 +37,7 @@ export class SettingsUsersComponent implements OnInit {
   adminsPageSize = 5;
   adminsPage = 1;
   adminsCount = 0;
+  company: CompanyDtoApi = {} as CompanyDtoApi;
  
   constructor(
     private readonly userRestService: UsersRestService,
@@ -43,11 +45,13 @@ export class SettingsUsersComponent implements OnInit {
     private readonly usersService: UsersService,
     private modalService: NgbModal,
     private replaceInTranslationPipe: ReplaceInTranslationPipe,
+    private readonly companiesRestService: CompaniesRestService,
   ) {}
 
   ngOnInit(): void {
     this.getAdmins();
     this.getUsers();
+    this.getCompany();
   }
 
   getAdmins() {
@@ -69,6 +73,18 @@ export class SettingsUsersComponent implements OnInit {
         tap((users) => (this.usersDisplay = users ?? [])),
         tap((users) => (this.usersCount = users.length)),
         tap(() => this.changeUsersPage(this.usersDisplay, 1)),
+        untilDestroyed(this),
+      )
+      .subscribe();
+  }
+
+  getCompany() {
+    this.companiesRestService
+      .getMyCompany()
+      .pipe(
+        tap((company) => {
+          this.company = company;
+        }),
         untilDestroyed(this),
       )
       .subscribe();
@@ -185,6 +201,18 @@ export class SettingsUsersComponent implements OnInit {
         }),
       )
       .subscribe();
+  }
+
+  getStatus(company: CompanyDtoApi,user: UserDtoApi): string{
+    if(company.isSlackActive){
+      if(user.isConnectorActive){
+        return 'active'
+      }else{
+        return 'warning'
+      }
+    }else{
+      return 'inactive'
+    }
   }
 
   getBadgeColor(userStatus: string) : string {
