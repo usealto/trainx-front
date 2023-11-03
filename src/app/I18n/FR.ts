@@ -370,12 +370,15 @@ export const FR = {
         placeholderSubtitle: 'Les équipes s’activent pour fournir les premiers résultats !',
         columns: {
           team: 'Équipe',
-          answeredQuestions: 'Questions répondues',
+          answeredQuestions: 'Taux de réponses',
+          answers: 'Réponses',
+          questions: 'Questions',
           noAnsweredQuestions: 'Aucune réponse',
           suggestedQuestions: 'Questions suggérées',
           noSuggeredQuestions: 'Aucune suggestion',
           comments: 'Commentaires',
           noComments: 'Aucun commentaire',
+          noQuestions: 'Aucune question',
         },
       },
       placeholders: {
