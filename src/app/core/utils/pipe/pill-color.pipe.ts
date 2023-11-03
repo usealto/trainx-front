@@ -11,7 +11,7 @@ export class PillColorPipe implements PipeTransform {
       return 'pill-green';
     } else if (num > 40) {
       return 'pill-orange';
-    } else if (num > 0) {
+    } else if (num >= 0) {
       return 'pill-red';
     }
     return 'pill-neutral';
