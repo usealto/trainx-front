@@ -36,7 +36,7 @@ export class SettingsUsersComponent implements OnInit {
   adminsPageSize = 5;
   adminsPage = 1;
   adminsCount = 0;
-
+ 
   constructor(
     private readonly userRestService: UsersRestService,
     private readonly offcanvasService: NgbOffcanvas,
@@ -185,5 +185,31 @@ export class SettingsUsersComponent implements OnInit {
         }),
       )
       .subscribe();
+  }
+
+  getBadgeColor(userStatus: string) : string {
+    switch(userStatus ){
+      case 'active':
+        return '#039855'
+      case 'warning':
+        return '#FEF3F2'
+      case 'inactive':
+        return '#363F72'
+      default:
+        return '#363F72'
+    }
+  }
+
+  getBadgeBackgroundColor(userStatus: string) : string {
+    switch(userStatus ){
+      case 'active':
+        return '#ECFDF3'
+      case 'warning':
+        return '#FEF3F2'
+      case 'inactive':
+        return '#F8F9FC'
+      default:
+        return '#F8F9FC'
+    }
   }
 }

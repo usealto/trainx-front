@@ -51,21 +51,39 @@
               <div
                 class="alto-badge"
                 [ngStyle]="{
-                  'background-color': user.slackId ? '#ECFDF3' : '#F8F9FC',
-                  color: user.slackId ? '#039855' : '#363F72'
+                  'background-color': getBadgeBackgroundColor(user.isConnectorActive ? 'active' : 'inactive'),
+                  'color': getBadgeColor(user.isConnectorActive ? 'active' : 'inactive')
                 }"
               >
-                <div class="d-flex align-items-center">
+                <div *ngIf="!user.isConnectorActive" class="d-flex align-items-center" ngbTooltip="{{ I18ns.settings.users.usersInactiveTooltip }}" tooltipClass="menu-tooltip-class">
+                  <span >{{ I18ns.settings.users.disable }}</span>
+                </div>
+                <div *ngIf="user.isConnectorActive" class="d-flex align-items-center">
                   <img
-                    *ngIf="user.slackId"
+                    *ngIf="user.company.connector === 'slack'"
                     src="assets/img/slack-logo.svg"
                     width="16"
                     height="16"
                     alt="Slack Logo"
                     class="me-2"
                   />
-                  <span *ngIf="user.slackId">{{ I18ns.settings.users.enable }}</span>
-                  <span *ngIf="!user.slackId">{{ I18ns.settings.users.disable }}</span>
+                  <img
+                    *ngIf="user.company.connector === 'google-chat'"
+                    src="assets/img/googlechat-logo.svg"
+                    width="16"
+                    height="16"
+                    alt="Slack Logo"
+                    class="me-2"
+                  />
+                  <span>{{ I18ns.settings.users.enable }}</span>
+                </div>
+                <div 
+                  *ngIf="false" class="d-flex align-items-center p-2"
+                  ngbTooltip="{{ I18ns.settings.users.warningTooltip }}"
+                  tooltipClass="menu-tooltip-class">
+                  <span> 
+                    <img class="emoji mb-2" [src]="EmojiName.Warning | emoji" width="14" height="14" /> 
+                  </span>
                 </div>
               </div>
             </td>

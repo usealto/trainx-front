@@ -750,6 +750,8 @@ export const FR = {
       adminsDesc:
         'Les administrateurs peuvent créer des programmes, des challenges et ont accès à des statistiques détaillées sur les résultats des équipes.',
       users: 'Utilisateurs standards',
+      usersInactiveTooltip: 'Pour réactiver l’intégration, veuillez vous rendre dans l’onglet “Diffusion”.',
+      warningTooltip: 'Nous rencontrons un problème avec cet utilisateur. Contactez votre administrateur Slack ou la team Alto si le problème persiste.',
       usersDesc:
         'Les utilisateurs peuvent participer aux programmes, suggérer des questions et ont accès à des statistiques détaillées sur leurs résultats seulement.',
       table: {
@@ -789,18 +791,48 @@ export const FR = {
       },
     },
     continuousSession: {
-      title: 'Session continue',
+      title: 'Diffusion',
       subtitle: 'Canaux de communication',
-      description: 'Choisissez par quel(s) moyen(s) vous souhaitez communiquer avec vos collaborateurs.',
+      description:
+        'Choisissez via quel(s) moyen(s) vous souhaitez diffuser vos questions à vos collaborateurs.',
       integrations: {
         title: 'Intégrations',
-        subtitle: 'Partagez directement les quizz dans vos canaux.',
+        subtitle:
+          'Diffusez vos questions à vos équipes directement sur votre plateforme de communication. Elles sont envoyées chaque lundi, mercredi et vendredi.',
         slack: 'Slack',
         teams: 'Teams',
+        gchat: 'Google Chat',
+        modal: {
+          titles: {
+            activateConnector: 'Vous devez configurer votre connecteur',
+            desactivateConnector: 'Vous êtes sur le point de désactiver votre plateforme de communication.',
+            activateWebApp: 'Vous êtes sur le point d’activer la web app.',
+            desactivateWebApp: 'Vous êtes sur le point de désactiver la web app.',
+          },
+          subtitles: {
+            activateConnector:
+              'Activer les intégrations vous permettra de diffuser vos questions sur la plateforme de communication choisie. Pour cela, merci de vous rapprocher de la team Alto 🙂(romain@usealto.com).',
+            desactivateConnector:
+              'Vous et vos collaborateurs ne pourrez plus envoyer de questions via votre canal de communication et ne recevrez plus de messages de notre part. Confirmez-vous ce choix ?',
+            activateWebApp:
+              'Vos équipes pourront répondre aux questions directement sur la web app. Pensez à les informer de ce changement. Confirmez-vous ce choix ?',
+            desactivateWebApp:
+              'Vos prochaines questions ne seront plus envoyées sur la web app. Confirmez-vous ce choix ?',
+          },
+          validBtns: {
+            activateConnector: 'Contacter Alto',
+            desactivateConnector: 'Désactiver la plateforme',
+            activateWebApp: 'Activer la web app',
+            desactivateWebApp: 'Désactiver la web app',
+          },
+        },
+        questionPushedTitle: 'Nombre de réponses attendues',
+        questionPushedSubtitle:
+          'Par défaut, vos équipes reçoivent 2 questions chaque lundi, mercredi et vendredi.',
       },
       webApp: {
         title: 'Web app',
-        subtitle: 'Partagez directement les quizz dans vos canaux.',
+        subtitle: 'Permettez à vos équipes d’accéder à la web app.',
       },
     },
   },
