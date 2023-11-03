@@ -14,13 +14,28 @@
   color: var(--gray-300, #d0d5dd);
 }
 
-.slack-teams-div {
-  padding-left: 4.5rem;
+.questions-pushed-box {
+  max-width: 350px;
 }
 
-.slack-div {
+.questions-pushed-input {
+  background-color: white;
+  color: var(--gray-300) !important;
+}
+
+.questions-pushed {
+  color: var(--gray-300);
+  &.subtitle {
+    font-size: 0.8333rem;
+  }
+}
+
+.connector {
   border-radius: 0.3333rem;
-  border: 0.0833rem solid var(--primary-600, #1570ef);
-  padding-left: 1rem;
-  padding-right: 1rem;
+  height: 3.3333rem;
+
+  &.activated {
+    border: 0.0833rem solid var(--primary-600, #1570ef);
+    background-color: white;
+  }
 }
