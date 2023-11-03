@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CompaniesStore } from 'src/app/modules/companies/companies.store';
@@ -7,6 +7,8 @@ import { AltoConnectorEnumApi, CompanyDtoApi, CompanyDtoApiConnectorEnumApi } fr
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
+import { ElementRef } from 'react';
+import { FormControl } from '@angular/forms';
 
 enum ModalType {
   ToggleConnector = 'toggleConnector',
@@ -25,8 +27,11 @@ export class SettingsIntegrationsComponent implements OnInit {
   Connector = AltoConnectorEnumApi;
 
   company?: CompanyDtoApi;
+
   isConnectorActivated = false;
+
   isWebAppActivated = false;
+
   connector: AltoConnectorEnumApi = AltoConnectorEnumApi.Unknown;
 
   constructor(
@@ -54,10 +59,10 @@ export class SettingsIntegrationsComponent implements OnInit {
       .subscribe();
   }
 
-  validateModal(type: ModalType, toggle: boolean) {
+  validateModal(type: ModalType, toggle: boolean, e: any) {
+    e.preventDefault();
     const modalRef = this.modalService.open(ConfirmationModalComponent, { centered: true, size: 'md' });
     const componentInstance = modalRef.componentInstance as ConfirmationModalComponent;
-
     if (type === ModalType.ToggleConnector) {
       componentInstance.title = !toggle
         ? I18ns.settings.continuousSession.integrations.modal.titles.desactivateConnector

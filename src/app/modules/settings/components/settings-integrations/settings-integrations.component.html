@@ -7,7 +7,8 @@
 <div class="d-flex align-items-center">
   <div class="form-check form-switch d-inline-block align-middle me-5">
     <input
-      (click)="validateModal(ModalType.ToggleConnector, isConnectorActivated ? false : true)"
+      #toggleConnector
+      (click)="validateModal(ModalType.ToggleConnector, isConnectorActivated ? false : true, $event)"
       type="checkbox"
       class="form-check-input"
       [checked]="isConnectorActivated"
@@ -80,7 +81,7 @@
   <div class="d-flex align-items-center">
     <div class="form-check form-switch d-inline-block align-middle me-5">
       <input
-        (click)="validateModal(ModalType.ToggleWebApp, isWebAppActivated ? false : true)"
+        (click)="validateModal(ModalType.ToggleWebApp, isWebAppActivated ? false : true, $event)"
         type="checkbox"
         class="form-check-input"
         [checked]="isWebAppActivated"
