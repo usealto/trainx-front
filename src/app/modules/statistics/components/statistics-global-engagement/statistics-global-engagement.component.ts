@@ -258,7 +258,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
       }),
       filter(([teams]) => teams.length > 0),
       tap(([teams, teamsProg, company]) => {
-        this.hasConnector = company?.isSlackActive ?? false;
+        this.hasConnector = company?.isConnectorActive ?? false;
         this.teams = teams.map((t) => t.team);
 
         this.teamsDisplay = teams.map((t) => {

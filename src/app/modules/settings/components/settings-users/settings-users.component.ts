@@ -38,7 +38,7 @@ export class SettingsUsersComponent implements OnInit {
   adminsPage = 1;
   adminsCount = 0;
   company: CompanyDtoApi = {} as CompanyDtoApi;
- 
+
   constructor(
     private readonly userRestService: UsersRestService,
     private readonly offcanvasService: NgbOffcanvas,
@@ -204,7 +204,7 @@ export class SettingsUsersComponent implements OnInit {
   }
 
   getStatus(company: CompanyDtoApi,user: UserDtoApi): string{
-    if(company.isSlackActive){
+    if(company.isConnectorActive){
       if(user.isConnectorActive){
         return 'active'
       }else{
