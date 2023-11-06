@@ -8,6 +8,7 @@ export interface DataForTable {
     answeredQuestionsProgression: number;
     commentsCount: number;
     commentsProgression: number;
+    questionsPushedCount: number;
     submittedQuestionsCount: number;
     submittedQuestionsProgression: number;
     leastMasteredTags: string[];
