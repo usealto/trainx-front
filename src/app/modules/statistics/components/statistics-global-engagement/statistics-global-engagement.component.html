@@ -146,7 +146,7 @@
           </td>
           <td *ngIf="hasConnector" class="alto-grey text-center">
             <span
-              *ngIf="team.submittedQuestionsCount; else noQuestion"
+              *ngIf="team.questionsPushedCount; else noQuestion"
               class="alto-score"
               [class]="team.answeredQuestionsProgression | pillColor"
               >{{ team.answeredQuestionsProgression + '%' }}</span
