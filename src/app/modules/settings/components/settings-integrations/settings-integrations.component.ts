@@ -46,7 +46,7 @@ export class SettingsIntegrationsComponent implements OnInit {
       .pipe(
         tap((comp) => {
           this.company = comp;
-          this.isConnectorActivated = comp.isSlackActive ?? false;
+          this.isConnectorActivated = comp.isConnectorActive ?? false;
           this.isWebAppActivated = comp.usersHaveWebAccess ?? false;
           this.connector =
             comp.connector === CompanyDtoApiConnectorEnumApi.Slack
@@ -104,7 +104,7 @@ export class SettingsIntegrationsComponent implements OnInit {
   activateConnector(isActivated: boolean) {
     if (this.company?.id) {
       this.companiesRestService
-        .patchCompany(this.company.id, { isSlackActive: isActivated })
+        .patchCompany(this.company.id, { isConnectorActive: isActivated })
         .pipe(
           tap((company) => {
             this.isConnectorActivated = isActivated;
