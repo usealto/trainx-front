@@ -1,13 +1,15 @@
 describe('Collaboration type filter', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/', {});
-
-    cy.get('[data-cy="leadMenuCollaboration"]').click();
+    cy.wait('@loadData');
   });
 
   it('Filters by collaboration type', function () {
-    cy.wait(500);
+    cy.intercept('GET', '/v1/**').as('loadData');
+    cy.get('[data-cy="leadMenuCollaboration"]').click();
+    cy.wait('@loadData');
 
     cy.get('[data-cy="contributionType"]')
       .last()

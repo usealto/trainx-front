@@ -1,8 +1,10 @@
 describe('Add user form', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/');
     cy.get('[data-cy="leadMenuSettings"]').click();
+    cy.wait('@loadData');
     cy.get('[data-cy="open-user-form"]').click();
   });
 

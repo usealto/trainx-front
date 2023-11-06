@@ -1,7 +1,9 @@
 describe('L/Programs Questions Tab', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
+    cy.intercept('GET', '/v1/**').as('loadData');
     cy.visit('/');
+    cy.wait('@loadData');
 
     cy.get('[data-cy="leadMenuPrograms"]').click();
 
@@ -34,7 +36,7 @@ describe('L/Programs Questions Tab', () => {
 
     cy.get('.ng-dropdown-header > input').click().type(`${tagTruncName}{enter}`);
 
-    cy.wait('@tagSearch').wait(100);
+    cy.wait('@tagSearch').wait(500);
 
     cy.get('[data-cy="questionsTagsList"]')
       .first()

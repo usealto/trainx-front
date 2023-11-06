@@ -1,8 +1,10 @@
 describe('Lead Statistics', () => {
   beforeEach(() => {
     cy.loginToAuth0(Cypress.env('auth_username-admin'), Cypress.env('auth_password-admin'));
-    cy.visit('/', {});
-    cy.get('[data-cy="leadMenuStatistics"]').click().wait(500);
+    cy.intercept('GET', '/v1/**').as('loadData');
+    cy.visit('/');
+    cy.get('[data-cy="leadMenuStatistics"]').click();
+    cy.wait('@loadData');
   });
 
   describe('Chart Basicline Teams', () => {
@@ -11,7 +13,7 @@ describe('Lead Statistics', () => {
     });
 
     it('Should load chart', () => {
-      cy.get('[data-cy="chartBasicline"]').find('canvas').should('exist');
+      cy.get('[data-cy="chartBasicline"]').find('canvas', { timeout: 10000 }).should('exist');
     });
   });
 
@@ -21,7 +23,7 @@ describe('Lead Statistics', () => {
     });
 
     it('Should load chart', () => {
-      cy.get('[data-cy="chartBasiclineThemes"]').find('canvas').should('exist');
+      cy.get('[data-cy="chartBasiclineThemes"]').find('canvas', { timeout: 10000 }).should('exist');
     });
   });
 });
