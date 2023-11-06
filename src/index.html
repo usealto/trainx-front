@@ -49,7 +49,7 @@
   <script type="text/javascript">
     let allowedHosts = ['app.usealto.com'];
     let url = window.location.href,
-      host = urlLib.parse(url).host;
+      host = url.split('/')[2];
     if (allowedHosts.includes(host)) {
       window.smartlook ||
         (function (d) {
