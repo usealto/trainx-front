@@ -282,8 +282,8 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
 
   private dataForTeamTableMapper(t: TeamStatsDtoApi, tProg?: TeamStatsDtoApi): DataForTable {
     const totalGuessCount = t.totalGuessesCount
-      ? t.totalGuessesCount > (t.questionsSubmittedCount ?? 0)
-        ? t.questionsSubmittedCount
+      ? t.totalGuessesCount > (t.questionsPushedCount ?? 0)
+        ? t.questionsPushedCount
         : t.totalGuessesCount
       : 0;
     return {
@@ -291,9 +291,10 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
       globalScore: t.score,
       answeredQuestionsCount: totalGuessCount,
       answeredQuestionsProgression:
-        totalGuessCount && t.questionsSubmittedCount
-          ? Math.round((totalGuessCount / t.questionsSubmittedCount) * 100)
+        totalGuessCount && t.questionsPushedCount
+          ? Math.round((totalGuessCount / t.questionsPushedCount) * 100)
           : 0,
+      questionsPushedCount: t.questionsPushedCount,
       commentsCount: t.commentsCount,
       commentsProgression: this.scoresService.getProgression(t.commentsCount, tProg?.commentsCount) ?? 0,
       submittedQuestionsCount: t.questionsSubmittedCount,
