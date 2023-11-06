@@ -503,6 +503,9 @@ export const FR = {
         noSuggestion: 'Aucune suggestion',
       },
     },
+    team: {
+
+    }
   },
   questions: {
     form: {

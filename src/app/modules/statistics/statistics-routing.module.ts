@@ -8,6 +8,16 @@ import { AltoRoutes } from '../shared/constants/routes';
 
 const routes: Routes = [
   {
+    path: AltoRoutes.statTeam,
+    loadChildren: () =>
+      import('./statistics-details/statistics-details.module').then((m) => m.StatisticsDetailsModule),
+  },
+  {
+    path: AltoRoutes.statUser,
+    loadChildren: () =>
+      import('./statistics-details/statistics-details.module').then((m) => m.StatisticsDetailsModule),
+  },
+  {
     path: '',
     component: StatisticsComponent,
     children: [
@@ -18,6 +28,7 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.performance,
+        pathMatch: 'full',
         component: StatisticsGlobalPerformanceComponent,
       },
       {
@@ -28,6 +39,20 @@ const routes: Routes = [
         path: AltoRoutes.teams,
         component: StatisticsPerTeamsComponent,
       },
+      // {
+      //   path: AltoRoutes.statTeam + '/:id',
+      //   children: [
+      //     {
+      //       path: '',
+      //       redirectTo: AltoRoutes.performance,
+      //       pathMatch: 'full',
+      //     },
+      //     {
+      //       path: AltoRoutes.performance,
+      //       component: StatisticsGlobalEngagementComponent,
+      //     }
+      //   ]
+      // },
     ],
   },
 ];
