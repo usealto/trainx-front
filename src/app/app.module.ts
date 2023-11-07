@@ -28,6 +28,7 @@ import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { SharedModule } from './modules/shared/shared.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,6 +41,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     NoCompanyComponent,
     NoTeamComponent,
     NoSmallScreenComponent,
+    ImpersonateComponent,
   ],
   imports: [
     ApiModule,

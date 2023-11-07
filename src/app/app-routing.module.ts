@@ -22,6 +22,7 @@ import { noSmallScreen } from './no-small-screen.guard';
 import { canActivateLead } from './roles.guard';
 import { startup } from './startup.guard';
 import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
+import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
 
 const routes: Routes = [
   {
@@ -155,16 +156,14 @@ const routes: Routes = [
       },
     ],
   },
-  //! TO UNCOMMENT WHEN ON ADMIN BRANCH
-  // {
-  //   path: AltoRoutes.admin,
-  //   resolve: {
-  //     splashscreen: noSplashScreenResolver,
-  //   },
-  //   loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule),
-  //   canActivate: [AuthGuard],
-  //   canActivateChild: [AuthGuard],
-  // },
+  {
+    path: AltoRoutes.impersonate + '/:id',
+    resolve: {
+      splashscreen: noSplashScreenResolver,
+    },
+    component: ImpersonateComponent,
+    canActivate: [AuthGuard],
+  },
   {
     path: AltoRoutes.translation,
     loadChildren: () => import('./core/utils/i18n/translation.module').then((m) => m.TranslationModule),
