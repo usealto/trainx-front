@@ -1,1 +1,83 @@
-<p>team-performance works!</p>
+<div class="mb-5">
+  <div class="col-6">
+    <h2>
+      <img class="emoji" [src]="EmojiName.FlexedBiceps | emoji" height="16" width="16" />
+      {{ I18ns.statistics.team.masteryLevel.title }}
+      <span class="ms-2 alto-badge" [style]="team.id | teamColor">{{ team.name }}</span>
+    </h2>
+    <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.masteryLevel.subtitle }}</p>
+  </div>
+</div>
+<div class="panel mb-4">
+  <div class="float-end">
+    <alto-time-picker
+      class="me-4"
+      [duration]="duration"
+      (durationSelected)="updateTimePicker($event)"
+    ></alto-time-picker>
+    <alto-dropdown-filter
+      [data]="members"
+      [selectedItems]="selectedMembers"
+      [displayLabel]="'firstname'"
+      [placeholder]="I18ns.statistics.team.masteryLevel.teamFilter"
+      (selectChange)="filterMembers($event)"
+    ></alto-dropdown-filter>
+  </div>
+  <h3>{{ I18ns.statistics.team.masteryLevel.chartTitle }}</h3>
+  <p class="alto-grey mb-4">
+    {{ I18ns.statistics.team.masteryLevel.chartSubtitle }}
+  </p>
+  <div class="chart-container">
+    <alto-chart-basicline [chartOption]="teamChartOption"></alto-chart-basicline>
+  </div>
+</div>
+<alto-leaderboard
+  [config]="['score']"
+  [title]="I18ns.statistics.team.masteryLevel.leaderboard"
+  [subtitle]="I18ns.statistics.team.masteryLevel.leaderboardSubtitle"
+  [data]="membersLeaderboard"
+  [size]="3"
+>
+</alto-leaderboard>
+<hr class="my-7" />
+<div class="mb-5">
+  <div class="col-6">
+    <h2>
+      <img class="emoji" [src]="EmojiName.FlexedBiceps | emoji" height="16" width="16" />
+      {{ I18ns.statistics.team.perThemes.title }}
+      <span class="ms-2 alto-badge" [style]="team.id | teamColor">{{ team.name }}</span>
+    </h2>
+    <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.perThemes.subtitle }}</p>
+  </div>
+</div>
+<div class="panel mb-4">
+  <div class="float-end">
+    <alto-time-picker
+      class="me-4"
+      [duration]="duration"
+      (durationSelected)="updateTimePicker($event)"
+    ></alto-time-picker>
+    <alto-dropdown-filter
+      [data]="tags"
+      [selectedItems]="selectedTags"
+      [displayLabel]="'name'"
+      [placeholder]="I18ns.statistics.team.perThemes.tagFilter"
+      (selectChange)="filterTags($event)"
+    ></alto-dropdown-filter>
+  </div>
+  <h3>{{ I18ns.statistics.team.perThemes.chartTitle }}</h3>
+  <p class="alto-grey mb-4">
+    {{ I18ns.statistics.team.perThemes.chartSubtitle }}
+  </p>
+  <div class="chart-container">
+    <alto-chart-basicline [chartOption]="tagsChartOption"></alto-chart-basicline>
+  </div>
+</div>
+<alto-leaderboard
+  [config]="['score']"
+  [title]="I18ns.statistics.team.perThemes.leaderboardTitle"
+  [subtitle]="I18ns.statistics.team.perThemes.leaderboardSubtitle"
+  [data]="tagsLeaderboard"
+  [size]="3"
+>
+</alto-leaderboard>

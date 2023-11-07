@@ -504,8 +504,25 @@ export const FR = {
       },
     },
     team: {
-
-    }
+      masteryLevel: {
+        title: 'Niveau de maîtrise de l’équipe',
+        subtitle: 'Retrouvez une vue d’ensemble sur les résultats de l’équipe.',
+        chartTitle: 'Évolution du score de l’équipe',
+        chartSubtitle: 'Évolution du score moyen de l’équipe.',
+        teamFilter: 'Membres',
+        leaderboard: 'Leaderboard',
+        leaderboardSubtitle: 'Aperçu du niveau de maîtrise des membres de l’équipe.',
+      },
+      perThemes: {
+        title: 'Performances par thématiques de l’équipe',
+        subtitle: 'Retrouvez une vue d’ensemble sur les résultats de l’équipe selon ses thématiques.',
+        chartTitle: 'Évolution du niveau de maîtrise',
+        chartSubtitle: 'Évolution du score moyen de l’équipe par tag.',
+        tagFilter: 'Tags',
+        leaderboardTitle: 'Leaderboard',
+        leaderboardSubtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
+      },
+    },
   },
   questions: {
     form: {
@@ -754,7 +771,8 @@ export const FR = {
         'Les administrateurs peuvent créer des programmes, des challenges et ont accès à des statistiques détaillées sur les résultats des équipes.',
       users: 'Utilisateurs standards',
       usersInactiveTooltip: 'Pour réactiver l’intégration, veuillez vous rendre dans l’onglet “Diffusion”.',
-      warningTooltip: 'Nous rencontrons un problème avec cet utilisateur. Contactez votre administrateur Slack ou la team Alto si le problème persiste.',
+      warningTooltip:
+        'Nous rencontrons un problème avec cet utilisateur. Contactez votre administrateur Slack ou la team Alto si le problème persiste.',
       usersDesc:
         'Les utilisateurs peuvent participer aux programmes, suggérer des questions et ont accès à des statistiques détaillées sur leurs résultats seulement.',
       table: {

@@ -52,7 +52,7 @@ export class LeaderboardComponent implements OnChanges {
       return 'alto-green';
     } else if (score > 40) {
       return 'alto-warning';
-    } else if (score > 0) {
+    } else if (score >= 0) {
       return 'alto-red';
     }
     return 'alto-grey';
