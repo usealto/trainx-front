@@ -751,7 +751,8 @@ export const FR = {
         'Les administrateurs peuvent créer des programmes, des challenges et ont accès à des statistiques détaillées sur les résultats des équipes.',
       users: 'Utilisateurs standards',
       usersInactiveTooltip: 'Pour réactiver l’intégration, veuillez vous rendre dans l’onglet “Diffusion”.',
-      warningTooltip: 'Nous rencontrons un problème avec cet utilisateur. Contactez votre administrateur Slack ou la team Alto si le problème persiste.',
+      warningTooltip:
+        'Nous rencontrons un problème avec cet utilisateur. Contactez votre administrateur Slack ou la team Alto si le problème persiste.',
       usersDesc:
         'Les utilisateurs peuvent participer aux programmes, suggérer des questions et ont accès à des statistiques détaillées sur leurs résultats seulement.',
       table: {
@@ -808,6 +809,7 @@ export const FR = {
             desactivateConnector: 'Vous êtes sur le point de désactiver votre plateforme de communication.',
             activateWebApp: 'Vous êtes sur le point d’activer la web app.',
             desactivateWebApp: 'Vous êtes sur le point de désactiver la web app.',
+            changeConnector: 'Vous êtes sur le point de changer de plateforme de communication.',
           },
           subtitles: {
             activateConnector:
@@ -818,12 +820,15 @@ export const FR = {
               'Vos équipes pourront répondre aux questions directement sur la web app. Pensez à les informer de ce changement. Confirmez-vous ce choix ?',
             desactivateWebApp:
               'Vos prochaines questions ne seront plus envoyées sur la web app. Confirmez-vous ce choix ?',
+            changeConnector:
+              'Vos prochaines questions ne seront plus envoyées via le même canal de communication. Confirmez-vous ce choix ?',
           },
           validBtns: {
             activateConnector: 'Contacter Alto',
             desactivateConnector: 'Désactiver la plateforme',
             activateWebApp: 'Activer la web app',
             desactivateWebApp: 'Désactiver la web app',
+            changeConnector: 'Changer de plateforme',
           },
         },
         questionPushedTitle: 'Nombre de réponses attendues',
