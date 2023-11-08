@@ -48,6 +48,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { PlaceholderManagerComponent } from './components/placeholder-manager/placeholder-manager.component';
 import { QuestionFormComponent } from './components/question-form/question-form.component';
+import { ImpersonationHeaderComponent } from './components/impersonation-header/impersonation-header.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +82,7 @@ import { QuestionFormComponent } from './components/question-form/question-form.
     LeaderboardComponent,
     PlaceholderManagerComponent,
     QuestionFormComponent,
+    ImpersonationHeaderComponent,
   ],
   imports: [
     CommonModule,
@@ -145,6 +147,7 @@ import { QuestionFormComponent } from './components/question-form/question-form.
     LeaderboardComponent,
     PlaceholderManagerComponent,
     QuestionFormComponent,
+    ImpersonationHeaderComponent,
   ],
   providers: [NgbActiveModal],
 })

@@ -19,7 +19,17 @@ export class ApiInterceptor implements HttpInterceptor {
 
     this.loadingStore.maxLoad++;
 
-    return next.handle(request).pipe(
+    const req =
+    localStorage.getItem('impersonatedUser') && !request.url.includes('/auth/')
+      ? request.clone({
+          headers: request.headers.set(
+            'x-impersonate-user-email',
+            localStorage.getItem('impersonatedUser') ?? '',
+          ),
+        })
+      : request;
+
+    return next.handle(req).pipe(
       tap((event: HttpEvent<any>) => {
         if (event instanceof HttpResponse) {
           /** Transform ISO dates from the API in Date Objects */

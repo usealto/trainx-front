@@ -39,5 +39,5 @@ export const AltoRoutes = {
   notFound: '404',
   // ADMIN
   translation: 'translation',
-  admin: 'admin',
+  impersonate: 'impersonate',
 };
