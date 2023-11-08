@@ -19,7 +19,7 @@ import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
 import { noSmallScreen } from './no-small-screen.guard';
-import { canActivateLead } from './roles.guard';
+import { canActivateAltoAdmin, canActivateLead } from './roles.guard';
 import { startup } from './startup.guard';
 import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
 import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
@@ -162,7 +162,7 @@ const routes: Routes = [
       splashscreen: noSplashScreenResolver,
     },
     component: ImpersonateComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, canActivateAltoAdmin],
   },
   {
     path: AltoRoutes.translation,
