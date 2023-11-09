@@ -73,6 +73,7 @@ export class ScoresRestService {
     duration: ScoreDuration,
     isProgression?: boolean,
     id?: string,
+    teamId?: string,
   ): Observable<QuestionStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
@@ -96,6 +97,7 @@ export class ScoresRestService {
         to: dateBefore,
         respondsRegularlyThreshold: 0.42,
         userId: id,
+        teamIds: teamId,
       } as GetQuestionsStatsRequestParams)
       .pipe(map((r) => r.data || []));
   }

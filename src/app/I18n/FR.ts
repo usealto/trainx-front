@@ -93,6 +93,8 @@ export const FR = {
     },
     global: 'Global',
     deletedUsername: 'Utilisateur supprimé',
+    noScore: 'Aucun score',
+    noEvolution: 'Aucune évolution',
   },
   leadHome: {
     title: 'Bonjour ',
@@ -521,6 +523,28 @@ export const FR = {
         tagFilter: 'Tags',
         leaderboardTitle: 'Leaderboard',
         leaderboardSubtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
+      },
+      members: {
+        title: 'Membres de l’équipe',
+        subtitle: 'Découvrez les scores moyens et les axes d’amélioration par membre.',
+        table: {
+          name: 'Nom',
+          globalScore: 'Score global',
+          scoreEvolution: 'Évolution du score',
+          lessMasteredTags: 'Tags les moins maîtrisés',
+        },
+      },
+      questions: {
+        title: 'Questions de l’équipe',
+        subtitle: 'Découvrez les scores moyens des membres de l’équipe par question.',
+        table: {
+          title: 'Intitulé de la question',
+          globalScore: 'Score global',
+          scoreEvolution: 'Évolution du score',
+          usersNumber: "Membres ayant répondu",
+          badMembers: 'Membres en difficulté',
+          noMember: 'Aucun membre',
+        },
       },
     },
   },

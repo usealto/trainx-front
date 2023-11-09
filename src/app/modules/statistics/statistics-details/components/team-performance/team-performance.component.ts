@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  QuestionStatsDtoApi,
   ScoreByTypeEnumApi,
   ScoreDtoApi,
   ScoreTimeframeEnumApi,
@@ -8,11 +9,12 @@ import {
   TagDtoApi,
   TeamDtoApi,
   UserDtoApi,
+  UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
+import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
@@ -24,6 +26,8 @@ import { xAxisDatesOptions, yAxisScoreOptions, legendOptions } from 'src/app/mod
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
+import { untilDestroyed } from '@ngneat/until-destroy';
 
 @Component({
   selector: 'alto-team-performance',
@@ -48,6 +52,22 @@ export class TeamPerformanceComponent implements OnInit {
   selectedTags: TagDtoApi[] = [];
   tagsChartOption: any = {};
   tagsLeaderboard: { name: string; score: number }[] = [];
+
+  membersTable: UserStatsDtoApi[] = [];
+  membersTablePage = 1;
+  membersTablePageSize = 5;
+  membersTableDataStatus: PlaceholderDataStatus = 'loading';
+  displayMemberTables: UserStatsDtoApi[] = [];
+  previousMembersStats: UserStatsDtoApi[] = [];
+
+  questionsTableSearch = '';
+  questionsTableScore = '';
+  questionsTable: QuestionStatsDtoApi[] = [];
+  questionsTablePage = 1;
+  questionsTablePageSize = 5;
+  questionsTableDataStatus: PlaceholderDataStatus = 'loading';
+  displayQuestionsTables: QuestionStatsDtoApi[] = [];
+  previousQuestionsStats: QuestionStatsDtoApi[] = [];
 
   constructor(
     private readonly profileStore: ProfileStore,
@@ -83,6 +103,100 @@ export class TeamPerformanceComponent implements OnInit {
     this.getTeamLeaderboard(this.duration);
     this.getTagsChartScores(this.duration);
     this.getTagsLeaderboard(this.duration);
+    this.getMembersTable(this.duration);
+    this.getQuestionsTable(this.duration);
+  }
+
+  filterQuestionsTable({ search = this.questionsTableSearch, score = this.questionsTableScore }) {
+    console.log('score: ', score, 'search: ', search);
+    this.questionsTableSearch = search;
+    this.questionsTableScore = score;
+
+    this.getQuestionsTable(this.duration);
+  }
+
+  getQuestionsTable(duration: ScoreDuration): void {
+    this.questionsTableDataStatus = 'loading';
+    combineLatest([
+      this.scoresRestService.getQuestionsStats(duration, false, undefined, this.teamId),
+      this.scoresRestService.getQuestionsStats(duration, true, undefined, this.teamId),
+    ])
+      .pipe(
+        tap(([res, previous]) => {
+          let temp = res;
+          if (this.questionsTableSearch && this.questionsTableSearch !== '') {
+            console.log('filtering by search');
+            temp = temp.filter((question) => {
+              const s = this.questionsTableSearch.toLowerCase();
+              const title = question.question.title.toLowerCase();
+              return title.includes(s);
+            });
+          }
+          if (this.questionsTableScore && this.questionsTableScore !== '') {
+            temp = this.scoresService.filterByScore(temp, this.questionsTableScore as ScoreFilter, true);
+          }
+          this.questionsTable = temp;
+          this.previousQuestionsStats = previous;
+          this.changeQuestionsPage(1);
+          this.questionsTableDataStatus = this.questionsTable.length > 0 ? 'good' : 'empty';
+        }),
+      )
+      .subscribe();
+  }
+
+  @memoize()
+  getQuestionProgression(question: QuestionStatsDtoApi): number {
+    const previous = this.previousQuestionsStats.find((m) => m.question.id === question.question.id);
+    return previous && previous.score && question.score ? question.score - previous.score : 0;
+  }
+
+  changeQuestionsPage(page: number) {
+    this.questionsTablePage = page;
+    this.displayQuestionsTables = this.questionsTable.slice(
+      (page - 1) * this.questionsTablePageSize,
+      page * this.questionsTablePageSize,
+    );
+  }
+
+  getMembersTable(duration: ScoreDuration, search?: string): void {
+    this.membersTableDataStatus = 'loading';
+    combineLatest([
+      this.scoresRestService.getUsersStats(duration, false, undefined, undefined, this.teamId),
+      this.scoresRestService.getUsersStats(duration, true, undefined, undefined, this.teamId),
+    ])
+      .pipe(
+        tap(([res, previous]) => {
+          if (search && search !== '') {
+            this.membersTable = res.filter((user) => {
+              const s = search.toLowerCase();
+              const firstname = user.user.firstname.toLowerCase();
+              const lastname = user.user.lastname.toLowerCase();
+              return firstname.includes(s) || lastname.includes(s);
+            });
+          } else {
+            this.membersTable = res;
+          }
+
+          this.previousMembersStats = previous;
+          this.changeMembersPage(1);
+          this.membersTableDataStatus = this.membersTable.length > 0 ? 'good' : 'empty';
+        }),
+      )
+      .subscribe();
+  }
+
+  @memoize()
+  getMemberProgression(member: UserStatsDtoApi): number {
+    const previous = this.previousMembersStats.find((m) => m.user.id === member.user.id);
+    return previous && previous.score && member.score ? member.score - previous.score : 0;
+  }
+
+  changeMembersPage(page: number) {
+    this.membersTablePage = page;
+    this.displayMemberTables = this.membersTable.slice(
+      (page - 1) * this.membersTablePageSize,
+      page * this.membersTablePageSize,
+    );
   }
 
   getTagsChartScores(duration: ScoreDuration): void {
