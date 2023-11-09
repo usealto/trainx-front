@@ -108,7 +108,6 @@ export class TeamPerformanceComponent implements OnInit {
   }
 
   filterQuestionsTable({ search = this.questionsTableSearch, score = this.questionsTableScore }) {
-    console.log('score: ', score, 'search: ', search);
     this.questionsTableSearch = search;
     this.questionsTableScore = score;
 
