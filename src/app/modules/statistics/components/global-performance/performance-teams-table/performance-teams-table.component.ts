@@ -9,6 +9,7 @@ import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { TeamsStatsFilters } from 'src/app/modules/shared/models/stats.model';
@@ -23,6 +24,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   Emoji = EmojiName;
   I18ns = I18ns;
+  AltoRoutes = AltoRoutes;
 
   @Input() duration: ScoreDuration = ScoreDuration.Year;
 

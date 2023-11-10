@@ -41,6 +41,7 @@ export class ScoresRestService {
     isProgression?: boolean,
     id?: string,
     sortBy?: string,
+    teamId?: string,
   ): Observable<UserStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
@@ -55,9 +56,9 @@ export class ScoresRestService {
       dateBefore = new Date();
       dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
-
     return this.statsApi
       .getUsersStats({
+        teamIds: teamId,
         from: dateAfter,
         to: dateBefore,
         respondsRegularlyThreshold: 0.42,
@@ -72,6 +73,7 @@ export class ScoresRestService {
     duration: ScoreDuration,
     isProgression?: boolean,
     id?: string,
+    teamId?: string,
   ): Observable<QuestionStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
@@ -95,6 +97,7 @@ export class ScoresRestService {
         to: dateBefore,
         respondsRegularlyThreshold: 0.42,
         userId: id,
+        teamIds: teamId,
       } as GetQuestionsStatsRequestParams)
       .pipe(map((r) => r.data || []));
   }
@@ -153,7 +156,7 @@ export class ScoresRestService {
       .pipe(map((r) => r.data || []));
   }
 
-  getTagsStats(duration: ScoreDuration, isProgression = false) {
+  getTagsStats(duration: ScoreDuration, isProgression = false, teamId?: string) {
     let dateAfter: Date;
     let dateBefore: Date;
 
@@ -169,7 +172,12 @@ export class ScoresRestService {
     }
 
     return this.statsApi
-      .getTagsStats({ itemsPerPage: 400, from: dateAfter, to: dateBefore })
+      .getTagsStats({
+        itemsPerPage: 400,
+        from: dateAfter,
+        to: dateBefore,
+        teamIds: teamId ? teamId : undefined,
+      })
       .pipe(map((r) => r.data || []));
   }
 
@@ -205,7 +213,6 @@ export class ScoresRestService {
     if (ids) {
       par.ids = ids.join(',');
     }
-
     return this.scoresApi.getScores(par).pipe(
       map((r) => r.data || ({} as ScoresResponseDtoApi)),
       filter((x) => !!x),

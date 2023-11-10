@@ -21,6 +21,8 @@ export const AltoRoutes = {
   performance: 'performance',
   engagement: 'engagement',
   teams: 'teams',
+  statTeam: 'team',
+  statUser: 'user',
 
   // USER
 

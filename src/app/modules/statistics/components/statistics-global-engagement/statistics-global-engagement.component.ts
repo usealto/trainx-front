@@ -22,6 +22,7 @@ import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder
 import { DataForTable } from '../../models/statistics.model';
 import { CompaniesStore } from 'src/app/modules/companies/companies.store';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 
 @UntilDestroy()
 @Component({
@@ -33,6 +34,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
   duration: ScoreDuration = ScoreDuration.Trimester;
+  AltoRoutes = AltoRoutes;
 
   leaderboard: { name: string; score: number; progression: number }[] = [];
 
