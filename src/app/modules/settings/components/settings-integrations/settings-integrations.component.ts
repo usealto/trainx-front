@@ -7,12 +7,11 @@ import { AltoConnectorEnumApi, CompanyDtoApi, CompanyDtoApiConnectorEnumApi } fr
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
-import { ElementRef } from 'react';
-import { FormControl } from '@angular/forms';
 
 enum ModalType {
   ToggleConnector = 'toggleConnector',
   ToggleWebApp = 'toggleWebApp',
+  ChangeConnector = 'changeConnector',
 }
 
 @UntilDestroy()
@@ -59,46 +58,57 @@ export class SettingsIntegrationsComponent implements OnInit {
       .subscribe();
   }
 
-  validateModal(type: ModalType, toggle: boolean, e: any) {
+  validateModal(type: ModalType, toggle: boolean, e: any, connector = this.connector) {
     e.preventDefault();
-    const modalRef = this.modalService.open(ConfirmationModalComponent, { centered: true, size: 'md' });
-    const componentInstance = modalRef.componentInstance as ConfirmationModalComponent;
-    if (type === ModalType.ToggleConnector) {
-      componentInstance.title = !toggle
-        ? I18ns.settings.continuousSession.integrations.modal.titles.desactivateConnector
-        : I18ns.settings.continuousSession.integrations.modal.titles.activateConnector;
-      componentInstance.subtitle = !toggle
-        ? I18ns.settings.continuousSession.integrations.modal.subtitles.desactivateConnector
-        : I18ns.settings.continuousSession.integrations.modal.subtitles.activateConnector;
-      componentInstance.validBtn = !toggle
-        ? I18ns.settings.continuousSession.integrations.modal.validBtns.desactivateConnector
-        : I18ns.settings.continuousSession.integrations.modal.validBtns.activateConnector;
-    } else if (type === ModalType.ToggleWebApp) {
-      componentInstance.title = !toggle
-        ? I18ns.settings.continuousSession.integrations.modal.titles.desactivateWebApp
-        : I18ns.settings.continuousSession.integrations.modal.titles.activateWebApp;
-      componentInstance.subtitle = !toggle
-        ? I18ns.settings.continuousSession.integrations.modal.subtitles.desactivateWebApp
-        : I18ns.settings.continuousSession.integrations.modal.subtitles.activateWebApp;
-      componentInstance.validBtn = !toggle
-        ? I18ns.settings.continuousSession.integrations.modal.validBtns.desactivateWebApp
-        : I18ns.settings.continuousSession.integrations.modal.validBtns.activateWebApp;
-    }
 
-    componentInstance.next
-      .pipe(
-        tap((answer) => {
-          modalRef.close();
-          if (answer === 'next') {
-            if (type === ModalType.ToggleConnector) {
-              this.activateConnector(toggle);
-            } else if (type === ModalType.ToggleWebApp) {
-              this.activateWebApp(toggle);
+    if (type !== ModalType.ChangeConnector || connector !== this.connector) {
+      const modalRef = this.modalService.open(ConfirmationModalComponent, { centered: true, size: 'md' });
+      const componentInstance = modalRef.componentInstance as ConfirmationModalComponent;
+      if (type === ModalType.ToggleConnector) {
+        componentInstance.title = !toggle
+          ? I18ns.settings.continuousSession.integrations.modal.titles.desactivateConnector
+          : I18ns.settings.continuousSession.integrations.modal.titles.activateConnector;
+        componentInstance.subtitle = !toggle
+          ? I18ns.settings.continuousSession.integrations.modal.subtitles.desactivateConnector
+          : I18ns.settings.continuousSession.integrations.modal.subtitles.activateConnector;
+        componentInstance.validBtn = !toggle
+          ? I18ns.settings.continuousSession.integrations.modal.validBtns.desactivateConnector
+          : I18ns.settings.continuousSession.integrations.modal.validBtns.activateConnector;
+      } else if (type === ModalType.ToggleWebApp) {
+        componentInstance.title = !toggle
+          ? I18ns.settings.continuousSession.integrations.modal.titles.desactivateWebApp
+          : I18ns.settings.continuousSession.integrations.modal.titles.activateWebApp;
+        componentInstance.subtitle = !toggle
+          ? I18ns.settings.continuousSession.integrations.modal.subtitles.desactivateWebApp
+          : I18ns.settings.continuousSession.integrations.modal.subtitles.activateWebApp;
+        componentInstance.validBtn = !toggle
+          ? I18ns.settings.continuousSession.integrations.modal.validBtns.desactivateWebApp
+          : I18ns.settings.continuousSession.integrations.modal.validBtns.activateWebApp;
+      } else if (type === ModalType.ChangeConnector) {
+        componentInstance.title = I18ns.settings.continuousSession.integrations.modal.titles.changeConnector;
+        componentInstance.subtitle =
+          I18ns.settings.continuousSession.integrations.modal.subtitles.changeConnector;
+        componentInstance.validBtn =
+          I18ns.settings.continuousSession.integrations.modal.validBtns.changeConnector;
+      }
+
+      componentInstance.next
+        .pipe(
+          tap((answer) => {
+            modalRef.close();
+            if (answer === 'next') {
+              if (type === ModalType.ToggleConnector) {
+                this.activateConnector(toggle);
+              } else if (type === ModalType.ToggleWebApp) {
+                this.activateWebApp(toggle);
+              } else if (type === ModalType.ChangeConnector) {
+                this.changeConnector(connector);
+              }
             }
-          }
-        }),
-      )
-      .subscribe();
+          }),
+        )
+        .subscribe();
+    }
   }
 
   activateConnector(isActivated: boolean) {

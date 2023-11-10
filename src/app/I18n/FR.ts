@@ -900,6 +900,7 @@ export const FR = {
             desactivateConnector: 'Vous êtes sur le point de désactiver votre plateforme de communication.',
             activateWebApp: 'Vous êtes sur le point d’activer la web app.',
             desactivateWebApp: 'Vous êtes sur le point de désactiver la web app.',
+            changeConnector: 'Vous êtes sur le point de changer de plateforme de communication.',
           },
           subtitles: {
             activateConnector:
@@ -910,12 +911,15 @@ export const FR = {
               'Vos équipes pourront répondre aux questions directement sur la web app. Pensez à les informer de ce changement. Confirmez-vous ce choix ?',
             desactivateWebApp:
               'Vos prochaines questions ne seront plus envoyées sur la web app. Confirmez-vous ce choix ?',
+            changeConnector:
+              'Vos prochaines questions ne seront plus envoyées via le même canal de communication. Confirmez-vous ce choix ?',
           },
           validBtns: {
             activateConnector: 'Contacter Alto',
             desactivateConnector: 'Désactiver la plateforme',
             activateWebApp: 'Activer la web app',
             desactivateWebApp: 'Désactiver la web app',
+            changeConnector: 'Changer de plateforme',
           },
         },
         questionPushedTitle: 'Nombre de réponses attendues',

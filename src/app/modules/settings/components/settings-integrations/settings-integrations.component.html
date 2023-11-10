@@ -32,7 +32,7 @@
         id="exampleRadios1"
         value="option1"
         [checked]="connector === Connector.Slack"
-        (click)="changeConnector(Connector.Slack)"
+        (click)="validateModal(ModalType.ChangeConnector, true, $event, Connector.Slack)"
       />
       <label class="form-check-label" for="exampleRadios1">
         <img src="assets/img/slack-logo.svg" width="16" height="16" alt="Slack Logo" class="me-2" />
@@ -47,7 +47,7 @@
           id="exampleRadios2"
           value="option2"
           [checked]="connector === Connector.GoogleChat"
-          (click)="changeConnector(Connector.GoogleChat)"
+          (click)="validateModal(ModalType.ChangeConnector, true, $event, Connector.GoogleChat)"
         />
         <label class="form-check-label" for="exampleRadios2">
           <img src="assets/img/gchat-logo.svg" width="16" height="16" alt="Gchat Logo" class="me-2" />

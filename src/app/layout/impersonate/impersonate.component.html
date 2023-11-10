@@ -1,0 +1,15 @@
+<div class="panel-full d-flex justify-content-center align-items-center">
+  <div class="text-center text-404">
+    <h1 class="my-5">Ready to impersonate <i>{{userToImpersonate}}</i> ?</h1>
+    <div *ngIf="userObj; else nouser">
+      <p>(Currently you are impersonated as {{userObj.firstname }}  {{userObj.lastname }})</p>
+      <a class="btn btn-primary btn-lg mt-4" href="/">Home </a>
+    </div>
+    <ng-template #nouser>
+      <button class="btn btn-primary btn-lg mt-4" (click)="impersonate()">impersonate {{userToImpersonate}} </button>
+    </ng-template>
+    <div *ngIf="notFound" class="mt-4 p-4 rounded border border-1 border-danger red">
+      <div class="fs-5">User not found. Impersonation failed</div>
+    </div>
+  </div>
+</div>
