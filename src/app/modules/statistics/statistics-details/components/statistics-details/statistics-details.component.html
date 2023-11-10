@@ -1,0 +1,13 @@
+<div class="header-panel">
+  <img [src]="EmojiName.ChartIncreasing | emoji" height="32" width="32" />
+  <h1 data-cy="leadStatisticsTitle">
+    {{ I18ns.statistics.title }} <i class="bi bi-arrow-right"></i> {{ name }}
+  </h1>
+</div>
+<alto-tabs
+  class="tabs d-block fw-bold"
+  (tabChanged)="tabChange($event)"
+  [data]="tabs"
+  [selectedValue]="selectedTab"
+></alto-tabs>
+<router-outlet> </router-outlet>

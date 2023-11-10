@@ -21,6 +21,8 @@ export const AltoRoutes = {
   performance: 'performance',
   engagement: 'engagement',
   teams: 'teams',
+  statTeam: 'team',
+  statUser: 'user',
 
   // USER
 
@@ -39,5 +41,5 @@ export const AltoRoutes = {
   notFound: '404',
   // ADMIN
   translation: 'translation',
-  admin: 'admin',
+  impersonate: 'impersonate',
 };

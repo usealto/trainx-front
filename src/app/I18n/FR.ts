@@ -93,6 +93,9 @@ export const FR = {
     },
     global: 'Global',
     deletedUsername: 'Utilisateur supprimé',
+    noScore: 'Aucun score',
+    noEvolution: 'Aucune évolution',
+    noTag: 'Aucun tag',
   },
   leadHome: {
     title: 'Bonjour ',
@@ -503,6 +506,94 @@ export const FR = {
         noSuggestion: 'Aucune suggestion',
       },
     },
+    team: {
+      teamActivity: {
+        title: 'Activité de l’équipe',
+        subtitle: 'Retrouvez une vue d’ensemble de l’activité des membres de l’équipe.',
+        chartTitle: 'Nombre de réponses',
+        chartSubtitle: 'Évolution du nombre total de réponses au sein de l’équipe.',
+        leaderboardTitle: 'Classement de mon équipe',
+        leaderboardSubtitle: 'Classement des membres de l’équipe selon leur nombre de questions répondues.',
+      },
+      membersEngagement: {
+        title: 'Engagement des membres de l’équipe',
+        subtitle:
+          'Retrouvez une vue d’ensemble des questions et commentaires remontés par les membres de l’équipe.',
+        chartTitle: 'Contribution',
+        chartSubtitle:
+          'Évolution du nombre de questions et de commentaires remontés par les membres de l’équipe.',
+        table: {
+          name: 'Nom',
+          questionsPushed: 'Réponses attendues',
+          answers: 'Réponses envoyées',
+          answersProgression: 'Taux de réponse',
+          submitedQuestions: 'Questions suggérées',
+          comments: 'Commentaires',
+          noAnswer: 'Aucune réponse',
+          noSubmitedQuestion: 'Aucune question',
+          noComment: 'Aucun commentaire',
+        },
+        tablePlaceholder: {
+          title: 'Nous n’avons pas encore de données à afficher',
+          subtitle: 'Cela ne devrait plus tarder !',
+        },
+        contributionPlaceholder: {
+          title: 'Nous n’avons pas encore de données à afficher',
+          subtitle: 'Votre équipe s’active pour fournir les premiers résultats !',
+        },
+        leaderboardPlaceholder: {
+          title: 'Aucun classement à afficher pour l’instant',
+        },
+        answersPlaceholder: {
+          title: 'Votre équipe n’a pas encore été active',
+          subtitle: 'Elle se prépare en coulisses',
+        },
+      },
+      masteryLevel: {
+        title: 'Niveau de maîtrise de l’équipe',
+        subtitle: 'Retrouvez une vue d’ensemble sur les résultats de l’équipe.',
+        chartTitle: 'Évolution du score de l’équipe',
+        chartSubtitle: 'Évolution du score moyen de l’équipe.',
+        teamFilter: 'Membres',
+        leaderboard: 'Leaderboard',
+        leaderboardSubtitle: 'Aperçu du niveau de maîtrise des membres de l’équipe.',
+      },
+      teamMembers: {
+        title: 'Membres de l’équipe',
+        subtitle: 'Retrouvez les statistiques détaillées d’engagement pour chaque membre de l’équipe.',
+      },
+      perThemes: {
+        title: 'Performances par thématiques de l’équipe',
+        subtitle: 'Retrouvez une vue d’ensemble sur les résultats de l’équipe selon ses thématiques.',
+        chartTitle: 'Évolution du niveau de maîtrise',
+        chartSubtitle: 'Évolution du score moyen de l’équipe par tag.',
+        tagFilter: 'Tags',
+        leaderboardTitle: 'Leaderboard',
+        leaderboardSubtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
+      },
+      members: {
+        title: 'Membres de l’équipe',
+        subtitle: 'Découvrez les scores moyens et les axes d’amélioration par membre.',
+        table: {
+          name: 'Nom',
+          globalScore: 'Score global',
+          scoreEvolution: 'Évolution du score',
+          lessMasteredTags: 'Tags les moins maîtrisés',
+        },
+      },
+      questions: {
+        title: 'Questions de l’équipe',
+        subtitle: 'Découvrez les scores moyens des membres de l’équipe par question.',
+        table: {
+          title: 'Intitulé de la question',
+          globalScore: 'Score global',
+          scoreEvolution: 'Évolution du score',
+          usersNumber: 'Membres ayant répondu',
+          badMembers: 'Membres en difficulté',
+          noMember: 'Aucun membre',
+        },
+      },
+    },
   },
   questions: {
     form: {
@@ -751,7 +842,8 @@ export const FR = {
         'Les administrateurs peuvent créer des programmes, des challenges et ont accès à des statistiques détaillées sur les résultats des équipes.',
       users: 'Utilisateurs standards',
       usersInactiveTooltip: 'Pour réactiver l’intégration, veuillez vous rendre dans l’onglet “Diffusion”.',
-      warningTooltip: 'Nous rencontrons un problème avec cet utilisateur. Contactez votre administrateur Slack ou la team Alto si le problème persiste.',
+      warningTooltip:
+        'Nous rencontrons un problème avec cet utilisateur. Contactez votre administrateur Slack ou la team Alto si le problème persiste.',
       usersDesc:
         'Les utilisateurs peuvent participer aux programmes, suggérer des questions et ont accès à des statistiques détaillées sur leurs résultats seulement.',
       table: {
@@ -808,6 +900,7 @@ export const FR = {
             desactivateConnector: 'Vous êtes sur le point de désactiver votre plateforme de communication.',
             activateWebApp: 'Vous êtes sur le point d’activer la web app.',
             desactivateWebApp: 'Vous êtes sur le point de désactiver la web app.',
+            changeConnector: 'Vous êtes sur le point de changer de plateforme de communication.',
           },
           subtitles: {
             activateConnector:
@@ -818,12 +911,15 @@ export const FR = {
               'Vos équipes pourront répondre aux questions directement sur la web app. Pensez à les informer de ce changement. Confirmez-vous ce choix ?',
             desactivateWebApp:
               'Vos prochaines questions ne seront plus envoyées sur la web app. Confirmez-vous ce choix ?',
+            changeConnector:
+              'Vos prochaines questions ne seront plus envoyées via le même canal de communication. Confirmez-vous ce choix ?',
           },
           validBtns: {
             activateConnector: 'Contacter Alto',
             desactivateConnector: 'Désactiver la plateforme',
             activateWebApp: 'Activer la web app',
             desactivateWebApp: 'Désactiver la web app',
+            changeConnector: 'Changer de plateforme',
           },
         },
         questionPushedTitle: 'Nombre de réponses attendues',
