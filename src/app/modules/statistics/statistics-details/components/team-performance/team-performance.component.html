@@ -8,38 +8,68 @@
     <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.masteryLevel.subtitle }}</p>
   </div>
 </div>
-<div class="panel mb-4">
-  <div class="float-end">
-    <alto-time-picker
-      class="me-4"
-      [duration]="duration"
-      (durationSelected)="updateTimePicker($event)"
-    ></alto-time-picker>
-    <alto-dropdown-filter
-      [data]="members"
-      [selectedItems]="selectedMembers"
-      [displayLabel]="'firstname'"
-      [placeholder]="I18ns.statistics.team.masteryLevel.teamFilter"
-      (selectChange)="filterMembers($event)"
-    ></alto-dropdown-filter>
+<alto-placeholder-manager [status]="teamChartStatus">
+  <div class="panel mb-4">
+    <div class="float-end">
+      <alto-time-picker
+        class="me-4"
+        [duration]="duration"
+        (durationSelected)="updateTimePicker($event)"
+      ></alto-time-picker>
+      <alto-dropdown-filter
+        [data]="members"
+        [selectedItems]="selectedMembers"
+        [displayLabel]="'firstname'"
+        [placeholder]="I18ns.statistics.team.masteryLevel.teamFilter"
+        (selectChange)="filterMembers($event)"
+      ></alto-dropdown-filter>
+    </div>
+    <h3>{{ I18ns.statistics.team.masteryLevel.chartTitle }}</h3>
+    <p class="alto-grey mb-4">
+      {{ I18ns.statistics.team.masteryLevel.chartSubtitle }}
+    </p>
+    <div class="chart-container">
+      <alto-chart-basicline [chartOption]="teamChartOption"></alto-chart-basicline>
+    </div>
   </div>
-  <h3>{{ I18ns.statistics.team.masteryLevel.chartTitle }}</h3>
-  <p class="alto-grey mb-4">
-    {{ I18ns.statistics.team.masteryLevel.chartSubtitle }}
-  </p>
-  <div class="chart-container">
-    <alto-chart-basicline [chartOption]="teamChartOption"></alto-chart-basicline>
+  <div class="nodata-placeholder" noData>
+    <h3 class="mb-5 fs-6">
+      {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}
+    </h3>
+    <div class="text-center">
+      <img [src]="EmojiName.FlexedBiceps | emoji" height="24" width="24" />
+      <p class="mt-3">
+        {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderTitle }}
+      </p>
+      <span class="d-inline-block mt-3">
+        {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderSubtitle }}
+      </span>
+    </div>
   </div>
-</div>
-<alto-leaderboard
-  [config]="['score']"
-  [title]="I18ns.statistics.team.masteryLevel.leaderboard"
-  [subtitle]="I18ns.statistics.team.masteryLevel.leaderboardSubtitle"
-  [data]="membersLeaderboard"
-  [size]="3"
->
-</alto-leaderboard>
+  <div class="skeleton-panel mb-5" style="height: 499px" loading></div>
+</alto-placeholder-manager>
+
+<alto-placeholder-manager [status]="membersLeaderboardStatus">
+  <alto-leaderboard
+    [config]="['score']"
+    [title]="I18ns.statistics.team.masteryLevel.leaderboard"
+    [subtitle]="I18ns.statistics.team.masteryLevel.leaderboardSubtitle"
+    [data]="membersLeaderboard"
+    [size]="3"
+  >
+  </alto-leaderboard>
+  <div class="nodata-placeholder" noData>
+    <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}</h2>
+    <div class="text-center">
+      <img [src]="EmojiName.Rocket | emoji" height="24" width="24" />
+      <p class="mt-3">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.placeholder }}</p>
+    </div>
+  </div>
+  <div class="skeleton-panel mb-5" style="height: 332px" loading></div>
+</alto-placeholder-manager>
+
 <hr class="my-7" />
+
 <div class="mb-5">
   <div class="col-6">
     <h2>
@@ -50,38 +80,67 @@
     <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.perThemes.subtitle }}</p>
   </div>
 </div>
-<div class="panel mb-4">
-  <div class="float-end">
-    <alto-time-picker
-      class="me-4"
-      [duration]="duration"
-      (durationSelected)="updateTimePicker($event)"
-    ></alto-time-picker>
-    <alto-dropdown-filter
-      [data]="tags"
-      [selectedItems]="selectedTags"
-      [displayLabel]="'name'"
-      [placeholder]="I18ns.statistics.team.perThemes.tagFilter"
-      (selectChange)="filterTags($event)"
-    ></alto-dropdown-filter>
-  </div>
-  <h3>{{ I18ns.statistics.team.perThemes.chartTitle }}</h3>
-  <p class="alto-grey mb-4">
-    {{ I18ns.statistics.team.perThemes.chartSubtitle }}
-  </p>
-  <div class="chart-container">
-    <alto-chart-basicline [chartOption]="tagsChartOption"></alto-chart-basicline>
-  </div>
-</div>
-<alto-leaderboard
-  [config]="['score']"
-  [title]="I18ns.statistics.team.perThemes.leaderboardTitle"
-  [subtitle]="I18ns.statistics.team.perThemes.leaderboardSubtitle"
-  [data]="tagsLeaderboard"
-  [size]="3"
->
-</alto-leaderboard>
 
+<alto-placeholder-manager [status]="tagsChartStatus">
+  <div class="panel mb-4">
+    <div class="float-end">
+      <alto-time-picker
+        class="me-4"
+        [duration]="duration"
+        (durationSelected)="updateTimePicker($event)"
+      ></alto-time-picker>
+      <alto-dropdown-filter
+        [data]="tags"
+        [selectedItems]="selectedTags"
+        [displayLabel]="'name'"
+        [placeholder]="I18ns.statistics.team.perThemes.tagFilter"
+        (selectChange)="filterTags($event)"
+      ></alto-dropdown-filter>
+    </div>
+    <h3>{{ I18ns.statistics.team.perThemes.chartTitle }}</h3>
+    <p class="alto-grey mb-4">
+      {{ I18ns.statistics.team.perThemes.chartSubtitle }}
+    </p>
+    <div class="chart-container">
+      <alto-chart-basicline [chartOption]="tagsChartOption"></alto-chart-basicline>
+    </div>
+  </div>
+
+  <div class="nodata-placeholder" noData>
+    <h2 class="mb-5 fs-6">
+      {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}
+    </h2>
+    <div class="text-center">
+      <img [src]="EmojiName.FourOclock | emoji" height="24" width="24" />
+      <p class="mt-3">
+        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderTitle }}
+      </p>
+      <span class="d-inline-block mt-3">
+        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderSubtitle }}
+      </span>
+    </div>
+  </div>
+  <div class="skeleton-panel mb-5" style="height: 500px" loading></div>
+</alto-placeholder-manager>
+
+<alto-placeholder-manager [status]="tagsLeaderboardStatus">
+  <alto-leaderboard
+    [config]="['score']"
+    [title]="I18ns.statistics.team.perThemes.leaderboardTitle"
+    [subtitle]="I18ns.statistics.team.perThemes.leaderboardSubtitle"
+    [data]="tagsLeaderboard"
+    [size]="3"
+  >
+  </alto-leaderboard>
+  <div class="nodata-placeholder" noData>
+    <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
+    <div class="text-center">
+      <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+      <p class="mt-3">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.placeholder }}</p>
+    </div>
+  </div>
+  <div class="skeleton-panel mb-5" style="height: 334px" loading></div>
+</alto-placeholder-manager>
 <hr class="my-7" />
 
 <div class="mb-5">
@@ -141,9 +200,14 @@
           </td>
           <td>
             <alto-colored-pill-list
+              *ngIf="member.tags.length > 0; else noTag"
+              color="primary"
               [textLimit]="15"
               [data]="member.tags || [] | sort : 'asc' : 'score' | slice : 0 : 3"
             ></alto-colored-pill-list>
+            <ng-template #noTag>
+              <p class="alto-grey">{{ I18ns.shared.noTag }}</p>
+            </ng-template>
           </td>
         </tr>
       </tbody>
@@ -155,6 +219,12 @@
       [pageSize]="membersTablePageSize"
       [page]="membersTablePage"
     ></alto-pagination>
+  </div>
+  <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noData>
+    <div class="text-center">
+      <img [src]="EmojiName.Eyes | emoji" height="24" width="24" />
+      <p class="mt-3">{{ I18ns.statistics.globalPerformance.teamsTable.placeholder }}</p>
+    </div>
   </div>
   <div class="skeleton-panel" style="height: 377px" loading></div>
 </alto-placeholder-manager>
@@ -247,5 +317,11 @@
       [page]="questionsTablePage"
     ></alto-pagination>
   </div>
-  <div class="skeleton-panel" style="height: 377px" loading></div>
+  <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noData>
+    <div class="text-center">
+      <img [src]="EmojiName.Collision | emoji" height="24" width="24" />
+      <p class="mt-3">{{ I18ns.statistics.globalPerformance.questionsTable.placeholder }}</p>
+    </div>
+  </div>
+  <div class="skeleton-panel mt-5" style="height: 266px" loading></div>
 </alto-placeholder-manager>

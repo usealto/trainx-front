@@ -47,11 +47,15 @@ export class TeamPerformanceComponent implements OnInit {
 
   selectedMembers: UserDtoApi[] = [];
   teamChartOption: any = {};
+  teamChartStatus: PlaceholderDataStatus = 'loading';
   membersLeaderboard: { name: string; score: number }[] = [];
+  membersLeaderboardStatus: PlaceholderDataStatus = 'loading';
 
   selectedTags: TagDtoApi[] = [];
   tagsChartOption: any = {};
+  tagsChartStatus: PlaceholderDataStatus = 'loading';
   tagsLeaderboard: { name: string; score: number }[] = [];
+  tagsLeaderboardStatus: PlaceholderDataStatus = 'loading';
 
   membersTable: UserStatsDtoApi[] = [];
   membersTablePage = 1;
@@ -124,7 +128,6 @@ export class TeamPerformanceComponent implements OnInit {
         tap(([res, previous]) => {
           let temp = res;
           if (this.questionsTableSearch && this.questionsTableSearch !== '') {
-            console.log('filtering by search');
             temp = temp.filter((question) => {
               const s = this.questionsTableSearch.toLowerCase();
               const title = question.question.title.toLowerCase();
@@ -137,7 +140,8 @@ export class TeamPerformanceComponent implements OnInit {
           this.questionsTable = temp;
           this.previousQuestionsStats = previous;
           this.changeQuestionsPage(1);
-          this.questionsTableDataStatus = this.questionsTable.length > 0 ? 'good' : 'empty';
+          // this.questionsTableDataStatus = this.questionsTable.length > 0 ? 'good' : 'noData';
+          this.questionsTableDataStatus = 'noData';
         }),
       )
       .subscribe();
@@ -178,7 +182,8 @@ export class TeamPerformanceComponent implements OnInit {
 
           this.previousMembersStats = previous;
           this.changeMembersPage(1);
-          this.membersTableDataStatus = this.membersTable.length > 0 ? 'good' : 'empty';
+          // this.membersTableDataStatus = this.membersTable.length > 0 ? 'good' : 'noData';
+          this.membersTableDataStatus = 'noData';
         }),
       )
       .subscribe();
@@ -199,6 +204,7 @@ export class TeamPerformanceComponent implements OnInit {
   }
 
   getTagsChartScores(duration: ScoreDuration): void {
+    this.tagsChartStatus = 'loading';
     this.scoresRestService
       .getScores(this.getScoreParams('tags', duration, false))
       .pipe(
@@ -208,6 +214,8 @@ export class TeamPerformanceComponent implements OnInit {
             filteredTags = res.scores.filter((s) => this.selectedTags.find((m) => m.id === s.id));
           }
           this.createTagsChart(filteredTags, duration);
+          // this.tagsChartStatus = filteredTags.length > 0 ? 'good' : 'noData';
+          this.tagsChartStatus = 'noData';
         }),
       )
       .subscribe();
@@ -252,6 +260,7 @@ export class TeamPerformanceComponent implements OnInit {
   }
 
   getTagsLeaderboard(duration: ScoreDuration): void {
+    this.tagsLeaderboardStatus = 'loading';
     this.scoresRestService
       .getTagsStats(duration, false, this.teamId)
       .pipe(
@@ -260,12 +269,15 @@ export class TeamPerformanceComponent implements OnInit {
             name: r.tag.name,
             score: r.score ?? 0,
           }));
+          // this.tagsLeaderboardStatus = this.tagsLeaderboard.length > 0 ? 'good' : 'noData';
+          this.tagsLeaderboardStatus = 'noData';
         }),
       )
       .subscribe();
   }
 
   getTeamLeaderboard(duration: ScoreDuration): void {
+    this.membersLeaderboardStatus = 'loading';
     this.scoresRestService
       .getUsersStats(duration, false, undefined, undefined, this.teamId)
       .pipe(
@@ -274,12 +286,15 @@ export class TeamPerformanceComponent implements OnInit {
             name: r.user.firstname + ' ' + r.user.lastname,
             score: r.score ?? 0,
           }));
+          // this.membersLeaderboardStatus = this.membersLeaderboard.length > 0 ? 'good' : 'noData';*
+          this.membersLeaderboardStatus = 'noData';
         }),
       )
       .subscribe();
   }
 
   getTeamChartScores(duration: ScoreDuration): void {
+    this.teamChartStatus = 'loading';
     combineLatest([
       this.scoresRestService.getScores(this.getScoreParams('members', duration, false)),
       this.scoresRestService.getScores(this.getScoreParams('members', duration, true)),
@@ -291,6 +306,8 @@ export class TeamPerformanceComponent implements OnInit {
             filteredMembers = r.scores.filter((s) => this.selectedMembers.find((m) => m.id === s.id));
           }
           this.createTeamChart(filteredMembers, global, duration);
+          // this.teamChartStatus = filteredMembers.length > 0 ? 'good' : 'noData';
+          this.teamChartStatus = 'noData';
         }),
       )
       .subscribe();

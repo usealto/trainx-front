@@ -3,6 +3,7 @@ import { StatisticsDetailsComponent } from './components/statistics-details/stat
 import { AltoRoutes } from '../../shared/constants/routes';
 import { TeamPerformanceComponent } from './components/team-performance/team-performance.component';
 import { NgModule } from '@angular/core';
+import { TeamEngagementComponent } from './components/team-engagement/team-engagement.component';
 
 const routes: Routes = [
   {
@@ -20,7 +21,7 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.engagement + '/:id',
-        component: TeamPerformanceComponent,
+        component: TeamEngagementComponent,
       },
     ],
   },
