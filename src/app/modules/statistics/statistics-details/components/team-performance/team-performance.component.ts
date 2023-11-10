@@ -140,8 +140,7 @@ export class TeamPerformanceComponent implements OnInit {
           this.questionsTable = temp;
           this.previousQuestionsStats = previous;
           this.changeQuestionsPage(1);
-          // this.questionsTableDataStatus = this.questionsTable.length > 0 ? 'good' : 'noData';
-          this.questionsTableDataStatus = 'noData';
+          this.questionsTableDataStatus = this.questionsTable.length > 0 ? 'good' : 'noData';
         }),
       )
       .subscribe();
@@ -182,8 +181,7 @@ export class TeamPerformanceComponent implements OnInit {
 
           this.previousMembersStats = previous;
           this.changeMembersPage(1);
-          // this.membersTableDataStatus = this.membersTable.length > 0 ? 'good' : 'noData';
-          this.membersTableDataStatus = 'noData';
+          this.membersTableDataStatus = this.membersTable.length > 0 ? 'good' : 'noData';
         }),
       )
       .subscribe();
@@ -214,8 +212,7 @@ export class TeamPerformanceComponent implements OnInit {
             filteredTags = res.scores.filter((s) => this.selectedTags.find((m) => m.id === s.id));
           }
           this.createTagsChart(filteredTags, duration);
-          // this.tagsChartStatus = filteredTags.length > 0 ? 'good' : 'noData';
-          this.tagsChartStatus = 'noData';
+          this.tagsChartStatus = filteredTags.length > 0 ? 'good' : 'noData';
         }),
       )
       .subscribe();
@@ -269,8 +266,7 @@ export class TeamPerformanceComponent implements OnInit {
             name: r.tag.name,
             score: r.score ?? 0,
           }));
-          // this.tagsLeaderboardStatus = this.tagsLeaderboard.length > 0 ? 'good' : 'noData';
-          this.tagsLeaderboardStatus = 'noData';
+          this.tagsLeaderboardStatus = this.tagsLeaderboard.length > 0 ? 'good' : 'noData';
         }),
       )
       .subscribe();
@@ -286,8 +282,7 @@ export class TeamPerformanceComponent implements OnInit {
             name: r.user.firstname + ' ' + r.user.lastname,
             score: r.score ?? 0,
           }));
-          // this.membersLeaderboardStatus = this.membersLeaderboard.length > 0 ? 'good' : 'noData';*
-          this.membersLeaderboardStatus = 'noData';
+          this.membersLeaderboardStatus = this.membersLeaderboard.length > 0 ? 'good' : 'noData';
         }),
       )
       .subscribe();
@@ -306,8 +301,7 @@ export class TeamPerformanceComponent implements OnInit {
             filteredMembers = r.scores.filter((s) => this.selectedMembers.find((m) => m.id === s.id));
           }
           this.createTeamChart(filteredMembers, global, duration);
-          // this.teamChartStatus = filteredMembers.length > 0 ? 'good' : 'noData';
-          this.teamChartStatus = 'noData';
+          this.teamChartStatus = filteredMembers.length > 0 ? 'good' : 'noData';
         }),
       )
       .subscribe();
