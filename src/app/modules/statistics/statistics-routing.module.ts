@@ -39,20 +39,6 @@ const routes: Routes = [
         path: AltoRoutes.teams,
         component: StatisticsPerTeamsComponent,
       },
-      // {
-      //   path: AltoRoutes.statTeam + '/:id',
-      //   children: [
-      //     {
-      //       path: '',
-      //       redirectTo: AltoRoutes.performance,
-      //       pathMatch: 'full',
-      //     },
-      //     {
-      //       path: AltoRoutes.performance,
-      //       component: StatisticsGlobalEngagementComponent,
-      //     }
-      //   ]
-      // },
     ],
   },
 ];
