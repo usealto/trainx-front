@@ -53,7 +53,18 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let team of paginatedTeams" class="align-middle">
+        <tr
+          *ngFor="let team of paginatedTeams"
+          class="align-middle"
+          [routerLink]="[
+            '/',
+            AltoRoutes.lead,
+            AltoRoutes.statistics,
+            AltoRoutes.statTeam,
+            AltoRoutes.performance,
+            team.team.id
+          ]"
+        >
           <td>
             <span class="alto-badge" [style]="team.team.id | teamColor">{{ team.team.name }}</span>
           </td>
