@@ -65,17 +65,25 @@
   <div class="panel">
     <div class="float-end">
       <alto-time-picker
-        class="me-4 float-end"
         [duration]="duration"
         (durationSelected)="updateTimePicker($event)"
       ></alto-time-picker>
       <alto-dropdown-filter
+        class="ms-4"
         [data]="tags"
         [selectedItems]="selectedTags"
-        [displayLabel]="'label'"
+        [displayLabel]="'name'"
         [placeholder]="I18ns.statistics.user.performance.themeMastering.tagFilter"
+        (selectChange)="filterTags($event)"
       >
       </alto-dropdown-filter>
+    </div>
+    <h3>{{ I18ns.statistics.user.performance.themeMastering.chartTitle }}</h3>
+    <p class="alto-grey mb-4">
+      {{ I18ns.statistics.user.performance.themeMastering.chartSubtitle }}
+    </p>
+    <div class="chart-container">
+      <alto-chart-basicline [chartOption]="tagsChartOptions"></alto-chart-basicline>
     </div>
   </div>
 </alto-placeholder-manager>

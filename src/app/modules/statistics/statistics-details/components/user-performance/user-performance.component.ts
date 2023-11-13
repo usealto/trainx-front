@@ -38,7 +38,7 @@ export class UserPerformanceComponent implements OnInit {
   userChartStatus: PlaceholderDataStatus = 'loading';
 
   tagsChartOptions!: any;
-  tagsChartStatus: PlaceholderDataStatus = 'loading';
+  tagsChartStatus: PlaceholderDataStatus = 'good';
   selectedTags: TagDtoApi[] = [];
 
   constructor(
@@ -70,6 +70,8 @@ export class UserPerformanceComponent implements OnInit {
   loadPage(): void {
     this.getUserChartScores(this.duration);
   }
+
+
 
   getUserChartScores(duration: ScoreDuration): void {
     this.userChartStatus = 'loading';
@@ -129,6 +131,11 @@ export class UserPerformanceComponent implements OnInit {
 
   updateTimePicker(event: any): void {
     this.duration = event;
+    this.loadPage();
+  }
+
+  filterTags(event: any): void {
+    this.selectedTags = event;
     this.loadPage();
   }
 
