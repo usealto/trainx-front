@@ -594,6 +594,24 @@ export const FR = {
         },
       },
     },
+    user: {
+      performance: {
+        masteringLevel: {
+          title: 'Niveau de maîtrise du collaborateur',
+          subtitle: 'Retrouvez une vue d’ensemble sur les résultats de votre collaborateur.',
+          chartTitle: 'Évolution du niveau de votre collaborateur',
+          chartSubtitle: 'Évolution du score moyen de votre collaborateur.',
+        },
+        themeMastering: {
+          title: 'Niveau de maîtrise par thématiques du collaborateur',
+          subtitle: 'Retrouvez une vue d’ensemble sur le niveau de maîtrise de votre collaborateur par thématiques.',
+          chartTitle: 'Évolution du niveau de maîtrise',
+          chartSubtitle: 'Évolution du niveau moyen de votre collaborateur par tag.',
+          tagFilter: 'Tags',
+        }
+      },
+      engagement: {},
+    },
   },
   questions: {
     form: {
