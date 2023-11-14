@@ -7,9 +7,15 @@ thead tr th {
 }
 
 tbody tr {
+  cursor: pointer;
   font-size: 0.833rem;
   height: 4.333rem;
 }
+
+tbody tr:hover {
+  background-color: var(--gray-50);
+}
+
 .user-profile {
   display: flex;
   align-items: center;

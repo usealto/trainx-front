@@ -601,16 +601,65 @@ export const FR = {
           subtitle: 'Retrouvez une vue d’ensemble sur les résultats de votre collaborateur.',
           chartTitle: 'Évolution du niveau de votre collaborateur',
           chartSubtitle: 'Évolution du score moyen de votre collaborateur.',
+          placeholder: {
+            title: 'Votre collaborateur est en train de s’échauffer',
+            subtitle: 'Les premiers résultats ne devraient plus tarder !',
+          },
         },
         themeMastering: {
           title: 'Niveau de maîtrise par thématiques du collaborateur',
-          subtitle: 'Retrouvez une vue d’ensemble sur le niveau de maîtrise de votre collaborateur par thématiques.',
+          subtitle:
+            'Retrouvez une vue d’ensemble sur le niveau de maîtrise de votre collaborateur par thématiques.',
           chartTitle: 'Évolution du niveau de maîtrise',
           chartSubtitle: 'Évolution du niveau moyen de votre collaborateur par tag.',
           tagFilter: 'Tags',
+          placeholder: {
+            title: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
+          },
+          spiderChart: {
+            title: 'Niveau de maîtrise par thématiques',
+            subtitle: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
+            placeholder: {
+              empty: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
+            },
+          },
+        },
+        questions: {
+          title: 'Questions du collaborateur',
+          subtitle: 'Découvrez les niveaux moyens de votre collaborateur par question.',
+          scoreFilter: 'Score',
+          table: {
+            title: 'Intitulé de la question',
+            userScore: 'Score du collaborateur',
+            scoreEvolution: 'Évolution du score',
+          },
+          placeholder: {
+            title: 'Certaines questions peuvent s’avérer plus piquantes que d’autres...',
+          },
+        },
+      },
+      engagement: {
+        userActivity: {
+          title: 'Activité du collaborateur',
+          subtitle: 'Retrouvez une vue d’ensemble de l’activité de votre collaborateur.',
+          chartTitle: 'Nombre de réponses',
+          chartSubtitle: 'Évolution du nombre total de réponses de votre collaborateur.',
+          placeholder: {
+            title: 'Votre collaborateur n’a pas encore été actif',
+            subtitle: 'Il se prépare en coulisses',
+          }
+        },
+        userEngagement: {
+          title: 'Engagement du collaborateur',
+          subtitle: 'Retrouvez une vue d’ensemble des questions et commentaires remontés par votre collaborateur.',
+          chartTitle: 'Contribution',
+          chartSubtitle: 'Évolution du nombre de questions et de commentaires remontés par votre collaborateur.',
+          placeholder: {
+            title: 'Nous n’avons pas encore de données à afficher',
+            subtitle: 'Cela ne devrait plus tarder !',
+          },
         }
       },
-      engagement: {},
     },
   },
   questions: {
@@ -1313,6 +1362,6 @@ export const FR = {
     timeLabel: 'Période',
     answerCountLabel: 'Nombre de questions répondues',
     collaborationCountLabel: 'Nombre de contributions',
-    answeredQuestions: 'Questions répondues',
+    answeredQuestions: 'Réponses',
   },
 };

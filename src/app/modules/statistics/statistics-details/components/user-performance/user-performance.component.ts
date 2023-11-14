@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
+  ScoreByTypeEnumApi,
   ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   TagDtoApi,
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { combineLatest, tap } from 'rxjs';
+import { combineLatest, map, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -20,6 +21,7 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'alto-user-performance',
@@ -38,8 +40,10 @@ export class UserPerformanceComponent implements OnInit {
   userChartStatus: PlaceholderDataStatus = 'loading';
 
   tagsChartOptions!: any;
-  tagsChartStatus: PlaceholderDataStatus = 'good';
+  tagsChartStatus: PlaceholderDataStatus = 'loading';
   selectedTags: TagDtoApi[] = [];
+
+  spiderChartStatus: PlaceholderDataStatus = 'empty';
 
   constructor(
     private readonly router: Router,
@@ -48,6 +52,7 @@ export class UserPerformanceComponent implements OnInit {
     private readonly scoresService: ScoresService,
     private readonly statisticsService: StatisticsService,
     private readonly tagsRestService: TagsRestService,
+    readonly titleCasePipe: TitleCasePipe,
   ) {}
 
   ngOnInit(): void {
@@ -69,9 +74,60 @@ export class UserPerformanceComponent implements OnInit {
 
   loadPage(): void {
     this.getUserChartScores(this.duration);
+    this.getTagsChartScores(this.duration);
   }
 
+  getTagsChartScores(duration: ScoreDuration): void {
+    this.tagsChartStatus = 'loading';
+    this.scoresRestService
+      .getScores(this.getScoreParams('tags', duration))
+      .pipe(
+        tap((res) => {
+          this.createTagsChart(res.scores, duration);
+          this.tagsChartStatus = res.scores.length > 0 ? 'good' : 'empty';
+        }),
+      )
+      .subscribe();
+  }
 
+  createTagsChart(scores: ScoreDtoApi[], duration: ScoreDuration): void {
+    const reducedScores = this.scoresService.reduceLineChartData(scores);
+    const points = reducedScores.map((d) => this.statisticsService.transformDataToPoint(d));
+
+    const labels = this.statisticsService
+      .formatLabel(
+        points[0].map((d) => d.x),
+        duration,
+      )
+      .map((s) => this.titleCasePipe.transform(s));
+
+    const dataSets = reducedScores.map((s) => {
+      const d = this.statisticsService.transformDataToPoint(s);
+      return { label: s.label, data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)) };
+    });
+
+    const series = dataSets.map((d) => {
+      return {
+        name: d.label,
+        data: d.data,
+        type: 'line',
+        showSybmol: false,
+        tootlip: {
+          valueFormatter: (value: any) => {
+            return (value as number) + '%';
+          },
+        },
+        lineStyle: {},
+      };
+    });
+
+    this.tagsChartOptions = {
+      xAxis: [{ ...xAxisDatesOptions, data: labels }],
+      yAxis: [{ ...yAxisScoreOptions }],
+      series: series,
+      legend: legendOptions,
+    };
+  }
 
   getUserChartScores(duration: ScoreDuration): void {
     this.userChartStatus = 'loading';
@@ -81,8 +137,8 @@ export class UserPerformanceComponent implements OnInit {
     ])
       .pipe(
         tap(([userScores, teamScores]) => {
-          console.log(userScores, teamScores);
           this.createUserChart(userScores.scores[0], teamScores.scores[0], duration);
+          this.userChartStatus = userScores.scores.length > 0 ? 'good' : 'empty';
         }),
       )
       .subscribe();
@@ -126,7 +182,6 @@ export class UserPerformanceComponent implements OnInit {
       series: series,
       legend: legendOptions,
     };
-    this.userChartStatus = 'good';
   }
 
   updateTimePicker(event: any): void {
@@ -136,21 +191,33 @@ export class UserPerformanceComponent implements OnInit {
 
   filterTags(event: any): void {
     this.selectedTags = event;
-    this.loadPage();
+    this.getTagsChartScores(this.duration);
   }
 
-  @memoize()
-  getScoreParams(type: 'user' | 'team', duration: ScoreDuration): any {
+  getScoreParams(type: 'user' | 'team' | 'tags', duration: ScoreDuration): any {
     return {
       duration,
-      type: type === 'user' ? ScoreTypeEnumApi.User : ScoreTypeEnumApi.Team,
-      ids: [type === 'user' ? this.user.id : this.user.team?.id],
+      type:
+        type === 'user'
+          ? ScoreTypeEnumApi.User
+          : type === 'team'
+          ? ScoreTypeEnumApi.Team
+          : ScoreTypeEnumApi.Tag,
+      ids: [
+        type === 'user'
+          ? this.user.id
+          : type === 'team'
+          ? this.user.team?.id
+          : this.selectedTags.map((t) => t.id),
+      ],
       timeframe:
         duration === ScoreDuration.Year
           ? ScoreTimeframeEnumApi.Month
           : duration === ScoreDuration.Trimester
           ? ScoreTimeframeEnumApi.Week
           : ScoreTimeframeEnumApi.Day,
+      scoredBy: type === 'tags' ? ScoreByTypeEnumApi.User : undefined,
+      scoredById: type === 'tags' ? this.user.id : undefined,
     } as ChartFilters;
   }
 }

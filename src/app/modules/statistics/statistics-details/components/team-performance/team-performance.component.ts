@@ -28,6 +28,8 @@ import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { untilDestroyed } from '@ngneat/until-destroy';
+import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 
 @Component({
   selector: 'alto-team-performance',
@@ -37,6 +39,7 @@ import { untilDestroyed } from '@ngneat/until-destroy';
 export class TeamPerformanceComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
+  AltoRoutes = AltoRoutes;
 
   teamId!: string;
   team!: TeamDtoApi;
@@ -82,24 +85,21 @@ export class TeamPerformanceComponent implements OnInit {
     private readonly scoresService: ScoresService,
     private readonly statisticService: StatisticsService,
     private readonly tagsRestService: TagsRestService,
+    private readonly usersRestService: UsersRestService,
   ) {}
 
   ngOnInit(): void {
-    this.tagsRestService
-      .getTags()
-      .pipe(
-        tap((r) => {
-          this.tags = r;
-          this.selectedTags = r.slice(0, 3);
-        }),
-      )
-      .subscribe();
     this.teamId = this.router.url.split('/').pop() || '';
     this.team = this.teamsStore.teams.value.find((t) => t.id === this.teamId) || ({} as TeamDtoApi);
-    this.members = this.profileStore.users.value.filter((u) => u.teamId === this.teamId);
-
-    this.selectedMembers = this.members.slice(0, 3);
-    this.loadPage();
+    combineLatest([this.tagsRestService.getTags(), this.usersRestService.getUsers()]).subscribe(
+      ([tags, users]) => {
+        this.tags = tags;
+        this.selectedTags = tags.slice(0, 3);
+        this.members = users.filter((u) => u.teamId === this.teamId);
+        this.selectedMembers = this.members.slice(0, 3);
+        this.loadPage();
+      },
+    );
   }
 
   loadPage(): void {

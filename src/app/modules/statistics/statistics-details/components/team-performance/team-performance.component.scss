@@ -10,8 +10,13 @@ hr {
 }
 
 tbody tr {
+  cursor: pointer;
   height: 4.6667rem;
   font-size: 0.833rem;
+}
+
+tbody tr:hover {
+  background-color: var(--gray-50);
 }
 
 alto-search {
