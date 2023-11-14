@@ -15,7 +15,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of displayedData" class="align-middle">
+      <tr
+        *ngFor="let item of displayedData"
+        class="align-middle"
+        [routerLink]="[
+          '/',
+          AltoRoutes.lead,
+          AltoRoutes.statistics,
+          type === 'team' ? AltoRoutes.statTeam : AltoRoutes.statUser,
+          AltoRoutes.performance,
+          type === 'team' ? item.team?.id : item.owner?.id
+        ]"
+      >
         <td>
           <span *ngIf="type === 'team'" class="alto-badge" [style]="item.team?.id | teamColor">
             {{ item.team?.name }}

@@ -46,7 +46,7 @@
       </span>
     </div>
   </div>
-  <div class="skeleton-panel mb-5" style="height: 499px" loading></div>
+  <div class="skeleton-panel mb-5" style="height: 497px" loading></div>
 </alto-placeholder-manager>
 
 <alto-placeholder-manager [status]="membersLeaderboardStatus">
@@ -65,7 +65,7 @@
       <p class="mt-3">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.placeholder }}</p>
     </div>
   </div>
-  <div class="skeleton-panel mb-5" style="height: 332px" loading></div>
+  <div class="skeleton-panel mb-5" style="height: 333px" loading></div>
 </alto-placeholder-manager>
 
 <hr class="my-7" />
@@ -120,7 +120,7 @@
       </span>
     </div>
   </div>
-  <div class="skeleton-panel mb-5" style="height: 500px" loading></div>
+  <div class="skeleton-panel mb-5" style="height: 497px" loading></div>
 </alto-placeholder-manager>
 
 <alto-placeholder-manager [status]="tagsLeaderboardStatus">
@@ -173,7 +173,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let member of displayMemberTables">
+        <tr
+          *ngFor="let member of displayMemberTables"
+          [routerLink]="[
+            '/',
+            AltoRoutes.lead,
+            AltoRoutes.statistics,
+            AltoRoutes.statUser,
+            AltoRoutes.performance,
+            member.id
+          ]"
+        >
           <td class="px-4">
             <alto-profile-card [user]="member.user"></alto-profile-card>
           </td>
@@ -323,5 +333,5 @@
       <p class="mt-3">{{ I18ns.statistics.globalPerformance.questionsTable.placeholder }}</p>
     </div>
   </div>
-  <div class="skeleton-panel mt-5" style="height: 266px" loading></div>
+  <div class="skeleton-panel mt-5" style="height: 377px" loading></div>
 </alto-placeholder-manager>

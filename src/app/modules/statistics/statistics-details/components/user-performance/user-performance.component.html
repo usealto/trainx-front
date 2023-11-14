@@ -1,0 +1,128 @@
+<div class="mb-5">
+  <h2>
+    <img class="emoji align-middle mb-2" [src]="EmojiName.FlexedBiceps | emoji" height="16" width="16" />
+    {{ I18ns.statistics.user.performance.masteringLevel.title }}
+    <div class="ms-4 user-profile d-inline-block">
+      <alto-img-badge [user]="user" [size]="24" class="d-inline-block align-bottom"></alto-img-badge>
+      <span class="mb-2 ms-2 fw-medium alto-grey d-inline-block align-middle">
+        {{ user.firstname + ' ' + user.lastname }}
+      </span>
+    </div>
+    <span class="ms-4 alto-badge" [style]="user.team?.id | teamColor">{{ user.team?.name }}</span>
+  </h2>
+  <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.user.performance.masteringLevel.subtitle }}</p>
+</div>
+<alto-placeholder-manager [status]="userChartStatus">
+  <div class="panel">
+    <alto-time-picker
+      class="me-4 float-end"
+      [duration]="duration"
+      (durationSelected)="updateTimePicker($event)"
+    ></alto-time-picker>
+    <h3>{{ I18ns.statistics.user.performance.masteringLevel.chartTitle }}</h3>
+    <p class="alto-grey mb-4">
+      {{ I18ns.statistics.user.performance.masteringLevel.chartSubtitle }}
+    </p>
+    <div class="chart-container">
+      <alto-chart-basicline [chartOption]="userChartOptions"></alto-chart-basicline>
+    </div>
+  </div>
+  <div class="nodata-placeholder" empty>
+    <h3 class="mb-5 fs-6">
+      {{ I18ns.statistics.user.performance.masteringLevel.chartTitle }}
+    </h3>
+    <div class="text-center">
+      <img [src]="EmojiName.FourOclock | emoji" height="24" width="24" />
+      <p class="mt-3">
+        {{ I18ns.statistics.user.performance.masteringLevel.placeholder.title }}
+      </p>
+      <span class="d-inline-block mt-3">
+        {{ I18ns.statistics.user.performance.masteringLevel.placeholder.subtitle }}
+      </span>
+    </div>
+  </div>
+  <div class="skeleton-panel mb-5" style="height: 497px" loading></div>
+</alto-placeholder-manager>
+
+<hr class="my-7" />
+
+<div>
+  <h2>
+    <img class="emoji align-middle mb-2" [src]="EmojiName.Label | emoji" height="16" width="16" />
+    {{ I18ns.statistics.user.performance.themeMastering.title }}
+    <div class="ms-4 user-profile d-inline-block">
+      <alto-img-badge [user]="user" [size]="24" class="d-inline-block align-bottom"></alto-img-badge>
+      <span class="mb-2 ms-2 fw-medium alto-grey d-inline-block align-middle">
+        {{ user.firstname + ' ' + user.lastname }}
+      </span>
+    </div>
+    <span class="ms-4 alto-badge" [style]="user.team?.id | teamColor">{{ user.team?.name }}</span>
+  </h2>
+  <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.user.performance.themeMastering.subtitle }}</p>
+</div>
+
+<alto-placeholder-manager [status]="tagsChartStatus">
+  <div class="panel mb-6">
+    <div class="float-end">
+      <alto-time-picker
+        [duration]="duration"
+        (durationSelected)="updateTimePicker($event)"
+      ></alto-time-picker>
+      <alto-dropdown-filter
+        class="ms-4"
+        [data]="tags"
+        [selectedItems]="selectedTags"
+        [displayLabel]="'name'"
+        [placeholder]="I18ns.statistics.user.performance.themeMastering.tagFilter"
+        (selectChange)="filterTags($event)"
+      >
+      </alto-dropdown-filter>
+    </div>
+    <h3>{{ I18ns.statistics.user.performance.themeMastering.chartTitle }}</h3>
+    <p class="alto-grey mb-4">
+      {{ I18ns.statistics.user.performance.themeMastering.chartSubtitle }}
+    </p>
+    <div class="chart-container">
+      <alto-chart-basicline [chartOption]="tagsChartOptions"></alto-chart-basicline>
+    </div>
+  </div>
+  <div class="nodata-placeholder" empty>
+    <h3 class="mb-5 fs-6">
+      {{ I18ns.statistics.user.performance.themeMastering.chartTitle }}
+    </h3>
+    <div class="text-center">
+      <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+      <p class="mt-3">
+        {{ I18ns.statistics.user.performance.themeMastering.placeholder.title }}
+      </p>
+    </div>
+  </div>
+  <div class="skeleton-panel mb-5" style="height: 497px" loading></div>
+</alto-placeholder-manager>
+
+<!-- <alto-placeholder-manager [status]="spiderChartStatus">
+  <div class="panel">
+    <alto-dropdown-filter
+      class="float-end"
+      [data]="tags"
+      [selectedItems]="selectedTags"
+      [displayLabel]="'name'"
+      [placeholder]="I18ns.statistics.user.performance.themeMastering.tagFilter"
+      (selectChange)="filterTags($event)"
+    >
+    </alto-dropdown-filter>
+    <h3>{{ I18ns.statistics.user.performance.themeMastering.spiderChart.title }}</h3>
+    <p class="alto-grey mb-4">
+      {{ I18ns.statistics.user.performance.themeMastering.spiderChart.subtitle }}
+    </p>
+  </div>
+  <div class="nodata-placeholder" empty>
+    <div class="text-center">
+      <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+      <p class="mt-3">
+        {{ I18ns.statistics.user.performance.themeMastering.spiderChart.placeholder.empty }}
+      </p>
+    </div>
+  </div>
+  <div class="skeleton-panel mb-5" style="height: 499px" loading></div>
+</alto-placeholder-manager> -->

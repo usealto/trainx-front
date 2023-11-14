@@ -24,6 +24,7 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { DataForTable } from '../../../models/statistics.model';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 
 @Component({
   selector: 'alto-team-engagement',
@@ -33,6 +34,7 @@ import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder
 export class TeamEngagementComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
+  AltoRoutes = AltoRoutes;
 
   team!: TeamDtoApi;
 
@@ -309,7 +311,6 @@ export class TeamEngagementComponent implements OnInit {
     this.loadPage();
   }
 
-  @memoize()
   getScoreParams(type: 'answers' | 'comments' | 'submitedQuestions', duration: ScoreDuration): ChartFilters {
     return {
       duration: duration,

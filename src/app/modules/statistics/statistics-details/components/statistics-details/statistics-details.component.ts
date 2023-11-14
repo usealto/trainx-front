@@ -35,6 +35,7 @@ export class StatisticsDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.type = this.router.url.split('/')[3] === 'team' ? 'team' : 'user';
     this.id = this.router.url.split('/').pop() || '';
+    this.selectedTab = this.router.url.split('/')[4] || '';
 
     if (this.type === 'user') {
       const user = this.profileStore.users.value.find((u) => u.id === this.id);
