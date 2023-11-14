@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { DataForTable } from '../../../models/statistics.model';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 
 @Component({
   selector: 'alto-per-teams-table',
@@ -9,6 +10,7 @@ import { DataForTable } from '../../../models/statistics.model';
 })
 export class PerTeamsTableComponent implements OnChanges {
   I18ns = I18ns;
+  AltoRoutes = AltoRoutes;
 
   @Input() data: DataForTable[] = [];
   @Input() type!: 'team' | 'user';
