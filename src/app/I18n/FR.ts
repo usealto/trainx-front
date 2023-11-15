@@ -621,6 +621,8 @@ export const FR = {
             subtitle: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
             placeholder: {
               empty: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
+              lessThan3Tags: 'Vous devez sélectionner au moins 3 tags.',
+              MoreThan6Tags: 'Vous devez sélectionner au maximum 6 tags.'
             },
           },
         },

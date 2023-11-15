@@ -156,7 +156,7 @@ export class ScoresRestService {
       .pipe(map((r) => r.data || []));
   }
 
-  getTagsStats(duration: ScoreDuration, isProgression = false, teamId?: string) {
+  getTagsStats(duration: ScoreDuration, isProgression = false, teamId?: string, ids?: string[]) {
     let dateAfter: Date;
     let dateBefore: Date;
 
@@ -173,6 +173,7 @@ export class ScoresRestService {
 
     return this.statsApi
       .getTagsStats({
+        ids: ids ? ids.join(',') : undefined,
         itemsPerPage: 400,
         from: dateAfter,
         to: dateBefore,
