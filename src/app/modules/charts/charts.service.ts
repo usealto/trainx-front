@@ -95,6 +95,31 @@ export class ChartsService {
     return eChartsOption;
   }
 
+  altoFormattingRadar(eChartsOption: EChartsOption): EChartsOption {
+    if (eChartsOption.series && Array.isArray(eChartsOption.series)) {
+      eChartsOption.series.forEach((serie) => {
+        if (serie.type === 'radar' && serie.data) {
+          // serie.data[0] = serie.data[0] === '-' ? 0 : serie.data[0] ?? 0;
+          // (emphasis: {
+          //   lineStyle: {
+          //     width: 4;
+          //   }
+          // });
+          serie.emphasis = {
+            lineStyle: {
+              width: 4,
+            },
+          };
+        }
+      });
+    }
+
+    eChartsOption.tooltip = {
+      show: false,
+    };
+    return eChartsOption;
+  }
+
   private tooltipFormatter(params: ITooltipParams, eChartsOption: EChartsOption) {
     const valueFormatter = Array.isArray(eChartsOption.series)
       ? eChartsOption.series[params.seriesIndex].tooltip?.valueFormatter
