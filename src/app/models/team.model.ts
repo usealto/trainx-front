@@ -24,4 +24,8 @@ export class Team implements ITeam {
     this.updatedAt = params.updatedAt;
     this.programIds = params.programs.map((p) => p.id);
   }
+
+  get rawData(): string {
+    return JSON.stringify(this);
+  }
 }

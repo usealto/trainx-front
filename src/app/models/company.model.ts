@@ -47,4 +47,8 @@ export class Company implements ICompany {
     this.createdAt = params.createdAt;
     this.updatedAt = params.updatedAt;
   }
+
+  get rawData(): string {
+    return JSON.stringify(this);
+  }
 }
