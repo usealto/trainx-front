@@ -100,23 +100,56 @@
   <div class="skeleton-panel mb-5" style="height: 497px" loading></div>
 </alto-placeholder-manager>
 
-<!-- <alto-placeholder-manager [status]="spiderChartStatus">
+<alto-placeholder-manager [status]="spiderChartSectionStatus">
   <div class="panel">
     <alto-dropdown-filter
       class="float-end"
       [data]="tags"
-      [selectedItems]="selectedTags"
+      [selectedItems]="selectedSpiderTags"
       [displayLabel]="'name'"
       [placeholder]="I18ns.statistics.user.performance.themeMastering.tagFilter"
-      (selectChange)="filterTags($event)"
+      (selectChange)="filterSpiderTags($event)"
     >
     </alto-dropdown-filter>
     <h3>{{ I18ns.statistics.user.performance.themeMastering.spiderChart.title }}</h3>
     <p class="alto-grey mb-4">
       {{ I18ns.statistics.user.performance.themeMastering.spiderChart.subtitle }}
     </p>
+    <alto-placeholder-manager [status]="spiderChartStatus">
+      <alto-chart-radar [chartOption]="spiderChartOptions"></alto-chart-radar>
+      <ng-container empty>
+        <div
+          *ngIf="spiderChartStatusReason === '<3 tags'"
+          class="nodata-placeholder d-flex align-items-center justify-content-center"
+          style="height: 366px"
+        >
+          <div class="text-center">
+            <img [src]="EmojiName.FaceWithMonocle | emoji" height="24" width="24" />
+            <p class="mt-3">
+              {{ I18ns.statistics.user.performance.themeMastering.spiderChart.placeholder.lessThan3Tags }}
+            </p>
+          </div>
+        </div>
+        <div
+          *ngIf="spiderChartStatusReason === '>6 tags'"
+          class="nodata-placeholder d-flex align-items-center justify-content-center"
+          style="height: 366px"
+        >
+          <div class="text-center">
+            <img [src]="EmojiName.FaceWithMonocle | emoji" height="24" width="24" />
+            <p class="mt-3">
+              {{ I18ns.statistics.user.performance.themeMastering.spiderChart.placeholder.MoreThan6Tags }}
+            </p>
+          </div>
+        </div>
+      </ng-container>
+      <div class="skeleton-panel" style="height: 400px" loading></div>
+    </alto-placeholder-manager>
   </div>
   <div class="nodata-placeholder" empty>
+    <h3 class="mb-5 fs-6">
+      {{ I18ns.statistics.user.performance.themeMastering.spiderChart.title }}
+    </h3>
     <div class="text-center">
       <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
       <p class="mt-3">
@@ -125,4 +158,4 @@
     </div>
   </div>
   <div class="skeleton-panel mb-5" style="height: 499px" loading></div>
-</alto-placeholder-manager> -->
+</alto-placeholder-manager>

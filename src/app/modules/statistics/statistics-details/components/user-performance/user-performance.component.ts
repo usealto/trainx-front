@@ -6,6 +6,7 @@ import {
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   TagDtoApi,
+  TagStatsDtoApi,
   UserDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { combineLatest, map, tap } from 'rxjs';
@@ -22,6 +23,7 @@ import { StatisticsService } from '../../../services/statistics.service';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
 import { TitleCasePipe } from '@angular/common';
+import * as echarts from 'echarts/types/dist/echarts';
 
 @Component({
   selector: 'alto-user-performance',
@@ -43,7 +45,11 @@ export class UserPerformanceComponent implements OnInit {
   tagsChartStatus: PlaceholderDataStatus = 'loading';
   selectedTags: TagDtoApi[] = [];
 
-  spiderChartStatus: PlaceholderDataStatus = 'empty';
+  spiderChartOptions!: any;
+  spiderChartStatus: PlaceholderDataStatus = 'loading';
+  spiderChartStatusReason: '<3 tags' | '>6 tags' | undefined = undefined;
+  spiderChartSectionStatus: PlaceholderDataStatus = 'loading';
+  selectedSpiderTags: TagDtoApi[] = [];
 
   constructor(
     private readonly router: Router,
@@ -65,6 +71,7 @@ export class UserPerformanceComponent implements OnInit {
         tap((r) => {
           this.tags = r;
           this.selectedTags = r.slice(0, 3);
+          this.selectedSpiderTags = r.slice(0, 6);
         }),
       )
       .subscribe();
@@ -75,6 +82,84 @@ export class UserPerformanceComponent implements OnInit {
   loadPage(): void {
     this.getUserChartScores(this.duration);
     this.getTagsChartScores(this.duration);
+    this.getSpiderChartScores(this.duration);
+  }
+
+  getSpiderChartScores(duration: ScoreDuration): void {
+    this.spiderChartSectionStatus = this.tags.length ? 'good' : 'empty';
+    this.spiderChartStatus = 'loading';
+    combineLatest([
+      this.scoresRestService.getTagsStats(
+        duration,
+        false,
+        this.user.teamId,
+        this.selectedSpiderTags.map((t) => t.id),
+      ),
+      this.scoresRestService.getScores(this.getScoreParams('tagStats', duration)),
+    ]).subscribe(([teamStats, userStats]) => {
+      this.createSpiderChart(
+        teamStats.sort((a, b) => a.tag.name.localeCompare(b.tag.name)),
+        userStats.scores.sort((a, b) => a.label.localeCompare(b.label)),
+      );
+      this.spiderChartStatus = 'good';
+    });
+  }
+
+  createSpiderChart(teamScores: TagStatsDtoApi[], userScores: ScoreDtoApi[]): void {
+    this.spiderChartOptions = {
+      color: ['#475467', '#FF917C'],
+      radar: {
+        indicator: teamScores.map((s) => {
+          return { name: s.tag.name, max: 100 };
+        }),
+        radius: '70%',
+        axisName: {
+          color: '#101828',
+          padding: [3, 10],
+        },
+      },
+      series: [
+        {
+          type: 'radar',
+          silent: true,
+          data: [
+            {
+              value: teamScores.map((s) => (s.score ? Math.round((s.score * 10000) / 100) : s.score)),
+              name: "Score de l'équipe",
+              symbol: 'rect',
+              symbolSize: 12,
+              lineStyle: {
+                type: 'dashed',
+              },
+            },
+          ],
+        },
+        {
+          type: 'radar',
+          data: [
+            {
+              value: userScores.map((u) => Math.round((u.averages[0] * 10000) / 100)),
+              name: 'Score du collaborateur',
+              areaStyle: {
+                color: 'rgba(255, 145, 124, 0.6)',
+                offset: 0,
+              },
+              label: {
+                show: true,
+                formatter: function (params: any) {
+                  return (params.value as string) + ' %';
+                },
+              },
+            },
+          ],
+        },
+      ],
+      legend: {
+        bottom: 0,
+        icon: 'circle',
+        itemWidth: 8,
+      },
+    };
   }
 
   getTagsChartScores(duration: ScoreDuration): void {
@@ -194,7 +279,20 @@ export class UserPerformanceComponent implements OnInit {
     this.getTagsChartScores(this.duration);
   }
 
-  getScoreParams(type: 'user' | 'team' | 'tags', duration: ScoreDuration): any {
+  filterSpiderTags(event: any): void {
+    this.selectedSpiderTags = event;
+    if (this.selectedSpiderTags.length < 3) {
+      this.spiderChartStatusReason = '<3 tags';
+      this.spiderChartStatus = 'empty';
+    } else if (this.selectedSpiderTags.length > 6) {
+      this.spiderChartStatusReason = '>6 tags';
+      this.spiderChartStatus = 'empty';
+    } else {
+      this.getSpiderChartScores(this.duration);
+    }
+  }
+
+  getScoreParams(type: 'user' | 'team' | 'tags' | 'tagStats', duration: ScoreDuration): any {
     return {
       duration,
       type:
@@ -208,16 +306,20 @@ export class UserPerformanceComponent implements OnInit {
           ? this.user.id
           : type === 'team'
           ? this.user.team?.id
-          : this.selectedTags.map((t) => t.id),
+          : type === 'tags'
+          ? this.selectedTags.map((t) => t.id)
+          : this.selectedSpiderTags.map((t) => t.id),
       ],
       timeframe:
-        duration === ScoreDuration.Year
+        type === 'tagStats'
+          ? ScoreTimeframeEnumApi.Year
+          : duration === ScoreDuration.Year
           ? ScoreTimeframeEnumApi.Month
           : duration === ScoreDuration.Trimester
           ? ScoreTimeframeEnumApi.Week
           : ScoreTimeframeEnumApi.Day,
-      scoredBy: type === 'tags' ? ScoreByTypeEnumApi.User : undefined,
-      scoredById: type === 'tags' ? this.user.id : undefined,
+      scoredBy: type === 'tags' || type === 'tagStats' ? ScoreByTypeEnumApi.User : undefined,
+      scoredById: type === 'tags' || type === 'tagStats' ? this.user.id : undefined,
     } as ChartFilters;
   }
 }
