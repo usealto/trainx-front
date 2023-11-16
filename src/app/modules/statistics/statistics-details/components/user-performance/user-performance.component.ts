@@ -114,7 +114,7 @@ export class UserPerformanceComponent implements OnInit {
         }),
         radius: '70%',
         axisName: {
-          color: 'black',
+          color: '#101828',
           padding: [3, 10],
         },
       },
