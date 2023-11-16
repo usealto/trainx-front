@@ -76,9 +76,6 @@ Using Cypress
 
 - Ask a friend
 
-## Push to Staging
-
-Merge `develop` branch into `admin`
 
 ## Push to Prod
 
