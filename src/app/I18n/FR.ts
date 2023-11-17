@@ -931,6 +931,8 @@ export const FR = {
       successEdit: 'Le collaborateur {{}} a bien été modifié',
       deleteAdminTooltip:
         'Pour supprimer un administrateur, transformez-le d’abord en utilisateur standard. Vous pourrez ensuite procéder à la suppression',
+      noUserPlaceholderTitle: 'Aucun utilisateur n’a été créé pour l’instant.',
+      noUserPlaceholderSubtitle: 'Vous pouvez créer un utilisateur, ou changer le rôle d\'un administrateur existant.',
       addUsers: {
         add: 'Ajouter des collaborateurs',
         invite: 'Inviter des collaborateurs',
