@@ -240,4 +240,8 @@ export class SettingsUsersComponent implements OnInit {
         return '#F8F9FC'
     }
   }
+
+  getHasRegularUser(usersDisplay: UserDtoApi[]){
+    return usersDisplay.length > 0;
+  }
 }
