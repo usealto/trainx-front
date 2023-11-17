@@ -397,7 +397,7 @@ export const FR = {
     globalPerformance: {
       navbarTitle: 'Performances',
       perTeamPerformance: {
-        title: 'Performance par équipes',
+        title: 'Niveau de maîtrise par équipes',
         subtitle: "Retrouvez une vue d' ensemble sur les résultats de vos équipes.",
         teamFilter: 'Équipes',
         scoreEvolution: {
@@ -563,7 +563,7 @@ export const FR = {
         subtitle: 'Retrouvez les statistiques détaillées d’engagement pour chaque membre de l’équipe.',
       },
       perThemes: {
-        title: 'Performances par thématiques de l’équipe',
+        title: 'Niveau de maîtrise par thématiques de l’équipe',
         subtitle: 'Retrouvez une vue d’ensemble sur les résultats de l’équipe selon ses thématiques.',
         chartTitle: 'Évolution du niveau de maîtrise',
         chartSubtitle: 'Évolution du niveau moyen de l’équipe par tag.',
@@ -926,7 +926,7 @@ export const FR = {
       disable: 'Inactive',
       deleteModal: {
         title: 'Supprimer l\'utilisateur "{{}}"',
-        subtitle: 'Êtes-vous sûr(e) de vouloir supprimer ce collaborateur ? Cette action est irréversible.',
+        subtitle: 'Êtes-vous sûr(e) de vouloir supprimer ce collaborateur ? Cette action est irréversible, et vous ne  pourrez plus utiliser cet email pour créer un nouvel utilisateur.',
       },
       successEdit: 'Le collaborateur {{}} a bien été modifié',
       deleteAdminTooltip:
@@ -1134,7 +1134,7 @@ export const FR = {
     },
     statistics: {
       title: 'Vos statistiques',
-      subtitle: 'Découvrez un aperçu de votre performance.',
+      subtitle: 'Découvrez un aperçu de votre niveau.',
       averageScore: {
         title: 'Score moyen',
         tooltip: 'Score moyen de vos réponses',
