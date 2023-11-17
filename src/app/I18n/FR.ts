@@ -350,7 +350,7 @@ export const FR = {
       activity: {
         title: "Activité de l'entreprise",
         subtitle: "Retrouvez une vue d'ensemble de l'activité des équipes.",
-        chartTitle: 'Nombre de questions répondues',
+        chartTitle: 'Nombre de réponses',
         chartSubtitle: "Évolution du nombre total de réponses au sein de l'entreprise.",
         teamFilter: 'Équipe',
       },
@@ -1362,7 +1362,7 @@ export const FR = {
   charts: {
     scoreLabel: 'Score (%)',
     timeLabel: 'Période',
-    answerCountLabel: 'Nombre de questions répondues',
+    answerCountLabel: 'Nombre de réponses',
     collaborationCountLabel: 'Nombre de contributions',
     answeredQuestions: 'Réponses',
   },
