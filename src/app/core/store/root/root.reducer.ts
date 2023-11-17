@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store/src';
+import { createReducer, on } from '@ngrx/store';
 import { setTimestamp, addUser, setTeams, setUserMe, setUsers, setCompany } from '../root/root.action';
 import { User, IUser } from '../../../models/user.model';
 import { Team } from '../../../models/team.model';
