@@ -39,17 +39,17 @@ export class Company implements ICompany {
   stats: CompanyStats[];
 
   constructor(data: ICompany) {
-    this.id = data.id;
-    this.name = data.name;
-    this.connector = data.connector;
-    this.isConnectorActive = data.isConnectorActive;
-    this.connectorDays = data.connectorDays;
-    this.connectorQuestionsPerQuiz = data.connectorQuestionsPerQuiz;
-    this.connectorTimes = data.connectorTimes;
-    this.adminIds = data.adminIds;
-    this.usersHaveWebAccess = data.usersHaveWebAccess;
-    this.createdAt = data.createdAt;
-    this.updatedAt = data.updatedAt;
+    this.id = data.id ?? 'companyId';
+    this.name = data.name ?? 'companyName';
+    this.connector = data.connector ?? CompanyDtoApiConnectorEnumApi.Unknown;
+    this.isConnectorActive = data.isConnectorActive ?? false;
+    this.connectorDays = data.connectorDays ?? [];
+    this.connectorQuestionsPerQuiz = data.connectorQuestionsPerQuiz ?? 0;
+    this.connectorTimes = data.connectorTimes ?? [];
+    this.adminIds = data.adminIds ?? [];
+    this.usersHaveWebAccess = data.usersHaveWebAccess ?? false;
+    this.createdAt = data.createdAt ?? new Date();
+    this.updatedAt = data.updatedAt ?? new Date();
     this.stats = [];
   }
 

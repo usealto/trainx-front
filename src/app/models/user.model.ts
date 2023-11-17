@@ -14,6 +14,7 @@ export interface IUser {
   deletedAt?: Date;
   isConnectorActive?: boolean;
   stats: IUserStats[];
+  companyId: string;
 }
 
 export class User implements IUser {
@@ -28,17 +29,19 @@ export class User implements IUser {
   deletedAt?: Date;
   isConnectorActive?: boolean;
   stats: UserStats[];
+  companyId: string;
 
   constructor(data: IUser) {
-    this.id = data.id;
-    this.firstname = data.firstname;
-    this.lastname = data.lastname;
-    this.email = data.email;
-    this.roles = data.roles;
-    this.teamId = data.teamId;
-    this.createdAt = data.createdAt;
-    this.updatedAt = data.updatedAt;
+    this.id = data.id ?? 'userId';
+    this.firstname = data.firstname ?? 'firstname';
+    this.lastname = data.lastname ?? 'lastname';
+    this.email = data.email ?? 'email';
+    this.roles = data.roles ?? [];
+    this.teamId = data.teamId ?? 'teamId';
+    this.createdAt = data.createdAt ?? new Date();
+    this.updatedAt = data.updatedAt ?? new Date();
     this.stats = data.stats.map((s) => new UserStats(s));
+    this.companyId = data.companyId ?? 'companyId';
   }
 
   static fromDto(data: UserDtoApi): User {
@@ -51,7 +54,8 @@ export class User implements IUser {
       teamId: data.teamId,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
-      stats: []
+      stats: [],
+      companyId: data.companyId,
     });
   }
 
@@ -71,7 +75,8 @@ export class User implements IUser {
       updatedAt: this.updatedAt,
       deletedAt: this.deletedAt,
       isConnectorActive: this.isConnectorActive,
-      stats: this.stats.map((s) => s.rawData)
+      stats: this.stats.map((s) => s.rawData),
+      companyId: this.companyId,
     };
   }
 

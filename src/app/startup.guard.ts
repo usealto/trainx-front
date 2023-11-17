@@ -6,7 +6,7 @@ import { AltoRoutes } from './modules/shared/constants/routes';
 
 export const startup: CanActivateFn = (route) => {
   const router = inject(Router);
-
+  console.log('startup guard');
   return inject(UsersRestService)
     .getMe()
     .pipe(
