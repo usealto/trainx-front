@@ -203,7 +203,7 @@ export const FR = {
       involvement: 'Taux de participation',
       involvementToolTip: 'Nombre de membres ayant commencé le programme sur le nombre de membres assignés',
       progress: 'Avancement',
-      progressToolTip: 'Nombre de questions répondues par tout les membres sur le nombre total de questions',
+      progressToolTip: 'Nombre de réponses par tout les membres sur le nombre total de questions',
       score: 'Score',
       membersHaveValidated: 'Membres ayant validé',
       scoreToolTip: 'Score moyen du programme depuis sa création',
@@ -363,7 +363,7 @@ export const FR = {
         chartSubtitle: 'Évolution du nombre de questions et de commentaires remontés par vos équipes.',
       },
       leaderboard: {
-        title: 'Leaderboard',
+        title: 'Classement de mes équipes',
         subtitle: 'Classement de vos équipes selon leur nombre de réponses.',
       },
       teamsTable: {
@@ -386,7 +386,7 @@ export const FR = {
       },
       placeholders: {
         inactiveTeams: "Vos équipes n'ont pas encore été actives",
-        inactiveTeamsTitle: 'Nombre de questions répondues',
+        inactiveTeamsTitle: 'Nombre de réponses',
         inactiveTeamsSubtitle: 'Elles se préparent en coulisses',
         noDataYet: 'Nous n’avons pas encore de données à afficher',
         noDataYetTitle: 'Collaboration',
@@ -407,7 +407,7 @@ export const FR = {
           placeholderSubtitle: 'Les équipes s’activent pour fournir les premiers résultats !',
         },
         leaderboard: {
-          title: 'Leaderboard',
+          title: 'Classement de mes équipes',
           subtitle: 'Aperçu du niveau de maîtrise de vos équipes.',
           top: 'Top',
           flop: 'Flop',
@@ -415,8 +415,8 @@ export const FR = {
         },
       },
       perThemePerformance: {
-        title: 'Performance par thématiques',
-        subtitle: "Retrouvez une vue d'ensemble sur les résultats de vos équipes selon leurs thématiques.",
+        title: 'Niveau de maîtrise par thématiques',
+        subtitle: "Retrouvez une vue d'ensemble sur le niveau de maîtrise de vos équipes selon leurs thématiques.",
         filters: {
           tags: 'Tags',
         },
@@ -447,7 +447,7 @@ export const FR = {
       },
       teamsTable: {
         title: 'Vos équipes',
-        subtitle: "Découvrez les scores moyens et les axes d'amélioration par équipe.",
+        subtitle: "Découvrez les niveaux moyens et les axes d'amélioration par équipe.",
         placeholder: 'Envie de lever le voile sur la face cachée de vos équipes ?',
         columns: {
           team: 'Équipe',
@@ -463,7 +463,7 @@ export const FR = {
       },
       questionsTable: {
         title: 'Questions',
-        subtitle: 'Découvrez les scores moyens de vos équipes par question.',
+        subtitle: 'Découvrez les niveaux moyens de vos équipes par question.',
         placeholder: 'Certaines questions peuvent s’avérer plus piquantes que d’autres...',
         columns: {
           question: 'Intitulé de la question',
@@ -489,12 +489,12 @@ export const FR = {
           "Découvrez les statistiques d'engagement et de performance de chacun de vos membres.",
       },
       globalTooltip:
-        '% de questions justes sur le nombre de questions répondues et variation sur la période passée',
+        '% de questions justes sur le nombre de réponses et variation sur la période passée',
       teamsFilter: 'Équipes',
       table: {
         globalScore: 'Score global',
         noScore: 'Aucun score',
-        answeredQuestions: 'Questions répondues',
+        answeredQuestions: 'Réponses',
         comments: 'Commentaires',
         suggestedQuestions: 'Questions suggérées',
         leastMasteredTags: 'Tags les moins maîtrisés',
@@ -513,7 +513,7 @@ export const FR = {
         chartTitle: 'Nombre de réponses',
         chartSubtitle: 'Évolution du nombre total de réponses au sein de l’équipe.',
         leaderboardTitle: 'Classement de mon équipe',
-        leaderboardSubtitle: 'Classement des membres de l’équipe selon leur nombre de questions répondues.',
+        leaderboardSubtitle: 'Classement des membres de l’équipe selon leur nombre de réponses.',
       },
       membersEngagement: {
         title: 'Engagement des membres de l’équipe',
@@ -555,7 +555,7 @@ export const FR = {
         chartTitle: 'Évolution du score de l’équipe',
         chartSubtitle: 'Évolution du score moyen de l’équipe.',
         teamFilter: 'Membres',
-        leaderboard: 'Leaderboard',
+        leaderboard: 'Classement de mon équipe',
         leaderboardSubtitle: 'Aperçu du niveau de maîtrise des membres de l’équipe.',
       },
       teamMembers: {
@@ -568,12 +568,12 @@ export const FR = {
         chartTitle: 'Évolution du niveau de maîtrise',
         chartSubtitle: 'Évolution du score moyen de l’équipe par tag.',
         tagFilter: 'Tags',
-        leaderboardTitle: 'Leaderboard',
+        leaderboardTitle: 'Classement par thème',
         leaderboardSubtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
       },
       members: {
         title: 'Membres de l’équipe',
-        subtitle: 'Découvrez les scores moyens et les axes d’amélioration par membre.',
+        subtitle: 'Découvrez les niveaux moyens et les axes d’amélioration par membre.',
         table: {
           name: 'Nom',
           globalScore: 'Score global',
@@ -583,7 +583,7 @@ export const FR = {
       },
       questions: {
         title: 'Questions de l’équipe',
-        subtitle: 'Découvrez les scores moyens des membres de l’équipe par question.',
+        subtitle: 'Découvrez les niveaux moyens des membres de l’équipe par question.',
         table: {
           title: 'Intitulé de la question',
           globalScore: 'Score global',
@@ -759,7 +759,7 @@ export const FR = {
         questionsPerMonth: 'Questions (30 derniers jours)',
         noData: 'Aucune donnée',
         questionsPerMonthTooltip:
-          'Nombre de questions répondues sur les 30 derniers jours et variation sur la dernière période',
+          'Nombre de réponses sur les 30 derniers jours et variation sur la dernière période',
         active: 'Actif',
         inactive: 'Inactif',
         placeholderTitle: 'Aucun utilisateur n’existe dans votre entreprise.',
@@ -1137,7 +1137,7 @@ export const FR = {
       subtitle: 'Découvrez un aperçu de votre performance.',
       averageScore: {
         title: 'Score moyen',
-        tooltip: 'Score moyen de vos questions répondues',
+        tooltip: 'Score moyen de vos réponses',
       },
       finishedPrograms: {
         title: 'Programmes terminés',
@@ -1159,7 +1159,7 @@ export const FR = {
       title: 'Votre équipe',
       subtitle: 'Découvrez votre classement et les challenges en cours.',
       leaderboard: {
-        title: 'Leaderboard',
+        title: 'Classement',
         name: 'Nom',
         score: 'Score',
       },
@@ -1196,9 +1196,9 @@ export const FR = {
       subtitle: 'Retrouvez les programmes qui vous ont été assignés',
       panels: {
         score: 'Score moyen',
-        scoreTooltip: 'Score moyen de vos  questions répondues',
+        scoreTooltip: 'Score moyen de vos réponses',
         frequency: 'Régularité',
-        frequencyTooltip: '% de questions répondues sur le nombre de question envoyées',
+        frequencyTooltip: '% de réponses sur le nombre de question envoyées',
         streak: 'Série en cours',
         currentStreakPlaceholder: 'C’est le moment de tester vos connaissances',
         longestStreakPlaceholder: 'Prêt(e) à relever le défi ? Lancez une session !',
