@@ -150,9 +150,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
           return (value as number) + ' %';
         },
       },
-      lineStyle: {
-        type: 'dashed',
-      },
+      lineStyle: {},
     });
 
     this.chartOption = {
@@ -160,7 +158,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
       yAxis: [{ ...yAxisScoreOptions }],
       series: series,
       legend: legendOptions,
-    };
+    };    
   }
 
   filterTeams(event: ScoreDtoApi[]) {

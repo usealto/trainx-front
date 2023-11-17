@@ -46,8 +46,15 @@ export class ChartsService {
               },
             });
           serie.lineStyle = {
+            ...serie.lineStyle,
             width: 3,
           };
+          // in case we display a global serie, we want dashed and grey
+          if(serie.name === 'Global'){
+            serie.color = '#475467';
+            serie.lineStyle.type = 'dashed';
+          }
+          
           serie.connectNulls = true;
           if (serie.data.length === 1) {
             serie.showSymbol = true;
