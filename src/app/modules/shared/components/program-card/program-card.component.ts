@@ -60,4 +60,8 @@ export class ProgramCardComponent implements OnInit, OnChanges {
       .pipe(tap(() => (this.program.isActive = checked)))
       .subscribe();
   }
+
+  teamHover(program: ProgramDtoApi) {
+    return program.teams.map((team) => team.name).join(', ');
+  }
 }

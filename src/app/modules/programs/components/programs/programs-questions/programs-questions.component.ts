@@ -184,4 +184,11 @@ export class ProgramsQuestionsComponent implements OnInit {
       !!this.questionFilters.score
     );
   }
+  getTagTooltip(question: QuestionDtoApi) {
+    return (question.tags) ? question.tags.map((p) => p.name).join(', ') : '';
+  }
+
+  getProgramTooltip(question: QuestionDtoApi) {
+    return (question.programs) ? question.programs.map((p) => p.name).join(', ') : '';
+  }
 }
