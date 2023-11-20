@@ -18,9 +18,9 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
-import { preventSmallScreen } from './no-small-screen.guard';
+import { PreventSmallScreenGuard } from './core/guards/no-small-screen.guard';
 import { canActivateAltoAdmin, canActivateLead } from './roles.guard';
-import { UserAccessGuard } from './user-access.guard';
+import { UserAccessGuard } from './core/guards/user-access.guard';
 import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
 import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
 
@@ -28,7 +28,7 @@ const routes: Routes = [
   {
     path: '',
     component: AppLayoutComponent,
-    canActivate: [UserAccessGuard, AuthGuard, preventSmallScreen],
+    canActivate: [UserAccessGuard, AuthGuard, PreventSmallScreenGuard],
     canActivateChild: [AuthGuard],
     resolve: {
       appData: AppResolver,

@@ -30,6 +30,7 @@ import { SharedModule } from './modules/shared/shared.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
 import { CoreModule } from './core/core.module';
+import { AppResolver } from './core/resolvers';
 @NgModule({
   declarations: [
     AppComponent,
@@ -111,6 +112,7 @@ import { CoreModule } from './core/core.module';
       useFactory: localeInitializer,
       deps: [LOCALE_ID],
     },
+    AppResolver,
   ],
   bootstrap: [AppComponent],
 })

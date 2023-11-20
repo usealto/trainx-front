@@ -1,11 +1,12 @@
-import { InjectionToken, NgModule } from '@angular/core';
-import { ActionReducerMap, StoreModule } from '@ngrx/store';
+import { NgModule } from '@angular/core';
+import { StoreModule } from '@ngrx/store';
 
-import { rootReducer } from './store/root/root.reducer';
-
-import * as FromRoot from './store/root/root.reducer';
+import { UserAccessGuard } from './guards/user-access.guard';
+import { reducers } from './store/store.reducer';
+import { PreventSmallScreenGuard } from './guards/no-small-screen.guard';
 
 @NgModule({
-  imports: [StoreModule.forRoot({ root: rootReducer })],
+  imports: [StoreModule.forRoot(reducers)],
+  providers: [UserAccessGuard, PreventSmallScreenGuard],
 })
 export class CoreModule {}

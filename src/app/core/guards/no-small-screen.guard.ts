@@ -1,10 +1,12 @@
 import { CanActivate, Router } from '@angular/router';
 import { debounceTime, fromEvent, map, tap } from 'rxjs';
-import { AltoRoutes } from './modules/shared/constants/routes';
+import { AltoRoutes } from '../../modules/shared/constants/routes';
+import { Injectable } from '@angular/core';
 
 let i = 0;
 
-export class preventSmallScreen implements CanActivate {
+@Injectable()
+export class PreventSmallScreenGuard implements CanActivate {
   constructor(private readonly router: Router) {}
   canActivate(): boolean {
     let isTooSmall = false;
