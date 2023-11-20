@@ -933,6 +933,8 @@ export const FR = {
         'Pour supprimer un administrateur, transformez-le d’abord en utilisateur standard. Vous pourrez ensuite procéder à la suppression',
       noUserPlaceholderTitle: 'Aucun utilisateur n’a été créé pour l’instant.',
       noUserPlaceholderSubtitle: 'Vous pouvez créer un utilisateur, ou changer le rôle d\'un administrateur existant.',
+      noUserFilteredPlaceholderTitle: 'Aucun utilisateur',
+      noUserFilteredPlaceholderSubtitle: 'Aucun utilisateur correspondant à cette recherche',
       addUsers: {
         add: 'Ajouter des collaborateurs',
         invite: 'Inviter des collaborateurs',
