@@ -13,13 +13,23 @@
     class="panel cursor-pointer"
     [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, program.id]"
   >
-    <p class="title" [ngClass]="{ 'w-100': !displayToggle }">{{ program.name }}</p>
+    
+    <p 
+      class="title" 
+      [ngClass]="{ 'w-100': !displayToggle }"
+      ngbTooltip="{{ program.name.length > 35 ? program.name : '' }}"
+    >
+      {{ program.name }}
+    </p>
+    
     <ng-container *ngIf="program.teams.length > 0; else elseTeams">
-      <p class="d-inline-block me-2">
-        <img class="pe-2 mb-2" [src]="Emoji.BustsInSilhouette | emoji" height="16" width="16" />
-        {{ I18ns.shared.assignedTeams + ' : ' }}
-      </p>
-      <span class="alto-badge teams">{{ program.teams.length }}</span>
+      <span  ngbTooltip="{{ teamHover(program) }}">
+        <p class="d-inline-block me-2">
+          <img class="pe-2 mb-2" [src]="Emoji.BustsInSilhouette | emoji" height="16" width="16" />
+          {{ I18ns.shared.assignedTeams + ' : ' }}
+        </p>
+        <span class="alto-badge teams">{{ program.teams.length }}</span>
+      </span>
     </ng-container>
     <ng-template #elseTeams>
       <div class="alto-badge">{{ I18ns.shared.noTeam }}</div>

@@ -44,7 +44,7 @@
       <tbody>
         <tr *ngFor="let quest of paginatedQuestions" class="align-middle">
           <td>
-            {{ quest.question.title }}
+            {{ quest.question.title | sliceWithDots: 150}}
           </td>
           <td class="text-center">
             <ng-container *ngIf="quest.score; else elseTemplate">
