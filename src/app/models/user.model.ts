@@ -40,7 +40,7 @@ export class User implements IUser {
     this.teamId = data.teamId ?? 'teamId';
     this.createdAt = data.createdAt ?? new Date();
     this.updatedAt = data.updatedAt ?? new Date();
-    this.stats = data.stats.map((s) => new UserStats(s));
+    this.stats = data.stats?.map((s) => new UserStats(s)) ?? [];
     this.companyId = data.companyId ?? 'companyId';
   }
 
@@ -82,10 +82,12 @@ export class User implements IUser {
 
   addStats(stats: UserStats): void {
     if (
-      !this.stats.every(({from, to, scoreById}) => {
-        return (compareAsc(stats.from, from) !== 0) ||
-          (compareAsc(stats.to, to) !== 0) ||
-          (stats.scoreById !== scoreById);
+      !this.stats.every(({ from, to, scoreById }) => {
+        return (
+          compareAsc(stats.from, from) !== 0 ||
+          compareAsc(stats.to, to) !== 0 ||
+          stats.scoreById !== scoreById
+        );
       })
     ) {
       this.stats = [...this.stats, stats];
@@ -93,11 +95,11 @@ export class User implements IUser {
   }
 
   getStatsByScoreById(id: string): UserStats[] {
-    return this.stats.filter(({scoreById}) => scoreById === id);
+    return this.stats.filter(({ scoreById }) => scoreById === id);
   }
 }
 
-export interface IUserStats extends IBaseStats{
+export interface IUserStats extends IBaseStats {
   nbDays: number;
   respondsRegularity: number;
   commentsCount: number;

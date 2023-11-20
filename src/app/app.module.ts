@@ -29,8 +29,7 @@ import { TestComponent } from './layout/test/test.component';
 import { SharedModule } from './modules/shared/shared.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
-import  { StoreModule } from '@ngrx/store';
-import { rootReducer } from './core/store/root/root.reducer';
+import { CoreModule } from './core/core.module';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +45,7 @@ import { rootReducer } from './core/store/root/root.reducer';
     ImpersonateComponent,
   ],
   imports: [
-    StoreModule.forRoot({ root: rootReducer }),
+    CoreModule,
     ApiModule,
     BrowserModule,
     HttpClientModule,
@@ -80,7 +79,6 @@ import { rootReducer } from './core/store/root/root.reducer';
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000',
     }),
-    StoreModule.forRoot({}, {}),
   ],
   providers: [
     {

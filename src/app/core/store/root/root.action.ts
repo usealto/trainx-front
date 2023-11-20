@@ -1,9 +1,9 @@
 import { User } from 'src/app/models/user.model';
-import { Action, createAction, props } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { Team } from 'src/app/models/team.model';
 
 // Timestamp
-export const setTimestamp = createAction('[Timestamp] Set new timestamp', props<Date>());
+export const setTimestamp = createAction('[Timestamp] Set new timestamp', props<{ date: Date }>());
 
 // User
 export const setUserMe = createAction('[User] Set me', props<{ user: User }>());
