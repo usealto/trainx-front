@@ -73,6 +73,7 @@
                 [data]="question.tags"
                 color="primary"
                 [limit]="3"
+                ngbTooltip="{{ getTagTooltip(question) }}">
               ></alto-colored-pill-list>
             </td>
           </ng-container>
@@ -85,6 +86,7 @@
               [textLimit]="30"
               [data]="question.programs"
               [limit]="2"
+              ngbTooltip="{{ getProgramTooltip(question) }}">
             ></alto-colored-pill-list>
           </td>
           <td *ngIf="!question.programs || question.programs.length < 1">-</td>
