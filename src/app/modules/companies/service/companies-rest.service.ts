@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable, map, tap } from 'rxjs';
 import {
   CompaniesApiService,
-  GetCompaniesRequestParams,
   CompanyDtoApi,
   CreateCompanyDtoApi,
   CompanyDtoResponseApi,
@@ -21,10 +20,6 @@ export class CompaniesRestService {
     private readonly userStore: ProfileStore,
     private readonly companiesStore: CompaniesStore,
   ) {}
-
-  getCompanies(req?: GetCompaniesRequestParams): Observable<CompanyDtoApi[]> {
-    return this.companyApi.getCompanies({ ...req }).pipe(map((companies) => companies.data ?? []));
-  }
 
   getCompanyById(id: string): Observable<CompanyDtoApi> {
     return this.companyApi

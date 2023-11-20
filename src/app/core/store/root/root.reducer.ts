@@ -10,7 +10,7 @@ export class TimestampedEntity<T> {
 
   constructor(data: T, timestamp?: Date | null) {
     this.data = data;
-    this.timestamp = timestamp ?? new Date();
+    this.timestamp = timestamp === null ? null : timestamp ?? new Date();
   }
 
   needsUpdate(): boolean {
