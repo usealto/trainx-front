@@ -13,6 +13,7 @@ import { Observable, combineLatest, map, of, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { IUser, User } from 'src/app/models/user.model';
 import { ETypeValue } from 'src/app/modules/collaboration/components/lead-collaboration/lead-collaboration.component';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -36,6 +37,8 @@ import { GuessesRestService } from 'src/app/modules/training/services/guesses-re
   styleUrls: ['./lead-home.component.scss'],
 })
 export class LeadHomeComponent implements OnInit {
+  me: User = new User({} as IUser);
+
   Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
@@ -45,8 +48,6 @@ export class LeadHomeComponent implements OnInit {
   programDataStatus: PlaceholderDataStatus = 'loading';
   isData = false;
   chartDataStatus: PlaceholderDataStatus = 'loading';
-
-  userName = '';
 
   globalFilters: ScoreFilters = {
     duration: ScoreDuration.Year,

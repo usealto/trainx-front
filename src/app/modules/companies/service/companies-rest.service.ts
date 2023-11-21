@@ -10,6 +10,7 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { ProfileStore } from '../../profile/profile.store';
 import { CompaniesStore } from '../companies.store';
+import { Company } from 'src/app/models/company.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,10 +22,10 @@ export class CompaniesRestService {
     private readonly companiesStore: CompaniesStore,
   ) {}
 
-  getCompanyById(id: string): Observable<CompanyDtoApi> {
+  getCompanyById(id: string): Observable<Company | undefined> {
     return this.companyApi
       .getCompanyById({ id })
-      .pipe(map((company) => company.data ?? ({} as CompanyDtoApi)));
+      .pipe(map(({ data }) => (data ? Company.fromDto(data) : undefined)));
   }
 
   getMyCompany(): Observable<CompanyDtoApi> {

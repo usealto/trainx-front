@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
-import { tap } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { IUser, User } from 'src/app/models/user.model';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 
 @UntilDestroy()
@@ -15,6 +14,7 @@ import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
   styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent implements OnInit {
+  me: User = new User({} as IUser);
   AltoRoutes = AltoRoutes;
   I18ns = I18ns;
   toggleTooltip = false;
@@ -26,18 +26,16 @@ export class MenuComponent implements OnInit {
   userRoute = ['/', AltoRoutes.user, AltoRoutes.userHome];
 
   constructor(
-    public readonly userStore: ProfileStore,
     private readonly router: Router,
+    private activatedRoute: ActivatedRoute,
     public auth: AuthService,
   ) {}
 
   ngOnInit(): void {
-    const { roles } = this.userStore.user.value;
-    if (
-      roles.some((r) => r === UserDtoApiRolesEnumApi.AltoAdmin || r === UserDtoApiRolesEnumApi.CompanyAdmin)
-    ) {
-      this.isAdmin = true;
-    }
+    this.activatedRoute.data.subscribe(({ me }) => {
+      this.me = me;
+      this.isAdmin = this.me.isAltoAdmin() || this.me.isCompanyAdmin();
+    });
 
     const segments = window.location.pathname.split('/');
     this.manageLeadState(segments[1]);

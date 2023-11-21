@@ -35,7 +35,7 @@ const routes: Routes = [
     canActivate: [appGuard, AuthGuard, PreventSmallScreenGuard],
     canActivateChild: [AuthGuard],
     resolve: {
-      appData: appResolver,
+      me: appResolver,
     },
     runGuardsAndResolvers: 'always',
     children: [
