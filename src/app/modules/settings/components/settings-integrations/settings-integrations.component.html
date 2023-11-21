@@ -65,6 +65,43 @@
       </div>
     </div>
   </div>
+  <ng-container *ngIf="connector === Connector.GoogleChat">
+    <div class="flex-container">
+
+      <div class="google-chat-instructions panel">
+        <h3>{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatInstructionsTitle }}</h3>
+        <p>{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatInstructions }}</p>
+        <a href="https://workspace.google.com/marketplace/app/staging_alt0/705098494120" target="_blank">{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatLink }}</a>
+        <p>{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatInstructions2 }}</p>
+      </div>
+      
+      <div class="send-email-section panel" >
+        <h3>{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.emailSendTitle }}</h3>
+        <button class="button" (click)="null">{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.emailSendButtonText }}</button>
+        <span>{{ '0' + ' ' + I18ns.settings.continuousSession.integrations.gchatSubtitle.nonConnectedUsersText }}</span>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="connector === Connector.Slack">
+    <div class="flex-container">
+
+      <div class="google-chat-instructions panel">
+        <h2>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.notAdminTitle }}</h2>
+        <h3>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.sendEmail }}</h3>
+        <div>
+          <input type="email" placeholder="{{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailExemple }}">
+          <button class="button" (click)="null">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailSendButtonText }}</button>
+        </div>
+        <p>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.notAdminText }}</p>
+      </div>
+      
+      <div class="send-email-section panel" >
+        <h2>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.adminTitle }}</h2>
+        <p>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.adminText }}</p>
+        <button class="button" (click)="null">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.authorConnection }}</button>
+      </div>
+    </div>
+  </ng-container>
   <div class="mt-4 questions-pushed-box">
     <h3 class="questions-pushed">
       {{ I18ns.settings.continuousSession.integrations.questionPushedTitle }}

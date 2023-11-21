@@ -34,9 +34,19 @@
   border-radius: 0.3333rem;
   height: 3.3333rem;
   padding-top: 0.8333rem;
+  margin-bottom: 0.8333rem;
 
   &.activated {
     border: 0.0833rem solid var(--primary-600, #1570ef);
     background-color: white;
   }
+}
+
+.flex-container {
+  display: flex;
+  gap: 24px;
+}
+
+.panel {
+  flex: 1;
 }

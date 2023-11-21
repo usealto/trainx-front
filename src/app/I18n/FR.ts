@@ -416,7 +416,8 @@ export const FR = {
       },
       perThemePerformance: {
         title: 'Niveau de maîtrise par thématiques',
-        subtitle: "Retrouvez une vue d'ensemble sur le niveau de maîtrise de vos équipes selon leurs thématiques.",
+        subtitle:
+          "Retrouvez une vue d'ensemble sur le niveau de maîtrise de vos équipes selon leurs thématiques.",
         filters: {
           tags: 'Tags',
         },
@@ -488,8 +489,7 @@ export const FR = {
         membersSubtitle:
           "Découvrez les statistiques d'engagement et de performance de chacun de vos membres.",
       },
-      globalTooltip:
-        '% de questions justes sur le nombre de réponses et variation sur la période passée',
+      globalTooltip: '% de questions justes sur le nombre de réponses et variation sur la période passée',
       teamsFilter: 'Équipes',
       table: {
         globalScore: 'Niveau global',
@@ -622,7 +622,7 @@ export const FR = {
             placeholder: {
               empty: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
               lessThan3Tags: 'Vous devez sélectionner au moins 3 tags.',
-              MoreThan6Tags: 'Vous devez sélectionner au maximum 6 tags.'
+              MoreThan6Tags: 'Vous devez sélectionner au maximum 6 tags.',
             },
           },
         },
@@ -649,18 +649,20 @@ export const FR = {
           placeholder: {
             title: 'Votre collaborateur n’a pas encore été actif',
             subtitle: 'Il se prépare en coulisses',
-          }
+          },
         },
         userEngagement: {
           title: 'Engagement du collaborateur',
-          subtitle: 'Retrouvez une vue d’ensemble des questions et commentaires remontés par votre collaborateur.',
+          subtitle:
+            'Retrouvez une vue d’ensemble des questions et commentaires remontés par votre collaborateur.',
           chartTitle: 'Contribution',
-          chartSubtitle: 'Évolution du nombre de questions et de commentaires remontés par votre collaborateur.',
+          chartSubtitle:
+            'Évolution du nombre de questions et de commentaires remontés par votre collaborateur.',
           placeholder: {
             title: 'Nous n’avons pas encore de données à afficher',
             subtitle: 'Cela ne devrait plus tarder !',
           },
-        }
+        },
       },
     },
   },
@@ -926,13 +928,15 @@ export const FR = {
       disable: 'Inactive',
       deleteModal: {
         title: 'Supprimer l\'utilisateur "{{}}"',
-        subtitle: 'Êtes-vous sûr(e) de vouloir supprimer ce collaborateur ? Cette action est irréversible, et vous ne  pourrez plus utiliser cet email pour créer un nouvel utilisateur.',
+        subtitle:
+          'Êtes-vous sûr(e) de vouloir supprimer ce collaborateur ? Cette action est irréversible, et vous ne  pourrez plus utiliser cet email pour créer un nouvel utilisateur.',
       },
       successEdit: 'Le collaborateur {{}} a bien été modifié',
       deleteAdminTooltip:
         'Pour supprimer un administrateur, transformez-le d’abord en utilisateur standard. Vous pourrez ensuite procéder à la suppression',
       noUserPlaceholderTitle: 'Aucun utilisateur n’a été créé pour l’instant.',
-      noUserPlaceholderSubtitle: 'Vous pouvez créer un utilisateur, ou changer le rôle d\'un administrateur existant.',
+      noUserPlaceholderSubtitle:
+        "Vous pouvez créer un utilisateur, ou changer le rôle d'un administrateur existant.",
       noUserFilteredPlaceholderTitle: 'Aucun utilisateur',
       noUserFilteredPlaceholderSubtitle: 'Aucun utilisateur correspondant à cette recherche',
       addUsers: {
@@ -967,6 +971,27 @@ export const FR = {
         slack: 'Slack',
         teams: 'Teams',
         gchat: 'Google Chat',
+        gchatSubtitle: {
+          googleChatInstructionsTitle: 'Comment vos utilisateurs peuvent ajouter Google Chat :',
+          googleChatInstructions: 'Ils ont simplement besoin de cliquer sur ce lien :',
+          googleChatLink: 'https://workspace.google.com/marketplace/app/staging_alto/705098494910',
+          googleChatInstructions2: 'Puis cliquer sur “Installer”. C’est tout.',
+          emailSendTitle: 'Vous pouvez aussi envoyer les instructions aux utilisateurs non connectés :',
+          emailSendButtonText: 'Envoyer les instructions par email',
+          nonConnectedUsersText: 'utilisateurs non connectés',
+        },
+        slackSubtitle: {
+          notAdminTitle: 'Je ne suis pas administrateur Slack :',
+          notAdminText:
+            'Afin qu’Alto puisse interagir avec vos collaborateurs, votre administrateur Slack doit autoriser la connexion à l’application.',
+          sendEmail: 'Envoyer un email',
+          emailExemple: 'Ex: philippe@usealto.com',
+          emailSendButtonText: 'Envoyer',
+          adminTitle: 'Je suis administrateur Slack :',
+          adminText:
+            'Si vous possédez les droits administrateur sur Slack, vous pouvez autoriser la connexion en cliquant sur le bouton suivant :',
+          authorConnection: 'Autoriser la connexion',
+        },
         modal: {
           titles: {
             activateConnector: 'Vous devez configurer votre connecteur',
