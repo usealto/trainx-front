@@ -97,6 +97,18 @@ export class User implements IUser {
   getStatsByScoreById(id: string): UserStats[] {
     return this.stats.filter(({ scoreById }) => scoreById === id);
   }
+
+  isAltoAdmin(): boolean {
+    return this.roles.includes(UserDtoApiRolesEnumApi.AltoAdmin);
+  }
+
+  isCompanyAdmin(): boolean {
+    return this.roles.includes(UserDtoApiRolesEnumApi.CompanyAdmin);
+  }
+
+  isCompanyUser(): boolean {
+    return this.isCompanyAdmin() || this.roles.includes(UserDtoApiRolesEnumApi.CompanyUser);
+  }
 }
 
 export interface IUserStats extends IBaseStats {

@@ -2,14 +2,23 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import {
-  AppResolver,
+  PreventSmallScreenGuard,
+  altoAdminGuard,
+  appGuard,
+  leadAccessGuard,
+  userAccessGuard,
+} from './core/guards';
+import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
+import {
+  appResolver,
   homeResolver,
-  programResolver,
-  trainingResolver,
   leadResolver,
   noSplashScreenResolver,
+  programResolver,
+  trainingResolver,
 } from './core/resolvers';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
+import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
 import { JwtComponent } from './layout/jwt/jwt.component';
 import { NoCompanyComponent } from './layout/no-company/no-company.component';
 import { NoSmallScreenComponent } from './layout/no-small-screen/no-small-screen.component';
@@ -18,21 +27,17 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
-import { PreventSmallScreenGuard } from './core/guards/no-small-screen.guard';
-import { canActivateAltoAdmin, canActivateLead } from './roles.guard';
-import { UserAccessGuard } from './core/guards/user-access.guard';
-import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
-import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
 
 const routes: Routes = [
   {
     path: '',
     component: AppLayoutComponent,
-    canActivate: [UserAccessGuard, AuthGuard, PreventSmallScreenGuard],
+    canActivate: [appGuard, AuthGuard, PreventSmallScreenGuard],
     canActivateChild: [AuthGuard],
     resolve: {
-      appData: AppResolver,
+      appData: appResolver,
     },
+    runGuardsAndResolvers: 'always',
     children: [
       {
         path: 'test',
@@ -40,6 +45,7 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.user,
+        canActivate: [userAccessGuard],
         children: [
           { path: '', redirectTo: AltoRoutes.userHome, pathMatch: 'full' },
           {
@@ -65,7 +71,7 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.lead,
-        canActivate: [canActivateLead],
+        canActivate: [leadAccessGuard],
         resolve: {
           appData: leadResolver,
         },
@@ -157,11 +163,11 @@ const routes: Routes = [
   },
   {
     path: AltoRoutes.impersonate + '/:id',
+    component: ImpersonateComponent,
+    canActivate: [AuthGuard, altoAdminGuard],
     resolve: {
       splashscreen: noSplashScreenResolver,
     },
-    component: ImpersonateComponent,
-    canActivate: [AuthGuard, canActivateAltoAdmin],
   },
   {
     path: AltoRoutes.translation,
