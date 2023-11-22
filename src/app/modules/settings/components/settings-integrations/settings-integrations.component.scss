@@ -34,7 +34,7 @@
   border-radius: 0.3333rem;
   height: 3.3333rem;
   padding-top: 0.8333rem;
-  margin-bottom: 0.8333rem;
+  margin-bottom: 2rem;
 
   &.activated {
     border: 0.0833rem solid var(--primary-600, #1570ef);
@@ -44,7 +44,7 @@
 
 .flex-container {
   display: flex;
-  gap: 24px;
+  gap: 2rem;
 }
 
 .panel {

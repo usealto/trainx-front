@@ -55,7 +55,7 @@
         </label>
       </div>
     </div>
-    <div class="py-3" style="border-radius: 4px; padding-left: 1rem; padding-right: 1rem">
+    <div class="py-3 connector" style="border-radius: 4px; padding-left: 1rem; padding-right: 1rem">
       <div class="form-check">
         <input class="form-check-input me-3" type="radio" id="exampleRadios3" value="option3" disabled />
         <label class="form-check-label" for="exampleRadios3">
@@ -77,8 +77,8 @@
       
       <div class="send-email-section panel" >
         <h3>{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.emailSendTitle }}</h3>
-        <button class="button" (click)="null">{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.emailSendButtonText }}</button>
-        <span>{{ '0' + ' ' + I18ns.settings.continuousSession.integrations.gchatSubtitle.nonConnectedUsersText }}</span>
+        <button class="btn btn-primary mb-2" (click)="sendGchatInstruction()"><i class="bi bi-send"></i> {{ I18ns.settings.continuousSession.integrations.gchatSubtitle.emailSendButtonText }}</button>
+        <span class="alto-badge">{{ nbUsersConnectorInactive + '/' + nbUsers + ' ' + I18ns.settings.continuousSession.integrations.gchatSubtitle.nonConnectedUsersText }}</span>
       </div>
     </div>
   </ng-container>
@@ -89,8 +89,8 @@
         <h2>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.notAdminTitle }}</h2>
         <h3>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.sendEmail }}</h3>
         <div>
-          <input type="email" placeholder="{{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailExemple }}">
-          <button class="button" (click)="null">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailSendButtonText }}</button>
+          <input class="my-2" type="text" placeholder="{{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailExemple }}" [(ngModel)]="emailValue">
+          <button class="btn btn-primary" (click)="sendEmailSlackAuthorization()"><i class="bi bi-send"></i> {{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailSendButtonText }}</button>
         </div>
         <p>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.notAdminText }}</p>
       </div>
@@ -98,7 +98,7 @@
       <div class="send-email-section panel" >
         <h2>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.adminTitle }}</h2>
         <p>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.adminText }}</p>
-        <button class="button" (click)="null">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.authorConnection }}</button>
+        <button class="button" (click)="openLinkSlack()">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.authorConnection }}</button>
       </div>
     </div>
   </ng-container>
