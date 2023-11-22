@@ -13,6 +13,10 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm install
 
+RUN npm install -g @angular/cli
+
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+
 # Bundle app source
 COPY . .
 
