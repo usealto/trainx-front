@@ -45,6 +45,9 @@
 .flex-container {
   display: flex;
   gap: 2rem;
+  h2, p, a, button {
+    margin-bottom: 1rem;
+  }
 }
 
 .panel {
