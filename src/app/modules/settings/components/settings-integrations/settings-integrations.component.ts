@@ -9,6 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import { UsersRestService } from '../../../profile/services/users-rest.service';
 import { TriggersService } from '../../services/triggers.service';
+import { ToastService } from '../../../../core/toast/toast.service';
 
 enum ModalType {
   ToggleConnector = 'toggleConnector',
@@ -45,6 +46,7 @@ export class SettingsIntegrationsComponent implements OnInit {
     private readonly companiesStore: CompaniesStore,
     private readonly usersRestService: UsersRestService,
     private readonly triggersService: TriggersService,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -188,11 +190,25 @@ export class SettingsIntegrationsComponent implements OnInit {
   }
 
   sendEmailSlackAuthorization() {
-    this.triggersService.askSlackAuthorization(this.emailValue).subscribe();
+    this.triggersService.askSlackAuthorization(this.emailValue).subscribe(
+      () => {
+        this.toastService.show({text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackSuccess, type: 'success'});
+      },
+      () => {
+        this.toastService.show({text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackError, type: 'danger'});
+      },
+    );
   }
 
   sendGchatInstruction() {
-    this.triggersService.sendGchatInstructions().subscribe();
+    this.triggersService.sendGchatInstructions().subscribe(
+      () => {
+        this.toastService.show({text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatSuccess, type: 'success'});
+      },
+      () => {
+        this.toastService.show({text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatError, type: 'danger'});
+      },
+    );
   }
 
   openLinkSlack() {

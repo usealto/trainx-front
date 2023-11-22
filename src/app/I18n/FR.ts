@@ -979,6 +979,10 @@ export const FR = {
           emailSendTitle: 'Vous pouvez aussi envoyer les instructions aux utilisateurs non connectés :',
           emailSendButtonText: 'Envoyer les instructions par email',
           nonConnectedUsersText: 'utilisateurs non connectés',
+          gchatSuccess:
+            'Un email avec les instructions a bien été envoyé à tous les utilisateurs non connectés.',
+          gchatError:
+            'Impossible d’envoyer l’email avec les instructions à vos utilisateurs. Réessayez plus tard ou contactez notre support client si le problème persiste.',
         },
         slackSubtitle: {
           notAdminTitle: 'Je ne suis pas administrateur Slack :',
@@ -991,6 +995,9 @@ export const FR = {
           adminText:
             'Si vous possédez les droits administrateur sur Slack, vous pouvez autoriser la connexion en cliquant sur le bouton suivant :',
           authorConnection: 'Autoriser la connexion',
+          slackSuccess: 'L’email de demande de connexion a bien été envoyé à votre administrateur.',
+          slackError:
+            'Impossible d’envoyer l’email de demande de connexion à votre administrateur. Réessayez plus tard ou contactez notre support client si le problème persiste.',
         },
         modal: {
           titles: {

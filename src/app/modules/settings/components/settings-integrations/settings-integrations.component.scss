@@ -1,13 +1,11 @@
 .integration-titles {
   font-size: 1.1667rem;
   font-weight: 600;
-  margin-left: 1rem;
 }
 
 .integration-subtitles {
   font-size: 1rem;
   font-weight: 400;
-  margin-left: 1rem;
 }
 
 .disabled-text {
@@ -43,13 +41,7 @@
 }
 
 .flex-container {
-  display: flex;
-  gap: 2rem;
-  h2, p, a, button {
-    margin-bottom: 1rem;
+  .panel {
+    width: 47rem;
   }
-}
-
-.panel {
-  flex: 1;
 }
