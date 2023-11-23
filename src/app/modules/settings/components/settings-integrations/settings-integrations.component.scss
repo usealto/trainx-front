@@ -1,13 +1,11 @@
 .integration-titles {
   font-size: 1.1667rem;
   font-weight: 600;
-  margin-left: 1rem;
 }
 
 .integration-subtitles {
   font-size: 1rem;
   font-weight: 400;
-  margin-left: 1rem;
 }
 
 .disabled-text {
@@ -34,9 +32,16 @@
   border-radius: 0.3333rem;
   height: 3.3333rem;
   padding-top: 0.8333rem;
+  margin-bottom: 2rem;
 
   &.activated {
     border: 0.0833rem solid var(--primary-600, #1570ef);
     background-color: white;
+  }
+}
+
+.flex-container {
+  .panel {
+    width: 47rem;
   }
 }

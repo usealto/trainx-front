@@ -4,8 +4,8 @@
 </div>
 
 <hr class="my-4" />
-<div class="d-flex align-items-center">
-  <div class="form-check form-switch d-inline-block align-middle me-5">
+<div class="d-flex">
+  <div class="form-check form-switch me-5 mt-3">
     <input
       #toggleConnector
       (click)="validateModal(ModalType.ToggleConnector, isConnectorActivated ? false : true, $event)"
@@ -21,9 +21,7 @@
     <span class="integration-subtitles" [ngStyle]="{ color: isConnectorActivated ? '#667085' : '#D0D5DD' }">
       {{ I18ns.settings.continuousSession.integrations.subtitle }}
     </span>
-  </div>
-</div>
-<ng-container *ngIf="isConnectorActivated">
+    <ng-container *ngIf="isConnectorActivated">
   <div class="d-flex align-items-center mt-5">
     <div class="px-3 me-5 connector" [class]="connector === Connector.Slack ? 'activated' : ''">
       <input
@@ -55,13 +53,52 @@
         </label>
       </div>
     </div>
-    <div class="py-3" style="border-radius: 4px; padding-left: 1rem; padding-right: 1rem">
+    <div class="py-3 connector" style="border-radius: 4px; padding-left: 1rem; padding-right: 1rem">
       <div class="form-check">
         <input class="form-check-input me-3" type="radio" id="exampleRadios3" value="option3" disabled />
         <label class="form-check-label" for="exampleRadios3">
           <img src="assets/img/teams-logo.svg" width="16" height="16" alt="Teams Logo" class="me-2" />
           <span>{{ I18ns.settings.continuousSession.integrations.teams }}</span>
         </label>
+      </div>
+    </div>
+  </div>
+  <div [hidden]="connector !== Connector.GoogleChat">
+    <div class="flex-container d-flex flex-wrap gap-5">
+
+      <div class="google-chat-instructions panel">
+        <h2 class="mb-4">{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatInstructionsTitle }}</h2>
+        <p class="mb-3">{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatInstructions }}</p>
+        <a class="d-inline-block text-primary text-decoration-underline mb-3" href="https://workspace.google.com/marketplace/app/staging_alt0/705098494120" target="_blank">{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatLink }}</a>
+        <p>{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatInstructions2 }}</p>
+      </div>
+      
+      <div class="google-chat-send-email-section panel d-block" >
+        <h2 class="mb-4">{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.emailSendTitle }}</h2>
+        <button class="btn btn-primary mb-3" (click)="sendGchatInstruction()"><i class="bi bi-send"></i> {{ I18ns.settings.continuousSession.integrations.gchatSubtitle.emailSendButtonText }}</button>
+        <div>
+          <span class="alto-badge orange">{{ nbUsersConnectorInactive + '/' + nbUsers + ' ' + I18ns.settings.continuousSession.integrations.gchatSubtitle.nonConnectedUsersText }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div [hidden]="connector !== Connector.Slack">
+    <div class="flex-container d-flex flex-wrap gap-5">
+
+      <div class="slack-send-email-section panel">
+        <h2 class="mb-4">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.notAdminTitle }}</h2>
+        <h3 class="mb-3">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.sendEmail }}</h3>
+        <div class="d-flex align-items-center mb-2 gap-3">
+          <input class="form-control" type="email" placeholder="{{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailExemple }}" [(ngModel)]="emailValue">
+          <button class="btn btn-primary" (click)="sendEmailSlackAuthorization()"><i class="bi bi-send"></i> {{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailSendButtonText }}</button>
+        </div>
+        <p>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.notAdminText }}</p>
+      </div>
+      
+      <div class="slack-instructions panel">
+        <h2 class="mb-4">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.adminTitle }}</h2>
+        <p class="mb-3">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.adminText }}</p>
+        <button class="btn btn-primary" (click)="openLinkSlack()"><i class="bi bi-check2"></i>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.authorConnection }}</button>
       </div>
     </div>
   </div>
@@ -75,34 +112,35 @@
     </p>
   </div>
 </ng-container>
-
-<hr class="mb-4 mt-5" />
-<div class="d-flex align-items-center">
-  <div class="d-flex align-items-center">
-    <div class="form-check form-switch d-inline-block align-middle me-5">
-      <input
-        (click)="validateModal(ModalType.ToggleWebApp, isWebAppActivated ? false : true, $event)"
-        type="checkbox"
-        class="form-check-input"
-        [checked]="isWebAppActivated"
-      />
-    </div>
-    <div class="d-grid">
-      <span class="integration-titles" [ngStyle]="{ color: isWebAppActivated ? '#101828' : '#D0D5DD' }">
-        {{ I18ns.settings.continuousSession.webApp.title }}
-      </span>
-      <span class="integration-subtitles" [ngStyle]="{ color: isWebAppActivated ? '#667085' : '#D0D5DD' }">
-        {{ I18ns.settings.continuousSession.webApp.subtitle }}
-      </span>
-    </div>
   </div>
 </div>
-<div *ngIf="isWebAppActivated" class="mt-4 questions-pushed-box">
-  <h3 class="questions-pushed">
-    {{ I18ns.settings.continuousSession.integrations.questionPushedTitle }}
-  </h3>
-  <input class="my-2 questions-pushed-input form-control" type="text" disabled value="2" />
-  <p class="questions-pushed subtitle">
-    {{ I18ns.settings.continuousSession.integrations.questionPushedSubtitle }}
-  </p>
+
+
+<hr class="mb-4 mt-5" />
+<div class="d-flex">
+  <div class="form-check form-switch d-inline-block align-middle mt-3 me-5">
+    <input
+      (click)="validateModal(ModalType.ToggleWebApp, isWebAppActivated ? false : true, $event)"
+      type="checkbox"
+      class="form-check-input"
+      [checked]="isWebAppActivated"
+    />
+  </div>
+  <div class="d-grid">
+    <span class="integration-titles" [ngStyle]="{ color: isWebAppActivated ? '#101828' : '#D0D5DD' }">
+      {{ I18ns.settings.continuousSession.webApp.title }}
+    </span>
+    <span class="integration-subtitles" [ngStyle]="{ color: isWebAppActivated ? '#667085' : '#D0D5DD' }">
+      {{ I18ns.settings.continuousSession.webApp.subtitle }}
+    </span>
+    <div *ngIf="isWebAppActivated" class="mt-4 questions-pushed-box">
+      <h3 class="questions-pushed">
+        {{ I18ns.settings.continuousSession.integrations.questionPushedTitle }}
+      </h3>
+      <input class="my-2 questions-pushed-input form-control" type="text" disabled value="2" />
+      <p class="questions-pushed subtitle">
+        {{ I18ns.settings.continuousSession.integrations.questionPushedSubtitle }}
+      </p>
+    </div>
+  </div>
 </div>

@@ -136,7 +136,7 @@
     data-cy="filterBySearch"
     class="w-50 d-inline-block"
     (searchChange)="filterUsers({ search: $event })"
-    *ngIf="getHasRegularUser(usersDisplay)"
+    *ngIf="getHasRegularUser(usersDisplay) || !userFilterEmpty()"
   ></alto-search>
   
 </div>
@@ -228,8 +228,12 @@
   ></alto-pagination>
 </div>
 <ng-template #nouser>
-  <div class="nodata-placeholder text-center">
+  <div class="nodata-placeholder text-center" *ngIf="userFilterEmpty()">
     <p class="mt-3">{{I18ns.settings.users.noUserPlaceholderTitle}}</p>
     <span class="m3 d-block">{{I18ns.settings.users.noUserPlaceholderSubtitle}}</span>
+  </div>
+  <div class="nodata-placeholder text-center" *ngIf="!userFilterEmpty()">
+    <p class="mt-3">{{I18ns.settings.users.noUserFilteredPlaceholderTitle}}</p>
+    <span class="m3 d-block">{{I18ns.settings.users.noUserFilteredPlaceholderSubtitle}}</span>
   </div>
 </ng-template>

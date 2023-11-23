@@ -7,9 +7,16 @@ import { SettingsUsersComponent } from './components/settings-users/settings-use
 import { SettingsIntegrationsComponent } from './components/settings-integrations/settings-integrations.component';
 import { AddUsersComponent } from './components/settings-users/add-users/add-users.component';
 import { ConfirmationModalComponent } from './components/confirmation-modal/confirmation-modal.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [SettingsComponent, SettingsUsersComponent, SettingsIntegrationsComponent, AddUsersComponent, ConfirmationModalComponent],
-  imports: [CommonModule, SettingsRoutingModule, SharedModule],
+  declarations: [
+    SettingsComponent,
+    SettingsUsersComponent,
+    SettingsIntegrationsComponent,
+    AddUsersComponent,
+    ConfirmationModalComponent,
+  ],
+  imports: [CommonModule, SettingsRoutingModule, SharedModule, FormsModule],
 })
 export class SettingsModule {}

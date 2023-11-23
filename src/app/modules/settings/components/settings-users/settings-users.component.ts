@@ -108,6 +108,7 @@ export class SettingsUsersComponent implements OnInit {
   }
 
   filterUsers({ search = this.userFilters.search }: UserFilters = this.userFilters) {
+    this.userFilters.search = search;
     this.userRestService
       .getUsersFiltered({ isCompanyAdmin: false })
       .pipe(
@@ -243,5 +244,9 @@ export class SettingsUsersComponent implements OnInit {
 
   getHasRegularUser(usersDisplay: UserDtoApi[]){
     return usersDisplay.length > 0;
+  }
+
+  userFilterEmpty(){
+    return this.userFilters.search === '' || this.userFilters.search == undefined;
   }
 }
