@@ -4,6 +4,7 @@ import {
   GetNextQuestionsForUserRequestParams,
   GetScoresRequestParams,
   GetUsersRequestParams,
+  NextQuestionDtoPaginatedResponseApi,
   PatchUserDtoApi,
   QuestionDtoPaginatedResponseApi,
   ScoresApiService,
@@ -90,7 +91,7 @@ export class UsersRestService {
   getNextQuestionsPaginated(
     userId: string,
     req?: GetNextQuestionsForUserRequestParams,
-  ): Observable<QuestionDtoPaginatedResponseApi> {
+  ): Observable<NextQuestionDtoPaginatedResponseApi> {
     const params = {
       ...req,
       id: userId,

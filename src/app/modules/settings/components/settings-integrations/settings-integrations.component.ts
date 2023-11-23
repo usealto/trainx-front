@@ -7,6 +7,9 @@ import { AltoConnectorEnumApi, CompanyDtoApi, CompanyDtoApiConnectorEnumApi } fr
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
+import { UsersRestService } from '../../../profile/services/users-rest.service';
+import { TriggersService } from '../../services/triggers.service';
+import { ToastService } from '../../../../core/toast/toast.service';
 
 enum ModalType {
   ToggleConnector = 'toggleConnector',
@@ -27,6 +30,10 @@ export class SettingsIntegrationsComponent implements OnInit {
 
   company?: CompanyDtoApi;
 
+  nbUsers = 0;
+  nbUsersConnectorInactive = 0;
+  emailValue = '';
+
   isConnectorActivated = false;
 
   isWebAppActivated = false;
@@ -37,6 +44,9 @@ export class SettingsIntegrationsComponent implements OnInit {
     private modalService: NgbModal,
     private readonly companiesRestService: CompaniesRestService,
     private readonly companiesStore: CompaniesStore,
+    private readonly usersRestService: UsersRestService,
+    private readonly triggersService: TriggersService,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +63,16 @@ export class SettingsIntegrationsComponent implements OnInit {
               : comp.connector === CompanyDtoApiConnectorEnumApi.GoogleChat
               ? AltoConnectorEnumApi.GoogleChat
               : AltoConnectorEnumApi.Unknown;
+        }),
+      )
+      .subscribe();
+
+    this.usersRestService
+      .getUsers()
+      .pipe(
+        tap((users) => {
+          this.nbUsers = users.length;
+          this.nbUsersConnectorInactive = users.filter((u) => !u.isConnectorActive).length;
         }),
       )
       .subscribe();
@@ -167,5 +187,32 @@ export class SettingsIntegrationsComponent implements OnInit {
         )
         .subscribe();
     }
+  }
+
+  sendEmailSlackAuthorization() {
+    this.triggersService.askSlackAuthorization(this.emailValue).subscribe(
+      () => {
+        this.toastService.show({text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackSuccess, type: 'success'});
+      },
+      () => {
+        this.toastService.show({text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackError, type: 'danger'});
+      },
+    );
+  }
+
+  sendGchatInstruction() {
+    this.triggersService.sendGchatInstructions().subscribe(
+      () => {
+        this.toastService.show({text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatSuccess, type: 'success'});
+      },
+      () => {
+        this.toastService.show({text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatError, type: 'danger'});
+      },
+    );
+  }
+
+  openLinkSlack() {
+    const url = '';
+    window.open(url, '_blank');
   }
 }
