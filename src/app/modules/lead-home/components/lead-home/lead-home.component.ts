@@ -10,6 +10,8 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { EChartsOption } from 'echarts';
 import { Observable, combineLatest, map, of, tap } from 'rxjs';
+import { IHomeData } from 'src/app/core/resolvers/home.resolver';
+import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -95,26 +97,23 @@ export class LeadHomeComponent implements OnInit {
     public readonly programsStore: ProgramsStore,
     public readonly programsRestService: ProgramsRestService,
     public readonly guessesRestService: GuessesRestService,
-    private readonly activatedRoute: ActivatedRoute,
     public readonly companiesRestService: CompaniesRestService,
-  ) {
-    this.activatedRoute.data
-      .pipe(
-        tap(({ appData }) => {
-          const comments = appData[1];
-          const submittedQuestionsCount = appData[2];
-          this.commentsCount = comments.length;
-          this.commentsDataStatus = comments.length === 0 ? 'noData' : 'good';
-          this.questionsCount = submittedQuestionsCount;
-          this.questionsDataStatus = submittedQuestionsCount === 0 ? 'noData' : 'good';
-
-          this.getAverageScore(this.globalFilters.duration as ScoreDuration, [appData[3], appData[4]]);
-        }),
-      )
-      .subscribe();
-  }
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
+  ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.me = data['me'] as User;
+    this.commentsCount = (data['homeData'] as IHomeData).comments.length;
+    this.commentsDataStatus = this.commentsCount === 0 ? 'noData' : 'good';
+    this.questionsCount = (data['homeData'] as IHomeData).questionsCount;
+    this.questionsDataStatus = this.questionsCount === 0 ? 'noData' : 'good';
+    this.getAverageScore(this.globalFilters.duration as ScoreDuration, [
+      (data['homeData'] as IHomeData).teamsStats,
+      (data['homeData'] as IHomeData).previousTeamsStats,
+    ]);
+
     this.createChart(this.globalFilters.duration as ScoreDuration);
     this.getProgramsStats(this.globalFilters);
     this.getGuessesCount(this.globalFilters.duration as ScoreDuration);

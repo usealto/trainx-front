@@ -1,26 +1,27 @@
-import { Injectable, inject } from '@angular/core';
-import { Resolve, ResolveFn } from '@angular/router';
-import { CommentDtoApi, QuestionDtoApi, QuestionSubmittedStatusEnumApi } from '@usealto/sdk-ts-angular';
-import { combineLatest, take } from 'rxjs';
-import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import * as FromRoot from '../store/root/root.reducer';
-import { Team } from 'src/app/models/team.model';
-import { User } from 'src/app/models/user.model';
+import { inject } from '@angular/core';
+import { ResolveFn } from '@angular/router';
+import {
+  CommentDtoApi,
+  QuestionSubmittedStatusEnumApi,
+  TeamStatsDtoApi,
+  UserDtoApi
+} from '@usealto/sdk-ts-angular';
+import { combineLatest, map } from 'rxjs';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { Store } from '@ngrx/store';
 
 export interface IHomeData {
-  users: User[];
-  teams: Team[];
+  users: UserDtoApi[];
   comments: CommentDtoApi[];
-  questions: QuestionDtoApi[];
+  questionsCount: number;
+  teamsStats: TeamStatsDtoApi[];
+  previousTeamsStats: TeamStatsDtoApi[];
 }
 
-export const homeResolver: ResolveFn<any> = () => {
+export const homeResolver: ResolveFn<IHomeData> = () => {
   return combineLatest([
     inject(UsersRestService).getUsers(),
     inject(CommentsRestService).getUnreadComments(),
@@ -29,7 +30,15 @@ export const homeResolver: ResolveFn<any> = () => {
     }),
     inject(ScoresRestService).getTeamsStats(ScoreDuration.Trimester),
     inject(ScoresRestService).getTeamsStats(ScoreDuration.Trimester, true),
-  ]).pipe(take(1));
+  ]).pipe(
+    map(([users, comments, questionsCount, teamsStats, previousTeamsStats]) => ({
+      users,
+      comments,
+      questionsCount,
+      teamsStats,
+      previousTeamsStats,
+    })),
+  );
 };
 
 // @Injectable()

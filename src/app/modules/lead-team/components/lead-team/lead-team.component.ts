@@ -19,6 +19,9 @@ import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
+import { ActivatedRoute } from '@angular/router';
+import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { User } from 'src/app/models/user.model';
 
 interface TeamDisplay extends TeamDtoApi {
   score?: number;
@@ -37,6 +40,7 @@ interface TeamDisplay extends TeamDtoApi {
 export class LeadTeamComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
+
   // Teams
   teams: TeamDtoApi[] = [];
   teamsStats: TeamStatsDtoApi[] = [];
@@ -67,7 +71,6 @@ export class LeadTeamComponent implements OnInit {
     private readonly offcanvasService: NgbOffcanvas,
     private readonly teamsRestService: TeamsRestService,
     private readonly usersService: UsersService,
-    private readonly profileStore: ProfileStore,
     private readonly scoreRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
     private modalService: NgbModal,
@@ -214,7 +217,7 @@ export class LeadTeamComponent implements OnInit {
 
   @memoize()
   getTeamUsersCount(teamId: string): number {
-    return this.profileStore.users.value.filter((user) => user.teamId === teamId).length;
+    return this.users.filter((user) => user.teamId === teamId).length;
   }
 
   @memoize()

@@ -1,4 +1,4 @@
-import { UserDtoApi, UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
+import { StreakDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 import { BaseStats, IBaseStats } from './stats.model';
 import { compareAsc } from 'date-fns';
 
@@ -15,6 +15,8 @@ export interface IUser {
   isConnectorActive?: boolean;
   stats: IUserStats[];
   companyId: string;
+  longestStreak: StreakDtoApi;
+  currentStreak: StreakDtoApi;
 }
 
 export class User implements IUser {
@@ -30,6 +32,8 @@ export class User implements IUser {
   isConnectorActive?: boolean;
   stats: UserStats[];
   companyId: string;
+  longestStreak: StreakDtoApi;
+  currentStreak: StreakDtoApi;
 
   constructor(data: IUser) {
     this.id = data.id ?? 'userId';
@@ -42,6 +46,8 @@ export class User implements IUser {
     this.updatedAt = data.updatedAt ?? new Date();
     this.stats = data.stats?.map((s) => new UserStats(s)) ?? [];
     this.companyId = data.companyId ?? 'companyId';
+    this.longestStreak = data.longestStreak ?? ({} as StreakDtoApi);
+    this.currentStreak = data.currentStreak ?? ({} as StreakDtoApi);
   }
 
   static fromDto(data: UserDtoApi): User {
@@ -56,6 +62,8 @@ export class User implements IUser {
       updatedAt: data.updatedAt,
       stats: [],
       companyId: data.companyId,
+      longestStreak: data.longestStreak,
+      currentStreak: data.currentStreak,
     });
   }
 
@@ -77,6 +85,8 @@ export class User implements IUser {
       isConnectorActive: this.isConnectorActive,
       stats: this.stats.map((s) => s.rawData),
       companyId: this.companyId,
+      longestStreak: this.longestStreak,
+      currentStreak: this.currentStreak,
     };
   }
 

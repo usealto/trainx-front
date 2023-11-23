@@ -27,6 +27,10 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
+import { meResolver } from './core/resolvers/me.resolver';
+import { usersResolver } from './core/resolvers/users.resolver';
+import { teamsResolver } from './core/resolvers/teams.resolver';
+import { companyResolver } from './core/resolvers/company.resolver';
 
 const routes: Routes = [
   {
@@ -35,7 +39,10 @@ const routes: Routes = [
     canActivate: [appGuard, AuthGuard, PreventSmallScreenGuard],
     canActivateChild: [AuthGuard],
     resolve: {
-      me: appResolver,
+      appResolver,
+      me: meResolver,
+      usersById: usersResolver,
+      teamsById: teamsResolver,
     },
     runGuardsAndResolvers: 'always',
     children: [
@@ -73,14 +80,15 @@ const routes: Routes = [
         path: AltoRoutes.lead,
         canActivate: [leadAccessGuard],
         resolve: {
-          appData: leadResolver,
+          leadData: leadResolver,
+          company: companyResolver,
         },
         children: [
           { path: '', redirectTo: AltoRoutes.leadHome, pathMatch: 'full' },
           {
             path: AltoRoutes.leadHome,
             resolve: {
-              appData: homeResolver,
+              homeData: homeResolver,
             },
             loadChildren: () => import('./modules/lead-home/lead-home.module').then((m) => m.LeadHomeModule),
           },

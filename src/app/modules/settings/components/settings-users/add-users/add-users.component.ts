@@ -7,11 +7,13 @@ import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { IAbstractControl } from 'src/app/core/form-types/i-abstract-control';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 import { AddUsersForm } from '../../../models/user.model';
 import { ToastService } from 'src/app/core/toast/toast.service';
+import { User } from 'src/app/models/user.model';
+import { ActivatedRoute } from '@angular/router';
+import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
 
 @Component({
   selector: 'alto-add-users',
@@ -30,17 +32,22 @@ export class AddUsersComponent implements OnInit {
   emails: string[] = [];
   deletedEmails: string[] = [];
 
+  me!: User;
+
   constructor(
-    private readonly userStore: ProfileStore,
     public activeOffcanvas: NgbActiveOffcanvas,
     readonly fob: UntypedFormBuilder,
     private readonly teamService: TeamsRestService,
     private readonly usersRestService: UsersRestService,
     private readonly validationService: ValidationService,
     private readonly toastService: ToastService,
+    private readonly resolversService: ResolversService,
+    private readonly activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.me = data['me'] as User;
     this.usersRestService
       .getUsersCount({ includeSoftDeleted: true })
       .pipe(
@@ -79,7 +86,7 @@ export class AddUsersComponent implements OnInit {
           Validators.email,
         ],
       ],
-      companyId: [this.userStore.user.value.companyId],
+      companyId: [this.me.companyId],
     });
 
     return userForm;

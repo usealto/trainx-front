@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { GuessDtoApi, UserDtoApi, UserLightDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
 import { combineLatest, map, tap } from 'rxjs';
+import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { User } from 'src/app/models/user.model';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
@@ -30,7 +33,7 @@ export class UserHomeComponent implements OnInit {
 
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
-  userName = '';
+  user!: User;
   ScoreDuration = ScoreDuration;
   //programs-run data
   guessesCount = 0;
@@ -43,20 +46,22 @@ export class UserHomeComponent implements OnInit {
   leaderboardUsers: LeaderboardUser[] | undefined = undefined;
 
   constructor(
-    private readonly profileStore: ProfileStore,
     private readonly userRestService: UsersRestService,
     private readonly guessesRestService: GuessesRestService,
     private readonly programRunsRestService: ProgramRunsRestService,
     private readonly scoreRestService: ScoresRestService,
+    private readonly resolversService: ResolversService,
+    private readonly activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.user = data['me'] as User;
     this.programRunsRestService
       .getMyProgramRunsCards()
       .pipe(tap((a) => (this.myProgramRunsCards = a.filter((r) => r.isProgress && r.duration))))
       .subscribe();
 
-    this.userName = this.profileStore.user.value.firstname ?? '';
     this.continuousSessionGetGuessesCount();
     this.getLeaderboard();
   }
@@ -106,9 +111,9 @@ export class UserHomeComponent implements OnInit {
         map(
           ([usersStats, users, previousScoredUsers]) =>
             [
-              usersStats.filter((user) => user.teamId === this.profileStore.user.value.teamId),
-              users.filter((user) => user.teamId === this.profileStore.user.value.teamId),
-              previousScoredUsers.filter((user) => user.teamId === this.profileStore.user.value.teamId),
+              usersStats.filter((user) => user.teamId === this.user.teamId),
+              users.filter((user) => user.teamId === this.user.teamId),
+              previousScoredUsers.filter((user) => user.teamId === this.user.teamId),
             ] as [UserStatsDtoApi[], UserDtoApi[], UserStatsDtoApi[]],
         ),
         tap(([teamUsers, users, previousScoredUsers]) => {

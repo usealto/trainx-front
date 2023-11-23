@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { tap } from 'rxjs';
+import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { User } from 'src/app/models/user.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoreFilter } from 'src/app/modules/shared/models/score.model';
@@ -51,7 +51,8 @@ export class TrainingHomeComponent implements OnInit {
   donePrograms?: TrainingCardData[];
   allPrograms?: TrainingCardData[];
   allProgramsFiltered?: TrainingCardData[];
-  user = this.userStore.user.value;
+  me!: User;
+  users!: Map<string, User>;
   selectedItems: TrainingCardData[] = [];
   disabledCountScore?: number;
   disabledCountProgress?: number;
@@ -59,11 +60,15 @@ export class TrainingHomeComponent implements OnInit {
   constructor(
     private readonly programRunsRestService: ProgramRunsRestService,
     private readonly scoresService: ScoresService,
-    private readonly userStore: ProfileStore,
     private readonly router: Router,
+    private readonly resolversService: ResolversService,
+    private readonly activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.me = data['me'] as User;
+    this.users = data['usersById'] as Map<string, User>;
     this.programRunsRestService
       .getMyProgramRunsCards()
       .pipe(
@@ -181,7 +186,7 @@ export class TrainingHomeComponent implements OnInit {
   }
 
   @memoize()
-  getUser(id: string): UserDtoApi | undefined {
-    return this.userStore.users.value.find((x) => x.id === id);
+  getUser(id: string): User | undefined {
+    return this.users.get(id);
   }
 }

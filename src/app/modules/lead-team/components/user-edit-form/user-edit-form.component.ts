@@ -17,6 +17,9 @@ import { UserForm } from '../../model/user-edit.form';
 import { TeamsRestService } from '../../services/teams-rest.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
+import { User } from 'src/app/models/user.model';
+import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'alto-user-edit-form',
@@ -34,19 +37,22 @@ export class UserEditFormComponent implements OnInit {
     type: ['', [Validators.required]],
   });
   teams: TeamDtoApi[] = [];
-  profile: UserDtoApi = this.profileStore.user.value;
+  profile!: User;
 
   constructor(
     public activeOffcanvas: NgbActiveOffcanvas,
     readonly fob: UntypedFormBuilder,
     private readonly teamsRestService: TeamsRestService,
     private readonly userService: UsersRestService,
-    private readonly profileStore: ProfileStore,
     private readonly toastService: ToastService,
     private replaceInTranslationPipe: ReplaceInTranslationPipe,
+    private readonly resolversService: ResolversService,
+    private readonly activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.profile = data['me'] as User;
     setTimeout(() => {
       this.teamsRestService
         .getTeams()

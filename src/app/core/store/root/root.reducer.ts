@@ -21,16 +21,16 @@ export class TimestampedEntity<T> {
 export interface RootState {
   me: TimestampedEntity<User>;
   company: TimestampedEntity<Company>;
-  users: TimestampedEntity<User[]>;
-  teams: TimestampedEntity<Team[]>;
+  usersById: TimestampedEntity<Map<string, User>>;
+  teamsById: TimestampedEntity<Map<string, Team>>;
   statsTimestamp?: Date;
 }
 
 export const initialState: RootState = {
   me: new TimestampedEntity<User>(new User({} as IUser), null),
   company: new TimestampedEntity<Company>(new Company({} as ICompany), null),
-  users: new TimestampedEntity<User[]>([], null),
-  teams: new TimestampedEntity<Team[]>([], null),
+  usersById: new TimestampedEntity<Map<string, User>>(new Map(), null),
+  teamsById: new TimestampedEntity<Map<string, Team>>(new Map(), null),
 };
 
 export const rootReducer = createReducer(
@@ -53,20 +53,20 @@ export const rootReducer = createReducer(
     setUsers,
     (state, { users }): RootState => ({
       ...state,
-      users: new TimestampedEntity<User[]>(users),
+      usersById: new TimestampedEntity(new Map<string, User>(users.map(user => [user.id, user])))
     }),
   ),
-  on(addUser, (state, { user }) => ({
-    ...state,
-    users: new TimestampedEntity<User[]>(
-      !state.users.data.find((u) => u.id === user.id) ? [...state.users.data, user] : [...state.users.data],
-    ),
-  })),
+  on(
+    addUser, (state, {user}): RootState => ({
+      ...state,
+      usersById: new TimestampedEntity(new Map<string, User>([...state.usersById.data.entries(), [user.id, user]]))
+    })
+  ),
   on(
     setTeams,
     (state, { teams }): RootState => ({
       ...state,
-      teams: new TimestampedEntity(teams),
+      teamsById: new TimestampedEntity(new Map<string, Team>(teams.map(team => [team.id, team]))),
     }),
   ),
   on(

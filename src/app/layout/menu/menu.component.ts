@@ -32,7 +32,7 @@ export class MenuComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ me }) => {
+    this.activatedRoute.data.pipe(map(({ me }) => me as User)).subscribe((me) => {
       this.me = me;
       this.isAdmin = this.me.isAltoAdmin() || this.me.isCompanyAdmin();
     });

@@ -1,17 +1,20 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { CommentDtoApi, QuestionDtoApi, QuestionLightDtoApi, TeamLightDtoApi } from '@usealto/sdk-ts-angular';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
-import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
-import { of, switchMap, tap } from 'rxjs';
-import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
-import { ToastService } from 'src/app/core/toast/toast.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { QuestionFormComponent } from 'src/app/modules/shared/components/question-form/question-form.component';
+import { CommentDtoApi, QuestionLightDtoApi, TeamLightDtoApi } from '@usealto/sdk-ts-angular';
+import { of, switchMap, tap } from 'rxjs';
+import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { ToastService } from 'src/app/core/toast/toast.service';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
+import { Team } from 'src/app/models/team.model';
+import { User } from 'src/app/models/user.model';
+import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
+import { QuestionFormComponent } from 'src/app/modules/shared/components/question-form/question-form.component';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
 
 @UntilDestroy()
 @Component({
@@ -27,17 +30,25 @@ export class CommentCardComponent {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
 
+  users!: Map<string, User>;
+  teams!: Map<string, Team>;
+
   constructor(
     private readonly modalService: NgbModal,
     private readonly commentsRestService: CommentsRestService,
     private readonly toastService: ToastService,
     private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
-    private readonly userStore: ProfileStore,
     private readonly offcanvasService: NgbOffcanvas,
     private readonly questionRestService: QuestionsRestService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   archiveComment(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.users = data['usersById'] as Map<string, User>;
+    this.teams = data['teamsById'] as Map<string, Team>;
+
     const fullname = this.comment?.author
       ? `${this.comment?.author.firstname} ${this.comment?.author.lastname}`
       : I18ns.shared.deletedUsername;
@@ -81,9 +92,10 @@ export class CommentCardComponent {
       .subscribe();
   }
 
-  getTeam(userId: string): TeamLightDtoApi | undefined {
-    const u = this.userStore.users.value.find((user) => user.id === userId);
-    return u?.team || undefined;
+  getTeam(userId: string): Team | undefined {
+    const u = this.users.get(userId);
+    // return this.teams.find((team) => team.id === u?.teamId);
+    return this.teams.get(u?.teamId || '');
   }
 
   openQuestionForm(question?: QuestionLightDtoApi) {
@@ -98,8 +110,7 @@ export class CommentCardComponent {
                 panelClass: 'overflow-auto',
               });
               canvasRef.componentInstance.question = q;
-              canvasRef.componentInstance.createdQuestion
-                .subscribe();
+              canvasRef.componentInstance.createdQuestion.subscribe();
             }
           }),
         )
