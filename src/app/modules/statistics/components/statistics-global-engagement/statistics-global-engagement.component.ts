@@ -1,13 +1,13 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Observable, combineLatest, filter, map, switchMap, tap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
-  CompanyDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   TeamDtoApi,
   TeamStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
+import { Observable, combineLatest, filter, map, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -15,14 +15,14 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../services/statistics.service';
-import { TitleCasePipe } from '@angular/common';
 
+import { ActivatedRoute } from '@angular/router';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { Company } from 'src/app/models/company.model';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { DataForTable } from '../../models/statistics.model';
-import { CompaniesStore } from 'src/app/modules/companies/companies.store';
-import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 
 @UntilDestroy()
 @Component({
@@ -35,6 +35,8 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   EmojiName = EmojiName;
   duration: ScoreDuration = ScoreDuration.Trimester;
   AltoRoutes = AltoRoutes;
+
+  company!: Company;
 
   leaderboard: { name: string; score: number; progression: number }[] = [];
 
@@ -60,10 +62,13 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly statisticsServices: StatisticsService,
-    private readonly companyRestService: CompaniesRestService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.company = data[EResolverData.Company] as Company;
     this.getAllData();
   }
 
@@ -249,18 +254,17 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     );
   }
 
-  private getTeamDataForTable(): Observable<[TeamStatsDtoApi[], TeamStatsDtoApi[], CompanyDtoApi]> {
+  private getTeamDataForTable(): Observable<[TeamStatsDtoApi[], TeamStatsDtoApi[]]> {
     return combineLatest([
       this.scoresRestService.getTeamsStats(this.duration),
       this.scoresRestService.getTeamsStats(this.duration, true),
-      this.companyRestService.getMyCompany(),
     ]).pipe(
       tap(([teams]) => {
         this.teamsDataStatus = teams.length === 0 ? 'noData' : 'good';
       }),
       filter(([teams]) => teams.length > 0),
-      tap(([teams, teamsProg, company]) => {
-        this.hasConnector = company?.isConnectorActive ?? false;
+      tap(([teams, teamsProg]) => {
+        this.hasConnector = this.company.isConnectorActive ?? false;
         this.teams = teams.map((t) => t.team);
 
         this.teamsDisplay = teams.map((t) => {

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { ActivatedRoute, Router } from '@angular/router';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { Team } from 'src/app/models/team.model';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'alto-statistics-details-performance',
@@ -10,22 +10,26 @@ import { ProfileStore } from 'src/app/modules/profile/profile.store';
   styleUrls: ['./statistics-details-performance.component.scss'],
 })
 export class StatisticsDetailsPerformanceComponent implements OnInit {
-  team!: TeamDtoApi;
-  user!: UserDtoApi;
+  team!: Team;
+  user!: User;
   type: 'team' | 'user' = 'team';
   constructor(
     private readonly router: Router,
-    private readonly teamStore: TeamStore,
-    private readonly profileStore: ProfileStore,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    const users = data[EResolverData.UsersById] as Map<string, User>;
+    const teams = data[EResolverData.TeamsById] as Map<string, Team>;
+
     const id = this.router.url.split('/').pop() || '';
     this.type = this.router.url.split('/')[3] === 'team' ? 'team' : 'user';
     if (this.type === 'team') {
-      this.team = this.teamStore.teams.value.find((t) => t.id === id) || ({} as TeamDtoApi);
+      this.team = teams.get(id) || ({} as Team);
     } else {
-      this.user = this.profileStore.users.value.find((u) => u.id === id) || ({} as UserDtoApi);
+      this.user = users.get(id) || ({} as User);
     }
   }
 }

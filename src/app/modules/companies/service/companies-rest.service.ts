@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable, map, tap } from 'rxjs';
 import {
   CompaniesApiService,
-  GetCompaniesRequestParams,
   CompanyDtoApi,
   CreateCompanyDtoApi,
   CompanyDtoResponseApi,
@@ -11,6 +10,7 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { ProfileStore } from '../../profile/profile.store';
 import { CompaniesStore } from '../companies.store';
+import { Company } from 'src/app/models/company.model';
 
 @Injectable({
   providedIn: 'root',
@@ -22,14 +22,10 @@ export class CompaniesRestService {
     private readonly companiesStore: CompaniesStore,
   ) {}
 
-  getCompanies(req?: GetCompaniesRequestParams): Observable<CompanyDtoApi[]> {
-    return this.companyApi.getCompanies({ ...req }).pipe(map((companies) => companies.data ?? []));
-  }
-
-  getCompanyById(id: string): Observable<CompanyDtoApi> {
+  getCompanyById(id: string): Observable<Company | undefined> {
     return this.companyApi
       .getCompanyById({ id })
-      .pipe(map((company) => company.data ?? ({} as CompanyDtoApi)));
+      .pipe(map(({ data }) => (data ? Company.fromDto(data) : undefined)));
   }
 
   getMyCompany(): Observable<CompanyDtoApi> {

@@ -5,6 +5,7 @@ import { PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto
 import { Observable, combineLatest, filter, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { User } from 'src/app/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
@@ -24,7 +25,8 @@ export class TeamFormComponent implements OnInit {
 
   private fb: IFormBuilder = this.fob;
 
-  teamsNames: string[] = [];
+  @Input() teamsNames: string[] = [];
+  @Input() users: User[] = [];
 
   teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
     name: [
@@ -37,7 +39,6 @@ export class TeamFormComponent implements OnInit {
 
   isEdit = false;
   programs: ProgramDtoApi[] = [];
-  users: UserDtoApi[] = [];
   userFilters = { teams: [] as TeamDtoApi[] };
 
   constructor(
@@ -51,30 +52,16 @@ export class TeamFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.teamsRestService
-      .getTeams()
-      .pipe(
-        tap((d) => {
-          d.forEach((t) => {
-            this.teamsNames.push(t.name.toLowerCase());
-          });
-        }),
-        tap(() => {
-          const teamName = this.team?.name.toLowerCase();
-          const index = this.teamsNames.indexOf(teamName ?? '');
-          if (teamName) {
-            this.teamsNames.splice(index, 1);
-          }
-        }),
-      )
-      .subscribe();
+    const teamName = this.team?.name.toLowerCase();
+    const index = this.teamsNames.indexOf(teamName ?? '');
+    if (teamName) {
+      this.teamsNames.splice(index, 1);
+    }
 
     setTimeout(() => {
-      combineLatest([this.programService.getPrograms(), this.userRestService.getUsers()])
-        .pipe(
-          tap(([programs, users]) => (this.programs = programs)),
-          tap(([programs, users]) => (this.users = users)),
-        )
+      this.programService
+        .getPrograms()
+        .pipe(tap((programs) => (this.programs = programs)))
         .subscribe();
 
       if (this.team) {

@@ -6,10 +6,10 @@ import {
   ProgramRunDtoPaginatedResponseApi,
   ProgramRunsApiService,
   QuestionDtoPaginatedResponseApi,
-  UserDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
 import { Observable, combineLatest, map, switchMap, tap } from 'rxjs';
+import { User } from 'src/app/models/user.model';
 import { ProfileStore } from '../../profile/profile.store';
 import { UsersRestService } from '../../profile/services/users-rest.service';
 import { ScoreDuration } from '../../shared/models/score.model';
@@ -88,7 +88,7 @@ export class ProgramRunsRestService {
                 result.push(user);
               }
               return result;
-            }, [] as UserDtoApi[]) ?? [],
+            }, [] as User[]) ?? [],
         }));
         return myPrograms;
       }),

@@ -1,15 +1,17 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AltoConnectorEnumApi, CompanyDtoApi, CompanyDtoApiConnectorEnumApi } from '@usealto/sdk-ts-angular';
 import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CompaniesStore } from 'src/app/modules/companies/companies.store';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { AltoConnectorEnumApi, CompanyDtoApi, CompanyDtoApiConnectorEnumApi } from '@usealto/sdk-ts-angular';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
-import { UsersRestService } from '../../../profile/services/users-rest.service';
-import { TriggersService } from '../../services/triggers.service';
+import { ActivatedRoute } from '@angular/router';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { ToastService } from '../../../../core/toast/toast.service';
+import { TriggersService } from '../../services/triggers.service';
+import { User } from 'src/app/models/user.model';
 
 enum ModalType {
   ToggleConnector = 'toggleConnector',
@@ -44,38 +46,26 @@ export class SettingsIntegrationsComponent implements OnInit {
     private modalService: NgbModal,
     private readonly companiesRestService: CompaniesRestService,
     private readonly companiesStore: CompaniesStore,
-    private readonly usersRestService: UsersRestService,
-    private readonly triggersService: TriggersService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
     private readonly toastService: ToastService,
+    private readonly triggersService: TriggersService,
   ) {}
 
   ngOnInit(): void {
-    this.companiesRestService
-      .getMyCompany()
-      .pipe(
-        tap((comp) => {
-          this.company = comp;
-          this.isConnectorActivated = comp.isConnectorActive ?? false;
-          this.isWebAppActivated = comp.usersHaveWebAccess ?? false;
-          this.connector =
-            comp.connector === CompanyDtoApiConnectorEnumApi.Slack
-              ? AltoConnectorEnumApi.Slack
-              : comp.connector === CompanyDtoApiConnectorEnumApi.GoogleChat
-              ? AltoConnectorEnumApi.GoogleChat
-              : AltoConnectorEnumApi.Unknown;
-        }),
-      )
-      .subscribe();
-
-    this.usersRestService
-      .getUsers()
-      .pipe(
-        tap((users) => {
-          this.nbUsers = users.length;
-          this.nbUsersConnectorInactive = users.filter((u) => !u.isConnectorActive).length;
-        }),
-      )
-      .subscribe();
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.company = data[EResolverData.Company] as CompanyDtoApi;
+    this.isConnectorActivated = this.company?.isConnectorActive ?? false;
+    this.isWebAppActivated = this.company?.usersHaveWebAccess ?? false;
+    this.connector =
+      this.company?.connector === CompanyDtoApiConnectorEnumApi.Slack
+        ? AltoConnectorEnumApi.Slack
+        : this.company?.connector === CompanyDtoApiConnectorEnumApi.GoogleChat
+        ? AltoConnectorEnumApi.GoogleChat
+        : AltoConnectorEnumApi.Unknown;
+    const users = Array.from((data[EResolverData.UsersById] as Map<string, User>).values());
+    this.nbUsers = users.length;
+    this.nbUsersConnectorInactive = users.filter((u) => !u.isConnectorActive).length;
   }
 
   validateModal(type: ModalType, toggle: boolean, e: any, connector = this.connector) {

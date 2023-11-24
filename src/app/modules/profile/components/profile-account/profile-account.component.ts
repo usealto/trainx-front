@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { UserDtoApi } from '@usealto/sdk-ts-angular';
-import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { UserForm } from '../../models/user.form';
-import { ProfileStore } from '../../profile.store';
-import { UsersRestService } from '../../services/users-rest.service';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { tap } from 'rxjs';
-import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { Company } from 'src/app/models/company.model';
+import { Team } from 'src/app/models/team.model';
+import { User } from 'src/app/models/user.model';
+import { UserForm } from '../../models/user.form';
+import { UsersRestService } from '../../services/users-rest.service';
 
 @UntilDestroy()
 @Component({
@@ -19,24 +22,32 @@ import { ToastService } from 'src/app/core/toast/toast.service';
 })
 export class ProfileAccountComponent implements OnInit {
   EmojiName = EmojiName;
+  teamsById = new Map<string, Team>();
 
   I18ns = I18ns;
   private fb: IFormBuilder;
 
   userForm!: IFormGroup<UserForm>;
-  user: UserDtoApi;
+  user!: User;
+  userTeam!: Team;
+  company!: Company;
 
   constructor(
     readonly fob: UntypedFormBuilder,
-    private readonly userStore: ProfileStore,
     private readonly userRestService: UsersRestService,
     private readonly toastService: ToastService,
+    private readonly resolversService: ResolversService,
+    private readonly activatedRoute: ActivatedRoute,
   ) {
     this.fb = fob;
-    this.user = this.userStore.user.value;
   }
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.user = data[EResolverData.Me] as User;
+    this.teamsById = data[EResolverData.TeamsById] as Map<string, Team>;
+    this.company = data[EResolverData.Company] as Company;
+    this.userTeam = this.user.teamId ? this.teamsById.get(this.user.teamId) || ({} as Team) : ({} as Team);
     this.initForm();
   }
 
@@ -56,7 +67,7 @@ export class ProfileAccountComponent implements OnInit {
         lastname: this.userForm.value?.lastname,
       })
       .pipe(
-        tap((u) => (this.user = u)),
+        tap((u) => (this.user = User.fromDto(u))),
         tap(() => {
           this.toastService.show({
             text: I18ns.profile.profile.form.success,

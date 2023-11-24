@@ -1,5 +1,6 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   ScoreByTypeEnumApi,
   ScoreDtoApi,
@@ -7,23 +8,21 @@ import {
   ScoreTypeEnumApi,
   TagDtoApi,
   TagStatsDtoApi,
-  UserDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { combineLatest, map, tap } from 'rxjs';
+import { combineLatest, tap } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { ITeam, Team } from 'src/app/models/team.model';
+import { IUser, User } from 'src/app/models/user.model';
+import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
+import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
-import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
-import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
-import { TitleCasePipe } from '@angular/common';
-import * as echarts from 'echarts/types/dist/echarts';
 
 @Component({
   selector: 'alto-user-performance',
@@ -34,7 +33,8 @@ export class UserPerformanceComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
 
-  user!: UserDtoApi;
+  user!: User;
+  userTeam!: Team;
   duration: ScoreDuration = ScoreDuration.Trimester;
   tags: TagDtoApi[] = [];
 
@@ -53,17 +53,22 @@ export class UserPerformanceComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly profileStore: ProfileStore,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly statisticsService: StatisticsService,
     private readonly tagsRestService: TagsRestService,
     readonly titleCasePipe: TitleCasePipe,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
-    const userI = this.router.url.split('/').pop() || '';
-    this.user = this.profileStore.users.value.find((u) => u.id === userI) || ({} as UserDtoApi);
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    const usersById = data[EResolverData.UsersById] as Map<string, User>;
+    const teamsById = data[EResolverData.TeamsById] as Map<string, Team>;
+    const userId = this.router.url.split('/').pop() || '';
+    this.user = usersById.get(userId) || new User({} as IUser);
+    this.userTeam = teamsById.get(this.user.teamId || '') || new Team({} as ITeam);
 
     this.tagsRestService
       .getTags()
@@ -306,7 +311,7 @@ export class UserPerformanceComponent implements OnInit {
         type === 'user'
           ? this.user.id
           : type === 'team'
-          ? this.user.team?.id
+          ? this.userTeam.id
           : type === 'tags'
           ? this.selectedTags.map((t) => t.id)
           : this.selectedSpiderTags.map((t) => t.id),

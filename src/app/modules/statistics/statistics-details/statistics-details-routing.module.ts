@@ -1,11 +1,9 @@
-import { RouterModule, Routes } from '@angular/router';
-import { StatisticsDetailsComponent } from './components/statistics-details/statistics-details.component';
-import { AltoRoutes } from '../../shared/constants/routes';
-import { TeamPerformanceComponent } from './components/team-performance/team-performance.component';
 import { NgModule } from '@angular/core';
-import { TeamEngagementComponent } from './components/team-engagement/team-engagement.component';
-import { StatisticsDetailsPerformanceComponent } from './components/statistics-details-performance/statistics-details-performance.component';
+import { RouterModule, Routes } from '@angular/router';
+import { AltoRoutes } from '../../shared/constants/routes';
 import { StatisticsDetailsEngagementComponent } from './components/statistics-details-engagement/statistics-details-engagement.component';
+import { StatisticsDetailsPerformanceComponent } from './components/statistics-details-performance/statistics-details-performance.component';
+import { StatisticsDetailsComponent } from './components/statistics-details/statistics-details.component';
 
 const routes: Routes = [
   {
@@ -19,11 +17,11 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.performance + '/:id',
-        component:  StatisticsDetailsPerformanceComponent,
+        component: StatisticsDetailsPerformanceComponent,
       },
       {
         path: AltoRoutes.engagement + '/:id',
-        component:  StatisticsDetailsEngagementComponent,
+        component: StatisticsDetailsEngagementComponent,
       },
     ],
   },

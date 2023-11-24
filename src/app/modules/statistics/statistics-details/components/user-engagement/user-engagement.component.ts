@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   ScoreByTypeEnumApi,
   ScoreDtoApi,
@@ -20,6 +20,9 @@ import { StatisticsService } from '../../../services/statistics.service';
 import { TitleCasePipe } from '@angular/common';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { combineLatest } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { IUser, User } from 'src/app/models/user.model';
+import { ITeam, Team } from 'src/app/models/team.model';
 
 @Component({
   selector: 'alto-user-engagement',
@@ -30,7 +33,8 @@ export class UserEngagementComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
 
-  user!: UserDtoApi;
+  user!: User;
+  userTeam!: Team;
   duration: ScoreDuration = ScoreDuration.Trimester;
 
   answersChartOptions!: any;
@@ -41,16 +45,21 @@ export class UserEngagementComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly profileStore: ProfileStore,
     private readonly scoreRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly statisticsService: StatisticsService,
     private readonly titleCasePipe: TitleCasePipe,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
-    const userI = this.router.url.split('/').pop() || '';
-    this.user = this.profileStore.users.value.find((u) => u.id === userI) || ({} as UserDtoApi);
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    const usersById = data[EResolverData.UsersById] as Map<string, User>;
+    const teamsById = data[EResolverData.TeamsById] as Map<string, Team>;
+    const userId = this.router.url.split('/').pop() || '';
+    this.user = usersById.get(userId) || new User({} as IUser);
+    this.userTeam = teamsById.get(this.user.teamId || '') || new Team({} as ITeam);
 
     this.loadPage();
   }

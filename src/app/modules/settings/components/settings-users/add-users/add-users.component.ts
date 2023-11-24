@@ -1,17 +1,19 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { TeamDtoApi } from '@usealto/sdk-ts-angular';
 import { catchError, combineLatest, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { IAbstractControl } from 'src/app/core/form-types/i-abstract-control';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { Team } from 'src/app/models/team.model';
+import { User } from 'src/app/models/user.model';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 import { AddUsersForm } from '../../../models/user.model';
-import { ToastService } from 'src/app/core/toast/toast.service';
 
 @Component({
   selector: 'alto-add-users',
@@ -26,39 +28,39 @@ export class AddUsersComponent implements OnInit {
   private fb: IFormBuilder = this.fob;
 
   userForms: IFormGroup<AddUsersForm>[] = [];
-  teams: TeamDtoApi[] = [];
+  teams: Team[] = [];
   emails: string[] = [];
   deletedEmails: string[] = [];
 
+  me!: User;
+
   constructor(
-    private readonly userStore: ProfileStore,
     public activeOffcanvas: NgbActiveOffcanvas,
     readonly fob: UntypedFormBuilder,
     private readonly teamService: TeamsRestService,
     private readonly usersRestService: UsersRestService,
     private readonly validationService: ValidationService,
     private readonly toastService: ToastService,
+    private readonly resolversService: ResolversService,
+    private readonly activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.me = data[EResolverData.Me] as User;
+    this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
     this.usersRestService
       .getUsersCount({ includeSoftDeleted: true })
       .pipe(
-        switchMap((count) => {
-          return combineLatest([
-            this.teamService.getTeams(),
-            count > 0
-              ? this.usersRestService.getUsersFiltered({
-                  includeSoftDeleted: true,
-                  itemsPerPage: count,
-                })
-              : of([]),
-          ]);
-        }),
-        tap(([teams, users]) => {
+        switchMap((count) =>
+          this.usersRestService.getUsersFiltered({
+            includeSoftDeleted: true,
+            itemsPerPage: count,
+          }),
+        ),
+        tap((users) => {
           this.emails = users.filter((u) => !u.deletedAt).map((u) => u.email);
           this.deletedEmails = users.filter((u) => u.deletedAt).map((u) => u.email);
-          this.teams = teams;
           this.addLine();
         }),
       )
@@ -79,7 +81,7 @@ export class AddUsersComponent implements OnInit {
           Validators.email,
         ],
       ],
-      companyId: [this.userStore.user.value.companyId],
+      companyId: [this.me.companyId],
     });
 
     return userForm;

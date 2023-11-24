@@ -8,6 +8,9 @@ import { TeamsRestService } from '../../../../lead-team/services/teams-rest.serv
 import { ProgramForm } from '../../../models/programs.form';
 import { TagsRestService } from '../../../services/tags-rest.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { ActivatedRoute } from '@angular/router';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { Team } from 'src/app/models/team.model';
 
 @UntilDestroy()
 @Component({
@@ -22,19 +25,26 @@ export class ProgramsFormComponent implements OnInit {
   I18ns = I18ns;
 
   tags: TagDtoApi[] = [];
-  teams: TeamDtoApi[] = [];
+  teams: Team[] = [];
   priorities = Object.values(PriorityEnumApi).map((p) => ({
     id: p,
     value: getTranslation(I18ns.shared.priorities, p.toLowerCase()),
   }));
-  constructor(private readonly tagService: TagsRestService, private readonly teamService: TeamsRestService) {}
+  constructor(
+    private readonly tagService: TagsRestService,
+    private readonly teamService: TeamsRestService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
+  ) {}
 
   ngOnInit(): void {
-    combineLatest([this.tagService.getTags(), this.teamService.getTeams()])
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
+    this.tagService
+      .getTags()
       .pipe(
-        tap(([tags, teams]) => {
+        tap((tags) => {
           this.tags = tags ?? [];
-          this.teams = teams ?? [];
         }),
         untilDestroyed(this),
       )

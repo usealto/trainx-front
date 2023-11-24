@@ -3,11 +3,13 @@ import { GuessDtoApi, UserLightDtoApi } from '@usealto/sdk-ts-angular';
 import { addDays, format } from 'date-fns';
 import { combineLatest, map, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { GuessesRestService } from '../../services/guesses-rest.service';
+import { User } from 'src/app/models/user.model';
+import { ActivatedRoute } from '@angular/router';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 
 @Component({
   selector: 'alto-continuing-training',
@@ -27,6 +29,7 @@ export class ContinuingTrainingComponent implements OnInit {
   regularityProgression = 0;
   streak = 0;
   longestStreak = 0;
+  me!: User;
 
   continuousSessionUsers: UserLightDtoApi[] = [];
 
@@ -34,18 +37,18 @@ export class ContinuingTrainingComponent implements OnInit {
     private readonly scoresRestService: ScoresRestService,
     private readonly guessesRestService: GuessesRestService,
     private readonly guessRestService: GuessesRestService,
-    private readonly profileStore: ProfileStore,
+    private readonly resolversService: ResolversService,
+    private readonly activatedRoute: ActivatedRoute,
   ) {}
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.me = data[EResolverData.Me] as User;
     combineLatest([
-      this.scoresRestService.getUsersStats(ScoreDuration.Month, false, this.profileStore.user.value.id),
-      this.scoresRestService.getUsersStats(ScoreDuration.Month, true, this.profileStore.user.value.id),
+      this.scoresRestService.getUsersStats(ScoreDuration.Month, false, this.me.id),
+      this.scoresRestService.getUsersStats(ScoreDuration.Month, true, this.me.id),
+      this.guessRestService.getGuesses({ createdBy: this.me.id, itemsPerPage: 500 }, ScoreDuration.Trimester),
       this.guessRestService.getGuesses(
-        { createdBy: this.profileStore.user.value.id, itemsPerPage: 500 },
-        ScoreDuration.Trimester,
-      ),
-      this.guessRestService.getGuesses(
-        { createdBy: this.profileStore.user.value.id, itemsPerPage: 500 },
+        { createdBy: this.me.id, itemsPerPage: 500 },
         ScoreDuration.Trimester,
         true,
       ),
@@ -57,13 +60,12 @@ export class ContinuingTrainingComponent implements OnInit {
             this.getParticipationDays(previousGuesses.data) / (this.daysInPeriod * this.threshold);
           this.regularityProgression = this.regularity - previousRegularity;
 
-          this.avgScore = userScore.find((u) => u.id === this.profileStore.user.value.id)?.score ?? 0;
-          const previousAvgScore =
-            previousSCore.find((u) => u.id === this.profileStore.user.value.id)?.score ?? 0;
+          this.avgScore = userScore.find((u) => u.id === this.me.id)?.score ?? 0;
+          const previousAvgScore = previousSCore.find((u) => u.id === this.me.id)?.score ?? 0;
           this.avgScoreProgression = this.avgScore - previousAvgScore;
 
-          this.streak = this.profileStore.user.value.currentStreak?.count;
-          this.longestStreak = this.profileStore.user.value.longestStreak?.count;
+          this.streak = this.me.currentStreak?.count;
+          this.longestStreak = this.me.longestStreak?.count;
         }),
       )
       .subscribe();

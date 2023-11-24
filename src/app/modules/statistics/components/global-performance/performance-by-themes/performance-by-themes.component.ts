@@ -1,17 +1,18 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
-  ScoresResponseDtoApi
+  ScoresResponseDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { Observable, switchMap, tap } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { Team } from 'src/app/models/team.model';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
@@ -49,27 +50,23 @@ export class PerformanceByThemesComponent implements OnChanges {
   constructor(
     private titleCasePipe: TitleCasePipe,
     public readonly programsStore: ProgramsStore,
-    public readonly teamsStore: TeamStore,
     private readonly scoresRestService: ScoresRestService,
     private readonly statisticsServices: StatisticsService,
     private readonly scoresServices: ScoresService,
-    private readonly teamRestService: TeamsRestService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['duration']) {
+      const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+      this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values()).map(
+        (t) => ({ label: t.name, id: t.id }),
+      );
+      this.selectedTeams = this.teams.splice(0, 5);
+
       this.getScores()
         .pipe(
-          switchMap(() => this.teamRestService.getTeams()),
-          tap((res) => {
-            this.teams = res
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((t) => ({
-                label: t.name,
-                id: t.id,
-              }));
-            this.selectedTeams = this.teams.splice(0, 5);
-          }),
           switchMap(() => this.scoresRestService.getTagsStats(this.duration)),
           tap((res) => {
             const output = res.filter((t) => t.score && t.score >= 0);

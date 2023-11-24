@@ -1,8 +1,11 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ProgramDtoApi, ProgramRunApi } from '@usealto/sdk-ts-angular';
 import { tap } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { Team } from 'src/app/models/team.model';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { AltoRoutes } from '../../constants/routes';
@@ -33,13 +36,14 @@ export class ProgramCardComponent implements OnInit, OnChanges {
   constructor(
     private readonly programRestService: ProgramsRestService,
     private readonly teamsRestService: TeamsRestService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
-    this.teamsRestService
-      .getTeams()
-      .pipe(tap((teams) => (this.teamsCount = teams.length)))
-      .subscribe();
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.teamsCount = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values()).length;
+
     this.membersHaveValidatedPercentage = this.membersHaveValidatedCount
       ? +this.membersHaveValidatedCount?.split('/')[0] / +this.membersHaveValidatedCount?.split('/')[1]
       : 0;
