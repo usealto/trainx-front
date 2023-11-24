@@ -20,6 +20,9 @@ RUN npm install -g @angular/cli
 
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
+# Install angular cli
+RUN npm install -g @angular/cli
+
 # Bundle app source
 COPY . .
 

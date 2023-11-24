@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host=127.0.0.1",
+    "start": "ng serve --host=0.0.0.0",
     "start:hmr": "ng serve --hmr",
     "prebuild:preprod": "node build-time.js",
     "build:preprod": "ng build --configuration preprod",
