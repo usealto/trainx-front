@@ -5,6 +5,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   GetNextQuestionsForUserRequestParams,
   GuessSourceEnumApi,
+  NextQuestionDtoApi,
   ProgramDtoApi,
   ProgramRunDtoApi,
   QuestionApi,
@@ -59,7 +60,7 @@ export class TrainingComponent implements OnInit {
 
   remainingQuestions: QuestionDtoApi[] = [];
 
-  displayedQuestion!: QuestionApi | QuestionDtoApi;
+  displayedQuestion!: QuestionApi | QuestionDtoApi | NextQuestionDtoApi;
   isQuestionsLoading = true;
   currentAnswers: AnswerCard[] = [];
   iDontKnow = false;
@@ -272,7 +273,7 @@ export class TrainingComponent implements OnInit {
     }
   }
 
-  setDisplayedQuestion(quest: QuestionApi | QuestionDtoApi) {
+  setDisplayedQuestion(quest: QuestionApi | QuestionDtoApi | NextQuestionDtoApi) {
     this.displayedQuestion = quest;
     this.getCurrentAnswers(this.displayedQuestion.answersAccepted, this.displayedQuestion.answersWrong);
     this.isTimedOut = false;

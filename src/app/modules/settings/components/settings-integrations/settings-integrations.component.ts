@@ -9,6 +9,8 @@ import { CompaniesRestService } from 'src/app/modules/companies/service/companie
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import { ActivatedRoute } from '@angular/router';
 import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { ToastService } from '../../../../core/toast/toast.service';
+import { TriggersService } from '../../services/triggers.service';
 
 enum ModalType {
   ToggleConnector = 'toggleConnector',
@@ -29,6 +31,10 @@ export class SettingsIntegrationsComponent implements OnInit {
 
   company?: CompanyDtoApi;
 
+  nbUsers = 0;
+  nbUsersConnectorInactive = 0;
+  emailValue = '';
+
   isConnectorActivated = false;
 
   isWebAppActivated = false;
@@ -41,6 +47,8 @@ export class SettingsIntegrationsComponent implements OnInit {
     private readonly companiesStore: CompaniesStore,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
+    private readonly toastService: ToastService,
+    private readonly triggersService: TriggersService,
   ) {}
 
   ngOnInit(): void {
@@ -54,6 +62,9 @@ export class SettingsIntegrationsComponent implements OnInit {
         : this.company?.connector === CompanyDtoApiConnectorEnumApi.GoogleChat
         ? AltoConnectorEnumApi.GoogleChat
         : AltoConnectorEnumApi.Unknown;
+    const users = Array.from((data[EResolverData.UsersById] as Map<string, User>).values());
+    this.nbUsers = users.length;
+    this.nbUsersConnectorInactive = users.filter((u) => !u.isConnectorActive).length;
   }
 
   validateModal(type: ModalType, toggle: boolean, e: any, connector = this.connector) {
@@ -165,5 +176,32 @@ export class SettingsIntegrationsComponent implements OnInit {
         )
         .subscribe();
     }
+  }
+
+  sendEmailSlackAuthorization() {
+    this.triggersService.askSlackAuthorization(this.emailValue).subscribe(
+      () => {
+        this.toastService.show({text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackSuccess, type: 'success'});
+      },
+      () => {
+        this.toastService.show({text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackError, type: 'danger'});
+      },
+    );
+  }
+
+  sendGchatInstruction() {
+    this.triggersService.sendGchatInstructions().subscribe(
+      () => {
+        this.toastService.show({text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatSuccess, type: 'success'});
+      },
+      () => {
+        this.toastService.show({text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatError, type: 'danger'});
+      },
+    );
+  }
+
+  openLinkSlack() {
+    const url = '';
+    window.open(url, '_blank');
   }
 }

@@ -116,7 +116,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
               data: d.data,
               type: 'line',
               showSymbol: false,
-              color: '#53b1fd',
+              color: '#FD853A',
             };
           });
 
