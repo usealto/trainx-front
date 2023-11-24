@@ -16,6 +16,7 @@ export interface ICompany {
   connectorQuestionsPerQuiz?: number;
   connectorTimes?: Array<CompanyDtoApiConnectorTimesEnumApi>;
   adminIds: string[];
+  theOfficeId: string;
   usersHaveWebAccess: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -27,6 +28,7 @@ export class Company implements ICompany {
   id: string;
   name: string;
   connector?: CompanyDtoApiConnectorEnumApi;
+  theOfficeId: string;
   isConnectorActive?: boolean;
   connectorDays?: Array<CompanyDtoApiConnectorDaysEnumApi>;
   connectorQuestionsPerQuiz?: number;
@@ -48,6 +50,7 @@ export class Company implements ICompany {
     this.connectorTimes = data.connectorTimes ?? [];
     this.adminIds = data.adminIds ?? [];
     this.usersHaveWebAccess = data.usersHaveWebAccess ?? false;
+    this.theOfficeId = data.theOfficeId ?? 'theOfficeId';
     this.createdAt = data.createdAt ?? new Date();
     this.updatedAt = data.updatedAt ?? new Date();
     this.stats = [];
@@ -64,6 +67,7 @@ export class Company implements ICompany {
       connectorTimes: data.connectorTimes,
       adminIds: data.admins ? data.admins.map(({ id }) => id) : [],
       usersHaveWebAccess: data.usersHaveWebAccess,
+      theOfficeId: data.theOfficeId,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       stats: [],
@@ -97,6 +101,7 @@ export class Company implements ICompany {
       connectorTimes: this.connectorTimes,
       adminIds: this.adminIds,
       usersHaveWebAccess: this.usersHaveWebAccess,
+      theOfficeId: this.theOfficeId,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       deletedAt: this.deletedAt,

@@ -1,25 +1,18 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import {
-  PatchUserDtoApi,
-  RoleEnumApi,
-  TeamDtoApi,
-  UserDtoApi,
-  UserDtoApiRolesEnumApi,
-} from '@usealto/sdk-ts-angular';
+import { PatchUserDtoApi, RoleEnumApi, UserDtoApi, UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 import { tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
+import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
+import { Team } from 'src/app/models/team.model';
+import { User } from 'src/app/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UserForm } from '../../model/user-edit.form';
-import { TeamsRestService } from '../../services/teams-rest.service';
-import { ToastService } from 'src/app/core/toast/toast.service';
-import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
-import { User } from 'src/app/models/user.model';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'alto-user-edit-form',
@@ -36,13 +29,12 @@ export class UserEditFormComponent implements OnInit {
     team: ['', [Validators.required]],
     type: ['', [Validators.required]],
   });
-  teams: TeamDtoApi[] = [];
+  teams: Team[] = [];
   profile!: User;
 
   constructor(
     public activeOffcanvas: NgbActiveOffcanvas,
     readonly fob: UntypedFormBuilder,
-    private readonly teamsRestService: TeamsRestService,
     private readonly userService: UsersRestService,
     private readonly toastService: ToastService,
     private replaceInTranslationPipe: ReplaceInTranslationPipe,
@@ -53,11 +45,8 @@ export class UserEditFormComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.profile = data['me'] as User;
+    this.teams = Array.from((data['teamsById'] as Map<string, Team>).values());
     setTimeout(() => {
-      this.teamsRestService
-        .getTeams()
-        .pipe(tap((teams) => (this.teams = teams)))
-        .subscribe();
       this.userForm.patchValue({
         team: this.user?.teamId,
         type: this.getHigherRole(this.user?.roles ?? []),

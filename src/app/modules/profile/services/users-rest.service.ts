@@ -25,37 +25,30 @@ export class UsersRestService {
     private userStore: ProfileStore,
   ) {}
 
-  getUsers(): Observable<UserDtoApi[]> {
-    // BAD CODE
-    return this.userApi.getUsers({ page: 1, itemsPerPage: 1000 }).pipe(
-      map((r) => r.data ?? []),
-      tap((users) => (this.userStore.users.value = users)),
+  getUsers(): Observable<User[]> {
+    return this.userApi.getUsers({ page: 1, sortBy: 'createdAt:asc', itemsPerPage: 1000 }).pipe(
+      switchMap(({ data, meta }) => {
+        const reqs: Observable<UserDtoApi[]>[] = [of(data ? data : [])];
+        let totalPages = meta.totalPage ?? 1;
+
+        for (let i = 2; i <= totalPages; i++) {
+          reqs.push(
+            this.userApi.getUsers({ page: i, sortBy: 'createdAt:asc', itemsPerPage: 1000 }).pipe(
+              tap(({ meta }) => {
+                if (meta.totalPage !== totalPages) {
+                  totalPages = meta.totalPage;
+                }
+              }),
+              map(({ data }) => (data ? data : [])),
+            ),
+          );
+        }
+        return combineLatest(reqs);
+      }),
+      map((usersDtos) => {
+        return usersDtos.flat().map(User.fromDto);
+      }),
     );
-
-    // GOOD CODE
-    // return this.userApi.getUsers({ page: 1, sortBy: 'createdAt:asc' }).pipe(
-    //   switchMap(({ data, meta }) => {
-    //     const reqs: Observable<UserDtoApi[]>[] = [of(data ? data : [])];
-    //     let totalPages = meta.totalPage ?? 1;
-
-    //     for (let i = 1; i < totalPages; i++) {
-    //       reqs.push(
-    //         this.userApi.getUsers({ page: i, sortBy: 'createdAt:asc' }).pipe(
-    //           tap(({ meta }) => {
-    //             if (meta.totalPage !== totalPages) {
-    //               totalPages = meta.totalPage;
-    //             }
-    //           }),
-    //           map(({ data }) => (data ? data : [])),
-    //         ),
-    //       );
-    //     }
-    //     return combineLatest(reqs);
-    //   }),
-    //   map((usersDtos) => {
-    //     return usersDtos.flat().map(User.fromDto);
-    //   }),
-    // );
   }
 
   resetUsers() {

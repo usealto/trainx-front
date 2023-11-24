@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -23,7 +23,7 @@ import { CollaborationModalComponent } from '../collaboration-modal/collaboratio
   styleUrls: ['./comment-card.component.scss', '../styles/collaboration-cards.scss'],
   providers: [ReplaceInTranslationPipe],
 })
-export class CommentCardComponent {
+export class CommentCardComponent implements OnInit {
   @Input() comment?: CommentDtoApi;
   @Output() refresh = new EventEmitter<boolean>();
 
@@ -44,11 +44,13 @@ export class CommentCardComponent {
     private readonly resolversService: ResolversService,
   ) {}
 
-  archiveComment(): void {
+  ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.users = data['usersById'] as Map<string, User>;
     this.teams = data['teamsById'] as Map<string, Team>;
+  }
 
+  archiveComment(): void {
     const fullname = this.comment?.author
       ? `${this.comment?.author.firstname} ${this.comment?.author.lastname}`
       : I18ns.shared.deletedUsername;
@@ -94,7 +96,6 @@ export class CommentCardComponent {
 
   getTeam(userId: string): Team | undefined {
     const u = this.users.get(userId);
-    // return this.teams.find((team) => team.id === u?.teamId);
     return this.teams.get(u?.teamId || '');
   }
 

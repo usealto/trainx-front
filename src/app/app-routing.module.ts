@@ -4,7 +4,7 @@ import { AuthGuard } from '@auth0/auth0-angular';
 import {
   PreventSmallScreenGuard,
   altoAdminGuard,
-  appGuard,
+  AppGuard,
   leadAccessGuard,
   userAccessGuard,
 } from './core/guards';
@@ -36,7 +36,7 @@ const routes: Routes = [
   {
     path: '',
     component: AppLayoutComponent,
-    canActivate: [appGuard, AuthGuard, PreventSmallScreenGuard],
+    canActivate: [AppGuard, AuthGuard, PreventSmallScreenGuard],
     canActivateChild: [AuthGuard],
     resolve: {
       appResolver,

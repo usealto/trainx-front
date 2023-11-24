@@ -1,4 +1,4 @@
-import { UserDtoApi } from '@usealto/sdk-ts-angular';
+import { User } from 'src/app/models/user.model';
 
 export interface TrainingCardData {
   programRunId?: string;
@@ -9,5 +9,5 @@ export interface TrainingCardData {
   isProgress: boolean;
   duration?: number;
   updatedAt?: Date;
-  users?: UserDtoApi[];
+  users?: User[];
 }

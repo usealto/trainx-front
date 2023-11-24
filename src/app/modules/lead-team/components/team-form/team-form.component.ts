@@ -1,10 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, filter, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
+import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { User } from 'src/app/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
@@ -37,7 +40,7 @@ export class TeamFormComponent implements OnInit {
 
   isEdit = false;
   programs: ProgramDtoApi[] = [];
-  users: UserDtoApi[] = [];
+  users: User[] = [];
   userFilters = { teams: [] as TeamDtoApi[] };
 
   constructor(
@@ -48,9 +51,13 @@ export class TeamFormComponent implements OnInit {
     private readonly programService: ProgramsRestService,
     private readonly teamsRestService: TeamsRestService,
     private readonly validationService: ValidationService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.users = Array.from((data['usersById'] as Map<string, User>).values());
     this.teamsRestService
       .getTeams()
       .pipe(
@@ -70,11 +77,9 @@ export class TeamFormComponent implements OnInit {
       .subscribe();
 
     setTimeout(() => {
-      combineLatest([this.programService.getPrograms(), this.userRestService.getUsers()])
-        .pipe(
-          tap(([programs, users]) => (this.programs = programs)),
-          tap(([programs, users]) => (this.users = users)),
-        )
+      this.programService
+        .getPrograms()
+        .pipe(tap((programs) => (this.programs = programs)))
         .subscribe();
 
       if (this.team) {

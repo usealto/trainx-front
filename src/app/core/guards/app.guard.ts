@@ -8,7 +8,7 @@ import { UsersRestService } from '../../modules/profile/services/users-rest.serv
 import { setCompany, setUserMe } from '../store/root/root.action';
 import * as FromRoot from '../store/store.reducer';
 
-export const appGuard: CanActivateFn = () => {
+export const AppGuard: CanActivateFn = () => {
   const store = inject<Store<FromRoot.AppState>>(Store<FromRoot.AppState>);
   const usersRestService = inject<UsersRestService>(UsersRestService);
   const companiesRestService = inject<CompaniesRestService>(CompaniesRestService);

@@ -6,7 +6,6 @@ import { combineLatest, map, tap } from 'rxjs';
 import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
@@ -114,7 +113,7 @@ export class UserHomeComponent implements OnInit {
               usersStats.filter((user) => user.teamId === this.user.teamId),
               users.filter((user) => user.teamId === this.user.teamId),
               previousScoredUsers.filter((user) => user.teamId === this.user.teamId),
-            ] as [UserStatsDtoApi[], UserDtoApi[], UserStatsDtoApi[]],
+            ] as [UserStatsDtoApi[], User[], UserStatsDtoApi[]],
         ),
         tap(([teamUsers, users, previousScoredUsers]) => {
           this.leaderboardUsers = teamUsers

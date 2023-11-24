@@ -8,8 +8,7 @@ import {
   ChallengeDtoApi,
   ChallengeTypeEnumApi,
   CreateChallengeDtoApi,
-  IdDtoApi,
-  TeamDtoApi,
+  TeamDtoApi
 } from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
 import { Observable, filter, map, switchMap, tap } from 'rxjs';
@@ -55,13 +54,13 @@ export class ChallengeFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.teamService
-      .getTeams()
-      .pipe(
-        tap((t) => (this.teams = t)),
-        untilDestroyed(this),
-      )
-      .subscribe();
+    // this.teamService
+    //   .getTeams()
+    //   .pipe(
+    //     tap((t) => (this.teams = t)),
+    //     untilDestroyed(this),
+    //   )
+    //   .subscribe();
 
     this.route.params
       .pipe(

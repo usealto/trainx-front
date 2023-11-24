@@ -1,8 +1,8 @@
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
-import { UserDtoApi } from '@usealto/sdk-ts-angular';
 import { intervalToDuration } from 'date-fns';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { User } from 'src/app/models/user.model';
 import { TrainingCardData } from 'src/app/modules/training/models/training.model';
 import { AltoRoutes } from '../../constants/routes';
 
@@ -23,7 +23,7 @@ export class TrainingCardComponent implements OnInit {
   title?: string;
   /** Can be Score or Progress */
   isProgress = true;
-  users: UserDtoApi[] = [];
+  users: User[] = [];
 
   constructor(private elementRef: ElementRef) {}
 

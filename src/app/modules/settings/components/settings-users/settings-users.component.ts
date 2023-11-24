@@ -13,6 +13,9 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
 import { AddUsersComponent } from './add-users/add-users.component';
+import { Company } from 'src/app/models/company.model';
+import { ActivatedRoute } from '@angular/router';
+import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
 
 @UntilDestroy()
 @Component({
@@ -27,6 +30,8 @@ export class SettingsUsersComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
 
+  company!: Company;
+
   paginatedUsers: UserDtoApi[] = [];
   usersDisplay: UserDtoApi[] = [];
   usersPageSize = 10;
@@ -37,7 +42,6 @@ export class SettingsUsersComponent implements OnInit {
   adminsPageSize = 5;
   adminsPage = 1;
   adminsCount = 0;
-  company: CompanyDtoApi = {} as CompanyDtoApi;
 
   constructor(
     private readonly userRestService: UsersRestService,
@@ -46,12 +50,15 @@ export class SettingsUsersComponent implements OnInit {
     private modalService: NgbModal,
     private replaceInTranslationPipe: ReplaceInTranslationPipe,
     private readonly companiesRestService: CompaniesRestService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.company = data['company'] as Company;
     this.getAdmins();
     this.getUsers();
-    this.getCompany();
   }
 
   getAdmins() {
@@ -73,18 +80,6 @@ export class SettingsUsersComponent implements OnInit {
         tap((users) => (this.usersDisplay = users ?? [])),
         tap((users) => (this.usersCount = users.length)),
         tap(() => this.changeUsersPage(this.usersDisplay, 1)),
-        untilDestroyed(this),
-      )
-      .subscribe();
-  }
-
-  getCompany() {
-    this.companiesRestService
-      .getMyCompany()
-      .pipe(
-        tap((company) => {
-          this.company = company;
-        }),
         untilDestroyed(this),
       )
       .subscribe();
@@ -203,41 +198,41 @@ export class SettingsUsersComponent implements OnInit {
       .subscribe();
   }
 
-  getStatus(company: CompanyDtoApi,user: UserDtoApi): string{
-    if(company.isConnectorActive){
-      if(user.isConnectorActive){
-        return 'active'
-      }else{
-        return 'warning'
+  getStatus(company: Company, user: UserDtoApi): string {
+    if (company.isConnectorActive) {
+      if (user.isConnectorActive) {
+        return 'active';
+      } else {
+        return 'warning';
       }
-    }else{
-      return 'inactive'
+    } else {
+      return 'inactive';
     }
   }
 
-  getBadgeColor(userStatus: string) : string {
-    switch(userStatus ){
+  getBadgeColor(userStatus: string): string {
+    switch (userStatus) {
       case 'active':
-        return '#039855'
+        return '#039855';
       case 'warning':
-        return '#FEF3F2'
+        return '#FEF3F2';
       case 'inactive':
-        return '#363F72'
+        return '#363F72';
       default:
-        return '#363F72'
+        return '#363F72';
     }
   }
 
-  getBadgeBackgroundColor(userStatus: string) : string {
-    switch(userStatus ){
+  getBadgeBackgroundColor(userStatus: string): string {
+    switch (userStatus) {
       case 'active':
-        return '#ECFDF3'
+        return '#ECFDF3';
       case 'warning':
-        return '#FEF3F2'
+        return '#FEF3F2';
       case 'inactive':
-        return '#F8F9FC'
+        return '#F8F9FC';
       default:
-        return '#F8F9FC'
+        return '#F8F9FC';
     }
   }
 }
