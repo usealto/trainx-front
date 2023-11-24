@@ -11,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { TriggersService } from '../../services/triggers.service';
+import { User } from 'src/app/models/user.model';
 
 enum ModalType {
   ToggleConnector = 'toggleConnector',
