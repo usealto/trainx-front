@@ -10,8 +10,11 @@ WORKDIR /usr/src/app
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
 
+# on some macos, it is required to specify this packages (should be useless with npm ci)
+RUN npm install -g @angular/cli
+
 # Install app dependencies
-RUN npm install
+RUN npm ci
 
 RUN npm install -g @angular/cli
 
