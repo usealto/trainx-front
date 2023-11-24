@@ -398,7 +398,7 @@ export const FR = {
       navbarTitle: 'Performances',
       perTeamPerformance: {
         title: 'Niveau de maîtrise par équipes',
-        subtitle: "Retrouvez une vue d' ensemble sur les résultats de vos équipes.",
+        subtitle: "Retrouvez une vue d' ensemble sur le niveau de vos équipes.",
         teamFilter: 'Équipes',
         scoreEvolution: {
           title: 'Évolution du niveau de vos équipes',
@@ -551,7 +551,7 @@ export const FR = {
       },
       masteryLevel: {
         title: 'Niveau de maîtrise de l’équipe',
-        subtitle: 'Retrouvez une vue d’ensemble sur les résultats de l’équipe.',
+        subtitle: 'Retrouvez une vue d’ensemble sur le niveau de l’équipe.',
         chartTitle: 'Évolution du niveau de l’équipe',
         chartSubtitle: 'Évolution du niveau moyen de l’équipe.',
         teamFilter: 'Membres',
@@ -564,7 +564,7 @@ export const FR = {
       },
       perThemes: {
         title: 'Niveau de maîtrise par thématiques de l’équipe',
-        subtitle: 'Retrouvez une vue d’ensemble sur les résultats de l’équipe selon ses thématiques.',
+        subtitle: 'Retrouvez une vue d’ensemble sur le niveau de l’équipe selon ses thématiques.',
         chartTitle: 'Évolution du niveau de maîtrise',
         chartSubtitle: 'Évolution du niveau moyen de l’équipe par tag.',
         tagFilter: 'Tags',
@@ -598,7 +598,7 @@ export const FR = {
       performance: {
         masteringLevel: {
           title: 'Niveau de maîtrise du collaborateur',
-          subtitle: 'Retrouvez une vue d’ensemble sur les résultats de votre collaborateur.',
+          subtitle: 'Retrouvez une vue d’ensemble sur le niveau de votre collaborateur.',
           chartTitle: 'Évolution du niveau de votre collaborateur',
           chartSubtitle: 'Évolution du niveau moyen de votre collaborateur.',
           placeholder: {
@@ -777,9 +777,9 @@ export const FR = {
           standardType: 'Utilisateur standard',
           adminType: 'Administrateur',
           adminSubtitle:
-            'Les administrateurs peuvent créer des programmes, des challenges et ont accès à des statistiques détaillées sur les résultats des équipes.',
+            'Les administrateurs peuvent créer des programmes et ont accès à des statistiques détaillées sur le niveau des équipes.',
           userSubtitle:
-            'Les utilisateurs standards peuvent participer aux programmes, suggérer des questions et ont accès à des statistiques détaillées sur leurs résultats seulement.',
+            'Les utilisateurs standards peuvent participer aux programmes, suggérer des questions et ont accès à leur niveau seulement.',
           validate: 'Valider',
         },
       },
