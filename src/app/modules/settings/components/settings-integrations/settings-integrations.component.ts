@@ -8,7 +8,7 @@ import { CompaniesStore } from 'src/app/modules/companies/companies.store';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import { ActivatedRoute } from '@angular/router';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 
 enum ModalType {
   ToggleConnector = 'toggleConnector',
@@ -45,7 +45,7 @@ export class SettingsIntegrationsComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.company = data['company'] as CompanyDtoApi;
+    this.company = data[EResolverData.Company] as CompanyDtoApi;
     this.isConnectorActivated = this.company?.isConnectorActive ?? false;
     this.isWebAppActivated = this.company?.usersHaveWebAccess ?? false;
     this.connector =

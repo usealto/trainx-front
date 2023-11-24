@@ -9,7 +9,7 @@ import {
   TeamLightDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { of, switchMap, tap } from 'rxjs';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
@@ -47,8 +47,8 @@ export class SuggQuestionCardComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.users = data['usersById'] as Map<string, User>;
-    this.teams = data['teamsById'] as Map<string, Team>;
+    this.users = data[EResolverData.UsersById] as Map<string, User>;
+    this.teams = data[EResolverData.TeamsById] as Map<string, Team>;
   }
 
   refuseQuestion() {

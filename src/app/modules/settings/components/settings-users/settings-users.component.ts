@@ -15,7 +15,7 @@ import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-m
 import { AddUsersComponent } from './add-users/add-users.component';
 import { Company } from 'src/app/models/company.model';
 import { ActivatedRoute } from '@angular/router';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 
 @UntilDestroy()
 @Component({
@@ -56,7 +56,7 @@ export class SettingsUsersComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.company = data['company'] as Company;
+    this.company = data[EResolverData.Company] as Company;
     this.getAdmins();
     this.getUsers();
   }

@@ -9,7 +9,7 @@ import { ProgramForm } from '../../../models/programs.form';
 import { TagsRestService } from '../../../services/tags-rest.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { ActivatedRoute } from '@angular/router';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { Team } from 'src/app/models/team.model';
 
 @UntilDestroy()
@@ -39,7 +39,7 @@ export class ProgramsFormComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.teams = Array.from((data['teamsById'] as Map<string, Team>).values());
+    this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
     this.tagService
       .getTags()
       .pipe(

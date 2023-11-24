@@ -1,11 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, filter, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
@@ -27,7 +25,8 @@ export class TeamFormComponent implements OnInit {
 
   private fb: IFormBuilder = this.fob;
 
-  teamsNames: string[] = [];
+  @Input() teamsNames: string[] = [];
+  @Input() users: User[] = [];
 
   teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
     name: [
@@ -40,7 +39,6 @@ export class TeamFormComponent implements OnInit {
 
   isEdit = false;
   programs: ProgramDtoApi[] = [];
-  users: User[] = [];
   userFilters = { teams: [] as TeamDtoApi[] };
 
   constructor(
@@ -51,30 +49,14 @@ export class TeamFormComponent implements OnInit {
     private readonly programService: ProgramsRestService,
     private readonly teamsRestService: TeamsRestService,
     private readonly validationService: ValidationService,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
-    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.users = Array.from((data['usersById'] as Map<string, User>).values());
-    this.teamsRestService
-      .getTeams()
-      .pipe(
-        tap((d) => {
-          d.forEach((t) => {
-            this.teamsNames.push(t.name.toLowerCase());
-          });
-        }),
-        tap(() => {
-          const teamName = this.team?.name.toLowerCase();
-          const index = this.teamsNames.indexOf(teamName ?? '');
-          if (teamName) {
-            this.teamsNames.splice(index, 1);
-          }
-        }),
-      )
-      .subscribe();
+    const teamName = this.team?.name.toLowerCase();
+    const index = this.teamsNames.indexOf(teamName ?? '');
+    if (teamName) {
+      this.teamsNames.splice(index, 1);
+    }
 
     setTimeout(() => {
       this.programService

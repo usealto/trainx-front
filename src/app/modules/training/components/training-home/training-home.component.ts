@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { tap } from 'rxjs';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { User } from 'src/app/models/user.model';
@@ -67,8 +67,8 @@ export class TrainingHomeComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.me = data['me'] as User;
-    this.users = data['usersById'] as Map<string, User>;
+    this.me = data[EResolverData.Me] as User;
+    this.users = data[EResolverData.UsersById] as Map<string, User>;
     this.programRunsRestService
       .getMyProgramRunsCards()
       .pipe(

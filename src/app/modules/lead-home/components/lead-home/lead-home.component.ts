@@ -11,7 +11,7 @@ import {
 import { EChartsOption } from 'echarts';
 import { Observable, combineLatest, map, of, tap } from 'rxjs';
 import { IHomeData } from 'src/app/core/resolvers/home.resolver';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -104,14 +104,14 @@ export class LeadHomeComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.me = data['me'] as User;
-    this.commentsCount = (data['homeData'] as IHomeData).comments.length;
+    this.me = data[EResolverData.Me] as User;
+    this.commentsCount = (data[EResolverData.HomeData] as IHomeData).comments.length;
     this.commentsDataStatus = this.commentsCount === 0 ? 'noData' : 'good';
-    this.questionsCount = (data['homeData'] as IHomeData).questionsCount;
+    this.questionsCount = (data[EResolverData.HomeData] as IHomeData).questionsCount;
     this.questionsDataStatus = this.questionsCount === 0 ? 'noData' : 'good';
     this.getAverageScore(this.globalFilters.duration as ScoreDuration, [
-      (data['homeData'] as IHomeData).teamsStats,
-      (data['homeData'] as IHomeData).previousTeamsStats,
+      (data[EResolverData.HomeData] as IHomeData).teamsStats,
+      (data[EResolverData.HomeData] as IHomeData).previousTeamsStats,
     ]);
 
     this.createChart(this.globalFilters.duration as ScoreDuration);

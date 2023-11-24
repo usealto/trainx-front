@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
 import { combineLatest, map, tap } from 'rxjs';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
@@ -54,7 +54,7 @@ export class UserHomeStatisticsComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.user = data['me'] as User;
+    this.user = data[EResolverData.Me] as User;
     this.getScore();
     this.getFinishedPrograms();
     this.getGuessesCount();

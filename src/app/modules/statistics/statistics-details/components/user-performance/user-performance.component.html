@@ -8,7 +8,7 @@
         {{ user.firstname + ' ' + user.lastname }}
       </span>
     </div>
-    <span class="ms-4 alto-badge" [style]="user.team?.id | teamColor">{{ user.team?.name }}</span>
+    <span class="ms-4 alto-badge" [style]="userTeam.id | teamColor">{{ userTeam.name }}</span>
   </h2>
   <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.user.performance.masteringLevel.subtitle }}</p>
 </div>
@@ -56,7 +56,7 @@
         {{ user.firstname + ' ' + user.lastname }}
       </span>
     </div>
-    <span class="ms-4 alto-badge" [style]="user.team?.id | teamColor">{{ user.team?.name }}</span>
+    <span class="ms-4 alto-badge" [style]="userTeam.id | teamColor">{{ userTeam.name }}</span>
   </h2>
   <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.user.performance.themeMastering.subtitle }}</p>
 </div>

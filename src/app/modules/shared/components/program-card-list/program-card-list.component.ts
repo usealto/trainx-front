@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { ProgramDtoApi } from '@usealto/sdk-ts-angular';
+import { tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -12,7 +13,6 @@ import { AltoRoutes } from '../../constants/routes';
 import { PlaceholderDataStatus } from '../../models/placeholder.model';
 import { ScoresRestService } from '../../services/scores-rest.service';
 import { ScoresService } from '../../services/scores.service';
-import { tap } from 'rxjs';
 
 @UntilDestroy()
 @Component({

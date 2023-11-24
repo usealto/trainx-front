@@ -17,7 +17,7 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../services/statistics.service';
 
 import { ActivatedRoute } from '@angular/router';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { Company } from 'src/app/models/company.model';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
@@ -68,7 +68,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.company = data['company'] as Company;
+    this.company = data[EResolverData.Company] as Company;
     this.getAllData();
   }
 

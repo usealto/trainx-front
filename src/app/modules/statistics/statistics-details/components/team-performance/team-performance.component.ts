@@ -12,7 +12,7 @@ import {
   UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { combineLatest, tap } from 'rxjs';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -75,14 +75,12 @@ export class TeamPerformanceComponent implements OnInit {
   previousQuestionsStats: QuestionStatsDtoApi[] = [];
 
   constructor(
-    // private readonly teamsStore: TeamStore,
     private titleCasePipe: TitleCasePipe,
     private readonly router: Router,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly statisticService: StatisticsService,
     private readonly tagsRestService: TagsRestService,
-    private readonly usersRestService: UsersRestService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
   ) {}
@@ -90,8 +88,8 @@ export class TeamPerformanceComponent implements OnInit {
   ngOnInit(): void {
     this.teamId = this.router.url.split('/').pop() || '';
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.team = (data['teamsById'] as Map<string, Team>).get(this.teamId) as Team;
-    this.members = Array.from((data['usersById'] as Map<string, User>).values()).filter(
+    this.team = (data[EResolverData.TeamsById] as Map<string, Team>).get(this.teamId) as Team;
+    this.members = Array.from((data[EResolverData.UsersById] as Map<string, User>).values()).filter(
       (u) => u.teamId === this.teamId,
     );
     this.selectedMembers = this.members.slice(0, 3);

@@ -5,7 +5,7 @@ import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { catchError, combineLatest, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { IAbstractControl } from 'src/app/core/form-types/i-abstract-control';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { Team } from 'src/app/models/team.model';
@@ -47,8 +47,8 @@ export class AddUsersComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.me = data['me'] as User;
-    this.teams = Array.from((data['teamsById'] as Map<string, Team>).values());
+    this.me = data[EResolverData.Me] as User;
+    this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
     this.usersRestService
       .getUsersCount({ includeSoftDeleted: true })
       .pipe(

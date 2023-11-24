@@ -9,7 +9,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { GuessesRestService } from '../../services/guesses-rest.service';
 import { User } from 'src/app/models/user.model';
 import { ActivatedRoute } from '@angular/router';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 
 @Component({
   selector: 'alto-continuing-training',
@@ -42,7 +42,7 @@ export class ContinuingTrainingComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.me = data['me'] as User;
+    this.me = data[EResolverData.Me] as User;
     combineLatest([
       this.scoresRestService.getUsersStats(ScoreDuration.Month, false, this.me.id),
       this.scoresRestService.getUsersStats(ScoreDuration.Month, true, this.me.id),

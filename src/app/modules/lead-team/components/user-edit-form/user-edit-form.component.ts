@@ -5,7 +5,7 @@ import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { PatchUserDtoApi, RoleEnumApi, UserDtoApi, UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 import { tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
@@ -44,8 +44,8 @@ export class UserEditFormComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.profile = data['me'] as User;
-    this.teams = Array.from((data['teamsById'] as Map<string, Team>).values());
+    this.profile = data[EResolverData.Me] as User;
+    this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
     setTimeout(() => {
       this.userForm.patchValue({
         team: this.user?.teamId,
