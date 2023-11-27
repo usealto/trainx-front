@@ -70,7 +70,7 @@ export class TrainingHomeComponent implements OnInit {
     this.me = data[EResolverData.Me] as User;
     this.users = data[EResolverData.UsersById] as Map<string, User>;
     this.programRunsRestService
-      .getMyProgramRunsCards()
+      .getMyProgramRunsCards(this.me.id, this.me.teamId ?? '')
       .pipe(
         tap((a) => {
           this.allPrograms = this.allProgramsFiltered = a;

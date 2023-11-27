@@ -88,7 +88,7 @@ export class UserHomeStatisticsComponent implements OnInit {
         this.statisticsDuration,
         true,
       ),
-      this.programRunsRestService.getMyProgramRuns(),
+      this.programRunsRestService.getMyProgramRuns(this.user.id),
     ])
       .pipe(
         tap(([currentPrograms, previousPrograms, currentProgramRuns]) => {
