@@ -33,6 +33,7 @@ export class UserHomeComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   user!: User;
+  users: User[] = [];
   ScoreDuration = ScoreDuration;
   //programs-run data
   guessesCount = 0;
@@ -45,7 +46,6 @@ export class UserHomeComponent implements OnInit {
   leaderboardUsers: LeaderboardUser[] | undefined = undefined;
 
   constructor(
-    private readonly userRestService: UsersRestService,
     private readonly guessesRestService: GuessesRestService,
     private readonly programRunsRestService: ProgramRunsRestService,
     private readonly scoreRestService: ScoresRestService,
@@ -56,8 +56,9 @@ export class UserHomeComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.user = data[EResolverData.Me] as User;
+    this.users = Array.from((data[EResolverData.UsersById] as Map<string, User>).values());
     this.programRunsRestService
-      .getMyProgramRunsCards()
+      .getMyProgramRunsCards(this.user.id, this.user.teamId ?? '')
       .pipe(tap((a) => (this.myProgramRunsCards = a.filter((r) => r.isProgress && r.duration))))
       .subscribe();
 
@@ -103,15 +104,14 @@ export class UserHomeComponent implements OnInit {
   getLeaderboard() {
     combineLatest([
       this.scoreRestService.getUsersStats(this.durationTabs, false),
-      this.userRestService.getUsers(),
       this.scoreRestService.getUsersStats(this.durationTabs, true),
     ])
       .pipe(
         map(
-          ([usersStats, users, previousScoredUsers]) =>
+          ([usersStats, previousScoredUsers]) =>
             [
               usersStats.filter((user) => user.teamId === this.user.teamId),
-              users.filter((user) => user.teamId === this.user.teamId),
+              this.users.filter((user) => user.teamId === this.user.teamId),
               previousScoredUsers.filter((user) => user.teamId === this.user.teamId),
             ] as [UserStatsDtoApi[], User[], UserStatsDtoApi[]],
         ),
