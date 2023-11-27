@@ -12,6 +12,8 @@ import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolver
 import { ToastService } from '../../../../core/toast/toast.service';
 import { TriggersService } from '../../services/triggers.service';
 import { User } from 'src/app/models/user.model';
+import { environment } from '../../../../../environments/environment';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 
 enum ModalType {
   ToggleConnector = 'toggleConnector',
@@ -26,6 +28,7 @@ enum ModalType {
   styleUrls: ['./settings-integrations.component.scss'],
 })
 export class SettingsIntegrationsComponent implements OnInit {
+  EmojiName = EmojiName;
   I18ns = I18ns;
   ModalType = ModalType;
   Connector = AltoConnectorEnumApi;
@@ -35,6 +38,7 @@ export class SettingsIntegrationsComponent implements OnInit {
   nbUsers = 0;
   nbUsersConnectorInactive = 0;
   emailValue = '';
+  emailSent = false;
 
   isConnectorActivated = false;
 
@@ -56,6 +60,7 @@ export class SettingsIntegrationsComponent implements OnInit {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.company = data[EResolverData.Company] as CompanyDtoApi;
     this.isConnectorActivated = this.company?.isConnectorActive ?? false;
+    console.log(this.company);
     this.isWebAppActivated = this.company?.usersHaveWebAccess ?? false;
     this.connector =
       this.company?.connector === CompanyDtoApiConnectorEnumApi.Slack
@@ -180,6 +185,7 @@ export class SettingsIntegrationsComponent implements OnInit {
   }
 
   sendEmailSlackAuthorization() {
+    this.emailSent = true;
     this.triggersService.askSlackAuthorization(this.emailValue).subscribe(
       () => {
         this.toastService.show({text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackSuccess, type: 'success'});
@@ -191,6 +197,7 @@ export class SettingsIntegrationsComponent implements OnInit {
   }
 
   sendGchatInstruction() {
+    this.emailSent = true;
     this.triggersService.sendGchatInstructions().subscribe(
       () => {
         this.toastService.show({text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatSuccess, type: 'success'});
@@ -202,7 +209,7 @@ export class SettingsIntegrationsComponent implements OnInit {
   }
 
   openLinkSlack() {
-    const url = '';
+    const url = environment.slackAuthorization + this.company?.id;
     window.open(url, '_blank');
   }
 }

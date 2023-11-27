@@ -40,8 +40,15 @@
   }
 }
 
-.flex-container {
-  .panel {
-    width: 47rem;
+@media (max-width: 75rem) {
+  .onboarding {
+    flex-direction: column;
+  }
+
+  .onboarding {
+    width: 100%;
+    flex-basis: auto;
+    max-width: none;
+    min-width: none;
   }
 }
