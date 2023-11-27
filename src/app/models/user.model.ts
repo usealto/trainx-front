@@ -41,11 +41,11 @@ export class User implements IUser {
     this.lastname = data.lastname ?? 'lastname';
     this.email = data.email ?? 'email';
     this.roles = data.roles ?? [];
-    this.teamId = data.teamId ?? 'teamId';
+    this.teamId = data.teamId ?? '';
     this.createdAt = data.createdAt ?? new Date();
     this.updatedAt = data.updatedAt ?? new Date();
     this.stats = data.stats?.map((s) => new UserStats(s)) ?? [];
-    this.companyId = data.companyId ?? 'companyId';
+    this.companyId = data.companyId ?? '';
     this.longestStreak = data.longestStreak ?? ({} as StreakDtoApi);
     this.currentStreak = data.currentStreak ?? ({} as StreakDtoApi);
   }
