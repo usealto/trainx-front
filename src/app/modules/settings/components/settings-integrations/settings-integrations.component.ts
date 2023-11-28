@@ -12,6 +12,8 @@ import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolver
 import { ToastService } from '../../../../core/toast/toast.service';
 import { TriggersService } from '../../services/triggers.service';
 import { User } from 'src/app/models/user.model';
+import { environment } from '../../../../../environments/environment';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 
 enum ModalType {
   ToggleConnector = 'toggleConnector',
@@ -26,6 +28,7 @@ enum ModalType {
   styleUrls: ['./settings-integrations.component.scss'],
 })
 export class SettingsIntegrationsComponent implements OnInit {
+  EmojiName = EmojiName;
   I18ns = I18ns;
   ModalType = ModalType;
   Connector = AltoConnectorEnumApi;
@@ -35,7 +38,9 @@ export class SettingsIntegrationsComponent implements OnInit {
   nbUsers = 0;
   nbUsersConnectorInactive = 0;
   emailValue = '';
+  emailSent = false;
 
+  isIntegrationEnabled = false;
   isConnectorActivated = false;
 
   isWebAppActivated = false;
@@ -55,7 +60,8 @@ export class SettingsIntegrationsComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.company = data[EResolverData.Company] as CompanyDtoApi;
-    this.isConnectorActivated = this.company?.isConnectorActive ?? false;
+    this.isIntegrationEnabled = this.company?.isIntegrationEnabled ?? false;
+    this.isConnectorActivated = false;
     this.isWebAppActivated = this.company?.usersHaveWebAccess ?? false;
     this.connector =
       this.company?.connector === CompanyDtoApiConnectorEnumApi.Slack
@@ -124,10 +130,10 @@ export class SettingsIntegrationsComponent implements OnInit {
   activateConnector(isActivated: boolean) {
     if (this.company?.id) {
       this.companiesRestService
-        .patchCompany(this.company.id, { isConnectorActive: isActivated })
+        .patchCompany(this.company.id, { isIntegrationEnabled: isActivated })
         .pipe(
           tap((company) => {
-            this.isConnectorActivated = isActivated;
+            this.isIntegrationEnabled = isActivated;
             if (company.data) {
               this.companiesStore.myCompany.value = company.data;
             }
@@ -156,6 +162,7 @@ export class SettingsIntegrationsComponent implements OnInit {
   }
 
   changeConnector(connector: AltoConnectorEnumApi) {
+    this.emailSent = false;
     this.connector = connector;
     if (this.company?.id) {
       this.companiesRestService
@@ -180,6 +187,7 @@ export class SettingsIntegrationsComponent implements OnInit {
   }
 
   sendEmailSlackAuthorization() {
+    this.emailSent = true;
     this.triggersService.askSlackAuthorization(this.emailValue).subscribe(
       () => {
         this.toastService.show({text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackSuccess, type: 'success'});
@@ -191,6 +199,7 @@ export class SettingsIntegrationsComponent implements OnInit {
   }
 
   sendGchatInstruction() {
+    this.emailSent = true;
     this.triggersService.sendGchatInstructions().subscribe(
       () => {
         this.toastService.show({text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatSuccess, type: 'success'});
@@ -202,7 +211,15 @@ export class SettingsIntegrationsComponent implements OnInit {
   }
 
   openLinkSlack() {
-    const url = '';
+    const url = environment.slackAuthorization + this.company?.id;
     window.open(url, '_blank');
+  }
+
+  isSlackActive(): boolean {
+    return this.connector === AltoConnectorEnumApi.Slack && this.isConnectorActivated;
+  }
+
+  isSlackPending(): boolean {
+    return this.connector === AltoConnectorEnumApi.Slack && !this.isConnectorActivated;
   }
 }

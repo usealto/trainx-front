@@ -974,11 +974,13 @@ export const FR = {
         gchatSubtitle: {
           googleChatInstructionsTitle: 'Comment vos utilisateurs peuvent ajouter Google Chat :',
           googleChatInstructions: 'Ils ont simplement besoin de cliquer sur ce lien :',
-          googleChatLink: 'https://workspace.google.com/marketplace/app/staging_alto/705098494910',
+          googleChatLink: 'https://workspace.google.com/marketplace/app/alto/1076506336192',
           googleChatInstructions2: 'Puis cliquer sur “Installer”. C’est tout.',
           emailSendTitle: 'Vous pouvez aussi envoyer les instructions aux utilisateurs non connectés :',
           emailSendButtonText: 'Envoyer les instructions par email',
           nonConnectedUsersText: 'utilisateurs non connectés',
+          gchatEmailSent: 'Un email a été envoyé aux utilisateurs non connectés.',
+          gchatSendAgain: 'Renvoyer un email',
           gchatSuccess:
             'Un email avec les instructions a bien été envoyé à tous les utilisateurs non connectés.',
           gchatError:
@@ -995,6 +997,9 @@ export const FR = {
           adminText:
             'Si vous possédez les droits administrateur sur Slack, vous pouvez autoriser la connexion en cliquant sur le bouton suivant :',
           authorConnection: 'Autoriser la connexion',
+          slackSent: 'En attente de la confirmation de votre administrateur Slack.',
+          slackSendAgain: 'Votre administrateur ne répond pas ?',
+          slackSendAgainBtn: 'Envoyer un autre email',
           slackSuccess: 'L’email de demande de connexion a bien été envoyé à votre administrateur.',
           slackError:
             'Impossible d’envoyer l’email de demande de connexion à votre administrateur. Réessayez plus tard ou contactez notre support client si le problème persiste.',

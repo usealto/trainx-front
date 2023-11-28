@@ -12,6 +12,7 @@ export interface ICompany {
   name: string;
   connector?: CompanyDtoApiConnectorEnumApi;
   isConnectorActive?: boolean;
+  isIntegrationEnabled?: boolean;
   connectorDays?: Array<CompanyDtoApiConnectorDaysEnumApi>;
   connectorQuestionsPerQuiz?: number;
   connectorTimes?: Array<CompanyDtoApiConnectorTimesEnumApi>;
@@ -30,6 +31,7 @@ export class Company implements ICompany {
   connector?: CompanyDtoApiConnectorEnumApi;
   theOfficeId: string;
   isConnectorActive?: boolean;
+  isIntegrationEnabled?: boolean;
   connectorDays?: Array<CompanyDtoApiConnectorDaysEnumApi>;
   connectorQuestionsPerQuiz?: number;
   connectorTimes?: Array<CompanyDtoApiConnectorTimesEnumApi>;
@@ -45,6 +47,7 @@ export class Company implements ICompany {
     this.name = data.name ?? 'companyName';
     this.connector = data.connector ?? CompanyDtoApiConnectorEnumApi.Unknown;
     this.isConnectorActive = data.isConnectorActive ?? false;
+    this.isIntegrationEnabled = data.isIntegrationEnabled ?? false;
     this.connectorDays = data.connectorDays ?? [];
     this.connectorQuestionsPerQuiz = data.connectorQuestionsPerQuiz ?? 0;
     this.connectorTimes = data.connectorTimes ?? [];
@@ -62,6 +65,7 @@ export class Company implements ICompany {
       name: data.name,
       connector: data.connector,
       isConnectorActive: data.isConnectorActive,
+      isIntegrationEnabled: data.isIntegrationEnabled,
       connectorDays: data.connectorDays,
       connectorQuestionsPerQuiz: data.connectorQuestionsPerQuiz,
       connectorTimes: data.connectorTimes,
@@ -96,6 +100,7 @@ export class Company implements ICompany {
       name: this.name,
       connector: this.connector,
       isConnectorActive: this.isConnectorActive,
+      isIntegrationEnabled: this.isIntegrationEnabled,
       connectorDays: this.connectorDays,
       connectorQuestionsPerQuiz: this.connectorQuestionsPerQuiz,
       connectorTimes: this.connectorTimes,
