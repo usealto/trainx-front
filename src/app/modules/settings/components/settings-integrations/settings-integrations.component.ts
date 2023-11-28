@@ -62,7 +62,6 @@ export class SettingsIntegrationsComponent implements OnInit {
     this.company = data[EResolverData.Company] as CompanyDtoApi;
     this.isIntegrationEnabled = this.company?.isIntegrationEnabled ?? false;
     this.isConnectorActivated = this.company?.isConnectorActive ?? false;
-    console.log(this.company);
     this.isWebAppActivated = this.company?.usersHaveWebAccess ?? false;
     this.connector =
       this.company?.connector === CompanyDtoApiConnectorEnumApi.Slack
