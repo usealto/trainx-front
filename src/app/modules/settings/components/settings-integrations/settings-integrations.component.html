@@ -35,11 +35,11 @@
       <label class="form-check-label" for="exampleRadios1">
         <img src="assets/img/slack-logo.svg" width="16" height="16" alt="Slack Logo" class="me-2" />
         <span>{{ I18ns.settings.continuousSession.integrations.slack }}</span>
-        <i [hidden]="connector !== Connector.Slack || !isConnectorActivated" class="bi bi-check-circle-fill ms-3" style="color: #32D583;"></i>
-        <img [hidden]="connector !== Connector.Slack || isConnectorActivated" class="ms-3 mb-2" [src]="EmojiName.HourglassNotDone | emoji" width="16" height="16"/>
+        <i [hidden]="isSlackActive() === false" class="bi bi-check-circle-fill ms-3" style="color: #32D583;"></i>
+        <img [hidden]="isSlackPending() === false" class="ms-3 mb-2" [src]="EmojiName.HourglassNotDone | emoji" width="16" height="16"/>
       </label>
     </div>
-    <div class="pt-3 px-3 me-5 connector" [class]="connector === Connector.GoogleChat ? 'activated' : ''">
+    <div class="px-3 me-5 connector" [class]="connector === Connector.GoogleChat ? 'activated' : ''">
       <div class="form-check">
         <input
           class="form-check-input me-3"
@@ -89,7 +89,7 @@
       </div>
     </div>
   </div>
-  <div [hidden]="connector !== Connector.Slack || isConnectorActivated">
+  <div [hidden]="isSlackPending() === false">
     <div class="flex-container d-flex gap-5 onboarding">
 
       <div class="panel" style="min-width: 40rem;">

@@ -61,7 +61,7 @@ export class SettingsIntegrationsComponent implements OnInit {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.company = data[EResolverData.Company] as CompanyDtoApi;
     this.isIntegrationEnabled = this.company?.isIntegrationEnabled ?? false;
-    this.isConnectorActivated = this.company?.isConnectorActive ?? false;
+    this.isConnectorActivated = false;
     this.isWebAppActivated = this.company?.usersHaveWebAccess ?? false;
     this.connector =
       this.company?.connector === CompanyDtoApiConnectorEnumApi.Slack
@@ -213,5 +213,13 @@ export class SettingsIntegrationsComponent implements OnInit {
   openLinkSlack() {
     const url = environment.slackAuthorization + this.company?.id;
     window.open(url, '_blank');
+  }
+
+  isSlackActive(): boolean {
+    return this.connector === AltoConnectorEnumApi.Slack && this.isConnectorActivated;
+  }
+
+  isSlackPending(): boolean {
+    return this.connector === AltoConnectorEnumApi.Slack && !this.isConnectorActivated;
   }
 }
