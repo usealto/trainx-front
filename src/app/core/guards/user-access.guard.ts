@@ -13,7 +13,7 @@ export const userAccessGuard: CanActivateFn = () => {
     map(([{ data: user }, { data: company }]) => {
       if (!user.teamId) {
         router.navigate(['/', AltoRoutes.noTeam]);
-      } else if (!company.usersHaveWebAccess || !user.isCompanyUser()) {
+      } else if (!company.usersHaveWebAccess || user.hasNoAccess()) {
         router.navigate(['/', AltoRoutes.noAccess]);
       }
       return !!user;

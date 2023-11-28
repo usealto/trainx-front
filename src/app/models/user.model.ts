@@ -36,10 +36,10 @@ export class User implements IUser {
   currentStreak: StreakDtoApi;
 
   constructor(data: IUser) {
-    this.id = data.id ?? 'userId';
-    this.firstname = data.firstname ?? 'firstname';
-    this.lastname = data.lastname ?? 'lastname';
-    this.email = data.email ?? 'email';
+    this.id = data.id ?? '';
+    this.firstname = data.firstname ?? '';
+    this.lastname = data.lastname ?? '';
+    this.email = data.email ?? '';
     this.roles = data.roles ?? [];
     this.teamId = data.teamId ?? '';
     this.createdAt = data.createdAt ?? new Date();
@@ -117,7 +117,11 @@ export class User implements IUser {
   }
 
   isCompanyUser(): boolean {
-    return this.isCompanyAdmin() || this.roles.includes(UserDtoApiRolesEnumApi.CompanyUser);
+    return this.roles.includes(UserDtoApiRolesEnumApi.CompanyUser);
+  }
+
+  hasNoAccess(): boolean {
+    return !this.isAltoAdmin() && !this.isCompanyAdmin() && !this.isCompanyUser();
   }
 }
 

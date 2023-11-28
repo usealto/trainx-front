@@ -15,13 +15,13 @@ export const usersResolver: ResolveFn<Map<string, User>> = () => {
     switchMap((timestampedUsers) => {
       return timestampedUsers.needsUpdate()
         ? usersRestService.getUsers().pipe(
-          switchMap((users) => {
-            store.dispatch(setUsers({users}));
-            return store.select(FromRoot.selectUsers);
-          }),
-          map(({data}) => data)
-        )
+            switchMap((users) => {
+              store.dispatch(setUsers({ users }));
+              return store.select(FromRoot.selectUsers);
+            }),
+            map(({ data }) => data),
+          )
         : of(timestampedUsers.data);
-    })
+    }),
   );
 };

@@ -1,8 +1,17 @@
 import { createReducer, on } from '@ngrx/store';
-import { addUser, setTeams, setUserMe, setUsers, setCompany, setTimestamp } from '../root/root.action';
-import { User, IUser } from '../../../models/user.model';
-import { Team } from '../../../models/team.model';
 import { Company, ICompany } from '../../../models/company.model';
+import { Team } from '../../../models/team.model';
+import { IUser, User } from '../../../models/user.model';
+import {
+  addUser,
+  removeUser,
+  setCompany,
+  setTeams,
+  setTimestamp,
+  setUserMe,
+  setUsers,
+  patchUser,
+} from '../root/root.action';
 
 export class TimestampedEntity<T> {
   data: T;
@@ -53,20 +62,43 @@ export const rootReducer = createReducer(
     setUsers,
     (state, { users }): RootState => ({
       ...state,
-      usersById: new TimestampedEntity(new Map<string, User>(users.map(user => [user.id, user])))
+      usersById: new TimestampedEntity(new Map<string, User>(users.map((user) => [user.id, user]))),
     }),
   ),
   on(
-    addUser, (state, {user}): RootState => ({
+    addUser,
+    (state, { user }): RootState => ({
       ...state,
-      usersById: new TimestampedEntity(new Map<string, User>([...state.usersById.data.entries(), [user.id, user]]))
-    })
+      usersById: new TimestampedEntity(
+        new Map<string, User>([...state.usersById.data.entries(), [user.id, user]]),
+      ),
+    }),
+  ),
+  on(
+    patchUser,
+    (state, { user }): RootState => ({
+      ...state,
+      usersById: new TimestampedEntity(
+        new Map<string, User>(
+          [...state.usersById.data.entries()].map(([id, u]) => (id === user.id ? [id, user] : [id, u])),
+        ),
+      ),
+    }),
+  ),
+  on(
+    removeUser,
+    (state, { user }): RootState => ({
+      ...state,
+      usersById: new TimestampedEntity(
+        new Map<string, User>([...state.usersById.data.entries()].filter(([id]) => id !== user.id)),
+      ),
+    }),
   ),
   on(
     setTeams,
     (state, { teams }): RootState => ({
       ...state,
-      teamsById: new TimestampedEntity(new Map<string, Team>(teams.map(team => [team.id, team]))),
+      teamsById: new TimestampedEntity(new Map<string, Team>(teams.map((team) => [team.id, team]))),
     }),
   ),
   on(

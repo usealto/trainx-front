@@ -60,7 +60,7 @@
                 </div>
                 <div *ngIf="getStatus(company, user) === 'active'" class="d-flex align-items-center">
                   <img
-                    *ngIf="user.company.connector === 'slack'"
+                    *ngIf="company.connector === 'slack'"
                     src="assets/img/slack-logo.svg"
                     width="16"
                     height="16"
@@ -68,7 +68,7 @@
                     class="me-2"
                   />
                   <img
-                    *ngIf="user.company.connector === 'google-chat'"
+                    *ngIf="company.connector === 'google-chat'"
                     src="assets/img/googlechat-logo.svg"
                     width="16"
                     height="16"
@@ -107,7 +107,7 @@
         class="mx-4 d-block"
         [collectionSize]="adminsCount"
         [(page)]="adminsPage"
-        (pageChange)="changeAdminsPage(adminsDisplay, $event)"
+        (pageChange)="changeAdminsPage($event)"
         [pageSize]="adminsPageSize"
       ></alto-pagination>
     </div>
@@ -138,7 +138,7 @@
     (searchChange)="filterUsers({ search: $event })"
     *ngIf="getHasRegularUser(usersDisplay) || !userFilterEmpty()"
   ></alto-search>
-  
+
 </div>
 
 <div class="table-panel" *ngIf="getHasRegularUser(usersDisplay); else nouser">
@@ -184,7 +184,7 @@
             </div>
             <div *ngIf="getStatus(company, user) === 'active'" class="d-flex align-items-center">
               <img
-                *ngIf="user.company.connector === 'slack'"
+                *ngIf="company.connector === 'slack'"
                 src="assets/img/slack-logo.svg"
                 width="16"
                 height="16"
@@ -192,7 +192,7 @@
                 class="me-2"
               />
               <img
-                *ngIf="user.company.connector === 'google-chat'"
+                *ngIf="company.connector === 'google-chat'"
                 src="assets/img/googlechat-logo.svg"
                 width="16"
                 height="16"
@@ -223,7 +223,7 @@
     class="mx-4 d-block"
     [collectionSize]="usersCount"
     [(page)]="usersPage"
-    (pageChange)="changeUsersPage(usersDisplay, $event)"
+    (pageChange)="changeUsersPage($event)"
     [pageSize]="usersPageSize"
   ></alto-pagination>
 </div>
