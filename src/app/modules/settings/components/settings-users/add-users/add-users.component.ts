@@ -1,16 +1,13 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { catchError, combineLatest, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { IAbstractControl } from 'src/app/core/form-types/i-abstract-control';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { Team } from 'src/app/models/team.model';
-import { User } from 'src/app/models/user.model';
-import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
+import { IUser, User } from 'src/app/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 import { AddUsersForm } from '../../../models/user.model';
@@ -23,32 +20,25 @@ import { AddUsersForm } from '../../../models/user.model';
 export class AddUsersComponent implements OnInit {
   I18ns = I18ns;
 
+  @Input() me: User = new User({} as IUser);
+  @Input() teams: Team[] = [];
   @Output() createdUsers = new EventEmitter<boolean>();
 
   private fb: IFormBuilder = this.fob;
 
   userForms: IFormGroup<AddUsersForm>[] = [];
-  teams: Team[] = [];
   emails: string[] = [];
   deletedEmails: string[] = [];
-
-  me!: User;
 
   constructor(
     public activeOffcanvas: NgbActiveOffcanvas,
     readonly fob: UntypedFormBuilder,
-    private readonly teamService: TeamsRestService,
     private readonly usersRestService: UsersRestService,
     private readonly validationService: ValidationService,
     private readonly toastService: ToastService,
-    private readonly resolversService: ResolversService,
-    private readonly activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
-    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.me = data[EResolverData.Me] as User;
-    this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
     this.usersRestService
       .getUsersCount({ includeSoftDeleted: true })
       .pipe(
@@ -139,6 +129,7 @@ export class AddUsersComponent implements OnInit {
                 type: 'success',
                 autoHide: false,
               });
+              this.createdUsers.emit(true);
               this.activeOffcanvas.close();
             }
           }),

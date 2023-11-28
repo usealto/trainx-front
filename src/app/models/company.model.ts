@@ -41,8 +41,8 @@ export class Company implements ICompany {
   stats: CompanyStats[];
 
   constructor(data: ICompany) {
-    this.id = data.id ?? 'companyId';
-    this.name = data.name ?? 'companyName';
+    this.id = data.id ?? '';
+    this.name = data.name ?? '';
     this.connector = data.connector ?? CompanyDtoApiConnectorEnumApi.Unknown;
     this.isConnectorActive = data.isConnectorActive ?? false;
     this.connectorDays = data.connectorDays ?? [];
@@ -50,7 +50,7 @@ export class Company implements ICompany {
     this.connectorTimes = data.connectorTimes ?? [];
     this.adminIds = data.adminIds ?? [];
     this.usersHaveWebAccess = data.usersHaveWebAccess ?? false;
-    this.theOfficeId = data.theOfficeId ?? 'theOfficeId';
+    this.theOfficeId = data.theOfficeId ?? '';
     this.createdAt = data.createdAt ?? new Date();
     this.updatedAt = data.updatedAt ?? new Date();
     this.stats = [];
@@ -76,10 +76,12 @@ export class Company implements ICompany {
 
   addStats(stats: CompanyStats): void {
     if (
-      !this.stats.every(({from, to, scoreById}) => {
-        return (compareAsc(stats.from, from) !== 0) ||
-          (compareAsc(stats.to, to) !== 0) ||
-          (stats.scoreById !== scoreById);
+      !this.stats.every(({ from, to, scoreById }) => {
+        return (
+          compareAsc(stats.from, from) !== 0 ||
+          compareAsc(stats.to, to) !== 0 ||
+          stats.scoreById !== scoreById
+        );
       })
     ) {
       this.stats = [...this.stats, stats];
@@ -87,7 +89,7 @@ export class Company implements ICompany {
   }
 
   getStatsByScoreById(id: string): CompanyStats[] {
-    return this.stats.filter(({scoreById}) => scoreById === id);
+    return this.stats.filter(({ scoreById }) => scoreById === id);
   }
 
   get rawData(): ICompany {
@@ -105,18 +107,18 @@ export class Company implements ICompany {
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
       deletedAt: this.deletedAt,
-      stats: this.stats.map((s) => s.rawData)
+      stats: this.stats.map((s) => s.rawData),
     };
   }
 }
 
 export interface ICompanyStats extends IBaseStats {
-  commentsCreatedCount: number,
-  questionsSubmittedCount: number,
-  score: number,
-  rankedTags: IRanking[],
-  rankedUsers: IRanking[],
-  rankedTeams: IRanking[]
+  commentsCreatedCount: number;
+  questionsSubmittedCount: number;
+  score: number;
+  rankedTags: IRanking[];
+  rankedUsers: IRanking[];
+  rankedTeams: IRanking[];
 }
 
 export class CompanyStats extends BaseStats {
@@ -142,7 +144,7 @@ export class CompanyStats extends BaseStats {
       questionsSubmittedCount: this.questionsSubmittedCount,
       rankedTags: this.rankedTags.map((r) => r.rawData),
       rankedUsers: this.rankedUsers.map((r) => r.rawData),
-      rankedTeams: this.rankedTeams.map((r) => r.rawData)
+      rankedTeams: this.rankedTeams.map((r) => r.rawData),
     };
   }
 }

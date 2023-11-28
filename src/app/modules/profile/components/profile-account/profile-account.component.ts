@@ -67,7 +67,7 @@ export class ProfileAccountComponent implements OnInit {
         lastname: this.userForm.value?.lastname,
       })
       .pipe(
-        tap((u) => (this.user = User.fromDto(u))),
+        tap((u) => (this.user = u)),
         tap(() => {
           this.toastService.show({
             text: I18ns.profile.profile.form.success,

@@ -6,15 +6,14 @@ import {
   GetUsersRequestParams,
   NextQuestionDtoPaginatedResponseApi,
   PatchUserDtoApi,
-  QuestionDtoPaginatedResponseApi,
   ScoresApiService,
   UserDtoApi,
   UserDtoPaginatedResponseApi,
   UsersApiService,
 } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, map, of, switchMap, tap } from 'rxjs';
-import { ProfileStore } from '../profile.store';
 import { User } from 'src/app/models/user.model';
+import { ProfileStore } from '../profile.store';
 
 @Injectable({
   providedIn: 'root',
@@ -86,15 +85,10 @@ export class UsersRestService {
     return this.userApi.getMe().pipe(map(({ data }) => (data ? User.fromDto(data) : undefined)));
   }
 
-  patchUser(id: string, patchUserDtoApi: PatchUserDtoApi): Observable<UserDtoApi> {
-    return this.userApi.patchUser({ id, patchUserDtoApi }).pipe(
-      map((u) => u.data || ({} as UserDtoApi)),
-      tap((u) => {
-        if (this.userStore.user.value.id === id) {
-          this.userStore.user.value = u;
-        }
-      }),
-    );
+  patchUser(id: string, patchUserDtoApi: PatchUserDtoApi): Observable<User> {
+    return this.userApi
+      .patchUser({ id, patchUserDtoApi })
+      .pipe(map(({ data: user }) => User.fromDto(user as UserDtoApi)));
   }
 
   getNextQuestionsPaginated(

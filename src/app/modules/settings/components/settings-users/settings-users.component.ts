@@ -1,21 +1,25 @@
-import { CompaniesRestService } from './../../../companies/service/companies-rest.service';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CompanyDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
+import { Store } from '@ngrx/store';
 import { filter, switchMap, tap } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
+import { Company, ICompany } from 'src/app/models/company.model';
 import { UserEditFormComponent } from 'src/app/modules/lead-team/components/user-edit-form/user-edit-form.component';
 import { UserFilters } from 'src/app/modules/profile/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
-import { EmojiName } from 'src/app/core/utils/emoji/data';
-import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
+import { patchUser, removeUser, setUsers } from '../../../../core/store/root/root.action';
+import * as FromRoot from '../../../../core/store/store.reducer';
+import { ToastService } from '../../../../core/toast/toast.service';
+import { Team } from '../../../../models/team.model';
+import { IUser, User } from '../../../../models/user.model';
 import { AddUsersComponent } from './add-users/add-users.component';
-import { Company } from 'src/app/models/company.model';
-import { ActivatedRoute } from '@angular/router';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 
 @UntilDestroy()
 @Component({
@@ -25,20 +29,23 @@ import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolver
   providers: [ReplaceInTranslationPipe],
 })
 export class SettingsUsersComponent implements OnInit {
-  userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
+  userFilters: UserFilters = { search: '' };
 
   I18ns = I18ns;
   EmojiName = EmojiName;
 
-  company!: Company;
+  company: Company = new Company({} as ICompany);
+  me: User = new User({} as IUser);
+  teams: Team[] = [];
+  users: User[] = [];
 
-  paginatedUsers: UserDtoApi[] = [];
-  usersDisplay: UserDtoApi[] = [];
+  paginatedUsers: User[] = [];
+  usersDisplay: User[] = [];
   usersPageSize = 10;
   usersPage = 1;
   usersCount = 0;
-  paginatedAdmins: UserDtoApi[] = [];
-  adminsDisplay: UserDtoApi[] = [];
+  paginatedAdmins: User[] = [];
+  adminsDisplay: User[] = [];
   adminsPageSize = 5;
   adminsPage = 1;
   adminsCount = 0;
@@ -47,81 +54,60 @@ export class SettingsUsersComponent implements OnInit {
     private readonly userRestService: UsersRestService,
     private readonly offcanvasService: NgbOffcanvas,
     private readonly usersService: UsersService,
-    private modalService: NgbModal,
-    private replaceInTranslationPipe: ReplaceInTranslationPipe,
-    private readonly companiesRestService: CompaniesRestService,
+    private readonly modalService: NgbModal,
+    private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
+    private readonly store: Store<FromRoot.AppState>,
+    private readonly toastService: ToastService,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+
+    this.me = data[EResolverData.Me] as User;
     this.company = data[EResolverData.Company] as Company;
+    this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
+    this.users = Array.from((data[EResolverData.UsersById] as Map<string, User>).values());
+
     this.getAdmins();
     this.getUsers();
   }
 
   getAdmins() {
-    this.userRestService
-      .getUsersFiltered({ isCompanyAdmin: true })
-      .pipe(
-        tap((users) => (this.adminsDisplay = users ?? [])),
-        tap((users) => (this.adminsCount = users.length)),
-        tap(() => this.changeAdminsPage(this.adminsDisplay, 1)),
-        untilDestroyed(this),
-      )
-      .subscribe();
+    this.adminsDisplay = this.usersService.filterUsers<User[]>(
+      this.users.filter((user) => user.isCompanyAdmin()),
+      { search: this.userFilters.search },
+    );
+    this.adminsCount = this.adminsDisplay.length;
+    this.changeAdminsPage(1);
   }
 
   getUsers() {
-    this.userRestService
-      .getUsersFiltered({ isCompanyAdmin: false })
-      .pipe(
-        tap((users) => (this.usersDisplay = users ?? [])),
-        tap((users) => (this.usersCount = users.length)),
-        tap(() => this.changeUsersPage(this.usersDisplay, 1)),
-        untilDestroyed(this),
-      )
-      .subscribe();
+    this.usersDisplay = this.usersService.filterUsers<User[]>(
+      this.users.filter((user) => !user.isCompanyAdmin()),
+      { search: this.userFilters.search },
+    );
+    this.usersCount = this.usersDisplay.length;
+    this.changeUsersPage(1);
   }
 
-  filterAdmins({ search = this.userFilters.search }: UserFilters = this.userFilters) {
-    this.userRestService
-      .getUsersFiltered({ isCompanyAdmin: true })
-      .pipe(
-        tap((users) => {
-          const filteredUsers = this.usersService.filterUsers<UserDtoApi[]>(users, { search });
-          this.adminsCount = filteredUsers.length;
-          this.adminsDisplay = filteredUsers;
-          this.changeAdminsPage(this.adminsDisplay, 1);
-          if (search === '') {
-            this.getAdmins();
-          }
-        }),
-      )
-      .subscribe();
-  }
-
-  filterUsers({ search = this.userFilters.search }: UserFilters = this.userFilters) {
+  filterAdmins({ search }: { search: string }) {
     this.userFilters.search = search;
-    this.userRestService
-      .getUsersFiltered({ isCompanyAdmin: false })
-      .pipe(
-        tap((users) => {
-          const filteredUsers = this.usersService.filterUsers<UserDtoApi[]>(users, { search });
-          this.usersCount = filteredUsers.length;
-          this.usersDisplay = filteredUsers;
-          this.changeUsersPage(this.usersDisplay, 1);
-          if (search === '') {
-            this.getUsers();
-          }
-        }),
-      )
-      .subscribe();
+    this.getAdmins();
   }
 
-  deleteUser(user: UserDtoApi) {
-    const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
+  filterUsers({ search }: { search: string }) {
+    this.userFilters.search = search;
+    this.getUsers();
+  }
+
+  deleteUser(user: User): void {
+    const modalRef = this.modalService.open(DeleteModalComponent, {
+      centered: true,
+      size: 'md',
+    });
     const componentInstance = modalRef.componentInstance as DeleteModalComponent;
     componentInstance.data = {
       title: this.replaceInTranslationPipe.transform(
@@ -133,14 +119,35 @@ export class SettingsUsersComponent implements OnInit {
     componentInstance.objectDeleted
       .pipe(
         switchMap(() => this.userRestService.deleteUser(user?.id ?? '')),
-        tap(() => {
-          modalRef.close();
-          this.userRestService.resetUsers();
-          this.getUsers();
-        }),
+        tap(() => this.store.dispatch(removeUser({ user }))),
+        switchMap(() => this.store.select(FromRoot.selectUsers)),
+        tap(() => modalRef.close()),
         untilDestroyed(this),
       )
-      .subscribe();
+      .subscribe({
+        next: ({ data: users }) => {
+          this.users = Array.from(users.values());
+          this.getUsers();
+        },
+        error: () => {
+          this.toastService.show({
+            type: 'danger',
+            text: this.replaceInTranslationPipe.transform(
+              I18ns.settings.users.deleteModal.error,
+              user.fullname,
+            ),
+          });
+        },
+        complete: () => {
+          this.toastService.show({
+            type: 'success',
+            text: this.replaceInTranslationPipe.transform(
+              I18ns.settings.users.deleteModal.success,
+              user.fullname,
+            ),
+          });
+        },
+      });
   }
 
   openUsersForm() {
@@ -148,32 +155,51 @@ export class SettingsUsersComponent implements OnInit {
       position: 'end',
       panelClass: 'overflow-auto users-form',
     });
-    canvasRef.closed
-      .pipe(
-        tap(() => {
-          this.getUsers();
-        }),
-      )
-      .subscribe();
+
     const instance = canvasRef.componentInstance as AddUsersComponent;
+    instance.me = this.me;
+    instance.teams = this.teams;
 
     instance.createdUsers
       .pipe(
         filter((x) => !!x),
-        tap((userCreated) => {
-          this.getUsers();
+        switchMap(() => {
+          // TODO : update store instead of using rest service (may impact AddUsersComponent)
+          return this.userRestService.getUsers();
+        }),
+        switchMap((users) => {
+          this.store.dispatch(setUsers({ users }));
+          return this.store.select(FromRoot.selectUsers);
         }),
       )
-      .subscribe();
+      .subscribe({
+        next: ({ data: users }) => {
+          this.users = Array.from(users.values());
+          this.getAdmins();
+          this.getUsers();
+        },
+        error: () => {
+          this.toastService.show({
+            type: 'danger',
+            text: I18ns.settings.users.addUsers.APIerror,
+          });
+        },
+        complete: () => {
+          this.toastService.show({
+            type: 'success',
+            text: I18ns.settings.users.addUsers.success,
+          });
+        },
+      });
   }
 
-  changeUsersPage(users: UserDtoApi[], page: number): void {
+  changeUsersPage(page: number): void {
     this.usersPage = page;
     this.paginatedUsers = this.usersDisplay.slice((page - 1) * this.usersPageSize, page * this.usersPageSize);
     return;
   }
 
-  changeAdminsPage(admins: UserDtoApi[], page: number): void {
+  changeAdminsPage(page: number): void {
     this.adminsPage = page;
     this.paginatedAdmins = this.adminsDisplay.slice(
       (page - 1) * this.adminsPageSize,
@@ -182,16 +208,25 @@ export class SettingsUsersComponent implements OnInit {
     return;
   }
 
-  openUserEditionForm(user: UserDtoApi) {
+  openUserEditionForm(user: User) {
     const canvasRef = this.offcanvasService.open(UserEditFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
     });
 
-    canvasRef.componentInstance.user = user;
-    canvasRef.componentInstance.editedUser
+    const instance = canvasRef.componentInstance as UserEditFormComponent;
+    instance.teams = this.teams;
+    instance.me = this.me;
+    instance.user = user;
+
+    instance.editedUser
       .pipe(
-        tap(() => {
+        switchMap((user) => {
+          this.store.dispatch(patchUser({ user }));
+          return this.store.select(FromRoot.selectUsers);
+        }),
+        tap(({ data: users }) => {
+          this.users = Array.from(users.values());
           this.getAdmins();
           this.getUsers();
         }),
@@ -199,7 +234,7 @@ export class SettingsUsersComponent implements OnInit {
       .subscribe();
   }
 
-  getStatus(company: Company, user: UserDtoApi): string {
+  getStatus(company: Company, user: User): string {
     if (company.isConnectorActive) {
       if (user.isConnectorActive) {
         return 'active';
@@ -237,11 +272,11 @@ export class SettingsUsersComponent implements OnInit {
     }
   }
 
-  getHasRegularUser(usersDisplay: UserDtoApi[]){
+  getHasRegularUser(usersDisplay: User[]): boolean {
     return usersDisplay.length > 0;
   }
 
-  userFilterEmpty(){
+  userFilterEmpty(): boolean {
     return this.userFilters.search === '' || this.userFilters.search == undefined;
   }
 }

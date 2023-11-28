@@ -930,6 +930,8 @@ export const FR = {
         title: 'Supprimer l\'utilisateur "{{}}"',
         subtitle:
           'Êtes-vous sûr(e) de vouloir supprimer ce collaborateur ? Cette action est irréversible, et vous ne  pourrez plus utiliser cet email pour créer un nouvel utilisateur.',
+        success: 'Le collaborateur {{}} a bien été supprimé',
+        error: 'Une erreur est survenue lors de la suppression du collaborateur {{}}',
       },
       successEdit: 'Le collaborateur {{}} a bien été modifié',
       deleteAdminTooltip:

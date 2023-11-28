@@ -8,6 +8,8 @@ export const setTimestamp = createAction('[Timestamp] Set new timestamp', props<
 // User
 export const setUserMe = createAction('[User] Set me', props<{ user: User }>());
 export const addUser = createAction('[User] Add User', props<{ user: User }>());
+export const patchUser = createAction('[User] Patch User', props<{ user: User }>());
+export const removeUser = createAction('[User] Remove User', props<{ user: User }>());
 export const setUsers = createAction('[User] Set Users', props<{ users: User[] }>());
 
 // Team
