@@ -114,7 +114,7 @@ export class SettingsUsersComponent implements OnInit {
     };
     componentInstance.objectDeleted
       .pipe(
-        switchMap(() => this.userRestService.deleteUser(user?.id ?? '')),
+        switchMap(() => this.userRestService.deleteUser(user.id)),
         tap(() => this.store.dispatch(removeUser({ user }))),
         switchMap(() => this.store.select(FromRoot.selectUsers)),
         tap(() => modalRef.close()),
