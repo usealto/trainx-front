@@ -4,5 +4,5 @@ export const environment = {
   auth0Domain: 'dev-bmttww5s.eu.auth0.com',
   auth0ClientId: 'ThcIBQZrRso5QaZq67kCU5eFYTfZwTSK',
   audience: 'https://api.usealto.com',
-  slackAuthorization: 'https://production-alto-slack-app-aomjizjppa-od.a.run.app/slack/install?companyId=',
+  slackAuthorization: 'https://staging-alto-slack-app-cinunhosha-od.a.run.app/slack/install?companyId=',
 };
