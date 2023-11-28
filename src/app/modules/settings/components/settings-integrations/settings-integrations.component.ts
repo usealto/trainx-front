@@ -40,6 +40,7 @@ export class SettingsIntegrationsComponent implements OnInit {
   emailValue = '';
   emailSent = false;
 
+  isIntegrationEnabled = false;
   isConnectorActivated = false;
 
   isWebAppActivated = false;
@@ -59,6 +60,7 @@ export class SettingsIntegrationsComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.company = data[EResolverData.Company] as CompanyDtoApi;
+    this.isIntegrationEnabled = this.company?.isIntegrationEnabled ?? false;
     this.isConnectorActivated = this.company?.isConnectorActive ?? false;
     console.log(this.company);
     this.isWebAppActivated = this.company?.usersHaveWebAccess ?? false;
@@ -129,10 +131,10 @@ export class SettingsIntegrationsComponent implements OnInit {
   activateConnector(isActivated: boolean) {
     if (this.company?.id) {
       this.companiesRestService
-        .patchCompany(this.company.id, { isConnectorActive: isActivated })
+        .patchCompany(this.company.id, { isIntegrationEnabled: isActivated })
         .pipe(
           tap((company) => {
-            this.isConnectorActivated = isActivated;
+            this.isIntegrationEnabled = isActivated;
             if (company.data) {
               this.companiesStore.myCompany.value = company.data;
             }
@@ -161,6 +163,7 @@ export class SettingsIntegrationsComponent implements OnInit {
   }
 
   changeConnector(connector: AltoConnectorEnumApi) {
+    this.emailSent = false;
     this.connector = connector;
     if (this.company?.id) {
       this.companiesRestService
