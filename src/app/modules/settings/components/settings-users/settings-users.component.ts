@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -60,7 +60,6 @@ export class SettingsUsersComponent implements OnInit {
     private readonly resolversService: ResolversService,
     private readonly store: Store<FromRoot.AppState>,
     private readonly toastService: ToastService,
-    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -110,10 +109,7 @@ export class SettingsUsersComponent implements OnInit {
     });
     const componentInstance = modalRef.componentInstance as DeleteModalComponent;
     componentInstance.data = {
-      title: this.replaceInTranslationPipe.transform(
-        I18ns.settings.users.deleteModal.title,
-        user.firstname + ' ' + user.lastname,
-      ),
+      title: this.replaceInTranslationPipe.transform(I18ns.settings.users.deleteModal.title, user.fullname),
       subtitle: this.replaceInTranslationPipe.transform(I18ns.settings.users.deleteModal.subtitle),
     };
     componentInstance.objectDeleted
