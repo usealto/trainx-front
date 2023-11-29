@@ -30,8 +30,8 @@ export class Company implements ICompany {
   name: string;
   connector?: CompanyDtoApiConnectorEnumApi;
   theOfficeId: string;
-  isConnectorActive?: boolean;
-  isIntegrationEnabled?: boolean;
+  isConnectorActive: boolean;
+  isIntegrationEnabled: boolean;
   connectorDays?: Array<CompanyDtoApiConnectorDaysEnumApi>;
   connectorQuestionsPerQuiz?: number;
   connectorTimes?: Array<CompanyDtoApiConnectorTimesEnumApi>;

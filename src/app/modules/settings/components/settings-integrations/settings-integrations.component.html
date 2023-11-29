@@ -95,13 +95,26 @@
       <div class="panel" style="min-width: 40rem;">
         <h2 class="mb-4 onboarding-titles">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.notAdminTitle }}</h2>
         <h3 [hidden]="emailSent" class="mb-3 onboarding-subtitles">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.sendEmail }}</h3>
-        <div class="d-flex flex-container gap-3">
-          <div class="mb-2 gap-3 col">
-            <input [hidden]="emailSent" class="form-control mb-3 email-input" type="email" placeholder="{{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailExemple }}" name="emailInput" [(ngModel)]="emailValue" #emailInput="ngModel" required email>
-            <p [hidden]="emailSent" style="color: var(--gray-500)">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.notAdminText }}</p>
+        <form [formGroup]="registerForm" (ngSubmit)="sendEmailSlackAuthorization()">
+          <div class="d-flex flex-container gap-3">
+            <div class="mb-2 gap-3 col">
+              <input 
+                [hidden]="emailSent" 
+                class="form-control mb-3 email-input" 
+                type="text" 
+                formControlName="email" 
+                [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)}" 
+                placeholder="{{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailExemple }}">
+              <p [hidden]="emailSent" style="color: var(--gray-500)">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.notAdminText }}</p>
+            </div>
+            <button 
+            [hidden]="emailSent" 
+            [disabled]="registerForm.invalid || disableBtn" 
+            class="btn btn-primary">
+            <i class="bi bi-send"></i>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailSendButtonText }}
+            </button>
           </div>
-          <button [hidden]="emailSent" [disabled]="!emailInput.valid" class="btn btn-primary " (click)="sendEmailSlackAuthorization()"><i class="bi bi-send"></i>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailSendButtonText }}</button>
-        </div>
+        </form>
         <p [hidden]="!emailSent" class="mb-4 mt-3 onboarding-texts"><img class="mb-2 me-3" [src]="EmojiName.HourglassNotDone | emoji" width="16" height="16"/>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.slackSent }}</p>
         <div class="d-flex flex-row align-items-center">
           <p [hidden]="!emailSent" class="onboarding-confirmations ms-5">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.slackSendAgain }}</p>

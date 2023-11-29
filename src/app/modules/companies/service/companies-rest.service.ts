@@ -39,8 +39,10 @@ export class CompaniesRestService {
     }
   }
 
-  patchCompany(id: string, patchCompanyDtoApi: PatchCompanyDtoApi): Observable<CompanyDtoResponseApi> {
-    return this.companyApi.patchCompany({ id, patchCompanyDtoApi });
+  patchCompany(id: string, patchCompanyDtoApi: PatchCompanyDtoApi): Observable<Company> {
+    return this.companyApi
+      .patchCompany({ id, patchCompanyDtoApi })
+      .pipe(map(({ data }) => (Company.fromDto(data as CompanyDtoApi))));
   }
 
   createCompany(createCompanyDtoApi: CreateCompanyDtoApi) {
