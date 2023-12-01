@@ -962,7 +962,7 @@ export const FR = {
         success: 'Vos collaborateurs vont recevoir un mail d’invitation pour se connecter à l’application.',
       },
       licences: 'licences',
-      licencesTitle: 'Nombre de licences attribués',
+      licencesTitle: 'Nombre de licences attribuées',
     },
     continuousSession: {
       title: 'Diffusion',

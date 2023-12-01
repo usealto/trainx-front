@@ -7,7 +7,7 @@
     <div class="progress w-30">
       <div
         class="progress-bar"
-        [class]="assignedLicencesCount > licencesCount ? 'bg-danger' : ''"
+        [class]="assignedLicencesCount > licencesCount ? 'progressbar-error' : ''"
         role="progressbar"
         [style.width]="getProgressbarWidth()"
       ></div>
