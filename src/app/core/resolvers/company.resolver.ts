@@ -7,6 +7,5 @@ import { map } from 'rxjs';
 
 export const companyResolver: ResolveFn<Company> = () => {
   const store = inject<Store<FromRoot.AppState>>(Store<FromRoot.AppState>);
-  console.log('companyResolver :');
   return store.select(FromRoot.selectCompany).pipe(map(({ data: company }) => company));
 };

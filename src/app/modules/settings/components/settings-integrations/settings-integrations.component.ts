@@ -1,24 +1,23 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { AltoConnectorEnumApi, CompanyDtoApi, CompanyDtoApiConnectorEnumApi } from '@usealto/sdk-ts-angular';
+import { Store } from '@ngrx/store';
+import { AltoConnectorEnumApi, CompanyDtoApiConnectorEnumApi } from '@usealto/sdk-ts-angular';
 import { switchMap, tap } from 'rxjs';
+import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CompaniesStore } from 'src/app/modules/companies/companies.store';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
-import { ActivatedRoute } from '@angular/router';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
-import { ToastService } from '../../../../core/toast/toast.service';
-import { TriggersService } from '../../services/triggers.service';
-import { User } from 'src/app/models/user.model';
 import { environment } from '../../../../../environments/environment';
-import { EmojiName } from 'src/app/core/utils/emoji/data';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { updateCompany } from '../../../../core/store/root/root.action';
 import * as FromRoot from '../../../../core/store/store.reducer';
+import { ToastService } from '../../../../core/toast/toast.service';
 import { Company, ICompany } from '../../../../models/company.model';
+import { TriggersService } from '../../services/triggers.service';
+import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 
 enum ModalType {
   ToggleConnector = 'toggleConnector',
@@ -84,7 +83,7 @@ export class SettingsIntegrationsComponent implements OnInit {
         (user) => !user.isConnectorActive,
       ).length;
     });
-    
+
     //custom email validator
     this.registerForm = this.formBuilder.group({
       email: [
@@ -163,10 +162,7 @@ export class SettingsIntegrationsComponent implements OnInit {
         .pipe(
           tap((company) => {
             // Dispatch l'action updateCompany pour mettre à jour l'état dans NgRx
-            console.log('updated company', company);
-            if (company) {
-              this.store.dispatch(updateCompany({ company }));
-            }
+            this.store.dispatch(updateCompany({ company }));
           }),
           switchMap(() => this.store.select(FromRoot.selectCompany)),
           untilDestroyed(this),
@@ -187,9 +183,7 @@ export class SettingsIntegrationsComponent implements OnInit {
         .pipe(
           tap((company) => {
             this.isWebAppActivated = isActivated;
-            if (company) {
-              this.companiesStore.myCompany.value = company;
-            }
+            this.companiesStore.myCompany.value = company;
           }),
           untilDestroyed(this),
         )
@@ -212,9 +206,7 @@ export class SettingsIntegrationsComponent implements OnInit {
         })
         .pipe(
           tap((company) => {
-            if (company) {
-              this.companiesStore.myCompany.value = company;
-            }
+            this.companiesStore.myCompany.value = company;
           }),
           untilDestroyed(this),
         )
@@ -224,8 +216,15 @@ export class SettingsIntegrationsComponent implements OnInit {
 
   sendEmailSlackAuthorization() {
     this.disableBtn = true;
-    this.triggersService.askSlackAuthorization(this.registerForm.get('email')?.value).subscribe(
-      () => {
+    this.triggersService.askSlackAuthorization(this.registerForm.get('email')?.value).subscribe({
+      error: () => {
+        this.toastService.show({
+          text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackError,
+          type: 'danger',
+        });
+        this.disableBtn = false;
+      },
+      complete: () => {
         this.toastService.show({
           text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackSuccess,
           type: 'success',
@@ -233,32 +232,25 @@ export class SettingsIntegrationsComponent implements OnInit {
         this.emailSent = true;
         this.disableBtn = false;
       },
-      () => {
-        this.toastService.show({
-          text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackError,
-          type: 'danger',
-        });
-        this.disableBtn = false;
-      },
-    );
+    });
   }
 
   sendGchatInstruction() {
     this.emailSent = true;
-    this.triggersService.sendGchatInstructions().subscribe(
-      () => {
-        this.toastService.show({
-          text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatSuccess,
-          type: 'success',
-        });
-      },
-      () => {
+    this.triggersService.sendGchatInstructions().subscribe({
+      error: () => {
         this.toastService.show({
           text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatError,
           type: 'danger',
         });
       },
-    );
+      complete: () => {
+        this.toastService.show({
+          text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatSuccess,
+          type: 'success',
+        });
+      },
+    });
   }
 
   openLinkSlack() {

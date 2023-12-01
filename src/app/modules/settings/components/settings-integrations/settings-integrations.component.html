@@ -22,126 +22,203 @@
       {{ I18ns.settings.continuousSession.integrations.subtitle }}
     </span>
     <ng-container *ngIf="isIntegrationEnabled">
-  <div class="d-flex align-items-center mt-5">
-    <div class="px-3 me-5 connector" [class]="connector === Connector.Slack ? 'activated' : ''">
-      <input
-        class="form-check-input me-3"
-        type="radio"
-        id="exampleRadios1"
-        value="option1"
-        [checked]="connector === Connector.Slack"
-        (click)="validateModal(ModalType.ChangeConnector, true, $event, Connector.Slack)"
-      />
-      <label class="form-check-label" for="exampleRadios1">
-        <img src="assets/img/slack-logo.svg" width="16" height="16" alt="Slack Logo" class="me-2" />
-        <span>{{ I18ns.settings.continuousSession.integrations.slack }}</span>
-        <i [hidden]="isSlackActive() === false" class="bi bi-check-circle-fill ms-3" style="color: #32D583;"></i>
-        <img [hidden]="isSlackPending() === false" class="ms-3 mb-2" [src]="EmojiName.HourglassNotDone | emoji" width="16" height="16"/>
-      </label>
-    </div>
-    <div class="px-3 me-5 connector" [class]="connector === Connector.GoogleChat ? 'activated' : ''">
-      <div class="form-check">
-        <input
-          class="form-check-input me-3"
-          type="radio"
-          id="exampleRadios2"
-          value="option2"
-          [checked]="connector === Connector.GoogleChat"
-          (click)="validateModal(ModalType.ChangeConnector, true, $event, Connector.GoogleChat)"
-        />
-        <label class="form-check-label" for="exampleRadios2">
-          <img src="assets/img/gchat-logo.svg" width="16" height="16" alt="Gchat Logo" class="me-2" />
-          <span>{{ I18ns.settings.continuousSession.integrations.gchat }}</span>
-          <i [hidden]="connector !== Connector.GoogleChat" class="bi bi-check-circle-fill ms-3" style="color: #32D583;"></i>
-        </label>
-      </div>
-    </div>
-    <div class="py-3 connector" style="border-radius: 4px; padding-left: 1rem; padding-right: 1rem">
-      <div class="form-check">
-        <input class="form-check-input me-3" type="radio" id="exampleRadios3" value="option3" disabled />
-        <label class="form-check-label" for="exampleRadios3">
-          <img src="assets/img/teams-logo.svg" width="16" height="16" alt="Teams Logo" class="me-2" />
-          <span>{{ I18ns.settings.continuousSession.integrations.teams }}</span>
-        </label>
-      </div>
-    </div>
-  </div>
-  <div [hidden]="connector !== Connector.GoogleChat">
-    <div class="flex-container gap-5 d-flex onboarding">
-
-      <div class="panel" style="min-width: 40rem;">
-        <h2 class="mb-4 onboarding-titles">{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatInstructionsTitle }}</h2>
-        <p class="mb-3 onboarding-texts">{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatInstructions }}</p>
-        <a class="d-inline-block text-primary text-decoration-underline mb-3" href="https://workspace.google.com/marketplace/app/alto/1076506336192" target="_blank">{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatLink }}</a>
-        <p class="onboarding-texts">{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatInstructions2 }}</p>
-      </div>
-      
-      <div class="panel" style="min-width: 40rem;">
-        <h2 class="mb-4 onboarding-titles">{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.emailSendTitle }}</h2>
-        <button [hidden]="emailSent" class="btn btn-primary" (click)="sendGchatInstruction()"><i class="bi bi-send"></i> {{ I18ns.settings.continuousSession.integrations.gchatSubtitle.emailSendButtonText }}</button>
-        <div [hidden]="!emailSent" class="d-flex flex-row align-items-center mb-4">
-          <p [hidden]="!emailSent" class="onboarding-confirmations"><i class="bi bi-check-circle-fill me-3" style="color: #32D583;"></i>{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatEmailSent }}</p>
-          <button [hidden]="!emailSent" (click)="sendGchatInstruction()" class="btn btn-link onboarding-resend">{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatSendAgain }}</button>
+      <div class="d-flex align-items-center mt-5">
+        <div class="px-3 me-5 connector" [class]="connector === Connector.Slack ? 'activated' : ''">
+          <input
+            class="form-check-input me-3"
+            type="radio"
+            id="exampleRadios1"
+            value="option1"
+            [checked]="connector === Connector.Slack"
+            (click)="validateModal(ModalType.ChangeConnector, true, $event, Connector.Slack)"
+          />
+          <label class="form-check-label" for="exampleRadios1">
+            <img src="assets/img/slack-logo.svg" width="16" height="16" alt="Slack Logo" class="me-2" />
+            <span>{{ I18ns.settings.continuousSession.integrations.slack }}</span>
+            <i
+              [hidden]="isSlackActive() === false"
+              class="bi bi-check-circle-fill ms-3"
+              style="color: #32d583"
+            ></i>
+            <img
+              [hidden]="isSlackPending() === false"
+              class="ms-3 mb-2"
+              [src]="EmojiName.HourglassNotDone | emoji"
+              width="16"
+              height="16"
+            />
+          </label>
         </div>
-        <div>
-          <span class="alto-badge orange">{{ nbUsersConnectorInactive + '/' + nbUsers + ' ' + I18ns.settings.continuousSession.integrations.gchatSubtitle.nonConnectedUsersText }}</span>
+        <div class="px-3 me-5 connector" [class]="connector === Connector.GoogleChat ? 'activated' : ''">
+          <div class="form-check">
+            <input
+              class="form-check-input me-3"
+              type="radio"
+              id="exampleRadios2"
+              value="option2"
+              [checked]="connector === Connector.GoogleChat"
+              (click)="validateModal(ModalType.ChangeConnector, true, $event, Connector.GoogleChat)"
+            />
+            <label class="form-check-label" for="exampleRadios2">
+              <img src="assets/img/gchat-logo.svg" width="16" height="16" alt="Gchat Logo" class="me-2" />
+              <span>{{ I18ns.settings.continuousSession.integrations.gchat }}</span>
+              <i
+                [hidden]="connector !== Connector.GoogleChat"
+                class="bi bi-check-circle-fill ms-3"
+                style="color: #32d583"
+              ></i>
+            </label>
+          </div>
+        </div>
+        <div class="py-3 connector" style="border-radius: 4px; padding-left: 1rem; padding-right: 1rem">
+          <div class="form-check">
+            <input class="form-check-input me-3" type="radio" id="exampleRadios3" value="option3" disabled />
+            <label class="form-check-label" for="exampleRadios3">
+              <img src="assets/img/teams-logo.svg" width="16" height="16" alt="Teams Logo" class="me-2" />
+              <span>{{ I18ns.settings.continuousSession.integrations.teams }}</span>
+            </label>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div [hidden]="isSlackPending() === false">
-    <div class="flex-container d-flex gap-5 onboarding">
+      <div [hidden]="connector !== Connector.GoogleChat">
+        <div class="flex-container gap-5 d-flex onboarding">
+          <div class="panel" style="min-width: 40rem">
+            <h2 class="mb-4 onboarding-titles">
+              {{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatInstructionsTitle }}
+            </h2>
+            <p class="mb-3 onboarding-texts">
+              {{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatInstructions }}
+            </p>
+            <a
+              class="d-inline-block text-primary text-decoration-underline mb-3"
+              href="https://workspace.google.com/marketplace/app/alto/1076506336192"
+              target="_blank"
+              >{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatLink }}</a
+            >
+            <p class="onboarding-texts">
+              {{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatInstructions2 }}
+            </p>
+          </div>
 
-      <div class="panel" style="min-width: 40rem;">
-        <h2 class="mb-4 onboarding-titles">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.notAdminTitle }}</h2>
-        <h3 [hidden]="emailSent" class="mb-3 onboarding-subtitles">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.sendEmail }}</h3>
-        <form [formGroup]="registerForm" (ngSubmit)="sendEmailSlackAuthorization()">
-          <div class="d-flex flex-container gap-3">
-            <div class="mb-2 gap-3 col">
-              <input 
-                [hidden]="emailSent" 
-                class="form-control mb-3 email-input" 
-                type="text" 
-                formControlName="email" 
-                [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)}" 
-                placeholder="{{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailExemple }}">
-              <p [hidden]="emailSent" style="color: var(--gray-500)">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.notAdminText }}</p>
+          <div class="panel" style="min-width: 40rem">
+            <h2 class="mb-4 onboarding-titles">
+              {{ I18ns.settings.continuousSession.integrations.gchatSubtitle.emailSendTitle }}
+            </h2>
+            <button [hidden]="emailSent" class="btn btn-primary" (click)="sendGchatInstruction()">
+              <i class="bi bi-send"></i>
+              {{ I18ns.settings.continuousSession.integrations.gchatSubtitle.emailSendButtonText }}
+            </button>
+            <div [hidden]="!emailSent" class="d-flex flex-row align-items-center mb-4">
+              <p [hidden]="!emailSent" class="onboarding-confirmations">
+                <i class="bi bi-check-circle-fill me-3" style="color: #32d583"></i
+                >{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatEmailSent }}
+              </p>
+              <button
+                [hidden]="!emailSent"
+                (click)="sendGchatInstruction()"
+                class="btn btn-link onboarding-resend"
+              >
+                {{ I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatSendAgain }}
+              </button>
             </div>
-            <button 
-            [hidden]="emailSent" 
-            [disabled]="registerForm.invalid || disableBtn" 
-            class="btn btn-primary">
-            <i class="bi bi-send"></i>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailSendButtonText }}
+            <div>
+              <span class="alto-badge orange">{{
+                nbUsersConnectorInactive +
+                  '/' +
+                  nbUsers +
+                  ' ' +
+                  I18ns.settings.continuousSession.integrations.gchatSubtitle.nonConnectedUsersText
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div [hidden]="isSlackPending() === false">
+        <div class="flex-container d-flex gap-5 onboarding">
+          <div class="panel" style="min-width: 40rem">
+            <h2 class="mb-4 onboarding-titles">
+              {{ I18ns.settings.continuousSession.integrations.slackSubtitle.notAdminTitle }}
+            </h2>
+            <h3 [hidden]="emailSent" class="mb-3 onboarding-subtitles">
+              {{ I18ns.settings.continuousSession.integrations.slackSubtitle.sendEmail }}
+            </h3>
+            <form [formGroup]="registerForm" (ngSubmit)="sendEmailSlackAuthorization()">
+              <div class="d-flex flex-container gap-3">
+                <div class="mb-2 gap-3 col">
+                  <input
+                    [hidden]="emailSent"
+                    class="form-control mb-3 email-input"
+                    type="text"
+                    formControlName="email"
+                    [ngClass]="{
+                      'is-invalid':
+                        registerForm.get('email')?.invalid &&
+                        (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)
+                    }"
+                    placeholder="{{
+                      I18ns.settings.continuousSession.integrations.slackSubtitle.emailExemple
+                    }}"
+                  />
+                  <p [hidden]="emailSent" style="color: var(--gray-500)">
+                    {{ I18ns.settings.continuousSession.integrations.slackSubtitle.notAdminText }}
+                  </p>
+                </div>
+                <button
+                  [hidden]="emailSent"
+                  [disabled]="registerForm.invalid || disableBtn"
+                  class="btn btn-primary"
+                >
+                  <i class="bi bi-send"></i
+                  >{{ I18ns.settings.continuousSession.integrations.slackSubtitle.emailSendButtonText }}
+                </button>
+              </div>
+            </form>
+            <p [hidden]="!emailSent" class="mb-4 mt-3 onboarding-texts">
+              <img class="mb-2 me-3" [src]="EmojiName.HourglassNotDone | emoji" width="16" height="16" />{{
+                I18ns.settings.continuousSession.integrations.slackSubtitle.slackSent
+              }}
+            </p>
+            <div class="d-flex flex-row align-items-center">
+              <p [hidden]="!emailSent" class="onboarding-confirmations ms-5">
+                {{ I18ns.settings.continuousSession.integrations.slackSubtitle.slackSendAgain }}
+              </p>
+              <button
+                [hidden]="!emailSent"
+                (click)="emailSent = false"
+                class="btn btn-link"
+                style="font-weight: bold; text-decoration: none; font-size: 0.833rem"
+              >
+                {{ I18ns.settings.continuousSession.integrations.slackSubtitle.slackSendAgainBtn }}
+              </button>
+            </div>
+          </div>
+
+          <div class="panel" style="min-width: 40rem">
+            <h2 class="mb-4 onboarding-titles">
+              {{ I18ns.settings.continuousSession.integrations.slackSubtitle.adminTitle }}
+            </h2>
+            <p class="mb-4 onboarding-texts">
+              {{ I18ns.settings.continuousSession.integrations.slackSubtitle.adminText }}
+            </p>
+            <button class="btn btn-primary" (click)="openLinkSlack()">
+              <i class="bi bi-check2"></i
+              >{{ I18ns.settings.continuousSession.integrations.slackSubtitle.authorConnection }}
             </button>
           </div>
-        </form>
-        <p [hidden]="!emailSent" class="mb-4 mt-3 onboarding-texts"><img class="mb-2 me-3" [src]="EmojiName.HourglassNotDone | emoji" width="16" height="16"/>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.slackSent }}</p>
-        <div class="d-flex flex-row align-items-center">
-          <p [hidden]="!emailSent" class="onboarding-confirmations ms-5">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.slackSendAgain }}</p>
-          <button [hidden]="!emailSent" (click)="emailSent=false" class="btn btn-link" style="font-weight: bold; text-decoration: none; font-size: 0.833rem;">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.slackSendAgainBtn }}</button>
         </div>
       </div>
-      
-      <div class="panel" style="min-width: 40rem;">
-        <h2 class="mb-4 onboarding-titles">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.adminTitle }}</h2>
-        <p class="mb-4 onboarding-texts">{{ I18ns.settings.continuousSession.integrations.slackSubtitle.adminText }}</p>
-        <button class="btn btn-primary" (click)="openLinkSlack()"><i class="bi bi-check2"></i>{{ I18ns.settings.continuousSession.integrations.slackSubtitle.authorConnection }}</button>
+      <div [hidden]="!isConnectorActivated" class="mt-4 questions-pushed-box">
+        <h3 class="questions-pushed">
+          {{ I18ns.settings.continuousSession.integrations.questionPushedTitle }}
+        </h3>
+        <input class="my-2 questions-pushed-input form-control" type="text" disabled value="2" />
+        <p class="questions-pushed subtitle">
+          {{ I18ns.settings.continuousSession.integrations.questionPushedSubtitle }}
+        </p>
       </div>
-    </div>
-  </div>
-  <div [hidden]="!isConnectorActivated" class="mt-4 questions-pushed-box">
-    <h3 class="questions-pushed">
-      {{ I18ns.settings.continuousSession.integrations.questionPushedTitle }}
-    </h3>
-    <input class="my-2 questions-pushed-input form-control" type="text" disabled value="2" />
-    <p class="questions-pushed subtitle">
-      {{ I18ns.settings.continuousSession.integrations.questionPushedSubtitle }}
-    </p>
-  </div>
-</ng-container>
+    </ng-container>
   </div>
 </div>
-
 
 <hr class="mb-4 mt-5" />
 <div class="d-flex">
