@@ -20,6 +20,7 @@ import { ToastService } from '../../../../core/toast/toast.service';
 import { Team } from '../../../../models/team.model';
 import { IUser, User } from '../../../../models/user.model';
 import { AddUsersComponent } from './add-users/add-users.component';
+import { LicensesRestService } from '../../services/licenses-rest.service';
 
 @UntilDestroy()
 @Component({
@@ -60,6 +61,7 @@ export class SettingsUsersComponent implements OnInit {
     private readonly resolversService: ResolversService,
     private readonly store: Store<FromRoot.AppState>,
     private readonly toastService: ToastService,
+    private readonly licensesRestService: LicensesRestService,
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +76,8 @@ export class SettingsUsersComponent implements OnInit {
 
     this.getAdmins();
     this.getUsers();
+
+    this.licensesRestService.getApplications();
   }
 
   getAdmins() {
