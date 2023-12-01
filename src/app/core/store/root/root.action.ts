@@ -18,3 +18,4 @@ export const setTeams = createAction('[User] Set Teams', props<{ teams: Team[] }
 
 // Company
 export const setCompany = createAction('[Company] Set Company', props<{ company: Company }>());
+export const updateCompany = createAction('[Company] Update Company', props<{ company: Company }>());

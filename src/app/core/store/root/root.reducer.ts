@@ -6,6 +6,7 @@ import {
   addUser,
   removeUser,
   setCompany,
+  updateCompany,
   setTeams,
   setTimestamp,
   setUserMe,
@@ -106,6 +107,13 @@ export const rootReducer = createReducer(
     (state, { company }): RootState => ({
       ...state,
       company: new TimestampedEntity(company),
+    }),
+  ),
+  on(
+    updateCompany,
+    (state, { company }): RootState => ({
+      ...state,
+      company: new TimestampedEntity(company), // Met à jour l'état de l'entreprise
     }),
   ),
 );

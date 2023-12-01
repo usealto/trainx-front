@@ -926,6 +926,7 @@ export const FR = {
       },
       enable: 'Active',
       disable: 'Inactive',
+      integrationDisabled: 'Désactivée',
       deleteModal: {
         title: 'Supprimer l\'utilisateur "{{}}"',
         subtitle:
@@ -1028,7 +1029,7 @@ export const FR = {
           },
           validBtns: {
             activateConnector: 'Contacter Alto',
-            desactivateConnector: 'Désactiver la plateforme',
+            desactivateConnector: 'Désactiver',
             activateWebApp: 'Activer la web app',
             desactivateWebApp: 'Désactiver la web app',
             changeConnector: 'Changer de plateforme',

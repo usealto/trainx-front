@@ -1,19 +1,23 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { AltoConnectorEnumApi, CompanyDtoApi, CompanyDtoApiConnectorEnumApi } from '@usealto/sdk-ts-angular';
-import { tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AltoConnectorEnumApi, CompanyDtoApiConnectorEnumApi } from '@usealto/sdk-ts-angular';
+import { switchMap, tap } from 'rxjs';
+import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CompaniesStore } from 'src/app/modules/companies/companies.store';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
-import { ActivatedRoute } from '@angular/router';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
-import { ToastService } from '../../../../core/toast/toast.service';
-import { TriggersService } from '../../services/triggers.service';
-import { User } from 'src/app/models/user.model';
 import { environment } from '../../../../../environments/environment';
-import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { updateCompany } from '../../../../core/store/root/root.action';
+import * as FromRoot from '../../../../core/store/store.reducer';
+import { ToastService } from '../../../../core/toast/toast.service';
+import { Company, ICompany } from '../../../../models/company.model';
+import { TriggersService } from '../../services/triggers.service';
+import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 
 enum ModalType {
   ToggleConnector = 'toggleConnector',
@@ -28,17 +32,18 @@ enum ModalType {
   styleUrls: ['./settings-integrations.component.scss'],
 })
 export class SettingsIntegrationsComponent implements OnInit {
+  registerForm!: FormGroup;
   EmojiName = EmojiName;
   I18ns = I18ns;
   ModalType = ModalType;
   Connector = AltoConnectorEnumApi;
 
-  company?: CompanyDtoApi;
+  company: Company = new Company({} as ICompany);
 
   nbUsers = 0;
   nbUsersConnectorInactive = 0;
-  emailValue = '';
   emailSent = false;
+  disableBtn = false;
 
   isIntegrationEnabled = false;
   isConnectorActivated = false;
@@ -55,27 +60,50 @@ export class SettingsIntegrationsComponent implements OnInit {
     private readonly resolversService: ResolversService,
     private readonly toastService: ToastService,
     private readonly triggersService: TriggersService,
+    private formBuilder: FormBuilder,
+    private store: Store<FromRoot.AppState>,
   ) {}
 
   ngOnInit(): void {
-    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.company = data[EResolverData.Company] as CompanyDtoApi;
-    this.isIntegrationEnabled = this.company?.isIntegrationEnabled ?? false;
-    this.isConnectorActivated = false;
-    this.isWebAppActivated = this.company?.usersHaveWebAccess ?? false;
-    this.connector =
-      this.company?.connector === CompanyDtoApiConnectorEnumApi.Slack
-        ? AltoConnectorEnumApi.Slack
-        : this.company?.connector === CompanyDtoApiConnectorEnumApi.GoogleChat
-        ? AltoConnectorEnumApi.GoogleChat
-        : AltoConnectorEnumApi.Unknown;
-    const users = Array.from((data[EResolverData.UsersById] as Map<string, User>).values());
-    this.nbUsers = users.length;
-    this.nbUsersConnectorInactive = users.filter((u) => !u.isConnectorActive).length;
+    this.store.select(FromRoot.selectCompany).subscribe((company) => {
+      this.company = company.data;
+      this.isIntegrationEnabled = company.data.isIntegrationEnabled ?? false;
+      this.isConnectorActivated = company.data.isConnectorActive ?? false;
+      this.isWebAppActivated = company.data.usersHaveWebAccess ?? false;
+      this.connector =
+        company.data.connector === CompanyDtoApiConnectorEnumApi.Slack
+          ? AltoConnectorEnumApi.Slack
+          : company.data.connector === CompanyDtoApiConnectorEnumApi.GoogleChat
+          ? AltoConnectorEnumApi.GoogleChat
+          : AltoConnectorEnumApi.Unknown;
+    });
+    this.store.select(FromRoot.selectUsers).subscribe((users) => {
+      this.nbUsers = users.data.size;
+      this.nbUsersConnectorInactive = Array.from(users.data.values()).filter(
+        (user) => !user.isConnectorActive,
+      ).length;
+    });
+
+    //custom email validator
+    this.registerForm = this.formBuilder.group({
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.email,
+          Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
+        ],
+      ],
+    });
   }
 
   validateModal(type: ModalType, toggle: boolean, e: any, connector = this.connector) {
     e.preventDefault();
+
+    if (type === ModalType.ToggleConnector && toggle) {
+      this.activateConnector(toggle);
+      return;
+    }
 
     if (type !== ModalType.ChangeConnector || connector !== this.connector) {
       const modalRef = this.modalService.open(ConfirmationModalComponent, { centered: true, size: 'md' });
@@ -127,20 +155,24 @@ export class SettingsIntegrationsComponent implements OnInit {
     }
   }
 
-  activateConnector(isActivated: boolean) {
+  activateConnector(isActivated: boolean): void {
     if (this.company?.id) {
       this.companiesRestService
         .patchCompany(this.company.id, { isIntegrationEnabled: isActivated })
         .pipe(
           tap((company) => {
-            this.isIntegrationEnabled = isActivated;
-            if (company.data) {
-              this.companiesStore.myCompany.value = company.data;
-            }
+            // Dispatch l'action updateCompany pour mettre à jour l'état dans NgRx
+            this.store.dispatch(updateCompany({ company }));
           }),
+          switchMap(() => this.store.select(FromRoot.selectCompany)),
           untilDestroyed(this),
         )
-        .subscribe();
+        .subscribe({
+          next: ({ data: company }) => {
+            this.company = company;
+            this.isIntegrationEnabled = company.isIntegrationEnabled;
+          },
+        });
     }
   }
 
@@ -151,9 +183,7 @@ export class SettingsIntegrationsComponent implements OnInit {
         .pipe(
           tap((company) => {
             this.isWebAppActivated = isActivated;
-            if (company.data) {
-              this.companiesStore.myCompany.value = company.data;
-            }
+            this.companiesStore.myCompany.value = company;
           }),
           untilDestroyed(this),
         )
@@ -176,9 +206,7 @@ export class SettingsIntegrationsComponent implements OnInit {
         })
         .pipe(
           tap((company) => {
-            if (company.data) {
-              this.companiesStore.myCompany.value = company.data;
-            }
+            this.companiesStore.myCompany.value = company;
           }),
           untilDestroyed(this),
         )
@@ -187,27 +215,42 @@ export class SettingsIntegrationsComponent implements OnInit {
   }
 
   sendEmailSlackAuthorization() {
-    this.emailSent = true;
-    this.triggersService.askSlackAuthorization(this.emailValue).subscribe(
-      () => {
-        this.toastService.show({text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackSuccess, type: 'success'});
+    this.disableBtn = true;
+    this.triggersService.askSlackAuthorization(this.registerForm.get('email')?.value).subscribe({
+      error: () => {
+        this.toastService.show({
+          text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackError,
+          type: 'danger',
+        });
+        this.disableBtn = false;
       },
-      () => {
-        this.toastService.show({text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackError, type: 'danger'});
+      complete: () => {
+        this.toastService.show({
+          text: I18ns.settings.continuousSession.integrations.slackSubtitle.slackSuccess,
+          type: 'success',
+        });
+        this.emailSent = true;
+        this.disableBtn = false;
       },
-    );
+    });
   }
 
   sendGchatInstruction() {
     this.emailSent = true;
-    this.triggersService.sendGchatInstructions().subscribe(
-      () => {
-        this.toastService.show({text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatSuccess, type: 'success'});
+    this.triggersService.sendGchatInstructions().subscribe({
+      error: () => {
+        this.toastService.show({
+          text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatError,
+          type: 'danger',
+        });
       },
-      () => {
-        this.toastService.show({text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatError, type: 'danger'});
+      complete: () => {
+        this.toastService.show({
+          text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatSuccess,
+          type: 'success',
+        });
       },
-    );
+    });
   }
 
   openLinkSlack() {

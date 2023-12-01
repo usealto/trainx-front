@@ -66,7 +66,9 @@ export class SettingsUsersComponent implements OnInit {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
 
     this.me = data[EResolverData.Me] as User;
-    this.company = data[EResolverData.Company] as Company;
+    this.store.select(FromRoot.selectCompany).subscribe((company) => {
+      this.company = company.data;
+    });
     this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
     this.users = Array.from((data[EResolverData.UsersById] as Map<string, User>).values());
 

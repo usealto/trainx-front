@@ -48,7 +48,11 @@
               {{ user.updatedAt | date : 'shortDate' }}
             </td>
             <td>
+              <div [hidden]="company.isIntegrationEnabled">
+                {{ I18ns.settings.users.integrationDisabled }}
+              </div>
               <div
+                [hidden]="!company.isIntegrationEnabled"
                 class="alto-badge"
                 [ngStyle]="{
                   'background-color': getBadgeBackgroundColor(getStatus(company, user)),
@@ -172,7 +176,11 @@
           {{ user.updatedAt | date : 'shortDate' }}
         </td>
         <td>
+          <div [hidden]="company.isIntegrationEnabled">
+                {{ I18ns.settings.users.integrationDisabled }}
+          </div>
           <div
+            [hidden]="!company.isIntegrationEnabled"
             class="alto-badge"
             [ngStyle]="{
               'background-color': getBadgeBackgroundColor(getStatus(company, user)),
