@@ -1,3 +1,4 @@
+<alto-licences-panel [licencesCount]="45" [assignedLicencesCount]="24" ></alto-licences-panel>
 <h2 class="mt-5">
   <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="16" height="16" />
   <div class="d-inline-block">
@@ -56,11 +57,16 @@
                 class="alto-badge"
                 [ngStyle]="{
                   'background-color': getBadgeBackgroundColor(getStatus(company, user)),
-                  'color': getBadgeColor(getStatus(company, user))
+                  color: getBadgeColor(getStatus(company, user))
                 }"
               >
-                <div *ngIf="getStatus(company, user) === 'inactive'" class="d-flex align-items-center" ngbTooltip="{{ I18ns.settings.users.usersInactiveTooltip }}" tooltipClass="menu-tooltip-class">
-                  <span >{{ I18ns.settings.users.disable }}</span>
+                <div
+                  *ngIf="getStatus(company, user) === 'inactive'"
+                  class="d-flex align-items-center"
+                  ngbTooltip="{{ I18ns.settings.users.usersInactiveTooltip }}"
+                  tooltipClass="menu-tooltip-class"
+                >
+                  <span>{{ I18ns.settings.users.disable }}</span>
                 </div>
                 <div *ngIf="getStatus(company, user) === 'active'" class="d-flex align-items-center">
                   <img
@@ -81,12 +87,14 @@
                   />
                   <span>{{ I18ns.settings.users.enable }}</span>
                 </div>
-                <div 
-                  *ngIf="getStatus(company, user) === 'warning'" class="d-flex align-items-center p-2"
+                <div
+                  *ngIf="getStatus(company, user) === 'warning'"
+                  class="d-flex align-items-center p-2"
                   ngbTooltip="{{ I18ns.settings.users.warningTooltip }}"
-                  tooltipClass="menu-tooltip-class">
-                  <span> 
-                    <img class="emoji mb-2" [src]="EmojiName.Warning | emoji" width="14" height="14" /> 
+                  tooltipClass="menu-tooltip-class"
+                >
+                  <span>
+                    <img class="emoji mb-2" [src]="EmojiName.Warning | emoji" width="14" height="14" />
                   </span>
                 </div>
               </div>
@@ -118,7 +126,7 @@
   </div>
 </div>
 
-<hr class="my-7">
+<hr class="my-7" />
 
 <div class="table-title">
   <div>
@@ -142,7 +150,6 @@
     (searchChange)="filterUsers({ search: $event })"
     *ngIf="getHasRegularUser(usersDisplay) || !userFilterEmpty()"
   ></alto-search>
-
 </div>
 
 <div class="table-panel" *ngIf="getHasRegularUser(usersDisplay); else nouser">
@@ -177,18 +184,23 @@
         </td>
         <td>
           <div [hidden]="company.isIntegrationEnabled">
-                {{ I18ns.settings.users.integrationDisabled }}
+            {{ I18ns.settings.users.integrationDisabled }}
           </div>
           <div
             [hidden]="!company.isIntegrationEnabled"
             class="alto-badge"
             [ngStyle]="{
               'background-color': getBadgeBackgroundColor(getStatus(company, user)),
-              'color': getBadgeColor(getStatus(company, user))
+              color: getBadgeColor(getStatus(company, user))
             }"
           >
-            <div *ngIf="getStatus(company, user) === 'inactive'" class="d-flex align-items-center" ngbTooltip="{{ I18ns.settings.users.usersInactiveTooltip }}" tooltipClass="menu-tooltip-class">
-              <span >{{ I18ns.settings.users.disable }}</span>
+            <div
+              *ngIf="getStatus(company, user) === 'inactive'"
+              class="d-flex align-items-center"
+              ngbTooltip="{{ I18ns.settings.users.usersInactiveTooltip }}"
+              tooltipClass="menu-tooltip-class"
+            >
+              <span>{{ I18ns.settings.users.disable }}</span>
             </div>
             <div *ngIf="getStatus(company, user) === 'active'" class="d-flex align-items-center">
               <img
@@ -209,12 +221,14 @@
               />
               <span>{{ I18ns.settings.users.enable }}</span>
             </div>
-            <div 
-              *ngIf="getStatus(company, user) === 'warning'" class="d-flex align-items-center p-2"
+            <div
+              *ngIf="getStatus(company, user) === 'warning'"
+              class="d-flex align-items-center p-2"
               ngbTooltip="{{ I18ns.settings.users.warningTooltip }}"
-              tooltipClass="menu-tooltip-class">
-              <span> 
-                <img class="emoji mb-2" [src]="EmojiName.Warning | emoji" width="14" height="14" /> 
+              tooltipClass="menu-tooltip-class"
+            >
+              <span>
+                <img class="emoji mb-2" [src]="EmojiName.Warning | emoji" width="14" height="14" />
               </span>
             </div>
           </div>
@@ -237,11 +251,11 @@
 </div>
 <ng-template #nouser>
   <div class="nodata-placeholder text-center" *ngIf="userFilterEmpty()">
-    <p class="mt-3">{{I18ns.settings.users.noUserPlaceholderTitle}}</p>
-    <span class="m3 d-block">{{I18ns.settings.users.noUserPlaceholderSubtitle}}</span>
+    <p class="mt-3">{{ I18ns.settings.users.noUserPlaceholderTitle }}</p>
+    <span class="m3 d-block">{{ I18ns.settings.users.noUserPlaceholderSubtitle }}</span>
   </div>
   <div class="nodata-placeholder text-center" *ngIf="!userFilterEmpty()">
-    <p class="mt-3">{{I18ns.settings.users.noUserFilteredPlaceholderTitle}}</p>
-    <span class="m3 d-block">{{I18ns.settings.users.noUserFilteredPlaceholderSubtitle}}</span>
+    <p class="mt-3">{{ I18ns.settings.users.noUserFilteredPlaceholderTitle }}</p>
+    <span class="m3 d-block">{{ I18ns.settings.users.noUserFilteredPlaceholderSubtitle }}</span>
   </div>
 </ng-template>
