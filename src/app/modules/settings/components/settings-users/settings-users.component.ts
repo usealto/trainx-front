@@ -98,6 +98,11 @@ export class SettingsUsersComponent implements OnInit {
     });
   }
 
+  toggleUserLicense(user: User): void {
+    console.log('toggleUserLicense', user);
+    this.usersMap.set(user.email, !this.usersMap.get(user.email));
+  }
+
   getAdmins() {
     this.adminsDisplay = this.usersService.filterUsers<User[]>(
       this.users.filter((user) => user.isCompanyAdmin()),

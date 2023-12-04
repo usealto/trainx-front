@@ -923,6 +923,7 @@ export const FR = {
         lastConnection: 'Dernière activité',
         connexion: 'Connexion',
         integration: 'Intégration',
+        license: 'Licence',
       },
       enable: 'Active',
       disable: 'Inactive',
