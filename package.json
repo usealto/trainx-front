@@ -42,7 +42,7 @@
     "@ngrx/store": "15.2",
     "@popperjs/core": "^2.11.6",
     "@usealto/sdk-ts-angular": "^1.0.202311280916-dev",
-    "@usealto/the-office-sdk-angular": "1.0.202312011748-dev",
+    "@usealto/the-office-sdk-angular": "1.0.202312041834-dev",
     "bootstrap": "^5.3.0",
     "bootstrap-icons": "^1.10.5",
     "chart.js": "^4.2.1",

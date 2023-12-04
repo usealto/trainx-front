@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { filter, switchMap, tap } from 'rxjs';
+import { combineLatest, filter, switchMap, tap } from 'rxjs';
 import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -51,6 +51,10 @@ export class SettingsUsersComponent implements OnInit {
   adminsPage = 1;
   adminsCount = 0;
 
+  availableLicensesCount = 0;
+  usedLicensesCount = 0;
+  usersMap: Map<string, boolean> = new Map<string, boolean>();
+
   constructor(
     private readonly userRestService: UsersRestService,
     private readonly offcanvasService: NgbOffcanvas,
@@ -68,16 +72,30 @@ export class SettingsUsersComponent implements OnInit {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
 
     this.me = data[EResolverData.Me] as User;
-    this.store.select(FromRoot.selectCompany).subscribe((company) => {
-      this.company = company.data;
-    });
+    this.store.select(FromRoot.selectCompany).pipe(
+      tap(({data: company}) => {
+        this.company = company;
+      })
+    );
     this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
     this.users = Array.from((data[EResolverData.UsersById] as Map<string, User>).values());
 
     this.getAdmins();
     this.getUsers();
+    this.getLicencesCount();
+  }
 
-    this.licensesRestService.getApplications();
+  getLicencesCount(): void {
+    combineLatest([
+      this.licensesRestService.getLicences(this.company),
+      this.licensesRestService.getUsersMap(this.users.map((u) => u.email)),
+    ]).subscribe(([company, usersMap]) => {
+      this.availableLicensesCount = company.licenses.reduce((acc, license) => license.quantity + acc, 0);
+      this.usersMap = usersMap;
+      this.usedLicensesCount = [...usersMap.values()].reduce((acc, hasLicense) => {
+        return hasLicense ? acc++ : acc;
+      }, 0);
+    });
   }
 
   getAdmins() {
