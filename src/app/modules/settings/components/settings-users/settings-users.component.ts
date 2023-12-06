@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { combineLatest, filter, switchMap, tap } from 'rxjs';
+import { filter, switchMap, tap } from 'rxjs';
 import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -20,7 +21,11 @@ import { ToastService } from '../../../../core/toast/toast.service';
 import { Team } from '../../../../models/team.model';
 import { IUser, User } from '../../../../models/user.model';
 import { AddUsersComponent } from './add-users/add-users.component';
-import { LicensesRestService } from '../../services/licenses-rest.service';
+
+interface IUserInfos {
+  user: User;
+  licenseControl: FormControl<boolean>;
+}
 
 @UntilDestroy()
 @Component({
@@ -38,22 +43,21 @@ export class SettingsUsersComponent implements OnInit {
   company: Company = new Company({} as ICompany);
   me: User = new User({} as IUser);
   teams: Team[] = [];
-  users: User[] = [];
+  users: IUserInfos[] = [];
 
-  paginatedUsers: User[] = [];
-  usersDisplay: User[] = [];
+  paginatedUsers: IUserInfos[] = [];
+  usersDisplay: IUserInfos[] = [];
   usersPageSize = 10;
   usersPage = 1;
   usersCount = 0;
-  paginatedAdmins: User[] = [];
-  adminsDisplay: User[] = [];
+  paginatedAdmins: IUserInfos[] = [];
+  adminsDisplay: IUserInfos[] = [];
   adminsPageSize = 5;
   adminsPage = 1;
   adminsCount = 0;
 
   availableLicensesCount = 0;
   usedLicensesCount = 0;
-  usersMap: Map<string, boolean> = new Map<string, boolean>();
 
   constructor(
     private readonly userRestService: UsersRestService,
@@ -65,7 +69,6 @@ export class SettingsUsersComponent implements OnInit {
     private readonly resolversService: ResolversService,
     private readonly store: Store<FromRoot.AppState>,
     private readonly toastService: ToastService,
-    private readonly licensesRestService: LicensesRestService,
   ) {}
 
   ngOnInit(): void {
@@ -73,62 +76,69 @@ export class SettingsUsersComponent implements OnInit {
 
     this.me = data[EResolverData.Me] as User;
     this.store.select(FromRoot.selectCompany).pipe(
-      tap(({data: company}) => {
+      tap(({ data: company }) => {
         this.company = company;
-      })
+        this.availableLicensesCount = company.licenseCount;
+      }),
     );
     this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
-    this.users = Array.from((data[EResolverData.UsersById] as Map<string, User>).values());
 
-    this.getAdmins();
-    this.getUsers();
-    this.getLicencesCount();
-  }
+    // this.licensesRestService.getLicences(this.company).subscribe((company) => {
+    //   this.availableLicensesCount = company.licenses.reduce((acc, license) => license.quantity + acc, 0);
+    // });
 
-  getLicencesCount(): void {
-    combineLatest([
-      this.licensesRestService.getLicences(this.company),
-      this.licensesRestService.getUsersMap(this.users.map((u) => u.email)),
-    ]).subscribe(([company, usersMap]) => {
-      this.availableLicensesCount = company.licenses.reduce((acc, license) => license.quantity + acc, 0);
-      this.usersMap = usersMap;
-      this.usedLicensesCount = [...usersMap.values()].reduce((acc, hasLicense) => {
-        return hasLicense ? acc++ : acc;
-      }, 0);
-    });
+    // this.licensesRestService
+    //   .getUsers(this.users.map(({ user }) => user.email))
+    //   .subscribe((theOfficeUsers) => {
+    //     this.usedLicensesCount = theOfficeUsers.reduce((acc, user) => {
+    //       return user.hasLicense ? acc++ : acc;
+    //     }, 0);
+
+    //     this.setUsers(Array.from((data[EResolverData.UsersById] as Map<string, User>).values()));
+    //     this.displayAdmins();
+    //     this.displayUsers();
+    //   });
   }
 
   toggleUserLicense(user: User): void {
     console.log('toggleUserLicense', user);
-    this.usersMap.set(user.email, !this.usersMap.get(user.email));
+    // this.usersMap.set(user.email, !this.usersMap.get(user.email));
   }
 
-  getAdmins() {
-    this.adminsDisplay = this.usersService.filterUsers<User[]>(
-      this.users.filter((user) => user.isCompanyAdmin()),
+  displayAdmins() {
+    const filteredUsers = this.usersService.filterUsers<User[]>(
+      this.users.map(({ user }) => user).filter((user) => user.isCompanyAdmin()),
       { search: this.userFilters.search },
     );
+
+    this.adminsDisplay = this.users.filter(({ user }) => {
+      return filteredUsers.some((filteredUser) => filteredUser.email === user.email);
+    });
     this.adminsCount = this.adminsDisplay.length;
     this.changeAdminsPage(1);
   }
 
-  getUsers() {
-    this.usersDisplay = this.usersService.filterUsers<User[]>(
-      this.users.filter((user) => !user.isCompanyAdmin()),
+  displayUsers() {
+    const filteredUsers = this.usersService.filterUsers<User[]>(
+      this.users.map(({ user }) => user).filter((user) => user.isCompanyUser() && !user.isCompanyAdmin()),
       { search: this.userFilters.search },
     );
+
+    this.usersDisplay = this.users.filter(({ user }) => {
+      return filteredUsers.some((filteredUser) => filteredUser.email === user.email);
+    });
     this.usersCount = this.usersDisplay.length;
     this.changeUsersPage(1);
   }
 
   filterAdmins({ search }: { search: string }) {
     this.userFilters.search = search;
-    this.getAdmins();
+    this.displayAdmins();
   }
 
   filterUsers({ search }: { search: string }) {
     this.userFilters.search = search;
-    this.getUsers();
+    this.displayUsers();
   }
 
   deleteUser(user: User): void {
@@ -151,8 +161,13 @@ export class SettingsUsersComponent implements OnInit {
       )
       .subscribe({
         next: ({ data: users }) => {
-          this.users = Array.from(users.values());
-          this.getUsers();
+          this.users = Array.from(users.values()).map((user) => {
+            return {
+              user,
+              licenseControl: new FormControl(false, { nonNullable: true }),
+            };
+          });
+          this.displayUsers();
         },
         error: () => {
           this.toastService.show({
@@ -199,9 +214,14 @@ export class SettingsUsersComponent implements OnInit {
       )
       .subscribe({
         next: ({ data: users }) => {
-          this.users = Array.from(users.values());
-          this.getAdmins();
-          this.getUsers();
+          this.users = Array.from(users.values()).map((user) => {
+            return {
+              user,
+              licenseControl: new FormControl(false, { nonNullable: true }),
+            };
+          });
+          this.displayAdmins();
+          this.displayUsers();
         },
         error: () => {
           this.toastService.show({
@@ -251,9 +271,14 @@ export class SettingsUsersComponent implements OnInit {
           return this.store.select(FromRoot.selectUsers);
         }),
         tap(({ data: users }) => {
-          this.users = Array.from(users.values());
-          this.getAdmins();
-          this.getUsers();
+          this.users = Array.from(users.values()).map((user) => {
+            return {
+              user,
+              licenseControl: new FormControl(false, { nonNullable: true }),
+            };
+          });
+          this.displayAdmins();
+          this.displayUsers();
         }),
       )
       .subscribe();
@@ -297,11 +322,16 @@ export class SettingsUsersComponent implements OnInit {
     }
   }
 
-  getHasRegularUser(usersDisplay: User[]): boolean {
-    return usersDisplay.length > 0;
-  }
-
   userFilterEmpty(): boolean {
     return this.userFilters.search === '' || this.userFilters.search == undefined;
+  }
+
+  private setUsers(users: User[]) {
+    this.users = Array.from(users.values()).map((user) => {
+      return {
+        user,
+        licenseControl: new FormControl(false, { nonNullable: true }),
+      };
+    });
   }
 }

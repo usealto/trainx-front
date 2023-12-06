@@ -1,21 +1,32 @@
 <div
   class="panel d-flex justify-content-between align-items-center"
-  [class]="assignedLicencesCount > licencesCount ? 'warning' : ''"
+  [class]="assignedLicensesCount > licensesCount ? 'warning' : ''"
 >
   <p class="title fs-5 p-0 m-0">{{ I18ns.settings.users.licencesTitle }}</p>
   <div class="flex-fill d-flex justify-content-end align-items-center">
     <div class="progress w-30">
       <div
         class="progress-bar"
-        [class]="assignedLicencesCount > licencesCount ? 'progressbar-error' : ''"
+        [class]="
+          assignedLicensesCount > licensesCount ? 'progressbar-error' : ''
+        "
         role="progressbar"
         [style.width]="getProgressbarWidth()"
       ></div>
     </div>
     <p class="p-O m-0 ms-4">
-      {{ assignedLicencesCount + '/' + licencesCount + ' ' + I18ns.settings.users.licences }}
+      {{
+        assignedLicensesCount +
+          "/" +
+          (I18ns.settings.users.licences | plural : licensesCount)
+      }}
     </p>
-    <a *ngIf="assignedLicencesCount > licencesCount" class="ms-4 btn" href="" target="_blank">
+    <a
+      *ngIf="assignedLicensesCount > licensesCount"
+      class="ms-4 btn"
+      href=""
+      target="_blank"
+    >
       <i class="bi bi-gear"></i>
     </a>
   </div>

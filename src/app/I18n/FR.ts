@@ -962,7 +962,7 @@ export const FR = {
           'Une erreur est survenue sur ces utilisateurs. Vérifiez la validité des champs avant de valider.',
         success: 'Vos collaborateurs vont recevoir un mail d’invitation pour se connecter à l’application.',
       },
-      licences: 'licences',
+      licences: ['{{}} licence', '{{}} licences'],
       licencesTitle: 'Nombre de licences attribuées',
     },
     continuousSession: {

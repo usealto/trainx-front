@@ -1,9 +1,14 @@
-<alto-licences-panel
-  [licencesCount]="availableLicensesCount"
-  [assignedLicencesCount]="usedLicensesCount"
-></alto-licences-panel>
+<alto-licenses-panel
+  [licensesCount]="availableLicensesCount"
+  [assignedLicensesCount]="usedLicensesCount"
+></alto-licenses-panel>
 <h2 class="mt-5">
-  <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="16" height="16" />
+  <img
+    class="emoji"
+    [src]="EmojiName.BustsInSilhouette | emoji"
+    width="16"
+    height="16"
+  />
   <div class="d-inline-block">
     {{ I18ns.settings.users.admins }}
   </div>
@@ -37,22 +42,28 @@
             <th scope="col" class="w-15">
               {{ I18ns.settings.users.table.integration }}
             </th>
-            <th scope="col" class="w-15">
+            <th scope="col" class="w-10">
               {{ I18ns.settings.users.table.license }}
             </th>
-            <th class="w-15 px-4"></th>
+            <th scope="col" class="px-4"></th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of paginatedAdmins" class="align-middle">
+          <tr *ngFor="let userInfos of paginatedAdmins" class="align-middle">
             <td class="px-4">
-              <alto-profile-card [user]="user"></alto-profile-card>
+              <alto-profile-card [user]="userInfos.user"></alto-profile-card>
             </td>
-            <td title="{{ user.createdAt | date : 'short' }}" class="fs-7">
-              {{ user.createdAt | date : 'shortDate' }}
+            <td
+              title="{{ userInfos.user.createdAt | date : 'short' }}"
+              class="fs-7"
+            >
+              {{ userInfos.user.createdAt | date : "shortDate" }}
             </td>
-            <td title="{{ user.updatedAt | date : 'short' }}" class="fs-7">
-              {{ user.updatedAt | date : 'shortDate' }}
+            <td
+              title="{{ userInfos.user.updatedAt | date : 'short' }}"
+              class="fs-7"
+            >
+              {{ userInfos.user.updatedAt | date : "shortDate" }}
             </td>
             <td>
               <div [hidden]="company.isIntegrationEnabled">
@@ -62,19 +73,24 @@
                 [hidden]="!company.isIntegrationEnabled"
                 class="alto-badge"
                 [ngStyle]="{
-                  'background-color': getBadgeBackgroundColor(getStatus(company, user)),
-                  color: getBadgeColor(getStatus(company, user))
+                  'background-color': getBadgeBackgroundColor(
+                    getStatus(company, userInfos.user)
+                  ),
+                  color: getBadgeColor(getStatus(company, userInfos.user))
                 }"
               >
                 <div
-                  *ngIf="getStatus(company, user) === 'inactive'"
+                  *ngIf="getStatus(company, userInfos.user) === 'inactive'"
                   class="d-flex align-items-center"
                   ngbTooltip="{{ I18ns.settings.users.usersInactiveTooltip }}"
                   tooltipClass="menu-tooltip-class"
                 >
                   <span>{{ I18ns.settings.users.disable }}</span>
                 </div>
-                <div *ngIf="getStatus(company, user) === 'active'" class="d-flex align-items-center">
+                <div
+                  *ngIf="getStatus(company, userInfos.user) === 'active'"
+                  class="d-flex align-items-center"
+                >
                   <img
                     *ngIf="company.connector === 'slack'"
                     src="assets/img/slack-logo.svg"
@@ -94,13 +110,18 @@
                   <span>{{ I18ns.settings.users.enable }}</span>
                 </div>
                 <div
-                  *ngIf="getStatus(company, user) === 'warning'"
+                  *ngIf="getStatus(company, userInfos.user) === 'warning'"
                   class="d-flex align-items-center p-2"
                   ngbTooltip="{{ I18ns.settings.users.warningTooltip }}"
                   tooltipClass="menu-tooltip-class"
                 >
                   <span>
-                    <img class="emoji mb-2" [src]="EmojiName.Warning | emoji" width="14" height="14" />
+                    <img
+                      class="emoji mb-2"
+                      [src]="EmojiName.Warning | emoji"
+                      width="14"
+                      height="14"
+                    />
                   </span>
                 </div>
               </div>
@@ -110,23 +131,23 @@
                 <input
                   type="checkbox"
                   class="form-check-input"
-                  (click)="toggleUserLicense(user)"
-                  [checked]="usersMap.get(user.email)"
+                  (click)="toggleUserLicense(userInfos.user)"
                 />
               </div>
             </td>
-            <td class="px-4">
-              <div class="d-flex justify-content-center">
-                <div
-                  ngbTooltip="{{ I18ns.settings.users.deleteAdminTooltip }}"
-                  placement="top"
-                  class="me-5"
-                  tooltipClass="tooltip-class"
-                >
-                  <i class="cursor-pointer fs-5 bi bi-trash3 disabled-icon"></i>
-                </div>
-                <i class="cursor-pointer fs-5 bi bi-pen" (click)="openUserEditionForm(user)"></i>
+            <td class="px-4 text-end">
+              <div
+                ngbTooltip="{{ I18ns.settings.users.deleteAdminTooltip }}"
+                placement="top"
+                tooltipClass="tooltip-class"
+                class="me-4 d-inline-block"
+              >
+                <i class="cursor-pointer fs-5 bi bi-trash3 disabled-icon"></i>
               </div>
+              <i
+                class="cursor-pointer fs-5 bi bi-pen"
+                (click)="openUserEditionForm(userInfos.user)"
+              ></i>
             </td>
           </tr>
         </tbody>
@@ -148,14 +169,23 @@
   <div>
     <div>
       <h2>
-        <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="14" height="14" />
+        <img
+          class="emoji"
+          [src]="EmojiName.BustsInSilhouette | emoji"
+          width="14"
+          height="14"
+        />
         {{ I18ns.settings.users.users }}
       </h2>
       <p class="alto-grey descriptions">
         {{ I18ns.settings.users.usersDesc }}
       </p>
     </div>
-    <button data-cy="open-user-form" class="btn btn-primary" (click)="openUsersForm()">
+    <button
+      data-cy="open-user-form"
+      class="btn btn-primary"
+      (click)="openUsersForm()"
+    >
       <i class="bi bi-plus-lg"></i>{{ I18ns.settings.users.addUsers.add }}
     </button>
   </div>
@@ -164,12 +194,12 @@
     data-cy="filterBySearch"
     class="w-50 d-inline-block"
     (searchChange)="filterUsers({ search: $event })"
-    *ngIf="getHasRegularUser(usersDisplay) || !userFilterEmpty()"
+    *ngIf="usersDisplay.length || !userFilterEmpty()"
   ></alto-search>
 </div>
 
-<div class="table-panel" *ngIf="getHasRegularUser(usersDisplay); else nouser">
-  <table class="table mt-5">
+<div class="table-panel" *ngIf="usersDisplay.length; else nouser">
+  <table class="table">
     <thead>
       <tr>
         <th scope="col" class="w-35 px-4">
@@ -184,22 +214,28 @@
         <th scope="col" class="w-15">
           {{ I18ns.settings.users.table.integration }}
         </th>
-        <th scope="col" class="w-15">
+        <th scope="col" class="w-10">
           {{ I18ns.settings.users.table.license }}
         </th>
-        <th class="w-15 px-4"></th>
+        <th scope="col" class="px-4"></th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of paginatedUsers" class="align-middle">
+      <tr *ngFor="let userInfos of paginatedUsers" class="align-middle">
         <td class="px-4">
-          <alto-profile-card [user]="user"></alto-profile-card>
+          <alto-profile-card [user]="userInfos.user"></alto-profile-card>
         </td>
-        <td title="{{ user.createdAt | date : 'short' }}" class="fs-7">
-          {{ user.createdAt | date : 'shortDate' }}
+        <td
+          title="{{ userInfos.user.createdAt | date : 'short' }}"
+          class="fs-7"
+        >
+          {{ userInfos.user.createdAt | date : "shortDate" }}
         </td>
-        <td title="{{ user.updatedAt | date : 'short' }}" class="fs-7">
-          {{ user.updatedAt | date : 'shortDate' }}
+        <td
+          title="{{ userInfos.user.updatedAt | date : 'short' }}"
+          class="fs-7"
+        >
+          {{ userInfos.user.updatedAt | date : "shortDate" }}
         </td>
         <td>
           <div [hidden]="company.isIntegrationEnabled">
@@ -209,19 +245,24 @@
             [hidden]="!company.isIntegrationEnabled"
             class="alto-badge"
             [ngStyle]="{
-              'background-color': getBadgeBackgroundColor(getStatus(company, user)),
-              color: getBadgeColor(getStatus(company, user))
+              'background-color': getBadgeBackgroundColor(
+                getStatus(company, userInfos.user)
+              ),
+              color: getBadgeColor(getStatus(company, userInfos.user))
             }"
           >
             <div
-              *ngIf="getStatus(company, user) === 'inactive'"
+              *ngIf="getStatus(company, userInfos.user) === 'inactive'"
               class="d-flex align-items-center"
               ngbTooltip="{{ I18ns.settings.users.usersInactiveTooltip }}"
               tooltipClass="menu-tooltip-class"
             >
               <span>{{ I18ns.settings.users.disable }}</span>
             </div>
-            <div *ngIf="getStatus(company, user) === 'active'" class="d-flex align-items-center">
+            <div
+              *ngIf="getStatus(company, userInfos.user) === 'active'"
+              class="d-flex align-items-center"
+            >
               <img
                 *ngIf="company.connector === 'slack'"
                 src="assets/img/slack-logo.svg"
@@ -241,13 +282,18 @@
               <span>{{ I18ns.settings.users.enable }}</span>
             </div>
             <div
-              *ngIf="getStatus(company, user) === 'warning'"
+              *ngIf="getStatus(company, userInfos.user) === 'warning'"
               class="d-flex align-items-center p-2"
               ngbTooltip="{{ I18ns.settings.users.warningTooltip }}"
               tooltipClass="menu-tooltip-class"
             >
               <span>
-                <img class="emoji mb-2" [src]="EmojiName.Warning | emoji" width="14" height="14" />
+                <img
+                  class="emoji mb-2"
+                  [src]="EmojiName.Warning | emoji"
+                  width="14"
+                  height="14"
+                />
               </span>
             </div>
           </div>
@@ -257,14 +303,21 @@
             <input
               type="checkbox"
               class="form-check-input"
-              (click)="toggleUserLicense(user)"
-              [checked]="usersMap.get(user.email)"
+              (click)="toggleUserLicense(userInfos.user)"
+              [formControl]="userInfos.licenseControl"
             />
           </div>
         </td>
-        <td class="px-4 text-center">
-          <i data-cy="btnDelete" class="cursor-pointer fs-5 bi bi-trash3 me-4" (click)="deleteUser(user)"></i>
-          <i class="cursor-pointer fs-5 bi bi-pen" (click)="openUserEditionForm(user)"></i>
+        <td class="px-4 text-end">
+          <i
+            data-cy="btnDelete"
+            class="cursor-pointer fs-5 bi bi-trash3 me-4"
+            (click)="deleteUser(userInfos.user)"
+          ></i>
+          <i
+            class="cursor-pointer fs-5 bi bi-pen"
+            (click)="openUserEditionForm(userInfos.user)"
+          ></i>
         </td>
       </tr>
     </tbody>
@@ -281,10 +334,16 @@
 <ng-template #nouser>
   <div class="nodata-placeholder text-center" *ngIf="userFilterEmpty()">
     <p class="mt-3">{{ I18ns.settings.users.noUserPlaceholderTitle }}</p>
-    <span class="m3 d-block">{{ I18ns.settings.users.noUserPlaceholderSubtitle }}</span>
+    <span class="m3 d-block">{{
+      I18ns.settings.users.noUserPlaceholderSubtitle
+    }}</span>
   </div>
   <div class="nodata-placeholder text-center" *ngIf="!userFilterEmpty()">
-    <p class="mt-3">{{ I18ns.settings.users.noUserFilteredPlaceholderTitle }}</p>
-    <span class="m3 d-block">{{ I18ns.settings.users.noUserFilteredPlaceholderSubtitle }}</span>
+    <p class="mt-3">
+      {{ I18ns.settings.users.noUserFilteredPlaceholderTitle }}
+    </p>
+    <span class="m3 d-block">{{
+      I18ns.settings.users.noUserFilteredPlaceholderSubtitle
+    }}</span>
   </div>
 </ng-template>

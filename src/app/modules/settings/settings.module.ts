@@ -8,7 +8,7 @@ import { SettingsIntegrationsComponent } from './components/settings-integration
 import { AddUsersComponent } from './components/settings-users/add-users/add-users.component';
 import { ConfirmationModalComponent } from './components/confirmation-modal/confirmation-modal.component';
 import { FormsModule } from '@angular/forms';
-import { LicencesPanelComponent } from './components/licences-panel/licences-panel.component';
+import { LicensesPanelComponent } from './components/licenses-panel/licenses-panel.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +17,7 @@ import { LicencesPanelComponent } from './components/licences-panel/licences-pan
     SettingsIntegrationsComponent,
     AddUsersComponent,
     ConfirmationModalComponent,
-    LicencesPanelComponent,
+    LicensesPanelComponent,
   ],
   imports: [CommonModule, SettingsRoutingModule, SharedModule, FormsModule],
 })
