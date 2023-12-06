@@ -48,6 +48,7 @@ export class User implements IUser {
     this.companyId = data.companyId ?? '';
     this.longestStreak = data.longestStreak ?? ({} as StreakDtoApi);
     this.currentStreak = data.currentStreak ?? ({} as StreakDtoApi);
+    this.isConnectorActive = data.isConnectorActive;
   }
 
   static fromDto(data: UserDtoApi): User {
@@ -64,6 +65,7 @@ export class User implements IUser {
       companyId: data.companyId,
       longestStreak: data.longestStreak,
       currentStreak: data.currentStreak,
+      isConnectorActive: data.isConnectorActive,
     });
   }
 
