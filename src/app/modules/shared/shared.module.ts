@@ -37,7 +37,6 @@ import { QuestionDeleteModalComponent } from './components/question-delete-modal
 import { RangeComponent } from './components/range/range.component';
 import { ScoreFilterComponent } from './components/score-filter/score-filter.component';
 import { SearchComponent } from './components/search/search.component';
-import { StatusPillComponent } from './components/status-pill/status-pill.component';
 import { TabsComponent } from './components/tabs/tabs.component';
 import { TextCounterComponent } from './components/text-counter/text-counter.component';
 import { TimePickerComponent } from './components/time-picker/time-picker.component';
@@ -60,7 +59,6 @@ import { ImpersonationHeaderComponent } from './components/impersonation-header/
     ImgBadgeComponent,
     AnchorNavigatorComponent,
     DropdownFilterComponent,
-    StatusPillComponent,
     SearchComponent,
     TabsComponent,
     ProfileCardComponent,
@@ -113,7 +111,6 @@ import { ImpersonationHeaderComponent } from './components/impersonation-header/
     ProfileCardComponent,
     TabsComponent,
     SearchComponent,
-    StatusPillComponent,
     PeriodFilterComponent,
     ProgramCardListComponent,
     TeamColorPipe,

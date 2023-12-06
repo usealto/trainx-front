@@ -7,10 +7,6 @@ import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ApiModule, BASE_PATH } from '@usealto/sdk-ts-angular';
-import {
-  ApiModule as TheofficeApiModule,
-  BASE_PATH as THEOFFICE_BASE_PATH,
-} from '@usealto/the-office-sdk-angular';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core/core.module';
@@ -51,7 +47,6 @@ import { SharedModule } from './modules/shared/shared.module';
   imports: [
     CoreModule,
     ApiModule,
-    TheofficeApiModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,
@@ -94,10 +89,6 @@ import { SharedModule } from './modules/shared/shared.module';
     {
       provide: BASE_PATH,
       useValue: environment.apiURL,
-    },
-    {
-      provide: THEOFFICE_BASE_PATH,
-      useValue: environment.theofficeApiURL,
     },
     {
       provide: HTTP_INTERCEPTORS,

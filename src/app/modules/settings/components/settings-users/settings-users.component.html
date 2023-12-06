@@ -1,5 +1,5 @@
 <alto-licenses-panel
-  [licensesCount]="availableLicensesCount"
+  [licensesCount]="company.licenseCount"
   [assignedLicensesCount]="usedLicensesCount"
 ></alto-licenses-panel>
 <h2 class="mt-5">
@@ -49,21 +49,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let userInfos of paginatedAdmins" class="align-middle">
+          <tr *ngFor="let user of paginatedAdmins" class="align-middle">
             <td class="px-4">
-              <alto-profile-card [user]="userInfos.user"></alto-profile-card>
+              <alto-profile-card [user]="user"></alto-profile-card>
             </td>
             <td
-              title="{{ userInfos.user.createdAt | date : 'short' }}"
+              title="{{ user.createdAt | date : 'short' }}"
               class="fs-7"
             >
-              {{ userInfos.user.createdAt | date : "shortDate" }}
+              {{ user.createdAt | date : "shortDate" }}
             </td>
             <td
-              title="{{ userInfos.user.updatedAt | date : 'short' }}"
+              title="{{ user.updatedAt | date : 'short' }}"
               class="fs-7"
             >
-              {{ userInfos.user.updatedAt | date : "shortDate" }}
+              {{ user.updatedAt | date : "shortDate" }}
             </td>
             <td>
               <div [hidden]="company.isIntegrationEnabled">
@@ -74,13 +74,13 @@
                 class="alto-badge"
                 [ngStyle]="{
                   'background-color': getBadgeBackgroundColor(
-                    getStatus(company, userInfos.user)
+                    getStatus(company, user)
                   ),
-                  color: getBadgeColor(getStatus(company, userInfos.user))
+                  color: getBadgeColor(getStatus(company, user))
                 }"
               >
                 <div
-                  *ngIf="getStatus(company, userInfos.user) === 'inactive'"
+                  *ngIf="getStatus(company, user) === 'inactive'"
                   class="d-flex align-items-center"
                   ngbTooltip="{{ I18ns.settings.users.usersInactiveTooltip }}"
                   tooltipClass="menu-tooltip-class"
@@ -88,7 +88,7 @@
                   <span>{{ I18ns.settings.users.disable }}</span>
                 </div>
                 <div
-                  *ngIf="getStatus(company, userInfos.user) === 'active'"
+                  *ngIf="getStatus(company, user) === 'active'"
                   class="d-flex align-items-center"
                 >
                   <img
@@ -110,7 +110,7 @@
                   <span>{{ I18ns.settings.users.enable }}</span>
                 </div>
                 <div
-                  *ngIf="getStatus(company, userInfos.user) === 'warning'"
+                  *ngIf="getStatus(company, user) === 'warning'"
                   class="d-flex align-items-center p-2"
                   ngbTooltip="{{ I18ns.settings.users.warningTooltip }}"
                   tooltipClass="menu-tooltip-class"
@@ -131,7 +131,8 @@
                 <input
                   type="checkbox"
                   class="form-check-input"
-                  (click)="toggleUserLicense(userInfos.user)"
+                  (click)="toggleUserLicense(user)"
+                  [checked]="user.hasLicense"
                 />
               </div>
             </td>
@@ -146,7 +147,7 @@
               </div>
               <i
                 class="cursor-pointer fs-5 bi bi-pen"
-                (click)="openUserEditionForm(userInfos.user)"
+                (click)="openUserEditionForm(user)"
               ></i>
             </td>
           </tr>
@@ -154,7 +155,7 @@
       </table>
       <alto-pagination
         class="mx-4 d-block"
-        [collectionSize]="adminsCount"
+        [collectionSize]="adminsDisplay.length"
         [(page)]="adminsPage"
         (pageChange)="changeAdminsPage($event)"
         [pageSize]="adminsPageSize"
@@ -221,21 +222,21 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let userInfos of paginatedUsers" class="align-middle">
+      <tr *ngFor="let user of paginatedUsers" class="align-middle">
         <td class="px-4">
-          <alto-profile-card [user]="userInfos.user"></alto-profile-card>
+          <alto-profile-card [user]="user"></alto-profile-card>
         </td>
         <td
-          title="{{ userInfos.user.createdAt | date : 'short' }}"
+          title="{{ user.createdAt | date : 'short' }}"
           class="fs-7"
         >
-          {{ userInfos.user.createdAt | date : "shortDate" }}
+          {{ user.createdAt | date : "shortDate" }}
         </td>
         <td
-          title="{{ userInfos.user.updatedAt | date : 'short' }}"
+          title="{{ user.updatedAt | date : 'short' }}"
           class="fs-7"
         >
-          {{ userInfos.user.updatedAt | date : "shortDate" }}
+          {{ user.updatedAt | date : "shortDate" }}
         </td>
         <td>
           <div [hidden]="company.isIntegrationEnabled">
@@ -246,13 +247,13 @@
             class="alto-badge"
             [ngStyle]="{
               'background-color': getBadgeBackgroundColor(
-                getStatus(company, userInfos.user)
+                getStatus(company, user)
               ),
-              color: getBadgeColor(getStatus(company, userInfos.user))
+              color: getBadgeColor(getStatus(company, user))
             }"
           >
             <div
-              *ngIf="getStatus(company, userInfos.user) === 'inactive'"
+              *ngIf="getStatus(company, user) === 'inactive'"
               class="d-flex align-items-center"
               ngbTooltip="{{ I18ns.settings.users.usersInactiveTooltip }}"
               tooltipClass="menu-tooltip-class"
@@ -260,7 +261,7 @@
               <span>{{ I18ns.settings.users.disable }}</span>
             </div>
             <div
-              *ngIf="getStatus(company, userInfos.user) === 'active'"
+              *ngIf="getStatus(company, user) === 'active'"
               class="d-flex align-items-center"
             >
               <img
@@ -282,7 +283,7 @@
               <span>{{ I18ns.settings.users.enable }}</span>
             </div>
             <div
-              *ngIf="getStatus(company, userInfos.user) === 'warning'"
+              *ngIf="getStatus(company, user) === 'warning'"
               class="d-flex align-items-center p-2"
               ngbTooltip="{{ I18ns.settings.users.warningTooltip }}"
               tooltipClass="menu-tooltip-class"
@@ -303,8 +304,8 @@
             <input
               type="checkbox"
               class="form-check-input"
-              (click)="toggleUserLicense(userInfos.user)"
-              [formControl]="userInfos.licenseControl"
+              (click)="toggleUserLicense(user)"
+              [checked]="user.hasLicense"
             />
           </div>
         </td>
@@ -312,11 +313,11 @@
           <i
             data-cy="btnDelete"
             class="cursor-pointer fs-5 bi bi-trash3 me-4"
-            (click)="deleteUser(userInfos.user)"
+            (click)="deleteUser(user)"
           ></i>
           <i
             class="cursor-pointer fs-5 bi bi-pen"
-            (click)="openUserEditionForm(userInfos.user)"
+            (click)="openUserEditionForm(user)"
           ></i>
         </td>
       </tr>
@@ -325,7 +326,7 @@
 
   <alto-pagination
     class="mx-4 d-block"
-    [collectionSize]="usersCount"
+    [collectionSize]="usersDisplay.length"
     [(page)]="usersPage"
     (pageChange)="changeUsersPage($event)"
     [pageSize]="usersPageSize"
