@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -60,27 +60,25 @@ export class SettingsUsersComponent implements OnInit {
     private readonly resolversService: ResolversService,
     private readonly store: Store<FromRoot.AppState>,
     private readonly toastService: ToastService,
-    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.me = data[EResolverData.Me] as User;
     this.company = data[EResolverData.Company] as Company;
-    this.users = Array.from((data[EResolverData.UsersById] as Map<string, User>).values());
     this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
-    this.displayAdmins();
-    this.displayUsers();
-    this.setUsedLicensesCount();
 
-    this.store.select(FromRoot.selectUsers).subscribe({
-      next: ({ data: users }) => {
-        this.users = Array.from(users.values());
-        this.displayAdmins();
-        this.displayUsers();
-        this.setUsedLicensesCount();
-      },
-    });
+    this.store
+      .select(FromRoot.selectUsers)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: ({ data: users }) => {
+          this.users = Array.from(users.values());
+          this.displayAdmins();
+          this.displayUsers();
+          this.setUsedLicensesCount();
+        },
+      });
   }
 
   toggleUserLicense(user: User): void {
