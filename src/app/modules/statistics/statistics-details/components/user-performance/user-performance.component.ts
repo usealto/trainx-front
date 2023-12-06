@@ -1,4 +1,4 @@
-import { TitleCasePipe } from '@angular/common';
+import { TitleCasePipe, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -23,6 +23,7 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
+import { ToastService, ToastType } from '../../../../../core/toast/toast.service';
 
 @Component({
   selector: 'alto-user-performance',
@@ -60,6 +61,8 @@ export class UserPerformanceComponent implements OnInit {
     readonly titleCasePipe: TitleCasePipe,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
+    private readonly location: Location,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +71,12 @@ export class UserPerformanceComponent implements OnInit {
     const teamsById = data[EResolverData.TeamsById] as Map<string, Team>;
     const userId = this.router.url.split('/').pop() || '';
     this.user = usersById.get(userId) || new User({} as IUser);
-    this.userTeam = teamsById.get(this.user.teamId || '') || new Team({} as ITeam);
+    if (!this.user.teamId || this.user.teamId === '' || teamsById.get(this.user.teamId) === undefined) {
+      this.location.back();
+      this.toastService.show({ type: 'danger', text: I18ns.statistics.user.toasts.noTeam });
+    } else {
+      this.userTeam = teamsById.get(this.user.teamId) as Team;
+    }
 
     this.tagsRestService
       .getTags()

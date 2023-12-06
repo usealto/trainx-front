@@ -595,6 +595,9 @@ export const FR = {
       },
     },
     user: {
+      toasts: {
+        noTeam: "Vous devez assigner une équipe à l'utilisateur pour accéder à ses statistiques.",
+      },
       performance: {
         masteringLevel: {
           title: 'Niveau de maîtrise du collaborateur',
