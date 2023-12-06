@@ -5,12 +5,10 @@
 export const environment = {
   production: false,
   apiURL: 'http://localhost:3000',
-  theofficeApiURL: 'http://localhost:3001',
   auth0Domain: 'dev-bmttww5s.eu.auth0.com',
   auth0ClientId: 'ThcIBQZrRso5QaZq67kCU5eFYTfZwTSK',
   audience: 'https://api.usealto.com',
   slackAuthorization: 'https://staging-alto-slack-app-cinunhosha-od.a.run.app/slack/install?companyId=',
-  // audience: 'https://dev-bmttww5s.eu.auth0.com/api/v2',
   applicationId: '5de36fd6-36c0-49ac-97bc-9e0517527d1c',
 };
 

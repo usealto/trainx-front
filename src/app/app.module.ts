@@ -69,7 +69,7 @@ import { SharedModule } from './modules/shared/shared.module';
         redirect_uri: window.location.origin,
       },
       httpInterceptor: {
-        allowedList: [`${environment.apiURL}/*`, `${environment.theofficeApiURL}/*`],
+        allowedList: [`${environment.apiURL}/*`],
       },
     }),
     ToastComponent,
