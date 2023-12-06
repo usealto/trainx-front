@@ -12,6 +12,7 @@ import {
   setUserMe,
   setUsers,
   patchUser,
+  addTeamStats,
 } from '../root/root.action';
 
 export class TimestampedEntity<T> {
@@ -114,6 +115,28 @@ export const rootReducer = createReducer(
     (state, { company }): RootState => ({
       ...state,
       company: new TimestampedEntity(company), // Met à jour l'état de l'entreprise
+    }),
+  ),
+  on(
+    addTeamStats,
+    (state, { teamStats }): RootState => ({
+      ...state,
+      teamsById: new TimestampedEntity(
+        new Map<string, Team>(
+          [...state.teamsById.data.entries()].map(([teamId, team]) => {
+            const statsForThisTeam = teamStats.filter((ts) => ts.team.id === teamId);
+
+            team.addStats(statsForThisTeam);
+
+            // Utilisez la méthode de construction ou une méthode similaire pour créer une instance de Team
+            const updatedTeam = new Team({ ...team, stats: updatedStats });
+
+            // Retourner l'équipe avec les stats mises à jour
+            return [teamId, updatedTeam];
+          }),
+        ),
+        state.teamsById.timestamp,
+      ),
     }),
   ),
 );
