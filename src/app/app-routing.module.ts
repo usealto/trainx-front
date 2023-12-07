@@ -107,11 +107,6 @@ const routes: Routes = [
             loadChildren: () => import('./modules/lead-team/lead-team.module').then((m) => m.LeadTeamModule),
           },
           {
-            path: AltoRoutes.challenges,
-            loadChildren: () =>
-              import('./modules/challenges/challenges.module').then((m) => m.ChallengesModule),
-          },
-          {
             path: AltoRoutes.settings,
             loadChildren: () => import('./modules/settings/settings.module').then((m) => m.SettingsModule),
           },

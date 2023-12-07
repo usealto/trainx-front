@@ -5,4 +5,5 @@ export const environment = {
   auth0ClientId: 'ThcIBQZrRso5QaZq67kCU5eFYTfZwTSK',
   audience: 'https://api.usealto.com',
   slackAuthorization: 'https://staging-alto-slack-app-cinunhosha-od.a.run.app/slack/install?companyId=',
+  applicationId: '5de36fd6-36c0-49ac-97bc-9e0517527d1c',
 };

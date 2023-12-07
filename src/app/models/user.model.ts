@@ -17,6 +17,7 @@ export interface IUser {
   companyId: string;
   longestStreak: StreakDtoApi;
   currentStreak: StreakDtoApi;
+  hasLicense: boolean;
 }
 
 export class User implements IUser {
@@ -34,6 +35,7 @@ export class User implements IUser {
   companyId: string;
   longestStreak: StreakDtoApi;
   currentStreak: StreakDtoApi;
+  hasLicense: boolean;
 
   constructor(data: IUser) {
     this.id = data.id ?? '';
@@ -48,6 +50,7 @@ export class User implements IUser {
     this.companyId = data.companyId ?? '';
     this.longestStreak = data.longestStreak ?? ({} as StreakDtoApi);
     this.currentStreak = data.currentStreak ?? ({} as StreakDtoApi);
+    this.hasLicense = data.hasLicense ?? false;
     this.isConnectorActive = data.isConnectorActive;
   }
 
@@ -65,6 +68,7 @@ export class User implements IUser {
       companyId: data.companyId,
       longestStreak: data.longestStreak,
       currentStreak: data.currentStreak,
+      hasLicense: data.hasLicense,
       isConnectorActive: data.isConnectorActive,
     });
   }
@@ -89,6 +93,7 @@ export class User implements IUser {
       companyId: this.companyId,
       longestStreak: this.longestStreak,
       currentStreak: this.currentStreak,
+      hasLicense: this.hasLicense,
     };
   }
 

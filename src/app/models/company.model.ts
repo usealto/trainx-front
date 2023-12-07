@@ -23,6 +23,7 @@ export interface ICompany {
   updatedAt: Date;
   deletedAt?: Date;
   stats: ICompanyStats[];
+  licenseCount: number;
 }
 
 export class Company implements ICompany {
@@ -41,6 +42,7 @@ export class Company implements ICompany {
   updatedAt: Date;
   deletedAt?: Date;
   stats: CompanyStats[];
+  licenseCount: number;
 
   constructor(data: ICompany) {
     this.id = data.id ?? '';
@@ -57,6 +59,7 @@ export class Company implements ICompany {
     this.createdAt = data.createdAt ?? new Date();
     this.updatedAt = data.updatedAt ?? new Date();
     this.stats = [];
+    this.licenseCount = data.licenseCount ?? 0;
   }
 
   static fromDto(data: CompanyDtoApi): Company {
@@ -75,6 +78,7 @@ export class Company implements ICompany {
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       stats: [],
+      licenseCount: data.licenseCount,
     });
   }
 
@@ -113,6 +117,7 @@ export class Company implements ICompany {
       updatedAt: this.updatedAt,
       deletedAt: this.deletedAt,
       stats: this.stats.map((s) => s.rawData),
+      licenseCount: this.licenseCount,
     };
   }
 }

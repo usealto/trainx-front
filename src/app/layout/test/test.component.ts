@@ -2,7 +2,6 @@ import { getLocaleDateFormat } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { ChallengeDtoApiStatusEnumApi } from '@usealto/sdk-ts-angular';
 import { format } from 'date-fns';
 import { map } from 'rxjs';
 import { ToastService } from 'src/app/core/toast/toast.service';
@@ -27,7 +26,6 @@ export class TestComponent implements OnInit {
   buildTime = buildTime;
   AltoRoutes = AltoRoutes;
   isDev = !environment.production;
-  ChallengeDtoApiStatusEnumApi = ChallengeDtoApiStatusEnumApi;
 
   today = format(new Date(), getLocaleDateFormat(this.locale, 0));
   // today = getLocaleDateFormat(this.locale, 0);
