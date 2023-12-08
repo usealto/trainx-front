@@ -6,7 +6,6 @@ import { combineLatest, map, tap } from 'rxjs';
 import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
@@ -16,6 +15,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
+import { IAppData } from '../../../../core/resolvers';
 
 @Component({
   selector: 'alto-user-home-statistics',
@@ -54,7 +54,7 @@ export class UserHomeStatisticsComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.user = data[EResolverData.Me] as User;
+    this.user = (data[EResolverData.AppData] as IAppData).me;
     this.getScore();
     this.getFinishedPrograms();
     this.getGuessesCount();
@@ -151,8 +151,14 @@ export class UserHomeStatisticsComponent implements OnInit {
     } as ChartFilters;
 
     combineLatest([
-      this.scoresRestService.getScores({ ...params, type: ScoreTypeEnumApi.User }),
-      this.scoresRestService.getScores({ ...params, type: ScoreTypeEnumApi.Team }),
+      this.scoresRestService.getScores({
+        ...params,
+        type: ScoreTypeEnumApi.User,
+      }),
+      this.scoresRestService.getScores({
+        ...params,
+        type: ScoreTypeEnumApi.Team,
+      }),
     ])
       .pipe(
         tap(([usersScores, teamsScores]) => {
@@ -222,7 +228,12 @@ export class UserHomeStatisticsComponent implements OnInit {
               },
               legend: {
                 display: true,
-                labels: { usePointStyle: true, boxWidth: 5, boxHeight: 5, pointStyle: 'circle' },
+                labels: {
+                  usePointStyle: true,
+                  boxWidth: 5,
+                  boxHeight: 5,
+                  pointStyle: 'circle',
+                },
               },
             },
           };

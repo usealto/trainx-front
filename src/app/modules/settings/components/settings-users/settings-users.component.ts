@@ -14,6 +14,7 @@ import { UserFilters } from 'src/app/modules/profile/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
+import { IAppData } from '../../../../core/resolvers';
 import { patchUser, removeUser, setUsers } from '../../../../core/store/root/root.action';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { ToastService } from '../../../../core/toast/toast.service';
@@ -64,9 +65,9 @@ export class SettingsUsersComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.me = data[EResolverData.Me] as User;
+    this.me = (data[EResolverData.AppData] as IAppData).me;
     this.company = data[EResolverData.Company] as Company;
-    this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
+    this.teams = Array.from((data[EResolverData.AppData] as IAppData).teamById.values());
 
     this.store
       .select(FromRoot.selectUsers)

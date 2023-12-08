@@ -6,6 +6,8 @@ import { map, tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { IUser, User } from 'src/app/models/user.model';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { EResolverData, ResolversService } from '../../core/resolvers/resolvers.service';
+import { IAppData } from '../../core/resolvers';
 
 @UntilDestroy()
 @Component({
@@ -28,14 +30,14 @@ export class MenuComponent implements OnInit {
   constructor(
     private readonly router: Router,
     private activatedRoute: ActivatedRoute,
+    private resolversSerivce: ResolversService,
     public auth: AuthService,
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.data.pipe(map(({ me }) => me as User)).subscribe((me) => {
-      this.me = me;
-      this.isAdmin = this.me.isAltoAdmin() || this.me.isCompanyAdmin();
-    });
+    const data = this.resolversSerivce.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.me = (data[EResolverData.AppData] as IAppData).me;
+    this.isAdmin = this.me.isAltoAdmin() || this.me.isCompanyAdmin();
 
     const segments = window.location.pathname.split('/');
     this.manageLeadState(segments[1]);

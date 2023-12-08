@@ -22,6 +22,7 @@ import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { IAppData } from '../../../../../core/resolvers';
 import { DataForTable } from '../../../models/statistics.model';
 import { StatisticsService } from '../../../services/statistics.service';
 
@@ -71,7 +72,7 @@ export class TeamEngagementComponent implements OnInit {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
 
     const teamId = this.router.url.split('/').pop() || '';
-    this.team = (data[EResolverData.TeamsById] as Map<string, Team>).get(teamId) as Team;
+    this.team = (data[EResolverData.AppData] as IAppData).teamById.get(teamId) as Team;
     this.company = (data[EResolverData.Company] as Company) ?? new Company({} as ICompany);
 
     this.loadPage();

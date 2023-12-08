@@ -31,6 +31,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
+import { IAppData } from '../../../../core/resolvers';
 
 @UntilDestroy()
 @Component({
@@ -104,7 +105,7 @@ export class LeadHomeComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.me = data[EResolverData.Me] as User;
+    this.me = (data[EResolverData.AppData] as IAppData).me;
     this.commentsCount = (data[EResolverData.HomeData] as IHomeData).comments.length;
     this.commentsDataStatus = this.commentsCount === 0 ? 'noData' : 'good';
     this.questionsCount = (data[EResolverData.HomeData] as IHomeData).questionsCount;

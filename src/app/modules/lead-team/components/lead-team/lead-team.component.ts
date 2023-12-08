@@ -21,6 +21,7 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
+import { IAppData } from 'src/app/core/resolvers';
 
 interface TeamDisplay extends TeamDtoApi {
   score?: number;
@@ -83,9 +84,9 @@ export class LeadTeamComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.rawUsers = Array.from((data[EResolverData.UsersById] as Map<string, User>).values());
-    this.teamNames = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values()).map((t) =>
-      t.name.toLowerCase(),
+    this.rawUsers = Array.from((data[EResolverData.AppData] as IAppData).userById.values());
+    this.teamNames = Array.from((data[EResolverData.AppData] as IAppData).teamById.values()).map(
+      (teams) => teams.name,
     );
     this.loadData();
   }
@@ -153,7 +154,10 @@ export class LeadTeamComponent implements OnInit {
     this.userFilters.score = score;
     this.userFilters.search = search;
 
-    let output = this.usersService.filterUsers<UserStatsDtoApi[]>(this.users, { teams, search });
+    let output = this.usersService.filterUsers<UserStatsDtoApi[]>(this.users, {
+      teams,
+      search,
+    });
     if (score) {
       output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
     }
@@ -192,7 +196,10 @@ export class LeadTeamComponent implements OnInit {
   }
 
   deleteTeam(team: TeamDtoApi) {
-    const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
+    const modalRef = this.modalService.open(DeleteModalComponent, {
+      centered: true,
+      size: 'md',
+    });
 
     const componentInstance = modalRef.componentInstance as DeleteModalComponent;
     componentInstance.data = {

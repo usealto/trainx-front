@@ -14,6 +14,7 @@ import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { buildTime } from 'src/build-time';
 import { environment } from 'src/environments/environment';
+import { IAppData } from '../../core/resolvers';
 
 @Component({
   selector: 'alto-test',
@@ -52,8 +53,8 @@ export class TestComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.parent?.data.pipe(map(({ me }) => me as User)).subscribe((me) => {
-      this.me = me;
+    this.activatedRoute.parent?.data.pipe(map(({ appData }) => appData as IAppData)).subscribe((appData) => {
+      this.me = appData.me;
     });
   }
 }
