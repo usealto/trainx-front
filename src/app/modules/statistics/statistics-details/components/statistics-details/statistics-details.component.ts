@@ -3,9 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { Team } from 'src/app/models/team.model';
-import { User } from 'src/app/models/user.model';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { IAppData } from '../../../../../core/resolvers';
 
 @Component({
   selector: 'alto-statistics-details',
@@ -35,8 +34,8 @@ export class StatisticsDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    const users = Array.from((data[EResolverData.UsersById] as Map<string, User>).values());
-    const teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
+    const users = Array.from((data[EResolverData.AppData] as IAppData).userById.values());
+    const teams = Array.from((data[EResolverData.AppData] as IAppData).teamById.values());
 
     this.type = this.router.url.split('/')[3] === 'team' ? 'team' : 'user';
     this.id = this.router.url.split('/').pop() || '';

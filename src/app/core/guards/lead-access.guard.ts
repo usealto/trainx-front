@@ -13,8 +13,9 @@ export const leadAccessGuard: CanActivateFn = () => {
     map(({ data: user }) => {
       if (!user.isCompanyAdmin()) {
         router.navigate(['/', AltoRoutes.user, AltoRoutes.userHome]);
+        return false;
       }
-      return user.isAltoAdmin();
+      return true;
     }),
   );
 };

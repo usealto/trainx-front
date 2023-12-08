@@ -18,7 +18,6 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
@@ -27,6 +26,7 @@ import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder
 import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { IAppData } from '../../../../../core/resolvers';
 import { StatisticsService } from '../../../services/statistics.service';
 
 @Component({
@@ -88,8 +88,8 @@ export class TeamPerformanceComponent implements OnInit {
   ngOnInit(): void {
     this.teamId = this.router.url.split('/').pop() || '';
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.team = (data[EResolverData.TeamsById] as Map<string, Team>).get(this.teamId) as Team;
-    this.members = Array.from((data[EResolverData.UsersById] as Map<string, User>).values()).filter(
+    this.team = (data[EResolverData.AppData] as IAppData).teamById.get(this.teamId) as Team;
+    this.members = Array.from((data[EResolverData.AppData] as IAppData).userById.values()).filter(
       (u) => u.teamId === this.teamId,
     );
     this.selectedMembers = this.members.slice(0, 3);

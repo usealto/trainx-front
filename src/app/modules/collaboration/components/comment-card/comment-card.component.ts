@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CommentDtoApi, QuestionLightDtoApi, TeamLightDtoApi } from '@usealto/sdk-ts-angular';
+import { CommentDtoApi, QuestionLightDtoApi } from '@usealto/sdk-ts-angular';
 import { of, switchMap, tap } from 'rxjs';
 import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
@@ -14,6 +14,7 @@ import { CommentsRestService } from 'src/app/modules/programs/services/comments-
 import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
 import { QuestionFormComponent } from 'src/app/modules/shared/components/question-form/question-form.component';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { IAppData } from '../../../../core/resolvers';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
 
 @UntilDestroy()
@@ -46,8 +47,8 @@ export class CommentCardComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.users = data[EResolverData.UsersById] as Map<string, User>;
-    this.teams = data[EResolverData.TeamsById] as Map<string, Team>;
+    this.users = (data[EResolverData.AppData] as IAppData).userById;
+    this.teams = (data[EResolverData.AppData] as IAppData).teamById;
   }
 
   archiveComment(): void {

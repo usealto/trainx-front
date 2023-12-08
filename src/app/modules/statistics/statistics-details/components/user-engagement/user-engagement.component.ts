@@ -1,3 +1,4 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -5,24 +6,21 @@ import {
   ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
-  UserDtoApi,
 } from '@usealto/sdk-ts-angular';
+import { combineLatest } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { ITeam, Team } from 'src/app/models/team.model';
+import { IUser, User } from 'src/app/models/user.model';
+import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { IAppData } from '../../../../../core/resolvers';
 import { StatisticsService } from '../../../services/statistics.service';
-import { TitleCasePipe } from '@angular/common';
-import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
-import { combineLatest } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
-import { IUser, User } from 'src/app/models/user.model';
-import { ITeam, Team } from 'src/app/models/team.model';
 
 @Component({
   selector: 'alto-user-engagement',
@@ -55,8 +53,8 @@ export class UserEngagementComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    const usersById = data[EResolverData.UsersById] as Map<string, User>;
-    const teamsById = data[EResolverData.TeamsById] as Map<string, Team>;
+    const usersById = (data[EResolverData.AppData] as IAppData).userById;
+    const teamsById = (data[EResolverData.AppData] as IAppData).teamById;
     const userId = this.router.url.split('/').pop() || '';
     this.user = usersById.get(userId) || new User({} as IUser);
     this.userTeam = teamsById.get(this.user.teamId || '') || new Team({} as ITeam);

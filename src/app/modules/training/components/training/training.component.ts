@@ -21,6 +21,7 @@ import { ProgramRunsRestService } from 'src/app/modules/programs/services/progra
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { IAppData } from '../../../../core/resolvers';
 import { GuessesRestService } from '../../services/guesses-rest.service';
 import { ExplanationComponent } from '../explanation/explanation.component';
 
@@ -84,7 +85,7 @@ export class TrainingComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.route.pathFromRoot);
-    this.user = data[EResolverData.Me] as User;
+    this.user = (data[EResolverData.AppData] as IAppData).me;
     this.route.params
       .pipe(
         map((p) => {
