@@ -230,6 +230,7 @@ export class LeadTeamComponent implements OnInit {
     });
 
     canvasRef.componentInstance.user = user.user;
+    canvasRef.componentInstance.teams = this.teams;
     canvasRef.closed.pipe(tap(() => this.loadData())).subscribe();
   }
 
