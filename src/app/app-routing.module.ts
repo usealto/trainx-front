@@ -27,9 +27,6 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
-import { meResolver } from './core/resolvers/me.resolver';
-import { usersResolver } from './core/resolvers/users.resolver';
-import { teamsResolver } from './core/resolvers/teams.resolver';
 import { companyResolver } from './core/resolvers/company.resolver';
 
 const routes: Routes = [
@@ -39,10 +36,7 @@ const routes: Routes = [
     canActivate: [AppGuard, AuthGuard, PreventSmallScreenGuard],
     canActivateChild: [AuthGuard],
     resolve: {
-      appResolver,
-      me: meResolver,
-      usersById: usersResolver,
-      teamsById: teamsResolver,
+      appData: appResolver,
     },
     runGuardsAndResolvers: 'always',
     children: [
@@ -105,11 +99,6 @@ const routes: Routes = [
           {
             path: AltoRoutes.leadTeams,
             loadChildren: () => import('./modules/lead-team/lead-team.module').then((m) => m.LeadTeamModule),
-          },
-          {
-            path: AltoRoutes.challenges,
-            loadChildren: () =>
-              import('./modules/challenges/challenges.module').then((m) => m.ChallengesModule),
           },
           {
             path: AltoRoutes.settings,

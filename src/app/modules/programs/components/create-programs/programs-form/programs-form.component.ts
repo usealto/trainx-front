@@ -1,16 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { combineLatest, tap } from 'rxjs';
+import { PriorityEnumApi, TagDtoApi } from '@usealto/sdk-ts-angular';
+import { tap } from 'rxjs';
 import { IFormGroup } from 'src/app/core/form-types';
-import { getTranslation, I18ns } from 'src/app/core/utils/i18n/I18n';
-import { PriorityEnumApi, TagDtoApi, TeamDtoApi } from '@usealto/sdk-ts-angular';
-import { TeamsRestService } from '../../../../lead-team/services/teams-rest.service';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { I18ns, getTranslation } from 'src/app/core/utils/i18n/I18n';
+import { Team } from 'src/app/models/team.model';
+import { IAppData } from '../../../../../core/resolvers';
 import { ProgramForm } from '../../../models/programs.form';
 import { TagsRestService } from '../../../services/tags-rest.service';
-import { EmojiName } from 'src/app/core/utils/emoji/data';
-import { ActivatedRoute } from '@angular/router';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
-import { Team } from 'src/app/models/team.model';
 
 @UntilDestroy()
 @Component({
@@ -32,14 +32,13 @@ export class ProgramsFormComponent implements OnInit {
   }));
   constructor(
     private readonly tagService: TagsRestService,
-    private readonly teamService: TeamsRestService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
+    this.teams = Array.from((data[EResolverData.AppData] as IAppData).teamById.values());
     this.tagService
       .getTags()
       .pipe(

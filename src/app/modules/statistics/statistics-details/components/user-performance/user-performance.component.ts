@@ -1,4 +1,4 @@
-import { TitleCasePipe, Location } from '@angular/common';
+import { Location, TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -13,7 +13,7 @@ import { combineLatest, tap } from 'rxjs';
 import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ITeam, Team } from 'src/app/models/team.model';
+import { Team } from 'src/app/models/team.model';
 import { IUser, User } from 'src/app/models/user.model';
 import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
@@ -22,8 +22,9 @@ import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { IAppData } from '../../../../../core/resolvers';
+import { ToastService } from '../../../../../core/toast/toast.service';
 import { StatisticsService } from '../../../services/statistics.service';
-import { ToastService, ToastType } from '../../../../../core/toast/toast.service';
 
 @Component({
   selector: 'alto-user-performance',
@@ -67,8 +68,8 @@ export class UserPerformanceComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    const usersById = data[EResolverData.UsersById] as Map<string, User>;
-    const teamsById = data[EResolverData.TeamsById] as Map<string, Team>;
+    const usersById = (data[EResolverData.AppData] as IAppData).userById;
+    const teamsById = (data[EResolverData.AppData] as IAppData).teamById;
     const userId = this.router.url.split('/').pop() || '';
     this.user = usersById.get(userId) || new User({} as IUser);
     if (!this.user.teamId || this.user.teamId === '' || teamsById.get(this.user.teamId) === undefined) {

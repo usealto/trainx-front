@@ -1,0 +1,25 @@
+.panel {
+  padding: 1.3333rem;
+  height: 5.83333rem;
+}
+
+.title {
+  font-weight: 600;
+}
+
+.warning {
+  p {
+    color: var(--error-600);
+  }
+  border: 1px solid var(--error-200);
+}
+
+.btn {
+  padding: 0 0.5rem;
+  background-color: var(--error-50);
+  color: var(--error-700);
+}
+
+.progressbar-error {
+  background-color: var(--error-500);
+}

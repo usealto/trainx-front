@@ -16,6 +16,7 @@ import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-tra
 import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
 import { QuestionFormComponent } from 'src/app/modules/shared/components/question-form/question-form.component';
+import { IAppData } from '../../../../core/resolvers';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
 import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
 
@@ -47,8 +48,8 @@ export class SuggQuestionCardComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.users = data[EResolverData.UsersById] as Map<string, User>;
-    this.teams = data[EResolverData.TeamsById] as Map<string, Team>;
+    this.users = (data[EResolverData.AppData] as IAppData).userById;
+    this.teams = (data[EResolverData.AppData] as IAppData).teamById;
   }
 
   refuseQuestion() {

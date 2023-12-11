@@ -13,6 +13,7 @@ import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
 import { UserForm } from '../../models/user.form';
 import { UsersRestService } from '../../services/users-rest.service';
+import { IAppData } from 'src/app/core/resolvers';
 
 @UntilDestroy()
 @Component({
@@ -44,8 +45,8 @@ export class ProfileAccountComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.user = data[EResolverData.Me] as User;
-    this.teamsById = data[EResolverData.TeamsById] as Map<string, Team>;
+    this.user = (data[EResolverData.AppData] as IAppData).me;
+    this.teamsById = (data[EResolverData.AppData] as IAppData).teamById;
     this.company = data[EResolverData.Company] as Company;
     this.userTeam = this.user.teamId ? this.teamsById.get(this.user.teamId) || ({} as Team) : ({} as Team);
     this.initForm();

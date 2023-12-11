@@ -1,21 +1,18 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ILeadResolverData } from './lead.resolver';
-import { User } from 'src/app/models/user.model';
-import { IHomeData } from './home.resolver';
-import { Team } from 'src/app/models/team.model';
 import { Company } from 'src/app/models/company.model';
+import { IAppData } from './app.resolver';
+import { IHomeData } from './home.resolver';
+import { ILeadResolverData } from './lead.resolver';
 
 export enum EResolverData {
-  UsersById = 'usersById',
-  TeamsById = 'teamsById',
-  Me = 'me',
+  AppData = 'appData',
   HomeData = 'homeData',
   Company = 'company',
 }
 
 export type ResolverData = {
-  [key: string]: User | ILeadResolverData | IHomeData | Map<string, User> | Map<string, Team> | Company;
+  [key: string]: IAppData | ILeadResolverData | IHomeData | Company;
 };
 
 @Injectable()

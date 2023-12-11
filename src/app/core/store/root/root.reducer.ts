@@ -25,7 +25,7 @@ export class TimestampedEntity<T> {
   }
 
   needsUpdate(): boolean {
-    return this.timestamp === null || Date.now() - this.timestamp.getTime() > 30000;
+    return this.timestamp === null || Date.now() - this.timestamp.getTime() > 60000;
   }
 }
 

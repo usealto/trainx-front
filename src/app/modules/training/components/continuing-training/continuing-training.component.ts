@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { GuessDtoApi, UserLightDtoApi } from '@usealto/sdk-ts-angular';
 import { addDays, format } from 'date-fns';
 import { combineLatest, map, tap } from 'rxjs';
+import { IAppData } from 'src/app/core/resolvers';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { User } from 'src/app/models/user.model';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { GuessesRestService } from '../../services/guesses-rest.service';
-import { User } from 'src/app/models/user.model';
-import { ActivatedRoute } from '@angular/router';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 
 @Component({
   selector: 'alto-continuing-training',
@@ -42,7 +43,8 @@ export class ContinuingTrainingComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.me = data[EResolverData.Me] as User;
+    this.me = (data[EResolverData.AppData] as IAppData).me;
+
     combineLatest([
       this.scoresRestService.getUsersStats(ScoreDuration.Month, false, this.me.id),
       this.scoresRestService.getUsersStats(ScoreDuration.Month, true, this.me.id),

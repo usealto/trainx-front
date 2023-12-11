@@ -14,6 +14,7 @@ import { UserFilters } from 'src/app/modules/profile/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
+import { IAppData } from '../../../../core/resolvers';
 import { patchUser, removeUser, setUsers } from '../../../../core/store/root/root.action';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { ToastService } from '../../../../core/toast/toast.service';
@@ -43,12 +44,12 @@ export class SettingsUsersComponent implements OnInit {
   usersDisplay: User[] = [];
   usersPageSize = 10;
   usersPage = 1;
-  usersCount = 0;
   paginatedAdmins: User[] = [];
   adminsDisplay: User[] = [];
   adminsPageSize = 5;
   adminsPage = 1;
-  adminsCount = 0;
+
+  usedLicensesCount = 0;
 
   constructor(
     private readonly userRestService: UsersRestService,
@@ -64,44 +65,58 @@ export class SettingsUsersComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.me = (data[EResolverData.AppData] as IAppData).me;
+    this.company = data[EResolverData.Company] as Company;
+    this.teams = Array.from((data[EResolverData.AppData] as IAppData).teamById.values());
 
-    this.me = data[EResolverData.Me] as User;
-    this.store.select(FromRoot.selectCompany).subscribe((company) => {
-      this.company = company.data;
-    });
-    this.teams = Array.from((data[EResolverData.TeamsById] as Map<string, Team>).values());
-    this.users = Array.from((data[EResolverData.UsersById] as Map<string, User>).values());
-
-    this.getAdmins();
-    this.getUsers();
+    this.store
+      .select(FromRoot.selectUsers)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: ({ data: users }) => {
+          this.users = Array.from(users.values());
+          this.displayAdmins();
+          this.displayUsers();
+          this.setUsedLicensesCount();
+        },
+      });
   }
 
-  getAdmins() {
+  toggleUserLicense(user: User): void {
+    this.userRestService
+      .patchUser(user.id, { hasLicense: !user.hasLicense })
+      .pipe(tap((patchedUser) => this.store.dispatch(patchUser({ user: patchedUser }))))
+      .subscribe();
+  }
+
+  private displayAdmins() {
     this.adminsDisplay = this.usersService.filterUsers<User[]>(
       this.users.filter((user) => user.isCompanyAdmin()),
       { search: this.userFilters.search },
     );
-    this.adminsCount = this.adminsDisplay.length;
     this.changeAdminsPage(1);
   }
 
-  getUsers() {
+  private displayUsers() {
     this.usersDisplay = this.usersService.filterUsers<User[]>(
-      this.users.filter((user) => !user.isCompanyAdmin()),
+      this.users.filter((user) => user.isCompanyUser() && !user.isCompanyAdmin()),
       { search: this.userFilters.search },
     );
-    this.usersCount = this.usersDisplay.length;
     this.changeUsersPage(1);
+  }
+
+  private setUsedLicensesCount() {
+    this.usedLicensesCount = this.users.filter((user) => user.hasLicense).length;
   }
 
   filterAdmins({ search }: { search: string }) {
     this.userFilters.search = search;
-    this.getAdmins();
+    this.displayAdmins();
   }
 
   filterUsers({ search }: { search: string }) {
     this.userFilters.search = search;
-    this.getUsers();
+    this.displayUsers();
   }
 
   deleteUser(user: User): void {
@@ -125,7 +140,8 @@ export class SettingsUsersComponent implements OnInit {
       .subscribe({
         next: ({ data: users }) => {
           this.users = Array.from(users.values());
-          this.getUsers();
+          this.displayAdmins();
+          this.displayUsers();
         },
         error: () => {
           this.toastService.show({
@@ -173,8 +189,8 @@ export class SettingsUsersComponent implements OnInit {
       .subscribe({
         next: ({ data: users }) => {
           this.users = Array.from(users.values());
-          this.getAdmins();
-          this.getUsers();
+          this.displayAdmins();
+          this.displayUsers();
         },
         error: () => {
           this.toastService.show({
@@ -225,8 +241,8 @@ export class SettingsUsersComponent implements OnInit {
         }),
         tap(({ data: users }) => {
           this.users = Array.from(users.values());
-          this.getAdmins();
-          this.getUsers();
+          this.displayAdmins();
+          this.displayUsers();
         }),
       )
       .subscribe();
@@ -268,10 +284,6 @@ export class SettingsUsersComponent implements OnInit {
       default:
         return '#F8F9FC';
     }
-  }
-
-  getHasRegularUser(usersDisplay: User[]): boolean {
-    return usersDisplay.length > 0;
   }
 
   userFilterEmpty(): boolean {

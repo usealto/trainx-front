@@ -11,6 +11,7 @@ import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { TrainingCardData } from '../../models/training.model';
+import { IAppData } from '../../../../core/resolvers';
 
 enum OngoingFilter {
   All = 'All',
@@ -67,8 +68,8 @@ export class TrainingHomeComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.me = data[EResolverData.Me] as User;
-    this.users = data[EResolverData.UsersById] as Map<string, User>;
+    this.me = (data[EResolverData.AppData] as IAppData).me;
+    this.users = (data[EResolverData.AppData] as IAppData).userById;
     this.programRunsRestService
       .getMyProgramRunsCards(this.me.id, this.me.teamId ?? '')
       .pipe(
