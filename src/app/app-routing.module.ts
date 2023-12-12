@@ -28,6 +28,7 @@ import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
 import { companyResolver } from './core/resolvers/company.resolver';
+import { teamStatsResolver } from './core/resolvers/teamStats.resolver';
 
 const routes: Routes = [
   {
@@ -76,6 +77,7 @@ const routes: Routes = [
         resolve: {
           leadData: leadResolver,
           company: companyResolver,
+          teamStats: teamStatsResolver,
         },
         children: [
           { path: '', redirectTo: AltoRoutes.leadHome, pathMatch: 'full' },

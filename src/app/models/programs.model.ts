@@ -1,4 +1,4 @@
-import { ProgramDtoApi, ProgramDtoApiPriorityEnumApi } from '@usealto/sdk-ts-angular';
+import { ProgramDtoApi, ProgramDtoApiPriorityEnumApi, ProgramStatsLightDtoApi } from '@usealto/sdk-ts-angular';
 import { BaseStats, IBaseStats } from './stats.model';
 import { compareAsc } from 'date-fns';
 
@@ -150,5 +150,28 @@ export class ProgramStats extends BaseStats {
       userCompletedProgramCount: this.userCompletedProgramCount,
       userValidatedProgramCount: this.userValidatedProgramCount,
     };
+  }
+}
+
+export class ProgramStatsLight {
+  programId: string;
+  totalGuessesCount: number;
+  validGuessesCount: number;
+  score: number;
+
+  constructor(data: ProgramStatsLight) {
+    this.programId = data.programId;
+    this.totalGuessesCount = data.totalGuessesCount;
+    this.validGuessesCount = data.validGuessesCount;
+    this.score = data.score;
+  }
+
+  static fromDto(data: ProgramStatsLightDtoApi): ProgramStatsLight {
+    return new ProgramStatsLight({
+      programId: data.program.id,
+      totalGuessesCount: data.totalGuessesCount || 0,
+      validGuessesCount: data.validGuessesCount || 0,
+      score: data.score || 0,
+    });
   }
 }

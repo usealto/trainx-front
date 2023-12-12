@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { Company, ICompany } from '../../../models/company.model';
-import { Team } from '../../../models/team.model';
+import { Team, TeamStats } from '../../../models/team.model';
 import { IUser, User } from '../../../models/user.model';
 import {
   addUser,
@@ -34,6 +34,7 @@ export interface RootState {
   company: TimestampedEntity<Company>;
   usersById: TimestampedEntity<Map<string, User>>;
   teamsById: TimestampedEntity<Map<string, Team>>;
+  teamsStatsByTeamId: TimestampedEntity<Map<string, TeamStats[]>>;
   statsTimestamp?: Date;
 }
 
@@ -42,6 +43,7 @@ export const initialState: RootState = {
   company: new TimestampedEntity<Company>(new Company({} as ICompany), null),
   usersById: new TimestampedEntity<Map<string, User>>(new Map(), null),
   teamsById: new TimestampedEntity<Map<string, Team>>(new Map(), null),
+  teamsStatsByTeamId: new TimestampedEntity<Map<string, TeamStats[]>>(new Map(), null),
 };
 
 export const rootReducer = createReducer(
@@ -118,25 +120,18 @@ export const rootReducer = createReducer(
     }),
   ),
   on(
-    addTeamStats,
-    (state, { teamStats }): RootState => ({
-      ...state,
-      teamsById: new TimestampedEntity(
-        new Map<string, Team>(
-          [...state.teamsById.data.entries()].map(([teamId, team]) => {
-            const statsForThisTeam = teamStats.filter((ts) => ts.team.id === teamId);
+    addTeamStats, 
+    (state, { teamStats }): RootState => {
+      const newTeamsStatsByTeamId = new Map<string, TeamStats[]>();
 
-            team.addStats(statsForThisTeam);
+      teamStats.forEach((stat) => {
+        const currentStats = newTeamsStatsByTeamId.get(stat.teamId) || [];
+        newTeamsStatsByTeamId.set(stat.teamId, [...currentStats, stat]);
+      });
 
-            // Utilisez la méthode de construction ou une méthode similaire pour créer une instance de Team
-            const updatedTeam = new Team({ ...team, stats: updatedStats });
-
-            // Retourner l'équipe avec les stats mises à jour
-            return [teamId, updatedTeam];
-          }),
-        ),
-        state.teamsById.timestamp,
-      ),
+      return {
+        ...state,
+        teamsStatsByTeamId: new TimestampedEntity(newTeamsStatsByTeamId, new Date()),
+      };
     }),
-  ),
 );

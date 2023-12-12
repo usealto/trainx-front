@@ -32,6 +32,7 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
 import { IAppData } from '../../../../core/resolvers';
+import { TeamStats } from '../../../../models/team.model';
 
 @UntilDestroy()
 @Component({
@@ -105,15 +106,19 @@ export class LeadHomeComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    console.log(data);
+    const teamStats = data['teamStats'] as any as Map<string, TeamStats[]>;
+    console.log("teamStats == ", teamStats);
     this.me = (data[EResolverData.AppData] as IAppData).me;
     this.commentsCount = (data[EResolverData.HomeData] as IHomeData).comments.length;
     this.commentsDataStatus = this.commentsCount === 0 ? 'noData' : 'good';
     this.questionsCount = (data[EResolverData.HomeData] as IHomeData).questionsCount;
     this.questionsDataStatus = this.questionsCount === 0 ? 'noData' : 'good';
-    this.getAverageScore(this.globalFilters.duration as ScoreDuration, [
-      (data[EResolverData.HomeData] as IHomeData).teamsStats,
-      (data[EResolverData.HomeData] as IHomeData).previousTeamsStats,
-    ]);
+    const teamStatsNow = TeamStats.getStatsForPeriod(teamStats, this.globalFilters.duration as ScoreDuration);
+    const teamStatsPrev = TeamStats.getStatsForPeriod(teamStats, this.globalFilters.duration as ScoreDuration, true);
+    console.log("teamStatsNow == ", teamStatsNow);
+    console.log("teamStatsPrev == ", teamStatsPrev);
+    this.setAverageScore(teamStatsNow, teamStatsPrev);
 
     this.createChart(this.globalFilters.duration as ScoreDuration);
     this.getProgramsStats(this.globalFilters);
@@ -200,24 +205,24 @@ export class LeadHomeComponent implements OnInit {
     );
   }
 
-  getAverageScore(duration: ScoreDuration, [current, previous]: TeamStatsDtoApi[][] = []) {
-    if (current && previous) {
-      this.setAverageScore(current, previous);
-    } else {
-      combineLatest([
-        this.scoresRestService.getTeamsStats(duration),
-        this.scoresRestService.getTeamsStats(duration, true),
-      ])
-        .pipe(
-          tap(([current, previous]) => {
-            this.setAverageScore(current, previous);
-          }),
-        )
-        .subscribe();
-    }
-  }
+  // getAverageScore(duration: ScoreDuration, [current, previous]: TeamStats[][] = []) {
+  //   if (current && previous) {
+  //     this.setAverageScore(current, previous);
+  //   } else {
+  //     combineLatest([
+  //       this.scoresRestService.getTeamsStats(duration),
+  //       this.scoresRestService.getTeamsStats(duration, true),
+  //     ])
+  //       .pipe(
+  //         tap(([current, previous]) => {
+  //           this.setAverageScore(current, previous);
+  //         }),
+  //       )
+  //       .subscribe();
+  //   }
+  // }
 
-  setAverageScore(current: TeamStatsDtoApi[], previous: TeamStatsDtoApi[]) {
+  setAverageScore(current: TeamStats[], previous: TeamStats[]) {
     current = current.filter((t) => t.score);
     previous = previous.filter((t) => t.score);
     const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;

@@ -24,6 +24,7 @@ import { Observable, filter, map } from 'rxjs';
 import { ChartFilters } from '../../shared/models/chart.model';
 import { ScoreDuration, ScoreFilters } from '../models/score.model';
 import { ScoresService } from './scores.service';
+import { TeamStats } from '../../../models/team.model';
 
 @Injectable({
   providedIn: 'root',
@@ -130,6 +131,40 @@ export class ScoresRestService {
         to: dateBefore,
       } as GetTeamsStatsRequestParams)
       .pipe(map((r) => r.data || []));
+  }
+
+  getTeamsStatsObj(
+    duration: ScoreDuration,
+    isProgression = false,
+    sortBy?: string,
+  ): Observable<TeamStats[]> {
+    let dateAfter: Date;
+    let dateBefore: Date;
+
+    if (isProgression) {
+      const [start, end] = this.service.getPreviousPeriod(duration);
+
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration);
+      dateBefore = new Date();
+      dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
+    }
+
+    return this.statsApi
+      .getTeamsStats({
+        sortBy: sortBy,
+        page: 1,
+        itemsPerPage: 400,
+        from: dateAfter,
+        to: dateBefore,
+      } as GetTeamsStatsRequestParams)
+      .pipe(
+        map((response) =>
+          response.data ? response.data.map((dto) => TeamStats.fromDto(dto, dateAfter, dateBefore, duration, isProgression)) : [],
+        ),
+      );
   }
 
   getProgramsStats(

@@ -1,8 +1,7 @@
 import { User } from 'src/app/models/user.model';
 import { createAction, props } from '@ngrx/store';
-import { Team } from 'src/app/models/team.model';
+import { Team, TeamStats } from 'src/app/models/team.model';
 import { Company } from '../../../models/company.model';
-import { TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
 
 // Timestamp
 export const setTimestamp = createAction('[Timestamp] Set new timestamp', props<{ date: Date }>());
@@ -16,7 +15,7 @@ export const setUsers = createAction('[User] Set Users', props<{ users: User[] }
 
 // Team
 export const setTeams = createAction('[User] Set Teams', props<{ teams: Team[] }>());
-export const addTeamStats = createAction('[User] Add Team Stats', props<{ teamStats: TeamStatsDtoApi[] }>());
+export const addTeamStats = createAction('[User] Add Team Stats', props<{ teamStats: TeamStats[] }>());
 
 // Company
 export const setCompany = createAction('[Company] Set Company', props<{ company: Company }>());
