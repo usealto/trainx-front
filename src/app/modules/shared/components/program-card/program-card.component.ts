@@ -3,7 +3,6 @@ import { ProgramDtoApi, ProgramRunApi } from '@usealto/sdk-ts-angular';
 import { tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { AltoRoutes } from '../../constants/routes';
 
@@ -27,19 +26,13 @@ export class ProgramCardComponent implements OnInit, OnChanges {
   AltoRoutes = AltoRoutes;
   EmojiName = EmojiName;
 
-  teamsCount = 0;
   membersHaveValidatedPercentage = 0;
+  teamsCount = 0;
 
-  constructor(
-    private readonly programRestService: ProgramsRestService,
-    private readonly teamsRestService: TeamsRestService,
-  ) {}
+  constructor(private readonly programRestService: ProgramsRestService) {}
 
   ngOnInit(): void {
-    this.teamsRestService
-      .getTeams()
-      .pipe(tap((teams) => (this.teamsCount = teams.length)))
-      .subscribe();
+    this.teamsCount = this.program.teams.length;
     this.membersHaveValidatedPercentage = this.membersHaveValidatedCount
       ? +this.membersHaveValidatedCount?.split('/')[0] / +this.membersHaveValidatedCount?.split('/')[1]
       : 0;

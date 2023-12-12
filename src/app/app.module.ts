@@ -2,12 +2,14 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, ErrorHandler, LOCALE_ID, NgModule, isDevMode } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ApiModule, BASE_PATH } from '@usealto/sdk-ts-angular';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
+import { CoreModule } from './core/core.module';
 import { ApiErrorInterceptor } from './core/interceptors/api-error.interceptor';
 import { ApiInterceptor } from './core/interceptors/api.interceptor';
 import { AppErrorHandler } from './core/interceptors/app-error.handler';
@@ -18,6 +20,7 @@ import { TranslationModule } from './core/utils/i18n/translation.module';
 import { LoadingModule } from './core/utils/loading/loading.module';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { AppComponent } from './layout/app/app.component';
+import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
 import { JwtComponent } from './layout/jwt/jwt.component';
 import { MenuComponent } from './layout/menu/menu.component';
 import { NoCompanyComponent } from './layout/no-company/no-company.component';
@@ -27,8 +30,6 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { SharedModule } from './modules/shared/shared.module';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,6 +45,7 @@ import { ImpersonateComponent } from './layout/impersonate/impersonate.component
     ImpersonateComponent,
   ],
   imports: [
+    CoreModule,
     ApiModule,
     BrowserModule,
     HttpClientModule,
@@ -75,7 +77,7 @@ import { ImpersonateComponent } from './layout/impersonate/impersonate.component
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
   providers: [

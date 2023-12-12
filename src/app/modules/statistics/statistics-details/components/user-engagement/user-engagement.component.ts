@@ -1,25 +1,26 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   ScoreByTypeEnumApi,
   ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
-  UserDtoApi,
 } from '@usealto/sdk-ts-angular';
+import { combineLatest } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { ITeam, Team } from 'src/app/models/team.model';
+import { IUser, User } from 'src/app/models/user.model';
+import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { IAppData } from '../../../../../core/resolvers';
 import { StatisticsService } from '../../../services/statistics.service';
-import { TitleCasePipe } from '@angular/common';
-import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
-import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'alto-user-engagement',
@@ -30,7 +31,8 @@ export class UserEngagementComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
 
-  user!: UserDtoApi;
+  user!: User;
+  userTeam!: Team;
   duration: ScoreDuration = ScoreDuration.Trimester;
 
   answersChartOptions!: any;
@@ -41,16 +43,21 @@ export class UserEngagementComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly profileStore: ProfileStore,
     private readonly scoreRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly statisticsService: StatisticsService,
     private readonly titleCasePipe: TitleCasePipe,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
-    const userI = this.router.url.split('/').pop() || '';
-    this.user = this.profileStore.users.value.find((u) => u.id === userI) || ({} as UserDtoApi);
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    const usersById = (data[EResolverData.AppData] as IAppData).userById;
+    const teamsById = (data[EResolverData.AppData] as IAppData).teamById;
+    const userId = this.router.url.split('/').pop() || '';
+    this.user = usersById.get(userId) || new User({} as IUser);
+    this.userTeam = teamsById.get(this.user.teamId || '') || new Team({} as ITeam);
 
     this.loadPage();
   }

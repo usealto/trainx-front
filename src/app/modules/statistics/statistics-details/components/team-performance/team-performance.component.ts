@@ -1,4 +1,6 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   QuestionStatsDtoApi,
   ScoreByTypeEnumApi,
@@ -7,29 +9,25 @@ import {
   ScoreTypeEnumApi,
   ScoresResponseDtoApi,
   TagDtoApi,
-  TeamDtoApi,
-  UserDtoApi,
   UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { Observable, combineLatest, tap } from 'rxjs';
+import { combineLatest, tap } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { Team } from 'src/app/models/team.model';
+import { User } from 'src/app/models/user.model';
+import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
+import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { IAppData } from '../../../../../core/resolvers';
 import { StatisticsService } from '../../../services/statistics.service';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { Router } from '@angular/router';
-import { TitleCasePipe } from '@angular/common';
-import { xAxisDatesOptions, yAxisScoreOptions, legendOptions } from 'src/app/modules/shared/constants/config';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { untilDestroyed } from '@ngneat/until-destroy';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 
 @Component({
   selector: 'alto-team-performance',
@@ -42,13 +40,13 @@ export class TeamPerformanceComponent implements OnInit {
   AltoRoutes = AltoRoutes;
 
   teamId!: string;
-  team!: TeamDtoApi;
-  members: UserDtoApi[] = [];
+  team!: Team;
+  members: User[] = [];
   tags: TagDtoApi[] = [];
 
   duration: ScoreDuration = ScoreDuration.Trimester;
 
-  selectedMembers: UserDtoApi[] = [];
+  selectedMembers: User[] = [];
   teamChartOption: any = {};
   teamChartStatus: PlaceholderDataStatus = 'loading';
   membersLeaderboard: { name: string; score: number }[] = [];
@@ -77,29 +75,30 @@ export class TeamPerformanceComponent implements OnInit {
   previousQuestionsStats: QuestionStatsDtoApi[] = [];
 
   constructor(
-    private readonly profileStore: ProfileStore,
-    private readonly teamsStore: TeamStore,
     private titleCasePipe: TitleCasePipe,
     private readonly router: Router,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly statisticService: StatisticsService,
     private readonly tagsRestService: TagsRestService,
-    private readonly usersRestService: UsersRestService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
     this.teamId = this.router.url.split('/').pop() || '';
-    this.team = this.teamsStore.teams.value.find((t) => t.id === this.teamId) || ({} as TeamDtoApi);
-    combineLatest([this.tagsRestService.getTags(), this.usersRestService.getUsers()]).subscribe(
-      ([tags, users]) => {
-        this.tags = tags;
-        this.selectedTags = tags.slice(0, 3);
-        this.members = users.filter((u) => u.teamId === this.teamId);
-        this.selectedMembers = this.members.slice(0, 3);
-        this.loadPage();
-      },
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.team = (data[EResolverData.AppData] as IAppData).teamById.get(this.teamId) as Team;
+    this.members = Array.from((data[EResolverData.AppData] as IAppData).userById.values()).filter(
+      (u) => u.teamId === this.teamId,
     );
+    this.selectedMembers = this.members.slice(0, 3);
+
+    this.tagsRestService.getTags().subscribe((tags) => {
+      this.tags = tags;
+      this.selectedTags = tags.slice(0, 3);
+      this.loadPage();
+    });
   }
 
   loadPage(): void {

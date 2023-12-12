@@ -1,30 +1,30 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   CompanyDtoApi,
   ScoreByTypeEnumApi,
   ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
-  TeamDtoApi,
   UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { combineLatest, map, tap } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { Company, ICompany } from 'src/app/models/company.model';
+import { Team } from 'src/app/models/team.model';
+import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { StatisticsService } from '../../../services/statistics.service';
-import { TitleCasePipe } from '@angular/common';
-import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { IAppData } from '../../../../../core/resolvers';
 import { DataForTable } from '../../../models/statistics.model';
-import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { StatisticsService } from '../../../services/statistics.service';
 
 @Component({
   selector: 'alto-team-engagement',
@@ -36,7 +36,8 @@ export class TeamEngagementComponent implements OnInit {
   EmojiName = EmojiName;
   AltoRoutes = AltoRoutes;
 
-  team!: TeamDtoApi;
+  team!: Team;
+  company!: Company;
 
   duration: ScoreDuration = ScoreDuration.Trimester;
 
@@ -59,17 +60,20 @@ export class TeamEngagementComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly teamsStore: TeamStore,
     private readonly scoreRestService: ScoresRestService,
     private readonly statisticsService: StatisticsService,
     private readonly titleCasePipe: TitleCasePipe,
     private readonly scoreService: ScoresService,
-    private readonly companyRestService: CompaniesRestService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+
     const teamId = this.router.url.split('/').pop() || '';
-    this.team = this.teamsStore.teams.value.find((t) => t.id === teamId) || ({} as TeamDtoApi);
+    this.team = (data[EResolverData.AppData] as IAppData).teamById.get(teamId) as Team;
+    this.company = (data[EResolverData.Company] as Company) ?? new Company({} as ICompany);
 
     this.loadPage();
   }
@@ -221,11 +225,10 @@ export class TeamEngagementComponent implements OnInit {
     combineLatest([
       this.scoreRestService.getUsersStats(duration, false, undefined, undefined, this.team.id),
       this.scoreRestService.getUsersStats(duration, true, undefined, undefined, this.team.id),
-      this.companyRestService.getMyCompany(),
     ])
       .pipe(
-        tap(([current, previous, company]) => {
-          this.getMembersTable(current, previous, company);
+        tap(([current, previous]) => {
+          this.getMembersTable(current, previous, this.company);
           current = current.filter((t) => t.score && t.score >= 0);
           previous = previous.filter((t) => t.score && t.score >= 0);
           this.membersLeaderboard = current

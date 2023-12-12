@@ -2,14 +2,23 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import {
+  PreventSmallScreenGuard,
+  altoAdminGuard,
+  AppGuard,
+  leadAccessGuard,
+  userAccessGuard,
+} from './core/guards';
+import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
+import {
   appResolver,
   homeResolver,
   leadResolver,
   noSplashScreenResolver,
   programResolver,
   trainingResolver,
-} from './app.resolver';
+} from './core/resolvers';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
+import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
 import { JwtComponent } from './layout/jwt/jwt.component';
 import { NoCompanyComponent } from './layout/no-company/no-company.component';
 import { NoSmallScreenComponent } from './layout/no-small-screen/no-small-screen.component';
@@ -18,19 +27,18 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
-import { noSmallScreen } from './no-small-screen.guard';
-import { canActivateAltoAdmin, canActivateLead } from './roles.guard';
-import { startup } from './startup.guard';
-import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
-import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
+import { companyResolver } from './core/resolvers/company.resolver';
 
 const routes: Routes = [
   {
     path: '',
     component: AppLayoutComponent,
+    canActivate: [AppGuard, AuthGuard, PreventSmallScreenGuard],
+    canActivateChild: [AuthGuard],
     resolve: {
-      storedData: appResolver,
+      appData: appResolver,
     },
+    runGuardsAndResolvers: 'always',
     children: [
       {
         path: 'test',
@@ -38,7 +46,7 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.user,
-        canActivate: [startup],
+        canActivate: [userAccessGuard],
         children: [
           { path: '', redirectTo: AltoRoutes.userHome, pathMatch: 'full' },
           {
@@ -64,16 +72,17 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.lead,
-        canActivate: [canActivateLead, startup],
+        canActivate: [leadAccessGuard],
         resolve: {
-          appData: leadResolver,
+          leadData: leadResolver,
+          company: companyResolver,
         },
         children: [
           { path: '', redirectTo: AltoRoutes.leadHome, pathMatch: 'full' },
           {
             path: AltoRoutes.leadHome,
             resolve: {
-              appData: homeResolver,
+              homeData: homeResolver,
             },
             loadChildren: () => import('./modules/lead-home/lead-home.module').then((m) => m.LeadHomeModule),
           },
@@ -90,11 +99,6 @@ const routes: Routes = [
           {
             path: AltoRoutes.leadTeams,
             loadChildren: () => import('./modules/lead-team/lead-team.module').then((m) => m.LeadTeamModule),
-          },
-          {
-            path: AltoRoutes.challenges,
-            loadChildren: () =>
-              import('./modules/challenges/challenges.module').then((m) => m.ChallengesModule),
           },
           {
             path: AltoRoutes.settings,
@@ -124,8 +128,6 @@ const routes: Routes = [
         component: NotFoundComponent,
       },
     ],
-    canActivate: [AuthGuard, noSmallScreen],
-    canActivateChild: [AuthGuard],
   },
   {
     path: '',
@@ -158,11 +160,11 @@ const routes: Routes = [
   },
   {
     path: AltoRoutes.impersonate + '/:id',
+    component: ImpersonateComponent,
+    canActivate: [AuthGuard, altoAdminGuard],
     resolve: {
       splashscreen: noSplashScreenResolver,
     },
-    component: ImpersonateComponent,
-    canActivate: [AuthGuard, canActivateAltoAdmin],
   },
   {
     path: AltoRoutes.translation,

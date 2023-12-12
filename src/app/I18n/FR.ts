@@ -398,7 +398,7 @@ export const FR = {
       navbarTitle: 'Performances',
       perTeamPerformance: {
         title: 'Niveau de maîtrise par équipes',
-        subtitle: "Retrouvez une vue d' ensemble sur les résultats de vos équipes.",
+        subtitle: "Retrouvez une vue d' ensemble sur le niveau de vos équipes.",
         teamFilter: 'Équipes',
         scoreEvolution: {
           title: 'Évolution du niveau de vos équipes',
@@ -551,7 +551,7 @@ export const FR = {
       },
       masteryLevel: {
         title: 'Niveau de maîtrise de l’équipe',
-        subtitle: 'Retrouvez une vue d’ensemble sur les résultats de l’équipe.',
+        subtitle: 'Retrouvez une vue d’ensemble sur le niveau de l’équipe.',
         chartTitle: 'Évolution du niveau de l’équipe',
         chartSubtitle: 'Évolution du niveau moyen de l’équipe.',
         teamFilter: 'Membres',
@@ -564,7 +564,7 @@ export const FR = {
       },
       perThemes: {
         title: 'Niveau de maîtrise par thématiques de l’équipe',
-        subtitle: 'Retrouvez une vue d’ensemble sur les résultats de l’équipe selon ses thématiques.',
+        subtitle: 'Retrouvez une vue d’ensemble sur le niveau de l’équipe selon ses thématiques.',
         chartTitle: 'Évolution du niveau de maîtrise',
         chartSubtitle: 'Évolution du niveau moyen de l’équipe par tag.',
         tagFilter: 'Tags',
@@ -595,10 +595,13 @@ export const FR = {
       },
     },
     user: {
+      toasts: {
+        noTeam: "Vous devez assigner une équipe à l'utilisateur pour accéder à ses statistiques.",
+      },
       performance: {
         masteringLevel: {
           title: 'Niveau de maîtrise du collaborateur',
-          subtitle: 'Retrouvez une vue d’ensemble sur les résultats de votre collaborateur.',
+          subtitle: 'Retrouvez une vue d’ensemble sur le niveau de votre collaborateur.',
           chartTitle: 'Évolution du niveau de votre collaborateur',
           chartSubtitle: 'Évolution du niveau moyen de votre collaborateur.',
           placeholder: {
@@ -777,9 +780,9 @@ export const FR = {
           standardType: 'Utilisateur standard',
           adminType: 'Administrateur',
           adminSubtitle:
-            'Les administrateurs peuvent créer des programmes, des challenges et ont accès à des statistiques détaillées sur les résultats des équipes.',
+            'Les administrateurs peuvent créer des programmes et ont accès à des statistiques détaillées sur le niveau des équipes.',
           userSubtitle:
-            'Les utilisateurs standards peuvent participer aux programmes, suggérer des questions et ont accès à des statistiques détaillées sur leurs résultats seulement.',
+            'Les utilisateurs standards peuvent participer aux programmes, suggérer des questions et ont accès à leur niveau seulement.',
           validate: 'Valider',
         },
       },
@@ -923,13 +926,17 @@ export const FR = {
         lastConnection: 'Dernière activité',
         connexion: 'Connexion',
         integration: 'Intégration',
+        license: 'Licence',
       },
       enable: 'Active',
       disable: 'Inactive',
+      integrationDisabled: 'Désactivée',
       deleteModal: {
         title: 'Supprimer l\'utilisateur "{{}}"',
         subtitle:
           'Êtes-vous sûr(e) de vouloir supprimer ce collaborateur ? Cette action est irréversible, et vous ne  pourrez plus utiliser cet email pour créer un nouvel utilisateur.',
+        success: 'Le collaborateur {{}} a bien été supprimé',
+        error: 'Une erreur est survenue lors de la suppression du collaborateur {{}}',
       },
       successEdit: 'Le collaborateur {{}} a bien été modifié',
       deleteAdminTooltip:
@@ -958,6 +965,8 @@ export const FR = {
           'Une erreur est survenue sur ces utilisateurs. Vérifiez la validité des champs avant de valider.',
         success: 'Vos collaborateurs vont recevoir un mail d’invitation pour se connecter à l’application.',
       },
+      licences: ['{{}} licence', '{{}} licences'],
+      licencesTitle: 'Nombre de licences attribuées',
     },
     continuousSession: {
       title: 'Diffusion',
@@ -974,11 +983,13 @@ export const FR = {
         gchatSubtitle: {
           googleChatInstructionsTitle: 'Comment vos utilisateurs peuvent ajouter Google Chat :',
           googleChatInstructions: 'Ils ont simplement besoin de cliquer sur ce lien :',
-          googleChatLink: 'https://workspace.google.com/marketplace/app/staging_alto/705098494910',
+          googleChatLink: 'https://workspace.google.com/marketplace/app/alto/1076506336192',
           googleChatInstructions2: 'Puis cliquer sur “Installer”. C’est tout.',
           emailSendTitle: 'Vous pouvez aussi envoyer les instructions aux utilisateurs non connectés :',
           emailSendButtonText: 'Envoyer les instructions par email',
           nonConnectedUsersText: 'utilisateurs non connectés',
+          gchatEmailSent: 'Un email a été envoyé aux utilisateurs non connectés.',
+          gchatSendAgain: 'Renvoyer un email',
           gchatSuccess:
             'Un email avec les instructions a bien été envoyé à tous les utilisateurs non connectés.',
           gchatError:
@@ -995,6 +1006,9 @@ export const FR = {
           adminText:
             'Si vous possédez les droits administrateur sur Slack, vous pouvez autoriser la connexion en cliquant sur le bouton suivant :',
           authorConnection: 'Autoriser la connexion',
+          slackSent: 'En attente de la confirmation de votre administrateur Slack.',
+          slackSendAgain: 'Votre administrateur ne répond pas ?',
+          slackSendAgainBtn: 'Envoyer un autre email',
           slackSuccess: 'L’email de demande de connexion a bien été envoyé à votre administrateur.',
           slackError:
             'Impossible d’envoyer l’email de demande de connexion à votre administrateur. Réessayez plus tard ou contactez notre support client si le problème persiste.',
@@ -1021,7 +1035,7 @@ export const FR = {
           },
           validBtns: {
             activateConnector: 'Contacter Alto',
-            desactivateConnector: 'Désactiver la plateforme',
+            desactivateConnector: 'Désactiver',
             activateWebApp: 'Activer la web app',
             desactivateWebApp: 'Désactiver la web app',
             changeConnector: 'Changer de plateforme',

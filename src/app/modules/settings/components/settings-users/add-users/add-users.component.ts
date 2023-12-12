@@ -1,17 +1,16 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { TeamDtoApi } from '@usealto/sdk-ts-angular';
 import { catchError, combineLatest, of, switchMap, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
 import { IAbstractControl } from 'src/app/core/form-types/i-abstract-control';
+import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { Team } from 'src/app/models/team.model';
+import { IUser, User } from 'src/app/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 import { AddUsersForm } from '../../../models/user.model';
-import { ToastService } from 'src/app/core/toast/toast.service';
 
 @Component({
   selector: 'alto-add-users',
@@ -21,20 +20,19 @@ import { ToastService } from 'src/app/core/toast/toast.service';
 export class AddUsersComponent implements OnInit {
   I18ns = I18ns;
 
+  @Input() me: User = new User({} as IUser);
+  @Input() teams: Team[] = [];
   @Output() createdUsers = new EventEmitter<boolean>();
 
   private fb: IFormBuilder = this.fob;
 
   userForms: IFormGroup<AddUsersForm>[] = [];
-  teams: TeamDtoApi[] = [];
   emails: string[] = [];
   deletedEmails: string[] = [];
 
   constructor(
-    private readonly userStore: ProfileStore,
     public activeOffcanvas: NgbActiveOffcanvas,
     readonly fob: UntypedFormBuilder,
-    private readonly teamService: TeamsRestService,
     private readonly usersRestService: UsersRestService,
     private readonly validationService: ValidationService,
     private readonly toastService: ToastService,
@@ -44,21 +42,15 @@ export class AddUsersComponent implements OnInit {
     this.usersRestService
       .getUsersCount({ includeSoftDeleted: true })
       .pipe(
-        switchMap((count) => {
-          return combineLatest([
-            this.teamService.getTeams(),
-            count > 0
-              ? this.usersRestService.getUsersFiltered({
-                  includeSoftDeleted: true,
-                  itemsPerPage: count,
-                })
-              : of([]),
-          ]);
-        }),
-        tap(([teams, users]) => {
+        switchMap((count) =>
+          this.usersRestService.getUsersFiltered({
+            includeSoftDeleted: true,
+            itemsPerPage: count,
+          }),
+        ),
+        tap((users) => {
           this.emails = users.filter((u) => !u.deletedAt).map((u) => u.email);
           this.deletedEmails = users.filter((u) => u.deletedAt).map((u) => u.email);
-          this.teams = teams;
           this.addLine();
         }),
       )
@@ -79,7 +71,7 @@ export class AddUsersComponent implements OnInit {
           Validators.email,
         ],
       ],
-      companyId: [this.userStore.user.value.companyId],
+      companyId: [this.me.companyId],
     });
 
     return userForm;
@@ -137,6 +129,7 @@ export class AddUsersComponent implements OnInit {
                 type: 'success',
                 autoHide: false,
               });
+              this.createdUsers.emit(true);
               this.activeOffcanvas.close();
             }
           }),

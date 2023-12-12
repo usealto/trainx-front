@@ -7,20 +7,21 @@ import {
   GuessSourceEnumApi,
   NextQuestionDtoApi,
   ProgramDtoApi,
-  ProgramRunApi,
   ProgramRunDtoApi,
   QuestionApi,
   QuestionDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { Subscription, combineLatest, filter, map, of, switchMap, tap, timer } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { User } from 'src/app/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { QuestionSubmittedFormComponent } from 'src/app/modules/programs/components/questions/question-submitted-form/question-submitted-form.component';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { IAppData } from '../../../../core/resolvers';
 import { GuessesRestService } from '../../services/guesses-rest.service';
 import { ExplanationComponent } from '../explanation/explanation.component';
 
@@ -43,6 +44,8 @@ export class TrainingComponent implements OnInit {
   displayTime = 30;
   time = 31000;
   timer?: Subscription;
+
+  user!: User;
 
   isContinuous = true;
 
@@ -70,7 +73,6 @@ export class TrainingComponent implements OnInit {
     private readonly offCanvasService: NgbOffcanvas,
     private readonly usersRestService: UsersRestService,
     private readonly guessRestService: GuessesRestService,
-    private readonly profileStore: ProfileStore,
     private readonly programsRestService: ProgramsRestService,
     private readonly programRunsRestService: ProgramRunsRestService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
@@ -78,9 +80,12 @@ export class TrainingComponent implements OnInit {
     private readonly router: Router,
     private readonly offcanvasService: NgbOffcanvas,
     private modalService: NgbModal,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.route.pathFromRoot);
+    this.user = (data[EResolverData.AppData] as IAppData).me;
     this.route.params
       .pipe(
         map((p) => {
@@ -95,7 +100,7 @@ export class TrainingComponent implements OnInit {
         switchMap(() =>
           this.programRunsRestService.getProgramRunsPaginated({
             programIds: this.programId,
-            createdBy: this.profileStore.user.value.id,
+            createdBy: this.user.id,
           }),
         ),
         switchMap(({ data }) => {
@@ -122,7 +127,7 @@ export class TrainingComponent implements OnInit {
           combineLatest([
             this.programRunsRestService.getMyProgramRunsQuestions({ id: this.programRun?.id ?? '' }),
             this.guessRestService.getGuesses({
-              createdBy: this.profileStore.user.value.id,
+              createdBy: this.user.id,
               programRunIds: this.programRun?.id,
             }),
           ]),
@@ -240,7 +245,7 @@ export class TrainingComponent implements OnInit {
       this.isQuestionsLoading = true;
 
       this.usersRestService
-        .getNextQuestionsPaginated(this.profileStore.user.value.id, {
+        .getNextQuestionsPaginated(this.user.id, {
           page: 1,
           itemsPerPage: 1,
         } as GetNextQuestionsForUserRequestParams)

@@ -1,17 +1,25 @@
-import { CompaniesRestService } from './../../../companies/service/companies-rest.service';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CompanyDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
+import { Store } from '@ngrx/store';
 import { filter, switchMap, tap } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
+import { Company, ICompany } from 'src/app/models/company.model';
 import { UserEditFormComponent } from 'src/app/modules/lead-team/components/user-edit-form/user-edit-form.component';
 import { UserFilters } from 'src/app/modules/profile/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
-import { EmojiName } from 'src/app/core/utils/emoji/data';
-import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
+import { IAppData } from '../../../../core/resolvers';
+import { patchUser, removeUser, setUsers } from '../../../../core/store/root/root.action';
+import * as FromRoot from '../../../../core/store/store.reducer';
+import { ToastService } from '../../../../core/toast/toast.service';
+import { Team } from '../../../../models/team.model';
+import { IUser, User } from '../../../../models/user.model';
 import { AddUsersComponent } from './add-users/add-users.component';
 
 @UntilDestroy()
@@ -22,130 +30,138 @@ import { AddUsersComponent } from './add-users/add-users.component';
   providers: [ReplaceInTranslationPipe],
 })
 export class SettingsUsersComponent implements OnInit {
-  userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
+  userFilters: UserFilters = { search: '' };
 
   I18ns = I18ns;
   EmojiName = EmojiName;
 
-  paginatedUsers: UserDtoApi[] = [];
-  usersDisplay: UserDtoApi[] = [];
+  company: Company = new Company({} as ICompany);
+  me: User = new User({} as IUser);
+  teams: Team[] = [];
+  users: User[] = [];
+
+  paginatedUsers: User[] = [];
+  usersDisplay: User[] = [];
   usersPageSize = 10;
   usersPage = 1;
-  usersCount = 0;
-  paginatedAdmins: UserDtoApi[] = [];
-  adminsDisplay: UserDtoApi[] = [];
+  paginatedAdmins: User[] = [];
+  adminsDisplay: User[] = [];
   adminsPageSize = 5;
   adminsPage = 1;
-  adminsCount = 0;
-  company: CompanyDtoApi = {} as CompanyDtoApi;
+
+  usedLicensesCount = 0;
 
   constructor(
     private readonly userRestService: UsersRestService,
     private readonly offcanvasService: NgbOffcanvas,
     private readonly usersService: UsersService,
-    private modalService: NgbModal,
-    private replaceInTranslationPipe: ReplaceInTranslationPipe,
-    private readonly companiesRestService: CompaniesRestService,
+    private readonly modalService: NgbModal,
+    private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
+    private readonly store: Store<FromRoot.AppState>,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
-    this.getAdmins();
-    this.getUsers();
-    this.getCompany();
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.me = (data[EResolverData.AppData] as IAppData).me;
+    this.company = data[EResolverData.Company] as Company;
+    this.teams = Array.from((data[EResolverData.AppData] as IAppData).teamById.values());
+
+    this.store
+      .select(FromRoot.selectUsers)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: ({ data: users }) => {
+          this.users = Array.from(users.values());
+          this.displayAdmins();
+          this.displayUsers();
+          this.setUsedLicensesCount();
+        },
+      });
   }
 
-  getAdmins() {
+  toggleUserLicense(user: User): void {
     this.userRestService
-      .getUsersFiltered({ isCompanyAdmin: true })
-      .pipe(
-        tap((users) => (this.adminsDisplay = users ?? [])),
-        tap((users) => (this.adminsCount = users.length)),
-        tap(() => this.changeAdminsPage(this.adminsDisplay, 1)),
-        untilDestroyed(this),
-      )
+      .patchUser(user.id, { hasLicense: !user.hasLicense })
+      .pipe(tap((patchedUser) => this.store.dispatch(patchUser({ user: patchedUser }))))
       .subscribe();
   }
 
-  getUsers() {
-    this.userRestService
-      .getUsersFiltered({ isCompanyAdmin: false })
-      .pipe(
-        tap((users) => (this.usersDisplay = users ?? [])),
-        tap((users) => (this.usersCount = users.length)),
-        tap(() => this.changeUsersPage(this.usersDisplay, 1)),
-        untilDestroyed(this),
-      )
-      .subscribe();
+  private displayAdmins() {
+    this.adminsDisplay = this.usersService.filterUsers<User[]>(
+      this.users.filter((user) => user.isCompanyAdmin()),
+      { search: this.userFilters.search },
+    );
+    this.changeAdminsPage(1);
   }
 
-  getCompany() {
-    this.companiesRestService
-      .getMyCompany()
-      .pipe(
-        tap((company) => {
-          this.company = company;
-        }),
-        untilDestroyed(this),
-      )
-      .subscribe();
+  private displayUsers() {
+    this.usersDisplay = this.usersService.filterUsers<User[]>(
+      this.users.filter((user) => user.isCompanyUser() && !user.isCompanyAdmin()),
+      { search: this.userFilters.search },
+    );
+    this.changeUsersPage(1);
   }
 
-  filterAdmins({ search = this.userFilters.search }: UserFilters = this.userFilters) {
-    this.userRestService
-      .getUsersFiltered({ isCompanyAdmin: true })
-      .pipe(
-        tap((users) => {
-          const filteredUsers = this.usersService.filterUsers<UserDtoApi[]>(users, { search });
-          this.adminsCount = filteredUsers.length;
-          this.adminsDisplay = filteredUsers;
-          this.changeAdminsPage(this.adminsDisplay, 1);
-          if (search === '') {
-            this.getAdmins();
-          }
-        }),
-      )
-      .subscribe();
+  private setUsedLicensesCount() {
+    this.usedLicensesCount = this.users.filter((user) => user.hasLicense).length;
   }
 
-  filterUsers({ search = this.userFilters.search }: UserFilters = this.userFilters) {
+  filterAdmins({ search }: { search: string }) {
     this.userFilters.search = search;
-    this.userRestService
-      .getUsersFiltered({ isCompanyAdmin: false })
-      .pipe(
-        tap((users) => {
-          const filteredUsers = this.usersService.filterUsers<UserDtoApi[]>(users, { search });
-          this.usersCount = filteredUsers.length;
-          this.usersDisplay = filteredUsers;
-          this.changeUsersPage(this.usersDisplay, 1);
-          if (search === '') {
-            this.getUsers();
-          }
-        }),
-      )
-      .subscribe();
+    this.displayAdmins();
   }
 
-  deleteUser(user: UserDtoApi) {
-    const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
+  filterUsers({ search }: { search: string }) {
+    this.userFilters.search = search;
+    this.displayUsers();
+  }
+
+  deleteUser(user: User): void {
+    const modalRef = this.modalService.open(DeleteModalComponent, {
+      centered: true,
+      size: 'md',
+    });
     const componentInstance = modalRef.componentInstance as DeleteModalComponent;
     componentInstance.data = {
-      title: this.replaceInTranslationPipe.transform(
-        I18ns.settings.users.deleteModal.title,
-        user.firstname + ' ' + user.lastname,
-      ),
+      title: this.replaceInTranslationPipe.transform(I18ns.settings.users.deleteModal.title, user.fullname),
       subtitle: this.replaceInTranslationPipe.transform(I18ns.settings.users.deleteModal.subtitle),
     };
     componentInstance.objectDeleted
       .pipe(
-        switchMap(() => this.userRestService.deleteUser(user?.id ?? '')),
-        tap(() => {
-          modalRef.close();
-          this.userRestService.resetUsers();
-          this.getUsers();
-        }),
+        switchMap(() => this.userRestService.deleteUser(user.id)),
+        tap(() => this.store.dispatch(removeUser({ user }))),
+        switchMap(() => this.store.select(FromRoot.selectUsers)),
+        tap(() => modalRef.close()),
         untilDestroyed(this),
       )
-      .subscribe();
+      .subscribe({
+        next: ({ data: users }) => {
+          this.users = Array.from(users.values());
+          this.displayAdmins();
+          this.displayUsers();
+        },
+        error: () => {
+          this.toastService.show({
+            type: 'danger',
+            text: this.replaceInTranslationPipe.transform(
+              I18ns.settings.users.deleteModal.error,
+              user.fullname,
+            ),
+          });
+        },
+        complete: () => {
+          this.toastService.show({
+            type: 'success',
+            text: this.replaceInTranslationPipe.transform(
+              I18ns.settings.users.deleteModal.success,
+              user.fullname,
+            ),
+          });
+        },
+      });
   }
 
   openUsersForm() {
@@ -153,32 +169,51 @@ export class SettingsUsersComponent implements OnInit {
       position: 'end',
       panelClass: 'overflow-auto users-form',
     });
-    canvasRef.closed
-      .pipe(
-        tap(() => {
-          this.getUsers();
-        }),
-      )
-      .subscribe();
+
     const instance = canvasRef.componentInstance as AddUsersComponent;
+    instance.me = this.me;
+    instance.teams = this.teams;
 
     instance.createdUsers
       .pipe(
         filter((x) => !!x),
-        tap((userCreated) => {
-          this.getUsers();
+        switchMap(() => {
+          // TODO : update store instead of using rest service (may impact AddUsersComponent)
+          return this.userRestService.getUsers();
+        }),
+        switchMap((users) => {
+          this.store.dispatch(setUsers({ users }));
+          return this.store.select(FromRoot.selectUsers);
         }),
       )
-      .subscribe();
+      .subscribe({
+        next: ({ data: users }) => {
+          this.users = Array.from(users.values());
+          this.displayAdmins();
+          this.displayUsers();
+        },
+        error: () => {
+          this.toastService.show({
+            type: 'danger',
+            text: I18ns.settings.users.addUsers.APIerror,
+          });
+        },
+        complete: () => {
+          this.toastService.show({
+            type: 'success',
+            text: I18ns.settings.users.addUsers.success,
+          });
+        },
+      });
   }
 
-  changeUsersPage(users: UserDtoApi[], page: number): void {
+  changeUsersPage(page: number): void {
     this.usersPage = page;
     this.paginatedUsers = this.usersDisplay.slice((page - 1) * this.usersPageSize, page * this.usersPageSize);
     return;
   }
 
-  changeAdminsPage(admins: UserDtoApi[], page: number): void {
+  changeAdminsPage(page: number): void {
     this.adminsPage = page;
     this.paginatedAdmins = this.adminsDisplay.slice(
       (page - 1) * this.adminsPageSize,
@@ -187,66 +222,71 @@ export class SettingsUsersComponent implements OnInit {
     return;
   }
 
-  openUserEditionForm(user: UserDtoApi) {
+  openUserEditionForm(user: User) {
     const canvasRef = this.offcanvasService.open(UserEditFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
     });
 
-    canvasRef.componentInstance.user = user;
-    canvasRef.componentInstance.editedUser
+    const instance = canvasRef.componentInstance as UserEditFormComponent;
+    instance.teams = this.teams;
+    instance.me = this.me;
+    instance.user = user;
+
+    instance.editedUser
       .pipe(
-        tap(() => {
-          this.getAdmins();
-          this.getUsers();
+        switchMap((user) => {
+          this.store.dispatch(patchUser({ user }));
+          return this.store.select(FromRoot.selectUsers);
+        }),
+        tap(({ data: users }) => {
+          this.users = Array.from(users.values());
+          this.displayAdmins();
+          this.displayUsers();
         }),
       )
       .subscribe();
   }
 
-  getStatus(company: CompanyDtoApi,user: UserDtoApi): string{
-    if(company.isConnectorActive){
-      if(user.isConnectorActive){
-        return 'active'
-      }else{
-        return 'warning'
+  getStatus(company: Company, user: User): string {
+    if (company.isConnectorActive) {
+      if (user.isConnectorActive) {
+        return 'active';
+      } else {
+        return 'warning';
       }
-    }else{
-      return 'inactive'
+    } else {
+      return 'inactive';
     }
   }
 
-  getBadgeColor(userStatus: string) : string {
-    switch(userStatus ){
+  getBadgeColor(userStatus: string): string {
+    switch (userStatus) {
       case 'active':
-        return '#039855'
+        return '#039855';
       case 'warning':
-        return '#FEF3F2'
+        return '#FEF3F2';
       case 'inactive':
-        return '#363F72'
+        return '#363F72';
       default:
-        return '#363F72'
+        return '#363F72';
     }
   }
 
-  getBadgeBackgroundColor(userStatus: string) : string {
-    switch(userStatus ){
+  getBadgeBackgroundColor(userStatus: string): string {
+    switch (userStatus) {
       case 'active':
-        return '#ECFDF3'
+        return '#ECFDF3';
       case 'warning':
-        return '#FEF3F2'
+        return '#FEF3F2';
       case 'inactive':
-        return '#F8F9FC'
+        return '#F8F9FC';
       default:
-        return '#F8F9FC'
+        return '#F8F9FC';
     }
   }
 
-  getHasRegularUser(usersDisplay: UserDtoApi[]){
-    return usersDisplay.length > 0;
-  }
-
-  userFilterEmpty(){
+  userFilterEmpty(): boolean {
     return this.userFilters.search === '' || this.userFilters.search == undefined;
   }
 }

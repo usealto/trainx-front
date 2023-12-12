@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
+import { IAppData } from '../../../../../core/resolvers';
 
 @Component({
   selector: 'alto-statistics-details',
@@ -17,8 +17,8 @@ export class StatisticsDetailsComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly profileStore: ProfileStore,
-    private readonly teamsStore: TeamStore,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   type: 'team' | 'user' = 'team';
@@ -33,19 +33,23 @@ export class StatisticsDetailsComponent implements OnInit {
   selectedTab = '';
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    const users = Array.from((data[EResolverData.AppData] as IAppData).userById.values());
+    const teams = Array.from((data[EResolverData.AppData] as IAppData).teamById.values());
+
     this.type = this.router.url.split('/')[3] === 'team' ? 'team' : 'user';
     this.id = this.router.url.split('/').pop() || '';
     this.selectedTab = this.router.url.split('/')[4] || '';
 
     if (this.type === 'user') {
-      const user = this.profileStore.users.value.find((u) => u.id === this.id);
+      const user = users.find((u) => u.id === this.id);
       if (!user) {
         this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, AltoRoutes.performance]);
       } else {
         this.name = user.firstname + ' ' + user.lastname;
       }
     } else {
-      const team = this.teamsStore.teams.value.find((t) => t.id === this.id);
+      const team = teams.find((t) => t.id === this.id);
       if (!team) {
         this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, AltoRoutes.performance]);
       } else {

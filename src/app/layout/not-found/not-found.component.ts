@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { Router } from '@angular/router';
-import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { User } from 'src/app/models/user.model';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 @Component({
   selector: 'alto-not-found',
   templateUrl: './not-found.component.html',
@@ -16,17 +16,14 @@ export class NotFoundComponent implements OnInit {
   Emoji = EmojiName;
   route: string[] = [];
 
-  constructor(public readonly userStore: ProfileStore, private readonly router: Router) {}
+  constructor(private readonly router: Router, private readonly activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
-    if (
-      this.userStore.user.value?.roles.some(
-        (r) => r === UserDtoApiRolesEnumApi.AltoAdmin || r === UserDtoApiRolesEnumApi.CompanyAdmin,
-      )
-    ) {
-      this.route = ['/', AltoRoutes.lead, AltoRoutes.leadHome];
-    } else {
-      this.route = ['/', AltoRoutes.user, AltoRoutes.userHome];
-    }
+    this.activatedRoute.parent?.data.pipe(map(({ me }) => me as User)).subscribe((me) => {
+      this.route =
+        me.isAltoAdmin() || me.isCompanyAdmin()
+          ? ['/', AltoRoutes.lead, AltoRoutes.leadHome]
+          : ['/', AltoRoutes.user, AltoRoutes.userHome];
+    });
   }
 }

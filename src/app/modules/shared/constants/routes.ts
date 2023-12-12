@@ -7,10 +7,6 @@ export const AltoRoutes = {
   programsCreate: 'e/new',
   programsEdit: 'e',
   //
-  challenges: 'challenges',
-  challengeCreate: 'e/new',
-  challengeEdit: 'e',
-  //
   leadTeams: 'teams',
   settings: 'settings',
   profile: 'profile',

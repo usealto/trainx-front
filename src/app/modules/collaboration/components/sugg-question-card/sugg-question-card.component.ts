@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -8,13 +9,16 @@ import {
   TeamLightDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { of, switchMap, tap } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
-import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
+import { Team } from 'src/app/models/team.model';
+import { User } from 'src/app/models/user.model';
 import { QuestionFormComponent } from 'src/app/modules/shared/components/question-form/question-form.component';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { IAppData } from '../../../../core/resolvers';
+import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
+import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
 
 @UntilDestroy()
 @Component({
@@ -23,12 +27,14 @@ import { ProfileStore } from 'src/app/modules/profile/profile.store';
   styleUrls: ['./sugg-question-card.component.scss', '../styles/collaboration-cards.scss'],
   providers: [ReplaceInTranslationPipe],
 })
-export class SuggQuestionCardComponent {
+export class SuggQuestionCardComponent implements OnInit {
   @Input() suggQuestion?: QuestionSubmittedDtoApi;
   @Output() refresh = new EventEmitter<boolean>();
 
   I18ns = I18ns;
   StatusEnum = QuestionSubmittedDtoApiStatusEnumApi;
+  users: Map<string, User> = new Map();
+  teams: Map<string, Team> = new Map();
 
   constructor(
     private readonly modalService: NgbModal,
@@ -36,8 +42,15 @@ export class SuggQuestionCardComponent {
     private readonly toastService: ToastService,
     private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
     private readonly offcanvasService: NgbOffcanvas,
-    private readonly userStore: ProfileStore,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
+
+  ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.users = (data[EResolverData.AppData] as IAppData).userById;
+    this.teams = (data[EResolverData.AppData] as IAppData).teamById;
+  }
 
   refuseQuestion() {
     const fullname = this.suggQuestion?.author
@@ -109,7 +122,7 @@ export class SuggQuestionCardComponent {
   }
 
   getTeam(userId: string): TeamLightDtoApi | undefined {
-    const u = this.userStore.users.value.find((user) => user.id === userId);
-    return u?.team || undefined;
+    const u = this.users.get(userId);
+    return this.teams.get(u?.teamId || '');
   }
 }

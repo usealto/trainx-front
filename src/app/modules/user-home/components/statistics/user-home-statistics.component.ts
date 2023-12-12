@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import Chart, { ChartData } from 'chart.js/auto';
 import { combineLatest, map, tap } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
+import { User } from 'src/app/models/user.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
@@ -13,6 +15,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
+import { IAppData } from '../../../../core/resolvers';
 
 @Component({
   selector: 'alto-user-home-statistics',
@@ -23,6 +26,7 @@ export class UserHomeStatisticsComponent implements OnInit {
   I18ns = I18ns;
   statisticsDuration = ScoreDuration.Trimester;
 
+  user!: User;
   //Statistics data
   userScore = 0;
   userScoreProgression = 0;
@@ -38,16 +42,19 @@ export class UserHomeStatisticsComponent implements OnInit {
   hasData = true;
 
   constructor(
-    private readonly profileStore: ProfileStore,
     private readonly guessesRestService: GuessesRestService,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly programsRestService: ProgramsRestService,
     private readonly programRunsRestService: ProgramRunsRestService,
     private readonly statisticsService: StatisticsService,
+    private readonly resolversService: ResolversService,
+    private readonly activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.user = (data[EResolverData.AppData] as IAppData).me;
     this.getScore();
     this.getFinishedPrograms();
     this.getGuessesCount();
@@ -61,8 +68,8 @@ export class UserHomeStatisticsComponent implements OnInit {
     ])
       .pipe(
         map(([curr, prev]) => [
-          curr.filter((u) => u.id === this.profileStore.user.value.id),
-          prev.filter((u) => u.id === this.profileStore.user.value.id),
+          curr.filter((u) => u.id === this.user.id),
+          prev.filter((u) => u.id === this.user.id),
         ]),
         tap(([curr, prev]) => {
           this.userScore = curr[0]?.score ?? 0;
@@ -75,16 +82,13 @@ export class UserHomeStatisticsComponent implements OnInit {
 
   getFinishedPrograms() {
     combineLatest([
+      this.programsRestService.getProgramsPaginated({ teamIds: this.user.teamId }, this.statisticsDuration),
       this.programsRestService.getProgramsPaginated(
-        { teamIds: this.profileStore.user.value.teamId },
-        this.statisticsDuration,
-      ),
-      this.programsRestService.getProgramsPaginated(
-        { teamIds: this.profileStore.user.value.teamId },
+        { teamIds: this.user.teamId },
         this.statisticsDuration,
         true,
       ),
-      this.programRunsRestService.getMyProgramRuns(),
+      this.programRunsRestService.getMyProgramRuns(this.user.id),
     ])
       .pipe(
         tap(([currentPrograms, previousPrograms, currentProgramRuns]) => {
@@ -120,11 +124,11 @@ export class UserHomeStatisticsComponent implements OnInit {
   getGuessesCount() {
     combineLatest([
       this.guessesRestService.getGuesses(
-        { createdBy: this.profileStore.user.value.id, itemsPerPage: 1 },
+        { createdBy: this.user.id, itemsPerPage: 1 },
         this.statisticsDuration,
       ),
       this.guessesRestService.getGuesses(
-        { createdBy: this.profileStore.user.value.id, itemsPerPage: 1 },
+        { createdBy: this.user.id, itemsPerPage: 1 },
         this.statisticsDuration,
         true,
       ),
@@ -147,13 +151,19 @@ export class UserHomeStatisticsComponent implements OnInit {
     } as ChartFilters;
 
     combineLatest([
-      this.scoresRestService.getScores({ ...params, type: ScoreTypeEnumApi.User }),
-      this.scoresRestService.getScores({ ...params, type: ScoreTypeEnumApi.Team }),
+      this.scoresRestService.getScores({
+        ...params,
+        type: ScoreTypeEnumApi.User,
+      }),
+      this.scoresRestService.getScores({
+        ...params,
+        type: ScoreTypeEnumApi.Team,
+      }),
     ])
       .pipe(
         tap(([usersScores, teamsScores]) => {
           //USER SCORES: reduce scores to remove all first values without data
-          const rawUserScores = usersScores.scores.find((u) => u.id === this.profileStore.user.value.id);
+          const rawUserScores = usersScores.scores.find((u) => u.id === this.user.id);
           if (!rawUserScores) {
             this.hasData = false;
             return;
@@ -168,7 +178,7 @@ export class UserHomeStatisticsComponent implements OnInit {
           );
 
           //TEAM SCORES: reduce scores to remove all first values without data
-          const rawTeamScores = teamsScores.scores.find((t) => t.id === this.profileStore.user.value.teamId);
+          const rawTeamScores = teamsScores.scores.find((t) => t.id === this.user.teamId);
           const reducedTeamScores = this.scoresService.reduceLineChartData([
             rawTeamScores ?? ({} as ScoreDtoApi),
           ]);
@@ -218,7 +228,12 @@ export class UserHomeStatisticsComponent implements OnInit {
               },
               legend: {
                 display: true,
-                labels: { usePointStyle: true, boxWidth: 5, boxHeight: 5, pointStyle: 'circle' },
+                labels: {
+                  usePointStyle: true,
+                  boxWidth: 5,
+                  boxHeight: 5,
+                  pointStyle: 'circle',
+                },
               },
             },
           };

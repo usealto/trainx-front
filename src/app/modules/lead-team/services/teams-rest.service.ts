@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
 import {
   CreateTeamDtoApi,
   DeleteResponseApi,
-  GetTeamsRequestParams,
   PatchTeamRequestParams,
   TeamDtoApi,
   TeamsApiService,
 } from '@usealto/sdk-ts-angular';
+import { combineLatest, map, Observable, of, switchMap, tap } from 'rxjs';
+import { Team } from 'src/app/models/team.model';
 import { TeamStore } from '../team.store';
 
 @Injectable({
@@ -19,22 +19,30 @@ export class TeamsRestService {
   getTeam(id: string) {
     return this.teamApi.getTeamById({ id });
   }
-  getTeams(req?: GetTeamsRequestParams): Observable<TeamDtoApi[]> {
-    if (this.teamStore.teams.value.length) {
-      return this.teamStore.teams.value$;
-    } else {
-      const par = {
-        ...req,
-        page: req?.page ?? 1,
-        itemsPerPage: req?.itemsPerPage ?? 300,
-        sortBy: req?.sortBy ?? 'name:asc',
-      };
+  getTeams(): Observable<Team[]> {
+    return this.teamApi.getTeams({ page: 1, sortBy: 'createdAt:asc', itemsPerPage: 1000 }).pipe(
+      switchMap(({ data, meta }) => {
+        const reqs: Observable<TeamDtoApi[]>[] = [of(data ? data : [])];
+        let totalPages = meta.totalPage ?? 1;
 
-      return this.teamApi.getTeams(par).pipe(
-        map((r) => r.data ?? []),
-        tap((teams) => (this.teamStore.teams.value = teams)),
-      );
-    }
+        for (let i = 2; i <= totalPages; i++) {
+          reqs.push(
+            this.teamApi.getTeams({ page: i, sortBy: 'createdAt:asc', itemsPerPage: 1000 }).pipe(
+              tap(({ meta }) => {
+                if (meta.totalPage !== totalPages) {
+                  totalPages = meta.totalPage;
+                }
+              }),
+              map(({ data }) => (data ? data : [])),
+            ),
+          );
+        }
+        return combineLatest(reqs);
+      }),
+      map((usersDtos) => {
+        return usersDtos.flat().map(Team.fromDto);
+      }),
+    );
   }
 
   createTeam(createTeamDtoApi: CreateTeamDtoApi): Observable<TeamDtoApi | undefined> {

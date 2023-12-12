@@ -3,6 +3,46 @@
   font-weight: 600;
 }
 
+.onboarding-titles {
+  font-size: 1.16667rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.66667rem;
+  color: var(--gray-900);
+}
+
+.onboarding-subtitles {
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1.66667rem;
+  color: var(--gray-900);
+}
+
+.onboarding-texts {
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.66667rem;
+  color: var(--gray-900);
+}
+
+.onboarding-confirmations {
+  font-size: 0.83333rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.66667rem;
+  color: #667085;
+}
+
+.onboarding-resend {
+  font-size: 0.83333rem;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--primary-700);
+  text-decoration: none;
+}
+
 .integration-subtitles {
   font-size: 1rem;
   font-weight: 400;
@@ -40,8 +80,23 @@
   }
 }
 
-.flex-container {
-  .panel {
-    width: 47rem;
+@media (max-width: 75rem) {
+  .onboarding {
+    flex-direction: column;
   }
+
+  .onboarding {
+    width: 100%;
+    flex-basis: auto;
+    max-width: none;
+    min-width: none;
+  }
+}
+
+.email-input.ng-invalid:not(.ng-touched) {
+    border-color: initial;
+}
+
+.email-input.ng-touched.ng-invalid {
+    border-color: var(--bs-danger);
 }

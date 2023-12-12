@@ -6,13 +6,13 @@ import {
   GetUsersRequestParams,
   NextQuestionDtoPaginatedResponseApi,
   PatchUserDtoApi,
-  QuestionDtoPaginatedResponseApi,
   ScoresApiService,
   UserDtoApi,
   UserDtoPaginatedResponseApi,
   UsersApiService,
 } from '@usealto/sdk-ts-angular';
-import { Observable, map, tap } from 'rxjs';
+import { Observable, combineLatest, map, of, switchMap, tap } from 'rxjs';
+import { User } from 'src/app/models/user.model';
 import { ProfileStore } from '../profile.store';
 
 @Injectable({
@@ -25,15 +25,30 @@ export class UsersRestService {
     private userStore: ProfileStore,
   ) {}
 
-  getUsers(): Observable<UserDtoApi[]> {
-    if (this.userStore.users.value.length) {
-      return this.userStore.users.value$;
-    } else {
-      return this.userApi.getUsers({ page: 1, itemsPerPage: 1000 }).pipe(
-        map((r) => r.data ?? []),
-        tap((users) => (this.userStore.users.value = users)),
-      );
-    }
+  getUsers(): Observable<User[]> {
+    return this.userApi.getUsers({ page: 1, sortBy: 'createdAt:asc', itemsPerPage: 1000 }).pipe(
+      switchMap(({ data, meta }) => {
+        const reqs: Observable<UserDtoApi[]>[] = [of(data ? data : [])];
+        let totalPages = meta.totalPage ?? 1;
+
+        for (let i = 2; i <= totalPages; i++) {
+          reqs.push(
+            this.userApi.getUsers({ page: i, sortBy: 'createdAt:asc', itemsPerPage: 1000 }).pipe(
+              tap(({ meta }) => {
+                if (meta.totalPage !== totalPages) {
+                  totalPages = meta.totalPage;
+                }
+              }),
+              map(({ data }) => (data ? data : [])),
+            ),
+          );
+        }
+        return combineLatest(reqs);
+      }),
+      map((usersDtos) => {
+        return usersDtos.flat().map(User.fromDto);
+      }),
+    );
   }
 
   resetUsers() {
@@ -66,26 +81,14 @@ export class UsersRestService {
     return this.userApi.getUsers(par);
   }
 
-  getMe(): Observable<UserDtoApi> {
-    if (this.userStore.user.value) {
-      return this.userStore.user.value$;
-    } else {
-      return this.userApi.getMe().pipe(
-        map((u) => u.data || ({} as UserDtoApi)),
-        tap((u) => (this.userStore.user.value = u)),
-      );
-    }
+  getMe(): Observable<User | undefined> {
+    return this.userApi.getMe().pipe(map(({ data }) => (data ? User.fromDto(data) : undefined)));
   }
 
-  patchUser(id: string, patchUserDtoApi: PatchUserDtoApi): Observable<UserDtoApi> {
-    return this.userApi.patchUser({ id, patchUserDtoApi }).pipe(
-      map((u) => u.data || ({} as UserDtoApi)),
-      tap((u) => {
-        if (this.userStore.user.value.id === id) {
-          this.userStore.user.value = u;
-        }
-      }),
-    );
+  patchUser(id: string, patchUserDtoApi: PatchUserDtoApi): Observable<User> {
+    return this.userApi
+      .patchUser({ id, patchUserDtoApi })
+      .pipe(map(({ data: user }) => User.fromDto(user as UserDtoApi)));
   }
 
   getNextQuestionsPaginated(

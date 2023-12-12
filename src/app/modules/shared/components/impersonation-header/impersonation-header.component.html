@@ -3,22 +3,22 @@
     <div class="fs-5">You are impersonnated as <strong>{{ impersonatedUserEmail }} </strong></div>
     <div class="fs-6">You can stop the impersonation process at any time.</div>
     <div class="d-flex justify-content-between">
-      <div 
+      <div
         class="btn btn-danger mt-2"
         (click)="removeImpersonation()"
       >
         Stop the impersonation
-      </div>            
+      </div>
       <div
         *ngIf="isAdmin"
         class="btn btn-light mt-2"
-        [routerLink]="'/admin/home'"> 
+        [routerLink]="'/admin/home'">
         <i class="bi bi-house"></i> Admin
       </div>
       <div
         *ngIf="!isAdmin"
-        class="mt-2"> 
-        Not impersonnated as Alto Admin. 
+        class="mt-2">
+        Not impersonnated as Alto Admin.
         <br> Stop impersonation to go to <strong>The Office</strong>
       </div>
     </div>

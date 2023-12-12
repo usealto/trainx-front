@@ -6,11 +6,10 @@ import {
   ProgramRunDtoPaginatedResponseApi,
   ProgramRunsApiService,
   QuestionDtoPaginatedResponseApi,
-  UserDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
 import { Observable, combineLatest, map, switchMap, tap } from 'rxjs';
-import { ProfileStore } from '../../profile/profile.store';
+import { User } from 'src/app/models/user.model';
 import { UsersRestService } from '../../profile/services/users-rest.service';
 import { ScoreDuration } from '../../shared/models/score.model';
 import { ScoresService } from '../../shared/services/scores.service';
@@ -24,7 +23,6 @@ export class ProgramRunsRestService {
   constructor(
     private readonly programRunApi: ProgramRunsApiService,
     private readonly programsRestService: ProgramsRestService,
-    private readonly profileStore: ProfileStore,
     private readonly scoresService: ScoresService,
     private readonly usersService: UsersRestService,
   ) {}
@@ -39,12 +37,12 @@ export class ProgramRunsRestService {
     return this.programRunApi.getProgramRuns(par);
   }
 
-  getMyProgramRunsCards(): Observable<TrainingCardData[]> {
+  getMyProgramRunsCards(userId: string, teamId: string): Observable<TrainingCardData[]> {
     let myPrograms: TrainingCardData[] = [];
     return combineLatest([
-      this.programsRestService.getMyPrograms(),
+      this.programsRestService.getMyPrograms(teamId),
       this.getProgramRunsPaginated({
-        createdBy: this.profileStore.user.value.id,
+        createdBy: userId,
       } as GetProgramRunsRequestParams),
     ]).pipe(
       map(([programs, programRuns]) => {
@@ -88,15 +86,20 @@ export class ProgramRunsRestService {
                 result.push(user);
               }
               return result;
-            }, [] as UserDtoApi[]) ?? [],
+            }, [] as User[]) ?? [],
         }));
         return myPrograms;
       }),
     );
   }
 
-  getMyProgramRuns(req?: GetProgramRunsRequestParams, duration?: ScoreDuration, isProgression = false) {
-    const params = { ...req, itemsPerPage: 300, createdBy: this.profileStore.user.value.id };
+  getMyProgramRuns(
+    userId: string,
+    req?: GetProgramRunsRequestParams,
+    duration?: ScoreDuration,
+    isProgression = false,
+  ) {
+    const params = { ...req, itemsPerPage: 300, createdBy: userId };
     if (duration) {
       params.createdAfter = isProgression
         ? this.scoresService.getPreviousPeriod(duration)[0]

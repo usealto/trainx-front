@@ -1,16 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { GuessDtoApi, UserDtoApi, UserLightDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
 import { combineLatest, map, tap } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
+import { User } from 'src/app/models/user.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { TrainingCardData } from 'src/app/modules/training/models/training.model';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
+import { IAppData } from '../../../../core/resolvers';
 
 interface LeaderboardUser {
   position: number;
@@ -30,7 +32,8 @@ export class UserHomeComponent implements OnInit {
 
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
-  userName = '';
+  user!: User;
+  users: User[] = [];
   ScoreDuration = ScoreDuration;
   //programs-run data
   guessesCount = 0;
@@ -43,20 +46,22 @@ export class UserHomeComponent implements OnInit {
   leaderboardUsers: LeaderboardUser[] | undefined = undefined;
 
   constructor(
-    private readonly profileStore: ProfileStore,
-    private readonly userRestService: UsersRestService,
     private readonly guessesRestService: GuessesRestService,
     private readonly programRunsRestService: ProgramRunsRestService,
     private readonly scoreRestService: ScoresRestService,
+    private readonly resolversService: ResolversService,
+    private readonly activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.user = (data[EResolverData.AppData] as IAppData).me;
+    this.users = Array.from((data[EResolverData.AppData] as IAppData).userById.values());
     this.programRunsRestService
-      .getMyProgramRunsCards()
+      .getMyProgramRunsCards(this.user.id, this.user.teamId ?? '')
       .pipe(tap((a) => (this.myProgramRunsCards = a.filter((r) => r.isProgress && r.duration))))
       .subscribe();
 
-    this.userName = this.profileStore.user.value.firstname ?? '';
     this.continuousSessionGetGuessesCount();
     this.getLeaderboard();
   }
@@ -99,17 +104,16 @@ export class UserHomeComponent implements OnInit {
   getLeaderboard() {
     combineLatest([
       this.scoreRestService.getUsersStats(this.durationTabs, false),
-      this.userRestService.getUsers(),
       this.scoreRestService.getUsersStats(this.durationTabs, true),
     ])
       .pipe(
         map(
-          ([usersStats, users, previousScoredUsers]) =>
+          ([usersStats, previousScoredUsers]) =>
             [
-              usersStats.filter((user) => user.teamId === this.profileStore.user.value.teamId),
-              users.filter((user) => user.teamId === this.profileStore.user.value.teamId),
-              previousScoredUsers.filter((user) => user.teamId === this.profileStore.user.value.teamId),
-            ] as [UserStatsDtoApi[], UserDtoApi[], UserStatsDtoApi[]],
+              usersStats.filter((user) => user.teamId === this.user.teamId),
+              this.users.filter((user) => user.teamId === this.user.teamId),
+              previousScoredUsers.filter((user) => user.teamId === this.user.teamId),
+            ] as [UserStatsDtoApi[], User[], UserStatsDtoApi[]],
         ),
         tap(([teamUsers, users, previousScoredUsers]) => {
           this.leaderboardUsers = teamUsers

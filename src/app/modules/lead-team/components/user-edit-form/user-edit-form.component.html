@@ -42,12 +42,12 @@
       </ng-template>
     </ng-select>
 
-    <label class="mt-4 required" *ngIf="profile.id !== user?.id">{{
+    <label class="mt-4 required" *ngIf="me.id !== user?.id">{{
       I18ns.leadTeam.members.forms.edition.type
     }}</label>
     <select
       data-cy="editMemberRole"
-      *ngIf="profile.id !== user?.id"
+      *ngIf="me.id !== user?.id"
       class="form-select"
       formControlName="type"
       id="type"
@@ -61,13 +61,13 @@
     </select>
     <p
       class="mt-3 subtitles"
-      *ngIf="profile.id !== user?.id && userForm.controls.type.value === 'company-user'"
+      *ngIf="me.id !== user?.id && userForm.controls.type.value === 'company-user'"
     >
       {{ I18ns.leadTeam.members.forms.edition.userSubtitle }}
     </p>
     <p
       class="mt-3 subtitles"
-      *ngIf="profile.id !== user?.id && userForm.controls.type.value === 'company-admin'"
+      *ngIf="me.id !== user?.id && userForm.controls.type.value === 'company-admin'"
     >
       {{ I18ns.leadTeam.members.forms.edition.adminSubtitle }}
     </p>

@@ -85,13 +85,13 @@ export class ProgramsRestService {
     );
   }
 
-  getMyPrograms(): Observable<ProgramDtoApi[]> {
+  getMyPrograms(teamId: string): Observable<ProgramDtoApi[]> {
     if (this.profileStore.myPrograms.value.length > 0) {
       return this.profileStore.myPrograms.value$;
     } else {
       return this.getPrograms().pipe(
         map((ps: ProgramDtoApi[]) =>
-          ps.filter((p) => p.teams.some((t) => t && t.id === this.profileStore.user.value.teamId)),
+          ps.filter((p) => p.teams.some((t) => t && t.id === teamId)),
         ),
         tap((p) => (this.profileStore.myPrograms.value = p)),
       );

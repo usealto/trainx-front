@@ -1,24 +1,27 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TeamDtoApi, TeamStatsDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { combineLatest, switchMap, tap } from 'rxjs';
+import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { Team } from 'src/app/models/team.model';
+import { User } from 'src/app/models/user.model';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { UserFilters } from 'src/app/modules/profile/models/user.model';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { environment } from 'src/environments/environment';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
+import { IAppData } from 'src/app/core/resolvers';
 
 interface TeamDisplay extends TeamDtoApi {
   score?: number;
@@ -37,6 +40,7 @@ interface TeamDisplay extends TeamDtoApi {
 export class LeadTeamComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
+
   // Teams
   teams: TeamDtoApi[] = [];
   teamsStats: TeamStatsDtoApi[] = [];
@@ -63,18 +67,27 @@ export class LeadTeamComponent implements OnInit {
   isFilteredUsers = false;
   selectedItems: UserStatsDtoApi[] = [];
 
+  rawUsers: User[] = [];
+  teamNames: string[] = [];
+
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
     private readonly teamsRestService: TeamsRestService,
     private readonly usersService: UsersService,
-    private readonly profileStore: ProfileStore,
     private readonly scoreRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
     private modalService: NgbModal,
     private replaceInTranslationPipe: ReplaceInTranslationPipe,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.rawUsers = Array.from((data[EResolverData.AppData] as IAppData).userById.values());
+    this.teamNames = Array.from((data[EResolverData.AppData] as IAppData).teamById.values()).map(
+      (teams) => teams.name,
+    );
     this.loadData();
   }
 
@@ -141,7 +154,10 @@ export class LeadTeamComponent implements OnInit {
     this.userFilters.score = score;
     this.userFilters.search = search;
 
-    let output = this.usersService.filterUsers<UserStatsDtoApi[]>(this.users, { teams, search });
+    let output = this.usersService.filterUsers<UserStatsDtoApi[]>(this.users, {
+      teams,
+      search,
+    });
     if (score) {
       output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
     }
@@ -174,11 +190,16 @@ export class LeadTeamComponent implements OnInit {
     });
 
     canvasRef.componentInstance.team = team;
+    canvasRef.componentInstance.users = this.rawUsers;
+    canvasRef.componentInstance.teamNames = this.teamNames;
     canvasRef.componentInstance.teamChanged.pipe(tap(() => this.loadData())).subscribe();
   }
 
   deleteTeam(team: TeamDtoApi) {
-    const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
+    const modalRef = this.modalService.open(DeleteModalComponent, {
+      centered: true,
+      size: 'md',
+    });
 
     const componentInstance = modalRef.componentInstance as DeleteModalComponent;
     componentInstance.data = {
@@ -209,12 +230,13 @@ export class LeadTeamComponent implements OnInit {
     });
 
     canvasRef.componentInstance.user = user.user;
+    canvasRef.componentInstance.teams = this.teams;
     canvasRef.closed.pipe(tap(() => this.loadData())).subscribe();
   }
 
   @memoize()
   getTeamUsersCount(teamId: string): number {
-    return this.profileStore.users.value.filter((user) => user.teamId === teamId).length;
+    return this.users.filter((user) => user.teamId === teamId).length;
   }
 
   @memoize()
