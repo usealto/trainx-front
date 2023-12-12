@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiURL: 'https://trainx-api.usealto.com',
+  apiURL: 'https://trainx-api.getcockpit.io',
   auth0Domain: 'https://usealto.eu.auth0.com',
   auth0ClientId: 'gtvfSAQkXeR1UzSLfIbgVNwttvTPs16d',
   audience: 'https://api.usealto.com',
