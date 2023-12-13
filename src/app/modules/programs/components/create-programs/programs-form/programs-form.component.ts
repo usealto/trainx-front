@@ -11,6 +11,7 @@ import { Team } from 'src/app/models/team.model';
 import { IAppData } from '../../../../../core/resolvers';
 import { ProgramForm } from '../../../models/programs.form';
 import { TagsRestService } from '../../../services/tags-rest.service';
+import { ICompany } from '../../../../../models/company.model';
 
 @UntilDestroy()
 @Component({
@@ -38,7 +39,7 @@ export class ProgramsFormComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.teams = Array.from((data[EResolverData.AppData] as IAppData).teamById.values());
+    this.teams = (data[EResolverData.AppData] as IAppData).company.teams;
     this.tagService
       .getTags()
       .pipe(

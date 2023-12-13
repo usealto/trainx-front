@@ -21,6 +21,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
 import { StatisticsService } from '../../../services/statistics.service';
+import { Company, ICompany } from '../../../../../models/company.model';
 
 @Component({
   selector: 'alto-user-engagement',
@@ -54,10 +55,10 @@ export class UserEngagementComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     const usersById = (data[EResolverData.AppData] as IAppData).userById;
-    const teamsById = (data[EResolverData.AppData] as IAppData).teamById;
+    const teamsById = (data[EResolverData.AppData] as IAppData).company.teams;
     const userId = this.router.url.split('/').pop() || '';
     this.user = usersById.get(userId) || new User({} as IUser);
-    this.userTeam = teamsById.get(this.user.teamId || '') || new Team({} as ITeam);
+    this.userTeam = teamsById.find((t) => t.id === this.user.teamId) || new Team({} as ITeam);
 
     this.loadPage();
   }

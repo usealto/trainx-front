@@ -4,7 +4,9 @@ import { Team, TeamStats } from 'src/app/models/team.model';
 import { Company } from '../../../models/company.model';
 
 // Timestamp
-export const setTimestamp = createAction('[Timestamp] Set new timestamp', props<{ date: Date }>());
+export const setTeamsStatsTimestamp = createAction('[Timestamp] Set new timestamp for teams stats', props<{ date: Date }>());
+export const setTeamsTimestamp = createAction('[Timestamp] Set new timestamp for teams', props<{ date: Date }>());
+
 
 // User
 export const setUserMe = createAction('[User] Set me', props<{ user: User }>());
@@ -14,8 +16,8 @@ export const removeUser = createAction('[User] Remove User', props<{ user: User 
 export const setUsers = createAction('[User] Set Users', props<{ users: User[] }>());
 
 // Team
-export const setTeams = createAction('[User] Set Teams', props<{ teams: Team[] }>());
-export const addTeamStats = createAction('[User] Add Team Stats', props<{ teamStats: TeamStats[] }>());
+export const setTeams = createAction('[Team] Set Teams', props<{ teams: Team[] }>());
+export const setTeamsStats = createAction('[Team] Set Team Stats', props<{ teamStats: TeamStats[] }>());
 
 // Company
 export const setCompany = createAction('[Company] Set Company', props<{ company: Company }>());

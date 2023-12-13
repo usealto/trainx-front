@@ -8,7 +8,7 @@ import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolver
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { Company } from 'src/app/models/company.model';
+import { Company, ICompany } from 'src/app/models/company.model';
 import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
 import { UserForm } from '../../models/user.form';
@@ -23,7 +23,7 @@ import { IAppData } from 'src/app/core/resolvers';
 })
 export class ProfileAccountComponent implements OnInit {
   EmojiName = EmojiName;
-  teamsById = new Map<string, Team>();
+  teams: Team[] = [];
 
   I18ns = I18ns;
   private fb: IFormBuilder;
@@ -46,9 +46,11 @@ export class ProfileAccountComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.user = (data[EResolverData.AppData] as IAppData).me;
-    this.teamsById = (data[EResolverData.AppData] as IAppData).teamById;
+    this.teams = (data[EResolverData.AppData] as IAppData).company.teams;
     this.company = data[EResolverData.Company] as Company;
-    this.userTeam = this.user.teamId ? this.teamsById.get(this.user.teamId) || ({} as Team) : ({} as Team);
+    this.userTeam = this.user.teamId
+      ? this.teams.find((t) => t.id === this.user.teamId) || ({} as Team)
+      : ({} as Team);
     this.initForm();
   }
 

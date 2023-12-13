@@ -11,7 +11,7 @@ import {
 import { EChartsOption } from 'echarts';
 import { Observable, combineLatest, map, of, tap } from 'rxjs';
 import { IHomeData } from 'src/app/core/resolvers/home.resolver';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolverData, ResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -32,7 +32,9 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
 import { IAppData } from '../../../../core/resolvers';
-import { TeamStats } from '../../../../models/team.model';
+import { Team, TeamStats } from '../../../../models/team.model';
+import { ICompany } from '../../../../models/company.model';
+import { ITeamStatsData } from '../../../../core/resolvers/teamStats.resolver';
 
 @UntilDestroy()
 @Component({
@@ -58,6 +60,8 @@ export class LeadHomeComponent implements OnInit {
     type: ScoreTypeEnumApi.Team,
     teams: [],
   };
+
+  teams: Team[] = [];
 
   scoreCount = 0;
   averageScore = 0;
@@ -106,26 +110,34 @@ export class LeadHomeComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    console.log(data);
-    const teamStats = data['teamStats'] as any as Map<string, TeamStats[]>;
-    console.log("teamStats == ", teamStats);
     this.me = (data[EResolverData.AppData] as IAppData).me;
     this.commentsCount = (data[EResolverData.HomeData] as IHomeData).comments.length;
     this.commentsDataStatus = this.commentsCount === 0 ? 'noData' : 'good';
     this.questionsCount = (data[EResolverData.HomeData] as IHomeData).questionsCount;
     this.questionsDataStatus = this.questionsCount === 0 ? 'noData' : 'good';
-    const teamStatsNow = TeamStats.getStatsForPeriod(teamStats, this.globalFilters.duration as ScoreDuration);
-    const teamStatsPrev = TeamStats.getStatsForPeriod(teamStats, this.globalFilters.duration as ScoreDuration, true);
-    console.log("teamStatsNow == ", teamStatsNow);
-    console.log("teamStatsPrev == ", teamStatsPrev);
-    this.setAverageScore(teamStatsNow, teamStatsPrev);
-
+    this.setTeamsAndStats(data);
     this.createChart(this.globalFilters.duration as ScoreDuration);
     this.getProgramsStats(this.globalFilters);
     this.getGuessesCount(this.globalFilters.duration as ScoreDuration);
     this.getTopFlop(this.globalFilters.duration as ScoreDuration)
       .pipe(untilDestroyed(this))
       .subscribe();
+  }
+
+  setTeamsAndStats(data: ResolverData) {
+    this.teams = (data[EResolverData.TeamStats] as ITeamStatsData).company.teams;
+    console.log('this.teams', this.teams);
+    const teamStats = data['teamStats'] as any as Map<string, TeamStats[]>;
+    this.teams.forEach((team) => {
+      team.stats = teamStats.get(team.id) || [];
+    });
+    const teamStatsNow = TeamStats.getStatsForPeriod(teamStats, this.globalFilters.duration as ScoreDuration);
+    const teamStatsPrev = TeamStats.getStatsForPeriod(
+      teamStats,
+      this.globalFilters.duration as ScoreDuration,
+      true,
+    );
+    this.setAverageScore(teamStatsNow, teamStatsPrev);
   }
 
   getProgramDataStatus() {
@@ -205,24 +217,34 @@ export class LeadHomeComponent implements OnInit {
     );
   }
 
-  // getAverageScore(duration: ScoreDuration, [current, previous]: TeamStats[][] = []) {
-  //   if (current && previous) {
-  //     this.setAverageScore(current, previous);
-  //   } else {
-  //     combineLatest([
-  //       this.scoresRestService.getTeamsStats(duration),
-  //       this.scoresRestService.getTeamsStats(duration, true),
-  //     ])
-  //       .pipe(
-  //         tap(([current, previous]) => {
-  //           this.setAverageScore(current, previous);
-  //         }),
-  //       )
-  //       .subscribe();
-  //   }
-  // }
+  getAverageScore(duration: ScoreDuration, [current, previous]: TeamStatsDtoApi[][] = []) {
+    if (current && previous) {
+      this.setAverageScoreDto(current, previous);
+    } else {
+      combineLatest([
+        this.scoresRestService.getTeamsStats(duration),
+        this.scoresRestService.getTeamsStats(duration, true),
+      ])
+        .pipe(
+          tap(([current, previous]) => {
+            this.setAverageScoreDto(current, previous);
+          }),
+        )
+        .subscribe();
+    }
+  }
 
   setAverageScore(current: TeamStats[], previous: TeamStats[]) {
+    current = current.filter((t) => t.score);
+    previous = previous.filter((t) => t.score);
+    const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;
+    this.averageScore =
+      current.filter((t) => t.score).reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
+    this.averageScoreProgression = previousScore ? (this.averageScore - previousScore) / previousScore : 0;
+    this.getProgramDataStatus();
+  }
+
+  setAverageScoreDto(current: TeamStatsDtoApi[], previous: TeamStatsDtoApi[]) {
     current = current.filter((t) => t.score);
     previous = previous.filter((t) => t.score);
     const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;

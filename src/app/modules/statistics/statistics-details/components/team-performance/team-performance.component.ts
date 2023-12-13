@@ -28,6 +28,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
 import { StatisticsService } from '../../../services/statistics.service';
+import { ICompany } from '../../../../../models/company.model';
 
 @Component({
   selector: 'alto-team-performance',
@@ -88,7 +89,7 @@ export class TeamPerformanceComponent implements OnInit {
   ngOnInit(): void {
     this.teamId = this.router.url.split('/').pop() || '';
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.team = (data[EResolverData.AppData] as IAppData).teamById.get(this.teamId) as Team;
+    this.team = (data[EResolverData.AppData] as IAppData).company.teams.find((u) => u.id === this.teamId) as Team;
     this.members = Array.from((data[EResolverData.AppData] as IAppData).userById.values()).filter(
       (u) => u.teamId === this.teamId,
     );

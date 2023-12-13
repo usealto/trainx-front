@@ -5,6 +5,7 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { IAppData } from '../../../../../core/resolvers';
+import { ICompany } from '../../../../../models/company.model';
 
 @Component({
   selector: 'alto-statistics-details',
@@ -35,7 +36,7 @@ export class StatisticsDetailsComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     const users = Array.from((data[EResolverData.AppData] as IAppData).userById.values());
-    const teams = Array.from((data[EResolverData.AppData] as IAppData).teamById.values());
+    const teams = (data[EResolverData.Company] as ICompany).teams;
 
     this.type = this.router.url.split('/')[3] === 'team' ? 'team' : 'user';
     this.id = this.router.url.split('/').pop() || '';

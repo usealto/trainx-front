@@ -16,6 +16,7 @@ import { QuestionFormComponent } from 'src/app/modules/shared/components/questio
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { IAppData } from '../../../../core/resolvers';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
+import { ICompany } from '../../../../models/company.model';
 
 @UntilDestroy()
 @Component({
@@ -32,7 +33,7 @@ export class CommentCardComponent implements OnInit {
   AltoRoutes = AltoRoutes;
 
   users!: Map<string, User>;
-  teams!: Map<string, Team>;
+  teams!: Team[];
 
   constructor(
     private readonly modalService: NgbModal,
@@ -48,7 +49,7 @@ export class CommentCardComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.users = (data[EResolverData.AppData] as IAppData).userById;
-    this.teams = (data[EResolverData.AppData] as IAppData).teamById;
+    this.teams = (data[EResolverData.AppData] as IAppData).company.teams;
   }
 
   archiveComment(): void {
@@ -97,7 +98,7 @@ export class CommentCardComponent implements OnInit {
 
   getTeam(userId: string): Team | undefined {
     const u = this.users.get(userId);
-    return this.teams.get(u?.teamId || '');
+    return this.teams.find((t) => t.id === u?.teamId);
   }
 
   openQuestionForm(question?: QuestionLightDtoApi) {

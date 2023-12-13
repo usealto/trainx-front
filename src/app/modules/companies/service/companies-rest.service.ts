@@ -28,15 +28,11 @@ export class CompaniesRestService {
       .pipe(map(({ data }) => (data ? Company.fromDto(data) : undefined)));
   }
 
-  getMyCompany(): Observable<CompanyDtoApi> {
-    if (this.companiesStore.myCompany.value) {
-      return this.companiesStore.myCompany.value$;
-    } else {
-      return this.companyApi.getCompanyById({ id: this.userStore.user.value.companyId }).pipe(
-        map((company) => company.data ?? ({} as CompanyDtoApi)),
-        tap((comp) => (this.companiesStore.myCompany.value = comp)),
-      );
-    }
+  // à supprimer
+  getMyCompany(): Observable<Company> {
+    return this.companyApi.getCompanyById({ id: this.userStore.user.value.companyId }).pipe(
+      map((company) => Company.fromDto(company.data as CompanyDtoApi)),
+    );
   }
 
   patchCompany(id: string, patchCompanyDtoApi: PatchCompanyDtoApi): Observable<Company> {

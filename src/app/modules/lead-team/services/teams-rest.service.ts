@@ -39,8 +39,8 @@ export class TeamsRestService {
         }
         return combineLatest(reqs);
       }),
-      map((usersDtos) => {
-        return usersDtos.flat().map(Team.fromDto);
+      map((teamsDtos) => {
+        return teamsDtos.flat().map(Team.fromDto);
       }),
     );
   }

@@ -22,6 +22,7 @@ import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
 import { IAppData } from 'src/app/core/resolvers';
+import { ICompany } from '../../../../models/company.model';
 
 interface TeamDisplay extends TeamDtoApi {
   score?: number;
@@ -85,7 +86,7 @@ export class LeadTeamComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.rawUsers = Array.from((data[EResolverData.AppData] as IAppData).userById.values());
-    this.teamNames = Array.from((data[EResolverData.AppData] as IAppData).teamById.values()).map(
+    this.teamNames = (data[EResolverData.Company] as ICompany).teams.map(
       (teams) => teams.name,
     );
     this.loadData();

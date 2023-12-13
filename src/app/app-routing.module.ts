@@ -29,6 +29,7 @@ import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
 import { companyResolver } from './core/resolvers/company.resolver';
 import { teamStatsResolver } from './core/resolvers/teamStats.resolver';
+import { teamsResolver } from './core/resolvers/teams.resolver';
 
 const routes: Routes = [
   {
@@ -76,7 +77,6 @@ const routes: Routes = [
         canActivate: [leadAccessGuard],
         resolve: {
           leadData: leadResolver,
-          company: companyResolver,
           teamStats: teamStatsResolver,
         },
         children: [

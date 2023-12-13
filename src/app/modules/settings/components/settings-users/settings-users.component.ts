@@ -66,8 +66,8 @@ export class SettingsUsersComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.me = (data[EResolverData.AppData] as IAppData).me;
-    this.company = data[EResolverData.Company] as Company;
-    this.teams = Array.from((data[EResolverData.AppData] as IAppData).teamById.values());
+    this.company = (data[EResolverData.AppData] as IAppData).company;
+    this.teams = (data[EResolverData.AppData] as IAppData).company.teams;
 
     this.store
       .select(FromRoot.selectUsers)

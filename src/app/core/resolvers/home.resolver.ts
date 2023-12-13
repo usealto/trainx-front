@@ -24,8 +24,8 @@ export const homeResolver: ResolveFn<IHomeData> = () => {
     inject(QuestionsSubmittedRestService).getQuestionsCount({
       status: QuestionSubmittedStatusEnumApi.Submitted,
     }),
-    inject(ScoresRestService).getTeamsStats(ScoreDuration.Trimester),
-    inject(ScoresRestService).getTeamsStats(ScoreDuration.Trimester, true),
+    inject(ScoresRestService).getTeamsStats(ScoreDuration.Year),
+    inject(ScoresRestService).getTeamsStats(ScoreDuration.Year, true),
   ]).pipe(
     map(([comments, questionsCount, teamsStats, previousTeamsStats]) => ({
       comments,

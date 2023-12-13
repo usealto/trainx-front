@@ -72,7 +72,7 @@ export class TeamEngagementComponent implements OnInit {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
 
     const teamId = this.router.url.split('/').pop() || '';
-    this.team = (data[EResolverData.AppData] as IAppData).teamById.get(teamId) as Team;
+    this.team = (data[EResolverData.AppData] as IAppData).company.teams.find((u) => u.id === teamId) as Team;
     this.company = (data[EResolverData.Company] as Company) ?? new Company({} as ICompany);
 
     this.loadPage();

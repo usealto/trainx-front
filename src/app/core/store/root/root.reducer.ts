@@ -8,11 +8,12 @@ import {
   setCompany,
   updateCompany,
   setTeams,
-  setTimestamp,
+  setTeamsStatsTimestamp,
+  setTeamsTimestamp,
   setUserMe,
   setUsers,
   patchUser,
-  addTeamStats,
+  setTeamsStats,
 } from '../root/root.action';
 
 export class TimestampedEntity<T> {
@@ -33,26 +34,31 @@ export interface RootState {
   me: TimestampedEntity<User>;
   company: TimestampedEntity<Company>;
   usersById: TimestampedEntity<Map<string, User>>;
-  teamsById: TimestampedEntity<Map<string, Team>>;
-  teamsStatsByTeamId: TimestampedEntity<Map<string, TeamStats[]>>;
-  statsTimestamp?: Date;
+  teamsStatsTimestamp?: Date;
+  teamsTimestamp?: Date;
 }
+
 
 export const initialState: RootState = {
   me: new TimestampedEntity<User>(new User({} as IUser), null),
   company: new TimestampedEntity<Company>(new Company({} as ICompany), null),
   usersById: new TimestampedEntity<Map<string, User>>(new Map(), null),
-  teamsById: new TimestampedEntity<Map<string, Team>>(new Map(), null),
-  teamsStatsByTeamId: new TimestampedEntity<Map<string, TeamStats[]>>(new Map(), null),
 };
 
 export const rootReducer = createReducer(
   initialState,
   on(
-    setTimestamp,
+    setTeamsStatsTimestamp,
     (state, { date }): RootState => ({
       ...state,
-      statsTimestamp: date,
+      teamsStatsTimestamp: date,
+    }),
+  ),
+  on(
+    setTeamsTimestamp,
+    (state, { date }): RootState => ({
+      ...state,
+      teamsTimestamp: date,
     }),
   ),
   on(
@@ -98,13 +104,16 @@ export const rootReducer = createReducer(
       ),
     }),
   ),
-  on(
-    setTeams,
-    (state, { teams }): RootState => ({
+  on(setTeams, (state, { teams }): RootState => {
+    const company = state.company.data;
+    company.teams = teams;
+
+    return {
       ...state,
-      teamsById: new TimestampedEntity(new Map<string, Team>(teams.map((team) => [team.id, team]))),
-    }),
-  ),
+      company: new TimestampedEntity(company),
+      teamsTimestamp: new Date(),
+    };
+  }),
   on(
     setCompany,
     (state, { company }): RootState => ({
@@ -119,19 +128,25 @@ export const rootReducer = createReducer(
       company: new TimestampedEntity(company), // Met à jour l'état de l'entreprise
     }),
   ),
-  on(
-    addTeamStats, 
-    (state, { teamStats }): RootState => {
-      const newTeamsStatsByTeamId = new Map<string, TeamStats[]>();
+  on(setTeamsStats, (state, { teamStats }): RootState => {
+    console.log('company');
+    const company = new Company(state.company.data);
+    const newTeamsStatsByTeamId = new Map<string, TeamStats[]>();
 
-      teamStats.forEach((stat) => {
-        const currentStats = newTeamsStatsByTeamId.get(stat.teamId) || [];
-        newTeamsStatsByTeamId.set(stat.teamId, [...currentStats, stat]);
-      });
+    teamStats.forEach((stat) => {
+      const currentStats = newTeamsStatsByTeamId.get(stat.teamId) || [];
+      newTeamsStatsByTeamId.set(stat.teamId, [...currentStats, stat]);
+    });
 
-      return {
-        ...state,
-        teamsStatsByTeamId: new TimestampedEntity(newTeamsStatsByTeamId, new Date()),
-      };
-    }),
+    company.teams.forEach((team) => {
+      team.stats = newTeamsStatsByTeamId.get(team.id) || [];
+    });
+
+    console.log('company end of reducer stats', company);
+
+    return {
+      ...state,
+      company: new TimestampedEntity(company),
+    };
+  }),
 );

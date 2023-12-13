@@ -6,6 +6,7 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { BaseStats, IBaseStats, IRanking, Ranking } from './stats.model';
 import { compareAsc } from 'date-fns';
+import { ITeam, Team } from './team.model';
 
 export interface ICompany {
   id: string;
@@ -24,6 +25,7 @@ export interface ICompany {
   deletedAt?: Date;
   stats: ICompanyStats[];
   licenseCount: number;
+  teams: ITeam[];
 }
 
 export class Company implements ICompany {
@@ -43,6 +45,7 @@ export class Company implements ICompany {
   deletedAt?: Date;
   stats: CompanyStats[];
   licenseCount: number;
+  teams: Team[];
 
   constructor(data: ICompany) {
     this.id = data.id ?? '';
@@ -60,6 +63,7 @@ export class Company implements ICompany {
     this.updatedAt = data.updatedAt ?? new Date();
     this.stats = [];
     this.licenseCount = data.licenseCount ?? 0;
+    this.teams = data.teams ? data.teams.map(team => new Team(team)) : [];
   }
 
   static fromDto(data: CompanyDtoApi): Company {
@@ -79,6 +83,7 @@ export class Company implements ICompany {
       updatedAt: data.updatedAt,
       stats: [],
       licenseCount: data.licenseCount,
+      teams: [],
     });
   }
 
@@ -118,6 +123,7 @@ export class Company implements ICompany {
       deletedAt: this.deletedAt,
       stats: this.stats.map((s) => s.rawData),
       licenseCount: this.licenseCount,
+      teams: this.teams.map(team => team.rawData),
     };
   }
 }

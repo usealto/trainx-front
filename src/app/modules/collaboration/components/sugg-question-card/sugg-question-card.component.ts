@@ -19,6 +19,7 @@ import { QuestionFormComponent } from 'src/app/modules/shared/components/questio
 import { IAppData } from '../../../../core/resolvers';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
 import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
+import { ICompany } from '../../../../models/company.model';
 
 @UntilDestroy()
 @Component({
@@ -34,7 +35,7 @@ export class SuggQuestionCardComponent implements OnInit {
   I18ns = I18ns;
   StatusEnum = QuestionSubmittedDtoApiStatusEnumApi;
   users: Map<string, User> = new Map();
-  teams: Map<string, Team> = new Map();
+  teams: Team[] = [];
 
   constructor(
     private readonly modalService: NgbModal,
@@ -49,7 +50,7 @@ export class SuggQuestionCardComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.users = (data[EResolverData.AppData] as IAppData).userById;
-    this.teams = (data[EResolverData.AppData] as IAppData).teamById;
+    this.teams = (data[EResolverData.AppData] as IAppData).company.teams;
   }
 
   refuseQuestion() {
@@ -123,6 +124,6 @@ export class SuggQuestionCardComponent implements OnInit {
 
   getTeam(userId: string): TeamLightDtoApi | undefined {
     const u = this.users.get(userId);
-    return this.teams.get(u?.teamId || '');
+    return this.teams.find((t) => t.id === u?.teamId);
   }
 }

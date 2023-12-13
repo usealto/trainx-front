@@ -25,6 +25,7 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
 import { ToastService } from '../../../../../core/toast/toast.service';
 import { StatisticsService } from '../../../services/statistics.service';
+import { ICompany } from '../../../../../models/company.model';
 
 @Component({
   selector: 'alto-user-performance',
@@ -69,14 +70,18 @@ export class UserPerformanceComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     const usersById = (data[EResolverData.AppData] as IAppData).userById;
-    const teamsById = (data[EResolverData.AppData] as IAppData).teamById;
+    const teamsById = (data[EResolverData.AppData] as IAppData).company.teams;
     const userId = this.router.url.split('/').pop() || '';
     this.user = usersById.get(userId) || new User({} as IUser);
-    if (!this.user.teamId || this.user.teamId === '' || teamsById.get(this.user.teamId) === undefined) {
+    if (
+      !this.user.teamId ||
+      this.user.teamId === '' ||
+      teamsById.find((t) => t.id === this.user.teamId) === undefined
+    ) {
       this.location.back();
       this.toastService.show({ type: 'danger', text: I18ns.statistics.user.toasts.noTeam });
     } else {
-      this.userTeam = teamsById.get(this.user.teamId) as Team;
+      this.userTeam = teamsById.find((t) => t.id === this.user.teamId) as Team;
     }
 
     this.tagsRestService

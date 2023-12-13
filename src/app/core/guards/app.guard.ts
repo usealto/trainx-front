@@ -7,11 +7,15 @@ import { CompaniesRestService } from '../../modules/companies/service/companies-
 import { UsersRestService } from '../../modules/profile/services/users-rest.service';
 import { setCompany, setUserMe } from '../store/root/root.action';
 import * as FromRoot from '../store/store.reducer';
+import { Company, ICompany } from '../../models/company.model';
+import { TeamsRestService } from '../../modules/lead-team/services/teams-rest.service';
 
 export const AppGuard: CanActivateFn = () => {
   const store = inject<Store<FromRoot.AppState>>(Store<FromRoot.AppState>);
   const usersRestService = inject<UsersRestService>(UsersRestService);
   const companiesRestService = inject<CompaniesRestService>(CompaniesRestService);
+  const teamsRestService = inject<TeamsRestService>(TeamsRestService);
+
   const router = inject(Router);
 
   return store.select(FromRoot.selectUserMe).pipe(
@@ -37,14 +41,18 @@ export const AppGuard: CanActivateFn = () => {
         switchMap(([user, timestampedCompany]) => {
           return timestampedCompany.needsUpdate()
             ? companiesRestService.getCompanyById(user.companyId).pipe(
-                map((company) => {
-                  if (company) {
-                    store.dispatch(setCompany({ company }));
-                  }
-                  return company;
-                }),
-              )
-            : of(timestampedCompany);
+              withLatestFrom(teamsRestService.getTeams()),
+              switchMap(([company, teams]) => {
+                const updatedCompany = company ?? new Company({} as ICompany);
+                const companyWithTeams = new Company({...updatedCompany.rawData, teams: teams.map(team => team.rawData)});
+
+                console.log('companyWithTeams : ', companyWithTeams);
+
+                store.dispatch(setCompany({company: companyWithTeams}));
+                return store.select(FromRoot.selectCompany);
+              })
+            )
+            : of(timestampedCompany)
         }),
         map((company) => {
           if (!company) {

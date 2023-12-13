@@ -4,6 +4,7 @@ import { IAppData } from 'src/app/core/resolvers';
 import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
+import { Company, ICompany } from '../../../../../models/company.model';
 
 @Component({
   selector: 'alto-statistics-details-engagement',
@@ -23,12 +24,12 @@ export class StatisticsDetailsEngagementComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     const users = (data[EResolverData.AppData] as IAppData).userById;
-    const teams = (data[EResolverData.AppData] as IAppData).teamById;
+    const teams = (data[EResolverData.AppData] as IAppData).company.teams;
 
     const id = this.router.url.split('/').pop() || '';
     this.type = this.router.url.split('/')[3] === 'team' ? 'team' : 'user';
     if (this.type === 'team') {
-      this.team = teams.get(id) || ({} as Team);
+      this.team = teams.find((t) => t.id === id) || ({} as Team);
     } else {
       this.user = users.get(id) || ({} as User);
     }

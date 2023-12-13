@@ -21,6 +21,7 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
+import { ICompany } from '../../../../../models/company.model';
 
 @UntilDestroy()
 @Component({
@@ -60,7 +61,7 @@ export class PerformanceByThemesComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['duration']) {
       const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-      this.teams = Array.from((data[EResolverData.AppData] as IAppData).teamById.values()).map((t) => ({
+      this.teams = (data[EResolverData.Company] as ICompany).teams.map((t) => ({
         label: t.name,
         id: t.id,
       }));
