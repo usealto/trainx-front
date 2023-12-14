@@ -3,6 +3,7 @@ import { ResolveFn } from '@angular/router';
 import { Store } from '@ngrx/store';
 
 import { Observable, combineLatest, map, of, switchMap } from 'rxjs';
+import { Company } from '../../models/company.model';
 import { Team } from '../../models/team.model';
 import { User } from '../../models/user.model';
 import { TeamsRestService } from '../../modules/lead-team/services/teams-rest.service';
@@ -15,6 +16,7 @@ export interface IAppData {
   me: User;
   teamById: Map<string, Team>;
   userById: Map<string, User>;
+  company: Company;
 }
 
 export const appResolver: ResolveFn<Observable<IAppData>> = () => {
@@ -52,5 +54,13 @@ export const appResolver: ResolveFn<Observable<IAppData>> = () => {
           : of(teams);
       }),
     ),
-  ]).pipe(map(([{ data: me }, { data: userById }, { data: teamById }]) => ({ me, userById, teamById })));
+    store.select(FromRoot.selectCompany),
+  ]).pipe(
+    map(([{ data: me }, { data: userById }, { data: teamById }, { data: company }]) => ({
+      me,
+      userById,
+      teamById,
+      company,
+    })),
+  );
 };
