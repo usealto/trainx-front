@@ -45,9 +45,11 @@ export class ProfileAccountComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.user = (data[EResolverData.AppData] as IAppData).me;
-    this.teamsById = (data[EResolverData.AppData] as IAppData).teamById;
-    this.company = data[EResolverData.Company] as Company;
+    const appData = data[EResolverData.AppData] as IAppData;
+
+    this.user = appData.me;
+    this.teamsById = appData.teamById;
+    this.company = appData.company;
     this.userTeam = this.user.teamId ? this.teamsById.get(this.user.teamId) || ({} as Team) : ({} as Team);
     this.initForm();
   }
