@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import {
+  AppGuard,
   PreventSmallScreenGuard,
   altoAdminGuard,
-  AppGuard,
   leadAccessGuard,
   userAccessGuard,
 } from './core/guards';
@@ -15,8 +15,8 @@ import {
   leadResolver,
   noSplashScreenResolver,
   programResolver,
-  trainingResolver,
 } from './core/resolvers';
+import { companyResolver } from './core/resolvers/company.resolver';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
 import { JwtComponent } from './layout/jwt/jwt.component';
@@ -27,7 +27,6 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
-import { companyResolver } from './core/resolvers/company.resolver';
 
 const routes: Routes = [
   {
@@ -59,9 +58,6 @@ const routes: Routes = [
           },
           {
             path: AltoRoutes.training,
-            resolve: {
-              appData: trainingResolver,
-            },
             loadChildren: () => import('./modules/training/training.module').then((m) => m.TrainingModule),
           },
           {
