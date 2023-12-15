@@ -275,3 +275,10 @@ textarea.form-control:focus {
     --bs-modal-width: 400px;
   }
 }
+
+// Bootstrap 5 automatically sets scroll-behavior: smooth; on html
+// which is painful when changing pages and scrolling.
+// see https://stackoverflow.com/questions/69585152/angular-scrollpositionrestoration-without-animation-smooth-scrolling
+html {
+  scroll-behavior: auto !important;
+}
