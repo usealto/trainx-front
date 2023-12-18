@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
@@ -34,8 +34,8 @@ export class StatisticsDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    const users = Array.from((data[EResolverData.AppData] as IAppData).userById.values());
-    const teams = Array.from((data[EResolverData.AppData] as IAppData).teamById.values());
+    const users = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
+    const teams = Array.from((data[EResolvers.AppResolver] as IAppData).teamById.values());
 
     this.type = this.router.url.split('/')[3] === 'team' ? 'team' : 'user';
     this.id = this.router.url.split('/').pop() || '';

@@ -10,7 +10,7 @@ import {
   UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { combineLatest, map, tap } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { Company, ICompany } from 'src/app/models/company.model';
@@ -72,8 +72,8 @@ export class TeamEngagementComponent implements OnInit {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
 
     const teamId = this.router.url.split('/').pop() || '';
-    this.team = (data[EResolverData.AppData] as IAppData).teamById.get(teamId) as Team;
-    this.company = (data[EResolverData.Company] as Company) ?? new Company({} as ICompany);
+    this.team = (data[EResolvers.AppResolver] as IAppData).teamById.get(teamId) as Team;
+    this.company = (data[EResolvers.CompanyResolver] as Company) ?? new Company({} as ICompany);
 
     this.loadPage();
   }

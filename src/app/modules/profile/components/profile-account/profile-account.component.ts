@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -45,7 +45,7 @@ export class ProfileAccountComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    const appData = data[EResolverData.AppData] as IAppData;
+    const appData = data[EResolvers.AppResolver] as IAppData;
 
     this.user = appData.me;
     this.teamsById = appData.teamById;
