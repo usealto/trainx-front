@@ -12,7 +12,7 @@ import {
   UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { combineLatest, tap } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -88,8 +88,8 @@ export class TeamPerformanceComponent implements OnInit {
   ngOnInit(): void {
     this.teamId = this.router.url.split('/').pop() || '';
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.team = (data[EResolverData.AppData] as IAppData).teamById.get(this.teamId) as Team;
-    this.members = Array.from((data[EResolverData.AppData] as IAppData).userById.values()).filter(
+    this.team = (data[EResolvers.AppResolver] as IAppData).teamById.get(this.teamId) as Team;
+    this.members = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values()).filter(
       (u) => u.teamId === this.teamId,
     );
     this.selectedMembers = this.members.slice(0, 3);
