@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { map, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { IUser, User } from 'src/app/models/user.model';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { EResolverData, ResolversService } from '../../core/resolvers/resolvers.service';
 import { IAppData } from '../../core/resolvers';
+import { EResolvers, ResolversService } from '../../core/resolvers/resolvers.service';
 
 @UntilDestroy()
 @Component({
@@ -36,7 +36,7 @@ export class MenuComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversSerivce.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.me = (data[EResolverData.AppData] as IAppData).me;
+    this.me = (data[EResolvers.AppResolver] as IAppData).me;
     this.isAdmin = this.me.isAltoAdmin() || this.me.isCompanyAdmin();
 
     const segments = window.location.pathname.split('/');

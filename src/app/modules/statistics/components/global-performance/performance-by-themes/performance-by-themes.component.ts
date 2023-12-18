@@ -10,7 +10,7 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { Observable, switchMap, tap } from 'rxjs';
 import { IAppData } from 'src/app/core/resolvers';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
@@ -60,7 +60,7 @@ export class PerformanceByThemesComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['duration']) {
       const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-      this.teams = Array.from((data[EResolverData.AppData] as IAppData).teamById.values()).map((t) => ({
+      this.teams = Array.from((data[EResolvers.AppResolver] as IAppData).teamById.values()).map((t) => ({
         label: t.name,
         id: t.id,
       }));

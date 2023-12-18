@@ -4,11 +4,11 @@ import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TeamDtoApi, TeamStatsDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { combineLatest, switchMap, tap } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { IAppData } from 'src/app/core/resolvers';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { UserFilters } from 'src/app/modules/profile/models/user.model';
@@ -21,7 +21,6 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
-import { IAppData } from 'src/app/core/resolvers';
 
 interface TeamDisplay extends TeamDtoApi {
   score?: number;
@@ -84,8 +83,8 @@ export class LeadTeamComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.rawUsers = Array.from((data[EResolverData.AppData] as IAppData).userById.values());
-    this.teamNames = Array.from((data[EResolverData.AppData] as IAppData).teamById.values()).map(
+    this.rawUsers = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
+    this.teamNames = Array.from((data[EResolvers.AppResolver] as IAppData).teamById.values()).map(
       (teams) => teams.name,
     );
     this.loadData();

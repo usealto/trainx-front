@@ -8,7 +8,7 @@ import {
   ScoreTypeEnumApi,
 } from '@usealto/sdk-ts-angular';
 import { combineLatest } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ITeam, Team } from 'src/app/models/team.model';
@@ -53,8 +53,8 @@ export class UserEngagementComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    const usersById = (data[EResolverData.AppData] as IAppData).userById;
-    const teamsById = (data[EResolverData.AppData] as IAppData).teamById;
+    const usersById = (data[EResolvers.AppResolver] as IAppData).userById;
+    const teamsById = (data[EResolvers.AppResolver] as IAppData).teamById;
     const userId = this.router.url.split('/').pop() || '';
     this.user = usersById.get(userId) || new User({} as IUser);
     this.userTeam = teamsById.get(this.user.teamId || '') || new Team({} as ITeam);
@@ -74,7 +74,7 @@ export class UserEngagementComponent implements OnInit {
       this.scoreRestService.getScores(this.getScoreparams('comments', duration)),
     ]).subscribe(([answers, comments]) => {
       this.contributionChartStatus = answers.scores.length || comments.scores.length ? 'good' : 'empty';
-      if(answers.scores.length || comments.scores.length) {
+      if (answers.scores.length || comments.scores.length) {
         this.createContributionChart(comments.scores, answers.scores, duration);
       }
     });
@@ -147,7 +147,7 @@ export class UserEngagementComponent implements OnInit {
     this.answersChartStatus = 'loading';
     this.scoreRestService.getScores(this.getScoreparams('answers', duration)).subscribe((res) => {
       this.answersChartStatus = res.scores.length ? 'good' : 'empty';
-      if(res.scores.length){
+      if (res.scores.length) {
         this.createAnswersChart(res.scores[0], duration);
       }
     });

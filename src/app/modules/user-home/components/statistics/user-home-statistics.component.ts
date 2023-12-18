@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import { combineLatest, map, tap } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
@@ -42,7 +42,6 @@ export class UserHomeStatisticsComponent implements OnInit {
   averageFinishedPrograms = 0;
   finishedProgramsCountProgression = 0;
 
-
   EmojiName = EmojiName;
   userChartStatus: PlaceholderDataStatus = 'loading';
   userChartOptions!: EChartsOption;
@@ -60,9 +59,9 @@ export class UserHomeStatisticsComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.user = (data[EResolverData.AppData] as IAppData).me;
-    const teamsById = (data[EResolverData.AppData] as IAppData).teamById;
-    this.userTeam = teamsById.get(this.user.teamId as string) as Team
+    this.user = (data[EResolvers.AppResolver] as IAppData).me;
+    const teamsById = (data[EResolvers.AppResolver] as IAppData).teamById;
+    this.userTeam = teamsById.get(this.user.teamId as string) as Team;
     this.getScore();
     this.getUserChartScores(this.statisticsDuration);
     this.getFinishedPrograms();
@@ -99,13 +98,23 @@ export class UserHomeStatisticsComponent implements OnInit {
         : ScoreTimeframeEnumApi.Day;
 
     combineLatest([
-      this.scoresRestService.getScores({type:ScoreTypeEnumApi.User, duration: this.statisticsDuration, ids: [this.user.id], timeframe: timeframe(this.statisticsDuration)}),
-      this.scoresRestService.getScores({type:ScoreTypeEnumApi.Team, duration: this.statisticsDuration, ids: [this.userTeam.id], timeframe: timeframe(this.statisticsDuration)}),
+      this.scoresRestService.getScores({
+        type: ScoreTypeEnumApi.User,
+        duration: this.statisticsDuration,
+        ids: [this.user.id],
+        timeframe: timeframe(this.statisticsDuration),
+      }),
+      this.scoresRestService.getScores({
+        type: ScoreTypeEnumApi.Team,
+        duration: this.statisticsDuration,
+        ids: [this.userTeam.id],
+        timeframe: timeframe(this.statisticsDuration),
+      }),
     ])
       .pipe(
         tap(([userScores, teamScores]) => {
           this.userChartStatus = userScores.scores.length > 0 ? 'good' : 'empty';
-          if(userScores.scores.length > 0){
+          if (userScores.scores.length > 0) {
             this.createUserChart(userScores.scores[0], teamScores.scores[0], duration);
           }
         }),
@@ -187,15 +196,18 @@ export class UserHomeStatisticsComponent implements OnInit {
       duration,
     );
 
-    const dataSets = [userScores, teamScores].map((scores,i) => {
+    const dataSets = [userScores, teamScores].map((scores, i) => {
       const d = this.statisticsService.transformDataToPoint(scores);
       return {
-        label: (i === 0) ? I18ns.userHome.statistics.progression.you : I18ns.userHome.statistics.progression.yourTeam + ` (${scores.label}) `,
+        label:
+          i === 0
+            ? I18ns.userHome.statistics.progression.you
+            : I18ns.userHome.statistics.progression.yourTeam + ` (${scores.label}) `,
         data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
       };
     });
 
-    const series = dataSets.map((d,i) => {
+    const series = dataSets.map((d, i) => {
       return {
         name: d.label,
         data: d.data,
@@ -206,7 +218,7 @@ export class UserHomeStatisticsComponent implements OnInit {
             return (value as number) + '%';
           },
         },
-        lineStyle: (i === 0) ? {} : {type: 'dashed'},
+        lineStyle: i === 0 ? {} : { type: 'dashed' },
       };
     });
 
@@ -214,7 +226,7 @@ export class UserHomeStatisticsComponent implements OnInit {
       xAxis: [{ ...xAxisDatesOptions, data: labels }],
       yAxis: [{ ...yAxisScoreOptions, axisLabel: { show: false } }],
       series: series as SeriesOption[],
-      legend: {...legendOptions, top:5 },
+      legend: { ...legendOptions, top: 5 },
     };
   }
 

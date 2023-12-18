@@ -20,7 +20,6 @@ import { QuestionsRestService } from '../../services/questions-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 import { TagsServiceService } from '../../services/tags-service.service';
 import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
-import { ResolversService } from '../../../../core/resolvers/resolvers.service';
 
 interface TagDisplay extends TagDtoApi {
   score?: number;

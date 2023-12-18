@@ -5,10 +5,11 @@ import { IAppData } from './app.resolver';
 import { IHomeData } from './home.resolver';
 import { ILeadResolverData } from './lead.resolver';
 
-export enum EResolverData {
-  AppData = 'appData',
-  HomeData = 'homeData',
-  Company = 'company',
+export enum EResolvers {
+  AppResolver = 'appResolver',
+  LeadResolver = 'leadResolver',
+  CompanyResolver = 'companyResolver',
+  HomeResolver = 'homeResolver',
 }
 
 export type ResolverData = {

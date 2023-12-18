@@ -10,7 +10,7 @@ import {
   TagStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { combineLatest, tap } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { Team } from 'src/app/models/team.model';
@@ -68,8 +68,8 @@ export class UserPerformanceComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    const usersById = (data[EResolverData.AppData] as IAppData).userById;
-    const teamsById = (data[EResolverData.AppData] as IAppData).teamById;
+    const usersById = (data[EResolvers.AppResolver] as IAppData).userById;
+    const teamsById = (data[EResolvers.AppResolver] as IAppData).teamById;
     const userId = this.router.url.split('/').pop() || '';
     this.user = usersById.get(userId) || new User({} as IUser);
     if (!this.user.teamId || this.user.teamId === '' || teamsById.get(this.user.teamId) === undefined) {
@@ -184,7 +184,7 @@ export class UserPerformanceComponent implements OnInit {
       .pipe(
         tap((res) => {
           this.tagsChartStatus = res.scores.length > 0 ? 'good' : 'empty';
-          if(res.scores.length > 0){ 
+          if (res.scores.length > 0) {
             this.createTagsChart(res.scores, duration);
           }
         }),
@@ -238,9 +238,9 @@ export class UserPerformanceComponent implements OnInit {
       this.scoresRestService.getScores(this.getScoreParams('team', duration)),
     ])
       .pipe(
-        tap(([userScores, teamScores]) => {          
+        tap(([userScores, teamScores]) => {
           this.userChartStatus = userScores.scores.length > 0 ? 'good' : 'empty';
-          if(userScores.scores.length > 0){
+          if (userScores.scores.length > 0) {
             this.createUserChart(userScores.scores[0], teamScores.scores[0], duration);
           }
         }),
