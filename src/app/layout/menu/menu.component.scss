@@ -81,9 +81,10 @@
 
 .menu {
   a.module {
-    display: block;
+    display: flex;
+    justify-content: space-around;
     border-radius: 0.3333rem;
-    margin: 0.67rem 1.3333rem;
+    margin: 0.67rem 0rem;
     color: var(--gray-700);
     font-weight: 500;
     font-size: 1.143rem;
@@ -98,6 +99,12 @@
       background-color: var(--alto-blue-second);
       i {
         color: var(--gray-100);
+      }
+    }
+    &:active {
+      background-color: var(--alto-blue-second);
+      i {
+        color: var(--gray-400);
       }
     }
   }
