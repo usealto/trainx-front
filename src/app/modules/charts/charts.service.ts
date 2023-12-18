@@ -10,6 +10,17 @@ export interface ITooltipParams {
   color: string;
   seriesIndex: number;
 }
+export interface initOptions {
+  devicePixelRatio?: number,
+  renderer?: string,
+  useDirtyRect?: boolean,     // Since `5.0.0`
+  useCoarsePointer?: boolean, // Since `5.4.0`
+  pointerSize?: number,       // Since `5.4.0`
+  ssr?: boolean,              // Since `5.3.0`
+  width?: number|string,
+  height?: number|string,
+  locale?: string 
+}
 
 @Injectable({
   providedIn: 'root',

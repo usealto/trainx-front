@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, Input, OnChanges } from '@angular/core';
 import { EChartsOption } from 'echarts';
-import { ChartsService } from '../charts.service';
+import { ChartsService, initOptions } from '../charts.service';
 
 @Component({
   selector: 'alto-chart-basicline',
@@ -9,6 +9,7 @@ import { ChartsService } from '../charts.service';
 })
 export class ChartBasiclineComponent implements OnChanges, AfterViewInit {
   @Input() chartOption?: EChartsOption;
+  @Input() initOptions: initOptions = {}
 
   isLoaded = false;
   lineOptions?: EChartsOption;
