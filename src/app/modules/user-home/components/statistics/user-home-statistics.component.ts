@@ -17,6 +17,7 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { Team } from 'src/app/models/team.model';
+import { EChartsOption, SeriesOption } from 'echarts';
 
 @Component({
   selector: 'alto-user-home-statistics',
@@ -44,7 +45,7 @@ export class UserHomeStatisticsComponent implements OnInit {
 
   EmojiName = EmojiName;
   userChartStatus: PlaceholderDataStatus = 'loading';
-  userChartOptions!: any;
+  userChartOptions!: EChartsOption;
 
   constructor(
     private readonly guessesRestService: GuessesRestService,
@@ -61,11 +62,7 @@ export class UserHomeStatisticsComponent implements OnInit {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.user = (data[EResolverData.AppData] as IAppData).me;
     const teamsById = (data[EResolverData.AppData] as IAppData).teamById;
-    if (!this.user.teamId || this.user.teamId === '' || teamsById.get(this.user.teamId) === undefined) {
-      console.log('error : no team for this user. Should not even be allowed on this page. Guards "noTeam" should be activated');
-    } else {
-      this.userTeam = teamsById.get(this.user.teamId) as Team;
-    }
+    this.userTeam = teamsById.get(this.user.teamId as string) as Team
     this.getScore();
     this.getUserChartScores(this.statisticsDuration);
     this.getFinishedPrograms();
@@ -214,7 +211,7 @@ export class UserHomeStatisticsComponent implements OnInit {
     this.userChartOptions = {
       xAxis: [{ ...xAxisDatesOptions, data: labels }],
       yAxis: [{ ...yAxisScoreOptions, axisLabel: { show: false } }],
-      series: series,
+      series: series as SeriesOption[],
       legend: {...legendOptions, top:5 },
     };
   }
