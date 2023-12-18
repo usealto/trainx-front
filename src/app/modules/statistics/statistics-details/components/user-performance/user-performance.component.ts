@@ -183,8 +183,10 @@ export class UserPerformanceComponent implements OnInit {
       .getScores(this.getScoreParams('tags', duration))
       .pipe(
         tap((res) => {
-          this.createTagsChart(res.scores, duration);
           this.tagsChartStatus = res.scores.length > 0 ? 'good' : 'empty';
+          if(res.scores.length > 0){ 
+            this.createTagsChart(res.scores, duration);
+          }
         }),
       )
       .subscribe();
@@ -236,9 +238,11 @@ export class UserPerformanceComponent implements OnInit {
       this.scoresRestService.getScores(this.getScoreParams('team', duration)),
     ])
       .pipe(
-        tap(([userScores, teamScores]) => {
-          this.createUserChart(userScores.scores[0], teamScores.scores[0], duration);
+        tap(([userScores, teamScores]) => {          
           this.userChartStatus = userScores.scores.length > 0 ? 'good' : 'empty';
+          if(userScores.scores.length > 0){
+            this.createUserChart(userScores.scores[0], teamScores.scores[0], duration);
+          }
         }),
       )
       .subscribe();

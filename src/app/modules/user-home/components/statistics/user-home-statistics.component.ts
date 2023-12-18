@@ -104,8 +104,10 @@ export class UserHomeStatisticsComponent implements OnInit {
     ])
       .pipe(
         tap(([userScores, teamScores]) => {
-          this.createUserChart(userScores.scores[0], teamScores.scores[0], duration);
           this.userChartStatus = userScores.scores.length > 0 ? 'good' : 'empty';
+          if(userScores.scores.length > 0){
+            this.createUserChart(userScores.scores[0], teamScores.scores[0], duration);
+          }
         }),
       )
       .subscribe();

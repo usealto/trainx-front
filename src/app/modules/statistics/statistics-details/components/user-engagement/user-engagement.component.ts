@@ -73,8 +73,10 @@ export class UserEngagementComponent implements OnInit {
       this.scoreRestService.getScores(this.getScoreparams('submitedQuestions', duration)),
       this.scoreRestService.getScores(this.getScoreparams('comments', duration)),
     ]).subscribe(([answers, comments]) => {
-      this.createContributionChart(comments.scores, answers.scores, duration);
       this.contributionChartStatus = answers.scores.length || comments.scores.length ? 'good' : 'empty';
+      if(answers.scores.length || comments.scores.length) {
+        this.createContributionChart(comments.scores, answers.scores, duration);
+      }
     });
   }
 
@@ -144,8 +146,10 @@ export class UserEngagementComponent implements OnInit {
   getAnswersChart(duration: ScoreDuration): void {
     this.answersChartStatus = 'loading';
     this.scoreRestService.getScores(this.getScoreparams('answers', duration)).subscribe((res) => {
-      this.createAnswersChart(res.scores[0], duration);
       this.answersChartStatus = res.scores.length ? 'good' : 'empty';
+      if(res.scores.length){
+        this.createAnswersChart(res.scores[0], duration);
+      }
     });
   }
 
