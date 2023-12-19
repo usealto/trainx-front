@@ -91,18 +91,18 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             : ScoreTimeframeEnumApi.Day,
       })
       .pipe(
-        tap(({ scores }) => (this.guessesDataStatus = scores.length === 0 ? 'noData' : 'good')),
-        filter(({ scores }) => scores.length > 0),
-        tap(({ scores }) => {
-          const reducedScores = this.scoresService.reduceLineChartData(scores);
-          const aggregatedData = this.statisticsServices.transformDataToPointByCounts(reducedScores[0]);
+        tap((scores) => (this.guessesDataStatus = scores.length === 0 ? 'noData' : 'good')),
+        filter((scores) => scores.length > 0),
+        tap((scores) => {
+          const formattedScores = this.scoresService.formatScores(scores);
+          const aggregatedData = this.statisticsServices.transformDataToPointByCounts(formattedScores[0]);
           const labels = this.statisticsServices
             .formatLabel(
               aggregatedData.map((d) => d.x),
               this.duration,
             )
             .map((s) => this.titleCasePipe.transform(s));
-          const dataset = reducedScores.map((s) => {
+          const dataset = formattedScores.map((s) => {
             const d = this.statisticsServices.transformDataToPointByCounts(s);
             return {
               label: s.label,
@@ -188,20 +188,24 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             : ScoreTimeframeEnumApi.Day,
       }),
     ]).pipe(
-      map(([comments, questionsSubmitted]) => {
-        return [comments.scores, questionsSubmitted.scores];
+      map(([commentsScores, questionsSubmittedScores]) => {
+        return [commentsScores, questionsSubmittedScores];
       }),
-      tap(([comments, questionsSubmitted]) => {
+      tap(([commentsScores, questionsSubmittedScores]) => {
         this.collaborationDataStatus =
-          comments.length === 0 && questionsSubmitted.length === 0 ? 'noData' : 'good';
+          commentsScores.length === 0 && questionsSubmittedScores.length === 0 ? 'noData' : 'good';
       }),
-      filter(([comments, questionsSubmitted]) => comments.length > 0 || questionsSubmitted.length > 0),
-      tap(([comments, questionsSubmitted]) => {
-        const reducedComments = this.scoresService.reduceLineChartData(comments);
-        const reducedQuestionsSubmitted = this.scoresService.reduceLineChartData(questionsSubmitted);
-        const aggregatedComments = this.statisticsServices.transformDataToPointByCounts(reducedComments[0]);
+      filter(
+        ([commentsScores, questionsSubmittedScores]) =>
+          commentsScores.length > 0 || questionsSubmittedScores.length > 0,
+      ),
+      tap(([commentsScores, questionsSubmittedScores]) => {
+        const formattedScores = this.scoresService.formatScores(commentsScores);
+        const formattedQuestionsSubmittedScores = this.scoresService.formatScores(questionsSubmittedScores);
+
+        const aggregatedComments = this.statisticsServices.transformDataToPointByCounts(formattedScores[0]);
         const aggregatedQuestionsSubmitted = this.statisticsServices.transformDataToPointByCounts(
-          reducedQuestionsSubmitted[0],
+          formattedQuestionsSubmittedScores[0],
         );
         const labels = this.statisticsServices
           .formatLabel(

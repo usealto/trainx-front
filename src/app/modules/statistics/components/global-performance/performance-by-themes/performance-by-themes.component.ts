@@ -2,12 +2,7 @@ import { TitleCasePipe } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import {
-  ScoreDtoApi,
-  ScoreTimeframeEnumApi,
-  ScoreTypeEnumApi,
-  ScoresResponseDtoApi,
-} from '@usealto/sdk-ts-angular';
+import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import { Observable, switchMap, tap } from 'rxjs';
 import { IAppData } from 'src/app/core/resolvers';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
@@ -20,6 +15,7 @@ import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { Score } from '../../../../../models/score.model';
 import { StatisticsService } from '../../../services/statistics.service';
 
 @UntilDestroy()
@@ -37,8 +33,8 @@ export class PerformanceByThemesComponent implements OnChanges {
   teams: { label: string; id: string }[] = [];
   selectedTeams: { label: string; id: string }[] = [];
 
-  items: ScoreDtoApi[] = [];
-  selectedItems: ScoreDtoApi[] = [];
+  items: Score[] = [];
+  selectedItems: Score[] = [];
   tagsLeaderboard: { name: string; score: number }[] = [];
   tagsDataStatus: PlaceholderDataStatus = 'loading';
 
@@ -80,7 +76,7 @@ export class PerformanceByThemesComponent implements OnChanges {
     }
   }
 
-  getScores(): Observable<ScoresResponseDtoApi> {
+  getScores(): Observable<Score[]> {
     return this.scoresRestService
       .getScores({
         timeframe:
@@ -93,14 +89,14 @@ export class PerformanceByThemesComponent implements OnChanges {
         type: ScoreTypeEnumApi.Tag,
       } as ChartFilters)
       .pipe(
-        tap((res) => {
-          this.items = res.scores.sort((a, b) => a.label.localeCompare(b.label));
-          let filteredItems: ScoreDtoApi[] = res.scores;
+        tap((scores) => {
+          this.items = scores.sort((a, b) => a.label.localeCompare(b.label));
+          let filteredItems: Score[] = scores;
           if (this.init) {
             this.selectedItems = this.items.slice(0, 3);
           }
           if (this.selectedItems.length) {
-            filteredItems = res.scores.filter((s) => this.selectedItems.some((si) => si.id === s.id));
+            filteredItems = scores.filter((s) => this.selectedItems.some((si) => si.id === s.id));
           }
           this.createScoreEvolutionChart(filteredItems, this.duration);
         }),
@@ -108,11 +104,11 @@ export class PerformanceByThemesComponent implements OnChanges {
       );
   }
 
-  createScoreEvolutionChart(scores: ScoreDtoApi[], duration: ScoreDuration) {
-    scores = this.scoresServices.reduceLineChartData(scores);
-    this.scoreCount = scores.length;
-    this.scoreDataStatus = scores.length === 0 ? 'noData' : 'good';
-    const aggregateData = this.statisticsServices.transformDataToPoint(scores[0]);
+  createScoreEvolutionChart(scores: Score[], duration: ScoreDuration) {
+    const formattedScores = this.scoresServices.formatScores(scores);
+    this.scoreCount = formattedScores.length;
+    this.scoreDataStatus = formattedScores.length === 0 ? 'noData' : 'good';
+    const aggregateData = this.statisticsServices.transformDataToPoint(formattedScores[0]);
     const labels = this.statisticsServices
       .formatLabel(
         aggregateData.map((d) => d.x),
@@ -120,7 +116,7 @@ export class PerformanceByThemesComponent implements OnChanges {
       )
       .map((s) => this.titleCasePipe.transform(s));
 
-    const dataSet = scores.map((s) => {
+    const dataSet = formattedScores.map((s) => {
       const d = this.statisticsServices.aggregateDataForScores(s, duration);
       return {
         label: s.label,
@@ -159,7 +155,7 @@ export class PerformanceByThemesComponent implements OnChanges {
     return;
   }
 
-  filterTagsAndPrograms(items: ScoreDtoApi[]) {
+  filterTagsAndPrograms(items: Score[]) {
     this.selectedItems = items;
     this.getScores().subscribe();
   }
