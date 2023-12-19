@@ -58,7 +58,6 @@
       }
       div:hover {
         background-color: var(--gray-700);
-        border-radius: 0.3333rem;
       }
     }
   }
@@ -83,8 +82,7 @@
   a.module {
     display: flex;
     justify-content: space-around;
-    border-radius: 0.3333rem;
-    margin: 0.67rem 0rem;
+    padding: 0.67rem 0rem;
     color: var(--gray-700);
     font-weight: 500;
     font-size: 1.143rem;
@@ -94,17 +92,17 @@
       color: var(--alto-grey);
     }
 
-    &.menu-selected,
     &:hover {
       background-color: var(--alto-blue-second);
       i {
         color: var(--gray-100);
       }
     }
+    &.menu-selected,
     &:active {
       background-color: var(--alto-blue-second);
       i {
-        color: var(--gray-400);
+        color: var(--gray-100);
       }
     }
   }
