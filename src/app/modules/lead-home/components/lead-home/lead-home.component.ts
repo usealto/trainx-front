@@ -141,11 +141,11 @@ export class LeadHomeComponent implements OnInit {
     this.scoresRestService
       .getScores(params)
       .pipe(
-        tap((res) => {
-          this.scoreCount = res.scores.length;
+        tap((scores) => {
+          this.scoreCount = scores.length;
           this.chartDataStatus = this.scoreCount === 0 ? 'noData' : 'good';
-          const scores = this.scoreService.reduceLineChartData(res.scores);
-          const points = this.statisticsServices.transformDataToPoint(scores[0]);
+          const formattedScores = this.scoreService.formatScores(scores);
+          const points = this.statisticsServices.transformDataToPoint(formattedScores[0]);
           const labels = this.statisticsServices
             .formatLabel(
               points.map((p) => p.x),

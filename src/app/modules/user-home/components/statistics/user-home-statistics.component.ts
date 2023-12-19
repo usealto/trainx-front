@@ -18,6 +18,7 @@ import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { Team } from 'src/app/models/team.model';
 import { EChartsOption, SeriesOption } from 'echarts';
+import { Score } from '../../../../models/score.model';
 
 @Component({
   selector: 'alto-user-home-statistics',
@@ -113,9 +114,9 @@ export class UserHomeStatisticsComponent implements OnInit {
     ])
       .pipe(
         tap(([userScores, teamScores]) => {
-          this.userChartStatus = userScores.scores.length > 0 ? 'good' : 'empty';
-          if (userScores.scores.length > 0) {
-            this.createUserChart(userScores.scores[0], teamScores.scores[0], duration);
+          this.userChartStatus = userScores.length > 0 ? 'good' : 'empty';
+          if (userScores.length > 0) {
+            this.createUserChart(userScores[0], teamScores[0], duration);
           }
         }),
       )
@@ -187,16 +188,19 @@ export class UserHomeStatisticsComponent implements OnInit {
       .subscribe();
   }
 
-  createUserChart(userScores: ScoreDtoApi, teamScores: ScoreDtoApi, duration: ScoreDuration): void {
-    const reducedTeamScores = this.scoresService.reduceLineChartData([teamScores])[0];
-    const teamPoints = this.statisticsService.transformDataToPoint(reducedTeamScores);
+  createUserChart(userScores: Score, teamScores: Score, duration: ScoreDuration): void {
+    const [formattedUserScores, formattedTeamScores] = this.scoresService.formatScores([
+      userScores,
+      teamScores,
+    ]);
 
+    const teamPoints = this.statisticsService.transformDataToPoint(formattedTeamScores);
     const labels = this.statisticsService.formatLabel(
       teamPoints.map((d) => d.x),
       duration,
     );
 
-    const dataSets = [userScores, teamScores].map((scores, i) => {
+    const dataSets = [formattedUserScores, formattedTeamScores].map((scores, i) => {
       const d = this.statisticsService.transformDataToPoint(scores);
       return {
         label:
