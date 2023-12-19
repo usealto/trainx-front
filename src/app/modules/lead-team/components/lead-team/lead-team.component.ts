@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TeamDtoApi, TeamStatsDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { combineLatest, switchMap, tap } from 'rxjs';
+import { ProgramDtoApi, TeamDtoApi, TeamStatsDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
+import { Subscription, combineLatest, switchMap, tap } from 'rxjs';
 import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { Team } from 'src/app/models/team.model';
+import { Team, TeamStats } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
 import { UserFilters } from 'src/app/modules/profile/models/user.model';
@@ -22,9 +22,19 @@ import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
 import { IAppData } from 'src/app/core/resolvers';
-import { ICompany } from '../../../../models/company.model';
+import { Company, ICompany } from '../../../../models/company.model';
+import { ITeamStatsData } from '../../../../core/resolvers/teamStats.resolver';
+import { ProgramsRestService } from '../../../programs/services/programs-rest.service';
+import { Program } from '../../../../models/program.model';
+import { IProgramsData } from '../../../../core/resolvers/programs.resolver';
+import { Store } from '@ngrx/store';
+import * as FromRoot from '../../../../core/store/store.reducer';
+import { setTeams } from '../../../../core/store/root/root.action';
 
-interface TeamDisplay extends TeamDtoApi {
+interface TeamDisplay {
+  id: string;
+  name: string;
+  team: Team;
   score?: number;
   totalGuessesCount?: number;
   validGuessesCount?: number;
@@ -42,9 +52,13 @@ export class LeadTeamComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
 
+  company: Company = {} as Company;
+
+  programs: Program[] = [];
+
   // Teams
-  teams: TeamDtoApi[] = [];
-  teamsStats: TeamStatsDtoApi[] = [];
+  teams: Team[] = [];
+  teamsStats: TeamStats[] = [];
   paginatedTeams: TeamDisplay[] = [];
   teamsDataStatus: PlaceholderDataStatus = 'loading';
   teamsPage = 1;
@@ -64,7 +78,7 @@ export class LeadTeamComponent implements OnInit {
   usersTotalQuestions = 0;
   usersTotalQuestionsProgression: number | null = 0;
   usersQuestionProgression = new Map<string, number>();
-  userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
+  userFilters: UserFilters = { teams: [] as Team[], score: '' };
   isFilteredUsers = false;
   selectedItems: UserStatsDtoApi[] = [];
 
@@ -81,35 +95,60 @@ export class LeadTeamComponent implements OnInit {
     private replaceInTranslationPipe: ReplaceInTranslationPipe,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
+    private readonly store: Store<FromRoot.AppState>,
   ) {}
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.rawUsers = Array.from((data[EResolverData.AppData] as IAppData).userById.values());
-    this.teamNames = (data[EResolverData.Company] as ICompany).teams.map(
-      (teams) => teams.name,
-    );
-    this.loadData();
+
+    this.store
+      .select(FromRoot.selectCompany)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: ({ data: company }) => {
+          this.company = company;
+          this.teams = this.company.teams;
+          console.log('hello hello team length:', this.teams.length );
+          this.programs = this.company.programs;
+          this.teamNames = this.teams.map((team) => team.name);
+          this.teamsStats = this.company.getStatsByPeriod(ScoreDuration.Month, false);
+          this.teamsScores = this.teams.map((team) => {
+            const matchingStats = this.teamsStats.find((teamStat) => teamStat.teamId === team.id);
+            if (!matchingStats) {
+              return {
+                id: team.id,
+                name: team.name,
+                team: team,
+                score: 0,
+                totalGuessesCount: 0,
+                validGuessesCount: 0,
+                questionsPushedCount: 0,
+              } as TeamDisplay;
+            }
+
+            return {
+              id: team.id,
+              name: team.name,
+              team: team,
+              score: matchingStats.score,
+              totalGuessesCount: matchingStats.totalGuessesCount,
+              validGuessesCount: matchingStats.validGuessesCount,
+              questionsPushedCount: matchingStats.questionsPushedCount,
+            } as TeamDisplay;
+          });
+          this.loadData();
+        },
+      });
   }
 
   loadData() {
     combineLatest([
-      this.scoreRestService.getTeamsStats(ScoreDuration.Month),
       this.scoreRestService.getUsersStats(ScoreDuration.Month),
       this.scoreRestService.getUsersStats(ScoreDuration.Month, true),
     ])
       .pipe(
-        tap(([teamsStats, usersStats, previousUsersStats]) => {
-          this.teams = teamsStats.map((teamStat) => teamStat.team);
-          this.teamsStats = teamsStats;
-          this.teamsScores = this.teamsStats.map((teamStat) => ({
-            ...teamStat.team,
-            score: teamStat.score,
-            totalGuessesCount: teamStat.totalGuessesCount,
-            validGuessesCount: teamStat.validGuessesCount,
-            questionsPushedCount: teamStat.questionsPushedCount,
-          }));
-
+        tap(([usersStats, previousUsersStats]) => {
           this.users = usersStats;
           this.usersTotalQuestions = usersStats.reduce(
             (prev, curr) => prev + (curr.totalGuessesCount || 0),
@@ -184,19 +223,32 @@ export class LeadTeamComponent implements OnInit {
       this.paginatedUsers.length === 0 ? (this.isFilteredUsers ? 'noResult' : 'noData') : 'good';
   }
 
-  openTeamForm(team?: TeamDtoApi) {
+  openTeamForm(team?: Team) {
     const canvasRef = this.offcanvasService.open(TeamFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
     });
 
-    canvasRef.componentInstance.team = team;
-    canvasRef.componentInstance.users = this.rawUsers;
-    canvasRef.componentInstance.teamNames = this.teamNames;
-    canvasRef.componentInstance.teamChanged.pipe(tap(() => this.loadData())).subscribe();
+    const instance = canvasRef.componentInstance as TeamFormComponent;
+
+    instance.team = team;
+    instance.programs = this.programs;
+    instance.users = this.rawUsers;
+    instance.teamsNames = this.teamNames;
+
+    instance.teamChanged
+      .pipe(
+        switchMap(() => {
+          return this.teamsRestService.getTeams();
+        }),
+        tap((teams) => {
+          this.store.dispatch(setTeams({ teams }));
+        }),
+      )
+      .subscribe();
   }
 
-  deleteTeam(team: TeamDtoApi) {
+  deleteTeam(team: Team) {
     const modalRef = this.modalService.open(DeleteModalComponent, {
       centered: true,
       size: 'md',
@@ -213,13 +265,16 @@ export class LeadTeamComponent implements OnInit {
 
     componentInstance.objectDeleted
       .pipe(
-        switchMap(() => this.teamsRestService.deleteTeam(team.id)),
-        tap(() => {
-          this.teamsRestService.resetCache();
-          this.loadData();
+        switchMap(() => {
+          return this.teamsRestService.deleteTeam(team.id);
+        }),
+        switchMap(() => {
+          return this.teamsRestService.getTeams();
+        }),
+        tap((teams) => {
+          this.store.dispatch(setTeams({ teams }));
           modalRef.close();
         }),
-        untilDestroyed(this),
       )
       .subscribe();
   }
@@ -230,8 +285,10 @@ export class LeadTeamComponent implements OnInit {
       panelClass: 'overflow-auto',
     });
 
-    canvasRef.componentInstance.user = user.user;
-    canvasRef.componentInstance.teams = this.teams;
+    const instance = canvasRef.componentInstance as UserEditFormComponent;
+
+    instance.user = User.fromDto(user.user);
+    instance.teams = this.teams;
     canvasRef.closed.pipe(tap(() => this.loadData())).subscribe();
   }
 

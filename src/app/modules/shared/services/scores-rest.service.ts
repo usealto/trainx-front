@@ -103,6 +103,7 @@ export class ScoresRestService {
       .pipe(map((r) => r.data || []));
   }
 
+  // TODO: remove this method
   getTeamsStats(
     duration: ScoreDuration,
     isProgression = false,
@@ -133,6 +134,7 @@ export class ScoresRestService {
       .pipe(map((r) => r.data || []));
   }
 
+  // Cloned from getTeamsStats() to use in resolver => Return TeamStats[] and not TeamStatsDtoApi[]
   getTeamsStatsObj(
     duration: ScoreDuration,
     isProgression = false,

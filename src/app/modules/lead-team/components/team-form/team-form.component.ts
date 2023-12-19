@@ -12,6 +12,8 @@ import { ProgramsRestService } from 'src/app/modules/programs/services/programs-
 import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 import { TeamForm } from '../../model/team.form';
 import { TeamsRestService } from '../../services/teams-rest.service';
+import { Team } from '../../../../models/team.model';
+import { Program } from '../../../../models/program.model';
 
 @Component({
   selector: 'alto-team-form',
@@ -20,13 +22,13 @@ import { TeamsRestService } from '../../services/teams-rest.service';
 })
 export class TeamFormComponent implements OnInit {
   I18ns = I18ns;
-  @Input() team?: TeamDtoApi;
-  @Output() teamChanged?: EventEmitter<TeamDtoApi> = new EventEmitter<TeamDtoApi>();
-
-  private fb: IFormBuilder = this.fob;
-
+  @Input() team?: Team;
+  @Output() teamChanged: EventEmitter<Team> = new EventEmitter<Team>();
+  @Input() programs: Program[] = [];
   @Input() teamsNames: string[] = [];
   @Input() users: User[] = [];
+
+  private fb: IFormBuilder = this.fob;
 
   teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
     name: [
@@ -38,8 +40,8 @@ export class TeamFormComponent implements OnInit {
   });
 
   isEdit = false;
-  programs: ProgramDtoApi[] = [];
-  userFilters = { teams: [] as TeamDtoApi[] };
+  userFilters = { teams: [] as Team[] };
+  teamPrograms: Program[] = [];
 
   constructor(
     public activeOffcanvas: NgbActiveOffcanvas,
@@ -52,42 +54,52 @@ export class TeamFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (this.team) {
+      const teamId = this.team?.id;
+
+      this.isEdit = true;
+      this.teamPrograms = this.programs.filter((program) => program.teamIds.includes(teamId));
+      this.userFilters.teams.push(this.team);
+      const filteredUsers = this.userService.filterUsers<UserDtoApi[]>(this.users, this.userFilters);
+      this.teamForm.patchValue({
+        name: this.team.name,
+        programs: this.teamPrograms,
+        invitationEmails: filteredUsers,
+      });
+    }
+
     const teamName = this.team?.name.toLowerCase();
     const index = this.teamsNames.indexOf(teamName ?? '');
+
     if (teamName) {
       this.teamsNames.splice(index, 1);
     }
 
-    setTimeout(() => {
-      this.programService
-        .getPrograms()
-        .pipe(tap((programs) => (this.programs = programs)))
-        .subscribe();
+    // setTimeout(() => {
+    //   if (this.team) {
+    //     this.teamsRestService
+    //       .getTeam(this.team.id)
+    //       .pipe(
+    //         tap((d) => {
+    //           if (!d.data) {
+    //             return;
+    //           }
+    //           this.team = Team.fromDto(d.data);
+    //           this.isEdit = true;
+    //           const { name, programs } = d.data;
+    //           this.userFilters.teams.push(this.team);
+    //           const filteredUsers = this.userService.filterUsers<UserDtoApi[]>(this.users, this.userFilters);
 
-      if (this.team) {
-        this.teamsRestService
-          .getTeam(this.team.id)
-          .pipe(
-            tap((d) => {
-              if (!d.data) {
-                return;
-              }
-              this.team = d.data;
-              this.isEdit = true;
-              const { name, programs } = this.team;
-              this.userFilters.teams.push(this.team);
-              const filteredUsers = this.userService.filterUsers<UserDtoApi[]>(this.users, this.userFilters);
-
-              this.teamForm.patchValue({
-                name,
-                programs: programs as ProgramDtoApi[],
-                invitationEmails: filteredUsers,
-              });
-            }),
-          )
-          .subscribe();
-      }
-    });
+    //           this.teamForm.patchValue({
+    //             name,
+    //             programs: Program.fromDto(programs as ProgramDtoApi[]),
+    //             invitationEmails: filteredUsers,
+    //           });
+    //         }),
+    //       )
+    //       .subscribe();
+    //   }
+    // });
   }
 
   createTeam() {
@@ -101,15 +113,13 @@ export class TeamFormComponent implements OnInit {
         .createTeam({ name })
         .pipe(
           switchMap((team) => {
-            this.teamsRestService.resetCache();
             if (team) {
               return combineLatest(this.updateTeamInfos(team, programs, invitationEmails));
             }
             return of(null);
           }),
           tap(() => {
-            this.teamsRestService.resetCache();
-            this.teamChanged?.emit();
+            this.teamChanged.emit();
             this.activeOffcanvas.dismiss();
           }),
         )
@@ -126,7 +136,6 @@ export class TeamFormComponent implements OnInit {
             filter((team) => !!team),
             switchMap((team) => {
               if (team) {
-                this.teamsRestService.resetCache();
                 return combineLatest([
                   ...[of(team)],
                   ...this.updateTeamInfos(team, programs, invitationEmails),
@@ -146,22 +155,23 @@ export class TeamFormComponent implements OnInit {
     }
   }
 
-  updateTeamInfos(team: TeamDtoApi, formProgs: ProgramDtoApi[], members: UserDtoApi[]): Observable<any>[] {
+  updateTeamInfos(team: Team, formProgs: Program[], members: UserDtoApi[]): Observable<any>[] {
     const output$: Observable<any>[] = [of(null)];
 
-    const initialTeamProgs = (this.team?.programs || []).reduce((result, program) => {
-      const longProg = this.programs.find((po) => program.id === po.id);
-      if (longProg && !result.find((p) => p.id === longProg.id)) {
-        result.push(longProg);
-      }
-      return result;
-    }, [] as ProgramDtoApi[]);
+    // chopper les programmes et filtrer by team.programIds (à la place de this.team.programs)
+    // const initialTeamProgs = (this.teamPrograms || []).reduce((result, program) => {
+    //   const longProg = this.programs.find((po) => program.id === po.id);
+    //   if (longProg && !result.find((p) => p.id === longProg.id)) {
+    //     result.push(longProg);
+    //   }
+    //   return result;
+    // }, [] as ProgramDtoApi[]);
 
-    initialTeamProgs.forEach((p) => {
+    this.teamPrograms.forEach((p) => {
       if (!formProgs.find((po) => po.id === p.id)) {
         output$.push(
           this.programService.updateProgram(p.id, {
-            teamIds: p.teams.filter((t) => t.id !== team.id).map((t) => ({ id: t.id })),
+            teamIds: p.teamIds.filter((t) => t !== team.id).map((t) => ({ id: t })),
           }),
         );
         this.programService.resetCache();
@@ -170,11 +180,11 @@ export class TeamFormComponent implements OnInit {
 
     if (formProgs) {
       formProgs.forEach((p) => {
-        if (!initialTeamProgs.find((po) => po.id === p.id) && team) {
+        if (!this.teamPrograms.find((po) => po.id === p.id) && team) {
           // To Add
           output$.push(
             this.programService.updateProgram(p.id, {
-              teamIds: [...p.teams, team].map((t) => ({ id: t.id })),
+              teamIds: [...p.teamIds, team.id].map((t) => ({ id: t })),
             }),
           );
           this.programService.resetCache();

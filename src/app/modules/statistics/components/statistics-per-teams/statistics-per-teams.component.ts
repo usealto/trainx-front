@@ -9,6 +9,7 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { DataForTable } from '../../models/statistics.model';
+import { Team } from '../../../../models/team.model';
 
 @Component({
   selector: 'alto-statistics-per-teams',
@@ -18,7 +19,7 @@ import { DataForTable } from '../../models/statistics.model';
 export class StatisticsPerTeamsComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
-  userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
+  userFilters: UserFilters = { teams: [] as Team[], score: '' };
   duration: ScoreDuration = ScoreDuration.Trimester;
 
   teams: TeamDtoApi[] = [];

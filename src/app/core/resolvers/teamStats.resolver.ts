@@ -4,7 +4,7 @@ import { TeamStats } from 'src/app/models/team.model';
 import * as FromRoot from './../../core/store/store.reducer';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, switchMap, tap } from 'rxjs';
-import { setTeamsStats } from '../store/root/root.action';
+import { setTeamsStats, setTeamsStatsTimestamp } from '../store/root/root.action';
 import { ScoresRestService } from '../../modules/shared/services/scores-rest.service';
 import { ScoreDuration } from '../../modules/shared/models/score.model';
 import { Company } from '../../models/company.model';
@@ -18,6 +18,7 @@ export const teamStatsResolver: ResolveFn<ITeamStatsData> = () => {
   const scoresRest = inject(ScoresRestService);
   console.log('teamStatsResolver');
 
+  //todo, force update if timestamp stat is ok but company.teams.stats is empty
   return store.select(FromRoot.selectTeamsStatsTimestamp).pipe(
     switchMap((timestamp) => {
       if (timestamp === null || timestamp === undefined || Date.now() - timestamp.getTime() > 60000) {
@@ -34,6 +35,7 @@ export const teamStatsResolver: ResolveFn<ITeamStatsData> = () => {
             console.log('teamStatsResolver', month, monthProg, trimester, trimesterProg, year, yearProg);
             const allStats = [...month, ...monthProg, ...trimester, ...trimesterProg, ...year, ...yearProg];
             store.dispatch(setTeamsStats({ teamStats: allStats }));
+            store.dispatch(setTeamsStatsTimestamp({ date: new Date() }));
             return store.select(FromRoot.selectCompany);
           })
         );

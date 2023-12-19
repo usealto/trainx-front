@@ -1,17 +1,14 @@
 import { StreakDtoApi, UserDtoApi, UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
 import { BaseStats, IBaseStats } from './stats.model';
 import { compareAsc } from 'date-fns';
+import { BaseModel, IBaseModel } from './base.model';
 
-export interface IUser {
-  id: string;
+export interface IUser extends IBaseModel {
   firstname: string;
   lastname: string;
   email: string;
   roles: Array<UserDtoApiRolesEnumApi>;
   teamId?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date;
   isConnectorActive?: boolean;
   stats: IUserStats[];
   companyId: string;
@@ -20,16 +17,12 @@ export interface IUser {
   hasLicense: boolean;
 }
 
-export class User implements IUser {
-  id: string;
+export class User extends BaseModel implements IUser {
   firstname: string;
   lastname: string;
   email: string;
   roles: Array<UserDtoApiRolesEnumApi>;
   teamId?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date;
   isConnectorActive?: boolean;
   stats: UserStats[];
   companyId: string;
@@ -38,14 +31,12 @@ export class User implements IUser {
   hasLicense: boolean;
 
   constructor(data: IUser) {
-    this.id = data.id ?? '';
+    super(data);
     this.firstname = data.firstname ?? '';
     this.lastname = data.lastname ?? '';
     this.email = data.email ?? '';
     this.roles = data.roles ?? [];
     this.teamId = data.teamId ?? '';
-    this.createdAt = data.createdAt ?? new Date();
-    this.updatedAt = data.updatedAt ?? new Date();
     this.stats = data.stats?.map((s) => new UserStats(s)) ?? [];
     this.companyId = data.companyId ?? '';
     this.longestStreak = data.longestStreak ?? ({} as StreakDtoApi);
@@ -77,17 +68,14 @@ export class User implements IUser {
     return `${this.firstname} ${this.lastname}`;
   }
 
-  get rawData(): IUser {
+  override get rawData(): IUser {
     return {
-      id: this.id,
+      ...super.rawData,
       firstname: this.firstname,
       lastname: this.lastname,
       email: this.email,
       roles: this.roles,
       teamId: this.teamId,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-      deletedAt: this.deletedAt,
       isConnectorActive: this.isConnectorActive,
       stats: this.stats.map((s) => s.rawData),
       companyId: this.companyId,

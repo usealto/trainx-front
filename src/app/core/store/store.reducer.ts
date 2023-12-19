@@ -16,3 +16,4 @@ export const selectUsers = createSelector(selectRoot, (state) => state.usersById
 export const selectCompany = createSelector(selectRoot, (state) => state.company);
 export const selectTeamsTimestamp = createSelector(selectRoot, (state) => state.teamsTimestamp);
 export const selectTeamsStatsTimestamp = createSelector(selectRoot, (state) => state.teamsStatsTimestamp);
+export const selectProgramsTimestamp = createSelector(selectRoot, (state) => state.programsTimestamp);

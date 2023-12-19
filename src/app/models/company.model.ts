@@ -6,10 +6,12 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { BaseStats, IBaseStats, IRanking, Ranking } from './stats.model';
 import { compareAsc } from 'date-fns';
-import { ITeam, Team } from './team.model';
+import { ITeam, Team, TeamStats } from './team.model';
+import { ScoreDuration } from '../modules/shared/models/score.model';
+import { BaseModel, IBaseModel } from './base.model';
+import { IProgram, Program } from './program.model';
 
-export interface ICompany {
-  id: string;
+export interface ICompany extends IBaseModel {
   name: string;
   connector?: CompanyDtoApiConnectorEnumApi;
   isConnectorActive?: boolean;
@@ -20,16 +22,13 @@ export interface ICompany {
   adminIds: string[];
   theOfficeId: string;
   usersHaveWebAccess: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date;
   stats: ICompanyStats[];
   licenseCount: number;
   teams: ITeam[];
+  programs: IProgram[];
 }
 
-export class Company implements ICompany {
-  id: string;
+export class Company extends BaseModel implements ICompany {
   name: string;
   connector?: CompanyDtoApiConnectorEnumApi;
   theOfficeId: string;
@@ -40,15 +39,13 @@ export class Company implements ICompany {
   connectorTimes?: Array<CompanyDtoApiConnectorTimesEnumApi>;
   adminIds: string[];
   usersHaveWebAccess: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date;
   stats: CompanyStats[];
   licenseCount: number;
   teams: Team[];
+  programs: Program[];
 
   constructor(data: ICompany) {
-    this.id = data.id ?? '';
+    super(data);
     this.name = data.name ?? '';
     this.connector = data.connector ?? CompanyDtoApiConnectorEnumApi.Unknown;
     this.isConnectorActive = data.isConnectorActive ?? false;
@@ -59,11 +56,10 @@ export class Company implements ICompany {
     this.adminIds = data.adminIds ?? [];
     this.usersHaveWebAccess = data.usersHaveWebAccess ?? false;
     this.theOfficeId = data.theOfficeId ?? '';
-    this.createdAt = data.createdAt ?? new Date();
-    this.updatedAt = data.updatedAt ?? new Date();
     this.stats = [];
     this.licenseCount = data.licenseCount ?? 0;
     this.teams = data.teams ? data.teams.map(team => new Team(team)) : [];
+    this.programs = data.programs ? data.programs.map(program => new Program(program)) : [];
   }
 
   static fromDto(data: CompanyDtoApi): Company {
@@ -84,6 +80,7 @@ export class Company implements ICompany {
       stats: [],
       licenseCount: data.licenseCount,
       teams: [],
+      programs: [],
     });
   }
 
@@ -105,9 +102,17 @@ export class Company implements ICompany {
     return this.stats.filter(({ scoreById }) => scoreById === id);
   }
 
-  get rawData(): ICompany {
+  getStatsByPeriod(duration: ScoreDuration, isPrev: boolean): TeamStats[] {
+    return this.teams.map((team) => team.getStatByPeriod(duration, isPrev)).filter((stat) => stat !== undefined) as TeamStats[];
+  }
+
+  getTeamPrograms(teamId: string): Program[] {
+    return this.programs.filter(program => program.teamIds.includes(teamId));
+  }
+
+  override get rawData(): ICompany {
     return {
-      id: this.id,
+      ...super.rawData,
       name: this.name,
       connector: this.connector,
       isConnectorActive: this.isConnectorActive,
@@ -118,12 +123,10 @@ export class Company implements ICompany {
       adminIds: this.adminIds,
       usersHaveWebAccess: this.usersHaveWebAccess,
       theOfficeId: this.theOfficeId,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-      deletedAt: this.deletedAt,
       stats: this.stats.map((s) => s.rawData),
       licenseCount: this.licenseCount,
       teams: this.teams.map(team => team.rawData),
+      programs: this.programs.map(program => program.rawData),
     };
   }
 }

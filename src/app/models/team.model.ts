@@ -1,35 +1,24 @@
-import { TeamDtoApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
+import { ProgramStatsLightDtoApi, TagStatsLightDtoApi, TeamDtoApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { BaseStats, IBaseStats } from './stats.model';
 import { compareAsc } from 'date-fns';
-import { TagStatsLight } from './tags.model';
-import { ProgramStatsLight } from './programs.model';
 import { ScoreDuration } from '../modules/shared/models/score.model';
+import { BaseModel, IBaseModel } from './base.model';
 
 
-export interface ITeam {
-  id: string;
+export interface ITeam extends IBaseModel {
   name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date;
   programIds: string[];
   stats: ITeamStats[];
 }
 
-export class Team implements ITeam {
-  id: string;
+export class Team extends BaseModel implements ITeam {
   name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date;
   programIds: string[];
   stats: TeamStats[];
 
   constructor(data: ITeam) {
-    this.id = data.id;
+    super(data);
     this.name = data.name;
-    this.createdAt = data.createdAt;
-    this.updatedAt = data.updatedAt;
     this.programIds = data.programIds;
     this.stats = data.stats.map((s) => new TeamStats(s));
   }
@@ -46,12 +35,10 @@ export class Team implements ITeam {
     });
   }
 
-  get rawData(): ITeam {
+  override get rawData(): ITeam {
     return {
-      id: this.id,
+      ...super.rawData,
       name: this.name,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
       programIds: this.programIds,
       stats: this.stats.map((s) => s.rawData),
     };
@@ -74,28 +61,35 @@ export class Team implements ITeam {
   getStatsByScoreById(id: string): TeamStats[] {
     return this.stats.filter(({ scoreById }) => scoreById === id);
   }
+
+  getStatByPeriod(duration: ScoreDuration, isPrev = false): TeamStats | undefined {
+    const filteredStats = this.stats.filter(
+      (stat) => stat.scoreDuration === duration && stat.isPrev === isPrev,
+    );
+    return filteredStats.length > 0 ? filteredStats[0] : undefined;
+  }
 }
 
 export interface ITeamStats extends IBaseStats {
+  programStats: ITeamProgramStats[];
   teamId: string;
   questionsPushedCount: number;
   commentsCount: number;
   questionsSubmittedCount: number;
   validGuessesCount: number;
-  tagStats: TagStatsLight[];
-  programStats: ProgramStatsLight[];
+  tagStats: ITeamTagStats[];
   scoreDuration: ScoreDuration;
   isPrev: boolean;
 }
 
-export class TeamStats extends BaseStats {
+export class TeamStats extends BaseStats implements ITeamStats {
+  programStats: TeamProgramStats[];
   teamId: string;
   questionsPushedCount: number;
   commentsCount: number;
   questionsSubmittedCount: number;
   validGuessesCount: number;
-  tagStats: TagStatsLight[];
-  programStats: ProgramStatsLight[];
+  tagStats: TeamTagStats[];
   scoreDuration: ScoreDuration;
   isPrev: boolean;
 
@@ -106,13 +100,19 @@ export class TeamStats extends BaseStats {
     this.commentsCount = data.commentsCount;
     this.questionsSubmittedCount = data.questionsSubmittedCount;
     this.validGuessesCount = data.validGuessesCount;
-    this.tagStats = data.tagStats || [];
-    this.programStats = data.programStats || [];
+    this.tagStats = data.tagStats.map((s) => new TeamTagStats(s));
+    this.programStats = data.programStats.map((s) => new TeamProgramStats(s));
     this.scoreDuration = data.scoreDuration;
     this.isPrev = data.isPrev;
   }
 
-  static fromDto(data: TeamStatsDtoApi, from: Date, to: Date, duration: ScoreDuration, isPrev: boolean): TeamStats {
+  static fromDto(
+    data: TeamStatsDtoApi,
+    from: Date,
+    to: Date,
+    duration: ScoreDuration,
+    isPrev: boolean,
+  ): TeamStats {
     return new TeamStats({
       teamId: data.team.id,
       from: from,
@@ -123,8 +123,8 @@ export class TeamStats extends BaseStats {
       validGuessesCount: data.validGuessesCount || 0,
       score: data.score || 0,
       totalGuessesCount: data.totalGuessesCount || 0,
-      tagStats: data.tags?.map((tag) => TagStatsLight.fromDto(tag)) || [],
-      programStats: data.programs?.map((program) => ProgramStatsLight.fromDto(program)) || [],
+      tagStats: data.tags?.map((tag) => TeamTagStats.fromDto(tag)) || [],
+      programStats: data.programs?.map((program) => TeamProgramStats.fromDto(program)) || [],
       scoreDuration: duration,
       isPrev: isPrev,
     });
@@ -144,30 +144,82 @@ export class TeamStats extends BaseStats {
       isPrev: this.isPrev,
     };
   }
+}
 
-  static getStatsForPeriod(
-    teamsStatsMap: Map<string, TeamStats[]>,
-    duration: ScoreDuration,
-    isPrev = false,
-  ): TeamStats[] {
-    const statsForPeriod: TeamStats[] = [];
-    teamsStatsMap.forEach((statsList) => {
-      const filteredStat = TeamStats.filterStatsByDurationAndPeriod(statsList, duration, isPrev);
+export interface ITeamProgramStats {
+  programId: string;
+  totalGuessesCount: number;
+  validGuessesCount: number;
+  score: number;
+}
 
-      if (filteredStat) {
-        statsForPeriod.push(filteredStat);
-      }
-    });
+export class TeamProgramStats implements ITeamProgramStats {
+  programId: string;
+  totalGuessesCount: number;
+  validGuessesCount: number;
+  score: number;
 
-    return statsForPeriod;
+  constructor(data: ITeamProgramStats) {
+    this.programId = data.programId;
+    this.totalGuessesCount = data.totalGuessesCount;
+    this.validGuessesCount = data.validGuessesCount;
+    this.score = data.score;
   }
 
-  static filterStatsByDurationAndPeriod(
-    statsList: TeamStats[],
-    duration: ScoreDuration,
-    isPrev: boolean,
-  ): TeamStats | undefined {
-    const filteredStats = statsList.filter((stat) => stat.scoreDuration === duration && stat.isPrev === isPrev);
-    return filteredStats.length > 0 ? filteredStats[0] : undefined;
+  static fromDto(data: ProgramStatsLightDtoApi): TeamProgramStats {
+    return new TeamProgramStats({
+      programId: data.program.id,
+      totalGuessesCount: data.totalGuessesCount || 0,
+      validGuessesCount: data.validGuessesCount || 0,
+      score: data.score || 0,
+    });
+  }
+
+  get rawData(): ITeamProgramStats {
+    return {
+      programId: this.programId,
+      totalGuessesCount: this.totalGuessesCount,
+      validGuessesCount: this.validGuessesCount,
+      score: this.score,
+    };
+  }
+}
+
+export interface ITeamTagStats {
+  tagId: string;
+  totalGuessesCount: number;
+  validGuessesCount: number;
+  score: number;
+}
+
+export class TeamTagStats implements ITeamTagStats {
+  tagId: string;
+  totalGuessesCount: number;
+  validGuessesCount: number;
+  score: number;
+
+  constructor(data: ITeamTagStats) {
+    this.tagId = data.tagId;
+    this.totalGuessesCount = data.totalGuessesCount;
+    this.validGuessesCount = data.validGuessesCount;
+    this.score = data.score;
+  }
+
+  static fromDto(data: TagStatsLightDtoApi): TeamTagStats {
+    return new TeamTagStats({
+      tagId: data.tag.id,
+      totalGuessesCount: data.totalGuessesCount || 0,
+      validGuessesCount: data.validGuessesCount || 0,
+      score: data.score || 0,
+    });
+  }
+
+  get rawData(): ITeamTagStats {
+    return {
+      tagId: this.tagId,
+      totalGuessesCount: this.totalGuessesCount,
+      validGuessesCount: this.validGuessesCount,
+      score: this.score,
+    };
   }
 }

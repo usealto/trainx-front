@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { filter, map, Observable, tap } from 'rxjs';
+import { filter, map, Observable, pipe, tap } from 'rxjs';
 import {
   CreateProgramDtoApi,
   DeleteResponseApi,
@@ -16,6 +16,7 @@ import { ProfileStore } from '../../profile/profile.store';
 import { ScoreDuration } from '../../shared/models/score.model';
 import { ScoresService } from '../../shared/services/scores.service';
 import { addDays } from 'date-fns';
+import { Program } from '../../../models/program.model';
 
 @Injectable({
   providedIn: 'root',
@@ -61,6 +62,7 @@ export class ProgramsRestService {
     );
   }
 
+  // todo: remove this method
   getPrograms(): Observable<ProgramDtoApi[]> {
     if (this.programStore.programs.value.length) {
       return this.programStore.programs.value$;
@@ -78,6 +80,21 @@ export class ProgramsRestService {
     }
   }
 
+  // Cloned from getPrograms() to return Program[] and not ProgramDtoApi[]
+  getProgramsObj(): Observable<Program[]> {
+    const par = {
+      page: 1,
+      itemsPerPage: 400,
+      sortBy: 'name:asc',
+    } as GetProgramsRequestParams;
+
+    return this.programApi.getPrograms(par).pipe(
+      map((d) => {
+        return d.data ? d.data.map((p) => Program.fromDto(p)) : [];
+      }),
+    );
+  }
+
   getProgram(id: string): Observable<ProgramDtoApi> {
     return this.programApi.getProgramById({ id }).pipe(
       filter((p) => !!p.data),
@@ -90,9 +107,7 @@ export class ProgramsRestService {
       return this.profileStore.myPrograms.value$;
     } else {
       return this.getPrograms().pipe(
-        map((ps: ProgramDtoApi[]) =>
-          ps.filter((p) => p.teams.some((t) => t && t.id === teamId)),
-        ),
+        map((ps: ProgramDtoApi[]) => ps.filter((p) => p.teams.some((t) => t && t.id === teamId))),
         tap((p) => (this.profileStore.myPrograms.value = p)),
       );
     }

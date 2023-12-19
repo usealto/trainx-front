@@ -10,10 +10,12 @@ import {
   setTeams,
   setTeamsStatsTimestamp,
   setTeamsTimestamp,
+  setProgramsTimestamp,
   setUserMe,
   setUsers,
   patchUser,
   setTeamsStats,
+  setPrograms,
 } from '../root/root.action';
 
 export class TimestampedEntity<T> {
@@ -34,6 +36,7 @@ export interface RootState {
   me: TimestampedEntity<User>;
   company: TimestampedEntity<Company>;
   usersById: TimestampedEntity<Map<string, User>>;
+  programsTimestamp?: Date;
   teamsStatsTimestamp?: Date;
   teamsTimestamp?: Date;
 }
@@ -59,6 +62,13 @@ export const rootReducer = createReducer(
     (state, { date }): RootState => ({
       ...state,
       teamsTimestamp: date,
+    }),
+  ),
+  on(
+    setProgramsTimestamp,
+    (state, { date }): RootState => ({
+      ...state,
+      programsTimestamp: date,
     }),
   ),
   on(
@@ -105,7 +115,7 @@ export const rootReducer = createReducer(
     }),
   ),
   on(setTeams, (state, { teams }): RootState => {
-    const company = state.company.data;
+    const company = new Company(state.company.data);
     company.teams = teams;
 
     return {
@@ -144,6 +154,14 @@ export const rootReducer = createReducer(
 
     console.log('company end of reducer stats', company);
 
+    return {
+      ...state,
+      company: new TimestampedEntity(company),
+    };
+  }),
+  on(setPrograms, (state, { programs }): RootState => {
+    const company = new Company(state.company.data);
+    company.programs = programs;
     return {
       ...state,
       company: new TimestampedEntity(company),

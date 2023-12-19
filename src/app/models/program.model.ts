@@ -1,10 +1,10 @@
-import { ProgramDtoApi, ProgramDtoApiPriorityEnumApi, ProgramStatsLightDtoApi } from '@usealto/sdk-ts-angular';
+import { ProgramDtoApi, ProgramDtoApiPriorityEnumApi } from '@usealto/sdk-ts-angular';
 import { BaseStats, IBaseStats } from './stats.model';
 import { compareAsc } from 'date-fns';
+import { BaseModel, IBaseModel } from './base.model';
 
-export interface IProgram {
+export interface IProgram extends IBaseModel {
   name: string;
-  id: string;
   isActive: boolean;
   description?: string;
   expectation: number;
@@ -13,15 +13,11 @@ export interface IProgram {
   teamIds: string[];
   questionsCount: number;
   ownerId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date;
   stats: IProgramStats[];
 }
 
-export class Program implements IProgram {
+export class Program extends BaseModel implements IProgram {
   name: string;
-  id: string;
   isActive: boolean;
   description?: string;
   expectation: number;
@@ -30,12 +26,10 @@ export class Program implements IProgram {
   teamIds: string[];
   questionsCount: number;
   ownerId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date;
   stats: ProgramStats[];
 
   constructor(data: IProgram) {
+    super(data);
     this.name = data.name;
     this.id = data.id;
     this.isActive = data.isActive;
@@ -61,7 +55,7 @@ export class Program implements IProgram {
       expectation: data.expectation,
       priority: data.priority,
       showTimer: data.showTimer,
-      teamIds: data.teams.map(({ id }) => id),
+      teamIds: data.teams?.map(({ id }) => id) ?? [],
       questionsCount: data.questionsCount,
       ownerId: data.owner.id,
       createdAt: data.createdAt,
@@ -85,10 +79,10 @@ export class Program implements IProgram {
     }
   }
 
-  get rawData(): IProgram {
+   override get rawData(): IProgram {
     return {
+      ...super.rawData,
       name: this.name,
-      id: this.id,
       isActive: this.isActive,
       description: this.description,
       expectation: this.expectation,
@@ -97,9 +91,6 @@ export class Program implements IProgram {
       teamIds: this.teamIds,
       questionsCount: this.questionsCount,
       ownerId: this.ownerId,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-      deletedAt: this.deletedAt,
       stats: this.stats.map((s) => s.rawData),
     };
   }
@@ -108,6 +99,7 @@ export class Program implements IProgram {
     return this.stats.filter(({ scoreById }) => scoreById === id);
   }
 }
+
 
 export interface IProgramStats extends IBaseStats {
   participation: number;
@@ -150,28 +142,5 @@ export class ProgramStats extends BaseStats {
       userCompletedProgramCount: this.userCompletedProgramCount,
       userValidatedProgramCount: this.userValidatedProgramCount,
     };
-  }
-}
-
-export class ProgramStatsLight {
-  programId: string;
-  totalGuessesCount: number;
-  validGuessesCount: number;
-  score: number;
-
-  constructor(data: ProgramStatsLight) {
-    this.programId = data.programId;
-    this.totalGuessesCount = data.totalGuessesCount;
-    this.validGuessesCount = data.validGuessesCount;
-    this.score = data.score;
-  }
-
-  static fromDto(data: ProgramStatsLightDtoApi): ProgramStatsLight {
-    return new ProgramStatsLight({
-      programId: data.program.id,
-      totalGuessesCount: data.totalGuessesCount || 0,
-      validGuessesCount: data.validGuessesCount || 0,
-      score: data.score || 0,
-    });
   }
 }

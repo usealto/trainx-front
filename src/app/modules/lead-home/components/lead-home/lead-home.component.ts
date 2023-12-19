@@ -33,8 +33,10 @@ import { StatisticsService } from 'src/app/modules/statistics/services/statistic
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
 import { IAppData } from '../../../../core/resolvers';
 import { Team, TeamStats } from '../../../../models/team.model';
-import { ICompany } from '../../../../models/company.model';
+import { Company } from '../../../../models/company.model';
 import { ITeamStatsData } from '../../../../core/resolvers/teamStats.resolver';
+import { Program } from '../../../../models/program.model';
+import { IProgramsData } from '../../../../core/resolvers/programs.resolver';
 
 @UntilDestroy()
 @Component({
@@ -60,6 +62,8 @@ export class LeadHomeComponent implements OnInit {
     type: ScoreTypeEnumApi.Team,
     teams: [],
   };
+
+  company: Company = new Company({} as any);
 
   teams: Team[] = [];
 
@@ -125,18 +129,9 @@ export class LeadHomeComponent implements OnInit {
   }
 
   setTeamsAndStats(data: ResolverData) {
-    this.teams = (data[EResolverData.TeamStats] as ITeamStatsData).company.teams;
-    console.log('this.teams', this.teams);
-    const teamStats = data['teamStats'] as any as Map<string, TeamStats[]>;
-    this.teams.forEach((team) => {
-      team.stats = teamStats.get(team.id) || [];
-    });
-    const teamStatsNow = TeamStats.getStatsForPeriod(teamStats, this.globalFilters.duration as ScoreDuration);
-    const teamStatsPrev = TeamStats.getStatsForPeriod(
-      teamStats,
-      this.globalFilters.duration as ScoreDuration,
-      true,
-    );
+    this.company = (data[EResolverData.TeamStats] as ITeamStatsData).company;
+    const teamStatsNow = this.company.getStatsByPeriod(this.globalFilters.duration as ScoreDuration, false);
+    const teamStatsPrev = this.company.getStatsByPeriod(this.globalFilters.duration as ScoreDuration, true);
     this.setAverageScore(teamStatsNow, teamStatsPrev);
   }
 
@@ -196,55 +191,41 @@ export class LeadHomeComponent implements OnInit {
   }
 
   getTopFlop(duration: ScoreDuration) {
-    return combineLatest([
-      this.scoresRestService.getTeamsStats(duration),
-      this.scoresRestService.getUsersStats(duration),
-    ]).pipe(
-      tap(([teams, users]) => {
-        teams = teams.filter((t) => t.score && t.score >= 0);
-        users = users.filter((u) => u.score && u.score >= 0);
-        this.teamsLeaderboard = teams.map((t) => ({ name: t.team.name, score: t.score ?? 0 }));
-        this.usersLeaderboard = users.map((u) => ({
-          name: u.user.firstname + ' ' + u.user.lastname,
-          score: u.score ?? 0,
-        }));
-        this.teamsLeaderboardCount = this.teamsLeaderboard.length;
-        this.teamsLeaderboardDataStatus = this.teamsLeaderboardCount === 0 ? 'noData' : 'good';
-        this.usersLeaderboardCount = this.usersLeaderboard.length;
-        this.usersLeaderboardDataStatus = this.usersLeaderboardCount === 0 ? 'noData' : 'good';
-        this.topflopLoaded = true;
-      }),
-    );
-  }
+    let teamStats = this.company.getStatsByPeriod(duration, false);
+    const teams = this.company.teams;
 
-  getAverageScore(duration: ScoreDuration, [current, previous]: TeamStatsDtoApi[][] = []) {
-    if (current && previous) {
-      this.setAverageScoreDto(current, previous);
-    } else {
-      combineLatest([
-        this.scoresRestService.getTeamsStats(duration),
-        this.scoresRestService.getTeamsStats(duration, true),
-      ])
-        .pipe(
-          tap(([current, previous]) => {
-            this.setAverageScoreDto(current, previous);
-          }),
-        )
-        .subscribe();
-    }
+    teamStats = teamStats.filter((t) => t.score && t.score >= 0);
+
+    this.teamsLeaderboard = teamStats.map((t) => {
+      // Find the corresponding team based on teamId
+      const matchingTeam = teams.find((team) => team.id === t.teamId);
+
+      // Return the mapping with team name and score
+      return {
+        name: matchingTeam ? matchingTeam.name : 'Unknown Team', // Fallback in case no matching team is found
+        score: t.score,
+      };
+    });
+
+    this.teamsLeaderboardCount = this.teamsLeaderboard.length;
+    this.teamsLeaderboardDataStatus = this.teamsLeaderboardCount === 0 ? 'noData' : 'good';
+
+     return this.scoresRestService.getUsersStats(duration).pipe(
+       tap((users) => {
+         users = users.filter((u) => u.score && u.score >= 0);
+         this.usersLeaderboard = users.map((u) => ({
+           name: u.user.firstname + ' ' + u.user.lastname,
+           score: u.score ?? 0,
+         }));
+
+         this.usersLeaderboardCount = this.usersLeaderboard.length;
+         this.usersLeaderboardDataStatus = this.usersLeaderboardCount === 0 ? 'noData' : 'good';
+         this.topflopLoaded = true;
+       }),
+     );
   }
 
   setAverageScore(current: TeamStats[], previous: TeamStats[]) {
-    current = current.filter((t) => t.score);
-    previous = previous.filter((t) => t.score);
-    const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;
-    this.averageScore =
-      current.filter((t) => t.score).reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
-    this.averageScoreProgression = previousScore ? (this.averageScore - previousScore) / previousScore : 0;
-    this.getProgramDataStatus();
-  }
-
-  setAverageScoreDto(current: TeamStatsDtoApi[], previous: TeamStatsDtoApi[]) {
     current = current.filter((t) => t.score);
     previous = previous.filter((t) => t.score);
     const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;
@@ -281,22 +262,19 @@ export class LeadHomeComponent implements OnInit {
   }
 
   getGuessesCount(duration: ScoreDuration) {
+    const teamsStats = this.company.getStatsByPeriod(duration, false);
+    this.expectedGuessCount = teamsStats.reduce((acc, team) => acc + (team.questionsPushedCount ?? 0), 0);
     combineLatest([
       this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration),
       this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration, true),
-      this.scoresRestService.getTeamsStats(duration),
     ])
       .pipe(
-        tap(([guesses, previousGuesses, teamsStats]) => {
+        tap(([guesses, previousGuesses]) => {
           this.guessCount = guesses.meta.totalItems;
           this.guessCountProgression =
             previousGuesses.meta.totalItems && guesses.meta.totalItems
               ? (guesses.meta.totalItems - previousGuesses.meta.totalItems) / previousGuesses.meta.totalItems
               : 0;
-          this.expectedGuessCount = teamsStats.reduce(
-            (acc, team) => acc + (team.questionsPushedCount ?? 0),
-            0,
-          );
         }),
       )
       .subscribe();

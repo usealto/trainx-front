@@ -133,16 +133,10 @@ export class SettingsUsersComponent implements OnInit {
       .pipe(
         switchMap(() => this.userRestService.deleteUser(user.id)),
         tap(() => this.store.dispatch(removeUser({ user }))),
-        switchMap(() => this.store.select(FromRoot.selectUsers)),
         tap(() => modalRef.close()),
         untilDestroyed(this),
       )
       .subscribe({
-        next: ({ data: users }) => {
-          this.users = Array.from(users.values());
-          this.displayAdmins();
-          this.displayUsers();
-        },
         error: () => {
           this.toastService.show({
             type: 'danger',
@@ -181,17 +175,11 @@ export class SettingsUsersComponent implements OnInit {
           // TODO : update store instead of using rest service (may impact AddUsersComponent)
           return this.userRestService.getUsers();
         }),
-        switchMap((users) => {
+        tap((users) => {
           this.store.dispatch(setUsers({ users }));
-          return this.store.select(FromRoot.selectUsers);
         }),
       )
       .subscribe({
-        next: ({ data: users }) => {
-          this.users = Array.from(users.values());
-          this.displayAdmins();
-          this.displayUsers();
-        },
         error: () => {
           this.toastService.show({
             type: 'danger',
@@ -235,14 +223,8 @@ export class SettingsUsersComponent implements OnInit {
 
     instance.editedUser
       .pipe(
-        switchMap((user) => {
+        tap((user) => {
           this.store.dispatch(patchUser({ user }));
-          return this.store.select(FromRoot.selectUsers);
-        }),
-        tap(({ data: users }) => {
-          this.users = Array.from(users.values());
-          this.displayAdmins();
-          this.displayUsers();
         }),
       )
       .subscribe();

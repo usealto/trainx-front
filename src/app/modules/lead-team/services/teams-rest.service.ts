@@ -8,17 +8,17 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { combineLatest, map, Observable, of, switchMap, tap } from 'rxjs';
 import { Team } from 'src/app/models/team.model';
-import { TeamStore } from '../team.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TeamsRestService {
-  constructor(private readonly teamApi: TeamsApiService, private teamStore: TeamStore) {}
+  constructor(private readonly teamApi: TeamsApiService) {}
 
   getTeam(id: string) {
     return this.teamApi.getTeamById({ id });
   }
+
   getTeams(): Observable<Team[]> {
     return this.teamApi.getTeams({ page: 1, sortBy: 'createdAt:asc', itemsPerPage: 1000 }).pipe(
       switchMap(({ data, meta }) => {
@@ -45,37 +45,19 @@ export class TeamsRestService {
     );
   }
 
-  createTeam(createTeamDtoApi: CreateTeamDtoApi): Observable<TeamDtoApi | undefined> {
+  createTeam(createTeamDtoApi: CreateTeamDtoApi): Observable<Team> {
     return this.teamApi.createTeam({ createTeamDtoApi }).pipe(
-      map((r) => r.data),
-      tap((team) => {
-        if (team) {
-          this.teamStore.teams.add(team);
-        }
-      }),
+      map((r) => Team.fromDto(r.data as TeamDtoApi)),
     );
   }
 
-  updateTeam(patchTeamRequestParams: PatchTeamRequestParams): Observable<TeamDtoApi | undefined> {
+  updateTeam(patchTeamRequestParams: PatchTeamRequestParams): Observable<Team> {
     return this.teamApi.patchTeam(patchTeamRequestParams).pipe(
-      map((r) => r.data),
-      tap((team) => {
-        if (team) {
-          this.teamStore.teams.patchWithId(team);
-        }
-      }),
+      map((r) => Team.fromDto(r.data as TeamDtoApi)),
     );
   }
 
-  deleteTeam(id: string): Observable<DeleteResponseApi | undefined> {
-    return this.teamApi.deleteTeam({ id }).pipe(
-      tap(() => {
-        this.teamStore.teams.value = this.teamStore.teams.value.filter((x) => x.id !== id);
-      }),
-    );
-  }
-
-  resetCache() {
-    this.teamStore.teams.reset();
+  deleteTeam(id: string): Observable<DeleteResponseApi> {
+    return this.teamApi.deleteTeam({ id });
   }
 }

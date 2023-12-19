@@ -1,7 +1,7 @@
-import { TeamDtoApi } from '@usealto/sdk-ts-angular';
+import { Team } from '../../../models/team.model';
 
 export interface UserFilters {
-  teams?: TeamDtoApi[];
+  teams?: Team[];
   score?: string;
   search?: string;
 }

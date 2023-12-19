@@ -15,6 +15,7 @@ import {
   leadResolver,
   noSplashScreenResolver,
   programResolver,
+  programsResolver,
   trainingResolver,
 } from './core/resolvers';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
@@ -78,6 +79,7 @@ const routes: Routes = [
         resolve: {
           leadData: leadResolver,
           teamStats: teamStatsResolver,
+          programs: programsResolver,
         },
         children: [
           { path: '', redirectTo: AltoRoutes.leadHome, pathMatch: 'full' },
