@@ -96,11 +96,11 @@ export class PerformanceByTeamsComponent implements OnChanges {
   }
 
   createScoreEvolutionChart(scores: Score[], globalScore: Score, duration: ScoreDuration) {
-    const formattedScores = this.scoresServices.formatScores(scores);
+    const formattedScores = this.scoresServices.formatScores([...scores, globalScore]);
     this.scoreDataStatus = formattedScores.length === 0 ? 'noData' : 'good';
     // Aligns Global with Score's Length so thay start on the same month
     const globalPoints = this.statisticsServices
-      .transformDataToPoint(globalScore)
+      .transformDataToPoint(formattedScores[formattedScores.length - 1])
       .slice(-formattedScores[0]?.averages?.length);
 
     const aggregatedData = this.statisticsServices.transformDataToPoint(formattedScores[0]);

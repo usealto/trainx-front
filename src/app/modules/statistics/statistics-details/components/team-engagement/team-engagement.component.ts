@@ -101,11 +101,17 @@ export class TeamEngagementComponent implements OnInit {
   }
 
   createContributionsChart(comments: Score[], submitedQuestions: Score[], duration: ScoreDuration): void {
-    const formatedComments = this.scoreService.formatScores(comments);
-    const formatedSubmitedQuestions = this.scoreService.formatScores(submitedQuestions);
-    const aggregatedComments = this.statisticsService.transformDataToPointByCounts(formatedComments[0]);
+    const formattedComments = this.scoreService.formatScores(comments);
+    const formattedSubmitedQuestions = this.scoreService.formatScores(submitedQuestions);
+
+    const [aggregatedFormattedCommentsScores, aggregatedFormattedSubmittedQuestionsScores] =
+      this.scoreService.formatScores([formattedComments[0], formattedSubmitedQuestions[0]]);
+
+    const aggregatedComments = this.statisticsService.transformDataToPointByCounts(
+      aggregatedFormattedCommentsScores,
+    );
     const aggregatedQuestionsSubmitted = this.statisticsService.transformDataToPointByCounts(
-      formatedSubmitedQuestions[0],
+      aggregatedFormattedSubmittedQuestionsScores,
     );
     const labels = this.statisticsService
       .formatLabel(
