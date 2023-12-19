@@ -3,16 +3,16 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ScoreByTypeEnumApi,
-  ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   TagDtoApi,
   TagStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { combineLatest, tap } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { Score } from 'src/app/models/score.model';
 import { Team } from 'src/app/models/team.model';
 import { IUser, User } from 'src/app/models/user.model';
 import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
@@ -68,8 +68,8 @@ export class UserPerformanceComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    const usersById = (data[EResolverData.AppData] as IAppData).userById;
-    const teamsById = (data[EResolverData.AppData] as IAppData).teamById;
+    const usersById = (data[EResolvers.AppResolver] as IAppData).userById;
+    const teamsById = (data[EResolvers.AppResolver] as IAppData).teamById;
     const userId = this.router.url.split('/').pop() || '';
     this.user = usersById.get(userId) || new User({} as IUser);
     if (!this.user.teamId || this.user.teamId === '' || teamsById.get(this.user.teamId) === undefined) {
@@ -113,13 +113,13 @@ export class UserPerformanceComponent implements OnInit {
     ]).subscribe(([teamStats, userStats]) => {
       this.createSpiderChart(
         teamStats.sort((a, b) => a.tag.name.localeCompare(b.tag.name)),
-        userStats.scores.sort((a, b) => a.label.localeCompare(b.label)),
+        userStats.sort((a, b) => a.label.localeCompare(b.label)),
       );
       this.spiderChartStatus = 'good';
     });
   }
 
-  createSpiderChart(teamScores: TagStatsDtoApi[], userScores: ScoreDtoApi[]): void {
+  createSpiderChart(teamScores: TagStatsDtoApi[], userScores: Score[]): void {
     this.spiderChartOptions = {
       color: ['#475467', '#FF917C'],
       radar: {
@@ -152,7 +152,9 @@ export class UserPerformanceComponent implements OnInit {
           type: 'radar',
           data: [
             {
-              value: userScores.map((u) => Math.round((u.averages[0] * 10000) / 100)),
+              value: userScores.map((u) =>
+                u.averages[0] ? Math.round((u.averages[0] * 10000) / 100) : null,
+              ),
               name: 'Score du collaborateur',
               areaStyle: {
                 color: 'rgba(255, 145, 124, 0.6)',
@@ -182,17 +184,19 @@ export class UserPerformanceComponent implements OnInit {
     this.scoresRestService
       .getScores(this.getScoreParams('tags', duration))
       .pipe(
-        tap((res) => {
-          this.createTagsChart(res.scores, duration);
-          this.tagsChartStatus = res.scores.length > 0 ? 'good' : 'empty';
+        tap((scores) => {
+          this.tagsChartStatus = scores.length > 0 ? 'good' : 'empty';
+          if (scores.length > 0) {
+            this.createTagsChart(scores, duration);
+          }
         }),
       )
       .subscribe();
   }
 
-  createTagsChart(scores: ScoreDtoApi[], duration: ScoreDuration): void {
-    const reducedScores = this.scoresService.reduceLineChartData(scores);
-    const points = reducedScores.map((d) => this.statisticsService.transformDataToPoint(d));
+  createTagsChart(scores: Score[], duration: ScoreDuration): void {
+    const formatedScores = this.scoresService.formatScores(scores);
+    const points = formatedScores.map((d) => this.statisticsService.transformDataToPoint(d));
 
     const labels = this.statisticsService
       .formatLabel(
@@ -201,7 +205,7 @@ export class UserPerformanceComponent implements OnInit {
       )
       .map((s) => this.titleCasePipe.transform(s));
 
-    const dataSets = reducedScores.map((s) => {
+    const dataSets = formatedScores.map((s) => {
       const d = this.statisticsService.transformDataToPoint(s);
       return { label: s.label, data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)) };
     });
@@ -237,16 +241,18 @@ export class UserPerformanceComponent implements OnInit {
     ])
       .pipe(
         tap(([userScores, teamScores]) => {
-          this.createUserChart(userScores.scores[0], teamScores.scores[0], duration);
-          this.userChartStatus = userScores.scores.length > 0 ? 'good' : 'empty';
+          this.userChartStatus = userScores.length > 0 ? 'good' : 'empty';
+          if (userScores.length > 0) {
+            this.createUserChart(userScores[0], teamScores[0], duration);
+          }
         }),
       )
       .subscribe();
   }
 
-  createUserChart(userScores: ScoreDtoApi, teamScores: ScoreDtoApi, duration: ScoreDuration): void {
-    const reducedTeamScores = this.scoresService.reduceLineChartData([teamScores])[0];
-    const teamPoints = this.statisticsService.transformDataToPoint(reducedTeamScores);
+  createUserChart(userScores: Score, teamScores: Score, duration: ScoreDuration): void {
+    const formatedTeamScores = this.scoresService.formatScores([teamScores])[0];
+    const teamPoints = this.statisticsService.transformDataToPoint(formatedTeamScores);
 
     const labels = this.statisticsService.formatLabel(
       teamPoints.map((d) => d.x),

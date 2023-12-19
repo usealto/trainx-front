@@ -4,15 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   QuestionStatsDtoApi,
   ScoreByTypeEnumApi,
-  ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
-  ScoresResponseDtoApi,
   TagDtoApi,
   UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { combineLatest, tap } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -28,6 +26,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
 import { StatisticsService } from '../../../services/statistics.service';
+import { Score } from 'src/app/models/score.model';
 
 @Component({
   selector: 'alto-team-performance',
@@ -88,8 +87,8 @@ export class TeamPerformanceComponent implements OnInit {
   ngOnInit(): void {
     this.teamId = this.router.url.split('/').pop() || '';
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.team = (data[EResolverData.AppData] as IAppData).teamById.get(this.teamId) as Team;
-    this.members = Array.from((data[EResolverData.AppData] as IAppData).userById.values()).filter(
+    this.team = (data[EResolvers.AppResolver] as IAppData).teamById.get(this.teamId) as Team;
+    this.members = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values()).filter(
       (u) => u.teamId === this.teamId,
     );
     this.selectedMembers = this.members.slice(0, 3);
@@ -206,9 +205,9 @@ export class TeamPerformanceComponent implements OnInit {
       .getScores(this.getScoreParams('tags', duration, false))
       .pipe(
         tap((res) => {
-          let filteredTags: ScoreDtoApi[] = res.scores;
+          let filteredTags: Score[] = res;
           if (this.selectedTags.length > 0) {
-            filteredTags = res.scores.filter((s) => this.selectedTags.find((m) => m.id === s.id));
+            filteredTags = res.filter((s) => this.selectedTags.find((m) => m.id === s.id));
           }
           this.createTagsChart(filteredTags, duration);
           this.tagsChartStatus = filteredTags.length > 0 ? 'good' : 'noData';
@@ -217,7 +216,7 @@ export class TeamPerformanceComponent implements OnInit {
       .subscribe();
   }
 
-  createTagsChart(scores: ScoreDtoApi[], duration: ScoreDuration): void {
+  createTagsChart(scores: Score[], duration: ScoreDuration): void {
     const aggregatedData = this.statisticService.transformDataToPoint(scores[0]);
 
     const labels = this.statisticService
@@ -295,9 +294,9 @@ export class TeamPerformanceComponent implements OnInit {
     ])
       .pipe(
         tap(([r, global]) => {
-          let filteredMembers: ScoreDtoApi[] = r.scores;
+          let filteredMembers: Score[] = r;
           if (this.selectedMembers.length > 0) {
-            filteredMembers = r.scores.filter((s) => this.selectedMembers.find((m) => m.id === s.id));
+            filteredMembers = r.filter((s) => this.selectedMembers.find((m) => m.id === s.id));
           }
           this.createTeamChart(filteredMembers, global, duration);
           this.teamChartStatus = filteredMembers.length > 0 ? 'good' : 'noData';
@@ -306,13 +305,13 @@ export class TeamPerformanceComponent implements OnInit {
       .subscribe();
   }
 
-  createTeamChart(scores: ScoreDtoApi[], global: ScoresResponseDtoApi, duration: ScoreDuration): void {
-    const reducedScores = this.scoresService.reduceLineChartData(scores);
+  createTeamChart(scores: Score[], global: Score[], duration: ScoreDuration): void {
+    const formatedScores = this.scoresService.formatScores(scores);
 
     const aggregatedData = this.statisticService.transformDataToPoint(scores[0]);
     const globalPoints = this.statisticService
-      .transformDataToPoint(global.scores[0])
-      .slice(-reducedScores[0]?.averages?.length);
+      .transformDataToPoint(global[0])
+      .slice(-formatedScores[0]?.averages?.length);
 
     const labels = this.statisticService
       .formatLabel(

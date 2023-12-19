@@ -8,7 +8,7 @@ import {
   ScoreTypeEnumApi,
 } from '@usealto/sdk-ts-angular';
 import { combineLatest } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ITeam, Team } from 'src/app/models/team.model';
@@ -21,6 +21,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
 import { StatisticsService } from '../../../services/statistics.service';
+import { Score } from 'src/app/models/score.model';
 
 @Component({
   selector: 'alto-user-engagement',
@@ -53,8 +54,8 @@ export class UserEngagementComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    const usersById = (data[EResolverData.AppData] as IAppData).userById;
-    const teamsById = (data[EResolverData.AppData] as IAppData).teamById;
+    const usersById = (data[EResolvers.AppResolver] as IAppData).userById;
+    const teamsById = (data[EResolvers.AppResolver] as IAppData).teamById;
     const userId = this.router.url.split('/').pop() || '';
     this.user = usersById.get(userId) || new User({} as IUser);
     this.userTeam = teamsById.get(this.user.teamId || '') || new Team({} as ITeam);
@@ -73,25 +74,23 @@ export class UserEngagementComponent implements OnInit {
       this.scoreRestService.getScores(this.getScoreparams('submitedQuestions', duration)),
       this.scoreRestService.getScores(this.getScoreparams('comments', duration)),
     ]).subscribe(([answers, comments]) => {
-      this.createContributionChart(comments.scores, answers.scores, duration);
-      this.contributionChartStatus = answers.scores.length || comments.scores.length ? 'good' : 'empty';
+      this.contributionChartStatus = answers.length || comments.length ? 'good' : 'empty';
+      if (answers.length || comments.length) {
+        this.createContributionChart(comments, answers, duration);
+      }
     });
   }
 
-  createContributionChart(
-    comments: ScoreDtoApi[],
-    submitedQuestions: ScoreDtoApi[],
-    duration: ScoreDuration,
-  ): void {
-    const reducedComments = this.scoresService.reduceLineChartData(comments);
-    const reducedQuestionsSubmitted = this.scoresService.reduceLineChartData(submitedQuestions);
-    const aggregatedComments = this.statisticsService.transformDataToPointByCounts(reducedComments[0]);
+  createContributionChart(comments: Score[], submitedQuestions: Score[], duration: ScoreDuration): void {
+    const formatedComments = this.scoresService.formatScores(comments);
+    const formatedQuestionsSubmitted = this.scoresService.formatScores(submitedQuestions);
+    const aggregatedComments = this.statisticsService.transformDataToPointByCounts(formatedComments[0]);
     const aggregatedQuestionsSubmitted = this.statisticsService.transformDataToPointByCounts(
-      reducedQuestionsSubmitted[0],
+      formatedQuestionsSubmitted[0],
     );
     const labels = this.statisticsService
       .formatLabel(
-        reducedComments.length > 0
+        formatedComments.length > 0
           ? aggregatedComments.map((d) => d.x)
           : aggregatedQuestionsSubmitted.map((d) => d.x),
         duration,
@@ -143,15 +142,17 @@ export class UserEngagementComponent implements OnInit {
 
   getAnswersChart(duration: ScoreDuration): void {
     this.answersChartStatus = 'loading';
-    this.scoreRestService.getScores(this.getScoreparams('answers', duration)).subscribe((res) => {
-      this.createAnswersChart(res.scores[0], duration);
-      this.answersChartStatus = res.scores.length ? 'good' : 'empty';
+    this.scoreRestService.getScores(this.getScoreparams('answers', duration)).subscribe((scores) => {
+      this.answersChartStatus = scores.length ? 'good' : 'empty';
+      if (scores.length) {
+        this.createAnswersChart(scores[0], duration);
+      }
     });
   }
 
-  createAnswersChart(scores: ScoreDtoApi, duration: ScoreDuration): void {
-    const reducedScores = this.scoresService.reduceLineChartData([scores]);
-    const points = this.statisticsService.transformDataToPointByCounts(reducedScores[0]);
+  createAnswersChart(scores: Score, duration: ScoreDuration): void {
+    const formatedScores = this.scoresService.formatScores([scores]);
+    const points = this.statisticsService.transformDataToPointByCounts(formatedScores[0]);
     const labels = this.statisticsService
       .formatLabel(
         points.map((p) => p.x),
@@ -159,7 +160,7 @@ export class UserEngagementComponent implements OnInit {
       )
       .map((l) => this.titleCasePipe.transform(l));
 
-    const dataset = reducedScores.map((s) => {
+    const dataset = formatedScores.map((s) => {
       const d = this.statisticsService.transformDataToPointByCounts(s);
       return {
         label: s.label,

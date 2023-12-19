@@ -4,7 +4,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { PriorityEnumApi, TagDtoApi } from '@usealto/sdk-ts-angular';
 import { tap } from 'rxjs';
 import { IFormGroup } from 'src/app/core/form-types';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns, getTranslation } from 'src/app/core/utils/i18n/I18n';
 import { Team } from 'src/app/models/team.model';
@@ -38,7 +38,7 @@ export class ProgramsFormComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.teams = Array.from((data[EResolverData.AppData] as IAppData).teamById.values());
+    this.teams = Array.from((data[EResolvers.AppResolver] as IAppData).teamById.values());
     this.tagService
       .getTags()
       .pipe(

@@ -9,13 +9,7 @@ import {
   userAccessGuard,
 } from './core/guards';
 import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
-import {
-  appResolver,
-  homeResolver,
-  leadResolver,
-  noSplashScreenResolver,
-  programResolver,
-} from './core/resolvers';
+import { appResolver, homeResolver, leadResolver, noSplashScreenResolver } from './core/resolvers';
 import { companyResolver } from './core/resolvers/company.resolver';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
@@ -35,7 +29,7 @@ const routes: Routes = [
     canActivate: [AppGuard, AuthGuard, PreventSmallScreenGuard],
     canActivateChild: [AuthGuard],
     resolve: {
-      appData: appResolver,
+      appResolver,
     },
     runGuardsAndResolvers: 'always',
     children: [
@@ -70,23 +64,20 @@ const routes: Routes = [
         path: AltoRoutes.lead,
         canActivate: [leadAccessGuard],
         resolve: {
-          leadData: leadResolver,
-          company: companyResolver,
+          leadResolver,
+          companyResolver,
         },
         children: [
           { path: '', redirectTo: AltoRoutes.leadHome, pathMatch: 'full' },
           {
             path: AltoRoutes.leadHome,
             resolve: {
-              homeData: homeResolver,
+              homeResolver,
             },
             loadChildren: () => import('./modules/lead-home/lead-home.module').then((m) => m.LeadHomeModule),
           },
           {
             path: AltoRoutes.programs,
-            resolve: {
-              appData: programResolver,
-            },
             loadChildren: () => import('./modules/programs/programs.module').then((m) => m.ProgramsModule),
             data: {
               preload: true,

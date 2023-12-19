@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { GuessDtoApi, UserDtoApi, UserLightDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
 import { combineLatest, map, tap } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
@@ -55,8 +55,8 @@ export class UserHomeComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.user = (data[EResolverData.AppData] as IAppData).me;
-    this.users = Array.from((data[EResolverData.AppData] as IAppData).userById.values());
+    this.user = (data[EResolvers.AppResolver] as IAppData).me;
+    this.users = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
     this.programRunsRestService
       .getMyProgramRunsCards(this.user.id, this.user.teamId ?? '')
       .pipe(tap((a) => (this.myProgramRunsCards = a.filter((r) => r.isProgress && r.duration))))
