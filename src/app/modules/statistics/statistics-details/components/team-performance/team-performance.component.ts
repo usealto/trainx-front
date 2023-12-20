@@ -91,11 +91,11 @@ export class TeamPerformanceComponent implements OnInit {
     this.members = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values()).filter(
       (u) => u.teamId === this.teamId,
     );
-    this.selectedMembers = this.members.slice(0, 3);
+    this.selectedMembers = this.members.slice(0, 1);
 
     this.tagsRestService.getTags().subscribe((tags) => {
       this.tags = tags;
-      this.selectedTags = tags.slice(0, 3);
+      this.selectedTags = tags.slice(0, 1);
       this.loadPage();
     });
   }
