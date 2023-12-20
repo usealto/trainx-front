@@ -148,6 +148,31 @@
   h1 {
     margin: 0;
   }
+
+  &.alert {
+    justify-content: space-between;
+
+    .main {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .alertMsg {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      i {
+        color: var(--bs-danger);
+      }
+
+      p {
+        margin: 0;
+        color: var(--bs-danger);
+      }
+    }
+  }
 }
 
 @media screen and (max-width: 820px) {
