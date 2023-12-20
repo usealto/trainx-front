@@ -306,12 +306,18 @@ export class TeamPerformanceComponent implements OnInit {
   }
 
   createTeamChart(scores: Score[], global: Score[], duration: ScoreDuration): void {
-    const formatedScores = this.scoresService.formatScores(scores);
+    const formattedScores = this.scoresService.formatScores(scores);
+    const formattedGlobalScores = this.scoresService.formatScores(global);
 
-    const aggregatedData = this.statisticService.transformDataToPoint(scores[0]);
+    const [aggregatedFormattedScores, aggregatedFormattedGlobalScores] = this.scoresService.formatScores([
+      formattedScores[0],
+      formattedGlobalScores[0],
+    ]);
+
+    const aggregatedData = this.statisticService.transformDataToPoint(aggregatedFormattedScores);
     const globalPoints = this.statisticService
-      .transformDataToPoint(global[0])
-      .slice(-formatedScores[0]?.averages?.length);
+      .transformDataToPoint(aggregatedFormattedGlobalScores)
+      .slice(-formattedScores[0]?.averages?.length);
 
     const labels = this.statisticService
       .formatLabel(
@@ -320,7 +326,7 @@ export class TeamPerformanceComponent implements OnInit {
       )
       .map((s) => this.titleCasePipe.transform(s));
 
-    const dataSet = scores.map((s) => {
+    const dataSet = formattedScores.map((s) => {
       const d = this.statisticService.transformDataToPoint(s);
       return { label: s.label, data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)) };
     });

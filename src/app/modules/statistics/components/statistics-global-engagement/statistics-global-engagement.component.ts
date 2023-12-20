@@ -200,12 +200,17 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
           commentsScores.length > 0 || questionsSubmittedScores.length > 0,
       ),
       tap(([commentsScores, questionsSubmittedScores]) => {
-        const formattedScores = this.scoresService.formatScores(commentsScores);
+        const formattedCommentsScores = this.scoresService.formatScores(commentsScores);
         const formattedQuestionsSubmittedScores = this.scoresService.formatScores(questionsSubmittedScores);
 
-        const aggregatedComments = this.statisticsServices.transformDataToPointByCounts(formattedScores[0]);
+        const [aggregaedFormattedCommentsScores, aggregatedFormattedQuestionsSubmittedScores] =
+          this.scoresService.formatScores([formattedCommentsScores[0], formattedQuestionsSubmittedScores[0]]);
+
+        const aggregatedComments = this.statisticsServices.transformDataToPointByCounts(
+          aggregaedFormattedCommentsScores,
+        );
         const aggregatedQuestionsSubmitted = this.statisticsServices.transformDataToPointByCounts(
-          formattedQuestionsSubmittedScores[0],
+          aggregatedFormattedQuestionsSubmittedScores,
         );
         const labels = this.statisticsServices
           .formatLabel(
