@@ -29,7 +29,7 @@ import { Program } from '../../../../models/program.model';
 import { IProgramsData } from '../../../../core/resolvers/programs.resolver';
 import { Store } from '@ngrx/store';
 import * as FromRoot from '../../../../core/store/store.reducer';
-import { setTeams } from '../../../../core/store/root/root.action';
+import { setPrograms, setTeams } from '../../../../core/store/root/root.action';
 
 interface TeamDisplay {
   id: string;
@@ -88,6 +88,7 @@ export class LeadTeamComponent implements OnInit {
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
     private readonly teamsRestService: TeamsRestService,
+    private readonly programsRestService: ProgramsRestService,
     private readonly usersService: UsersService,
     private readonly scoreRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
@@ -244,6 +245,13 @@ export class LeadTeamComponent implements OnInit {
         tap((teams) => {
           this.store.dispatch(setTeams({ teams }));
         }),
+        switchMap(() => {
+          return this.programsRestService.getProgramsObj();
+        }),
+        tap((programs) => {
+          this.store.dispatch(setPrograms({ programs }));
+        }),
+
       )
       .subscribe();
   }
