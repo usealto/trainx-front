@@ -9,7 +9,7 @@ import {
   TagDtoApi,
   UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { combineLatest, tap } from 'rxjs';
+import { combineLatest, of, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -25,7 +25,7 @@ import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
-import { StatisticsService } from '../../../services/statistics.service';
+import { Point, StatisticsService } from '../../../services/statistics.service';
 import { Score } from 'src/app/models/score.model';
 
 @Component({
@@ -289,7 +289,9 @@ export class TeamPerformanceComponent implements OnInit {
   getTeamChartScores(duration: ScoreDuration): void {
     this.teamChartStatus = 'loading';
     combineLatest([
-      this.scoresRestService.getScores(this.getScoreParams('members', duration, false)),
+      this.members.length
+        ? this.scoresRestService.getScores(this.getScoreParams('members', duration, false))
+        : of([]),
       this.scoresRestService.getScores(this.getScoreParams('members', duration, true)),
     ])
       .pipe(
@@ -299,25 +301,38 @@ export class TeamPerformanceComponent implements OnInit {
             filteredMembers = r.filter((s) => this.selectedMembers.find((m) => m.id === s.id));
           }
           this.createTeamChart(filteredMembers, global, duration);
-          this.teamChartStatus = filteredMembers.length > 0 ? 'good' : 'noData';
+          this.teamChartStatus = [...filteredMembers, global].length > 0 ? 'good' : 'noData';
         }),
       )
       .subscribe();
   }
 
   createTeamChart(scores: Score[], global: Score[], duration: ScoreDuration): void {
-    const formattedScores = this.scoresService.formatScores(scores);
+    // /!\ scores can be empty /!\
+    const formattedScores = scores.length ? this.scoresService.formatScores(scores) : [];
     const formattedGlobalScores = this.scoresService.formatScores(global);
 
-    const [aggregatedFormattedScores, aggregatedFormattedGlobalScores] = this.scoresService.formatScores([
-      formattedScores[0],
-      formattedGlobalScores[0],
-    ]);
+    let aggregatedFormattedScores: Score;
+    let aggregatedFormattedGlobalScores: Score;
+    let aggregatedData: Point[] = [];
 
-    const aggregatedData = this.statisticService.transformDataToPoint(aggregatedFormattedScores);
-    const globalPoints = this.statisticService
-      .transformDataToPoint(aggregatedFormattedGlobalScores)
-      .slice(-formattedScores[0]?.averages?.length);
+    if (scores.length) {
+      [aggregatedFormattedScores, aggregatedFormattedGlobalScores] = this.scoresService.formatScores([
+        formattedScores[0],
+        formattedGlobalScores[0],
+      ]);
+
+      aggregatedData = this.statisticService.transformDataToPoint(aggregatedFormattedScores);
+    } else {
+      aggregatedFormattedGlobalScores = this.scoresService.formatScores([formattedGlobalScores[0]])[0];
+      aggregatedData = this.statisticService.transformDataToPoint(aggregatedFormattedGlobalScores);
+    }
+
+    const globalPoints = scores.length
+      ? this.statisticService
+          .transformDataToPoint(aggregatedFormattedGlobalScores)
+          .slice(-formattedScores[0]?.averages?.length)
+      : this.statisticService.transformDataToPoint(aggregatedFormattedGlobalScores);
 
     const labels = this.statisticService
       .formatLabel(
@@ -326,10 +341,12 @@ export class TeamPerformanceComponent implements OnInit {
       )
       .map((s) => this.titleCasePipe.transform(s));
 
-    const dataSet = formattedScores.map((s) => {
-      const d = this.statisticService.transformDataToPoint(s);
-      return { label: s.label, data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)) };
-    });
+    const dataSet = scores.length
+      ? formattedScores.map((s) => {
+          const d = this.statisticService.transformDataToPoint(s);
+          return { label: s.label, data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)) };
+        })
+      : [];
 
     const series = dataSet.map((d) => {
       return {
@@ -384,7 +401,6 @@ export class TeamPerformanceComponent implements OnInit {
     this.loadPage();
   }
 
-  @memoize()
   getScoreParams(type: 'members' | 'tags', duration: ScoreDuration, global: boolean): ChartFilters {
     return {
       duration: duration,

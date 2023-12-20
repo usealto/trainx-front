@@ -31,6 +31,7 @@ export class StatisticsDetailsComponent implements OnInit {
   ];
 
   selectedTab = '';
+  emptyTeam = false;
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
@@ -54,6 +55,7 @@ export class StatisticsDetailsComponent implements OnInit {
         this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, AltoRoutes.performance]);
       } else {
         this.name = team.name;
+        this.emptyTeam = users.every(({ teamId }) => teamId !== team.id);
       }
     }
   }

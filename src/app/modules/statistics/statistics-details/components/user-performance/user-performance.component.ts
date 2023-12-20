@@ -88,9 +88,11 @@ export class UserPerformanceComponent implements OnInit {
           this.selectedSpiderTags = r.slice(0, 6);
         }),
       )
-      .subscribe();
-
-    this.loadPage();
+      .subscribe({
+        next: () => {
+          this.loadPage();
+        },
+      });
   }
 
   loadPage(): void {

@@ -1,9 +1,25 @@
-<div class="header-panel">
+<div *ngIf="!emptyTeam; else emptyAlert" class="header-panel">
   <img [src]="EmojiName.ChartIncreasing | emoji" height="32" width="32" />
   <h1 data-cy="leadStatisticsTitle">
     {{ I18ns.statistics.title }} <i class="mx-3 bi bi-arrow-right"></i> {{ name }}
   </h1>
 </div>
+
+<ng-template #emptyAlert>
+  <div class="header-panel alert">
+    <div class="main">
+      <img [src]="EmojiName.ChartIncreasing | emoji" height="32" width="32" />
+      <h1 data-cy="leadStatisticsTitle">
+        {{ I18ns.statistics.title }} <i class="mx-3 bi bi-arrow-right"></i> {{ name }}
+      </h1>
+    </div>
+    <div class="alertMsg">
+      <i class="bi-exclamation-triangle"></i>
+      <p>{{ I18ns.statistics.team.emptyTeam }}</p>
+    </div>
+  </div>
+</ng-template>
+
 <alto-tabs
   class="tabs d-block fw-bold"
   (tabChanged)="tabChange($event)"

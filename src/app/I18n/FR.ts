@@ -507,6 +507,7 @@ export const FR = {
       },
     },
     team: {
+      emptyTeam: 'Pas de membre dans cette équipe',
       teamActivity: {
         title: 'Activité de l’équipe',
         subtitle: 'Retrouvez une vue d’ensemble de l’activité des membres de l’équipe.',
