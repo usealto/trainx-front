@@ -17,8 +17,8 @@ export class ChartRadarComponent implements OnChanges, AfterViewInit {
 
   ngOnChanges(): void {
     if (this.chartOption && this.isLoaded) {
-      // this.radarOption = this.chartsService.altoFormattingRadar(this.chartOption);
-      this.radarOption = this.chartOption;
+      this.radarOption = this.chartsService.altoFormattingRadar(this.chartOption);
+      // this.radarOption = this.chartOption;
     }
   }
 
