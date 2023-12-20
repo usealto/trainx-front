@@ -36,7 +36,7 @@ export class StatisticsDetailsComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     const users = Array.from((data[EResolverData.AppData] as IAppData).userById.values());
-    const teams = (data[EResolverData.Company] as ICompany).teams;
+    const teams = (data[EResolverData.AppData] as IAppData).company.teams;
 
     this.type = this.router.url.split('/')[3] === 'team' ? 'team' : 'user';
     this.id = this.router.url.split('/').pop() || '';

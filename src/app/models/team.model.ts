@@ -187,6 +187,7 @@ export class TeamProgramStats implements ITeamProgramStats {
 
 export interface ITeamTagStats {
   tagId: string;
+  name: string;
   totalGuessesCount: number;
   validGuessesCount: number;
   score: number;
@@ -194,12 +195,14 @@ export interface ITeamTagStats {
 
 export class TeamTagStats implements ITeamTagStats {
   tagId: string;
+  name: string;
   totalGuessesCount: number;
   validGuessesCount: number;
   score: number;
 
   constructor(data: ITeamTagStats) {
     this.tagId = data.tagId;
+    this.name = data.name;
     this.totalGuessesCount = data.totalGuessesCount;
     this.validGuessesCount = data.validGuessesCount;
     this.score = data.score;
@@ -208,6 +211,7 @@ export class TeamTagStats implements ITeamTagStats {
   static fromDto(data: TagStatsLightDtoApi): TeamTagStats {
     return new TeamTagStats({
       tagId: data.tag.id,
+      name: data.tag.name,
       totalGuessesCount: data.totalGuessesCount || 0,
       validGuessesCount: data.validGuessesCount || 0,
       score: data.score || 0,
@@ -217,6 +221,7 @@ export class TeamTagStats implements ITeamTagStats {
   get rawData(): ITeamTagStats {
     return {
       tagId: this.tagId,
+      name: this.name,
       totalGuessesCount: this.totalGuessesCount,
       validGuessesCount: this.validGuessesCount,
       score: this.score,

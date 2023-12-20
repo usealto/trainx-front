@@ -23,6 +23,9 @@ import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/mod
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { DataForTable } from '../../models/statistics.model';
+import { Store } from '@ngrx/store';
+import * as FromRoot from '../../../../core/store/store.reducer';
+
 
 @UntilDestroy()
 @Component({
@@ -36,7 +39,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   duration: ScoreDuration = ScoreDuration.Trimester;
   AltoRoutes = AltoRoutes;
 
-  company!: Company;
+  company: Company = {} as Company;
 
   leaderboard: { name: string; score: number; progression: number }[] = [];
 
@@ -64,11 +67,14 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     private readonly statisticsServices: StatisticsService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
+    private readonly store: Store<FromRoot.AppState>,
   ) {}
 
   ngOnInit(): void {
-    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.company = data[EResolverData.Company] as Company;
+    this.store
+      .select(FromRoot.selectCompany)
+      .pipe(tap(({ data: company }) => (this.company = company)))
+      .subscribe();
     this.getAllData();
   }
 

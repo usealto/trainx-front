@@ -9,7 +9,11 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { DataForTable } from '../../models/statistics.model';
-import { Team } from '../../../../models/team.model';
+import { Team, TeamStats } from '../../../../models/team.model';
+import { Company } from '../../../../models/company.model';
+import * as FromRoot from '../../../../core/store/store.reducer';
+import { Store } from '@ngrx/store';
+
 
 @Component({
   selector: 'alto-statistics-per-teams',
@@ -22,8 +26,12 @@ export class StatisticsPerTeamsComponent implements OnInit {
   userFilters: UserFilters = { teams: [] as Team[], score: '' };
   duration: ScoreDuration = ScoreDuration.Trimester;
 
-  teams: TeamDtoApi[] = [];
+  company: Company = {} as Company;
+  teams: Team[] = [];
   members: DataForTable[] = [];
+
+  teamsStats: TeamStats[] = [];
+  teamsStatsPrev: TeamStats[] = [];
 
   membersDisplay: DataForTable[] = [];
   membersDataStatus: PlaceholderDataStatus = 'loading';
@@ -34,28 +42,34 @@ export class StatisticsPerTeamsComponent implements OnInit {
   constructor(
     private readonly scoreRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
+    private readonly store: Store<FromRoot.AppState>,
   ) {}
 
   ngOnInit(): void {
-    this.getDatas();
+    this.store
+      .select(FromRoot.selectCompany)
+      .pipe(tap(({ data: company }) => {
+        this.company = company
+        this.teams = this.company.teams;
+        this.teamsStats = this.company.getStatsByPeriod(this.duration, false);
+        this.teamsStatsPrev = this.company.getStatsByPeriod(this.duration, true);
+        this.getDatas();
+      }))
+      .subscribe();
   }
 
   getDatas() {
     combineLatest([
-      this.scoreRestService.getTeamsStats(this.duration),
-      this.scoreRestService.getTeamsStats(this.duration, true),
       this.scoreRestService.getUsersStats(this.duration),
       this.scoreRestService.getUsersStats(this.duration, true),
     ])
       .pipe(
-        tap(([teams, teamsProg, users, usersProg]) => {
-          this.teams = teams.map((t) => t.team);
-
-          this.teamsDisplay = teams.map((t) => {
-            const teamProg = teamsProg.find((tp) => tp.team.id === t.team.id);
+        tap(([users, usersProg]) => {
+          this.teamsDisplay = this.teamsStats.map((t) => {
+            const teamProg = this.teamsStatsPrev.find((tp) => tp.teamId === t.teamId);
             return this.dataForTeamTableMapper(t, teamProg);
           });
-          this.teamsDataStatus = teams.length === 0 ? 'noData' : 'good';
+          this.teamsDataStatus = this.teams.length === 0 ? 'noData' : 'good';
 
           this.membersDisplay = users.map((u) => {
             const userProg = usersProg.find((tp) => tp.user.id === u.user.id);
@@ -91,9 +105,9 @@ export class StatisticsPerTeamsComponent implements OnInit {
     this.getDatas();
   }
 
-  dataForTeamTableMapper(t: TeamStatsDtoApi, tProg?: TeamStatsDtoApi) {
+  dataForTeamTableMapper(t: TeamStats, tProg?: TeamStats) {
     return {
-      team: t.team,
+      team: this.teams.find((team) => team.id === t.teamId),
       globalScore: t.score,
       answeredQuestionsCount: t.totalGuessesCount,
       answeredQuestionsProgression:
@@ -103,11 +117,11 @@ export class StatisticsPerTeamsComponent implements OnInit {
       submittedQuestionsCount: t.questionsSubmittedCount,
       submittedQuestionsProgression:
         this.scoreService.getProgression(t.questionsSubmittedCount, tProg?.questionsSubmittedCount) ?? 0,
-      leastMasteredTags: t.tags
+      leastMasteredTags: t.tagStats
         ?.filter((ta) => (ta.score ?? 0) < 50)
         .sort((a, b) => (a.score || 0) - (b.score || 0))
         .slice(0, 3)
-        .map((t) => t.tag.name),
+        .map((t) => t.name),
     } as DataForTable;
   }
 
