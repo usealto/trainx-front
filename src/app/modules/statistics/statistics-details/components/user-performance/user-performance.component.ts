@@ -88,9 +88,11 @@ export class UserPerformanceComponent implements OnInit {
           this.selectedSpiderTags = r.slice(0, 6);
         }),
       )
-      .subscribe();
-
-    this.loadPage();
+      .subscribe({
+        next: () => {
+          this.loadPage();
+        },
+      });
   }
 
   loadPage(): void {
@@ -135,7 +137,7 @@ export class UserPerformanceComponent implements OnInit {
       series: [
         {
           type: 'radar',
-          silent: true,
+          // silent: true,
           data: [
             {
               value: teamScores.map((s) => (s.score ? Math.round((s.score * 10000) / 100) : s.score)),
@@ -251,15 +253,19 @@ export class UserPerformanceComponent implements OnInit {
   }
 
   createUserChart(userScores: Score, teamScores: Score, duration: ScoreDuration): void {
-    const formatedTeamScores = this.scoresService.formatScores([teamScores])[0];
-    const teamPoints = this.statisticsService.transformDataToPoint(formatedTeamScores);
+    const [formattedUserScores, formattedTeamScores] = this.scoresService.formatScores([
+      userScores,
+      teamScores,
+    ]);
+
+    const teamPoints = this.statisticsService.transformDataToPoint(formattedTeamScores);
 
     const labels = this.statisticsService.formatLabel(
       teamPoints.map((d) => d.x),
       duration,
     );
 
-    const dataSets = [userScores, teamScores].map((scores) => {
+    const dataSets = [formattedUserScores, formattedTeamScores].map((scores) => {
       const d = this.statisticsService.transformDataToPoint(scores);
       return {
         label: scores.label,

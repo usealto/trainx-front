@@ -34,7 +34,6 @@
       let allowedHosts = ['trainx.getcockpit.io'];
       let url = window.location.href,
       host = url.split('/')[2];
-      console.log('host',host,allowedHosts,allowedHosts.includes(host));
       if (allowedHosts.includes(host)) {
         (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
