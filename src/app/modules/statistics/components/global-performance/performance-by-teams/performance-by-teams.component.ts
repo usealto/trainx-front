@@ -75,7 +75,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
         this.teamScores = scores;
         let filteredTeams = scores;
         if (this.init) {
-          this.selectedTeams = this.teamScores.slice(0, 3);
+          this.selectedTeams = this.teamScores.slice(0, 1);
         }
         if (this.selectedTeams.length) {
           filteredTeams = scores.filter((score) => this.selectedTeams.some((team) => team.id === score.id));

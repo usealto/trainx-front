@@ -84,7 +84,7 @@ export class UserPerformanceComponent implements OnInit {
       .pipe(
         tap((r) => {
           this.tags = r;
-          this.selectedTags = r.slice(0, 3);
+          this.selectedTags = r.slice(0, 1);
           this.selectedSpiderTags = r.slice(0, 6);
         }),
       )
