@@ -190,7 +190,7 @@
           <th scope="col" class="w-25 text-center">
             {{ I18ns.leadTeam.members.table.globalScore }}
           </th>
-          <th scope="col" class="w-25">
+          <th scope="col" class="w-25 text-center">
             {{ I18ns.leadTeam.members.table.questionsPerMonth }}
             <i
               class="ms-2 alto-grey bi bi-question-circle"
@@ -220,7 +220,7 @@
               {{ I18ns.leadTeam.members.table.noScore }}
             </ng-template>
           </td>
-          <td>
+          <td class="text-center">
             <ng-container *ngIf="(user.totalGuessesCount ?? 0) > 0; else noData">
               <span class="w-10 d-inline-block">
                 {{ user.totalGuessesCount }}
