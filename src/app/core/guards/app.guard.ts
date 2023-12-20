@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { map, of, switchMap, withLatestFrom } from 'rxjs';
+import { combineLatest, map, of, switchMap, tap, withLatestFrom } from 'rxjs';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { CompaniesRestService } from '../../modules/companies/service/companies-rest.service';
 import { UsersRestService } from '../../modules/profile/services/users-rest.service';
@@ -40,19 +40,24 @@ export const AppGuard: CanActivateFn = () => {
         withLatestFrom(store.select(FromRoot.selectCompany)),
         switchMap(([user, timestampedCompany]) => {
           return timestampedCompany.needsUpdate()
-            ? companiesRestService.getCompanyById(user.companyId).pipe(
-              withLatestFrom(teamsRestService.getTeams()),
-              switchMap(([company, teams]) => {
-                const updatedCompany = company ?? new Company({} as ICompany);
-                const companyWithTeams = new Company({...updatedCompany.rawData, teams: teams.map(team => team.rawData)});
+            ? combineLatest([
+                companiesRestService.getCompanyById(user.companyId),
+                teamsRestService.getTeams(),
+              ]).pipe(
+                switchMap(([company, teams]) => {
+                  const updatedCompany = company ?? new Company({} as ICompany);
+                  const companyWithTeams = new Company({
+                    ...updatedCompany.rawData,
+                    teams: teams.map((team) => team.rawData),
+                  });
 
-                console.log('companyWithTeams : ', companyWithTeams);
+                  console.log('companyWithTeams : ', companyWithTeams);
 
-                store.dispatch(setCompany({company: companyWithTeams}));
-                return store.select(FromRoot.selectCompany);
-              })
-            )
-            : of(timestampedCompany)
+                  store.dispatch(setCompany({ company: companyWithTeams }));
+                  return store.select(FromRoot.selectCompany);
+                }),
+              )
+            : of(timestampedCompany);
         }),
         map((company) => {
           if (!company) {

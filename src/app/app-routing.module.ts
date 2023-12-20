@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import {
+  AppGuard,
   PreventSmallScreenGuard,
   altoAdminGuard,
-  AppGuard,
   leadAccessGuard,
   userAccessGuard,
 } from './core/guards';
@@ -18,6 +18,7 @@ import {
   programsResolver,
   trainingResolver,
 } from './core/resolvers';
+import { teamStatsResolver } from './core/resolvers/teamStats.resolver';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
 import { JwtComponent } from './layout/jwt/jwt.component';
@@ -28,9 +29,6 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
-import { companyResolver } from './core/resolvers/company.resolver';
-import { teamStatsResolver } from './core/resolvers/teamStats.resolver';
-import { teamsResolver } from './core/resolvers/teams.resolver';
 
 const routes: Routes = [
   {
