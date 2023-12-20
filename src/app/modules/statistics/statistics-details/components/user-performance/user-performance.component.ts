@@ -135,7 +135,7 @@ export class UserPerformanceComponent implements OnInit {
       series: [
         {
           type: 'radar',
-          silent: true,
+          // silent: true,
           data: [
             {
               value: teamScores.map((s) => (s.score ? Math.round((s.score * 10000) / 100) : s.score)),
