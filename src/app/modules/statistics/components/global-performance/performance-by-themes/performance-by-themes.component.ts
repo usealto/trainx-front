@@ -61,7 +61,7 @@ export class PerformanceByThemesComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['duration']) {
       const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-      this.teams = (data[EResolverData.Company] as ICompany).teams.map((t) => ({
+      this.teams = (data[EResolverData.AppData] as IAppData).company.teams.map((t) => ({
         label: t.name,
         id: t.id,
       }));

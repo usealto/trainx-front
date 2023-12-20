@@ -19,6 +19,8 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { TitleCasePipe } from '@angular/common';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
+import { Company } from '../../../../../models/company.model';
+import { Team, TeamStats } from '../../../../../models/team.model';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -27,12 +29,13 @@ import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder
 })
 export class PerformanceByTeamsComponent implements OnChanges {
   @Input() duration: ScoreDuration = ScoreDuration.Year;
+  @Input() company?: Company;
   @Output() selecedDuration = this.duration;
 
   Emoji = EmojiName;
   I18ns = I18ns;
   init = true;
-  teams: ScoreDtoApi[] = [];
+  teamsScore: ScoreDtoApi[] = [];
   selectedTeams: ScoreDtoApi[] = [];
   scoredTeams: { label: string; score: number | null; progression: number | null }[] = [];
   scoreDataStatus: PlaceholderDataStatus = 'loading';
@@ -51,23 +54,39 @@ export class PerformanceByTeamsComponent implements OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['duration']) {
-      combineLatest([
-        this.getScores(),
-        this.scoresRestService.getTeamsStats(this.duration),
-        this.scoresRestService.getTeamsStats(this.duration, true),
-      ])
-        .pipe(
-          tap(([, teams]) => {
-            teams = teams.filter((t) => t.score && t.score >= 0);
-            this.teamsLeaderboard = teams.map((t) => ({ name: t.team.name, score: t.score ?? 0 }));
-            this.teamsLeaderboardDataStatus = this.teamsLeaderboard.length === 0 ? 'noData' : 'good';
-          }),
-          tap(([, current, previous]) => {
-            this.getTeamsScores(current, previous);
-          }),
-        )
-        .subscribe();
+    if ((changes['duration'] || changes['company']) && this.company?.teams) {
+      this.getScores().subscribe();
+
+      const teams = this.company.teams;
+
+      const teamStats = this.company.getStatsByPeriod(this.duration, false);
+      const previousTeamStats = this.company.getStatsByPeriod(this.duration, true);
+
+      const teamsStatstmp = teamStats.filter((t) => t.score && t.score >= 0);
+      this.teamsLeaderboard = teamsStatstmp.map((t) => ({
+        name: teams.filter((team) => t.teamId === team.id)[0].name,
+        score: t.score ?? 0,
+      }));
+      this.teamsLeaderboardDataStatus = this.teamsLeaderboard.length === 0 ? 'noData' : 'good';
+
+      this.getTeamsScores(teamStats, previousTeamStats);
+
+      // combineLatest([
+      //   this.getScores(),
+      //   this.scoresRestService.getTeamsStats(this.duration),
+      //   this.scoresRestService.getTeamsStats(this.duration, true),
+      // ])
+      //   .pipe(
+      //     tap(([, teams]) => {
+      //       teams = teams.filter((t) => t.score && t.score >= 0);
+      //       this.teamsLeaderboard = teams.map((t) => ({ name: t.team.name, score: t.score ?? 0 }));
+      //       this.teamsLeaderboardDataStatus = this.teamsLeaderboard.length === 0 ? 'noData' : 'good';
+      //     }),
+      //     tap(([, current, previous]) => {
+      //       this.getTeamsScores(current, previous);
+      //     }),
+      //   )
+      //   .subscribe();
     }
   }
 
@@ -77,10 +96,10 @@ export class PerformanceByTeamsComponent implements OnChanges {
       this.scoresRestService.getScores(this.getScoreParams(this.duration, true)),
     ]).pipe(
       tap(([res, global]) => {
-        this.teams = res.scores;
+        this.teamsScore = res.scores;
         let filteredTeams: ScoreDtoApi[] = res.scores;
         if (this.init) {
-          this.selectedTeams = this.teams.slice(0, 3);
+          this.selectedTeams = this.teamsScore.slice(0, 3);
         }
         if (this.selectedTeams.length) {
           filteredTeams = res.scores.filter((score) =>
@@ -93,11 +112,12 @@ export class PerformanceByTeamsComponent implements OnChanges {
     );
   }
 
-  getTeamsScores(current: TeamStatsDtoApi[], previous: TeamStatsDtoApi[]) {
+  getTeamsScores(current: TeamStats[], previous: TeamStats[]) {
     this.scoredTeams = current
       .map((team) => {
-        const progression = previous.find((t) => t.id === team.id)?.score ?? null;
-        return { label: team.label, score: team.score ?? 0, progression: progression };
+        const teamName = this.company?.teams.filter((t) => t.id === team.teamId)[0].name ?? '';
+        const progression = previous.find((t) => t.teamId === team.teamId)?.score ?? null;
+        return { label: teamName, score: team.score ?? 0, progression: progression };
       })
       .sort((a, b) => (a.score && b.score ? b.score - a.score : 0));
   }
@@ -158,7 +178,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
       yAxis: [{ ...yAxisScoreOptions }],
       series: series,
       legend: legendOptions,
-    };    
+    };
   }
 
   filterTeams(event: ScoreDtoApi[]) {
