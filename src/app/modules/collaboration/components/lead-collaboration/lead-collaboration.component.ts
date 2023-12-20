@@ -429,6 +429,9 @@ export class LeadCollaborationComponent implements OnInit {
     this.selectedPeriodsFilters = [];
     this.emptyPlaceholderData = undefined;
     this.getSelectedTabData();
+    if(this.selectedTab.value !== ETabValue.ALL) {
+      this.handleTabChange(this.tabs[2]);
+    }
   }
 
   initContributionsByPeriod() {

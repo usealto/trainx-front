@@ -1390,7 +1390,7 @@ export const FR = {
       allTitle: `Aucune question ou commentaire`,
       allSubtitle: `Vos utilisateurs n'ont fait aucun retour pour l'instant`,
       emptySearchTitle: `Aucun résultat ne correspond aux filtres sélectionnés.`,
-      emptySearchSubtitle: `Essayez avec d'autres filtres`,
+      emptySearchSubtitle: `Essayez avec d'autres filtres ou onglets`,
     },
     modal: {
       cancel: 'Annuler',
