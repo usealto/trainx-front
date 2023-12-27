@@ -14,6 +14,9 @@ import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { TeamsStatsFilters } from 'src/app/modules/shared/models/stats.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { TeamStats } from '../../../../../models/team.model';
+import { Program } from '../../../../../models/program.model';
+import { Company } from '../../../../../models/company.model';
 
 @UntilDestroy()
 @Component({
@@ -26,7 +29,11 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
 
+  @Input() company: Company = {} as Company;
   @Input() duration: ScoreDuration = ScoreDuration.Year;
+
+  teamsStats: TeamStats[] = [];
+  teamsStatsPrev: TeamStats[] = [];
 
   teamFilters: TeamsStatsFilters = {
     programs: [],
@@ -35,15 +42,12 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
     search: '',
   };
 
-  teams: TeamStatsDtoApi[] = [];
-  teamsPreviousPeriod: TeamStatsDtoApi[] = [];
-  teamsDisplay: TeamStatsDtoApi[] = [];
-  paginatedTeams: TeamStatsDtoApi[] = [];
+  teamsDisplay: TeamStats[] = [];
+  paginatedTeams: TeamStats[] = [];
   teamsDataStatus: PlaceholderDataStatus = 'loading';
   teamsPage = 1;
   teamsPageSize = 5;
 
-  programs: ProgramDtoApi[] = [];
   tags: TagDtoApi[] = [];
   scoreIsLoading = false;
 
@@ -56,18 +60,17 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    this.programsRestService
-      .getPrograms()
-      .pipe(tap((pgs) => (this.programs = pgs)))
-      .subscribe();
     this.tags = this.programsStore.tags.value;
 
-    this.getTeamsByDuration();
+    this.teamsStats = this.company.getStatsByPeriod(this.duration, false);
+    this.teamsStatsPrev = this.company.getStatsByPeriod(this.duration, true);
+
+    this.getTeamsFiltered();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['duration']?.firstChange && changes['duration']?.currentValue) {
-      this.getTeamsByDuration();
+      this.getTeamsFiltered();
     }
   }
 
@@ -86,60 +89,65 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
     // this.teamFilters.teams = teams;
     this.teamFilters.search = search;
 
-    let output: TeamStatsDtoApi[] = this.teams;
+    let output: TeamStats[] = this.teamsStats;
     if (programs && programs.length > 0) {
-      output = output.filter((t) => t.programs?.some((p) => programs.some((pr) => pr === p.id)));
+      output = output.filter((t) => t.programStats?.some((p) => programs.some((pr) => pr === p.programId)));
     }
     if (tags && tags.length > 0) {
-      output = output.filter((t) => t.tags?.some((p) => tags.some((pr) => pr === p.id)));
+      output = output.filter((t) => t.tagStats?.some((p) => tags.some((pr) => pr === p.tagId)));
     }
 
     if (search) {
-      output = output.filter((t) => t.team.name.toLowerCase().includes(search.toLowerCase()));
+      output = output.filter((t) =>
+        this.company.getTeamName(t.teamId).toLowerCase().includes(search.toLowerCase()),
+      );
     }
-    // if (teams && teams.length > 0) {
-    //   output = output.filter((t) => teams.some((pr) => pr === t.id));
-    // }
 
     this.teamsDisplay = output;
 
     this.changeTeamsPage(1);
   }
 
-  getTeamsByDuration() {
-    this.scoreIsLoading = true;
-    this.scoreRestService
-      .getTeamsStats(this.duration as ScoreDuration)
-      .pipe(
-        tap((t) => {
-          this.teams = t;
-          this.teamsDisplay = t;
-
-          this.changeTeamsPage(1);
-        }),
-        switchMap(() => this.scoreRestService.getTeamsStats(this.duration, true)),
-        tap((t) => (this.teamsPreviousPeriod = t)),
-        tap(() => (this.scoreIsLoading = false)),
-        tap(() => this.getTeamsFiltered()),
-        untilDestroyed(this),
-      )
-      .subscribe();
-  }
-
   changeTeamsPage(page: number) {
+    console.log('teamsDisplay', this.teamsDisplay);
     this.teamsPage = page;
     this.paginatedTeams = this.teamsDisplay.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
     this.teamsDataStatus = this.paginatedTeams.length === 0 ? 'noData' : 'good';
   }
 
   @memoize()
-  getTeamPreviousScore(team: TeamStatsDtoApi) {
-    const prevScore = this.teamsPreviousPeriod.filter((t) => t.id === team.id)[0]?.score || 0;
+  getTeamPreviousScore(team: TeamStats) {
+    const prevScore = this.teamsStatsPrev.filter((t) => t.teamId === team.teamId)[0]?.score || 0;
     return prevScore && team.score ? team.score - prevScore : 0;
   }
 
-  // @memoize()
-  // getTeamsDropdown(size: number): TeamDtoApi[] {
-  //   return this.teamsDisplay.map((t) => t.team);
-  // }
+  getLowestScorePrograms(teamId: string): any[] {
+    // Récupérer les statistiques de l'équipe spécifiée.
+    const teamStats = this.teamsStats.find((team) => team.teamId === teamId)?.programStats;
+
+    // Récupérer les programmes de l'équipe.
+    const teamPrograms = this.company.getTeamPrograms(teamId);
+
+    if (!teamStats || !teamPrograms) {
+      return [];
+    }
+
+    // Associer chaque programme avec son score en utilisant les IDs des programmes.
+    const programsWithScores = teamPrograms.map((program) => {
+      const programStat = teamStats.find((stat) => stat.programId === program.id);
+      return {
+        ...program,
+        score: programStat ? programStat.score : null,
+      };
+    });
+
+    // Filtrer les programmes qui n'ont pas de score.
+    const programsWithValidScores = programsWithScores.filter((program) => program.score !== null);
+
+    // Trier les programmes par score en ordre croissant.
+    programsWithValidScores.sort((a, b) => (a.score || 0)  - (b.score || 0));
+
+    // Retourner les trois programmes avec les scores les plus bas.
+    return programsWithValidScores.slice(0, 3);
+  }
 }

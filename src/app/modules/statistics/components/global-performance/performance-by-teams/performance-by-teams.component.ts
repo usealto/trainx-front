@@ -70,23 +70,6 @@ export class PerformanceByTeamsComponent implements OnChanges {
       this.teamsLeaderboardDataStatus = this.teamsLeaderboard.length === 0 ? 'noData' : 'good';
 
       this.getTeamsScores(teamStats, previousTeamStats);
-
-      // combineLatest([
-      //   this.getScores(),
-      //   this.scoresRestService.getTeamsStats(this.duration),
-      //   this.scoresRestService.getTeamsStats(this.duration, true),
-      // ])
-      //   .pipe(
-      //     tap(([, teams]) => {
-      //       teams = teams.filter((t) => t.score && t.score >= 0);
-      //       this.teamsLeaderboard = teams.map((t) => ({ name: t.team.name, score: t.score ?? 0 }));
-      //       this.teamsLeaderboardDataStatus = this.teamsLeaderboard.length === 0 ? 'noData' : 'good';
-      //     }),
-      //     tap(([, current, previous]) => {
-      //       this.getTeamsScores(current, previous);
-      //     }),
-      //   )
-      //   .subscribe();
     }
   }
 

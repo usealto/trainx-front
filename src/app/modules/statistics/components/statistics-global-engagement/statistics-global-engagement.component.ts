@@ -25,6 +25,7 @@ import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder
 import { DataForTable } from '../../models/statistics.model';
 import { Store } from '@ngrx/store';
 import * as FromRoot from '../../../../core/store/store.reducer';
+import { Team, TeamStats } from '../../../../models/team.model';
 
 
 @UntilDestroy()
@@ -41,6 +42,9 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
 
   company: Company = {} as Company;
 
+  teamsStats: TeamStats[] = [];
+  teamsStatsPrev: TeamStats[] = [];
+
   leaderboard: { name: string; score: number; progression: number }[] = [];
 
   guessChartOptions: any = {};
@@ -51,7 +55,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   collaborationDataStatus: PlaceholderDataStatus = 'loading';
 
   teamsDataStatus: PlaceholderDataStatus = 'loading';
-  teams: TeamDtoApi[] = [];
+  teams: Team[] = [];
   teamsDisplay: DataForTable[] = [];
   paginatedTeams: DataForTable[] = [];
   teamsPage = 1;
@@ -75,16 +79,19 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
       .select(FromRoot.selectCompany)
       .pipe(tap(({ data: company }) => (this.company = company)))
       .subscribe();
+    this.teamsStats = this.company.getStatsByPeriod(this.duration, false);
+    this.teamsStatsPrev = this.company.getStatsByPeriod(this.duration, true);
     this.getAllData();
   }
 
   private getAllData(): void {
-    combineLatest([this.getActivityData(), this.getTeamEngagementData(), this.getTeamDataForTable()])
+    this.getTeamDataForTable();
+    combineLatest([this.getActivityData(), this.getTeamEngagementData()])
       .pipe(untilDestroyed(this))
       .subscribe();
   }
 
-  private getActivityData(): Observable<[TeamStatsDtoApi[], TeamStatsDtoApi[]]> {
+  private getActivityData(): Observable<[TeamStats[], TeamStats[]]> {
     return this.scoresRestService
       .getScores({
         duration: this.duration,
@@ -145,24 +152,22 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             legend: { show: false },
           };
         }),
-        switchMap(() => {
-          return combineLatest([
-            this.scoresRestService.getTeamsStats(this.duration, false, 'totalGuessesCount:desc'),
-            this.scoresRestService.getTeamsStats(this.duration, true, 'totalGuessesCount:desc'),
-          ]);
+        map((): [TeamStats[], TeamStats[]] => {
+          return [this.teamsStats, this.teamsStatsPrev];
         }),
         tap(
           ([currentsStats]) =>
             (this.guessesLeaderboardDataStatus = currentsStats.length === 0 ? 'noData' : 'good'),
         ),
         tap(([currentStats, previousStats]) => {
+          currentStats = currentStats.sort((a, b) => (b.totalGuessesCount || 0) - (a.totalGuessesCount || 0));
           currentStats = currentStats.filter((t) => t.score && t.score >= 0);
           previousStats = previousStats.filter((t) => t.score && t.score >= 0);
           this.leaderboard = currentStats.map((t) => {
-            const previousScore = previousStats.find((p) => p.team.id === t.team.id)?.score;
+            const previousScore = previousStats.find((p) => p.teamId === t.teamId)?.score;
             const progression = this.scoresService.getProgression(t.score, previousScore);
             return {
-              name: t.team.name,
+              name: this.company.teams.find((team) => team.id === t.teamId)?.name ?? '',
               score: t.totalGuessesCount ? t.totalGuessesCount : 0,
               progression: progression ? progression : 0,
             };
@@ -260,26 +265,16 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     );
   }
 
-  private getTeamDataForTable(): Observable<[TeamStatsDtoApi[], TeamStatsDtoApi[]]> {
-    return combineLatest([
-      this.scoresRestService.getTeamsStats(this.duration),
-      this.scoresRestService.getTeamsStats(this.duration, true),
-    ]).pipe(
-      tap(([teams]) => {
-        this.teamsDataStatus = teams.length === 0 ? 'noData' : 'good';
-      }),
-      filter(([teams]) => teams.length > 0),
-      tap(([teams, teamsProg]) => {
-        this.hasConnector = this.company.isConnectorActive ?? false;
-        this.teams = teams.map((t) => t.team);
+  private getTeamDataForTable(): void {
+    this.teamsDataStatus = this.teamsStats.length === 0 ? 'noData' : 'good';
+    this.hasConnector = this.company.isConnectorActive ?? false;
+    this.teams = this.teamsStats.map((t) => this.company.teams.find((team) => team.id === t.teamId) as Team);
 
-        this.teamsDisplay = teams.map((t) => {
-          const teamProg = teamsProg.find((tp) => tp.team.id === t.team.id);
-          return this.dataForTeamTableMapper(t, teamProg);
-        });
-        this.changeTeamsPage(1);
-      }),
-    );
+    this.teamsDisplay = this.teamsStats.map((t) => {
+      const teamProg = this.teamsStatsPrev.find((tp) => tp.teamId === t.teamId);
+      return this.dataForTeamTableMapper(t, teamProg);
+    });
+    this.changeTeamsPage(1);
   }
 
   updateTimePicker(event: any): void {
@@ -292,14 +287,14 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     this.paginatedTeams = this.teamsDisplay.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
   }
 
-  private dataForTeamTableMapper(t: TeamStatsDtoApi, tProg?: TeamStatsDtoApi): DataForTable {
+  private dataForTeamTableMapper(t: TeamStats, tProg?: TeamStats): DataForTable {
     const totalGuessCount = t.totalGuessesCount
       ? t.totalGuessesCount > (t.questionsPushedCount ?? 0)
         ? t.questionsPushedCount
         : t.totalGuessesCount
       : 0;
     return {
-      team: t.team,
+      team: this.company.teams.find((team) => team.id === t.teamId),
       globalScore: t.score,
       answeredQuestionsCount: totalGuessCount,
       answeredQuestionsProgression:
@@ -312,11 +307,11 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
       submittedQuestionsCount: t.questionsSubmittedCount,
       submittedQuestionsProgression:
         this.scoresService.getProgression(t.questionsSubmittedCount, tProg?.questionsSubmittedCount) ?? 0,
-      leastMasteredTags: t.tags
+      leastMasteredTags: t.tagStats
         ?.filter((ta) => (ta.score ?? 0) < 50)
         .sort((a, b) => (a.score || 0) - (b.score || 0))
         .slice(0, 3)
-        .map((t) => t.tag.name),
+        .map((t) => t.name),
     } as DataForTable;
   }
 }

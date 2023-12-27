@@ -110,6 +110,14 @@ export class Company extends BaseModel implements ICompany {
     return this.programs.filter(program => program.teamIds.includes(teamId));
   }
 
+  getTeamName(teamId: string): string {
+    return this.teams.find(team => team.id === teamId)?.name ?? '';
+  }
+
+  getProgramName(programId: string): string {
+    return this.programs.find(program => program.id === programId)?.name ?? '';
+  }
+
   override get rawData(): ICompany {
     return {
       ...super.rawData,

@@ -15,7 +15,7 @@
     ></alto-dropdown-filter> -->
     <alto-dropdown-filter
       class="me-3 text-start"
-      [data]="programs"
+      [data]="company.programs"
       [displayLabel]="'name'"
       [returnValue]="'id'"
       [placeholder]="I18ns.programs.questions.filters.programs"
@@ -62,11 +62,11 @@
             AltoRoutes.statistics,
             AltoRoutes.statTeam,
             AltoRoutes.performance,
-            team.team.id
+            team.teamId
           ]"
         >
           <td>
-            <span class="alto-badge" [style]="team.team.id | teamColor">{{ team.team.name }}</span>
+            <span class="alto-badge" [style]="team.teamId | teamColor">{{ company.getTeamName(team.teamId) }}</span>
           </td>
           <td class="text-center">
             <ng-container *ngIf="team.score; else elseTemplate">
@@ -96,11 +96,11 @@
             <!-- <ng-template #tagsTooltip>
                 <ng-container *ngFor="let tag of team.tags">{{ tag.label }}<br /></ng-container>
               </ng-template>-->
-            <ng-container *ngIf="team.tags && team.tags.length > 0; else noTag">
+            <ng-container *ngIf="team.tagStats && team.tagStats.length > 0; else noTag">
               <alto-colored-pill-list
                 [textLimit]="15"
                 color="primary"
-                [data]="team.tags | sort : 'asc' : 'score' | slice : 0 : 3"
+                [data]="team.tagStats | sort : 'asc' : 'score' | slice : 0 : 3"
               ></alto-colored-pill-list>
             </ng-container>
             <ng-template #noTag>
@@ -114,10 +114,10 @@
                 <ng-container *ngFor="let prog of team.programs">{{ prog.label }}<br /></ng-container>
               </ng-template>-->
 
-            <ng-container *ngIf="team.programs && team.programs.length > 0; else noProgram">
+            <ng-container *ngIf="team.programStats && team.programStats.length > 0; else noProgram">
               <alto-colored-pill-list
                 [textLimit]="15"
-                [data]="team.programs || [] | sort : 'asc' : 'score' | slice : 0 : 3"
+                [data]="getLowestScorePrograms(team.teamId) | slice : 0 : 3"
               ></alto-colored-pill-list>
             </ng-container>
             <ng-template #noProgram>
