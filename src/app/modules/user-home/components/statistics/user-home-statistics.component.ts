@@ -61,8 +61,8 @@ export class UserHomeStatisticsComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.user = (data[EResolvers.AppResolver] as IAppData).me;
-    const teamsById = (data[EResolvers.AppResolver] as IAppData).teamById;
-    this.userTeam = teamsById.get(this.user.teamId as string) as Team;
+    const teamsById = (data[EResolvers.AppResolver] as IAppData).company.teams;
+    this.userTeam = teamsById.find((t) => t.id === this.user.teamId) || new Team({} as any);
     this.getScore();
     this.getUserChartScores(this.statisticsDuration);
     this.getFinishedPrograms();

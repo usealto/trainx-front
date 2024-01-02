@@ -56,6 +56,8 @@ export class StatisticsPerTeamsComponent implements OnInit {
         tap(({ company, users }) => {
           this.company = company.data;
           this.teams = this.company.teams;
+          console.log('teams');
+          console.log(this.teams);
           this.teamsStats = this.company.getStatsByPeriod(this.duration, false);
           this.teamsStatsPrev = this.company.getStatsByPeriod(this.duration, true);
 

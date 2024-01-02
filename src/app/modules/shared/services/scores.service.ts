@@ -233,6 +233,10 @@ export class ScoresService {
   }
 
   formatScores(scores: Score[]): Score[] {
+    if (scores.length === 0 || scores[0] === undefined) {
+      return [];
+    }
+
     const filteredScores = scores.map((ts) => this.filterTimeSeries(ts));
 
     const longestDates = filteredScores.reduce((dates, score) => {

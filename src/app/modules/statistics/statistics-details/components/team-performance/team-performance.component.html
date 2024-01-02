@@ -210,7 +210,7 @@
           </td>
           <td>
             <alto-colored-pill-list
-              *ngIf="member.tags.length > 0; else noTag"
+              *ngIf="member.tags && member.tags.length > 0; else noTag"
               color="primary"
               [textLimit]="15"
               [data]="member.tags || [] | sort : 'asc' : 'score' | slice : 0 : 3"

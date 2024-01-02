@@ -14,9 +14,7 @@ import {
   homeResolver,
   leadResolver,
   noSplashScreenResolver,
-  programResolver,
   programsResolver,
-  trainingResolver,
 } from './core/resolvers';
 import { teamStatsResolver } from './core/resolvers/teamStats.resolver';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
