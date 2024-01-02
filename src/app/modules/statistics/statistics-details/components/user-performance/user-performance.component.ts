@@ -26,6 +26,8 @@ import { IAppData } from '../../../../../core/resolvers';
 import { ToastService } from '../../../../../core/toast/toast.service';
 import { StatisticsService } from '../../../services/statistics.service';
 import { ICompany } from '../../../../../models/company.model';
+import { data } from 'cypress/types/jquery';
+import { te } from 'date-fns/locale';
 
 @Component({
   selector: 'alto-user-performance',
@@ -196,42 +198,51 @@ export class UserPerformanceComponent implements OnInit {
   }
 
   createTagsChart(scores: ScoreDtoApi[], duration: ScoreDuration): void {
+    scores = scores || [];
+
     const reducedScores = this.scoresService.reduceLineChartData(scores);
     const points = reducedScores.map((d) => this.statisticsService.transformDataToPoint(d));
 
-    const labels = this.statisticsService
-      .formatLabel(
-        points[0].map((d) => d.x),
-        duration,
-      )
-      .map((s) => this.titleCasePipe.transform(s));
+    let labels = [];
+    let dataSets = [];
+    let series = [];
 
-    const dataSets = reducedScores.map((s) => {
-      const d = this.statisticsService.transformDataToPoint(s);
-      return { label: s.label, data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)) };
-    });
+    // Ne procéder à la création des labels, dataSets et series que si points n'est pas vide
+    if (points.length > 0) {
+      labels = this.statisticsService
+        .formatLabel(
+          points[0].map((d) => d.x),
+          duration,
+        )
+        .map((s) => this.titleCasePipe.transform(s));
 
-    const series = dataSets.map((d) => {
-      return {
-        name: d.label,
-        data: d.data,
-        type: 'line',
-        showSybmol: false,
-        tootlip: {
-          valueFormatter: (value: any) => {
-            return (value as number) + '%';
+      dataSets = reducedScores.map((s) => {
+        const d = this.statisticsService.transformDataToPoint(s);
+        return { label: s.label, data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)) };
+      });
+
+      series = dataSets.map((d) => {
+        return {
+          name: d.label,
+          data: d.data,
+          type: 'line',
+          showSybmol: false,
+          tooltip: {
+            valueFormatter: (value: any) => {
+              return (value as number) + '%';
+            },
           },
-        },
-        lineStyle: {},
+          lineStyle: {},
+        };
+      });
+      
+      this.tagsChartOptions = {
+        xAxis: [{ ...xAxisDatesOptions, data: labels }],
+        yAxis: [{ ...yAxisScoreOptions }],
+        series: series,
+        legend: legendOptions,
       };
-    });
-
-    this.tagsChartOptions = {
-      xAxis: [{ ...xAxisDatesOptions, data: labels }],
-      yAxis: [{ ...yAxisScoreOptions }],
-      series: series,
-      legend: legendOptions,
-    };
+    }
   }
 
   getUserChartScores(duration: ScoreDuration): void {
@@ -242,6 +253,7 @@ export class UserPerformanceComponent implements OnInit {
     ])
       .pipe(
         tap(([userScores, teamScores]) => {
+          
           this.createUserChart(userScores.scores[0], teamScores.scores[0], duration);
           this.userChartStatus = userScores.scores.length > 0 ? 'good' : 'empty';
         }),
@@ -253,18 +265,34 @@ export class UserPerformanceComponent implements OnInit {
     const reducedTeamScores = this.scoresService.reduceLineChartData([teamScores])[0];
     const teamPoints = this.statisticsService.transformDataToPoint(reducedTeamScores);
 
-    const labels = this.statisticsService.formatLabel(
-      teamPoints.map((d) => d.x),
-      duration,
-    );
+    let labels: string[] = [];
 
-    const dataSets = [userScores, teamScores].map((scores) => {
-      const d = this.statisticsService.transformDataToPoint(scores);
-      return {
-        label: scores.label,
-        data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
-      };
-    });
+    if (teamPoints.length === 0) {
+      labels = [];
+    } else {
+      labels = this.statisticsService.formatLabel(
+        teamPoints.map((d) => d.x),
+        duration,
+      );
+    }
+
+
+
+    let dataSets: any[] = [];
+
+    if (userScores === undefined || teamScores === undefined) {
+      dataSets = [];
+    } else {
+      dataSets = [userScores, teamScores].map((scores) => {
+        console.log(scores);
+        const d = this.statisticsService.transformDataToPoint(scores);
+        return {
+          label: scores.label,
+          data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
+        };
+      });
+    }
+
 
     const series = dataSets.map((d) => {
       return {

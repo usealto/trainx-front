@@ -117,7 +117,7 @@ export class ScoresService {
   }
 
   reduceLineChartData(scores: ScoreDtoApi[]): ScoreDtoApi[] {
-    if (scores.length === 0) {
+    if (scores.length === 0 || scores[0] === undefined) {
       return [];
     }
 

@@ -13,6 +13,9 @@ import { Team, TeamStats } from '../../../../models/team.model';
 import { Company } from '../../../../models/company.model';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { Store } from '@ngrx/store';
+import { untilDestroyed } from '@ngneat/until-destroy';
+import { User } from '../../../../models/user.model';
+import { selectCompanyAndUsers } from '../../../../core/store/store.reducer';
 
 
 @Component({
@@ -28,6 +31,7 @@ export class StatisticsPerTeamsComponent implements OnInit {
 
   company: Company = {} as Company;
   teams: Team[] = [];
+  users: User[] = [];
   members: DataForTable[] = [];
 
   teamsStats: TeamStats[] = [];
@@ -47,14 +51,19 @@ export class StatisticsPerTeamsComponent implements OnInit {
 
   ngOnInit(): void {
     this.store
-      .select(FromRoot.selectCompany)
-      .pipe(tap(({ data: company }) => {
-        this.company = company
-        this.teams = this.company.teams;
-        this.teamsStats = this.company.getStatsByPeriod(this.duration, false);
-        this.teamsStatsPrev = this.company.getStatsByPeriod(this.duration, true);
-        this.getDatas();
-      }))
+      .select(FromRoot.selectCompanyAndUsers)
+      .pipe(
+        tap(({ company, users }) => {
+          this.company = company.data;
+          this.teams = this.company.teams;
+          this.teamsStats = this.company.getStatsByPeriod(this.duration, false);
+          this.teamsStatsPrev = this.company.getStatsByPeriod(this.duration, true);
+
+          this.users = Array.from(users.data.values());
+
+          this.getDatas();
+        }),
+      )
       .subscribe();
   }
 
@@ -71,11 +80,13 @@ export class StatisticsPerTeamsComponent implements OnInit {
           });
           this.teamsDataStatus = this.teams.length === 0 ? 'noData' : 'good';
 
-          this.membersDisplay = users.map((u) => {
-            const userProg = usersProg.find((tp) => tp.user.id === u.user.id);
-            return this.dataForMembersTableMapper(u, userProg);
+          this.membersDisplay = this.users.map((u) => {
+            const userStat = users.find((us) => us.user.id === u.id);
+            const userProg = usersProg.find((tp) => tp.user.id === u.id);
+            return this.dataForMembersTableMapper(u, userStat, userProg);
           });
           this.members = this.membersDisplay;
+          console.log(this.members);
           this.membersDataStatus = users.length === 0 ? 'noData' : 'good';
         }),
       )
@@ -125,19 +136,19 @@ export class StatisticsPerTeamsComponent implements OnInit {
     } as DataForTable;
   }
 
-  dataForMembersTableMapper(u: UserStatsDtoApi, uProg?: UserStatsDtoApi) {
+  dataForMembersTableMapper(user: User, u?: UserStatsDtoApi, uProg?: UserStatsDtoApi) {
     return {
-      owner: u.user,
-      globalScore: u.score,
-      answeredQuestionsCount: u.totalGuessesCount,
+      owner: user,
+      globalScore: u?.score,
+      answeredQuestionsCount: u?.totalGuessesCount,
       answeredQuestionsProgression:
-        this.scoreService.getProgression(u.totalGuessesCount, uProg?.totalGuessesCount) ?? 0,
-      commentsCount: u.commentsCount,
-      commentsProgression: this.scoreService.getProgression(u.commentsCount, uProg?.commentsCount) ?? 0,
-      submittedQuestionsCount: u.questionsSubmittedCount,
+        this.scoreService.getProgression(u?.totalGuessesCount, uProg?.totalGuessesCount) ?? 0,
+      commentsCount: u?.commentsCount,
+      commentsProgression: this.scoreService.getProgression(u?.commentsCount, uProg?.commentsCount) ?? 0,
+      submittedQuestionsCount: u?.questionsSubmittedCount,
       submittedQuestionsProgression:
-        this.scoreService.getProgression(u.questionsSubmittedCount, uProg?.questionsSubmittedCount) ?? 0,
-      leastMasteredTags: u.tags
+        this.scoreService.getProgression(u?.questionsSubmittedCount, uProg?.questionsSubmittedCount) ?? 0,
+      leastMasteredTags: u?.tags
         ?.filter((ta) => (ta.score ?? 0) < 50)
         .sort((a, b) => (a.score || 0) - (b.score || 0))
         .slice(0, 3)

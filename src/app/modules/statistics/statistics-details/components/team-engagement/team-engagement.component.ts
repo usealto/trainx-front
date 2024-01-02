@@ -25,6 +25,10 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
 import { DataForTable } from '../../../models/statistics.model';
 import { StatisticsService } from '../../../services/statistics.service';
+import { User } from '../../../../../models/user.model';
+import { Store } from '@ngrx/store';
+import * as FromRoot from '../../../../../core/store/store.reducer';
+
 
 @Component({
   selector: 'alto-team-engagement',
@@ -38,6 +42,7 @@ export class TeamEngagementComponent implements OnInit {
 
   team!: Team;
   company!: Company;
+  users: User[] = [];
 
   duration: ScoreDuration = ScoreDuration.Trimester;
 
@@ -66,16 +71,25 @@ export class TeamEngagementComponent implements OnInit {
     private readonly scoreService: ScoresService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
+    private readonly store: Store<FromRoot.AppState>,
   ) {}
 
   ngOnInit(): void {
-    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-
     const teamId = this.router.url.split('/').pop() || '';
-    this.team = (data[EResolverData.AppData] as IAppData).company.teams.find((u) => u.id === teamId) as Team;
-    this.company = (data[EResolverData.Company] as Company) ?? new Company({} as ICompany);
 
-    this.loadPage();
+    this.store
+      .select(FromRoot.selectCompanyAndUsers)
+      .pipe(
+        tap(({ company, users }) => {
+          this.company = company.data;
+          this.team = this.company.teams.find((u) => u.id === teamId) as Team;
+
+          this.users = Array.from(users.data.values());
+
+          this.loadPage();
+        }),
+      )
+      .subscribe();
   }
 
   loadPage(): void {
@@ -178,35 +192,39 @@ export class TeamEngagementComponent implements OnInit {
         return u.user.firstname.toLowerCase().includes(s) || u.user.lastname.toLowerCase().includes(s);
       });
     }
-    this.membersTable = temp.map((user) => {
-      const prevUser = previousUsers.find((u) => u.user.id === user.user.id) ?? ({} as UserStatsDtoApi);
-      return this.dataFormUserTableMapper(user, prevUser);
+    this.membersTable = this.users.map((user) => {
+      const userStats = temp.find((u) => u.user.id === user.id) ?? ({} as UserStatsDtoApi);
+      const prevUser = previousUsers.find((u) => u.user.id === user.id) ?? ({} as UserStatsDtoApi);
+      return this.dataFormUserTableMapper(user, userStats, prevUser);
     });
     this.membersTableStatus = this.membersTable.length > 0 ? 'good' : 'noData';
     this.changeMembersTablePage(1);
   }
 
-  private dataFormUserTableMapper(user: UserStatsDtoApi, prevUser: UserStatsDtoApi): DataForTable {
-    const totalGuessCount = user.totalGuessesCount
-      ? user.totalGuessesCount > (user.questionsPushedCount ?? 0)
-        ? user.questionsPushedCount
-        : user.totalGuessesCount
+  private dataFormUserTableMapper(user: User, userStat: UserStatsDtoApi, prevUser: UserStatsDtoApi): DataForTable {
+    const totalGuessCount = userStat.totalGuessesCount
+      ? userStat.totalGuessesCount > (userStat.questionsPushedCount ?? 0)
+        ? userStat.questionsPushedCount
+        : userStat.totalGuessesCount
       : 0;
     return {
-      owner: user.user,
+      owner: user,
       globalScore: 0,
       answeredQuestionsCount: totalGuessCount ?? 0,
       answeredQuestionsProgression:
-        totalGuessCount && user.questionsPushedCount
-          ? Math.round((totalGuessCount / user.questionsPushedCount) * 100)
+        totalGuessCount && userStat.questionsPushedCount
+          ? Math.round((totalGuessCount / userStat.questionsPushedCount) * 100)
           : 0,
-      questionsPushedCount: user.questionsPushedCount ?? 0,
-      commentsCount: user.commentsCount ?? 0,
-      commentsProgression: this.scoreService.getProgression(user.commentsCount, prevUser?.commentsCount) ?? 0,
-      submittedQuestionsCount: user.questionsSubmittedCount,
+      questionsPushedCount: userStat.questionsPushedCount ?? 0,
+      commentsCount: userStat.commentsCount ?? 0,
+      commentsProgression:
+        this.scoreService.getProgression(userStat.commentsCount, prevUser?.commentsCount) ?? 0,
+      submittedQuestionsCount: userStat.questionsSubmittedCount,
       submittedQuestionsProgression:
-        this.scoreService.getProgression(user.questionsSubmittedCount, prevUser?.questionsSubmittedCount) ??
-        0,
+        this.scoreService.getProgression(
+          userStat.questionsSubmittedCount,
+          prevUser?.questionsSubmittedCount,
+        ) ?? 0,
       leastMasteredTags: [''],
     } as DataForTable;
   }
