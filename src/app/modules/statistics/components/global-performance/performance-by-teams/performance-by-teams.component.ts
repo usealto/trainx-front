@@ -1,11 +1,5 @@
 import { Component, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import {
-  ScoreDtoApi,
-  ScoreTimeframeEnumApi,
-  ScoreTypeEnumApi,
-  ScoresResponseDtoApi,
-  TeamStatsDtoApi,
-} from '@usealto/sdk-ts-angular';
+import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -21,6 +15,7 @@ import { TitleCasePipe } from '@angular/common';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { Company } from '../../../../../models/company.model';
 import { Team, TeamStats } from '../../../../../models/team.model';
+import { Score } from '../../../../../models/score.model';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -35,8 +30,8 @@ export class PerformanceByTeamsComponent implements OnChanges {
   Emoji = EmojiName;
   I18ns = I18ns;
   init = true;
-  teamsScore: ScoreDtoApi[] = [];
-  selectedTeams: ScoreDtoApi[] = [];
+  teamsScore: Score[] = [];
+  selectedTeams: Score[] = [];
   scoredTeams: { label: string; score: number | null; progression: number | null }[] = [];
   scoreDataStatus: PlaceholderDataStatus = 'loading';
 
@@ -73,23 +68,21 @@ export class PerformanceByTeamsComponent implements OnChanges {
     }
   }
 
-  getScores(): Observable<[ScoresResponseDtoApi, ScoresResponseDtoApi]> {
+  getScores(): Observable<[Score[], Score[]]> {
     return combineLatest([
       this.scoresRestService.getScores(this.getScoreParams(this.duration, false)),
       this.scoresRestService.getScores(this.getScoreParams(this.duration, true)),
     ]).pipe(
-      tap(([res, global]) => {
-        this.teamsScore = res.scores;
-        let filteredTeams: ScoreDtoApi[] = res.scores;
+      tap(([scores, scoresPrev]) => {
+        this.teamsScore = scores;
+        let filteredTeams: Score[] = scores;
         if (this.init) {
-          this.selectedTeams = this.teamsScore.slice(0, 3);
+          this.selectedTeams = this.teamsScore.slice(0, 1);
         }
         if (this.selectedTeams.length) {
-          filteredTeams = res.scores.filter((score) =>
-            this.selectedTeams.some((team) => team.id === score.id),
-          );
+          filteredTeams = scores.filter((score) => this.selectedTeams.some((team) => team.id === score.id));
         }
-        this.createScoreEvolutionChart(filteredTeams, global.scores[0], this.duration);
+        this.createScoreEvolutionChart(filteredTeams, scoresPrev[0], this.duration);
       }),
       tap(() => (this.init = false)),
     );
@@ -105,22 +98,27 @@ export class PerformanceByTeamsComponent implements OnChanges {
       .sort((a, b) => (a.score && b.score ? b.score - a.score : 0));
   }
 
-  createScoreEvolutionChart(scores: ScoreDtoApi[], globalScore: ScoreDtoApi, duration: ScoreDuration) {
-    scores = this.scoresServices.reduceLineChartData(scores);
-    this.scoreDataStatus = scores.length === 0 ? 'noData' : 'good';
+  createScoreEvolutionChart(scores: Score[], globalScore: Score, duration: ScoreDuration) {
+    const allFormattedScores = this.scoresServices.formatScores([...scores, globalScore]);
+
+    // pop global score
+    const formattedScores = [...allFormattedScores];
+    const formattedGlobalScore = formattedScores.pop() as Score;
+
+    this.scoreDataStatus = formattedScores.length === 0 ? 'noData' : 'good';
     // Aligns Global with Score's Length so thay start on the same month
     const globalPoints = this.statisticsServices
-      .transformDataToPoint(globalScore)
-      .slice(-scores[0]?.averages?.length);
+      .transformDataToPoint(formattedGlobalScore)
+      .slice(-formattedScores[0]?.averages?.length);
 
-    const aggregatedData = this.statisticsServices.transformDataToPoint(scores[0]);
+    const aggregatedData = this.statisticsServices.transformDataToPoint(formattedScores[0]);
     const labels = this.statisticsServices
       .formatLabel(
         aggregatedData.map((d) => d.x),
         duration,
       )
       .map((s) => this.titleCasePipe.transform(s));
-    const dataSet = scores.map((s) => {
+    const dataSet = formattedScores.map((s) => {
       const d = this.statisticsServices.transformDataToPoint(s);
       return {
         label: s.label,
@@ -164,7 +162,7 @@ export class PerformanceByTeamsComponent implements OnChanges {
     };
   }
 
-  filterTeams(event: ScoreDtoApi[]) {
+  filterTeams(event: Score[]) {
     this.selectedTeams = event;
     this.getScores().subscribe();
   }

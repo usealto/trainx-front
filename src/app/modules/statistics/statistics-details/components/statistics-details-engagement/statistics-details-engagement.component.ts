@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IAppData } from 'src/app/core/resolvers';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
 import { Company, ICompany } from '../../../../../models/company.model';
@@ -23,8 +23,8 @@ export class StatisticsDetailsEngagementComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    const users = (data[EResolverData.AppData] as IAppData).userById;
-    const teams = (data[EResolverData.AppData] as IAppData).company.teams;
+    const users = (data[EResolvers.AppResolver] as IAppData).userById;
+    const teams = (data[EResolvers.AppResolver] as IAppData).company.teams;
 
     const id = this.router.url.split('/').pop() || '';
     this.type = this.router.url.split('/')[3] === 'team' ? 'team' : 'user';

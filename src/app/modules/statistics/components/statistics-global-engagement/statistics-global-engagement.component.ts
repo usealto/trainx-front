@@ -17,7 +17,7 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from '../../services/statistics.service';
 
 import { ActivatedRoute } from '@angular/router';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { Company } from 'src/app/models/company.model';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
@@ -104,18 +104,18 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             : ScoreTimeframeEnumApi.Day,
       })
       .pipe(
-        tap(({ scores }) => (this.guessesDataStatus = scores.length === 0 ? 'noData' : 'good')),
-        filter(({ scores }) => scores.length > 0),
-        tap(({ scores }) => {
-          const reducedScores = this.scoresService.reduceLineChartData(scores);
-          const aggregatedData = this.statisticsServices.transformDataToPointByCounts(reducedScores[0]);
+        tap((scores) => (this.guessesDataStatus = scores.length === 0 ? 'noData' : 'good')),
+        filter((scores) => scores.length > 0),
+        tap((scores) => {
+          const formattedScores = this.scoresService.formatScores(scores);
+          const aggregatedData = this.statisticsServices.transformDataToPointByCounts(formattedScores[0]);
           const labels = this.statisticsServices
             .formatLabel(
               aggregatedData.map((d) => d.x),
               this.duration,
             )
             .map((s) => this.titleCasePipe.transform(s));
-          const dataset = reducedScores.map((s) => {
+          const dataset = formattedScores.map((s) => {
             const d = this.statisticsServices.transformDataToPointByCounts(s);
             return {
               label: s.label,
@@ -199,20 +199,29 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             : ScoreTimeframeEnumApi.Day,
       }),
     ]).pipe(
-      map(([comments, questionsSubmitted]) => {
-        return [comments.scores, questionsSubmitted.scores];
+      map(([commentsScores, questionsSubmittedScores]) => {
+        return [commentsScores, questionsSubmittedScores];
       }),
-      tap(([comments, questionsSubmitted]) => {
+      tap(([commentsScores, questionsSubmittedScores]) => {
         this.collaborationDataStatus =
-          comments.length === 0 && questionsSubmitted.length === 0 ? 'noData' : 'good';
+          commentsScores.length === 0 && questionsSubmittedScores.length === 0 ? 'noData' : 'good';
       }),
-      filter(([comments, questionsSubmitted]) => comments.length > 0 || questionsSubmitted.length > 0),
-      tap(([comments, questionsSubmitted]) => {
-        const reducedComments = this.scoresService.reduceLineChartData(comments);
-        const reducedQuestionsSubmitted = this.scoresService.reduceLineChartData(questionsSubmitted);
-        const aggregatedComments = this.statisticsServices.transformDataToPointByCounts(reducedComments[0]);
+      filter(
+        ([commentsScores, questionsSubmittedScores]) =>
+          commentsScores.length > 0 || questionsSubmittedScores.length > 0,
+      ),
+      tap(([commentsScores, questionsSubmittedScores]) => {
+        const formattedCommentsScores = this.scoresService.formatScores(commentsScores);
+        const formattedQuestionsSubmittedScores = this.scoresService.formatScores(questionsSubmittedScores);
+
+        const [aggregaedFormattedCommentsScores, aggregatedFormattedQuestionsSubmittedScores] =
+          this.scoresService.formatScores([formattedCommentsScores[0], formattedQuestionsSubmittedScores[0]]);
+
+        const aggregatedComments = this.statisticsServices.transformDataToPointByCounts(
+          aggregaedFormattedCommentsScores,
+        );
         const aggregatedQuestionsSubmitted = this.statisticsServices.transformDataToPointByCounts(
-          reducedQuestionsSubmitted[0],
+          aggregatedFormattedQuestionsSubmittedScores,
         );
         const labels = this.statisticsServices
           .formatLabel(

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
@@ -32,11 +32,12 @@ export class StatisticsDetailsComponent implements OnInit {
   ];
 
   selectedTab = '';
+  emptyTeam = false;
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    const users = Array.from((data[EResolverData.AppData] as IAppData).userById.values());
-    const teams = (data[EResolverData.AppData] as IAppData).company.teams;
+    const users = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
+    const teams = (data[EResolvers.AppResolver] as IAppData).company.teams;
 
     this.type = this.router.url.split('/')[3] === 'team' ? 'team' : 'user';
     this.id = this.router.url.split('/').pop() || '';
@@ -55,6 +56,7 @@ export class StatisticsDetailsComponent implements OnInit {
         this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, AltoRoutes.performance]);
       } else {
         this.name = team.name;
+        this.emptyTeam = users.every(({ teamId }) => teamId !== team.id);
       }
     }
   }

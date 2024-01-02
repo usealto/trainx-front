@@ -37,7 +37,7 @@ const routes: Routes = [
     canActivate: [AppGuard, AuthGuard, PreventSmallScreenGuard],
     canActivateChild: [AuthGuard],
     resolve: {
-      appData: appResolver,
+      appResolver,
     },
     runGuardsAndResolvers: 'always',
     children: [
@@ -60,9 +60,6 @@ const routes: Routes = [
           },
           {
             path: AltoRoutes.training,
-            resolve: {
-              appData: trainingResolver,
-            },
             loadChildren: () => import('./modules/training/training.module').then((m) => m.TrainingModule),
           },
           {
@@ -84,15 +81,12 @@ const routes: Routes = [
           {
             path: AltoRoutes.leadHome,
             resolve: {
-              homeData: homeResolver,
+              homeResolver,
             },
             loadChildren: () => import('./modules/lead-home/lead-home.module').then((m) => m.LeadHomeModule),
           },
           {
             path: AltoRoutes.programs,
-            resolve: {
-              appData: programResolver,
-            },
             loadChildren: () => import('./modules/programs/programs.module').then((m) => m.ProgramsModule),
             data: {
               preload: true,

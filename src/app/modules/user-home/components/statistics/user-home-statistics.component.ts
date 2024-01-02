@@ -1,21 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
-import Chart, { ChartData } from 'chart.js/auto';
 import { combineLatest, map, tap } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
-import { chartDefaultOptions } from 'src/app/modules/shared/constants/config';
-import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
 import { IAppData } from '../../../../core/resolvers';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
+import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
+import { Team } from 'src/app/models/team.model';
+import { EChartsOption, SeriesOption } from 'echarts';
+import { Score } from '../../../../models/score.model';
 
 @Component({
   selector: 'alto-user-home-statistics',
@@ -24,9 +27,11 @@ import { IAppData } from '../../../../core/resolvers';
 })
 export class UserHomeStatisticsComponent implements OnInit {
   I18ns = I18ns;
+  // could be replaced by duration bellow
   statisticsDuration = ScoreDuration.Trimester;
 
   user!: User;
+  userTeam!: Team;
   //Statistics data
   userScore = 0;
   userScoreProgression = 0;
@@ -38,8 +43,9 @@ export class UserHomeStatisticsComponent implements OnInit {
   averageFinishedPrograms = 0;
   finishedProgramsCountProgression = 0;
 
-  userProgressionChart?: Chart;
-  hasData = true;
+  EmojiName = EmojiName;
+  userChartStatus: PlaceholderDataStatus = 'loading';
+  userChartOptions!: EChartsOption;
 
   constructor(
     private readonly guessesRestService: GuessesRestService,
@@ -54,11 +60,13 @@ export class UserHomeStatisticsComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.user = (data[EResolverData.AppData] as IAppData).me;
+    this.user = (data[EResolvers.AppResolver] as IAppData).me;
+    const teamsById = (data[EResolvers.AppResolver] as IAppData).teamById;
+    this.userTeam = teamsById.get(this.user.teamId as string) as Team;
     this.getScore();
+    this.getUserChartScores(this.statisticsDuration);
     this.getFinishedPrograms();
     this.getGuessesCount();
-    this.createUserProgressionChart();
   }
 
   getScore() {
@@ -75,6 +83,41 @@ export class UserHomeStatisticsComponent implements OnInit {
           this.userScore = curr[0]?.score ?? 0;
           const previousScore = prev[0]?.score ?? 0;
           this.userScoreProgression = previousScore && this.userScore ? this.userScore - previousScore : 0;
+        }),
+      )
+      .subscribe();
+  }
+
+  getUserChartScores(duration: ScoreDuration): void {
+    this.userChartStatus = 'loading';
+
+    const timeframe = (duration: ScoreDuration) =>
+      duration === ScoreDuration.Year
+        ? ScoreTimeframeEnumApi.Month
+        : duration === ScoreDuration.Trimester
+        ? ScoreTimeframeEnumApi.Week
+        : ScoreTimeframeEnumApi.Day;
+
+    combineLatest([
+      this.scoresRestService.getScores({
+        type: ScoreTypeEnumApi.User,
+        duration: this.statisticsDuration,
+        ids: [this.user.id],
+        timeframe: timeframe(this.statisticsDuration),
+      }),
+      this.scoresRestService.getScores({
+        type: ScoreTypeEnumApi.Team,
+        duration: this.statisticsDuration,
+        ids: [this.userTeam.id],
+        timeframe: timeframe(this.statisticsDuration),
+      }),
+    ])
+      .pipe(
+        tap(([userScores, teamScores]) => {
+          this.userChartStatus = userScores.length > 0 ? 'good' : 'empty';
+          if (userScores.length > 0) {
+            this.createUserChart(userScores[0], teamScores[0], duration);
+          }
         }),
       )
       .subscribe();
@@ -144,114 +187,58 @@ export class UserHomeStatisticsComponent implements OnInit {
       )
       .subscribe();
   }
-  createUserProgressionChart() {
-    const params = {
-      timeframe: ScoreTimeframeEnumApi.Day,
-      duration: this.statisticsDuration,
-    } as ChartFilters;
 
-    combineLatest([
-      this.scoresRestService.getScores({
-        ...params,
-        type: ScoreTypeEnumApi.User,
-      }),
-      this.scoresRestService.getScores({
-        ...params,
-        type: ScoreTypeEnumApi.Team,
-      }),
-    ])
-      .pipe(
-        tap(([usersScores, teamsScores]) => {
-          //USER SCORES: reduce scores to remove all first values without data
-          const rawUserScores = usersScores.scores.find((u) => u.id === this.user.id);
-          if (!rawUserScores) {
-            this.hasData = false;
-            return;
-          }
-          const reducedUserScores = this.scoresService.reduceLineChartData([
-            rawUserScores ?? ({} as ScoreDtoApi),
-          ]);
+  createUserChart(userScores: Score, teamScores: Score, duration: ScoreDuration): void {
+    const [formattedUserScores, formattedTeamScores] = this.scoresService.formatScores([
+      userScores,
+      teamScores,
+    ]);
 
-          const userScores = this.statisticsService.aggregateDataForScores(
-            reducedUserScores[0],
-            this.statisticsDuration,
-          );
+    const teamPoints = this.statisticsService.transformDataToPoint(formattedTeamScores);
+    const labels = this.statisticsService.formatLabel(
+      teamPoints.map((d) => d.x),
+      duration,
+    );
 
-          //TEAM SCORES: reduce scores to remove all first values without data
-          const rawTeamScores = teamsScores.scores.find((t) => t.id === this.user.teamId);
-          const reducedTeamScores = this.scoresService.reduceLineChartData([
-            rawTeamScores ?? ({} as ScoreDtoApi),
-          ]);
+    const dataSets = [formattedUserScores, formattedTeamScores].map((scores, i) => {
+      const d = this.statisticsService.transformDataToPoint(scores);
+      return {
+        label:
+          i === 0
+            ? I18ns.userHome.statistics.progression.you
+            : I18ns.userHome.statistics.progression.yourTeam + ` (${scores.label}) `,
+        data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
+      };
+    });
 
-          const teamScores = this.statisticsService.aggregateDataForScores(
-            reducedTeamScores[0],
-            this.statisticsDuration,
-          );
+    const series = dataSets.map((d, i) => {
+      return {
+        name: d.label,
+        data: d.data,
+        type: 'line',
+        showSymbol: false,
+        tooltip: {
+          valueFormatter: (value: any) => {
+            return (value as number) + '%';
+          },
+        },
+        lineStyle: i === 0 ? {} : { type: 'dashed' },
+      };
+    });
 
-          const labels = this.statisticsService.formatLabel(
-            userScores.map((d) => d.x),
-            this.statisticsDuration,
-          );
-          const data: ChartData = {
-            labels: labels,
-            datasets: [
-              {
-                label: I18ns.userHome.statistics.progression.you,
-                data: userScores.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
-                fill: false,
-                tension: 0.2,
-                spanGaps: true,
-              },
-              {
-                label: I18ns.userHome.statistics.progression.yourTeam,
-                data: teamScores.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
-                fill: false,
-                tension: 0.2,
-                borderDash: [4],
-                spanGaps: true,
-              },
-            ],
-          };
-
-          if (this.userProgressionChart) {
-            this.userProgressionChart.destroy();
-          }
-          const customChartOptions = {
-            ...chartDefaultOptions,
-            plugins: {
-              tooltip: {
-                callbacks: {
-                  label: function (tooltipItem: any) {
-                    return `${tooltipItem.dataset.label}: ${tooltipItem.formattedValue}%`;
-                  },
-                },
-              },
-              legend: {
-                display: true,
-                labels: {
-                  usePointStyle: true,
-                  boxWidth: 5,
-                  boxHeight: 5,
-                  pointStyle: 'circle',
-                },
-              },
-            },
-          };
-          this.userProgressionChart = new Chart('userProgressionChart', {
-            type: 'line',
-            data: data,
-            options: customChartOptions,
-          });
-        }),
-      )
-      .subscribe();
+    this.userChartOptions = {
+      xAxis: [{ ...xAxisDatesOptions, data: labels }],
+      yAxis: [{ ...yAxisScoreOptions, axisLabel: { show: false } }],
+      series: series as SeriesOption[],
+      legend: { ...legendOptions, top: 5 },
+    };
   }
 
   updateTimePicker(duration: any) {
     this.statisticsDuration = duration;
     this.getScore();
+    this.getUserChartScores(duration);
     this.getFinishedPrograms();
     this.getGuessesCount();
-    this.createUserProgressionChart();
   }
 }

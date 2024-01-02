@@ -7,12 +7,13 @@ import { ILeadResolverData } from './lead.resolver';
 import { ITeamStatsData } from './teamStats.resolver';
 import { IProgramsData } from './programs.resolver';
 
-export enum EResolverData {
-  AppData = 'appData',
-  HomeData = 'homeData',
-  Company = 'company',
+export enum EResolvers {
+  AppResolver = 'appResolver',
+  LeadResolver = 'leadResolver',
+  CompanyResolver = 'companyResolver',
+  HomeResolver = 'homeResolver',
   TeamStats = 'teamStats',
-  Programs = 'programs'
+  Programs = 'programs',
 }
 
 export type ResolverData = {

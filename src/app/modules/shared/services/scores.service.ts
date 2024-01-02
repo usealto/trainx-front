@@ -2,16 +2,17 @@ import { Injectable } from '@angular/core';
 import { ScoreDtoApi, ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
 import { addDays, addHours, startOfDay } from 'date-fns';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { Score } from '../../../models/score.model';
 import { ScoreDuration, ScoreFilter, TopFlopDisplay } from '../models/score.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScoresService {
-  reduceWithoutNull(data: number[] = []): number | null {
+  reduceWithoutNull(data: (number | null)[] = []): number | null {
     if (data.length === 0) return null;
 
-    const output = data.filter((x) => x !== null && x !== undefined);
+    const output = data.filter((x) => x !== null && x !== undefined) as number[];
     if (output.length === 0) return null;
     return output.reduce((prev, curr) => prev + curr, 0) / output.length;
   }
@@ -214,5 +215,44 @@ export class ScoresService {
       return null;
     }
     return (value - previousValue) / previousValue;
+  }
+
+  private filterTimeSeries(scores: Score): Score {
+    const firstIndex = scores.counts.findIndex((c) => c !== null);
+
+    if (firstIndex !== 0) {
+      scores.dates = scores.dates.slice(firstIndex - 1);
+      scores.averages = scores.averages.slice(firstIndex);
+      scores.counts = scores.counts.slice(firstIndex);
+      scores.valids = scores.valids.slice(firstIndex);
+      scores.averages.unshift(0);
+      scores.counts.unshift(0);
+      scores.valids.unshift(0);
+    }
+    return scores;
+  }
+
+  formatScores(scores: Score[]): Score[] {
+    const filteredScores = scores.map((ts) => this.filterTimeSeries(ts));
+
+    const longestDates = filteredScores.reduce((dates, score) => {
+      if (score.dates.length > dates.length) {
+        return score.dates;
+      }
+      return dates;
+    }, scores[0].dates);
+
+    filteredScores.forEach((score) => {
+      if (score.dates.length < longestDates.length) {
+        score.dates = [...longestDates];
+        while (score.averages.length !== score.dates.length) {
+          score.averages.unshift(null);
+          score.counts.unshift(null);
+          score.valids.unshift(null);
+        }
+      }
+    });
+
+    return filteredScores;
   }
 }

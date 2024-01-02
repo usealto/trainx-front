@@ -4,16 +4,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   CompanyDtoApi,
   ScoreByTypeEnumApi,
-  ScoreDtoApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { combineLatest, map, tap } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { combineLatest, tap } from 'rxjs';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { Company, ICompany } from 'src/app/models/company.model';
+import { Score } from 'src/app/models/score.model';
 import { Team } from 'src/app/models/team.model';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
@@ -105,9 +105,6 @@ export class TeamEngagementComponent implements OnInit {
       this.scoreRestService.getScores(this.getScoreParams('submitedQuestions', duration)),
     ])
       .pipe(
-        map(([comments, questionsSubmitted]) => {
-          return [comments.scores, questionsSubmitted.scores];
-        }),
         tap(([comments, submitedQuestions]) => {
           this.contributionChartStatus =
             comments.length > 0 || submitedQuestions.length > 0 ? 'good' : 'noData';
@@ -117,16 +114,18 @@ export class TeamEngagementComponent implements OnInit {
       .subscribe();
   }
 
-  createContributionsChart(
-    comments: ScoreDtoApi[],
-    submitedQuestions: ScoreDtoApi[],
-    duration: ScoreDuration,
-  ): void {
-    const reducedComments = this.scoreService.reduceLineChartData(comments);
-    const reducedQuestionsSubmitted = this.scoreService.reduceLineChartData(submitedQuestions);
-    const aggregatedComments = this.statisticsService.transformDataToPointByCounts(reducedComments[0]);
+  createContributionsChart(comments: Score[], submitedQuestions: Score[], duration: ScoreDuration): void {
+    const formattedComments = this.scoreService.formatScores(comments);
+    const formattedSubmitedQuestions = this.scoreService.formatScores(submitedQuestions);
+
+    const [aggregatedFormattedCommentsScores, aggregatedFormattedSubmittedQuestionsScores] =
+      this.scoreService.formatScores([formattedComments[0], formattedSubmitedQuestions[0]]);
+
+    const aggregatedComments = this.statisticsService.transformDataToPointByCounts(
+      aggregatedFormattedCommentsScores,
+    );
     const aggregatedQuestionsSubmitted = this.statisticsService.transformDataToPointByCounts(
-      reducedQuestionsSubmitted[0],
+      aggregatedFormattedSubmittedQuestionsScores,
     );
     const labels = this.statisticsService
       .formatLabel(
@@ -272,16 +271,16 @@ export class TeamEngagementComponent implements OnInit {
       .getScores(this.getScoreParams('answers', duration))
       .pipe(
         tap((res) => {
-          this.createAnswersChart(res.scores, duration);
-          this.answersChartStatus = res.scores.length > 0 ? 'good' : 'noData';
+          this.createAnswersChart(res, duration);
+          this.answersChartStatus = res.length > 0 ? 'good' : 'noData';
         }),
       )
       .subscribe();
   }
 
-  createAnswersChart(scores: ScoreDtoApi[], duration: ScoreDuration): void {
-    const reducedScores = this.scoreService.reduceLineChartData(scores);
-    const aggregatedData = this.statisticsService.transformDataToPointByCounts(reducedScores[0]);
+  createAnswersChart(scores: Score[], duration: ScoreDuration): void {
+    const formatedScores = this.scoreService.formatScores(scores);
+    const aggregatedData = this.statisticsService.transformDataToPointByCounts(formatedScores[0]);
     const labels = this.statisticsService
       .formatLabel(
         aggregatedData.map((d) => d.x),
@@ -289,7 +288,7 @@ export class TeamEngagementComponent implements OnInit {
       )
       .map((s) => this.titleCasePipe.transform(s));
 
-    const dataset = reducedScores.map((s) => {
+    const dataset = formatedScores.map((s) => {
       const d = this.statisticsService.transformDataToPointByCounts(s);
       return {
         label: s.label,

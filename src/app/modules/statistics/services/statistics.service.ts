@@ -1,8 +1,8 @@
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { ScoreDuration } from '../../shared/models/score.model';
 import { startOfDay, startOfMonth, startOfWeek, format, parseISO } from 'date-fns';
-import { ScoreDtoApi } from '@usealto/sdk-ts-angular';
 import { ScoresService } from '../../shared/services/scores.service';
+import { Score } from 'src/app/models/score.model';
 
 export interface Point {
   x: Date;
@@ -26,9 +26,9 @@ export class StatisticsService {
     }
   }
 
-  aggregateDataForScores(score: ScoreDtoApi | undefined, duration: ScoreDuration): Point[] {
+  aggregateDataForScores(score: Score | undefined, duration: ScoreDuration): Point[] {
     const data: Point[] = [];
-    const groupedData: { [key: string]: number[] } = {};
+    const groupedData: { [key: string]: (number | null)[] } = {};
     if (score == undefined) {
       return [];
     }
@@ -53,7 +53,7 @@ export class StatisticsService {
     return data.sort((a, b) => a.x.getTime() - b.x.getTime());
   }
 
-  transformDataToPoint(score: ScoreDtoApi) {
+  transformDataToPoint(score: Score) {
     const res: Point[] = [];
     score?.dates.forEach((date, index) => {
       res.push({ x: date, y: score.averages[index] });
@@ -61,7 +61,7 @@ export class StatisticsService {
     return res;
   }
 
-  transformDataToPointByCounts(score: ScoreDtoApi) {
+  transformDataToPointByCounts(score: Score) {
     const res: Point[] = [];
     score?.dates.forEach((date, index) => {
       res.push({ x: date, y: score.counts[index] });

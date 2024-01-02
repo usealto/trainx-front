@@ -25,6 +25,7 @@ import { ChartFilters } from '../../shared/models/chart.model';
 import { ScoreDuration, ScoreFilters } from '../models/score.model';
 import { ScoresService } from './scores.service';
 import { TeamStats } from '../../../models/team.model';
+import { Score } from '../../../models/score.model';
 
 @Injectable({
   providedIn: 'root',
@@ -222,7 +223,7 @@ export class ScoresRestService {
   getScores(
     { duration, type, team, timeframe, sortBy, user, ids, scoredBy, scoredById }: ChartFilters,
     isProgression = false,
-  ): Observable<ScoresResponseDtoApi> {
+  ): Observable<Score[]> {
     const par: GetScoresRequestParams = {
       type: type ?? ScoreTypeEnumApi.Guess,
       timeframe: timeframe ?? ScoreTimeframeEnumApi.Day,
@@ -254,6 +255,18 @@ export class ScoresRestService {
     return this.scoresApi.getScores(par).pipe(
       map((r) => r.data || ({} as ScoresResponseDtoApi)),
       filter((x) => !!x),
+      map((r) => {
+        if (timeframe === ScoreTimeframeEnumApi.Day) {
+          r.scores.map((score) => {
+            score.dates.pop();
+            score.averages.pop();
+            score.counts.pop();
+            score.valids.pop();
+          });
+        }
+        return r;
+      }),
+      map((r) => r.scores.map((s) => Score.fromDto(s))),
     );
   }
 

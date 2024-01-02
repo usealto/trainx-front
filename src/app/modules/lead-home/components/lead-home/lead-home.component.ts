@@ -11,7 +11,7 @@ import {
 import { EChartsOption } from 'echarts';
 import { Observable, combineLatest, map, of, tap } from 'rxjs';
 import { IHomeData } from 'src/app/core/resolvers/home.resolver';
-import { EResolverData, ResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -114,10 +114,10 @@ export class LeadHomeComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.me = (data[EResolverData.AppData] as IAppData).me;
-    this.commentsCount = (data[EResolverData.HomeData] as IHomeData).comments.length;
+    this.me = (data[EResolvers.AppResolver] as IAppData).me;
+    this.commentsCount = (data[EResolvers.HomeResolver] as IHomeData).comments.length;
     this.commentsDataStatus = this.commentsCount === 0 ? 'noData' : 'good';
-    this.questionsCount = (data[EResolverData.HomeData] as IHomeData).questionsCount;
+    this.questionsCount = (data[EResolvers.HomeResolver] as IHomeData).questionsCount;
     this.questionsDataStatus = this.questionsCount === 0 ? 'noData' : 'good';
     this.setTeamsAndStats(data);
     this.createChart(this.globalFilters.duration as ScoreDuration);
@@ -129,7 +129,7 @@ export class LeadHomeComponent implements OnInit {
   }
 
   setTeamsAndStats(data: ResolverData) {
-    this.company = (data[EResolverData.TeamStats] as ITeamStatsData).company;
+    this.company = (data[EResolvers.TeamStats] as ITeamStatsData).company;
     const teamStatsNow = this.company.getStatsByPeriod(this.globalFilters.duration as ScoreDuration, false);
     const teamStatsPrev = this.company.getStatsByPeriod(this.globalFilters.duration as ScoreDuration, true);
     this.setAverageScore(teamStatsNow, teamStatsPrev);
@@ -153,11 +153,11 @@ export class LeadHomeComponent implements OnInit {
     this.scoresRestService
       .getScores(params)
       .pipe(
-        tap((res) => {
-          this.scoreCount = res.scores.length;
+        tap((scores) => {
+          this.scoreCount = scores.length;
           this.chartDataStatus = this.scoreCount === 0 ? 'noData' : 'good';
-          const scores = this.scoreService.reduceLineChartData(res.scores);
-          const points = this.statisticsServices.transformDataToPoint(scores[0]);
+          const formattedScores = this.scoreService.formatScores(scores);
+          const points = this.statisticsServices.transformDataToPoint(formattedScores[0]);
           const labels = this.statisticsServices
             .formatLabel(
               points.map((p) => p.x),

@@ -507,6 +507,7 @@ export const FR = {
       },
     },
     team: {
+      emptyTeam: 'Pas de membre dans cette équipe',
       teamActivity: {
         title: 'Activité de l’équipe',
         subtitle: 'Retrouvez une vue d’ensemble de l’activité des membres de l’équipe.',
@@ -1389,7 +1390,7 @@ export const FR = {
       allTitle: `Aucune question ou commentaire`,
       allSubtitle: `Vos utilisateurs n'ont fait aucun retour pour l'instant`,
       emptySearchTitle: `Aucun résultat ne correspond aux filtres sélectionnés.`,
-      emptySearchSubtitle: `Essayez avec d'autres filtres`,
+      emptySearchSubtitle: `Essayez avec d'autres filtres ou onglets`,
     },
     modal: {
       cancel: 'Annuler',

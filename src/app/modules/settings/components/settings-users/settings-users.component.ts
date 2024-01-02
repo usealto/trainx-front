@@ -4,7 +4,7 @@ import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { filter, switchMap, tap } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
@@ -65,9 +65,9 @@ export class SettingsUsersComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.me = (data[EResolverData.AppData] as IAppData).me;
-    this.company = (data[EResolverData.AppData] as IAppData).company;
-    this.teams = (data[EResolverData.AppData] as IAppData).company.teams;
+    this.me = (data[EResolvers.AppResolver] as IAppData).me;
+    this.company = (data[EResolvers.AppResolver] as IAppData).company;
+    this.teams = this.company.teams;
 
     this.store
       .select(FromRoot.selectUsers)
