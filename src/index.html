@@ -30,19 +30,6 @@
     </style>
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#1976d2" />
-    <script type="text/javascript">
-      let allowedHosts = ['trainx.getcockpit.io'];
-      let url = window.location.href,
-      host = url.split('/')[2];
-      if (allowedHosts.includes(host)) {
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })
-        (window,document,'script','dataLayer','GTM-WHFJNB4F');
-      }
-    </script>
   </head>
   <body>
     <div class="first-loader">
@@ -59,4 +46,27 @@
     <noscript>Please enable JavaScript to continue using this application.</noscript>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WHFJNB4F" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </body>
+
+  <script type="text/javascript">
+    let allowedHosts = ['app.usealto.com','trainx.usealto.com','trainx.getcockpit.io'];
+    let url = window.location.href,
+      host = url.split('/')[2];
+    if (allowedHosts.includes(host)) {
+      window.smartlook ||
+        (function (d) {
+          var o = (smartlook = function () {
+              o.api.push(arguments);
+            }),
+            h = d.getElementsByTagName('head')[0];
+          var c = d.createElement('script');
+          o.api = new Array();
+          c.async = true;
+          c.type = 'text/javascript';
+          c.charset = 'utf-8';
+          c.src = 'https://web-sdk.smartlook.com/recorder.js';
+          h.appendChild(c);
+        })(document);
+      smartlook('init', '859144cbc2e1751d9223b71993862d211312c7b0', { region: 'eu' });
+    }
+  </script>
 </html>
