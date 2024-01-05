@@ -12,7 +12,7 @@ import {
   QuestionDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { Subscription, combineLatest, filter, map, of, switchMap, tap, timer } from 'rxjs';
-import { EResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
@@ -85,7 +85,7 @@ export class TrainingComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.route.pathFromRoot);
-    this.user = (data[EResolverData.AppData] as IAppData).me;
+    this.user = (data[EResolvers.AppResolver] as IAppData).me;
     this.route.params
       .pipe(
         map((p) => {

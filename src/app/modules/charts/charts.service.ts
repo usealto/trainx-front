@@ -1,4 +1,4 @@
-import { EChartsOption } from 'echarts';
+import { EChartsOption, RadarComponentOption } from 'echarts';
 import { Injectable } from '@angular/core';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 
@@ -9,6 +9,18 @@ export interface ITooltipParams {
   seriesName: string;
   color: string;
   seriesIndex: number;
+  value? : any[];
+}
+export interface initOptions {
+  devicePixelRatio?: number;
+  renderer?: string;
+  useDirtyRect?: boolean; // Since `5.0.0`
+  useCoarsePointer?: boolean; // Since `5.4.0`
+  pointerSize?: number; // Since `5.4.0`
+  ssr?: boolean; // Since `5.3.0`
+  width?: number | string;
+  height?: number | string;
+  locale?: string;
 }
 
 @Injectable({
@@ -50,11 +62,11 @@ export class ChartsService {
             width: 3,
           };
           // in case we display a global serie, we want dashed and grey
-          if(serie.name === 'Global'){
+          if (serie.name === 'Global') {
             serie.color = '#475467';
             serie.lineStyle.type = 'dashed';
           }
-          
+
           serie.connectNulls = true;
           if (serie.data.length === 1) {
             serie.showSymbol = true;
@@ -106,12 +118,6 @@ export class ChartsService {
     if (eChartsOption.series && Array.isArray(eChartsOption.series)) {
       eChartsOption.series.forEach((serie) => {
         if (serie.type === 'radar' && serie.data) {
-          // serie.data[0] = serie.data[0] === '-' ? 0 : serie.data[0] ?? 0;
-          // (emphasis: {
-          //   lineStyle: {
-          //     width: 4;
-          //   }
-          // });
           serie.emphasis = {
             lineStyle: {
               width: 4,
@@ -122,7 +128,13 @@ export class ChartsService {
     }
 
     eChartsOption.tooltip = {
-      show: false,
+      trigger: 'item',
+      padding: 0,
+      borderColor: '#EAECF0',
+      formatter: (params) => {
+        return this.tooltipRadarFormatter(params as ITooltipParams, eChartsOption);
+      },
+      ...eChartsOption.tooltip,
     };
     return eChartsOption;
   }
@@ -144,6 +156,38 @@ export class ChartsService {
         </svg>
         <p>${params.seriesName} : <b style="color: ${params.color};">${formattedData}<b></p>
       </div>
+    </div>
+  `;
+  }
+
+
+  private tooltipRadarFormatter(params: ITooltipParams, eChartsOption: EChartsOption) {
+    const radarOption = eChartsOption?.radar as RadarComponentOption
+    const labels = radarOption?.indicator
+    const emptySeries = Array.isArray(eChartsOption.series)
+
+    if(!emptySeries) return ''
+    if (!labels) return ''
+    if (!params.value) return ''
+    
+    let listString = ''  
+    const bulletPointString = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="11" viewBox="0 0 10 11" fill="none">
+    <circle cx="5" cy="5.5" r="5" fill="${params.color}"/></svg>`
+
+    for (let i = 0; i < labels.length; i++) {
+      listString += `
+      <div style="padding : 4px 10px 8px 10px; display: flex; align-items: center; gap: 10px;">
+      ${bulletPointString}
+      <span>${labels[i].name}</span> : <b style="color: ${params.color};">${params.value[i] || '- '}%</b>
+      </div>`      
+    }
+    
+    return `
+    <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10); border-radius: 4px;">
+      <div style="color: #667085; background-color: #F9FAFB; padding : 8px 10px 4px 10px; font-weight: 600;">
+        ${params.name}
+      </div>
+      ${listString}
     </div>
   `;
   }
