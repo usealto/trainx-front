@@ -6,6 +6,7 @@ import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import * as FromRoot from '../../../../../core/store/store.reducer';
 import { Company } from '../../../../../models/company.model';
 import { tap } from 'rxjs';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'alto-statistics-global-performance',
@@ -15,22 +16,16 @@ import { tap } from 'rxjs';
 export class StatisticsGlobalPerformanceComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
-  duration: ScoreDuration = ScoreDuration.Trimester;
+  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
+    nonNullable: true,
+  });
   company: Company = {} as Company;
 
   constructor(private readonly store: Store<FromRoot.AppState>) {}
   ngOnInit(): void {
     this.store
       .select(FromRoot.selectCompany)
-      .pipe(
-        tap(({data: company}) => 
-          this.company = company
-          )
-        )
-        .subscribe();
-  }
-
-  updateTimePicker(event: any): void {
-    this.duration = event;
+      .pipe(tap(({ data: company }) => (this.company = company)))
+      .subscribe();
   }
 }

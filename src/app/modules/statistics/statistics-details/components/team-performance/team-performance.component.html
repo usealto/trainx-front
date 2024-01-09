@@ -13,8 +13,7 @@
     <div class="float-end">
       <alto-time-picker
         class="me-4"
-        [duration]="duration"
-        (durationSelected)="updateTimePicker($event)"
+        [durationControl]="durationControl"
       ></alto-time-picker>
       <alto-dropdown-filter
         [data]="members"
@@ -86,8 +85,7 @@
     <div class="float-end">
       <alto-time-picker
         class="me-4"
-        [duration]="duration"
-        (durationSelected)="updateTimePicker($event)"
+        [durationControl]="durationControl"
       ></alto-time-picker>
       <alto-dropdown-filter
         [data]="tags"
@@ -108,15 +106,15 @@
 
   <div class="nodata-placeholder" noData>
     <h2 class="mb-5 fs-6">
-      {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}
+      <!-- {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }} -->
     </h2>
     <div class="text-center">
       <img [src]="EmojiName.FourOclock | emoji" height="24" width="24" />
       <p class="mt-3">
-        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderTitle }}
+        <!-- {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderTitle }} -->
       </p>
       <span class="d-inline-block mt-3">
-        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderSubtitle }}
+        <!-- {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholderSubtitle }} -->
       </span>
     </div>
   </div>
@@ -146,8 +144,7 @@
 <div class="mb-5">
   <alto-time-picker
     class="float-end"
-    [duration]="duration"
-    (durationSelected)="updateTimePicker($event)"
+    [durationControl]="durationControl"
   ></alto-time-picker>
   <div class="col-6">
     <h2>
@@ -157,7 +154,7 @@
     </h2>
     <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.members.subtitle }}</p>
   </div>
-  <alto-search (searchChange)="getMembersTable(duration, $event)"></alto-search>
+  <alto-search (searchChange)="getMembersTable(durationControl.value, $event)"></alto-search>
 </div>
 <alto-placeholder-manager [status]="membersTableDataStatus">
   <div class="table-panel">
@@ -244,8 +241,7 @@
 <div class="mb-5">
   <alto-time-picker
     class="float-end"
-    [duration]="duration"
-    (durationSelected)="updateTimePicker($event)"
+    [durationControl]="durationControl"
   ></alto-time-picker>
   <div class="col-6">
     <h2>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { QuestionDtoApi } from '@usealto/sdk-ts-angular';
@@ -16,6 +16,7 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { QuestionDisplay, QuestionFilters } from '../../../models/question.model';
 import { ProgramsStore } from '../../../programs.store';
 import { QuestionsRestService } from '../../../services/questions-rest.service';
+import { Program } from '../../../../../models/program.model';
 
 @UntilDestroy()
 @Component({
@@ -39,10 +40,11 @@ export class ProgramsQuestionsComponent implements OnInit {
   selectedItems: QuestionDtoApi[] = [];
   questionListStatus: PlaceholderDataStatus = 'loading';
 
+  @Input() programs: Program[] = [];
+
   constructor(
     private readonly questionsService: QuestionsRestService,
     private readonly offcanvasService: NgbOffcanvas,
-    public readonly teamStore: TeamStore,
     public readonly programsStore: ProgramsStore,
     private modalService: NgbModal,
     private readonly scoreService: ScoresService,
@@ -185,10 +187,10 @@ export class ProgramsQuestionsComponent implements OnInit {
     );
   }
   getTagTooltip(question: QuestionDtoApi) {
-    return (question.tags) ? question.tags.map((p) => p.name).join(', ') : '';
+    return question.tags ? question.tags.map((p) => p.name).join(', ') : '';
   }
 
   getProgramTooltip(question: QuestionDtoApi) {
-    return (question.programs) ? question.programs.map((p) => p.name).join(', ') : '';
+    return question.programs ? question.programs.map((p) => p.name).join(', ') : '';
   }
 }

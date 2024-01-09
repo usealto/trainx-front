@@ -43,6 +43,8 @@ export class Company extends BaseModel implements ICompany {
   licenseCount: number;
   teams: Team[];
   programs: Program[];
+  teamById: Map<string, Team>;
+  programById: Map<string, Program>;
 
   constructor(data: ICompany) {
     super(data);
@@ -58,8 +60,10 @@ export class Company extends BaseModel implements ICompany {
     this.theOfficeId = data.theOfficeId ?? '';
     this.stats = [];
     this.licenseCount = data.licenseCount ?? 0;
-    this.teams = data.teams ? data.teams.map(team => new Team(team)) : [];
-    this.programs = data.programs ? data.programs.map(program => new Program(program)) : [];
+    this.teams = data.teams ? data.teams.map((team) => new Team(team)) : [];
+    this.programs = data.programs ? data.programs.map((program) => new Program(program)) : [];
+    this.teamById = new Map(this.teams.map((team) => [team.id, team]));
+    this.programById = new Map(this.programs.map((program) => [program.id, program]));
   }
 
   static fromDto(data: CompanyDtoApi): Company {
@@ -103,19 +107,17 @@ export class Company extends BaseModel implements ICompany {
   }
 
   getStatsByPeriod(duration: ScoreDuration, isPrev: boolean): TeamStats[] {
-    return this.teams.map((team) => team.getStatByPeriod(duration, isPrev)).filter((stat) => stat !== undefined) as TeamStats[];
+    return this.teams
+      .map((team) => team.getStatByPeriod(duration, isPrev))
+      .filter((stat) => stat !== undefined) as TeamStats[];
   }
 
   getTeamPrograms(teamId: string): Program[] {
-    return this.programs.filter(program => program.teamIds.includes(teamId));
+    return this.programs.filter((program) => program.teamIds.includes(teamId));
   }
 
-  getTeamName(teamId: string): string {
-    return this.teams.find(team => team.id === teamId)?.name ?? '';
-  }
-
-  getProgramName(programId: string): string {
-    return this.programs.find(program => program.id === programId)?.name ?? '';
+  getProgramTeams(programId: string): Team[] {
+    return this.teams.filter((team) => team.programIds.includes(programId));
   }
 
   override get rawData(): ICompany {
@@ -133,8 +135,8 @@ export class Company extends BaseModel implements ICompany {
       theOfficeId: this.theOfficeId,
       stats: this.stats.map((s) => s.rawData),
       licenseCount: this.licenseCount,
-      teams: this.teams.map(team => team.rawData),
-      programs: this.programs.map(program => program.rawData),
+      teams: this.teams.map((team) => team.rawData),
+      programs: this.programs.map((program) => program.rawData),
     };
   }
 }

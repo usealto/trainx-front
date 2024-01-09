@@ -1,6 +1,11 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
+
+export interface ITabOption {
+  label: string;
+  value: any;
+}
 
 @Component({
   selector: 'alto-tabs',
@@ -10,28 +15,15 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 export class TabsComponent {
   I18ns = I18ns;
 
-  @Input() labels: string[] = [];
-  @Input() selectedValue: any;
-  @Input() data: { label: string; value: any }[] = [];
-  @Output() tabChanged = new EventEmitter<any>();
+  // @Input() labels: string[] = [];
+  // @Input() selectedValue: any;
+  // @Input() data: { label: string; value: any }[] = [];
+  // @Output() tabChanged = new EventEmitter<any>();
 
-  ID = Math.round(Math.random() * 1000);
+  @Input() options: ITabOption[] = [];
+  @Input() selectedControl: FormControl<ITabOption | null> = new FormControl(this.options[0] ?? null);
 
-  switchTab(val: any) {
-    this.tabChanged.emit(val);
-  }
-
-  @memoize()
-  getId(i: number): number {
-    return Math.round(Math.random() * 1000);
-  }
-
-  isChecked(i: number): boolean {
-    if (this.selectedValue) {
-      return this.data[i].value === this.selectedValue;
-    } else if (i === 0) {
-      return true;
-    }
-    return false;
+  switchTab(option: ITabOption): void {
+    this.selectedControl.patchValue(option);
   }
 }

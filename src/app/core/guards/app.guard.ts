@@ -1,20 +1,22 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, of, switchMap, tap, withLatestFrom } from 'rxjs';
+import { combineLatest, map, of, switchMap, withLatestFrom } from 'rxjs';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { Company, ICompany } from '../../models/company.model';
 import { CompaniesRestService } from '../../modules/companies/service/companies-rest.service';
+import { TeamsRestService } from '../../modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from '../../modules/profile/services/users-rest.service';
 import { setCompany, setUserMe } from '../store/root/root.action';
 import * as FromRoot from '../store/store.reducer';
-import { Company, ICompany } from '../../models/company.model';
-import { TeamsRestService } from '../../modules/lead-team/services/teams-rest.service';
+import { ProgramsRestService } from '../../modules/programs/services/programs-rest.service';
 
 export const AppGuard: CanActivateFn = () => {
   const store = inject<Store<FromRoot.AppState>>(Store<FromRoot.AppState>);
   const usersRestService = inject<UsersRestService>(UsersRestService);
   const companiesRestService = inject<CompaniesRestService>(CompaniesRestService);
   const teamsRestService = inject<TeamsRestService>(TeamsRestService);
+  const programsRestService = inject<ProgramsRestService>(ProgramsRestService);
 
   const router = inject(Router);
 
@@ -43,17 +45,19 @@ export const AppGuard: CanActivateFn = () => {
             ? combineLatest([
                 companiesRestService.getCompanyById(user.companyId),
                 teamsRestService.getTeams(),
+                programsRestService.getProgramsObj(),
               ]).pipe(
-                switchMap(([company, teams]) => {
-                  const updatedCompany = company ?? new Company({} as ICompany);
-                  const companyWithTeams = new Company({
-                    ...updatedCompany.rawData,
+                switchMap(([company, teams, programs]) => {
+                  if (!company) {
+                    return of(company);
+                  }
+                  const companyWithTeamsAndPrograms = new Company({
+                    ...company.rawData,
                     teams: teams.map((team) => team.rawData),
+                    programs: programs.map((program) => program.rawData),
                   });
 
-                  console.log('companyWithTeams : ', companyWithTeams);
-
-                  store.dispatch(setCompany({ company: companyWithTeams }));
+                  store.dispatch(setCompany({ company: companyWithTeamsAndPrograms }));
                   return store.select(FromRoot.selectCompany);
                 }),
               )

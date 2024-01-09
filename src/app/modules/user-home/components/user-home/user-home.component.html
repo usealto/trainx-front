@@ -68,12 +68,8 @@
         <h2 class="ps-5 pt-5">{{ I18ns.userHome.teams.leaderboard.title }}</h2>
         <alto-tabs
           class="ps-5 mb-4"
-          [data]="[
-            { label: I18ns.shared.dateFilter.week, value: ScoreDuration.Week },
-            { label: I18ns.shared.dateFilter.month, value: ScoreDuration.Month },
-            { label: I18ns.shared.dateFilter.year, value: ScoreDuration.Year }
-          ]"
-          (tabChanged)="leaderboardTabChanged($event)"
+          [options]="durationOptions"
+          [selectedControl]="durationControl"
         ></alto-tabs>
         <table class="table table-no-last-line">
           <thead class="border-bottom border-top">
@@ -118,29 +114,5 @@
         </table>
       </div>
     </div>
-    <!-- TODO: add challenges table later -->
-    <div class="col"></div>
-    <!-- <div class="col panel">
-    <h2>{{ I18ns.userHome.teams.challenges.title }}</h2>
-    <alto-tabs
-      class="mb-3"
-      [data]="[
-        { label: 'First', value: '1' },
-        { label: 'Second', value: '2' }
-      ]"
-    ></alto-tabs>
-    <hr />
-    <table class="table">
-      <thead>
-        <th scope="col">{{ I18ns.userHome.teams.challenges.name }}</th>
-        <th scope="col">{{ I18ns.userHome.teams.challenges.leader }}</th>
-        <th scope="col">{{ I18ns.userHome.teams.challenges.position }}</th>
-        <th scope="col">{{ I18ns.userHome.teams.challenges.end }}</th>
-      </thead>
-      <tbody>
-        <tr></tr>
-      </tbody>
-    </table>
-  </div> -->
   </div>
 </div>

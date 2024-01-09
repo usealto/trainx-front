@@ -1,17 +1,14 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { Observable, combineLatest, map, of, switchMap } from 'rxjs';
 
-import { Observable, combineLatest, map, of, switchMap, tap, withLatestFrom } from 'rxjs';
-import { Team } from '../../models/team.model';
+import { Company } from '../../models/company.model';
 import { User } from '../../models/user.model';
-import { TeamsRestService } from '../../modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from '../../modules/profile/services/users-rest.service';
-import { setCompany, setTeams, setUsers } from '../store/root/root.action';
+import { setUsers } from '../store/root/root.action';
 import { EmojiMap, emojiData } from '../utils/emoji/data';
 import * as FromRoot from './../../core/store/store.reducer';
-import { CompaniesRestService } from '../../modules/companies/service/companies-rest.service';
-import { Company, ICompany } from '../../models/company.model';
 
 export interface IAppData {
   me: User;
@@ -37,21 +34,21 @@ export const appResolver: ResolveFn<Observable<IAppData>> = () => {
         of(timestampedUser),
         timestampedUserById.needsUpdate()
           ? usersRestService.getUsers().pipe(
-            switchMap((users) => {
-              store.dispatch(setUsers({users}));
-              return store.select(FromRoot.selectUsers);
-            })
-          )
+              switchMap((users) => {
+                store.dispatch(setUsers({ users }));
+                return store.select(FromRoot.selectUsers);
+              }),
+            )
           : of(timestampedUserById),
-        of(timestampedCompany)     
+        of(timestampedCompany),
       ]);
     }),
-    map(([{data: me}, {data: userById}, {data: company}]) => {
+    map(([{ data: me }, { data: userById }, { data: company }]) => {
       return {
         me,
         userById,
-        company
-      }
-    })
+        company,
+      };
+    }),
   );
 };

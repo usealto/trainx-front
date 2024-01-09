@@ -2,19 +2,12 @@ import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import {
-  ScoreTimeframeEnumApi,
-  ScoreTypeEnumApi,
-  TeamStatsDtoApi,
-  UserDtoApi,
-} from '@usealto/sdk-ts-angular';
+import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import { EChartsOption } from 'echarts';
-import { Observable, combineLatest, map, of, tap } from 'rxjs';
-import { IHomeData } from 'src/app/core/resolvers/home.resolver';
+import { combineLatest, tap } from 'rxjs';
 import { EResolvers, ResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { IUser, User } from 'src/app/models/user.model';
 import { ETypeValue } from 'src/app/modules/collaboration/components/lead-collaboration/lead-collaboration.component';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
@@ -32,11 +25,10 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
 import { IAppData } from '../../../../core/resolvers';
-import { Team, TeamStats } from '../../../../models/team.model';
-import { Company } from '../../../../models/company.model';
+import { IHomeData } from '../../../../core/resolvers/home.resolver';
 import { ITeamStatsData } from '../../../../core/resolvers/teamStats.resolver';
-import { Program } from '../../../../models/program.model';
-import { IProgramsData } from '../../../../core/resolvers/programs.resolver';
+import { Company } from '../../../../models/company.model';
+import { Team, TeamStats } from '../../../../models/team.model';
 
 @UntilDestroy()
 @Component({
@@ -100,7 +92,6 @@ export class LeadHomeComponent implements OnInit {
     private readonly titleCasePipe: TitleCasePipe,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
-    private readonly userService: UsersRestService,
     private readonly statisticsServices: StatisticsService,
     public readonly teamStore: TeamStore,
     public readonly profileStore: ProfileStore,
@@ -210,19 +201,19 @@ export class LeadHomeComponent implements OnInit {
     this.teamsLeaderboardCount = this.teamsLeaderboard.length;
     this.teamsLeaderboardDataStatus = this.teamsLeaderboardCount === 0 ? 'noData' : 'good';
 
-     return this.scoresRestService.getUsersStats(duration).pipe(
-       tap((users) => {
-         users = users.filter((u) => u.score && u.score >= 0);
-         this.usersLeaderboard = users.map((u) => ({
-           name: u.user.firstname + ' ' + u.user.lastname,
-           score: u.score ?? 0,
-         }));
+    return this.scoresRestService.getUsersStats(duration).pipe(
+      tap((users) => {
+        users = users.filter((u) => u.score && u.score >= 0);
+        this.usersLeaderboard = users.map((u) => ({
+          name: u.user.firstname + ' ' + u.user.lastname,
+          score: u.score ?? 0,
+        }));
 
-         this.usersLeaderboardCount = this.usersLeaderboard.length;
-         this.usersLeaderboardDataStatus = this.usersLeaderboardCount === 0 ? 'noData' : 'good';
-         this.topflopLoaded = true;
-       }),
-     );
+        this.usersLeaderboardCount = this.usersLeaderboard.length;
+        this.usersLeaderboardDataStatus = this.usersLeaderboardCount === 0 ? 'noData' : 'good';
+        this.topflopLoaded = true;
+      }),
+    );
   }
 
   setAverageScore(current: TeamStats[], previous: TeamStats[]) {
@@ -278,13 +269,5 @@ export class LeadHomeComponent implements OnInit {
         }),
       )
       .subscribe();
-  }
-
-  @memoize()
-  getUser(id?: string): Observable<UserDtoApi | undefined> {
-    if (!id) {
-      return of(undefined);
-    }
-    return this.userService.getUsersFiltered({ ids: id }).pipe(map((u) => u.shift()));
   }
 }

@@ -43,7 +43,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   };
 
   teamsDisplay: TeamStats[] = [];
-  paginatedTeams: TeamStats[] = [];
+  paginatedTeamsStats: TeamStats[] = [];
   teamsDataStatus: PlaceholderDataStatus = 'loading';
   teamsPage = 1;
   teamsPageSize = 5;
@@ -98,8 +98,8 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
     }
 
     if (search) {
-      output = output.filter((t) =>
-        this.company.getTeamName(t.teamId).toLowerCase().includes(search.toLowerCase()),
+      output = output.filter(
+        (t) => this.company.teamById.get(t.teamId)?.name.toLowerCase().includes(search.toLowerCase()) ?? true,
       );
     }
 
@@ -109,10 +109,12 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   }
 
   changeTeamsPage(page: number) {
-    console.log('teamsDisplay', this.teamsDisplay);
     this.teamsPage = page;
-    this.paginatedTeams = this.teamsDisplay.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
-    this.teamsDataStatus = this.paginatedTeams.length === 0 ? 'noData' : 'good';
+    this.paginatedTeamsStats = this.teamsDisplay.slice(
+      (page - 1) * this.teamsPageSize,
+      page * this.teamsPageSize,
+    );
+    this.teamsDataStatus = this.paginatedTeamsStats.length === 0 ? 'noData' : 'good';
   }
 
   @memoize()
@@ -145,7 +147,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
     const programsWithValidScores = programsWithScores.filter((program) => program.score !== null);
 
     // Trier les programmes par score en ordre croissant.
-    programsWithValidScores.sort((a, b) => (a.score || 0)  - (b.score || 0));
+    programsWithValidScores.sort((a, b) => (a.score || 0) - (b.score || 0));
 
     // Retourner les trois programmes avec les scores les plus bas.
     return programsWithValidScores.slice(0, 3);

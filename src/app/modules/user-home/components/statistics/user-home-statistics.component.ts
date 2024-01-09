@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
+import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import { combineLatest, map, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -19,6 +19,7 @@ import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/mod
 import { Team } from 'src/app/models/team.model';
 import { EChartsOption, SeriesOption } from 'echarts';
 import { Score } from '../../../../models/score.model';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'alto-user-home-statistics',
@@ -27,8 +28,10 @@ import { Score } from '../../../../models/score.model';
 })
 export class UserHomeStatisticsComponent implements OnInit {
   I18ns = I18ns;
-  // could be replaced by duration bellow
-  statisticsDuration = ScoreDuration.Trimester;
+
+  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
+    nonNullable: true,
+  });
 
   user!: User;
   userTeam!: Team;
@@ -63,16 +66,19 @@ export class UserHomeStatisticsComponent implements OnInit {
     this.user = (data[EResolvers.AppResolver] as IAppData).me;
     const teamsById = (data[EResolvers.AppResolver] as IAppData).company.teams;
     this.userTeam = teamsById.find((t) => t.id === this.user.teamId) || new Team({} as any);
-    this.getScore();
-    this.getUserChartScores(this.statisticsDuration);
-    this.getFinishedPrograms();
-    this.getGuessesCount();
+
+    this.durationControl.valueChanges.subscribe((duration) => {
+      this.getScore(duration);
+      this.getUserChartScores(duration);
+      this.getFinishedPrograms(duration);
+      this.getGuessesCount(duration);
+    });
   }
 
-  getScore() {
+  getScore(duration: ScoreDuration) {
     combineLatest([
-      this.scoresRestService.getUsersStats(this.statisticsDuration, false),
-      this.scoresRestService.getUsersStats(this.statisticsDuration, true),
+      this.scoresRestService.getUsersStats(duration, false),
+      this.scoresRestService.getUsersStats(duration, true),
     ])
       .pipe(
         map(([curr, prev]) => [
@@ -101,15 +107,15 @@ export class UserHomeStatisticsComponent implements OnInit {
     combineLatest([
       this.scoresRestService.getScores({
         type: ScoreTypeEnumApi.User,
-        duration: this.statisticsDuration,
+        duration: duration,
         ids: [this.user.id],
-        timeframe: timeframe(this.statisticsDuration),
+        timeframe: timeframe(duration),
       }),
       this.scoresRestService.getScores({
         type: ScoreTypeEnumApi.Team,
-        duration: this.statisticsDuration,
+        duration: duration,
         ids: [this.userTeam.id],
-        timeframe: timeframe(this.statisticsDuration),
+        timeframe: timeframe(duration),
       }),
     ])
       .pipe(
@@ -123,15 +129,11 @@ export class UserHomeStatisticsComponent implements OnInit {
       .subscribe();
   }
 
-  getFinishedPrograms() {
+  getFinishedPrograms(duration: ScoreDuration) {
     combineLatest([
-      this.programsRestService.getProgramsPaginated({ teamIds: this.user.teamId }, this.statisticsDuration),
-      this.programsRestService.getProgramsPaginated(
-        { teamIds: this.user.teamId },
-        this.statisticsDuration,
-        true,
-      ),
-      this.programRunsRestService.getMyProgramRuns(this.user.id),
+      this.programsRestService.getProgramsPaginated({ teamIds: this.user.teamId }, duration),
+      this.programsRestService.getProgramsPaginated({ teamIds: this.user.teamId }, duration, true),
+      this.programRunsRestService.getUserProgramRuns(this.user.id),
     ])
       .pipe(
         tap(([currentPrograms, previousPrograms, currentProgramRuns]) => {
@@ -164,17 +166,10 @@ export class UserHomeStatisticsComponent implements OnInit {
       .subscribe();
   }
 
-  getGuessesCount() {
+  getGuessesCount(duration: ScoreDuration) {
     combineLatest([
-      this.guessesRestService.getGuesses(
-        { createdBy: this.user.id, itemsPerPage: 1 },
-        this.statisticsDuration,
-      ),
-      this.guessesRestService.getGuesses(
-        { createdBy: this.user.id, itemsPerPage: 1 },
-        this.statisticsDuration,
-        true,
-      ),
+      this.guessesRestService.getGuesses({ createdBy: this.user.id, itemsPerPage: 1 }, duration),
+      this.guessesRestService.getGuesses({ createdBy: this.user.id, itemsPerPage: 1 }, duration, true),
     ])
       .pipe(
         tap(([guesses, previousGuesses]) => {
@@ -232,13 +227,5 @@ export class UserHomeStatisticsComponent implements OnInit {
       series: series as SeriesOption[],
       legend: { ...legendOptions, top: 5 },
     };
-  }
-
-  updateTimePicker(duration: any) {
-    this.statisticsDuration = duration;
-    this.getScore();
-    this.getUserChartScores(duration);
-    this.getFinishedPrograms();
-    this.getGuessesCount();
   }
 }

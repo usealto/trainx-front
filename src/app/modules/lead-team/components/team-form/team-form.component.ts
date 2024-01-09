@@ -23,7 +23,6 @@ import { Program } from '../../../../models/program.model';
 export class TeamFormComponent implements OnInit {
   I18ns = I18ns;
   @Input() team?: Team;
-  @Output() teamChanged: EventEmitter<Team> = new EventEmitter<Team>();
   @Input() programs: Program[] = [];
   @Input() teamsNames: string[] = [];
   @Input() users: User[] = [];
@@ -39,7 +38,6 @@ export class TeamFormComponent implements OnInit {
     invitationEmails: [],
   });
 
-  isEdit = false;
   userFilters = { teams: [] as Team[] };
   teamPrograms: Program[] = [];
 
@@ -56,8 +54,6 @@ export class TeamFormComponent implements OnInit {
   ngOnInit(): void {
     if (this.team) {
       const teamId = this.team?.id;
-
-      this.isEdit = true;
       this.teamPrograms = this.programs.filter((program) => program.teamIds.includes(teamId));
       this.userFilters.teams.push(this.team);
       const filteredUsers = this.userService.filterUsers<UserDtoApi[]>(this.users, this.userFilters);
@@ -107,52 +103,74 @@ export class TeamFormComponent implements OnInit {
 
     const { name, programs, invitationEmails } = this.teamForm.value;
 
-    if (!this.isEdit && !this.team) {
-      //CREATION MODE
-      this.teamsRestService
-        .createTeam({ name })
-        .pipe(
-          switchMap((team) => {
-            if (team) {
-              return combineLatest(this.updateTeamInfos(team, programs, invitationEmails));
-            }
-            return of(null);
-          }),
-          tap(() => {
-            this.teamChanged.emit();
-            this.activeOffcanvas.dismiss();
-          }),
-        )
-        .subscribe();
-    } else {
-      //EDIT MODE
-      const params: PatchTeamDtoApi = {
-        name: name,
-      };
-      if (this.team?.id) {
-        this.teamsRestService
-          .updateTeam({ id: this.team.id, patchTeamDtoApi: params })
-          .pipe(
-            filter((team) => !!team),
-            switchMap((team) => {
-              if (team) {
-                return combineLatest([
-                  ...[of(team)],
-                  ...this.updateTeamInfos(team, programs, invitationEmails),
-                ]);
-              }
-              return of(null);
-            }),
-            tap((team) => {
-              if (team) {
-                this.teamChanged?.emit(team[0]);
-              }
-              this.activeOffcanvas.close();
-            }),
-          )
-          .subscribe();
-      }
-    }
+    // TODO : un seul pipe
+    // A la fin du pipe, lorsqu'un changement a eu lieu (create/update), teamChanged.emit([LA NOUVELLE TEAM/LA TEAM UPDATEE])
+    // Le composant parent doit souscrire à teamChanged pour mettre à jour la liste des teams (dans le store) et la liste des programmes
+
+    (this.team
+      ? this.teamsRestService.updateTeam({ id: this.team.id, patchTeamDtoApi: { name } })
+      : this.teamsRestService.createTeam({ name })
+    )
+      .pipe(
+        switchMap((team: Team) => {
+          if (team) {
+            return combineLatest(this.updateTeamInfos(team, programs, invitationEmails));
+          }
+          return of([undefined]);
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.activeOffcanvas.close(true);
+        },
+      });
+
+    // if (!this.isEdit && !this.team) {
+    //   //CREATION MODE
+    //   this.teamsRestService
+    //     .createTeam({ name })
+    //     .pipe(
+    //       switchMap((team) => {
+    //         if (team) {
+    //           return combineLatest(this.updateTeamInfos(team, programs, invitationEmails));
+    //         }
+    //         return of(null);
+    //       }),
+    //       tap(() => {
+    //         this.teamChanged.emit();
+    //         this.activeOffcanvas.dismiss();
+    //       }),
+    //     )
+    //     .subscribe();
+    // } else {
+    //   //EDIT MODE
+    //   const params: PatchTeamDtoApi = {
+    //     name: name,
+    //   };
+    //   if (this.team?.id) {
+    //     this.teamsRestService
+    //       .updateTeam({ id: this.team.id, patchTeamDtoApi: params })
+    //       .pipe(
+    //         filter((team) => !!team),
+    //         switchMap((team) => {
+    //           if (team) {
+    //             return combineLatest([
+    //               ...[of(team)],
+    //               ...this.updateTeamInfos(team, programs, invitationEmails),
+    //             ]);
+    //           }
+    //           return of(null);
+    //         }),
+    //         tap((team) => {
+    //           if (team) {
+    //             this.teamChanged?.emit(team[0]);
+    //           }
+    //           this.activeOffcanvas.close();
+    //         }),
+    //       )
+    //       .subscribe();
+    //   }
+    // }
   }
 
   updateTeamInfos(team: Team, formProgs: Program[], members: UserDtoApi[]): Observable<any>[] {
@@ -174,7 +192,6 @@ export class TeamFormComponent implements OnInit {
             teamIds: p.teamIds.filter((t) => t !== team.id).map((t) => ({ id: t })),
           }),
         );
-        this.programService.resetCache();
       }
     });
 
@@ -187,7 +204,6 @@ export class TeamFormComponent implements OnInit {
               teamIds: [...p.teamIds, team.id].map((t) => ({ id: t })),
             }),
           );
-          this.programService.resetCache();
         }
       });
     }

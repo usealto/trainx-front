@@ -29,6 +29,11 @@ import { QuestionDisplayLight } from '../../models/question.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
+import { ResolversService } from '../../../../core/resolvers/resolvers.service';
+import { Store } from '@ngrx/store';
+import * as FromRoot from '../../../../core/store/store.reducer';
+import { Program } from '../../../../models/program.model';
+import { Company } from '../../../../models/company.model';
 
 @UntilDestroy()
 @Component({
@@ -46,9 +51,10 @@ export class CreateProgramsComponent implements OnInit {
   programForm!: IFormGroup<ProgramForm>;
   programsNames: string[] = [];
   currentStep = 1;
-  editedProgram?: ProgramDtoApi;
+  editedProgram?: Program;
   isEdit = false;
   isNewProgram = false;
+  company: Company = {} as Company;
 
   questions!: QuestionDtoApi[];
   questionsAssociated!: QuestionDtoApi[];
@@ -78,55 +84,52 @@ export class CreateProgramsComponent implements OnInit {
     public teamStore: TeamStore,
     private modalService: NgbModal,
     private replaceInTranslationPipe: ReplaceInTranslationPipe,
+    private readonly store: Store<FromRoot.AppState>,
   ) {
     this.fb = fob;
   }
 
   ngOnInit(): void {
-    this.route.params
+    this.store
+      .select(FromRoot.selectCompany)
       .pipe(
-        map((p) => {
-          if (p['id'] === 'new') {
-            this.getProgramNames();
-            this.initForm();
-            this.isNewProgram = true;
-            return null;
-          } else {
-            this.isEdit = true;
-            return p['id'];
-          }
+        switchMap(({ data: company }) => {
+          this.company = company;
+
+          return this.route.params.pipe(
+            map((params) => {
+              const programId = params['id'];
+              if (programId === 'new') {
+                this.isNewProgram = true;
+                this.initForm();
+                return null;
+              } else {
+                this.isEdit = true;
+                return company.programById.get(programId);
+              }
+            }),
+            tap((program) => {
+              if (this.isEdit && program) {
+                this.getProgramNames();
+                this.editedProgram = program;
+                this.initForm(program);
+              }
+            }),
+          );
         }),
-        filter((x) => !!x),
-        switchMap((id) => this.programRestService.getProgram(id)),
-        tap((p) => {
-          this.editedProgram = p;
-          this.getProgramNames();
-        }),
-        tap((p) => this.initForm(p)),
         untilDestroyed(this),
       )
       .subscribe();
   }
 
   getProgramNames() {
-    this.programRestService
-      .getPrograms()
-      .pipe(
-        tap((d) => {
-          d.forEach((p) => {
-            this.programsNames.push(p.name.toLowerCase());
-          });
-        }),
-        tap(() => {
-          const programName = this.editedProgram?.name.toLowerCase();
-          const index = this.programsNames.indexOf(programName ?? '');
-          this.programsNames.splice(index, 1);
-        }),
-      )
-      .subscribe();
+    this.programsNames = this.company.programs.map((p) => p.name.toLowerCase());
+    const programName = this.editedProgram?.name.toLowerCase();
+    const index = this.programsNames.indexOf(programName ?? '');
+    this.programsNames.splice(index, 1);
   }
 
-  initForm(program?: ProgramDtoApi) {
+  initForm(program?: Program) {
     this.programForm = this.fb.group<ProgramForm>({
       name: [
         program?.name ?? '',
@@ -139,7 +142,7 @@ export class CreateProgramsComponent implements OnInit {
       description: program?.description ?? '',
       expectation: [program?.expectation ?? 75, [Validators.required]],
       tags: [[]],
-      teams: [program?.teams?.map((t) => t.id) ?? []],
+      teams: program?.teamIds ?? [],
     });
   }
 
@@ -172,7 +175,7 @@ export class CreateProgramsComponent implements OnInit {
         map((d) => d.data),
         tap((prog: ProgramDtoApi) => {
           this.isEdit = true;
-          this.editedProgram = prog;
+          this.editedProgram = Program.fromDto(prog);
           this.getAssociatedQuestions();
         }),
         untilDestroyed(this),
@@ -206,9 +209,6 @@ export class CreateProgramsComponent implements OnInit {
             // We keep the form open after question's creation
             this.openQuestionForm();
           }
-
-          // refresh the program
-          this.refreshProgram();
 
           // refresh the questions list
           this.getQuestions();
@@ -320,7 +320,6 @@ export class CreateProgramsComponent implements OnInit {
           tap(() => {
             this.getQuestions();
             this.getAssociatedQuestions();
-            this.refreshProgram();
           }),
           untilDestroyed(this),
         )
@@ -342,7 +341,7 @@ export class CreateProgramsComponent implements OnInit {
     if (!this.editedProgram) {
       return;
     }
-    const { id, name, teams } = this.editedProgram;
+    const { id, name, teamIds } = this.editedProgram;
 
     const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
 
@@ -351,7 +350,7 @@ export class CreateProgramsComponent implements OnInit {
       title: this.replaceInTranslationPipe.transform(I18ns.programs.delete.title, name),
       subtitle: this.replaceInTranslationPipe.transform(
         I18ns.programs.delete.subtitle,
-        teams.length.toString(),
+        teamIds.length.toString(),
       ),
     };
 
@@ -359,7 +358,6 @@ export class CreateProgramsComponent implements OnInit {
       .pipe(
         switchMap(() => this.programRestService.deleteProgram(id)),
         tap(() => {
-          this.programRestService.resetCache();
           modalRef.close();
           this.location.back();
         }),
@@ -410,13 +408,5 @@ export class CreateProgramsComponent implements OnInit {
       return '';
     }
     return getTranslation(I18ns.shared.priorities, p.toLowerCase());
-  }
-
-  refreshProgram() {
-    if (this.editedProgram) {
-      this.programRestService.getProgram(this.editedProgram.id).subscribe((p) => {
-        this.editedProgram = p;
-      });
-    }
   }
 }

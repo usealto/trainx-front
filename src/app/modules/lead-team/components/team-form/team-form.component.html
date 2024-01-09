@@ -11,7 +11,7 @@
   <alto-icon-badge [size]="4" icon="bi-people"></alto-icon-badge>
 
   <p class="title d-inline-block">
-    {{ isEdit ? I18ns.leadTeam.teams.form.title.edit : I18ns.leadTeam.teams.form.title.create }}
+    {{ team ? I18ns.leadTeam.teams.form.title.edit : I18ns.leadTeam.teams.form.title.create }}
   </p>
 </div>
 
@@ -84,7 +84,7 @@
     <button type="button" class="btn cancel-btn" aria-label="Close" (click)="activeOffcanvas.dismiss()">
       {{ I18ns.shared.cancel }}
     </button>
-    <ng-container *ngIf="isEdit; else elseTemplate">
+    <ng-container *ngIf="team; else elseTemplate">
       <input
         data-cy="btnSave"
         type="submit"

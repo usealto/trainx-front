@@ -1,10 +1,6 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-import {
-  CommentDtoApi,
-  QuestionSubmittedStatusEnumApi,
-  TeamStatsDtoApi
-} from '@usealto/sdk-ts-angular';
+import { CommentDtoApi, QuestionSubmittedStatusEnumApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { combineLatest, map } from 'rxjs';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
@@ -35,12 +31,3 @@ export const homeResolver: ResolveFn<IHomeData> = () => {
     })),
   );
 };
-
-// @Injectable()
-// export class HomeResolver implements Resolve<IHomeData> {
-//   constructor(private readonly store: Store<FromRoot.LeadState>) {}
-
-//   resolve(): Observable<IHomeData> {
-
-//   }
-// }

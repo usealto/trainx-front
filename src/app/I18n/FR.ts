@@ -418,22 +418,15 @@ export const FR = {
         title: 'Niveau de maîtrise par thématiques',
         subtitle:
           "Retrouvez une vue d'ensemble sur le niveau de maîtrise de vos équipes selon leurs thématiques.",
-        filters: {
-          tags: 'Tags',
-        },
-        scoreEvolutionChart: {
-          title: 'Évolution du niveau de maîtrise',
-          subtitle: 'Évolution du niveau moyen de vos équipes par tag.',
-          placeholderTitle: 'Les équipes sont en train de s’échauffer',
-          placeholderSubtitle: 'Les premiers résultats ne devraient plus tarder !',
-        },
-        teamsKnowledgeChart: {
-          title: 'Niveau de maîtrise de vos équipes par thématique',
-          subtitle: 'Aperçu du niveau moyen de vos équipes sur le tag sélectionné.',
-          placeholderTitle: 'Quelles thématiques déstabilisent vos équipes ? Vous le saurez prochainement',
-          filters: {
-            tags: 'Tags',
-            teams: 'Équipes',
+        spiderChart: {
+          title: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
+          subtitle: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
+          global: 'Score de vos équipes',
+          placeholders: {
+            noData: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
+            notEnoughTags: 'Vous devez avoir créé au moins 3 tags.',
+            lessThan3Tags: 'Vous devez sélectionner au moins 3 tags.',
+            moreThan6Tags: 'Vous devez sélectionner au maximum 6 tags.',
           },
         },
         control: {
@@ -621,7 +614,7 @@ export const FR = {
             title: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
           },
           spiderChart: {
-            title: 'Niveau de maîtrise par thématiques',
+            title: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
             subtitle: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
             placeholder: {
               empty: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',

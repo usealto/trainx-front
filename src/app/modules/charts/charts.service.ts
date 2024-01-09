@@ -9,7 +9,7 @@ export interface ITooltipParams {
   seriesName: string;
   color: string;
   seriesIndex: number;
-  value? : any[];
+  value?: any[];
 }
 export interface initOptions {
   devicePixelRatio?: number;
@@ -127,6 +127,15 @@ export class ChartsService {
       });
     }
 
+    eChartsOption.radar = {
+      radius: '70%',
+      axisName: {
+        color: '#667085',
+        padding: [3, 10],
+      },
+      ...eChartsOption.radar,
+    };
+
     eChartsOption.tooltip = {
       trigger: 'item',
       padding: 0,
@@ -135,6 +144,14 @@ export class ChartsService {
         return this.tooltipRadarFormatter(params as ITooltipParams, eChartsOption);
       },
       ...eChartsOption.tooltip,
+    };
+
+    eChartsOption.legend = {
+      bottom: 0,
+      icon: 'circle',
+      itemWidth: 8,
+      textStyle: { color: '#667085' },
+      ...eChartsOption.legend,
     };
     return eChartsOption;
   }
@@ -160,28 +177,27 @@ export class ChartsService {
   `;
   }
 
-
   private tooltipRadarFormatter(params: ITooltipParams, eChartsOption: EChartsOption) {
-    const radarOption = eChartsOption?.radar as RadarComponentOption
-    const labels = radarOption?.indicator
-    const emptySeries = Array.isArray(eChartsOption.series)
+    const radarOption = eChartsOption?.radar as RadarComponentOption;
+    const labels = radarOption?.indicator;
+    const emptySeries = Array.isArray(eChartsOption.series);
 
-    if(!emptySeries) return ''
-    if (!labels) return ''
-    if (!params.value) return ''
-    
-    let listString = ''  
+    if (!emptySeries) return '';
+    if (!labels) return '';
+    if (!params.value) return '';
+
+    let listString = '';
     const bulletPointString = `<svg xmlns="http://www.w3.org/2000/svg" width="10" height="11" viewBox="0 0 10 11" fill="none">
-    <circle cx="5" cy="5.5" r="5" fill="${params.color}"/></svg>`
+    <circle cx="5" cy="5.5" r="5" fill="${params.color}"/></svg>`;
 
     for (let i = 0; i < labels.length; i++) {
       listString += `
       <div style="padding : 4px 10px 8px 10px; display: flex; align-items: center; gap: 10px;">
       ${bulletPointString}
       <span>${labels[i].name}</span> : <b style="color: ${params.color};">${params.value[i] || '- '}%</b>
-      </div>`      
+      </div>`;
     }
-    
+
     return `
     <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10); border-radius: 4px;">
       <div style="color: #667085; background-color: #F9FAFB; padding : 8px 10px 4px 10px; font-weight: 600;">

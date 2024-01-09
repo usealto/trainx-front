@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TrainingCardData } from '../../models/training.model';
+import { ITrainingCardData } from '../../../shared/components/training-card/training-card.component';
 
 @Component({
   selector: 'alto-training-cards-list',
@@ -7,7 +7,7 @@ import { TrainingCardData } from '../../models/training.model';
   styleUrls: ['./training-cards-list.component.scss'],
 })
 export class TrainingCardsListComponent {
-  @Input() data?: TrainingCardData[];
+  @Input() data?: ITrainingCardData[];
   @Input() pageSize = 1;
   page = 1;
 

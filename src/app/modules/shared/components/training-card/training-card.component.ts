@@ -3,8 +3,19 @@ import { intervalToDuration } from 'date-fns';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { User } from 'src/app/models/user.model';
-import { TrainingCardData } from 'src/app/modules/training/models/training.model';
 import { AltoRoutes } from '../../constants/routes';
+
+export interface ITrainingCardData {
+  programRunId?: string;
+  programId: string;
+  title: string;
+  score: number;
+  expectation: number;
+  inProgress: boolean;
+  duration?: number;
+  updatedAt?: Date;
+  users?: User[];
+}
 
 @Component({
   selector: 'alto-training-card',
@@ -14,7 +25,7 @@ import { AltoRoutes } from '../../constants/routes';
 export class TrainingCardComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
-  @Input() data?: TrainingCardData;
+  @Input() data?: ITrainingCardData;
   score?: number;
   /**
    * In Seconds
@@ -30,7 +41,7 @@ export class TrainingCardComponent implements OnInit {
   ngOnInit(): void {
     this.duration = this.data?.duration;
     this.title = this.data?.title;
-    this.isProgress = this.data?.isProgress ?? true;
+    this.isProgress = this.data?.inProgress ?? true;
     this.users = this.data?.users ?? [];
     this.score = 0;
 

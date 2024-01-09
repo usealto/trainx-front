@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { QuestionSubmittedDtoApi, TagDtoApi, TagStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Observable, combineLatest, switchMap, tap } from 'rxjs';
+import { QuestionSubmittedDtoApi, TagDtoApi } from '@usealto/sdk-ts-angular';
+import { Subscription, combineLatest, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -10,8 +11,12 @@ import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { IAppData } from '../../../../core/resolvers';
+import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
+import { Program } from '../../../../models/program.model';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
+import { ITabOption } from '../../../shared/components/tabs/tabs.component';
 import { ScoreDuration, ScoreFilter } from '../../../shared/models/score.model';
 import { QuestionDisplay } from '../../models/question.model';
 import { TagFilters } from '../../models/tag.model';
@@ -25,17 +30,19 @@ interface TagDisplay extends TagDtoApi {
   score?: number;
 }
 
-@UntilDestroy()
 @Component({
   selector: 'alto-programs',
   templateUrl: './programs.component.html',
   styleUrls: ['./programs.component.scss'],
   providers: [ReplaceInTranslationPipe],
 })
-export class ProgramsComponent implements OnInit {
+export class ProgramsComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+
+  programs: Program[] = [];
+
   //
   activeProgramCount = 0;
 
@@ -60,12 +67,14 @@ export class ProgramsComponent implements OnInit {
   isFilteredTags = false;
   selectedScore = [];
 
-  tabData = [
+  tabOptions: ITabOption[] = [
     { label: I18ns.programs.tabs.programs, value: 'programs' },
     { label: I18ns.programs.tabs.questions, value: 'questions' },
     { label: I18ns.programs.tabs.tags, value: 'tags' },
   ];
-  activeTab = this.tabData[0].value;
+  activeTab = new FormControl();
+
+  programsComponentSubscription = new Subscription();
 
   constructor(
     private readonly scoresRestServices: ScoresRestService,
@@ -78,28 +87,47 @@ export class ProgramsComponent implements OnInit {
     private modalService: NgbModal,
     private readonly scoreService: ScoresService,
     private replaceInTranslationPipe: ReplaceInTranslationPipe,
+    private readonly resolversService: ResolversService,
+    private readonly activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
-    this.getScoresFromTags().subscribe();
-    setTimeout(() => {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.programs = (data[EResolvers.AppResolver] as IAppData).company.programs;
+
+    this.programsComponentSubscription.add(
       combineLatest([
+        this.scoresRestServices.getTagsStats(ScoreDuration.All, false),
         this.questionsService.getQuestions(),
         this.scoresRestServices.getQuestionsStats(ScoreDuration.All, false),
       ])
         .pipe(
-          tap(([questions, questionScores]) => {
+          tap(([stats, questions, questionsScores]) => {
+            stats.forEach((stat) => {
+              this.tagsScore.set(stat.tag.id, stat.score || 0);
+            });
+
             this.programsStore.questionsInitList.value = questions.map((q) => {
               return {
                 ...q,
-                score: questionScores.find((qs) => qs.id === q.id)?.score || 0,
+                score: questionsScores.find((qs) => qs.id === q.id)?.score || 0,
               } as QuestionDisplay;
             });
           }),
-          untilDestroyed(this),
+          switchMap(() => {
+            return this.activeTab.valueChanges;
+          }),
         )
-        .subscribe();
-    }, 1000);
+        .subscribe({
+          next: () => {
+            this.resetFilters();
+          },
+        }),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.programsComponentSubscription.unsubscribe();
   }
 
   handleTabChange(value: any) {
@@ -126,19 +154,8 @@ export class ProgramsComponent implements OnInit {
           this.tagRestService.resetTags();
           this.getTags();
         }),
-        untilDestroyed(this),
       )
       .subscribe();
-  }
-
-  getScoresFromTags(): Observable<TagStatsDtoApi[]> {
-    return this.scoresRestServices.getTagsStats(ScoreDuration.All, false).pipe(
-      tap((stats) => {
-        stats.forEach((stat) => {
-          this.tagsScore.set(stat.tag.id, stat.score || 0);
-        });
-      }),
-    );
   }
 
   @memoize()
@@ -176,7 +193,6 @@ export class ProgramsComponent implements OnInit {
           this.filterTagsByScore(this.tags as TagDisplay[], this.tagFilters.score);
           this.isTagsLoading = false;
         }),
-        untilDestroyed(this),
       )
       .subscribe();
   }

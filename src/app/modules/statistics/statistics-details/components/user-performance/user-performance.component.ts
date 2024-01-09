@@ -25,9 +25,7 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
 import { ToastService } from '../../../../../core/toast/toast.service';
 import { StatisticsService } from '../../../services/statistics.service';
-import { ICompany } from '../../../../../models/company.model';
-import { data } from 'cypress/types/jquery';
-import { te } from 'date-fns/locale';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'alto-user-performance',
@@ -40,7 +38,9 @@ export class UserPerformanceComponent implements OnInit {
 
   user!: User;
   userTeam!: Team;
-  duration: ScoreDuration = ScoreDuration.Trimester;
+  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
+    nonNullable: true,
+  });
   tags: TagDtoApi[] = [];
 
   userChartOptions!: any;
@@ -97,28 +97,29 @@ export class UserPerformanceComponent implements OnInit {
       )
       .subscribe({
         next: () => {
-          this.loadPage();
+          this.getSpiderChartScores();
+          this.getUserChartScores(this.durationControl.value);
+          this.getTagsChartScores(this.durationControl.value);
         },
       });
+
+    this.durationControl.valueChanges.subscribe((duration) => {
+      this.getUserChartScores(duration);
+      this.getTagsChartScores(duration);
+    });
   }
 
-  loadPage(): void {
-    this.getUserChartScores(this.duration);
-    this.getTagsChartScores(this.duration);
-    this.getSpiderChartScores(this.duration);
-  }
-
-  getSpiderChartScores(duration: ScoreDuration): void {
+  getSpiderChartScores(): void {
     this.spiderChartSectionStatus = this.tags.length ? 'good' : 'empty';
     this.spiderChartStatus = 'loading';
     combineLatest([
       this.scoresRestService.getTagsStats(
-        duration,
+        ScoreDuration.Year,
         false,
         this.user.teamId,
         this.selectedSpiderTags.map((t) => t.id),
       ),
-      this.scoresRestService.getScores(this.getScoreParams('tagStats', duration)),
+      this.scoresRestService.getScores(this.getScoreParams('tagStats', ScoreDuration.Year)),
     ]).subscribe(([teamStats, userStats]) => {
       this.createSpiderChart(
         teamStats.sort((a, b) => a.tag.name.localeCompare(b.tag.name)),
@@ -135,11 +136,6 @@ export class UserPerformanceComponent implements OnInit {
         indicator: teamScores.map((s) => {
           return { name: s.tag.name, max: 100 };
         }),
-        radius: '70%',
-        axisName: {
-          color: '#667085',
-          padding: [3, 10],
-        },
       },
       series: [
         {
@@ -179,12 +175,6 @@ export class UserPerformanceComponent implements OnInit {
           ],
         },
       ],
-      legend: {
-        bottom: 0,
-        icon: 'circle',
-        itemWidth: 8,
-        textStyle: { color: '#667085' },
-      },
     };
   }
 
@@ -233,7 +223,7 @@ export class UserPerformanceComponent implements OnInit {
         lineStyle: {},
       };
     });
-      
+
     this.tagsChartOptions = {
       xAxis: [{ ...xAxisDatesOptions, data: labels }],
       yAxis: [{ ...yAxisScoreOptions }],
@@ -309,14 +299,9 @@ export class UserPerformanceComponent implements OnInit {
     };
   }
 
-  updateTimePicker(event: any): void {
-    this.duration = event;
-    this.loadPage();
-  }
-
   filterTags(event: any): void {
     this.selectedTags = event;
-    this.getTagsChartScores(this.duration);
+    this.getTagsChartScores(this.durationControl.value);
   }
 
   filterSpiderTags(event: any): void {
@@ -328,7 +313,7 @@ export class UserPerformanceComponent implements OnInit {
       this.spiderChartStatusReason = '>6 tags';
       this.spiderChartStatus = 'empty';
     } else {
-      this.getSpiderChartScores(this.duration);
+      this.getSpiderChartScores();
     }
   }
 

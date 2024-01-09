@@ -16,8 +16,7 @@
   <div class="panel">
     <alto-time-picker
       class="me-4 float-end"
-      [duration]="duration"
-      (durationSelected)="updateTimePicker($event)"
+      [durationControl]="durationControl"
     ></alto-time-picker>
     <h3>{{ I18ns.statistics.user.performance.masteringLevel.chartTitle }}</h3>
     <p class="alto-grey mb-4">
@@ -65,8 +64,7 @@
   <div class="panel mb-6">
     <div class="float-end">
       <alto-time-picker
-        [duration]="duration"
-        (durationSelected)="updateTimePicker($event)"
+        [durationControl]="durationControl"
       ></alto-time-picker>
       <alto-dropdown-filter
         class="ms-4"

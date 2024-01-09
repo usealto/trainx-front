@@ -10,8 +10,7 @@
   <div class="panel mb-4">
     <alto-time-picker
       class="float-end"
-      [duration]="duration"
-      (durationSelected)="updateTimePicker($event)"
+      [durationControl]="durationControl"
     ></alto-time-picker>
     <h3>{{ I18ns.statistics.team.teamActivity.chartTitle }}</h3>
     <p class="alto-grey mb-4">
@@ -57,8 +56,7 @@
   <div class="panel mb-4">
     <alto-time-picker
       class="float-end"
-      [duration]="duration"
-      (durationSelected)="updateTimePicker($event)"
+      [durationControl]="durationControl"
     ></alto-time-picker>
     <h3>{{ I18ns.statistics.team.membersEngagement.chartTitle }}</h3>
     <p class="alto-grey mb-4">
@@ -81,8 +79,7 @@
 <div class="mb-5">
   <alto-time-picker
     class="float-end"
-    [duration]="duration"
-    (durationSelected)="updateTimePicker($event)"
+    [durationControl]="durationControl"
   ></alto-time-picker>
   <h2>
     <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" height="16" width="16" />

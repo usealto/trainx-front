@@ -1,13 +1,8 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import {
-  ScoreTimeframeEnumApi,
-  ScoreTypeEnumApi,
-  TeamDtoApi,
-  TeamStatsDtoApi,
-} from '@usealto/sdk-ts-angular';
-import { Observable, combineLatest, filter, map, switchMap, tap } from 'rxjs';
+import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
+import { Observable, combineLatest, filter, map, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
@@ -26,7 +21,7 @@ import { DataForTable } from '../../models/statistics.model';
 import { Store } from '@ngrx/store';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { Team, TeamStats } from '../../../../models/team.model';
-
+import { FormControl } from '@angular/forms';
 
 @UntilDestroy()
 @Component({
@@ -37,7 +32,9 @@ import { Team, TeamStats } from '../../../../models/team.model';
 export class StatisticsGlobalEngagementComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
-  duration: ScoreDuration = ScoreDuration.Trimester;
+  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
+    nonNullable: true,
+  });
   AltoRoutes = AltoRoutes;
 
   company: Company = {} as Company;
@@ -65,7 +62,6 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
 
   constructor(
     private readonly titleCasePipe: TitleCasePipe,
-    public readonly teamStore: TeamStore,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly statisticsServices: StatisticsService,
@@ -79,27 +75,30 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
       .select(FromRoot.selectCompany)
       .pipe(tap(({ data: company }) => (this.company = company)))
       .subscribe();
-    this.teamsStats = this.company.getStatsByPeriod(this.duration, false);
-    this.teamsStatsPrev = this.company.getStatsByPeriod(this.duration, true);
-    this.getAllData();
+
+    this.durationControl.valueChanges.subscribe((duration) => {
+      this.teamsStats = this.company.getStatsByPeriod(duration, false);
+      this.teamsStatsPrev = this.company.getStatsByPeriod(duration, true);
+      this.getAllData(duration);
+    });
   }
 
-  private getAllData(): void {
+  private getAllData(duration: ScoreDuration): void {
     this.getTeamDataForTable();
-    combineLatest([this.getActivityData(), this.getTeamEngagementData()])
+    combineLatest([this.getActivityData(duration), this.getTeamEngagementData(duration)])
       .pipe(untilDestroyed(this))
       .subscribe();
   }
 
-  private getActivityData(): Observable<[TeamStats[], TeamStats[]]> {
+  private getActivityData(duration: ScoreDuration): Observable<[TeamStats[], TeamStats[]]> {
     return this.scoresRestService
       .getScores({
-        duration: this.duration,
+        duration: duration,
         type: ScoreTypeEnumApi.Guess,
         timeframe:
-          this.duration === ScoreDuration.Year
+          duration === ScoreDuration.Year
             ? ScoreTimeframeEnumApi.Month
-            : this.duration === ScoreDuration.Trimester
+            : duration === ScoreDuration.Trimester
             ? ScoreTimeframeEnumApi.Week
             : ScoreTimeframeEnumApi.Day,
       })
@@ -112,7 +111,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
           const labels = this.statisticsServices
             .formatLabel(
               aggregatedData.map((d) => d.x),
-              this.duration,
+              duration,
             )
             .map((s) => this.titleCasePipe.transform(s));
           const dataset = formattedScores.map((s) => {
@@ -176,25 +175,25 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
       );
   }
 
-  private getTeamEngagementData() {
+  private getTeamEngagementData(duration: ScoreDuration) {
     return combineLatest([
       this.scoresRestService.getScores({
-        duration: this.duration,
+        duration: duration,
         type: ScoreTypeEnumApi.Comment,
         timeframe:
-          this.duration === ScoreDuration.Year
+          duration === ScoreDuration.Year
             ? ScoreTimeframeEnumApi.Month
-            : this.duration === ScoreDuration.Trimester
+            : duration === ScoreDuration.Trimester
             ? ScoreTimeframeEnumApi.Week
             : ScoreTimeframeEnumApi.Day,
       }),
       this.scoresRestService.getScores({
-        duration: this.duration,
+        duration: duration,
         type: ScoreTypeEnumApi.QuestionSubmitted,
         timeframe:
-          this.duration === ScoreDuration.Year
+          duration === ScoreDuration.Year
             ? ScoreTimeframeEnumApi.Month
-            : this.duration === ScoreDuration.Trimester
+            : duration === ScoreDuration.Trimester
             ? ScoreTimeframeEnumApi.Week
             : ScoreTimeframeEnumApi.Day,
       }),
@@ -226,7 +225,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
         const labels = this.statisticsServices
           .formatLabel(
             aggregatedComments.map((d) => d.x),
-            this.duration,
+            duration,
           )
           .map((s) => this.titleCasePipe.transform(s));
 
@@ -284,11 +283,6 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
       return this.dataForTeamTableMapper(t, teamProg);
     });
     this.changeTeamsPage(1);
-  }
-
-  updateTimePicker(event: any): void {
-    this.duration = event;
-    this.getAllData();
   }
 
   changeTeamsPage(page: number) {

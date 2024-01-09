@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { tap } from 'rxjs';
+import { Observable, combineLatest, map, of, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -10,8 +10,10 @@ import { ProgramRunsRestService } from 'src/app/modules/programs/services/progra
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { TrainingCardData } from '../../models/training.model';
 import { IAppData } from '../../../../core/resolvers';
+import { GetProgramRunsRequestParams, ProgramRunDtoPaginatedResponseApi } from '@usealto/sdk-ts-angular';
+import { Program } from '../../../../models/program.model';
+import { ITrainingCardData } from '../../../shared/components/training-card/training-card.component';
 
 enum OngoingFilter {
   All = 'All',
@@ -45,16 +47,18 @@ export class TrainingHomeComponent implements OnInit {
   doneFilters: DoneFilters = { scoreStatus: DoneFilter.All, search: '' };
   allProgramsFilters: AllProgramsFilters = { search: '' };
 
-  onGoingPrograms: TrainingCardData[] = [];
-  onGoingProgramsDisplay?: TrainingCardData[];
-  improveScorePrograms?: TrainingCardData[];
-  doneProgramsFiltered?: TrainingCardData[];
-  donePrograms?: TrainingCardData[];
-  allPrograms?: TrainingCardData[];
-  allProgramsFiltered?: TrainingCardData[];
+  programs: Program[] = [];
+
+  onGoingPrograms: ITrainingCardData[] = [];
+  onGoingProgramsDisplay?: ITrainingCardData[];
+  improveScorePrograms?: ITrainingCardData[];
+  doneProgramsFiltered?: ITrainingCardData[];
+  donePrograms?: ITrainingCardData[];
+  allPrograms?: ITrainingCardData[];
+  allProgramsFiltered?: ITrainingCardData[];
   me!: User;
   users!: Map<string, User>;
-  selectedItems: TrainingCardData[] = [];
+  selectedItems: ITrainingCardData[] = [];
   disabledCountScore?: number;
   disabledCountProgress?: number;
 
@@ -70,17 +74,17 @@ export class TrainingHomeComponent implements OnInit {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.me = (data[EResolvers.AppResolver] as IAppData).me;
     this.users = (data[EResolvers.AppResolver] as IAppData).userById;
-    this.programRunsRestService
-      .getMyProgramRunsCards(this.me.id, this.me.teamId ?? '')
+    this.programs = (data[EResolvers.AppResolver] as IAppData).company.programs;
+    this.getMyProgramRunsCards(this.me.id)
       .pipe(
         tap((a) => {
           this.allPrograms = this.allProgramsFiltered = a;
-          this.disabledCountScore = a.filter((r) => !r.isProgress).length;
-          this.disabledCountProgress = a.filter((r) => r.isProgress).length;
-          this.onGoingPrograms = this.onGoingProgramsDisplay = a.filter((r) => r.isProgress && r.duration);
+          this.disabledCountScore = a.filter((r) => !r.inProgress).length;
+          this.disabledCountProgress = a.filter((r) => r.inProgress).length;
+          this.onGoingPrograms = this.onGoingProgramsDisplay = a.filter((r) => r.inProgress && r.duration);
           this.startedProgramsCount = this.onGoingPrograms.filter((p) => !!p.programRunId).length;
-          this.improveScorePrograms = a.filter((r) => !r.isProgress && r.score < r.expectation);
-          this.donePrograms = this.doneProgramsFiltered = a.filter((r) => !r.isProgress);
+          this.improveScorePrograms = a.filter((r) => !r.inProgress && r.score < r.expectation);
+          this.donePrograms = this.doneProgramsFiltered = a.filter((r) => !r.inProgress);
         }),
       )
       .subscribe();
@@ -146,15 +150,15 @@ export class TrainingHomeComponent implements OnInit {
 
     this.allProgramsFilters = { score, progress, search };
 
-    let output: TrainingCardData[] = this.allPrograms ?? [];
+    let output: ITrainingCardData[] = this.allPrograms ?? [];
 
     const outputP = this.scoresService.filterByScore(
-      output.filter((p) => p.isProgress),
+      output.filter((p) => p.inProgress),
       progress as ScoreFilter,
       false,
     );
     const outputS = this.scoresService.filterByScore(
-      output.filter((p) => !p.isProgress),
+      output.filter((p) => !p.inProgress),
       score as ScoreFilter,
       false,
     );
@@ -189,5 +193,58 @@ export class TrainingHomeComponent implements OnInit {
   @memoize()
   getUser(id: string): User | undefined {
     return this.users.get(id);
+  }
+
+  getMyProgramRunsCards(userId: string): Observable<ITrainingCardData[]> {
+    let myPrograms: ITrainingCardData[] = [];
+    return this.programRunsRestService
+      .getProgramRunsPaginated({
+        createdBy: userId,
+      } as GetProgramRunsRequestParams)
+      .pipe(
+        map((programRuns: ProgramRunDtoPaginatedResponseApi) => {
+          return this.programs.reduce((output, p) => {
+            const progRun = programRuns.data?.filter((x) => x.programId === p.id)[0] || null;
+
+            output.push({
+              title: p.name,
+              score: !progRun ? 0 : (progRun.goodGuessesCount / progRun.questionsCount) * 100,
+              updatedAt: progRun?.updatedAt,
+              programRunId: progRun?.id,
+              programId: p.id,
+              expectation: p.expectation,
+              inProgress: !progRun?.finishedAt,
+              duration: (progRun?.questionsCount ? progRun?.questionsCount : p.questionsCount) * 30,
+            });
+            return output;
+          }, [] as ITrainingCardData[]);
+        }),
+        tap((arr) => {
+          myPrograms = arr.sort((a, b) => (b.updatedAt?.getTime() ?? 0) - (a.updatedAt?.getTime() ?? 0));
+        }),
+        switchMap((arr) =>
+          combineLatest([
+            this.programRunsRestService.getProgramRunsPaginated({
+              isFinished: true,
+              programIds: arr.map((x) => x.programId).join(','),
+            }),
+            of(this.users),
+          ]),
+        ),
+        map(([prs, users]) => {
+          myPrograms = myPrograms.map((pDisp) => ({
+            ...pDisp,
+            users:
+              prs.data?.reduce((result, pr) => {
+                const user = users.get(pr.createdBy ?? '');
+                if (pr.programId === pDisp.programId && user && !result.find((u) => u.id === user.id)) {
+                  result.push(user);
+                }
+                return result;
+              }, [] as User[]) ?? [],
+          }));
+          return myPrograms;
+        }),
+      );
   }
 }

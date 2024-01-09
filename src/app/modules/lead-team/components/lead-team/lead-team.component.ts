@@ -1,9 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ProgramDtoApi, TeamDtoApi, TeamStatsDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, switchMap, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { UserStatsDtoApi } from '@usealto/sdk-ts-angular';
+import { combineLatest, switchMap, tap } from 'rxjs';
+import { IAppData } from 'src/app/core/resolvers';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -18,18 +20,14 @@ import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder
 import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { setCompany, setTeams } from '../../../../core/store/root/root.action';
+import * as FromRoot from '../../../../core/store/store.reducer';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
+import { Company } from '../../../../models/company.model';
+import { Program } from '../../../../models/program.model';
+import { ProgramsRestService } from '../../../programs/services/programs-rest.service';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
-import { IAppData } from 'src/app/core/resolvers';
-import { Company, ICompany } from '../../../../models/company.model';
-import { ITeamStatsData } from '../../../../core/resolvers/teamStats.resolver';
-import { ProgramsRestService } from '../../../programs/services/programs-rest.service';
-import { Program } from '../../../../models/program.model';
-import { IProgramsData } from '../../../../core/resolvers/programs.resolver';
-import { Store } from '@ngrx/store';
-import * as FromRoot from '../../../../core/store/store.reducer';
-import { setPrograms, setTeams } from '../../../../core/store/root/root.action';
 
 interface TeamDisplay {
   id: string;
@@ -110,7 +108,7 @@ export class LeadTeamComponent implements OnInit {
         next: ({ data: company }) => {
           this.company = company;
           this.teams = this.company.teams;
-          console.log('hello hello team length:', this.teams.length );
+          console.log('hello hello team length:', this.teams.length);
           this.programs = this.company.programs;
           this.teamNames = this.teams.map((team) => team.name);
           this.teamsStats = this.company.getStatsByPeriod(ScoreDuration.Month, false);
@@ -237,23 +235,22 @@ export class LeadTeamComponent implements OnInit {
     instance.users = this.rawUsers;
     instance.teamsNames = this.teamNames;
 
-    instance.teamChanged
+    canvasRef.closed
       .pipe(
         switchMap(() => {
-          return this.teamsRestService.getTeams();
+          return combineLatest([this.teamsRestService.getTeams(), this.programsRestService.getProgramsObj()]);
         }),
-        tap((teams) => {
-          this.store.dispatch(setTeams({ teams }));
-        }),
-        switchMap(() => {
-          return this.programsRestService.getProgramsObj();
-        }),
-        tap((programs) => {
-          this.store.dispatch(setPrograms({ programs }));
-        }),
-
       )
-      .subscribe();
+      .subscribe({
+        next: ([teams, programs]) => {
+          const updatedCompany = new Company({
+            ...this.company.rawData,
+            teams: teams.map((team) => team.rawData),
+            programs: programs.map((program) => program.rawData),
+          });
+          this.store.dispatch(setCompany({ company: updatedCompany }));
+        },
+      });
   }
 
   deleteTeam(team: Team) {

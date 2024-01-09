@@ -1,12 +1,7 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  ScoreByTypeEnumApi,
-  ScoreDtoApi,
-  ScoreTimeframeEnumApi,
-  ScoreTypeEnumApi,
-} from '@usealto/sdk-ts-angular';
+import { ScoreByTypeEnumApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import { combineLatest } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -21,8 +16,8 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
 import { StatisticsService } from '../../../services/statistics.service';
-import { Company, ICompany } from '../../../../../models/company.model';
 import { Score } from 'src/app/models/score.model';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'alto-user-engagement',
@@ -35,7 +30,9 @@ export class UserEngagementComponent implements OnInit {
 
   user!: User;
   userTeam!: Team;
-  duration: ScoreDuration = ScoreDuration.Trimester;
+  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Trimester, {
+    nonNullable: true,
+  });
 
   answersChartOptions!: any;
   answersChartStatus: PlaceholderDataStatus = 'loading';
@@ -60,13 +57,15 @@ export class UserEngagementComponent implements OnInit {
     const userId = this.router.url.split('/').pop() || '';
     this.user = usersById.get(userId) || new User({} as IUser);
     this.userTeam = teamsById.find((t) => t.id === this.user.teamId) || new Team({} as ITeam);
-
-    this.loadPage();
+    this.loadPage(this.durationControl.value);
+    this.durationControl.valueChanges.subscribe((duration) => {
+      this.loadPage(duration);
+    });
   }
 
-  loadPage(): void {
-    this.getAnswersChart(this.duration);
-    this.getContributionChart(this.duration);
+  loadPage(duration: ScoreDuration): void {
+    this.getAnswersChart(duration);
+    this.getContributionChart(duration);
   }
 
   getContributionChart(duration: ScoreDuration): void {
@@ -197,11 +196,6 @@ export class UserEngagementComponent implements OnInit {
       series: series,
       legend: legendOptions,
     };
-  }
-
-  updateTimePicker(event: any): void {
-    this.duration = event;
-    this.loadPage();
   }
 
   getScoreparams(type: 'answers' | 'comments' | 'submitedQuestions', duration: ScoreDuration): ChartFilters {

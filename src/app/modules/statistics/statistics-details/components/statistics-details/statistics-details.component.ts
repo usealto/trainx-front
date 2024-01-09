@@ -5,7 +5,8 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { IAppData } from '../../../../../core/resolvers';
-import { ICompany } from '../../../../../models/company.model';
+import { ITabOption } from '../../../../shared/components/tabs/tabs.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'alto-statistics-details',
@@ -26,12 +27,12 @@ export class StatisticsDetailsComponent implements OnInit {
   id!: string;
   name!: string;
 
-  tabs = [
+  tabsOptions: ITabOption[] = [
     { label: I18ns.statistics.globalPerformance.navbarTitle, value: AltoRoutes.performance },
     { label: I18ns.statistics.globalEngagement.title, value: AltoRoutes.engagement },
   ];
 
-  selectedTab = '';
+  tabControl = new FormControl<ITabOption>(this.tabsOptions[0], { nonNullable: true });
   emptyTeam = false;
 
   ngOnInit(): void {
@@ -41,7 +42,11 @@ export class StatisticsDetailsComponent implements OnInit {
 
     this.type = this.router.url.split('/')[3] === 'team' ? 'team' : 'user';
     this.id = this.router.url.split('/').pop() || '';
-    this.selectedTab = this.router.url.split('/')[4] || '';
+    const selectedTab = this.tabsOptions.find((t) => t.value === this.router.url.split('/')[4]);
+
+    if (selectedTab) {
+      this.tabControl.patchValue(selectedTab, { emitEvent: false });
+    }
 
     if (this.type === 'user') {
       const user = users.find((u) => u.id === this.id);
@@ -62,7 +67,7 @@ export class StatisticsDetailsComponent implements OnInit {
   }
 
   tabChange(val: string) {
-    const selectedTab = this.tabs.find((t) => t.value === val)?.value || this.tabs[0].value;
+    const selectedTab = this.tabsOptions.find((t) => t.value === val)?.value || this.tabsOptions[0].value;
     this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, this.type, selectedTab, this.id]);
   }
 }

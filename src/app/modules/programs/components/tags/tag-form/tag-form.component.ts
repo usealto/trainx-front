@@ -15,6 +15,9 @@ import { TagForm } from '../../../models/tag.form';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
 import { TagsRestService } from '../../../services/tags-rest.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
+import { Store } from '@ngrx/store';
+import * as FromRoot from '../../../../../core/store/store.reducer';
+import { Program } from '../../../../../models/program.model';
 
 @Component({
   selector: 'alto-tags-form',
@@ -36,7 +39,7 @@ export class TagsFormComponent implements OnInit {
 
   isEdit = false;
 
-  programs: ProgramDtoApi[] = [];
+  programs: Program[] = [];
   questions: QuestionDtoApi[] = [];
 
   constructor(
@@ -45,35 +48,34 @@ export class TagsFormComponent implements OnInit {
     private readonly tagService: TagsRestService,
     readonly fob: UntypedFormBuilder,
     private readonly toastService: ToastService,
+    private readonly store: Store<FromRoot.AppState>,
   ) {}
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.programService
-        .getPrograms()
-        .pipe(
-          tap((programs) => {
-            this.programs = programs ?? [];
-          }),
-          filter(() => !!this.tag),
-          tap((programs) => {
-            this.isEdit = true;
-            if (this.tag) {
-              const { name, description } = this.tag;
+    this.store
+      .select(FromRoot.selectCompany)
+      .pipe(
+        tap(({ data: company }) => {
+          this.programs = company.programs ?? [];
+        }),
+        filter(() => !!this.tag),
+        tap(({ data: company }) => {
+          this.isEdit = true;
+          if (this.tag) {
+            const { name, description } = this.tag;
 
-              this.programs = programs ?? [];
-              this.tagForm.patchValue({
-                name,
-                // programs: programs?.filter((program) => program.tags?.some((t) => this.tag?.id))
-                //   .map((p) => p.id),
-                // questions: questions?.map((p) => p.id),
-                description,
-              });
-            }
-          }),
-        )
-        .subscribe();
-    }, 0);
+            this.programs = company.programs ?? [];
+            this.tagForm.patchValue({
+              name,
+              // programs: programs?.filter((program) => program.tags?.some((t) => this.tag?.id))
+              //   .map((p) => p.id),
+              // questions: questions?.map((p) => p.id),
+              description,
+            });
+          }
+        }),
+      )
+      .subscribe();
   }
 
   createTag() {

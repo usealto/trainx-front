@@ -4,7 +4,6 @@ import { IAppData } from 'src/app/core/resolvers';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
-import { Company, ICompany } from '../../../../../models/company.model';
 
 @Component({
   selector: 'alto-statistics-details-engagement',

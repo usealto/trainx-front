@@ -9,13 +9,8 @@ import {
   userAccessGuard,
 } from './core/guards';
 import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
-import {
-  appResolver,
-  homeResolver,
-  leadResolver,
-  noSplashScreenResolver,
-  programsResolver,
-} from './core/resolvers';
+import { appResolver, noSplashScreenResolver } from './core/resolvers';
+import { homeResolver } from './core/resolvers/home.resolver';
 import { teamStatsResolver } from './core/resolvers/teamStats.resolver';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
@@ -70,25 +65,20 @@ const routes: Routes = [
         path: AltoRoutes.lead,
         canActivate: [leadAccessGuard],
         resolve: {
-          leadData: leadResolver,
           teamStats: teamStatsResolver,
-          programs: programsResolver,
         },
         children: [
           { path: '', redirectTo: AltoRoutes.leadHome, pathMatch: 'full' },
           {
             path: AltoRoutes.leadHome,
             resolve: {
-              homeResolver,
+              homeResolver: homeResolver, // TODO : replace resolver
             },
             loadChildren: () => import('./modules/lead-home/lead-home.module').then((m) => m.LeadHomeModule),
           },
           {
             path: AltoRoutes.programs,
             loadChildren: () => import('./modules/programs/programs.module').then((m) => m.ProgramsModule),
-            data: {
-              preload: true,
-            },
           },
           {
             path: AltoRoutes.leadTeams,
@@ -106,9 +96,6 @@ const routes: Routes = [
             path: AltoRoutes.statistics,
             loadChildren: () =>
               import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
-            data: {
-              preload: true,
-            },
           },
           {
             path: AltoRoutes.collaboration,

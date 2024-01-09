@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import {
   AnswerFormatTypeEnumApi,
   CreateQuestionDtoApi,
@@ -24,6 +25,8 @@ import { combineLatest, tap } from 'rxjs';
 import { IFormBuilder, IFormControl, IFormGroup } from 'src/app/core/form-types';
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import * as FromRoot from '../../../../core/store/store.reducer';
+import { Program } from '../../../../models/program.model';
 import { QuestionForm } from '../../../programs/models/question.form';
 import { ProgramsRestService } from '../../../programs/services/programs-rest.service';
 import { QuestionsRestService } from '../../../programs/services/questions-rest.service';
@@ -53,7 +56,7 @@ export class QuestionFormComponent implements OnInit {
   questionForm!: IFormGroup<QuestionForm>;
   isEdit = false;
 
-  programs: ProgramDtoApi[] = [];
+  programs: Program[] = [];
   tags: TagDtoApi[] = [];
 
   questionHardLimit = 300;
@@ -76,57 +79,56 @@ export class QuestionFormComponent implements OnInit {
     readonly fob: UntypedFormBuilder,
     public activeOffcanvas: NgbActiveOffcanvas,
     private readonly toastService: ToastService,
+    private readonly store: Store<FromRoot.AppState>,
   ) {
     this.fb = fob;
   }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      combineLatest([this.tagService.getTags(), this.programService.getPrograms()])
-        .pipe(
-          tap(([tags, programs]) => {
-            this.tags = tags ?? [];
-            this.programs = programs ?? [];
-          }),
-          untilDestroyed(this),
-        )
-        .subscribe();
+    combineLatest([this.tagService.getTags(), this.store.select(FromRoot.selectCompany)])
+      .pipe(
+        tap(([tags, { data: company }]) => {
+          this.tags = tags ?? [];
+          this.programs = company.programs ?? [];
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe();
 
-      this.questionForm = this.fb.group<QuestionForm>({
-        title: ['', [Validators.required]],
-        type: QuestionTypeEnumApi.MultipleChoice,
-        tags: [],
-        programs: this.program ? [[this.program.id]] : [],
-        answerType: AnswerFormatTypeEnumApi.Text,
-        answersAccepted: this.fb.array(
-          this.question ? this.createFormArray(this.question.answersAccepted.length) : [this.fb.control('')],
-          this.atLeastOne,
-        ),
-        answersWrong: this.fb.array(
-          this.question ? this.createFormArray(this.question.answersWrong.length) : [this.fb.control('')],
-          this.atLeastOne,
-        ),
-        explanation: '',
-        link: '',
+    this.questionForm = this.fb.group<QuestionForm>({
+      title: ['', [Validators.required]],
+      type: QuestionTypeEnumApi.MultipleChoice,
+      tags: [],
+      programs: this.program ? [[this.program.id]] : [],
+      answerType: AnswerFormatTypeEnumApi.Text,
+      answersAccepted: this.fb.array(
+        this.question ? this.createFormArray(this.question.answersAccepted.length) : [this.fb.control('')],
+        this.atLeastOne,
+      ),
+      answersWrong: this.fb.array(
+        this.question ? this.createFormArray(this.question.answersWrong.length) : [this.fb.control('')],
+        this.atLeastOne,
+      ),
+      explanation: '',
+      link: '',
+    });
+
+    if (this.question) {
+      this.isEdit = true;
+      this.questionForm.patchValue({
+        title: this.question.title,
+        tags: this.question.tags?.map((t) => t.id),
+        programs: this.question.programs?.map((p) => p.id),
+        explanation: this.question.explanation,
+        link: this.question.link,
       });
-
-      if (this.question) {
-        this.isEdit = true;
-        this.questionForm.patchValue({
-          title: this.question.title,
-          tags: this.question.tags?.map((t) => t.id),
-          programs: this.question.programs?.map((p) => p.id),
-          explanation: this.question.explanation,
-          link: this.question.link,
-        });
-        this.questionForm.controls.answersAccepted.patchValue(this.question.answersAccepted);
-        this.questionForm.controls.answersWrong.patchValue(this.question.answersWrong);
-      } else if (this.questionSubmitted) {
-        this.questionForm.patchValue({
-          title: this.questionSubmitted.title,
-        });
-      }
-    }, 0);
+      this.questionForm.controls.answersAccepted.patchValue(this.question.answersAccepted);
+      this.questionForm.controls.answersWrong.patchValue(this.question.answersWrong);
+    } else if (this.questionSubmitted) {
+      this.questionForm.patchValue({
+        title: this.questionSubmitted.title,
+      });
+    }
   }
 
   createFormArray(size: number): IFormControl<string>[] {

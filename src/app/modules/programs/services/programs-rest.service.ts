@@ -57,27 +57,8 @@ export class ProgramsRestService {
     return this.programApi.patchProgram({ id, patchProgramDtoApi }).pipe(
       tap(() => {
         this.programStore.programsInitCardList.reset();
-        this.programStore.programs.reset();
       }),
     );
-  }
-
-  // todo: remove this method
-  getPrograms(): Observable<ProgramDtoApi[]> {
-    if (this.programStore.programs.value.length) {
-      return this.programStore.programs.value$;
-    } else {
-      const par = {
-        page: 1,
-        itemsPerPage: 400,
-        sortBy: 'name:asc',
-      } as GetProgramsRequestParams;
-
-      return this.programApi.getPrograms(par).pipe(
-        map((d) => d.data ?? []),
-        tap((pr) => (this.programStore.programs.value = pr)),
-      );
-    }
   }
 
   // Cloned from getPrograms() to return Program[] and not ProgramDtoApi[]
@@ -102,22 +83,10 @@ export class ProgramsRestService {
     );
   }
 
-  getMyPrograms(teamId: string): Observable<ProgramDtoApi[]> {
-    if (this.profileStore.myPrograms.value.length > 0) {
-      return this.profileStore.myPrograms.value$;
-    } else {
-      return this.getPrograms().pipe(
-        map((ps: ProgramDtoApi[]) => ps.filter((p) => p.teams.some((t) => t && t.id === teamId))),
-        tap((p) => (this.profileStore.myPrograms.value = p)),
-      );
-    }
-  }
-
   createProgram(createProgramDtoApi: CreateProgramDtoApi) {
     return this.programApi.createProgram({ createProgramDtoApi }).pipe(
       tap(() => {
         this.programStore.programsInitCardList.reset();
-        this.programStore.programs.reset();
       }),
     );
   }
@@ -160,9 +129,5 @@ export class ProgramsRestService {
 
   activate(id: string, active: boolean) {
     return this.programApi.patchProgram({ id, patchProgramDtoApi: { isActive: active } });
-  }
-
-  resetCache() {
-    this.programStore.programs.reset();
   }
 }

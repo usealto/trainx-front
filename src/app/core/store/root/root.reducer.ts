@@ -4,19 +4,18 @@ import { Team, TeamStats } from '../../../models/team.model';
 import { IUser, User } from '../../../models/user.model';
 import {
   addUser,
+  patchUser,
   removeUser,
   setCompany,
-  updateCompany,
+  setPrograms,
   setTeams,
-  setTeamsStatsTimestamp,
-  setTeamsTimestamp,
-  setProgramsTimestamp,
+  setTeamsStats,
   setUserMe,
   setUsers,
-  patchUser,
-  setTeamsStats,
-  setPrograms,
+  updateCompany,
+  updatePrograms,
 } from '../root/root.action';
+import { Program } from '../../../models/program.model';
 
 export class TimestampedEntity<T> {
   data: T;
@@ -36,11 +35,8 @@ export interface RootState {
   me: TimestampedEntity<User>;
   company: TimestampedEntity<Company>;
   usersById: TimestampedEntity<Map<string, User>>;
-  programsTimestamp?: Date;
   teamsStatsTimestamp?: Date;
-  teamsTimestamp?: Date;
 }
-
 
 export const initialState: RootState = {
   me: new TimestampedEntity<User>(new User({} as IUser), null),
@@ -50,27 +46,6 @@ export const initialState: RootState = {
 
 export const rootReducer = createReducer(
   initialState,
-  on(
-    setTeamsStatsTimestamp,
-    (state, { date }): RootState => ({
-      ...state,
-      teamsStatsTimestamp: date,
-    }),
-  ),
-  on(
-    setTeamsTimestamp,
-    (state, { date }): RootState => ({
-      ...state,
-      teamsTimestamp: date,
-    }),
-  ),
-  on(
-    setProgramsTimestamp,
-    (state, { date }): RootState => ({
-      ...state,
-      programsTimestamp: date,
-    }),
-  ),
   on(
     setUserMe,
     (state, { user }): RootState => ({
@@ -115,13 +90,11 @@ export const rootReducer = createReducer(
     }),
   ),
   on(setTeams, (state, { teams }): RootState => {
-    const company = new Company(state.company.data);
-    company.teams = teams;
+    const company = new Company({ ...state.company.data.rawData, teams: teams.map((team) => team.rawData) });
 
     return {
       ...state,
       company: new TimestampedEntity(company),
-      teamsTimestamp: new Date(),
     };
   }),
   on(
@@ -135,24 +108,16 @@ export const rootReducer = createReducer(
     updateCompany,
     (state, { company }): RootState => ({
       ...state,
-      company: new TimestampedEntity(company), // Met à jour l'état de l'entreprise
+      company: new TimestampedEntity(company),
     }),
   ),
   on(setTeamsStats, (state, { teamStats }): RootState => {
-    console.log('company');
-    const company = new Company(state.company.data);
-    const newTeamsStatsByTeamId = new Map<string, TeamStats[]>();
-
-    teamStats.forEach((stat) => {
-      const currentStats = newTeamsStatsByTeamId.get(stat.teamId) || [];
-      newTeamsStatsByTeamId.set(stat.teamId, [...currentStats, stat]);
+    const teams = state.company.data.teams.map((team) => {
+      const stats = teamStats.filter((stat) => stat.teamId === team.id);
+      return new Team({ ...team.rawData, stats });
     });
 
-    company.teams.forEach((team) => {
-      team.stats = newTeamsStatsByTeamId.get(team.id) || [];
-    });
-
-    console.log('company end of reducer stats', company);
+    const company = new Company({ ...state.company.data.rawData, teams });
 
     return {
       ...state,
@@ -160,8 +125,23 @@ export const rootReducer = createReducer(
     };
   }),
   on(setPrograms, (state, { programs }): RootState => {
-    const company = new Company(state.company.data);
-    company.programs = programs;
+    const company = new Company({
+      ...state.company.data,
+      programs: programs.map((program) => program.rawData),
+    });
+
+    return {
+      ...state,
+      company: new TimestampedEntity(company),
+    };
+  }),
+  on(updatePrograms, (state, { programs }): RootState => {
+    const programsById: Map<string, Program> = new Map(
+      state.company.data.programs.map((program) => [program.id, program]),
+    );
+    programs.forEach((program) => programsById.set(program.id, program));
+    const company = new Company({ ...state.company.data, programs: [...programsById.values()] });
+
     return {
       ...state,
       company: new TimestampedEntity(company),
