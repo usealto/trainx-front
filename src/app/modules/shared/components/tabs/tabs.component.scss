@@ -1,19 +1,26 @@
-:host {
-  display: inline-block;
-  height: 2.5rem;
-}
-
-.btn-check:checked + .alto-tab-btn {
-  border-bottom: 2px #175cd3 solid;
-  color: #175cd3;
-  font-weight: 600;
-}
-
-.alto-tab-btn {
-  margin-right: 1.33rem;
-  cursor: pointer;
-  padding-bottom: 0.75rem;
+.alto-tabs-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
   font-weight: 400;
-  font-size: 1rem;
-  color: var(--alto-grey);
+  height: 2.5rem;
+  gap: 1rem;
+  width: 100%;
+
+  .tab-btn {
+    font-weight: 400;
+    font-size: 1rem;
+    color: var(--alto-grey);
+    border: none;
+    cursor: pointer;
+    width: fit-content;
+    height: 100%;
+
+    &.check {
+      border-bottom: 2px #175cd3 solid;
+      color: #175cd3;
+      font-weight: 600;
+    }
+  }
 }

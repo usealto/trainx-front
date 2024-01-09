@@ -72,7 +72,7 @@ export class ProgramsComponent implements OnInit, OnDestroy {
     { label: I18ns.programs.tabs.questions, value: 'questions' },
     { label: I18ns.programs.tabs.tags, value: 'tags' },
   ];
-  activeTab = new FormControl();
+  activeTab = new FormControl(this.tabOptions[0] ?? null);
 
   programsComponentSubscription = new Subscription();
 
@@ -147,15 +147,14 @@ export class ProgramsComponent implements OnInit, OnDestroy {
       ),
     };
     componentInstance.objectDeleted
-      .pipe(
-        switchMap(() => this.tagRestService.deleteTag(tag?.id ?? '')),
-        tap(() => {
+      .pipe(switchMap(() => this.tagRestService.deleteTag(tag?.id ?? '')))
+      .subscribe({
+        complete: () => {
           modalRef.close();
           this.tagRestService.resetTags();
           this.getTags();
-        }),
-      )
-      .subscribe();
+        },
+      });
   }
 
   @memoize()

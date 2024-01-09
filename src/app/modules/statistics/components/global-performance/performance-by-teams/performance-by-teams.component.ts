@@ -1,21 +1,21 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { ScoreDtoApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
+import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { xAxisDatesOptions, yAxisScoreOptions, legendOptions } from 'src/app/modules/shared/constants/config';
+import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
+import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { StatisticsService } from '../../../services/statistics.service';
-import { TitleCasePipe } from '@angular/common';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { Company } from '../../../../../models/company.model';
-import { Team, TeamStats } from '../../../../../models/team.model';
 import { Score } from '../../../../../models/score.model';
+import { TeamStats } from '../../../../../models/team.model';
+import { StatisticsService } from '../../../services/statistics.service';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -57,11 +57,12 @@ export class PerformanceByTeamsComponent implements OnChanges {
       const teamStats = this.company.getStatsByPeriod(this.duration, false);
       const previousTeamStats = this.company.getStatsByPeriod(this.duration, true);
 
-      const teamsStatstmp = teamStats.filter((t) => t.score && t.score >= 0);
-      this.teamsLeaderboard = teamsStatstmp.map((t) => ({
-        name: teams.filter((team) => t.teamId === team.id)[0].name,
-        score: t.score ?? 0,
-      }));
+      this.teamsLeaderboard = teamStats
+        .filter((t) => t.score && t.score >= 0)
+        .map((t) => ({
+          name: teams.filter((team) => t.teamId === team.id)[0].name,
+          score: t.score ?? 0,
+        }));
       this.teamsLeaderboardDataStatus = this.teamsLeaderboard.length === 0 ? 'noData' : 'good';
 
       this.getTeamsScores(teamStats, previousTeamStats);
