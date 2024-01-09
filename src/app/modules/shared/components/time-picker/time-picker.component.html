@@ -1,32 +1,37 @@
 <div class="btn-group" role="group">
   <input
+    id="year"
     type="radio"
     class="btn-check"
     autocomplete="off"
     [formControl]="durationControl"
+    [value]="ScoreDuration.Year"
   />
-  <label class="btn btn-outline-secondary">{{
+  <label for="year" class="btn btn-outline-secondary">{{
     I18ns.shared.rollingDateFilter.year
   }}</label>
 
   <input
+    id="trimester"
     type="radio"
     class="btn-check"
-
     autocomplete="off"
     [formControl]="durationControl"
+    [value]="ScoreDuration.Trimester"
   />
-  <label class="btn btn-outline-secondary">
+  <label for="trimester" class="btn btn-outline-secondary">
     {{ I18ns.shared.rollingDateFilter.trimester }}
   </label>
 
   <input
+    id="month"
     type="radio"
     class="btn-check"
     autocomplete="off"
     [formControl]="durationControl"
+    [value]="ScoreDuration.Month"
   />
-  <label class="btn btn-outline-secondary">{{
+  <label for="month" class="btn btn-outline-secondary">{{
     I18ns.shared.rollingDateFilter.month
   }}</label>
 </div>
