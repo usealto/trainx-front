@@ -31,6 +31,7 @@
     (programTotal)="activeProgramCount = $event"
     [place]="'program'"
     [isActive]="true"
+    [programs]="programs"
   ></alto-program-card-list>
 </div>
 
@@ -58,7 +59,7 @@
     </a>
   </div>
 
-  <alto-program-card-list data-cy="programCardList" [place]="'program'"></alto-program-card-list>
+  <alto-program-card-list data-cy="programCardList" [programs]="programs" [place]="'program'"></alto-program-card-list>
 </div>
 
 <!-- QUESTIONS -->

@@ -5,15 +5,18 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { AltoRoutes } from '../../constants/routes';
+import { Program } from '../../../../models/program.model';
+import { Team } from '../../../../models/team.model';
 
 @Component({
   selector: 'alto-program-card',
   templateUrl: './program-card.component.html',
   styleUrls: ['./program-card.component.scss'],
 })
-export class ProgramCardComponent implements OnInit, OnChanges {
+export class ProgramCardComponent implements OnInit {
   @Input() displayToggle = false;
-  @Input() program!: ProgramDtoApi;
+  @Input() program!: Program;
+  @Input() teams: Team[] = [];
   @Input() programRun!: ProgramRunApi;
   @Input() score: number | undefined;
   @Input() progress: number | undefined;
@@ -32,20 +35,20 @@ export class ProgramCardComponent implements OnInit, OnChanges {
   constructor(private readonly programRestService: ProgramsRestService) {}
 
   ngOnInit(): void {
-    this.teamsCount = this.program.teams.length;
+    this.teamsCount = this.program.teamIds.length;
     this.membersHaveValidatedPercentage = this.membersHaveValidatedCount
       ? +this.membersHaveValidatedCount?.split('/')[0] / +this.membersHaveValidatedCount?.split('/')[1]
       : 0;
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['programRun']?.firstChange) {
-      this.programRestService
-        .getProgram(this.programRun.programId)
-        .pipe(tap((prog) => (this.program = prog)))
-        .subscribe();
-    }
-  }
+  // ngOnChanges(changes: SimpleChanges) {
+  //   if (changes['programRun']?.firstChange) {
+  //     this.programRestService
+  //       .getProgram(this.programRun.programId)
+  //       .pipe(tap((prog) => (this.program = prog)))
+  //       .subscribe();
+  //   }
+  // }
 
   changeIsActive(id: string, checked: boolean) {
     this.programRestService
@@ -54,7 +57,7 @@ export class ProgramCardComponent implements OnInit, OnChanges {
       .subscribe();
   }
 
-  teamHover(program: ProgramDtoApi) {
-    return program.teams.map((team) => team.name).join(', ');
+  teamHover() {
+    return this.teams.map((team) => team.name).join(', ');
   }
 }

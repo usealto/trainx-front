@@ -13,6 +13,8 @@ import { AltoRoutes } from '../../constants/routes';
 import { PlaceholderDataStatus } from '../../models/placeholder.model';
 import { ScoresRestService } from '../../services/scores-rest.service';
 import { ScoresService } from '../../services/scores.service';
+import { Program } from '../../../../models/program.model';
+import { Company } from '../../../../models/company.model';
 
 @UntilDestroy()
 @Component({
@@ -28,9 +30,10 @@ export class ProgramCardListComponent implements OnInit {
   @Output() programTotal = new EventEmitter<number>();
   @Input() place: 'home' | 'program' = 'home';
   @Input() isActive = false;
+  @Input() programs: Program[] = [];
+  @Input() company: Company = {} as Company;
 
-  programs: ProgramDtoApi[] = [];
-  programsDisplay: ProgramDtoApi[] = [];
+  programsDisplay: Program[] = [];
 
   programsScores = new Map<string, number>();
   programsProgress = new Map<string, number>();
@@ -111,9 +114,9 @@ export class ProgramCardListComponent implements OnInit {
         true,
       );
     }
-    this.programsDisplay = filteredData.map((p) => {
-      return { ...p, score: undefined };
-    });
+    // this.programsDisplay = filteredData.map((p) => {
+    //   return { ...p, score: undefined };
+    // });
     this.count = this.programsDisplay.length;
     this.isSearchResult = true;
     if (this.count === 0 && this.isSearchResult === true) {
@@ -155,7 +158,7 @@ export class ProgramCardListComponent implements OnInit {
           data.forEach((x) => {
             x.program.teams = x.teams.map((t) => t.team);
           });
-          this.programs = data.map((x) => x.program);
+          this.programs = data.map((x) => Program.fromDto(x.program));
           this.programsDisplay = this.programs;
           this.count = this.programs.length;
           this.ongoingProgramsDataStatus = this.count === 0 ? 'noData' : 'good';

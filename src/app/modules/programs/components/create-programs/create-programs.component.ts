@@ -29,11 +29,11 @@ import { QuestionDisplayLight } from '../../models/question.model';
 import { ProgramsStore } from '../../programs.store';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
-import { ResolversService } from '../../../../core/resolvers/resolvers.service';
 import { Store } from '@ngrx/store';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { Program } from '../../../../models/program.model';
 import { Company } from '../../../../models/company.model';
+import { setPrograms } from '../../../../core/store/root/root.action';
 
 @UntilDestroy()
 @Component({
@@ -99,7 +99,8 @@ export class CreateProgramsComponent implements OnInit {
           return this.route.params.pipe(
             map((params) => {
               const programId = params['id'];
-              if (programId === 'new') {
+              if (programId === undefined) {
+                console.log('new');
                 this.isNewProgram = true;
                 this.initForm();
                 return null;
@@ -110,8 +111,8 @@ export class CreateProgramsComponent implements OnInit {
             }),
             tap((program) => {
               if (this.isEdit && program) {
-                this.getProgramNames();
                 this.editedProgram = program;
+                this.getProgramNames();
                 this.initForm(program);
               }
             }),
@@ -177,6 +178,11 @@ export class CreateProgramsComponent implements OnInit {
           this.isEdit = true;
           this.editedProgram = Program.fromDto(prog);
           this.getAssociatedQuestions();
+          this.programRestService.getProgramsObj()
+          .pipe(
+            tap((programs) => {
+              this.store.dispatch(setPrograms({ programs }));
+            }),).subscribe();
         }),
         untilDestroyed(this),
       )
