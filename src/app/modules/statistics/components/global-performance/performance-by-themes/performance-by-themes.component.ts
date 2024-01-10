@@ -10,6 +10,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { FormControl } from '@angular/forms';
 import { TagDtoApi, TagStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { TagsRestService } from '../../../../programs/services/tags-rest.service';
+import { ChartsService } from '../../../../charts/charts.service';
 
 @UntilDestroy()
 @Component({
@@ -34,6 +35,7 @@ export class PerformanceByThemesComponent implements OnChanges, OnInit {
     private readonly tagsRestService: TagsRestService,
     public readonly programsStore: ProgramsStore,
     private readonly scoresRestService: ScoresRestService,
+    private readonly chartService: ChartsService,
   ) {}
 
   ngOnInit(): void {
@@ -75,17 +77,20 @@ export class PerformanceByThemesComponent implements OnChanges, OnInit {
   }
 
   createSpiderChart(tagStats: TagStatsDtoApi[]) {
+    tagStats = tagStats.splice(0, 6);
     this.spiderChartOptions = {
       color: ['#475467'],
       radar: {
-        indicator: tagStats.map((t) => t.tag.name),
+        indicator: tagStats.map((t) => {
+          return { name: t.tag.name, max: 100 };
+        }),
       },
       series: [
         {
           type: 'radar',
           data: [
             {
-              value: tagStats.map((t) => t.score ?? 0),
+              value: tagStats.map((t) => t.score ? Math.round((t.score * 10000) / 100) : 0),
               name: I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.global,
               Symbol: 'rect',
               SymbolSize: 12,
