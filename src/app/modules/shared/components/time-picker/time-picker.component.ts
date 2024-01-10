@@ -12,6 +12,7 @@ export type TimePickerOption = ScoreDuration.Year | ScoreDuration.Trimester | Sc
 })
 export class TimePickerComponent {
   I18ns = I18ns;
+  ScoreDuration = ScoreDuration;
   @Input() durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
     nonNullable: true,
   });
