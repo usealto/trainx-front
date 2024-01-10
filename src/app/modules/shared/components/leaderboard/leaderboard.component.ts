@@ -39,10 +39,7 @@ export class LeaderboardComponent implements OnChanges, OnInit {
     this.leaderboard = this.data.map((e, i) => ({ ...e, index: i + 1 }));
     const temp = [...this.leaderboard];
     this.top = temp.splice(0, this.size);
-    this.flop = temp.splice(
-      temp.length - (temp.length < this.size ? temp.length : this.size),
-      this.size,
-    );
+    this.flop = temp.splice(temp.length - (temp.length < this.size ? temp.length : this.size), this.size);
     this.data = this.data.sort((a, b) => b.score - a.score);
   }
 

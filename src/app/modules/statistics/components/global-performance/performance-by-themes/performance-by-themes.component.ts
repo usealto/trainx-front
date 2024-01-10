@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { combineLatest, map } from 'rxjs';
+import { Subscription, combineLatest, map, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
@@ -18,11 +18,14 @@ import { ChartsService } from '../../../../charts/charts.service';
   templateUrl: './performance-by-themes.component.html',
   styleUrls: ['./performance-by-themes.component.scss'],
 })
-export class PerformanceByThemesComponent implements OnChanges, OnInit {
+export class PerformanceByThemesComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
 
-  @Input() duration: ScoreDuration = ScoreDuration.Year;
+  @Input() durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
+    nonNullable: true,
+  });
+
   tags: TagDtoApi[] = [];
   tagsControl: FormControl<TagDtoApi[]> = new FormControl<TagDtoApi[]>([], { nonNullable: true });
   spiderChartDataStatus: PlaceholderDataStatus = 'loading';
@@ -30,6 +33,8 @@ export class PerformanceByThemesComponent implements OnChanges, OnInit {
 
   tagsLeaderboard: { name: string; score: number }[] = [];
   tagsDataStatus: PlaceholderDataStatus = 'loading';
+
+  tagStatsSubscription: Subscription = new Subscription();
 
   constructor(
     private readonly tagsRestService: TagsRestService,
@@ -39,45 +44,45 @@ export class PerformanceByThemesComponent implements OnChanges, OnInit {
   ) {}
 
   ngOnInit(): void {
-    combineLatest([this.tagsRestService.getTags(), this.scoresRestService.getTagsStats(this.duration)])
-      .pipe(
-        map(([tags, tagStats]) => {
-          this.tags = tags;
-          return tagStats;
+    this.tagStatsSubscription.add(
+      combineLatest([
+        this.tagsControl.valueChanges.pipe(startWith(this.tagsControl.value)),
+        this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+      ])
+        .pipe(
+          tap(() => (this.spiderChartDataStatus = 'loading')),
+          switchMap(([selectedTags, duration]: [TagDtoApi[], ScoreDuration]) => {
+            return combineLatest([
+              this.tagsRestService.getTags(),
+              this.scoresRestService.getTagsStats(duration),
+            ]);
+            // .pipe(
+            //   map(([tags, tagStats]) => {
+            //     this.tags = tags;
+            //     return tagStats;
+            //   }),
+            //   map((tagStats) => tagStats.filter((t) => t.score && t.score >= 0)),
+            //   tap((tagStats) => {
+            //     this.tagsLeaderboard = tagStats.map((t) => ({ name: t.tag.name, score: t.score ?? 0 }));
+            //     this.tagsDataStatus = this.tagsLeaderboard.length === 0 ? 'noData' : 'good';
+            //   }),
+            //   map((tagStats) => tagStats.filter((tag) => selectedTags.includes(tag.tag))),
+            //   map((tagStats) => tagStats.sort((a, b) => a.tag.name.localeCompare(b.tag.name))),
+            // );
+          }),
+        )
+        .subscribe((tagStats) => {
+          // this.createSpiderChart(tagStats);
+          // this.spiderChartDataStatus = tagStats.length === 0 ? 'noData' : 'good';
         }),
-        map((res) => res.filter((t) => t.score && t.score >= 0)),
-      )
-      .subscribe((tagStats) => {
-        this.tagsLeaderboard = tagStats.map((t) => ({ name: t.tag.name, score: t.score ?? 0 }));
-        this.tagsDataStatus = this.tagsLeaderboard.length === 0 ? 'noData' : 'good';
-      });
+    );
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['duration']) {
-      this.getSpiderChartData(this.duration);
-    }
-  }
-
-  getSpiderChartData(duration: ScoreDuration): void {
-    this.spiderChartDataStatus = 'loading';
-
-    this.scoresRestService
-      .getTagsStats(
-        duration,
-        false,
-        undefined,
-        this.tagsControl.value.map((tag) => tag.id),
-      )
-      .pipe(map((tagStats) => tagStats.sort((a, b) => a.tag.name.localeCompare(b.tag.name))))
-      .subscribe((tagStats) => {
-        this.spiderChartDataStatus = tagStats.length === 0 ? 'noData' : 'good';
-        this.createSpiderChart(tagStats);
-      });
+  ngOnDestroy(): void {
+    this.tagStatsSubscription.unsubscribe();
   }
 
   createSpiderChart(tagStats: TagStatsDtoApi[]) {
-    tagStats = tagStats.splice(0, 6);
     this.spiderChartOptions = {
       color: ['#475467'],
       radar: {
@@ -90,7 +95,7 @@ export class PerformanceByThemesComponent implements OnChanges, OnInit {
           type: 'radar',
           data: [
             {
-              value: tagStats.map((t) => t.score ? Math.round((t.score * 10000) / 100) : 0),
+              value: tagStats.map((t) => (t.score ? Math.round((t.score * 10000) / 100) : 0)),
               name: I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.global,
               Symbol: 'rect',
               SymbolSize: 12,

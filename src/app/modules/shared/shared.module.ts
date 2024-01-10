@@ -48,6 +48,10 @@ import { LeaderboardComponent } from './components/leaderboard/leaderboard.compo
 import { PlaceholderManagerComponent } from './components/placeholder-manager/placeholder-manager.component';
 import { QuestionFormComponent } from './components/question-form/question-form.component';
 import { ImpersonationHeaderComponent } from './components/impersonation-header/impersonation-header.component';
+import { InputTextComponent } from './components/forms/input-text/input-text.component';
+import { InputPillsComponent } from './components/forms/input-pills/input-pills.component';
+import { InputSearchComponent } from './components/forms/input-search/input-search.component';
+import { InputMultipleSelectComponent } from './components/forms/input-multiple-select/input-multiple-select.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +85,10 @@ import { ImpersonationHeaderComponent } from './components/impersonation-header/
     PlaceholderManagerComponent,
     QuestionFormComponent,
     ImpersonationHeaderComponent,
+    InputTextComponent,
+    InputPillsComponent,
+    InputSearchComponent,
+    InputMultipleSelectComponent,
   ],
   imports: [
     CommonModule,
@@ -145,6 +153,10 @@ import { ImpersonationHeaderComponent } from './components/impersonation-header/
     PlaceholderManagerComponent,
     QuestionFormComponent,
     ImpersonationHeaderComponent,
+    InputTextComponent,
+    InputPillsComponent,
+    InputSearchComponent,
+    InputMultipleSelectComponent,
   ],
   providers: [NgbActiveModal],
 })

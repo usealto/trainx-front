@@ -1,0 +1,34 @@
+.dropdown {
+  display: block;
+
+  .dropdown-input {
+    min-height: 3.167rem;
+  }
+
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    z-index: 1;
+    padding: 0;
+    border-radius: 5px;
+
+    &.show {
+      display: block;
+    }
+
+    .dropdown-item {
+      padding: 8px 10px;
+
+      &:active {
+        background-color: var(--gray-50);
+      }
+    }
+  }
+}
+
+.alto-badge {
+  border: solid 2px #ffff
+}
+

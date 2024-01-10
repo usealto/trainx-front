@@ -3,13 +3,13 @@ import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, of, switchMap, withLatestFrom } from 'rxjs';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { Company, ICompany } from '../../models/company.model';
+import { Company } from '../../models/company.model';
 import { CompaniesRestService } from '../../modules/companies/service/companies-rest.service';
 import { TeamsRestService } from '../../modules/lead-team/services/teams-rest.service';
 import { UsersRestService } from '../../modules/profile/services/users-rest.service';
+import { ProgramsRestService } from '../../modules/programs/services/programs-rest.service';
 import { setCompany, setUserMe } from '../store/root/root.action';
 import * as FromRoot from '../store/store.reducer';
-import { ProgramsRestService } from '../../modules/programs/services/programs-rest.service';
 
 export const AppGuard: CanActivateFn = () => {
   const store = inject<Store<FromRoot.AppState>>(Store<FromRoot.AppState>);

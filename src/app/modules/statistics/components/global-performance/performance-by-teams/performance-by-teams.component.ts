@@ -1,5 +1,5 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -16,15 +16,17 @@ import { Company } from '../../../../../models/company.model';
 import { Score } from '../../../../../models/score.model';
 import { TeamStats } from '../../../../../models/team.model';
 import { StatisticsService } from '../../../services/statistics.service';
+import { FormControl } from '@angular/forms';
+import { SelectOption } from '../../../../shared/models/select-option.model';
 
 @Component({
   selector: 'alto-performance-by-teams',
   templateUrl: './performance-by-teams.component.html',
   styleUrls: ['./performance-by-teams.component.scss'],
 })
-export class PerformanceByTeamsComponent implements OnChanges {
+export class PerformanceByTeamsComponent implements OnInit, OnChanges {
   @Input() duration: ScoreDuration = ScoreDuration.Year;
-  @Input() company?: Company;
+  @Input() company!: Company;
   @Output() selecedDuration = this.duration;
 
   Emoji = EmojiName;
@@ -40,6 +42,9 @@ export class PerformanceByTeamsComponent implements OnChanges {
   teamsLeaderboardDataStatus: PlaceholderDataStatus = 'loading';
   chartOption: any = {};
 
+  selectedTeamsControl = new FormControl([] as FormControl<SelectOption>[], { nonNullable: true });
+  teamsOptions: SelectOption[] = [];
+
   constructor(
     private titleCasePipe: TitleCasePipe,
     public readonly teamStore: TeamStore,
@@ -47,6 +52,12 @@ export class PerformanceByTeamsComponent implements OnChanges {
     private readonly scoresServices: ScoresService,
     private readonly statisticsServices: StatisticsService,
   ) {}
+
+  ngOnInit(): void {
+    this.teamsOptions = this.company.teams.map(
+      (team) => new SelectOption({ label: team.name, value: team.id }),
+    );
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ((changes['duration'] || changes['company']) && this.company?.teams) {

@@ -1,0 +1,62 @@
+<div class="dropdown">
+  <div
+    class="dropdown-input form-control cursor-pointer d-flex justify-content-between align-items-center"
+    (click)="toggleDropdown()"
+  >
+    <div>
+      <ng-container *ngIf="controls.value.length > 0; else noOptionSelected">
+        <div
+          *ngFor="let itemControl of controls.value; let index = index"
+          class="alto-badge me-2 cursor-pointer"
+          [style]="'color: white; background-color: ' + itemControl.value.color"
+        >
+          <span class="d-flex justify-content-between align-items-center gap-2">
+            {{ itemControl.value.label }}
+            <i
+              *ngIf="itemControl.enabled"
+              class="bi bi-x-lg px-1"
+              (click)="$event.stopPropagation(); removePill(index)"
+            ></i>
+          </span>
+        </div>
+      </ng-container>
+      <ng-template #noOptionSelected>
+        <p class="alto-grey">{{ placeholder }}</p>
+      </ng-template>
+    </div>
+
+    <div class="d-flex gap-2">
+      <i class="bi bi-x-lg hover-red" (click)="$event.stopPropagation(); removeAll()"></i>
+      <i class="bi" [ngClass]="isDropdownOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+    </div>
+  </div>
+  <div
+    #dropdownMenu
+    class="dropdown-menu"
+    [ngClass]="{ show: isDropdownOpen }"
+    (click)="$event.stopPropagation()"
+  >
+    <ng-container *ngIf="filteredOptions.length > 0; else noOption">
+      <div *ngIf="filteredOptions.length > 1" class="dropdown-item border-bottom" (click)="addAll()">
+        <p class="alto-grey">Select all</p>
+      </div>
+
+      <div
+        class="dropdown-item"
+        *ngFor="let option of filteredOptions; let index = index; let last = last"
+        [class.border-bottom]="!last"
+        (click)="addPill(option)"
+      >
+        <div class="alto-badge" [style]="'color: white; background-color: ' + option.color">
+          <span>{{ option.label }}</span>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #noOption>
+      <div class="dropdown-item">
+        <p class="fst-italic alto-grey">No option available</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

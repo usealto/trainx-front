@@ -1,11 +1,17 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
+import {
+  GuessDtoPaginatedResponseApi,
+  ProgramStatsDtoApi,
+  ScoreTimeframeEnumApi,
+  ScoreTypeEnumApi,
+  UserStatsDtoApi,
+} from '@usealto/sdk-ts-angular';
 import { EChartsOption } from 'echarts';
-import { combineLatest, tap } from 'rxjs';
-import { EResolvers, ResolverData, ResolversService } from 'src/app/core/resolvers/resolvers.service';
+import { Observable, Subscription, combineLatest, startWith, switchMap, tap } from 'rxjs';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { IUser, User } from 'src/app/models/user.model';
@@ -13,13 +19,12 @@ import { ETypeValue } from 'src/app/modules/collaboration/components/lead-collab
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration, ScoreFilters } from 'src/app/modules/shared/models/score.model';
+import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
@@ -29,14 +34,14 @@ import { IHomeData } from '../../../../core/resolvers/home.resolver';
 import { ITeamStatsData } from '../../../../core/resolvers/teamStats.resolver';
 import { Company } from '../../../../models/company.model';
 import { Team, TeamStats } from '../../../../models/team.model';
+import { Score } from '../../../../models/score.model';
 
-@UntilDestroy()
 @Component({
   selector: 'alto-lead-home',
   templateUrl: './lead-home.component.html',
   styleUrls: ['./lead-home.component.scss'],
 })
-export class LeadHomeComponent implements OnInit {
+export class LeadHomeComponent implements OnInit, OnDestroy {
   me: User = new User({} as IUser);
 
   Emoji = EmojiName;
@@ -49,13 +54,11 @@ export class LeadHomeComponent implements OnInit {
   isData = false;
   chartDataStatus: PlaceholderDataStatus = 'loading';
 
-  globalFilters: ScoreFilters = {
-    duration: ScoreDuration.Year,
-    type: ScoreTypeEnumApi.Team,
-    teams: [],
-  };
+  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
+    nonNullable: true,
+  });
 
-  company: Company = new Company({} as any);
+  company!: Company;
 
   teams: Team[] = [];
 
@@ -88,6 +91,8 @@ export class LeadHomeComponent implements OnInit {
   topflopLoaded = false;
   chartOption: EChartsOption = {};
 
+  private leadHomeComponentSubscription = new Subscription();
+
   constructor(
     private readonly titleCasePipe: TitleCasePipe,
     private readonly scoresRestService: ScoresRestService,
@@ -105,24 +110,40 @@ export class LeadHomeComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.company = (data[EResolvers.TeamStats] as ITeamStatsData).company;
     this.me = (data[EResolvers.AppResolver] as IAppData).me;
     this.commentsCount = (data[EResolvers.HomeResolver] as IHomeData).comments.length;
     this.commentsDataStatus = this.commentsCount === 0 ? 'noData' : 'good';
     this.questionsCount = (data[EResolvers.HomeResolver] as IHomeData).questionsCount;
     this.questionsDataStatus = this.questionsCount === 0 ? 'noData' : 'good';
-    this.setTeamsAndStats(data);
-    this.createChart(this.globalFilters.duration as ScoreDuration);
-    this.getProgramsStats(this.globalFilters);
-    this.getGuessesCount(this.globalFilters.duration as ScoreDuration);
-    this.getTopFlop(this.globalFilters.duration as ScoreDuration)
-      .pipe(untilDestroyed(this))
-      .subscribe();
+
+    this.leadHomeComponentSubscription.add(
+      this.durationControl.valueChanges
+        .pipe(
+          startWith(this.durationControl.value),
+          tap((duration) => {
+            this.setTeamsAndStats(duration);
+          }),
+          switchMap((duration) => {
+            return combineLatest([
+              this.createChart(duration),
+              this.getProgramsStats(duration),
+              this.getGuessesCount(duration),
+              this.getTopFlop(duration),
+            ]);
+          }),
+        )
+        .subscribe(),
+    );
   }
 
-  setTeamsAndStats(data: ResolverData) {
-    this.company = (data[EResolvers.TeamStats] as ITeamStatsData).company;
-    const teamStatsNow = this.company.getStatsByPeriod(this.globalFilters.duration as ScoreDuration, false);
-    const teamStatsPrev = this.company.getStatsByPeriod(this.globalFilters.duration as ScoreDuration, true);
+  ngOnDestroy(): void {
+    this.leadHomeComponentSubscription.unsubscribe();
+  }
+
+  setTeamsAndStats(duration: ScoreDuration): void {
+    const teamStatsNow = this.company.getStatsByPeriod(duration, false);
+    const teamStatsPrev = this.company.getStatsByPeriod(duration, true);
     this.setAverageScore(teamStatsNow, teamStatsPrev);
   }
 
@@ -134,54 +155,50 @@ export class LeadHomeComponent implements OnInit {
     }
   }
 
-  createChart(duration: ScoreDuration) {
+  createChart(duration: ScoreDuration): Observable<Score[]> {
     const params = {
       duration: duration,
       type: ScoreTypeEnumApi.Guess,
       timeframe: ScoreTimeframeEnumApi.Month,
     };
 
-    this.scoresRestService
-      .getScores(params)
-      .pipe(
-        tap((scores) => {
-          this.scoreCount = scores.length;
-          this.chartDataStatus = this.scoreCount === 0 ? 'noData' : 'good';
-          const formattedScores = this.scoreService.formatScores(scores);
-          const points = this.statisticsServices.transformDataToPoint(formattedScores[0]);
-          const labels = this.statisticsServices
-            .formatLabel(
-              points.map((p) => p.x),
-              duration,
-            )
-            .map((s) => this.titleCasePipe.transform(s));
+    return this.scoresRestService.getScores(params).pipe(
+      tap((scores) => {
+        this.scoreCount = scores.length;
+        this.chartDataStatus = this.scoreCount === 0 ? 'noData' : 'good';
+        const formattedScores = this.scoreService.formatScores(scores);
+        const points = this.statisticsServices.transformDataToPoint(formattedScores[0]);
+        const labels = this.statisticsServices
+          .formatLabel(
+            points.map((p) => p.x),
+            duration,
+          )
+          .map((s) => this.titleCasePipe.transform(s));
 
-          this.chartOption = {
-            xAxis: [{ ...xAxisDatesOptions, data: labels }],
-            yAxis: [{ ...yAxisScoreOptions }],
-            series: [
-              {
-                name: I18ns.shared.global,
-                color: '#fdb022',
-                data: points.map((p) => (p.y ? Math.round((p.y * 10000) / 100) : (p.y as number))),
-                type: 'line',
-                showSymbol: false,
-                tooltip: {
-                  valueFormatter: (value: any) => {
-                    return value ? (value as number) + '%' : '';
-                  },
+        this.chartOption = {
+          xAxis: [{ ...xAxisDatesOptions, data: labels }],
+          yAxis: [{ ...yAxisScoreOptions }],
+          series: [
+            {
+              name: I18ns.shared.global,
+              color: '#fdb022',
+              data: points.map((p) => (p.y ? Math.round((p.y * 10000) / 100) : (p.y as number))),
+              type: 'line',
+              showSymbol: false,
+              tooltip: {
+                valueFormatter: (value: any) => {
+                  return value ? (value as number) + '%' : '';
                 },
               },
-            ],
-            legend: legendOptions,
-          };
-        }),
-        untilDestroyed(this),
-      )
-      .subscribe();
+            },
+          ],
+          legend: legendOptions,
+        };
+      }),
+    );
   }
 
-  getTopFlop(duration: ScoreDuration) {
+  getTopFlop(duration: ScoreDuration): Observable<UserStatsDtoApi[]> {
     let teamStats = this.company.getStatsByPeriod(duration, false);
     const teams = this.company.teams;
 
@@ -226,48 +243,44 @@ export class LeadHomeComponent implements OnInit {
     this.getProgramDataStatus();
   }
 
-  getProgramsStats(filters: ScoreFilters) {
-    combineLatest([
-      this.scoresRestService.getProgramsStats(filters.duration as ScoreDuration),
-      this.scoresRestService.getProgramsStats(filters.duration as ScoreDuration, true),
-    ])
-      .pipe(
-        tap(([programsStats, lastProgramsStats]) => {
-          this.programsCount = programsStats.length;
-          this.finishedProgramsCount = programsStats.filter((p) => p.participation === 1).length;
-          this.averageFinishedPrograms =
-            this.finishedProgramsCount && this.programsCount
-              ? this.finishedProgramsCount / this.programsCount
-              : 0;
-          const lastProgramsCount = lastProgramsStats.length;
-          const lastFinishedProgramsCount = lastProgramsStats.filter((p) => p.participation === 1).length;
-          const lastAverageFinishedPrograms =
-            lastFinishedProgramsCount && lastProgramsCount
-              ? lastFinishedProgramsCount / lastProgramsCount
-              : 0;
-          this.averageFinishedProgramsProgression =
-            this.averageFinishedPrograms - lastAverageFinishedPrograms;
-        }),
-      )
-      .subscribe();
+  getProgramsStats(duration: ScoreDuration): Observable<[ProgramStatsDtoApi[], ProgramStatsDtoApi[]]> {
+    return combineLatest([
+      this.scoresRestService.getProgramsStats(duration),
+      this.scoresRestService.getProgramsStats(duration, true),
+    ]).pipe(
+      tap(([programsStats, lastProgramsStats]) => {
+        this.programsCount = programsStats.length;
+        this.finishedProgramsCount = programsStats.filter((p) => p.participation === 1).length;
+        this.averageFinishedPrograms =
+          this.finishedProgramsCount && this.programsCount
+            ? this.finishedProgramsCount / this.programsCount
+            : 0;
+        const lastProgramsCount = lastProgramsStats.length;
+        const lastFinishedProgramsCount = lastProgramsStats.filter((p) => p.participation === 1).length;
+        const lastAverageFinishedPrograms =
+          lastFinishedProgramsCount && lastProgramsCount ? lastFinishedProgramsCount / lastProgramsCount : 0;
+        this.averageFinishedProgramsProgression = this.averageFinishedPrograms - lastAverageFinishedPrograms;
+      }),
+    );
   }
 
-  getGuessesCount(duration: ScoreDuration) {
+  getGuessesCount(
+    duration: ScoreDuration,
+  ): Observable<[GuessDtoPaginatedResponseApi, GuessDtoPaginatedResponseApi]> {
     const teamsStats = this.company.getStatsByPeriod(duration, false);
     this.expectedGuessCount = teamsStats.reduce((acc, team) => acc + (team.questionsPushedCount ?? 0), 0);
-    combineLatest([
+
+    return combineLatest([
       this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration),
       this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration, true),
-    ])
-      .pipe(
-        tap(([guesses, previousGuesses]) => {
-          this.guessCount = guesses.meta.totalItems;
-          this.guessCountProgression =
-            previousGuesses.meta.totalItems && guesses.meta.totalItems
-              ? (guesses.meta.totalItems - previousGuesses.meta.totalItems) / previousGuesses.meta.totalItems
-              : 0;
-        }),
-      )
-      .subscribe();
+    ]).pipe(
+      tap(([guesses, previousGuesses]) => {
+        this.guessCount = guesses.meta.totalItems;
+        this.guessCountProgression =
+          previousGuesses.meta.totalItems && guesses.meta.totalItems
+            ? (guesses.meta.totalItems - previousGuesses.meta.totalItems) / previousGuesses.meta.totalItems
+            : 0;
+      }),
+    );
   }
 }

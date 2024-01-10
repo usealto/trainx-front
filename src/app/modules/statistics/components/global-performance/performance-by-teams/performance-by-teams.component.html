@@ -8,6 +8,9 @@
       [placeholder]="I18ns.statistics.globalPerformance.perTeamPerformance.teamFilter"
       (selectChange)="filterTeams($event)"
     ></alto-dropdown-filter>
+
+    <alto-input-multiple-select [controls]="selectedTeamsControl" [options]="teamsOptions"></alto-input-multiple-select>
+
     <h3>{{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}</h3>
     <p class="alto-grey mb-4">
       {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.subtitle }}

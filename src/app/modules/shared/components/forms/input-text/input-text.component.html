@@ -1,0 +1,4 @@
+<div class="input-container">
+  <input type="text" class="form-control" [formControl]="control" [placeholder]="placeholder" />
+  <p *ngIf="control.dirty && control.invalid" class="mt-2 alto-red ">{{control.getError('error')}}</p>
+</div>

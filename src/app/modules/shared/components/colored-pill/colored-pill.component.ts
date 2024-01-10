@@ -26,7 +26,6 @@ export class ColoredPillListComponent {
 
   @memoize()
   getText(d: any): string {
-    console.log('alto-pill', d);
     return d.shortName || d.name || d.title || d.label || d;
   }
 }

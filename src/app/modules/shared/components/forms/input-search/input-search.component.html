@@ -1,0 +1,10 @@
+<div class="input-search">
+  <span class="search-icon"><i class="bi bi-search"></i></span>
+  <input
+    type="text"
+    class="input-field"
+    [placeholder]="placeholder"
+    [formControl]="searchControl"
+  />
+  <i *ngIf="searchControl.value" class="delete-icon cursor-pointer bi-x-lg hover-red" (click)="reset()"></i>
+</div>
