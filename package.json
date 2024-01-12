@@ -9,7 +9,7 @@
     "build:preprod": "ng build --configuration preprod",
     "build:sandbox": "ng build --configuration sandbox",
     "prebuild": "node build-time.js",
-    "build": "ng build --configuration productions",
+    "build": "ng build --configuration production",
     "build:sentry": "npm run build && npm run sentry:sourcemap",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
