@@ -199,23 +199,6 @@ export class TeamPerformanceComponent implements OnInit {
     );
   }
 
-  // getTagsChartScores(duration: ScoreDuration): void {
-  //   this.tagsChartStatus = 'loading';
-  //   this.scoresRestService
-  //     .getScores(this.getScoreParams('tags', duration, false))
-  //     .pipe(
-  //       tap((res) => {
-  //         let filteredTags: Score[] = res;
-  //         if (this.selectedTags.length > 0) {
-  //           filteredTags = res.filter((s) => this.selectedTags.find((m) => m.id === s.id));
-  //         }
-  //         this.createTagsChart(filteredTags, duration);
-  //         this.tagsChartStatus = filteredTags.length > 0 ? 'good' : 'noData';
-  //       }),
-  //     )
-  //     .subscribe();
-  // }
-
   getTagsData(duration: ScoreDuration): void {
     this.tagsLeaderboardStatus = 'loading';
     this.scoresRestService
