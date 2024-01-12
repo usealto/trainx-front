@@ -12,7 +12,7 @@ export const environment = {
   applicationId: '5de36fd6-36c0-49ac-97bc-9e0517527d1c',
   sentryDsn: 'https://1a9f0e07b9404c1ced5df9b98d821209@o4506417447174144.ingest.sentry.io/4506558380048384',
   sentryTracesSampleRate: 1.0,
-  sentryReplaysSessionSampleRate: 0.25,
+  sentryReplaysSessionSampleRate: 0,
   sentryReplaysOnErrorSampleRate: 1.0,
 };
 
