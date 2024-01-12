@@ -131,10 +131,9 @@
     </table>
     <alto-pagination
       class="mx-4 d-block"
-      [collectionSize]="teamsDisplay.length"
-      (pageChange)="changeTeamsPage($event)"
-      [pageSize]="teamsPageSize"
-      [page]="teamsPage"
+      [pageControl]="teamsPageControl"
+      [itemsCount]="teamsDisplay.length"
+      [itemsPerPage]="teamsPageSize"
     ></alto-pagination>
   </div>
 

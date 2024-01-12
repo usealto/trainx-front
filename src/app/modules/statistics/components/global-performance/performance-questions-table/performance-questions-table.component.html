@@ -109,10 +109,9 @@
     </table>
     <alto-pagination
       class="mx-4 d-block"
-      [collectionSize]="questionsDisplay.length"
-      (pageChange)="changeQuestionsPage($event)"
-      [pageSize]="questionsPageSize"
-      [page]="questionsPage"
+      [pageControl]="questionsPageControl"
+      [itemsCount]="questionsDisplay.length"
+      [itemsPerPage]="questionsPageSize"
     ></alto-pagination>
   </div>
 

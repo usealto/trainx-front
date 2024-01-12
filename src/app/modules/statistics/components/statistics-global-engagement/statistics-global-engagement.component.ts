@@ -1,29 +1,24 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
-import { Observable, combineLatest, filter, map, tap } from 'rxjs';
+import { Observable, Subscription, combineLatest, filter, map, startWith, switchMap, tap } from 'rxjs';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
-import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { StatisticsService } from '../../services/statistics.service';
-
-import { ActivatedRoute } from '@angular/router';
-import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { Company } from 'src/app/models/company.model';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { DataForTable } from '../../models/statistics.model';
-import { Store } from '@ngrx/store';
-import * as FromRoot from '../../../../core/store/store.reducer';
+import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
+import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { IAppData } from '../../../../core/resolvers';
 import { Team, TeamStats } from '../../../../models/team.model';
-import { FormControl } from '@angular/forms';
+import { DataForTable } from '../../models/statistics.model';
+import { StatisticsService } from '../../services/statistics.service';
 
-@UntilDestroy()
 @Component({
   selector: 'alto-statistics-global-engagement',
   templateUrl: './statistics-global-engagement.component.html',
@@ -32,12 +27,9 @@ import { FormControl } from '@angular/forms';
 export class StatisticsGlobalEngagementComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
-  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
-    nonNullable: true,
-  });
   AltoRoutes = AltoRoutes;
 
-  company: Company = {} as Company;
+  company!: Company;
 
   teamsStats: TeamStats[] = [];
   teamsStatsPrev: TeamStats[] = [];
@@ -53,12 +45,17 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
 
   teamsDataStatus: PlaceholderDataStatus = 'loading';
   teams: Team[] = [];
-  teamsDisplay: DataForTable[] = [];
   paginatedTeams: DataForTable[] = [];
-  teamsPage = 1;
-  teamsPageSize = 5;
 
   hasConnector = false;
+
+  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
+    nonNullable: true,
+  });
+  pageControl: FormControl<number> = new FormControl(1, { nonNullable: true });
+  teamsDisplay: DataForTable[] = [];
+  teamsPageSize = 5;
+  private readonly statisticsGlobalEngagementComponentSubscription = new Subscription();
 
   constructor(
     private readonly titleCasePipe: TitleCasePipe,
@@ -67,27 +64,29 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     private readonly statisticsServices: StatisticsService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
-    private readonly store: Store<FromRoot.AppState>,
   ) {}
 
   ngOnInit(): void {
-    this.store
-      .select(FromRoot.selectCompany)
-      .pipe(tap(({ data: company }) => (this.company = company)))
-      .subscribe();
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.company = (data[EResolvers.AppResolver] as IAppData).company;
 
-    this.durationControl.valueChanges.subscribe((duration) => {
-      this.teamsStats = this.company.getStatsByPeriod(duration, false);
-      this.teamsStatsPrev = this.company.getStatsByPeriod(duration, true);
-      this.getAllData(duration);
-    });
-  }
-
-  private getAllData(duration: ScoreDuration): void {
-    this.getTeamDataForTable();
-    combineLatest([this.getActivityData(duration), this.getTeamEngagementData(duration)])
-      .pipe(untilDestroyed(this))
-      .subscribe();
+    this.statisticsGlobalEngagementComponentSubscription.add(
+      combineLatest([
+        this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+        this.pageControl.valueChanges.pipe(startWith(this.pageControl.value)),
+      ])
+        .pipe(
+          tap(([duration, page]) => {
+            this.teamsStats = this.company.getStatsByPeriod(duration, false);
+            this.teamsStatsPrev = this.company.getStatsByPeriod(duration, true);
+            this.getTeamDataForTable(page);
+          }),
+          switchMap(([duration]) => {
+            return combineLatest([this.getActivityData(duration), this.getTeamEngagementData(duration)]);
+          }),
+        )
+        .subscribe(),
+    );
   }
 
   private getActivityData(duration: ScoreDuration): Observable<[TeamStats[], TeamStats[]]> {
@@ -273,7 +272,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     );
   }
 
-  private getTeamDataForTable(): void {
+  private getTeamDataForTable(page: number): void {
     this.teamsDataStatus = this.teamsStats.length === 0 ? 'noData' : 'good';
     this.hasConnector = this.company.isConnectorActive ?? false;
     this.teams = this.teamsStats.map((t) => this.company.teams.find((team) => team.id === t.teamId) as Team);
@@ -282,11 +281,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
       const teamProg = this.teamsStatsPrev.find((tp) => tp.teamId === t.teamId);
       return this.dataForTeamTableMapper(t, teamProg);
     });
-    this.changeTeamsPage(1);
-  }
 
-  changeTeamsPage(page: number) {
-    this.teamsPage = page;
     this.paginatedTeams = this.teamsDisplay.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
   }
 

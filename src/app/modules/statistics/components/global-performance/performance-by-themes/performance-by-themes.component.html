@@ -7,11 +7,24 @@
       {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.subtitle }}
     </p>
 
-    <div class="chart-container">
+    <div *ngIf="selectedTags.length >= 3 || selectedTags.length <= 6; else tagFilterError" class="chart-container">
       <alto-chart-radar
         [chartOption]="spiderChartOptions"
       ></alto-chart-radar>
     </div>
+    <ng-template #tagFilterError>
+      <div
+          class="nodata-placeholder d-flex align-items-center justify-content-center"
+          style="height: 366px"
+        >
+          <div class="text-center">
+            <img [src]="Emoji.FaceWithMonocle | emoji" height="24" width="24" />
+            <p class="mt-3">
+              {{ selectedTags.length < 3 ? I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.lessThan3Tags : I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.moreThan6Tags}}
+            </p>
+          </div>
+        </div>
+    </ng-template>
   </div>
 
   <div class="nodata-placeholder" noData>
@@ -30,6 +43,7 @@
 
 <alto-placeholder-manager [status]="tagsDataStatus">
   <alto-leaderboard
+    *ngIf="tagsDataStatus === 'good'"
     [config]="['score']"
     [title]="I18ns.statistics.globalPerformance.perThemePerformance.control.title"
     [subtitle]="I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle"

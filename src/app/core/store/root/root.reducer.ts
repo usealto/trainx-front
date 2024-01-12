@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { Company, ICompany } from '../../../models/company.model';
-import { Team, TeamStats } from '../../../models/team.model';
+import { Program } from '../../../models/program.model';
+import { Team } from '../../../models/team.model';
 import { IUser, User } from '../../../models/user.model';
 import {
   addUser,
@@ -15,7 +16,6 @@ import {
   updateCompany,
   updatePrograms,
 } from '../root/root.action';
-import { Program } from '../../../models/program.model';
 
 export class TimestampedEntity<T> {
   data: T;

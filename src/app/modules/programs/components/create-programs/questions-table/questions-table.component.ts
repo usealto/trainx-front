@@ -1,13 +1,14 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { QuestionDtoApi, QuestionDtoPaginatedResponseApi } from '@usealto/sdk-ts-angular';
 import { QuestionDisplayLight } from '../../../models/question.model';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'alto-questions-table',
   templateUrl: './questions-table.component.html',
   styleUrls: ['./questions-table.component.scss'],
 })
-export class QuestionsTableComponent implements OnChanges {
+export class QuestionsTableComponent implements OnInit, OnChanges {
   @Input() data?: QuestionDtoPaginatedResponseApi;
   @Input() isChecked = false;
 
@@ -16,10 +17,16 @@ export class QuestionsTableComponent implements OnChanges {
   @Output() pageChange = new EventEmitter<any>();
 
   questionsCount = 0;
-  questionPage = 1;
+  questionPageControl = new FormControl(1, { nonNullable: true });
   questionPageSize = 10;
 
   questionsDisplay: QuestionDisplayLight[] = [];
+
+  ngOnInit(): void {
+    this.questionPageControl.valueChanges.subscribe((page) => {
+      this.questionPageChange(page);
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']?.currentValue) {

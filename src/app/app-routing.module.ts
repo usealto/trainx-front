@@ -64,6 +64,7 @@ const routes: Routes = [
       {
         path: AltoRoutes.lead,
         canActivate: [leadAccessGuard],
+        runGuardsAndResolvers: 'always',
         resolve: {
           teamStats: teamStatsResolver,
         },
@@ -71,6 +72,7 @@ const routes: Routes = [
           { path: '', redirectTo: AltoRoutes.leadHome, pathMatch: 'full' },
           {
             path: AltoRoutes.leadHome,
+            runGuardsAndResolvers: 'always',
             resolve: {
               homeResolver: homeResolver, // TODO : replace resolver
             },

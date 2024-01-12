@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ProgramDtoApi, TagDtoApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { switchMap, tap } from 'rxjs';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { TagDtoApi } from '@usealto/sdk-ts-angular';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -14,9 +13,10 @@ import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { TeamsStatsFilters } from 'src/app/modules/shared/models/stats.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { TeamStats } from '../../../../../models/team.model';
-import { Program } from '../../../../../models/program.model';
 import { Company } from '../../../../../models/company.model';
+import { TeamStats } from '../../../../../models/team.model';
+import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -45,11 +45,13 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   teamsDisplay: TeamStats[] = [];
   paginatedTeamsStats: TeamStats[] = [];
   teamsDataStatus: PlaceholderDataStatus = 'loading';
-  teamsPage = 1;
+  teamsPageControl = new FormControl(1, { nonNullable: true });
   teamsPageSize = 5;
 
   tags: TagDtoApi[] = [];
   scoreIsLoading = false;
+
+  private readonly performanceTeamsTableComponentSubscription = new Subscription();
 
   constructor(
     public readonly teamStore: TeamStore,
@@ -66,6 +68,10 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
     this.teamsStatsPrev = this.company.getStatsByPeriod(this.duration, true);
 
     this.getTeamsFiltered();
+
+    this.performanceTeamsTableComponentSubscription.add(
+      this.teamsPageControl.valueChanges.subscribe((page) => this.changeTeamsPage(page)),
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -79,7 +85,6 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
       duration = this.teamFilters.duration,
       programs = this.teamFilters.programs,
       tags = this.teamFilters.tags,
-      teams = this.teamFilters.teams,
       search = this.teamFilters.search,
     }: TeamsStatsFilters = this.teamFilters,
   ) {
@@ -108,8 +113,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
     this.changeTeamsPage(1);
   }
 
-  changeTeamsPage(page: number) {
-    this.teamsPage = page;
+  private changeTeamsPage(page: number) {
     this.paginatedTeamsStats = this.teamsDisplay.slice(
       (page - 1) * this.teamsPageSize,
       page * this.teamsPageSize,

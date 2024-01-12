@@ -1,23 +1,21 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   QuestionStatsDtoApi,
-  ScoreByTypeEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
-  TagDtoApi,
+  TagStatsDtoApi,
   UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { combineLatest, of, tap } from 'rxjs';
+import { Subscription, combineLatest, map, of, startWith, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { Score } from 'src/app/models/score.model';
 import { Team } from 'src/app/models/team.model';
-import { User } from 'src/app/models/user.model';
 import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
@@ -28,53 +26,61 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
 import { Point, StatisticsService } from '../../../services/statistics.service';
+import { SelectOption } from '../../../../shared/models/select-option.model';
 
 @Component({
   selector: 'alto-team-performance',
   templateUrl: './team-performance.component.html',
   styleUrls: ['./team-performance.component.scss'],
 })
-export class TeamPerformanceComponent implements OnInit {
+export class TeamPerformanceComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   EmojiName = EmojiName;
   AltoRoutes = AltoRoutes;
 
   teamId!: string;
   team!: Team;
-  members: User[] = [];
-  tags: TagDtoApi[] = [];
 
-  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Trimester, {
-    nonNullable: true,
-  });
-
-  selectedMembers: User[] = [];
   teamChartOption: any = {};
   teamChartStatus: PlaceholderDataStatus = 'loading';
   membersLeaderboard: { name: string; score: number }[] = [];
   membersLeaderboardStatus: PlaceholderDataStatus = 'loading';
+  membersOptions: SelectOption[] = [];
+  membersChartControl = new FormControl([] as FormControl<SelectOption>[], {
+    nonNullable: true,
+  });
 
-  selectedTags: TagDtoApi[] = [];
-  tagsChartOption: any = {};
-  tagsChartStatus: PlaceholderDataStatus = 'loading';
+  spiderChartOptions: any = {};
+  spiderChartDataStatus: PlaceholderDataStatus = 'loading';
+  tagsControl = new FormControl([] as FormControl<SelectOption>[], {
+    nonNullable: true,
+  });
+  tagsOptions: SelectOption[] = [];
+
   tagsLeaderboard: { name: string; score: number }[] = [];
   tagsLeaderboardStatus: PlaceholderDataStatus = 'loading';
 
   membersTable: UserStatsDtoApi[] = [];
-  membersTablePage = 1;
+  membersPageControl = new FormControl(1, { nonNullable: true });
   membersTablePageSize = 5;
   membersTableDataStatus: PlaceholderDataStatus = 'loading';
   displayMemberTables: UserStatsDtoApi[] = [];
   previousMembersStats: UserStatsDtoApi[] = [];
+  membersSearchControl: FormControl<string> = new FormControl<string>('', { nonNullable: true });
 
-  questionsTableSearch = '';
-  questionsTableScore = '';
   questionsTable: QuestionStatsDtoApi[] = [];
-  questionsTablePage = 1;
+  questionsPageControl = new FormControl(1, { nonNullable: true });
   questionsTablePageSize = 5;
   questionsTableDataStatus: PlaceholderDataStatus = 'loading';
   displayQuestionsTables: QuestionStatsDtoApi[] = [];
   previousQuestionsStats: QuestionStatsDtoApi[] = [];
+  questionsSearchControl: FormControl<string> = new FormControl<string>('', { nonNullable: true });
+  questionsScoreControl: FormControl<string> = new FormControl<string>('', { nonNullable: true });
+
+  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Trimester, {
+    nonNullable: true,
+  });
+  private readonly performanceByTeamsSubscription: Subscription = new Subscription();
 
   constructor(
     private titleCasePipe: TitleCasePipe,
@@ -93,64 +99,200 @@ export class TeamPerformanceComponent implements OnInit {
     this.team = (data[EResolvers.AppResolver] as IAppData).company.teams.find(
       (u) => u.id === this.teamId,
     ) as Team;
-    this.members = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values()).filter(
+    const members = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values()).filter(
       (u) => u.teamId === this.teamId,
     );
-    this.selectedMembers = this.members.slice(0, 1);
+    this.membersOptions = members.map((user) => new SelectOption({ label: user.fullname, value: user.id }));
+    this.membersChartControl.setValue([
+      new FormControl(new SelectOption({ label: members[0].fullname, value: members[0].id }), {
+        nonNullable: true,
+      }),
+    ]);
 
-    this.durationControl.valueChanges.subscribe((duration) => {
-      this.loadPage(duration);
-    });
+    this.performanceByTeamsSubscription.add(
+      combineLatest([
+        this.membersChartControl.valueChanges.pipe(startWith(this.membersChartControl.value)),
+        this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+      ])
+        .pipe(
+          tap(() => (this.teamChartStatus = 'loading')),
+          switchMap(([selectedMembers, duration]) => {
+            return combineLatest([
+              of(selectedMembers),
+              of(duration),
+              this.scoresRestService.getScores(this.getScoreParams(duration, false)),
+              this.scoresRestService.getScores(this.getScoreParams(duration, true)),
+            ]);
+          }),
+        )
+        .subscribe({
+          next: ([selectedMembers, duration, memberScores, globalScores]) => {
+            const selectedMemberIds = selectedMembers.map((m) => m.value);
+            if (selectedMemberIds.length > 0) {
+              memberScores = memberScores.filter((s) =>
+                selectedMemberIds.find((userOption) => userOption.value === s.id),
+              );
+            }
 
-    this.tagsRestService.getTags().subscribe((tags) => {
-      this.tags = tags;
-      this.selectedTags = tags.slice(0, 1);
-      this.loadPage(this.durationControl.value);
-    });
-  }
+            this.createTeamChart(memberScores, globalScores, duration);
+            this.teamChartStatus = [...memberScores, globalScores].length > 0 ? 'good' : 'noData';
+          },
+        }),
+    );
 
-  loadPage(duration: ScoreDuration): void {
-    this.getTeamChartScores(duration);
-    this.getTeamLeaderboard(duration);
-    this.getTagsChartScores(duration);
-    this.getTagsLeaderboard(duration);
-    this.getMembersTable(duration);
-    this.getQuestionsTable(duration);
-  }
+    this.performanceByTeamsSubscription.add(
+      this.tagsRestService
+        .getTags()
+        .pipe(
+          tap((tags) => {
+            this.tagsOptions = tags.map((tag) => new SelectOption({ label: tag.name, value: tag.id }));
 
-  filterQuestionsTable({ search = this.questionsTableSearch, score = this.questionsTableScore }) {
-    this.questionsTableSearch = search;
-    this.questionsTableScore = score;
-
-    this.getQuestionsTable(this.durationControl.value);
-  }
-
-  getQuestionsTable(duration: ScoreDuration): void {
-    this.questionsTableDataStatus = 'loading';
-    combineLatest([
-      this.scoresRestService.getQuestionsStats(duration, false, undefined, this.teamId),
-      this.scoresRestService.getQuestionsStats(duration, true, undefined, this.teamId),
-    ])
-      .pipe(
-        tap(([res, previous]) => {
-          let temp = res;
-          if (this.questionsTableSearch && this.questionsTableSearch !== '') {
-            temp = temp.filter((question) => {
-              const s = this.questionsTableSearch.toLowerCase();
-              const title = question.question.title.toLowerCase();
-              return title.includes(s);
+            this.tagsControl.setValue(
+              tags.slice(0, 6).map(
+                (tag) =>
+                  new FormControl(new SelectOption({ label: tag.name, value: tag.id }), {
+                    nonNullable: true,
+                  }),
+              ),
+            );
+          }),
+          switchMap(() => {
+            return this.tagsControl.valueChanges.pipe(startWith(this.tagsControl.value));
+          }),
+          tap(() => {
+            this.spiderChartDataStatus = 'loading';
+            this.tagsLeaderboardStatus = 'loading';
+          }),
+          switchMap((selectedTags) => {
+            return combineLatest([
+              of(selectedTags),
+              this.scoresRestService.getTagsStats(ScoreDuration.Year, false, this.teamId),
+            ]);
+          }),
+          map(([selectedTags, tagStats]) => {
+            this.tagsLeaderboard = tagStats.map((tag) => {
+              return {
+                name: tag.tag.name,
+                score: tag.score ?? 0,
+              };
             });
-          }
-          if (this.questionsTableScore && this.questionsTableScore !== '') {
-            temp = this.scoresService.filterByScore(temp, this.questionsTableScore as ScoreFilter, true);
-          }
-          this.questionsTable = temp;
-          this.previousQuestionsStats = previous;
+            this.tagsLeaderboardStatus = this.tagsLeaderboard.length === 0 ? 'noData' : 'good';
+            const selectedTagIds = selectedTags.map((tag) => tag.value.value);
+            tagStats = tagStats.filter((tag) => selectedTagIds.includes(tag.tag.id));
+            this.spiderChartDataStatus = tagStats.length === 0 ? 'noData' : 'good';
+            if (selectedTags.length > 0) {
+              tagStats = tagStats.filter((tag) => tagStats.includes(tag));
+            }
+            return tagStats.sort((a, b) => a.tag.name.localeCompare(b.tag.name));
+          }),
+        )
+        .subscribe((tagStats) => {
+          this.createSpiderChart(tagStats);
+        }),
+    );
+
+    this.performanceByTeamsSubscription.add(
+      combineLatest([
+        this.questionsScoreControl.valueChanges,
+        this.questionsSearchControl.valueChanges,
+        this.durationControl.valueChanges,
+      ])
+        .pipe(
+          startWith<[string, string, ScoreDuration]>([
+            this.questionsSearchControl.value,
+            this.questionsScoreControl.value,
+            this.durationControl.value,
+          ]),
+          tap(() => (this.questionsTableDataStatus = 'loading')),
+          switchMap(([search, score, duration]) => {
+            return combineLatest([
+              of(search),
+              of(score),
+              this.scoresRestService.getQuestionsStats(duration, false, undefined, this.teamId),
+              this.scoresRestService.getQuestionsStats(duration, true, undefined, this.teamId),
+            ]);
+          }),
+          map(([search, scoreFilter, questionsStats, prevQuestionsStats]) => {
+            if (search) {
+              questionsStats = questionsStats.filter((question) => {
+                const s = search.toLowerCase();
+                const title = question.question.title.toLowerCase();
+                return title.includes(s);
+              });
+            }
+            if (scoreFilter) {
+              questionsStats = this.scoresService.filterByScore(
+                questionsStats,
+                scoreFilter as ScoreFilter,
+                true,
+              );
+            }
+            return [questionsStats, prevQuestionsStats];
+          }),
+        )
+        .subscribe(([questionsStats, prevQuestionsStats]) => {
+          this.questionsTable = questionsStats;
+          this.previousQuestionsStats = prevQuestionsStats;
           this.changeQuestionsPage(1);
           this.questionsTableDataStatus = this.questionsTable.length > 0 ? 'good' : 'noData';
         }),
-      )
-      .subscribe();
+    );
+
+    this.performanceByTeamsSubscription.add(
+      combineLatest([this.membersSearchControl.valueChanges, this.durationControl.valueChanges])
+        .pipe(
+          startWith<[string, ScoreDuration]>([this.membersSearchControl.value, this.durationControl.value]),
+          tap(() => {
+            this.membersTableDataStatus = 'loading';
+            this.membersLeaderboardStatus = 'loading';
+          }),
+          switchMap(([search, duration]) => {
+            return combineLatest([
+              of(search),
+              this.scoresRestService.getUsersStats(duration, false, undefined, undefined, this.teamId),
+              this.scoresRestService.getUsersStats(duration, true, undefined, undefined, this.teamId),
+            ]);
+          }),
+          map(([search, usersStats, prevUsersStats]) => {
+            this.membersLeaderboard = usersStats.map((r) => ({
+              name: r.user.firstname + ' ' + r.user.lastname,
+              score: r.score ?? 0,
+            }));
+            this.membersLeaderboardStatus = this.membersLeaderboard.length > 0 ? 'good' : 'noData';
+            if (search) {
+              usersStats = usersStats.filter((user) => {
+                const s = search.toLowerCase();
+                const firstname = user.user.firstname.toLowerCase();
+                const lastname = user.user.lastname.toLowerCase();
+                return firstname.includes(s) || lastname.includes(s);
+              });
+            }
+            return [usersStats, prevUsersStats];
+          }),
+        )
+        .subscribe(([usersStats, prevUsersStats]) => {
+          (this.membersTable = usersStats),
+            (this.previousMembersStats = prevUsersStats),
+            this.changeMembersPage(1);
+          this.membersTableDataStatus = this.membersTable.length > 0 ? 'good' : 'noData';
+        }),
+    );
+
+    this.performanceByTeamsSubscription.add(
+      this.membersPageControl.valueChanges.subscribe((page) => {
+        this.changeQuestionsPage(page);
+      }),
+    );
+
+    this.performanceByTeamsSubscription.add(
+      this.questionsPageControl.valueChanges.subscribe((page) => {
+        this.changeQuestionsPage(page);
+      }),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.performanceByTeamsSubscription.unsubscribe();
   }
 
   @memoize()
@@ -160,38 +302,10 @@ export class TeamPerformanceComponent implements OnInit {
   }
 
   changeQuestionsPage(page: number) {
-    this.questionsTablePage = page;
     this.displayQuestionsTables = this.questionsTable.slice(
       (page - 1) * this.questionsTablePageSize,
       page * this.questionsTablePageSize,
     );
-  }
-
-  getMembersTable(duration: ScoreDuration, search?: string): void {
-    this.membersTableDataStatus = 'loading';
-    combineLatest([
-      this.scoresRestService.getUsersStats(duration, false, undefined, undefined, this.teamId),
-      this.scoresRestService.getUsersStats(duration, true, undefined, undefined, this.teamId),
-    ])
-      .pipe(
-        tap(([res, previous]) => {
-          if (search && search !== '') {
-            this.membersTable = res.filter((user) => {
-              const s = search.toLowerCase();
-              const firstname = user.user.firstname.toLowerCase();
-              const lastname = user.user.lastname.toLowerCase();
-              return firstname.includes(s) || lastname.includes(s);
-            });
-          } else {
-            this.membersTable = res;
-          }
-
-          this.previousMembersStats = previous;
-          this.changeMembersPage(1);
-          this.membersTableDataStatus = this.membersTable.length > 0 ? 'good' : 'noData';
-        }),
-      )
-      .subscribe();
   }
 
   @memoize()
@@ -201,119 +315,43 @@ export class TeamPerformanceComponent implements OnInit {
   }
 
   changeMembersPage(page: number) {
-    this.membersTablePage = page;
     this.displayMemberTables = this.membersTable.slice(
       (page - 1) * this.membersTablePageSize,
       page * this.membersTablePageSize,
     );
   }
 
-  getTagsChartScores(duration: ScoreDuration): void {
-    this.tagsChartStatus = 'loading';
-    this.scoresRestService
-      .getScores(this.getScoreParams('tags', duration, false))
-      .pipe(
-        tap((res) => {
-          let filteredTags: Score[] = res;
-          if (this.selectedTags.length > 0) {
-            filteredTags = res.filter((s) => this.selectedTags.find((m) => m.id === s.id));
-          }
-          this.createTagsChart(filteredTags, duration);
-          this.tagsChartStatus = filteredTags.length > 0 ? 'good' : 'noData';
+  createSpiderChart(tagStats: TagStatsDtoApi[]): void {
+    this.spiderChartOptions = {
+      color: ['#475467'],
+      radar: {
+        indicator: tagStats.map((t) => {
+          return { name: t.tag.name, max: 100 };
         }),
-      )
-      .subscribe();
-  }
-
-  createTagsChart(scores: Score[], duration: ScoreDuration): void {
-    const aggregatedData = this.statisticService.transformDataToPoint(scores[0]);
-
-    const labels = this.statisticService
-      .formatLabel(
-        aggregatedData.map((d) => d.x),
-        duration,
-      )
-      .map((s) => this.titleCasePipe.transform(s));
-
-    const dataSet = scores.map((s) => {
-      const d = this.statisticService.transformDataToPoint(s);
-      return { label: s.label, data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)) };
-    });
-
-    const series = dataSet.map((d) => {
-      return {
-        name: d.label,
-        data: d.data,
-        type: 'line',
-        showSymbol: false,
-        tooltip: {
-          valueFormatter: (value: any) => {
-            return (value as number) + '%';
-          },
+      },
+      series: [
+        {
+          type: 'radar',
+          data: [
+            {
+              value: tagStats.map((t) => (t.score ? Math.round((t.score * 10000) / 100) : 0)),
+              name: I18ns.statistics.team.perThemes.chartTitle,
+              Symbol: 'rect',
+              SymbolSize: 12,
+              lineStyle: {
+                type: 'dashed',
+              },
+              label: {
+                show: true,
+                formatter: function (params: any) {
+                  return (params.value as string) + ' %';
+                },
+              },
+            },
+          ],
         },
-        lineStyle: {},
-      };
-    });
-
-    this.tagsChartOption = {
-      xAxis: [{ ...xAxisDatesOptions, data: labels }],
-      yAxis: [{ ...yAxisScoreOptions }],
-      series: series,
-      legend: legendOptions,
+      ],
     };
-  }
-
-  getTagsLeaderboard(duration: ScoreDuration): void {
-    this.tagsLeaderboardStatus = 'loading';
-    this.scoresRestService
-      .getTagsStats(duration, false, this.teamId)
-      .pipe(
-        tap((res) => {
-          this.tagsLeaderboard = res.map((r) => ({
-            name: r.tag.name,
-            score: r.score ?? 0,
-          }));
-          this.tagsLeaderboardStatus = this.tagsLeaderboard.length > 0 ? 'good' : 'noData';
-        }),
-      )
-      .subscribe();
-  }
-
-  getTeamLeaderboard(duration: ScoreDuration): void {
-    this.membersLeaderboardStatus = 'loading';
-    this.scoresRestService
-      .getUsersStats(duration, false, undefined, undefined, this.teamId)
-      .pipe(
-        tap((res) => {
-          this.membersLeaderboard = res.map((r) => ({
-            name: r.user.firstname + ' ' + r.user.lastname,
-            score: r.score ?? 0,
-          }));
-          this.membersLeaderboardStatus = this.membersLeaderboard.length > 0 ? 'good' : 'noData';
-        }),
-      )
-      .subscribe();
-  }
-
-  getTeamChartScores(duration: ScoreDuration): void {
-    this.teamChartStatus = 'loading';
-    combineLatest([
-      this.members.length
-        ? this.scoresRestService.getScores(this.getScoreParams('members', duration, false))
-        : of([]),
-      this.scoresRestService.getScores(this.getScoreParams('members', duration, true)),
-    ])
-      .pipe(
-        tap(([r, global]) => {
-          let filteredMembers: Score[] = r;
-          if (this.selectedMembers.length > 0) {
-            filteredMembers = r.filter((s) => this.selectedMembers.find((m) => m.id === s.id));
-          }
-          this.createTeamChart(filteredMembers, global, duration);
-          this.teamChartStatus = [...filteredMembers, global].length > 0 ? 'good' : 'noData';
-        }),
-      )
-      .subscribe();
   }
 
   createTeamChart(scores: Score[], global: Score[], duration: ScoreDuration): void {
@@ -395,24 +433,13 @@ export class TeamPerformanceComponent implements OnInit {
     };
   }
 
-  filterMembers(event: any): void {
-    this.selectedMembers = event;
-    this.loadPage(this.durationControl.value);
-  }
-
-  filterTags(event: any): void {
-    this.selectedTags = event;
-    this.loadPage(this.durationControl.value);
-  }
-
-  getScoreParams(type: 'members' | 'tags', duration: ScoreDuration, global: boolean): ChartFilters {
+  getScoreParams(duration: ScoreDuration, global: boolean): ChartFilters {
     return {
       duration: duration,
-      type:
-        type === 'members' ? (global ? ScoreTypeEnumApi.Team : ScoreTypeEnumApi.User) : ScoreTypeEnumApi.Tag,
-      ids: type === 'members' ? (global ? [this.teamId] : this.members.map((m) => m.id)) : undefined,
-      scoredBy: type === 'tags' ? ScoreByTypeEnumApi.Team : undefined,
-      scoredById: type === 'tags' ? this.teamId : undefined,
+      type: global ? ScoreTypeEnumApi.Team : ScoreTypeEnumApi.User,
+      ids: global ? [this.teamId] : this.membersOptions.map((m) => m.value),
+      scoredBy: undefined,
+      scoredById: undefined,
       timeframe:
         duration === ScoreDuration.Year
           ? ScoreTimeframeEnumApi.Month

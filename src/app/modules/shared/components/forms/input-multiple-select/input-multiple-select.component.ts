@@ -1,8 +1,14 @@
 import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subscription, startWith } from 'rxjs';
+import { Subscription, debounceTime, startWith } from 'rxjs';
 
 import { SelectOption } from '../../../models/select-option.model';
+import { I18ns } from '../../../../../core/utils/i18n/I18n';
+
+interface ICheckedOption {
+  isChecked: boolean;
+  option: SelectOption;
+}
 
 @Component({
   selector: 'alto-input-multiple-select',
@@ -18,17 +24,34 @@ export class InputMultipleSelectComponent implements OnInit, OnDestroy {
   );
   @Input() options: SelectOption[] = [];
 
+  I18ns = I18ns;
   isDropdownOpen = false;
-  filteredOptions: SelectOption[] = [];
+  filteredOptions: ICheckedOption[] = [];
+  searchControl: FormControl<string | null> = new FormControl(null);
 
   private readonly inputMultipleSelectComponentSubscription = new Subscription();
 
   constructor(private el: ElementRef) {}
 
   ngOnInit(): void {
+    this.filteredOptions = this.options.map((option) => ({
+      isChecked: this.controls.value.some((control) => control.value.value === option.value),
+      option,
+    }));
+
     this.inputMultipleSelectComponentSubscription.add(
-      this.controls.valueChanges.pipe(startWith(null)).subscribe(() => {
-        this.setFilteredOptions();
+      this.controls.valueChanges.subscribe(() => {
+        this.filteredOptions.forEach((option) => {
+          option.isChecked = this.controls.value.some(
+            (control) => control.value.value === option.option.value,
+          );
+        });
+      }),
+    );
+
+    this.inputMultipleSelectComponentSubscription.add(
+      this.searchControl.valueChanges.pipe(startWith(null), debounceTime(300)).subscribe((searchTerm) => {
+        this.setFilteredOptions(searchTerm);
       }),
     );
   }
@@ -44,40 +67,49 @@ export class InputMultipleSelectComponent implements OnInit, OnDestroy {
     }
   }
 
+  private setFilteredOptions(searchTerm: string | null): void {
+    this.filteredOptions = this.options
+      .filter(({ label }) => {
+        if (searchTerm === null) {
+          return true;
+        }
+
+        return label.toLowerCase().includes(searchTerm.toLowerCase());
+      })
+      .map((option) => ({
+        isChecked: this.controls.value.some((control) => control.value.value === option.value),
+        option,
+      }));
+  }
+
   toggleDropdown(): void {
     if (this.controls.enabled) {
       this.isDropdownOpen = !this.isDropdownOpen;
     }
   }
 
-  private setFilteredOptions(): void {
-    this.filteredOptions = this.options
-      .filter(({ value }) => {
-        return this.controls.value.map((ctrl) => ctrl.value).every((opt) => opt.value !== value);
-      })
-      .map((option) => new SelectOption(option.rawData));
+  toggleOption(option: ICheckedOption): void {
+    option.isChecked = !option.isChecked;
 
-    if (this.filteredOptions.length === 0) {
-      this.isDropdownOpen = false;
+    if (option.isChecked) {
+      this.controls.patchValue([
+        ...this.controls.value,
+        new FormControl(option.option, { nonNullable: true }),
+      ]);
+    } else {
+      this.controls.patchValue(
+        this.controls.value.filter((control) => control.value.value !== option.option.value),
+      );
     }
   }
 
-  addOption(option: SelectOption): void {
-    this.controls.patchValue([...this.controls.value, new FormControl(option, { nonNullable: true })]);
-  }
+  toggleAllOptions(check?: boolean): void {
+    const toCheck = check === undefined ? !this.filteredOptions.every((option) => option.isChecked) : check;
 
-  removeOption(index: number): void {
-    if (this.controls.value[index].enabled) {
-      this.controls.patchValue(this.controls.value.filter((_, i) => i !== index));
+    if (toCheck) {
+      this.controls.patchValue(this.options.map((option) => new FormControl(option, { nonNullable: true })));
+    } else {
+      this.controls.patchValue([]);
     }
-  }
-
-  addAllOptions(): void {
-    this.controls.patchValue(this.options.map((option) => new FormControl(option, { nonNullable: true })));
-    this.isDropdownOpen = false;
-  }
-
-  removeAllOptions(): void {
-    this.controls.patchValue([]);
   }
 }

@@ -19,12 +19,8 @@ export class TabsComponent implements OnInit {
   @Input() selectedControl: FormControl<ITabOption | null> = new FormControl(this.options[0] ?? null);
 
   ngOnInit(): void {
-    console.log('options : ', this.options);
-    console.log('selectedControl : ', this.selectedControl.value);
-
     if (!this.selectedControl.value && this.options.length > 0) {
       this.selectedControl.patchValue(this.options[0]);
-      console.log('patched');
     }
   }
 

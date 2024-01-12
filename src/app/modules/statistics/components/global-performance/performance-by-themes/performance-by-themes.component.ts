@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { Subscription, combineLatest, map, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, map, of, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
@@ -22,11 +22,8 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
 
-  @Input() durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
-    nonNullable: true,
-  });
-
   tags: TagDtoApi[] = [];
+  selectedTags: TagDtoApi[] = [];
   tagsControl: FormControl<TagDtoApi[]> = new FormControl<TagDtoApi[]>([], { nonNullable: true });
   spiderChartDataStatus: PlaceholderDataStatus = 'loading';
   spiderChartOptions: any = {};
@@ -45,35 +42,34 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.tagStatsSubscription.add(
-      combineLatest([
-        this.tagsControl.valueChanges.pipe(startWith(this.tagsControl.value)),
-        this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
-      ])
+      this.tagsControl.valueChanges
+        .pipe(startWith(this.tagsControl.value))
         .pipe(
           tap(() => (this.spiderChartDataStatus = 'loading')),
-          switchMap(([selectedTags, duration]: [TagDtoApi[], ScoreDuration]) => {
+          switchMap((selectedTags) => {
             return combineLatest([
               this.tagsRestService.getTags(),
-              this.scoresRestService.getTagsStats(duration),
+              this.scoresRestService.getTagsStats(ScoreDuration.Year),
+              of(selectedTags),
             ]);
-            // .pipe(
-            //   map(([tags, tagStats]) => {
-            //     this.tags = tags;
-            //     return tagStats;
-            //   }),
-            //   map((tagStats) => tagStats.filter((t) => t.score && t.score >= 0)),
-            //   tap((tagStats) => {
-            //     this.tagsLeaderboard = tagStats.map((t) => ({ name: t.tag.name, score: t.score ?? 0 }));
-            //     this.tagsDataStatus = this.tagsLeaderboard.length === 0 ? 'noData' : 'good';
-            //   }),
-            //   map((tagStats) => tagStats.filter((tag) => selectedTags.includes(tag.tag))),
-            //   map((tagStats) => tagStats.sort((a, b) => a.tag.name.localeCompare(b.tag.name))),
-            // );
+          }),
+          map(([tags, tagStats, selectedTags]) => {
+            this.tags = tags;
+            this.selectedTags = selectedTags;
+            tagStats.filter((t) => t.score && t.score >= 0);
+            this.spiderChartDataStatus = tagStats.length === 0 ? 'noData' : 'good';
+            this.tagsLeaderboard = tagStats.map((t) => ({ name: t.tag.name, score: t.score ?? 0 }));
+            this.tagsDataStatus = this.tagsLeaderboard.length === 0 ? 'noData' : 'good';
+            return (
+              tagStats
+                // .filter((tag) => selectedTags.includes(tag.tag))
+                .splice(0, 6)
+                .sort((a, b) => a.tag.name.localeCompare(b.tag.name))
+            );
           }),
         )
         .subscribe((tagStats) => {
-          // this.createSpiderChart(tagStats);
-          // this.spiderChartDataStatus = tagStats.length === 0 ? 'noData' : 'good';
+          this.createSpiderChart(tagStats);
         }),
     );
   }

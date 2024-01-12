@@ -197,10 +197,9 @@
     </table>
     <alto-pagination
       class="mx-4 d-block"
-      [collectionSize]="membersTable.length"
-      (pageChange)="changeMembersTablePage($event)"
-      [pageSize]="membersTablePageSize"
-      [page]="membersTablePage"
+      [pageControl]="pageControl"
+      [itemsPerPage]="membersTablePageSize"
+      [itemsCount]="membersTable.length"
     ></alto-pagination>
   </div>
   <div class="nodata-placeholder text-center" noData>

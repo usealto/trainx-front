@@ -29,10 +29,6 @@ interface LeaderboardUser {
   styleUrls: ['./user-home.component.scss'],
 })
 export class UserHomeComponent implements OnInit, OnDestroy {
-  @Input() pageSize = 2;
-
-  page = 1;
-
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   user!: User;
@@ -57,7 +53,10 @@ export class UserHomeComponent implements OnInit, OnDestroy {
   });
   leaderboardUsers: LeaderboardUser[] | undefined = undefined;
 
-  userHomeComponentSubscription = new Subscription();
+  pageSize = 2;
+  // TODO : pagination is managed in the template, we need to subscribe and handle the page changes in a subscription
+  pageControl: FormControl<number> = new FormControl(1, { nonNullable: true });
+  private readonly userHomeComponentSubscription = new Subscription();
 
   constructor(
     private readonly guessesRestService: GuessesRestService,
@@ -155,9 +154,5 @@ export class UserHomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.userHomeComponentSubscription.unsubscribe();
-  }
-
-  paginateProgramRuns(page: number) {
-    this.page = page;
   }
 }

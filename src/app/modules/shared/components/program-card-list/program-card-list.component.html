@@ -41,7 +41,7 @@
   <div class="row mb-4">
     <div
       class="mb-4 col-4"
-      *ngFor="let prog of programsDisplay | slice : (page - 1) * pageSize : page * pageSize"
+      *ngFor="let prog of programsDisplay | slice : (pageControl.value - 1) * pageSize : pageControl.value * pageSize"
     >
       <alto-program-card
         [displayToggle]="displayToggle"
@@ -68,9 +68,9 @@
   </div>
 
   <alto-pagination
-    [collectionSize]="count"
-    [(page)]="page"
-    [pageSize]="pageSize"
+    [pageControl]="pageControl"
+    [itemsCount]="count"
+    [itemsPerPage]="pageSize"
     aria-label="Default pagination"
   ></alto-pagination>
 
@@ -103,9 +103,9 @@
       <div class="skeleton-panel" style="height: 226px"></div>
     </div>
     <alto-pagination
-    [collectionSize]="count"
-    [(page)]="page"
-    [pageSize]="pageSize"
+    [pageControl]="pageControl"
+    [itemsCount]="count"
+    [itemsPerPage]="pageSize"
     aria-label="Default pagination"
   ></alto-pagination>
   </div>

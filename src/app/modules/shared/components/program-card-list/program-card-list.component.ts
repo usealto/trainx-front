@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { ProgramDtoApi } from '@usealto/sdk-ts-angular';
 import { tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -13,8 +12,8 @@ import { AltoRoutes } from '../../constants/routes';
 import { PlaceholderDataStatus } from '../../models/placeholder.model';
 import { ScoresRestService } from '../../services/scores-rest.service';
 import { ScoresService } from '../../services/scores.service';
+import { FormControl } from '@angular/forms';
 
-@UntilDestroy()
 @Component({
   selector: 'alto-program-card-list',
   templateUrl: './program-card-list.component.html',
@@ -36,7 +35,7 @@ export class ProgramCardListComponent implements OnInit {
   programsProgress = new Map<string, number>();
   programsInvolvement = new Map<string, number>();
   programsMemberHaveValidatedCount = new Map<string, string>();
-  page = 1;
+  pageControl = new FormControl(1, { nonNullable: true });
   count = 0;
   pageSize = 3;
 

@@ -1,7 +1,7 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { QuestionStatsDtoApi, QuestionStatsTeamDtoApi } from '@usealto/sdk-ts-angular';
-import { switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -13,17 +13,19 @@ import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 
-@UntilDestroy()
 @Component({
   selector: 'alto-performance-questions-table',
   templateUrl: './performance-questions-table.component.html',
   styleUrls: ['./performance-questions-table.component.scss'],
 })
-export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
+export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
 
-  @Input() duration: ScoreDuration = ScoreDuration.Year;
+  // @Input() duration: ScoreDuration = ScoreDuration.Year;
+  @Input() durationControl: FormControl<ScoreDuration> = new FormControl(ScoreDuration.Year, {
+    nonNullable: true,
+  });
 
   questionFilters: QuestionFilters = {
     programs: [],
@@ -37,10 +39,12 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
   questionsDisplay: QuestionStatsDtoApi[] = [];
   paginatedQuestions: QuestionStatsDtoApi[] = [];
   questionsDataStatus: PlaceholderDataStatus = 'loading';
-  questionsPage = 1;
+  questionsPageControl = new FormControl(1, { nonNullable: true });
   questionsPageSize = 5;
 
-  scoreIsLoading = false;
+  scoreIsLoading = true;
+
+  private readonly performanceQuestionsTableComponentSubscription = new Subscription();
 
   constructor(
     public readonly teamStore: TeamStore,
@@ -50,13 +54,36 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
-    this.getQuestionsByDuration();
+    this.performanceQuestionsTableComponentSubscription.add(
+      this.durationControl.valueChanges
+        .pipe(
+          startWith(this.durationControl.value),
+          tap(() => (this.scoreIsLoading = true)),
+          switchMap((duration) => {
+            return combineLatest([
+              this.scoreRestService.getQuestionsStats(duration),
+              this.scoreRestService.getQuestionsStats(duration, true),
+            ]);
+          }),
+        )
+        .subscribe(([questionsStats, prevQuestionsStats]) => {
+          this.questions = questionsStats;
+          this.questionsDisplay = [...questionsStats];
+          this.changeQuestionsPage(this.questionsPageControl.value);
+
+          this.questionsPreviousPeriod = prevQuestionsStats;
+          this.scoreIsLoading = false;
+          this.getQuestionsFiltered();
+        }),
+    );
+
+    this.performanceQuestionsTableComponentSubscription.add(
+      this.questionsPageControl.valueChanges.subscribe((page) => this.changeQuestionsPage(page)),
+    );
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['duration']?.firstChange && changes['duration']?.currentValue) {
-      this.getQuestionsByDuration();
-    }
+  ngOnDestroy(): void {
+    this.performanceQuestionsTableComponentSubscription.unsubscribe();
   }
 
   getQuestionsFiltered(
@@ -89,27 +116,7 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
     this.changeQuestionsPage(1);
   }
 
-  getQuestionsByDuration() {
-    this.scoreIsLoading = true;
-    this.scoreRestService
-      .getQuestionsStats(this.duration as ScoreDuration)
-      .pipe(
-        tap((t) => {
-          this.questions = t;
-          this.questionsDisplay = t;
-          this.changeQuestionsPage(1);
-        }),
-        switchMap(() => this.scoreRestService.getQuestionsStats(this.duration, true)),
-        tap((t) => (this.questionsPreviousPeriod = t)),
-        tap(() => (this.scoreIsLoading = false)),
-        tap(() => this.getQuestionsFiltered()),
-        untilDestroyed(this),
-      )
-      .subscribe();
-  }
-
-  changeQuestionsPage(page: number) {
-    this.questionsPage = page;
+  private changeQuestionsPage(page: number) {
     this.paginatedQuestions = this.questionsDisplay.slice(
       (page - 1) * this.questionsPageSize,
       page * this.questionsPageSize,

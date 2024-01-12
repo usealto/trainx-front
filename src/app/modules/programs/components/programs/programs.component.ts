@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { QuestionSubmittedDtoApi, TagDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -56,7 +56,7 @@ export class ProgramsComponent implements OnInit, OnDestroy {
   //
   tags!: TagDtoApi[];
   paginatedTags!: TagDtoApi[];
-  tagsPage = 1;
+  tagsPageControl = new FormControl(1, { nonNullable: true });
   tagsCount = 0;
   tagsPageSize = 10;
   isTagsLoading = true;
@@ -94,6 +94,12 @@ export class ProgramsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.programs = (data[EResolvers.AppResolver] as IAppData).company.programs;
+
+    this.programsComponentSubscription.add(
+      this.tagsPageControl.valueChanges
+        .pipe(startWith(this.tagsPageControl.value))
+        .subscribe((page) => this.changeTagsPage(page, this.tags as TagDisplay[])),
+    );
 
     this.programsComponentSubscription.add(
       combineLatest([
@@ -188,7 +194,7 @@ export class ProgramsComponent implements OnInit, OnDestroy {
             contributors,
             search,
           }) as TagDisplay[];
-          this.changeTagsPage(this.tags);
+          // this.changeTagsPage(this.tags);
           this.filterTagsByScore(this.tags as TagDisplay[], this.tagFilters.score);
           this.isTagsLoading = false;
         }),
@@ -201,7 +207,7 @@ export class ProgramsComponent implements OnInit, OnDestroy {
     tags.forEach((tag) => (tag.score = this.getTagScore(tag.id)));
     tags = this.scoreService.filterByScore(tags, score as ScoreFilter, true);
 
-    this.changeTagsPage(tags);
+    // this.changeTagsPage(tags);
   }
 
   openTagForm(tag?: TagDtoApi) {
@@ -214,15 +220,9 @@ export class ProgramsComponent implements OnInit, OnDestroy {
     canvasRef.componentInstance.createdTag.pipe(tap(() => this.getTags())).subscribe();
   }
 
-  changeTagsPage(tags: TagDtoApi[]) {
-    if (this.tagsPage > Math.ceil(tags.length / this.tagsPageSize)) {
-      this.tagsPage = 1;
-    }
+  changeTagsPage(page: number, tags: TagDtoApi[]) {
     this.tagsCount = tags.length;
-    this.paginatedTags = tags.slice(
-      (this.tagsPage - 1) * this.tagsPageSize,
-      this.tagsPage * this.tagsPageSize,
-    );
+    this.paginatedTags = tags.slice((page - 1) * this.tagsPageSize, page * this.tagsPageSize);
   }
 
   resetFilters() {

@@ -1,24 +1,22 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { QuestionDtoApi } from '@usealto/sdk-ts-angular';
-import { map, switchMap, tap, take, filter } from 'rxjs';
+import { Subscription, filter, map, startWith, switchMap, take, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { QuestionDeleteModalComponent } from 'src/app/modules/shared/components/question-delete-modal/question-delete-modal.component';
 import { QuestionFormComponent } from 'src/app/modules/shared/components/question-form/question-form.component';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { Program } from '../../../../../models/program.model';
 import { QuestionDisplay, QuestionFilters } from '../../../models/question.model';
 import { ProgramsStore } from '../../../programs.store';
 import { QuestionsRestService } from '../../../services/questions-rest.service';
-import { Program } from '../../../../../models/program.model';
 
-@UntilDestroy()
 @Component({
   selector: 'alto-programs-questions',
   templateUrl: './programs-questions.component.html',
@@ -28,10 +26,12 @@ export class ProgramsQuestionsComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+
+  @Input() programs: Program[] = [];
   //
   questions: QuestionDisplay[] = [];
   paginatedQuestions: QuestionDisplay[] = [];
-  questionsPage = 1;
+  questionsPageControl = new FormControl(1, { nonNullable: true });
   questionsCount = 0;
   questionsPageSize = 10;
   questionsScore = new Map<string, number>();
@@ -40,7 +40,7 @@ export class ProgramsQuestionsComponent implements OnInit {
   selectedItems: QuestionDtoApi[] = [];
   questionListStatus: PlaceholderDataStatus = 'loading';
 
-  @Input() programs: Program[] = [];
+  private readonly programsQuestionsComponentSubscription = new Subscription();
 
   constructor(
     private readonly questionsService: QuestionsRestService,
@@ -51,6 +51,14 @@ export class ProgramsQuestionsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.programsQuestionsComponentSubscription.add(
+      this.questionsPageControl.valueChanges
+        .pipe(startWith(this.questionsPageControl.value))
+        .subscribe((page) => {
+          this.questionPageChange(page);
+        }),
+    );
+
     this.programsStore.questionsInitList.value$
       .pipe(
         filter((x) => !!x),
@@ -123,12 +131,12 @@ export class ProgramsQuestionsComponent implements OnInit {
       .subscribe();
   }
 
-  questionPageChange() {
+  questionPageChange(page: number) {
     this.questionsCount = this.questions.length;
 
     this.paginatedQuestions = this.questions.slice(
-      (this.questionsPage - 1) * this.questionsPageSize,
-      this.questionsPage * this.questionsPageSize,
+      (page - 1) * this.questionsPageSize,
+      page * this.questionsPageSize,
     );
   }
 
@@ -143,7 +151,6 @@ export class ProgramsQuestionsComponent implements OnInit {
         tap(() => {
           this.getQuestions();
         }),
-        untilDestroyed(this),
       )
       .subscribe();
   }
@@ -159,7 +166,6 @@ export class ProgramsQuestionsComponent implements OnInit {
           modalRef.close();
           this.getQuestions();
         }),
-        untilDestroyed(this),
       )
       .subscribe();
   }

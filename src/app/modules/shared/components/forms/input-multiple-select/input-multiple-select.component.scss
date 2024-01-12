@@ -2,7 +2,26 @@
   display: block;
 
   .dropdown-input {
-    min-height: 3.167rem;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 3.167rem;
+    border-radius: 3.167rem;
+    cursor: pointer;
+  }
+
+  .title-container {
+    padding-left: 15px;
+    padding-right: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .5rem;
+
+    .title {
+      font-weight: 500;
+    }
   }
 
   .dropdown-menu {
@@ -20,6 +39,11 @@
 
     .dropdown-item {
       padding: 8px 10px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
 
       &:active {
         background-color: var(--gray-50);
@@ -29,6 +53,7 @@
 }
 
 .alto-badge {
-  border: solid 2px #ffff
+  background-color: var(--bs-primary);
+  color: white;
 }
 

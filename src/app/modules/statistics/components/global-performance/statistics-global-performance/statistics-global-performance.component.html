@@ -14,7 +14,7 @@
   </div>
 </div>
 
-<alto-performance-by-teams [duration]="durationControl.value" [company]="company"></alto-performance-by-teams>
+<alto-performance-by-teams [durationControl]="durationControl" [company]="company"></alto-performance-by-teams>
 <hr class="my-7">
 
 <div class="mb-5 position-relative">
@@ -25,15 +25,9 @@
     </h2>
     <p class="mb-4 alto-grey">{{ I18ns.statistics.globalPerformance.perThemePerformance.subtitle }}</p>
   </div>
-  <div class="col-6 text-end">
-    <alto-time-picker
-      class="time-picker2"
-      [durationControl]="durationControl"
-    ></alto-time-picker>
-  </div>
 </div>
 
-<alto-performance-by-themes [durationControl]="durationControl"></alto-performance-by-themes>
+<alto-performance-by-themes></alto-performance-by-themes>
 <hr class="my-7">
 
 <div class="mb-4 position-relative">
@@ -63,4 +57,4 @@
   <p class="mb-4 alto-grey">{{ I18ns.statistics.globalPerformance.questionsTable.subtitle }}</p>
 </div>
 
-<alto-performance-questions-table [duration]="durationControl.value"></alto-performance-questions-table>
+<alto-performance-questions-table [durationControl]="durationControl"></alto-performance-questions-table>

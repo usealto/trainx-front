@@ -58,11 +58,11 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
   membersTable: DataForTable[] = [];
   membersTableSearch = '';
   paginatedMembersTable: DataForTable[] = [];
-  membersTablePage = 1;
   membersTablePageSize = 5;
   membersTableStatus: PlaceholderDataStatus = 'loading';
   hasConnector = false;
 
+  pageControl: FormControl<number> = new FormControl(1, { nonNullable: true });
   private teamEngagementComponentSubscription = new Subscription();
 
   constructor(
@@ -110,6 +110,12 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
             this.createContributionsChart(commentsScores, submitedCommentsScores, duration);
           },
         ),
+    );
+
+    this.teamEngagementComponentSubscription.add(
+      this.pageControl.valueChanges.subscribe((page) => {
+        this.changeMembersTablePage(page);
+      }),
     );
   }
 
@@ -234,8 +240,7 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
     } as DataForTable;
   }
 
-  changeMembersTablePage(page: number): void {
-    this.membersTablePage = page;
+  private changeMembersTablePage(page: number): void {
     this.paginatedMembersTable = this.membersTable.slice(
       (page - 1) * this.membersTablePageSize,
       page * this.membersTablePageSize,

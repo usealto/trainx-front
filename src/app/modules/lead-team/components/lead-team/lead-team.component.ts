@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { UserStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { combineLatest, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, switchMap, tap } from 'rxjs';
 import { IAppData } from 'src/app/core/resolvers';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -28,6 +27,7 @@ import { Program } from '../../../../models/program.model';
 import { ProgramsRestService } from '../../../programs/services/programs-rest.service';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
+import { FormControl } from '@angular/forms';
 
 interface TeamDisplay {
   id: string;
@@ -39,14 +39,13 @@ interface TeamDisplay {
   questionsPushedCount?: number;
 }
 
-@UntilDestroy()
 @Component({
   selector: 'alto-lead-team',
   templateUrl: './lead-team.component.html',
   styleUrls: ['./lead-team.component.scss'],
   providers: [ReplaceInTranslationPipe],
 })
-export class LeadTeamComponent implements OnInit {
+export class LeadTeamComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
 
@@ -59,7 +58,7 @@ export class LeadTeamComponent implements OnInit {
   teamsStats: TeamStats[] = [];
   paginatedTeams: TeamDisplay[] = [];
   teamsDataStatus: PlaceholderDataStatus = 'loading';
-  teamsPage = 1;
+  teamsPageControl = new FormControl(1, { nonNullable: true });
   teamsPageSize = 5;
   teamsScores: TeamDisplay[] = [];
   // Users
@@ -70,7 +69,7 @@ export class LeadTeamComponent implements OnInit {
   users: UserStatsDtoApi[] = [];
   previousUsersStats: UserStatsDtoApi[] = [];
   paginatedUsers: UserStatsDtoApi[] = [];
-  usersPage = 1;
+  usersPageControl = new FormControl(1, { nonNullable: true });
   usersPageSize = 5;
   filteredUsers: UserStatsDtoApi[] = [];
   usersTotalQuestions = 0;
@@ -82,6 +81,8 @@ export class LeadTeamComponent implements OnInit {
 
   rawUsers: User[] = [];
   teamNames: string[] = [];
+
+  private readonly leadTeamComponentSubscription = new Subscription();
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
@@ -99,85 +100,96 @@ export class LeadTeamComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.company = (data[EResolvers.AppResolver] as IAppData).company;
     this.rawUsers = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
 
-    this.store
-      .select(FromRoot.selectCompany)
-      .pipe(untilDestroyed(this))
-      .subscribe({
-        next: ({ data: company }) => {
-          this.company = company;
-          this.teams = this.company.teams;
-          console.log('hello hello team length:', this.teams.length);
-          this.programs = this.company.programs;
-          this.teamNames = this.teams.map((team) => team.name);
-          this.teamsStats = this.company.getStatsByPeriod(ScoreDuration.Month, false);
-          this.teamsScores = this.teams.map((team) => {
-            const matchingStats = this.teamsStats.find((teamStat) => teamStat.teamId === team.id);
-            if (!matchingStats) {
-              return {
-                id: team.id,
-                name: team.name,
-                team: team,
-                score: 0,
-                totalGuessesCount: 0,
-                validGuessesCount: 0,
-                questionsPushedCount: 0,
-              } as TeamDisplay;
-            }
+    this.teams = this.company.teams;
+    this.programs = this.company.programs;
+    this.teamNames = this.teams.map((team) => team.name);
+    this.teamsStats = this.company.getStatsByPeriod(ScoreDuration.Month, false);
+    this.teamsScores = this.teams.map((team) => {
+      const matchingStats = this.teamsStats.find((teamStat) => teamStat.teamId === team.id);
+      if (!matchingStats) {
+        return {
+          id: team.id,
+          name: team.name,
+          team: team,
+          score: 0,
+          totalGuessesCount: 0,
+          validGuessesCount: 0,
+          questionsPushedCount: 0,
+        } as TeamDisplay;
+      }
 
-            return {
-              id: team.id,
-              name: team.name,
-              team: team,
-              score: matchingStats.score,
-              totalGuessesCount: matchingStats.totalGuessesCount,
-              validGuessesCount: matchingStats.validGuessesCount,
-              questionsPushedCount: matchingStats.questionsPushedCount,
-            } as TeamDisplay;
-          });
-          this.loadData();
-        },
-      });
+      return {
+        id: team.id,
+        name: team.name,
+        team: team,
+        score: matchingStats.score,
+        totalGuessesCount: matchingStats.totalGuessesCount,
+        validGuessesCount: matchingStats.validGuessesCount,
+        questionsPushedCount: matchingStats.questionsPushedCount,
+      } as TeamDisplay;
+    });
+
+    this.leadTeamComponentSubscription.add(
+      combineLatest([
+        this.scoreRestService.getUsersStats(ScoreDuration.Month),
+        this.scoreRestService.getUsersStats(ScoreDuration.Month, true),
+      ])
+        .pipe(
+          tap(([usersStats, previousUsersStats]) => {
+            this.users = usersStats;
+            this.usersTotalQuestions = usersStats.reduce(
+              (prev, curr) => prev + (curr.totalGuessesCount || 0),
+              0,
+            );
+
+            this.usersTotalQuestionsProgression = this.scoreService.getProgression(
+              this.usersTotalQuestions,
+              previousUsersStats.reduce((prev, curr) => prev + (curr.totalGuessesCount || 0), 0),
+            );
+            this.previousUsersStats = previousUsersStats;
+            this.absoluteUsersCount = this.users.length;
+
+            this.users.forEach((user) => {
+              const member = this.teams.find((team) => team.id === user.teamId);
+              this.usersMap.set(user.id, member ? member.name : '');
+            });
+
+            this.changeTeamsPage(1);
+            this.filteredUsers = this.users;
+            this.changeUsersPage(this.users, 1);
+          }),
+        )
+        .subscribe(),
+    );
+
+    this.leadTeamComponentSubscription.add(
+      this.teamsPageControl.valueChanges.subscribe((page) => {
+        this.changeTeamsPage(page);
+      }),
+    );
+
+    this.leadTeamComponentSubscription.add(
+      this.usersPageControl.valueChanges.subscribe((page) => {
+        this.changeUsersPage(this.filteredUsers, page);
+      }),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.leadTeamComponentSubscription.unsubscribe();
   }
 
   loadData() {
-    combineLatest([
+    return combineLatest([
       this.scoreRestService.getUsersStats(ScoreDuration.Month),
       this.scoreRestService.getUsersStats(ScoreDuration.Month, true),
-    ])
-      .pipe(
-        tap(([usersStats, previousUsersStats]) => {
-          this.users = usersStats;
-          this.usersTotalQuestions = usersStats.reduce(
-            (prev, curr) => prev + (curr.totalGuessesCount || 0),
-            0,
-          );
-
-          this.usersTotalQuestionsProgression = this.scoreService.getProgression(
-            this.usersTotalQuestions,
-            previousUsersStats.reduce((prev, curr) => prev + (curr.totalGuessesCount || 0), 0),
-          );
-          this.previousUsersStats = previousUsersStats;
-          this.absoluteUsersCount = this.users.length;
-
-          this.users.forEach((user) => {
-            const member = this.teams.find((team) => team.id === user.teamId);
-            this.usersMap.set(user.id, member ? member.name : '');
-          });
-        }),
-        tap(() => this.changeTeamsPage(1)),
-        tap(() => {
-          this.filteredUsers = this.users;
-          this.changeUsersPage(this.users, 1);
-        }),
-        untilDestroyed(this),
-      )
-      .subscribe();
+    ]).subscribe();
   }
 
   changeTeamsPage(page: number) {
-    this.teamsPage = page;
     this.paginatedTeams = this.teamsScores.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
     this.teamsDataStatus = this.paginatedTeams.length === 0 ? 'noData' : 'good';
   }
@@ -212,7 +224,6 @@ export class LeadTeamComponent implements OnInit {
   }
 
   changeUsersPage(users: UserStatsDtoApi[], page: number) {
-    this.usersPage = page;
     this.usersCount = users.length;
     this.paginatedUsers = this.filteredUsers.slice(
       (page - 1) * this.usersPageSize,

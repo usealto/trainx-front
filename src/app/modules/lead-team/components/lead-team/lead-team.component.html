@@ -95,10 +95,9 @@
       </table>
       <alto-pagination
         class="mx-4 d-block"
-        [collectionSize]="teams.length"
-        (pageChange)="changeTeamsPage($event)"
-        [pageSize]="teamsPageSize"
-        [page]="teamsPage"
+        [pageControl]="teamsPageControl"
+        [itemsCount]="teams.length"
+        [itemsPerPage]="teamsPageSize"
       ></alto-pagination>
     </div>
 
@@ -247,10 +246,9 @@
 
     <alto-pagination
       class="mx-4 d-block"
-      [collectionSize]="usersCount"
-      (pageChange)="changeUsersPage(filteredUsers, $event)"
-      [pageSize]="usersPageSize"
-      [page]="usersPage"
+      [pageControl]="usersPageControl"
+      [itemsCount]="usersCount"
+      [itemsPerPage]="usersPageSize"
     ></alto-pagination>
   </div>
 

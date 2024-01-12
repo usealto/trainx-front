@@ -40,6 +40,7 @@
 
 <alto-placeholder-manager [status]="guessesLeaderboardDataStatus">
   <alto-leaderboard
+    *ngIf="guessesLeaderboardDataStatus === 'good'"
     [config]="['count', 'progress']"
     [data]="leaderboard"
     [title]="I18ns.statistics.globalEngagement.leaderboard.title"
@@ -206,10 +207,9 @@
     </table>
     <alto-pagination
       class="mx-4 d-block"
-      [collectionSize]="teamsDisplay.length"
-      (pageChange)="changeTeamsPage($event)"
-      [pageSize]="teamsPageSize"
-      [page]="teamsPage"
+      [pageControl]="pageControl"
+      [itemsCount]="teamsDisplay.length"
+      [itemsPerPage]="teamsPageSize"
     ></alto-pagination>
   </div>
 

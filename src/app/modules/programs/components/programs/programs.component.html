@@ -127,10 +127,9 @@
       </table>
       <alto-pagination
         class="mx-4 d-block"
-        [collectionSize]="tagsCount"
-        [(page)]="tagsPage"
-        (pageChange)="getTags()"
-        [pageSize]="tagsPageSize"
+        [pageControl]="tagsPageControl"
+        [itemsCount]="tagsCount"
+        [itemsPerPage]="tagsPageSize"
         aria-label="Default pagination"
       ></alto-pagination>
     </div>

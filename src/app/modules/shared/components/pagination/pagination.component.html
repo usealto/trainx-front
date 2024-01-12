@@ -1,26 +1,20 @@
-<ngb-pagination
-  (pageChange)="paginate($event)"
-  [page]="page"
-  [pageSize]="pageSize"
-  [collectionSize]="collectionSize"
->
-  <ng-template ngbPaginationPrevious let-disabled="disabled">
-    <button [disabled]="disabled" class="btn btn-outline-secondary">
-      <i class="bi bi-arrow-left-short"></i><span>{{ I18ns.shared.previous }}</span>
-    </button>
-  </ng-template>
+<div class="pagination">
+  <button [disabled]="pageControl.value === 1"
+  class="btn btn-outline-secondary"
+  (click)="paginate(pageControl.value - 1)">
+    <i class="bi bi-arrow-left-short"></i><span>{{ I18ns.shared.previous }}</span>
+  </button>
 
-  <ng-template ngbPaginationPages let-page let-pages="pages">
-    <div class="ngb-custom-pages-item mt-3" *ngIf="collectionSize > pageSize">
-      <span id="paginationDescription" class="col-form-label text-nowrap numbers">
-        {{ page + ' ' + I18ns.shared.pagination.on + ' ' + lastPage }}
-      </span>
-    </div>
-  </ng-template>
-  <ng-template ngbPaginationNext let-disabled="disabled">
-    <button [disabled]="disabled" class="btn btn-outline-secondary">
-      <span>{{ I18ns.shared.next }}</span
-      ><i class="bi bi-arrow-right-short"></i>
-    </button>
-  </ng-template>
-</ngb-pagination>
+  <div *ngIf="itemsCount > itemsPerPage">
+    <span class="col-form-label text-nowrap numbers">
+      {{ pageControl.value + ' / ' + pageCount }}
+    </span>
+  </div>
+
+  <button [disabled]="pageControl.value === pageCount"
+  class="btn btn-outline-secondary"
+  (click)="paginate(pageControl.value + 1)">
+    <span>{{ I18ns.shared.next }}</span
+    ><i class="bi bi-arrow-right-short"></i>
+  </button>
+</div>

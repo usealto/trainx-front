@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { filter, switchMap, tap } from 'rxjs';
+import { Subscription, filter, map, startWith, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -21,6 +21,7 @@ import { ToastService } from '../../../../core/toast/toast.service';
 import { Team } from '../../../../models/team.model';
 import { IUser, User } from '../../../../models/user.model';
 import { AddUsersComponent } from './add-users/add-users.component';
+import { FormControl } from '@angular/forms';
 
 @UntilDestroy()
 @Component({
@@ -29,7 +30,7 @@ import { AddUsersComponent } from './add-users/add-users.component';
   styleUrls: ['./settings-users.component.scss'],
   providers: [ReplaceInTranslationPipe],
 })
-export class SettingsUsersComponent implements OnInit {
+export class SettingsUsersComponent implements OnInit, OnDestroy {
   userFilters: UserFilters = { search: '' };
 
   I18ns = I18ns;
@@ -43,13 +44,15 @@ export class SettingsUsersComponent implements OnInit {
   paginatedUsers: User[] = [];
   usersDisplay: User[] = [];
   usersPageSize = 10;
-  usersPage = 1;
+  usersPageControl = new FormControl(1, { nonNullable: true });
   paginatedAdmins: User[] = [];
   adminsDisplay: User[] = [];
   adminsPageSize = 5;
-  adminsPage = 1;
+  adminsPageControl = new FormControl(1, { nonNullable: true });
 
   usedLicensesCount = 0;
+
+  private readonly settingsUsersComponentSubscription = new Subscription();
 
   constructor(
     private readonly userRestService: UsersRestService,
@@ -69,17 +72,32 @@ export class SettingsUsersComponent implements OnInit {
     this.company = (data[EResolvers.AppResolver] as IAppData).company;
     this.teams = this.company.teams;
 
-    this.store
-      .select(FromRoot.selectUsers)
-      .pipe(untilDestroyed(this))
-      .subscribe({
-        next: ({ data: users }) => {
-          this.users = Array.from(users.values());
+    this.settingsUsersComponentSubscription.add(
+      this.store
+        .select(FromRoot.selectUsers)
+        .pipe(tap(({ data: userById }) => (this.users = Array.from(userById.values()))))
+        .subscribe(() => {
           this.displayAdmins();
           this.displayUsers();
           this.setUsedLicensesCount();
-        },
-      });
+        }),
+    );
+
+    this.settingsUsersComponentSubscription.add(
+      this.adminsPageControl.valueChanges
+        .pipe(startWith(this.adminsPageControl.value))
+        .subscribe((page) => this.changeAdminsPage(page)),
+    );
+
+    this.settingsUsersComponentSubscription.add(
+      this.usersPageControl.valueChanges
+        .pipe(startWith(this.usersPageControl.value))
+        .subscribe((page) => this.changeUsersPage(page)),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.settingsUsersComponentSubscription.unsubscribe();
   }
 
   toggleUserLicense(user: User): void {
@@ -196,18 +214,14 @@ export class SettingsUsersComponent implements OnInit {
   }
 
   changeUsersPage(page: number): void {
-    this.usersPage = page;
     this.paginatedUsers = this.usersDisplay.slice((page - 1) * this.usersPageSize, page * this.usersPageSize);
-    return;
   }
 
   changeAdminsPage(page: number): void {
-    this.adminsPage = page;
     this.paginatedAdmins = this.adminsDisplay.slice(
       (page - 1) * this.adminsPageSize,
       page * this.adminsPageSize,
     );
-    return;
   }
 
   openUserEditionForm(user: User) {

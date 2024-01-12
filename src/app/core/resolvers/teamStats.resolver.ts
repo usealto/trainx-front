@@ -15,9 +15,7 @@ export interface ITeamStatsData {
 export const teamStatsResolver: ResolveFn<ITeamStatsData> = () => {
   const store = inject<Store<FromRoot.AppState>>(Store<FromRoot.AppState>);
   const scoresRest = inject(ScoresRestService);
-  console.log('teamStatsResolver');
 
-  //todo, force update if timestamp stat is ok but company.teams.stats is empty
   return store.select(FromRoot.selectTeamsStatsTimestamp).pipe(
     switchMap((timestamp) => {
       if (timestamp === null || timestamp === undefined || Date.now() - timestamp.getTime() > 60000) {

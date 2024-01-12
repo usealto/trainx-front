@@ -111,9 +111,8 @@
   </table>
   <alto-pagination
     class="mx-4 d-block"
-    [collectionSize]="data.length"
-    [pageSize]="pageSize"
-    [page]="page"
-    (pageChange)="paginate($event)"
+    [pageControl]="pageControl"
+    [itemsCount]="displayedData.length"
+    [itemsPerPage]="pageSize"
   ></alto-pagination>
 </div>

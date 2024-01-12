@@ -155,10 +155,9 @@
       </table>
       <alto-pagination
         class="mx-4 d-block"
-        [collectionSize]="adminsDisplay.length"
-        [(page)]="adminsPage"
-        (pageChange)="changeAdminsPage($event)"
-        [pageSize]="adminsPageSize"
+        [pageControl]="adminsPageControl"
+        [itemsCount]="adminsDisplay.length"
+        [itemsPerPage]="adminsPageSize"
       ></alto-pagination>
     </div>
   </div>
@@ -326,10 +325,9 @@
 
   <alto-pagination
     class="mx-4 d-block"
-    [collectionSize]="usersDisplay.length"
-    [(page)]="usersPage"
-    (pageChange)="changeUsersPage($event)"
-    [pageSize]="usersPageSize"
+    [pageControl]="usersPageControl"
+    [itemsCount]="usersDisplay.length"
+    [itemsPerPage]="usersPageSize"
   ></alto-pagination>
 </div>
 <ng-template #nouser>

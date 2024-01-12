@@ -278,6 +278,12 @@ h2 {
   animation: 5s shine linear infinite;
 }
 
+.hover-red {
+  &:hover {
+    color: var(--error-600);
+  }
+}
+
 @keyframes shine {
   to {
     background-position-x: -200%;
