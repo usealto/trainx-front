@@ -26,13 +26,6 @@
     </h2>
     <p class="mb-4 alto-grey">{{ I18ns.statistics.globalPerformance.perThemePerformance.subtitle }}</p>
   </div>
-  <div class="col-6 text-end">
-    <alto-time-picker
-      class="time-picker2"
-      [duration]="duration"
-      (durationSelected)="updateTimePicker($event)"
-    ></alto-time-picker>
-  </div>
 </div>
 
 <alto-performance-by-themes [duration]="duration"></alto-performance-by-themes>

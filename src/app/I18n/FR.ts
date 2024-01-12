@@ -422,9 +422,9 @@ export const FR = {
           tags: 'Tags',
         },
         spiderChart: {
-          title: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
-          subtitle: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
-          global: 'Score de vos équipes',
+          title: 'Évolution du niveau de maîtrise',
+          subtitle: "Évolution du niveau moyen de l'entreprise par tag.",
+          global: 'Score global',
           placeholders: {
             noData: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
             notEnoughTags: 'Vous devez avoir créé au moins 3 tags.',
@@ -580,8 +580,9 @@ export const FR = {
         chartTitle: 'Évolution du niveau de maîtrise',
         chartSubtitle: 'Évolution du niveau moyen de l’équipe par tag.',
         tagFilter: 'Tags',
-        spiderChartLabel: "Score de l'équipe",
-        leaderboardTitle: 'Classement par thème',
+        teamScore: "Score de l'équipe",
+        globalScore: 'Score global',
+        leaderboardTitle: 'Évolution du niveau moyen de l’équipe par tag.',
         leaderboardSubtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
       },
       members: {
@@ -633,8 +634,8 @@ export const FR = {
             title: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
           },
           spiderChart: {
-            title: 'Niveau de maîtrise par thématiques',
-            subtitle: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
+            title: 'Évolution du niveau de maîtrise',
+            subtitle: 'Évolution du niveau moyen de l’utilisateur par tag.',
             placeholder: {
               empty: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
               lessThan3Tags: 'Vous devez sélectionner au moins 3 tags.',

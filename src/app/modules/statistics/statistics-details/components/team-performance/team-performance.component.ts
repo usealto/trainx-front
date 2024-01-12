@@ -94,9 +94,14 @@ export class TeamPerformanceComponent implements OnInit {
     );
     this.selectedMembers = this.members.slice(0, 1);
 
-    this.tagsRestService.getTags().subscribe((tags) => {
-      this.tags = tags;
-      this.selectedTags = tags.slice(0, 6);
+    combineLatest([
+      this.tagsRestService.getTags(),
+      this.scoresRestService.getTagsStats(ScoreDuration.Trimester, false, this.teamId),
+    ])
+    .subscribe(([tags, tagStats]) => {
+      tagStats = tagStats.filter((t) => t.score && t.score >= 0);
+      this.tags = tags.filter((t) => tagStats.some((ts) => ts.tag.id === t.id));
+      this.selectedTags = this.tags.slice(0, 6);
       this.loadPage();
     });
   }
@@ -201,32 +206,41 @@ export class TeamPerformanceComponent implements OnInit {
 
   getTagsData(duration: ScoreDuration): void {
     this.tagsLeaderboardStatus = 'loading';
-    this.scoresRestService
-      .getTagsStats(duration, false, this.teamId)
+    combineLatest([
+      this.scoresRestService
+      .getTagsStats(duration, false, this.teamId),
+      this.scoresRestService.getTagsStats(duration, true)
+    ])
       .pipe(
-        map((tagStats) => tagStats.filter((t) => t.score && t.score >= 0)),
-        tap((res) => {
-          this.tagsLeaderboard = res.map((r) => ({
+        map(([teamTagStats, globalTagStats]) => {
+          return [
+            teamTagStats.filter((t) => ( t.score && t.score >= 0 )),
+            globalTagStats.filter((t) => ( t.score && t.score >= 0 )),
+          ];
+        }),
+        tap(([teamTagStats, globalTagStats]) => {
+          this.tagsLeaderboard = teamTagStats.map((r) => ({
             name: r.tag.name,
             score: r.score ?? 0,
           }));
           this.tagsLeaderboardStatus = this.tagsLeaderboard.length > 0 ? 'good' : 'noData';
         }),
       )
-      .subscribe((tagStats) => {
+      .subscribe(([teamTagStats, globalTagStats]) => {
         if (this.selectedTags.length) {
-          tagStats = tagStats.filter((tagStats) => this.selectedTags.some((si) => si.id === tagStats.tag.id));
+          teamTagStats = teamTagStats.filter((tagStat) => this.selectedTags.some((si) => si.id === tagStat.tag.id));
+          globalTagStats = globalTagStats.filter((tagStat) => this.selectedTags.some((si) => si.id === tagStat.tag.id));
         }
-        this.createSpiderChart(tagStats);
+        this.createSpiderChart(teamTagStats, globalTagStats);
         this.spiderChartDataStatus = this.tagsLeaderboard.length > 0 ? 'good' : 'noData';
       });
   }
 
-  createSpiderChart(tagStats: TagStatsDtoApi[]) {
+  createSpiderChart(teamTagStats: TagStatsDtoApi[], globalTagStats: TagStatsDtoApi[]) {
     this.spiderChartOptions = {
-      color: ['#475467'],
+      color: ['#475467', '#FF917C'],
       radar: {
-        indicator: tagStats.map((t) => {
+        indicator: teamTagStats.map((t) => {
           return { name: t.tag.name, max: 100 };
         }),
         radius: '70%',
@@ -240,12 +254,25 @@ export class TeamPerformanceComponent implements OnInit {
           type: 'radar',
           data: [
             {
-              value: tagStats.map((t) => (t.score ? Math.round((t.score * 10000) / 100) : 0)),
-              name: I18ns.statistics.team.perThemes.spiderChartLabel,
+              value: globalTagStats.map((t) => (t.score ? Math.round((t.score * 10000) / 100) : 0)),
+              name: I18ns.statistics.team.perThemes.globalScore,
               Symbol: 'rect',
               SymbolSize: 12,
               lineStyle: {
                 type: 'dashed',
+              },
+            },
+          ],
+        },
+        {
+          type: 'radar',
+          data: [
+            {
+              value: teamTagStats.map((t) => (t.score ? Math.round((t.score * 10000) / 100) : 0)),
+              name: I18ns.statistics.team.perThemes.teamScore,
+              areaStyle: {
+                color: 'rgba(255, 145, 124, 0.6)',
+                offset: 0,
               },
               label: {
                 show: true,
