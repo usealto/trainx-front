@@ -45,3 +45,5 @@ cypress/screenshots
 cypress/videos
 
 documentation.json
+# Sentry Config File
+.sentryclirc

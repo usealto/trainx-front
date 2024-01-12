@@ -1,7 +1,8 @@
-import { ErrorHandler, Injectable, isDevMode } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
+import { SentryErrorHandler } from '@sentry/angular-ivy';
 
 @Injectable()
-export class AppErrorHandler extends ErrorHandler {
+export class AppErrorHandler extends SentryErrorHandler {
   constructor() {
     super();
   }
