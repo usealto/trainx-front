@@ -6,10 +6,11 @@
     "start": "ng serve --host=0.0.0.0",
     "start:hmr": "ng serve --hmr",
     "prebuild:preprod": "node build-time.js",
-    "build:preprod": "ng build --configuration preprod",
+    "build:preprod": "ng build --configuration preprod && npm run sentry:sourcemaps",
     "build:sandbox": "ng build --configuration sandbox",
     "prebuild": "node build-time.js",
     "build": "ng build --configuration production",
+    "build:prod": "npm run build && npm run sentry:sourcemaps",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test-ci": "ng test --karma-config=karma-ci.conf.js --no-progress",
@@ -22,7 +23,8 @@
     "build-storybook": "ng run assessment-front:build-storybook",
     "compodoc:build": "compodoc -p tsconfig.doc.json",
     "compodoc:build-and-serve": "compodoc -p tsconfig.doc.json -s",
-    "compodoc:serve": "compodoc -s"
+    "compodoc:serve": "compodoc -s",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org alto-w0 --project trainx-front ./dist && sentry-cli sourcemaps upload --org alto-w0 --project trainx-front ./dist"
   },
   "private": true,
   "dependencies": {
@@ -41,6 +43,8 @@
     "@ngneat/until-destroy": "^9.2.3",
     "@ngrx/store": "15.2",
     "@popperjs/core": "^2.11.6",
+    "@sentry/angular-ivy": "^7.93.0",
+    "@sentry/cli": "^2.25.0",
     "@usealto/sdk-ts-angular": "^1.0.202312061105-dev",
     "bootstrap": "^5.3.0",
     "bootstrap-icons": "^1.10.5",
