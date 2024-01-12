@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/angular-ivy';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, ErrorHandler, LOCALE_ID, NgModule, isDevMode } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -30,6 +31,7 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { SharedModule } from './modules/shared/shared.module';
+import { Router } from '@angular/router';
 @NgModule({
   declarations: [
     AppComponent,
@@ -82,6 +84,10 @@ import { SharedModule } from './modules/shared/shared.module';
   ],
   providers: [
     {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthHttpInterceptor,
       multi: true,
@@ -109,7 +115,7 @@ import { SharedModule } from './modules/shared/shared.module';
       provide: APP_INITIALIZER,
       multi: true,
       useFactory: localeInitializer,
-      deps: [LOCALE_ID],
+      deps: [LOCALE_ID, Sentry.TraceService],
     },
   ],
   bootstrap: [AppComponent],
