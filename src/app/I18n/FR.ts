@@ -141,13 +141,13 @@ export const FR = {
     },
     leaderboard: {
       teams: {
-        title: 'Niveau de connaissance de vos équipes',
-        subtitle: 'Classement selon le taux de bonnes réponses.',
+        title: 'Classement de vos équipes',
+        subtitle: 'Aperçu du classement selon le taux de bonnes réponses.',
         placeholder: 'Envie de découvrir le niveau de connaissance de vos équipes ?',
       },
       users: {
-        title: 'Niveau de connaissance de vos collaborateurs',
-        subtitle: 'Classement selon le taux de bonnes réponses.',
+        title: 'Classement de vos collaborateurs',
+        subtitle: 'Aperçu du classement selon le taux de bonnes réponses.',
         placeholder: 'Envie de découvrir le niveau de connaissance de vos collaborateurs ?',
       },
     },
@@ -407,7 +407,7 @@ export const FR = {
           placeholderSubtitle: 'Les équipes s’activent pour fournir les premiers résultats !',
         },
         leaderboard: {
-          title: 'Classement de mes équipes',
+          title: 'Classement de vos équipes',
           subtitle: 'Aperçu du niveau de maîtrise de vos équipes.',
           top: 'Top',
           flop: 'Flop',
@@ -422,8 +422,8 @@ export const FR = {
           tags: 'Tags',
         },
         spiderChart: {
-          title: 'Évolution du niveau de maîtrise',
-          subtitle: "Évolution du niveau moyen de l'entreprise par tag.",
+          title: 'Aperçu des thématiques',
+          subtitle: "Évaluation du niveau moyen de l'entreprise sur les 12 derniers mois.",
           global: 'Score global',
           placeholders: {
             noData: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
@@ -448,7 +448,7 @@ export const FR = {
           },
         },
         control: {
-          title: 'Niveau de maîtrise des thématiques',
+          title: 'Classement des thématiques',
           subtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
           placeholder: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
         },
@@ -524,7 +524,7 @@ export const FR = {
         subtitle: 'Retrouvez une vue d’ensemble de l’activité des membres de l’équipe.',
         chartTitle: 'Nombre de réponses',
         chartSubtitle: 'Évolution du nombre total de réponses au sein de l’équipe.',
-        leaderboardTitle: 'Classement de mon équipe',
+        leaderboardTitle: 'Classement au sein de mon équipe',
         leaderboardSubtitle: 'Classement des membres de l’équipe selon leur nombre de réponses.',
       },
       membersEngagement: {
@@ -567,7 +567,7 @@ export const FR = {
         chartTitle: 'Évolution du niveau de l’équipe',
         chartSubtitle: 'Évolution du niveau moyen de l’équipe.',
         teamFilter: 'Membres',
-        leaderboard: 'Classement de mon équipe',
+        leaderboard: 'Classement au sein de mon équipe',
         leaderboardSubtitle: 'Aperçu du niveau de maîtrise des membres de l’équipe.',
       },
       teamMembers: {
@@ -577,13 +577,13 @@ export const FR = {
       perThemes: {
         title: 'Niveau de maîtrise par thématiques de l’équipe',
         subtitle: 'Retrouvez une vue d’ensemble sur le niveau de l’équipe selon ses thématiques.',
-        chartTitle: 'Évolution du niveau de maîtrise',
-        chartSubtitle: 'Évolution du niveau moyen de l’équipe par tag.',
+        chartTitle: 'Aperçu des thématiques',
+        chartSubtitle: "Évaluation du niveau moyen de l'équipe sur les 12 derniers mois.",
         tagFilter: 'Tags',
         teamScore: "Score de l'équipe",
         globalScore: 'Score global',
-        leaderboardTitle: 'Évolution du niveau moyen de l’équipe par tag.',
-        leaderboardSubtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
+        leaderboardTitle: 'Classement des thématiques',
+        leaderboardSubtitle: 'Aperçu de la maîtrise des thématiques par les collaborateurs de cette équipe.',
       },
       members: {
         title: 'Membres de l’équipe',
@@ -634,8 +634,8 @@ export const FR = {
             title: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
           },
           spiderChart: {
-            title: 'Évolution du niveau de maîtrise',
-            subtitle: 'Évolution du niveau moyen de l’utilisateur par tag.',
+            title: 'Aperçu des thématiques',
+            subtitle: 'Évaluation du niveau moyen de votre collaborateur sur les 12 derniers mois.',
             placeholder: {
               empty: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
               lessThan3Tags: 'Vous devez sélectionner au moins 3 tags.',

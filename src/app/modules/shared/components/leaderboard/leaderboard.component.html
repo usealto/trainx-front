@@ -1,12 +1,10 @@
 <div class="panel">
-  <div class="pb-4">
-    <h3>{{ title }}</h3>
-    <p class="alto-grey">{{ subtitle }}</p>
-  </div>
-
-  <div class="leaderboard-header">
+  <div class="leaderboard-header mb-2">
     <img class="me-2" [src]="Emoji.Trophy | emoji" height="16" width="16" />
-    <h3 class="d-inline-block">{{ I18ns.shared.leaderboard }}</h3>
+    <h3 class="d-inline-block mb-0">{{ title || I18ns.shared.leaderboard }}</h3>
+  </div>
+  <div class="pb-4">
+    <p class="alto-grey">{{ subtitle }}</p>
   </div>
 
   <!-- TOP -->
