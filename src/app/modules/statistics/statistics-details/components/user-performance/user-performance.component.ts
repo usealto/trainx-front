@@ -92,20 +92,20 @@ export class UserPerformanceComponent implements OnInit {
 
   loadPage(): void {
     this.getUserChartScores(this.duration);
-    this.getSpiderChartScores(this.duration);
+    this.getSpiderChartScores();
   }
 
-  getSpiderChartScores(duration: ScoreDuration): void {
+  getSpiderChartScores(): void {
     this.spiderChartSectionStatus = this.tags.length ? 'good' : 'empty';
     this.spiderChartStatus = 'loading';
     combineLatest([
       this.scoresRestService.getTagsStats(
-        duration,
+        ScoreDuration.Year,
         false,
         this.user.teamId,
         this.selectedSpiderTags.map((t) => t.id),
       ),
-      this.scoresRestService.getScores(this.getScoreParams('tagStats', duration)),
+      this.scoresRestService.getScores(this.getScoreParams('tagStats', ScoreDuration.Year)),
     ]).subscribe(([teamStats, userStats]) => {
       this.createSpiderChart(
         teamStats.sort((a, b) => a.tag.name.localeCompare(b.tag.name)),
@@ -250,7 +250,7 @@ export class UserPerformanceComponent implements OnInit {
       this.spiderChartStatusReason = '>6 tags';
       this.spiderChartStatus = 'empty';
     } else {
-      this.getSpiderChartScores(this.duration);
+      this.getSpiderChartScores();
     }
   }
 
