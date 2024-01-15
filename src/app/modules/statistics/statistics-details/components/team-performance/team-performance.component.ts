@@ -109,7 +109,7 @@ export class TeamPerformanceComponent implements OnInit {
   loadPage(): void {
     this.getTeamChartScores(this.duration);
     this.getTeamLeaderboard(this.duration);
-    this.getTagsData(this.duration);
+    this.getTagsData();
     this.getMembersTable(this.duration);
     this.getQuestionsTable(this.duration);
   }
@@ -204,12 +204,12 @@ export class TeamPerformanceComponent implements OnInit {
     );
   }
 
-  getTagsData(duration: ScoreDuration): void {
+  getTagsData(): void {
     this.tagsLeaderboardStatus = 'loading';
     combineLatest([
       this.scoresRestService
-      .getTagsStats(duration, false, this.teamId),
-      this.scoresRestService.getTagsStats(duration, true)
+      .getTagsStats(ScoreDuration.Year, false, this.teamId),
+      this.scoresRestService.getTagsStats(ScoreDuration.Year, true)
     ])
       .pipe(
         map(([teamTagStats, globalTagStats]) => {
@@ -218,7 +218,7 @@ export class TeamPerformanceComponent implements OnInit {
             globalTagStats.filter((t) => ( t.score && t.score >= 0 )),
           ];
         }),
-        tap(([teamTagStats, globalTagStats]) => {
+        tap(([teamTagStats]) => {
           this.tagsLeaderboard = teamTagStats.map((r) => ({
             name: r.tag.name,
             score: r.score ?? 0,
