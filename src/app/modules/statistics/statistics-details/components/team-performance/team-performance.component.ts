@@ -232,7 +232,7 @@ export class TeamPerformanceComponent implements OnInit {
           globalTagStats = globalTagStats.filter((tagStat) => this.selectedTags.some((si) => si.id === tagStat.tag.id));
         }
         this.createSpiderChart(teamTagStats, globalTagStats);
-        this.spiderChartDataStatus = this.tagsLeaderboard.length > 0 ? 'good' : 'noData';
+        this.spiderChartDataStatus = this.tags.length < 3 ? 'empty' : teamTagStats.length > 0 ? 'good' : 'noData';
       });
   }
 

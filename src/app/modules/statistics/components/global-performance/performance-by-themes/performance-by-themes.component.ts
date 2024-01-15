@@ -9,6 +9,7 @@ import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { TagsRestService } from '../../../../programs/services/tags-rest.service';
+import { AltoRoutes } from '../../../../shared/constants/routes';
 
 @UntilDestroy()
 @Component({
@@ -20,6 +21,7 @@ export class PerformanceByThemesComponent implements OnInit {
   @Input() duration: ScoreDuration = ScoreDuration.Year;
   Emoji = EmojiName;
   I18ns = I18ns;
+  AltoRoutes = AltoRoutes;
 
   tags: TagDtoApi[] = [];
   selectedItems: TagDtoApi[] = [];
@@ -54,7 +56,8 @@ export class PerformanceByThemesComponent implements OnInit {
         tagStats = tagStats.filter((tagStats) => this.selectedItems.some((si) => si.id === tagStats.tag.id));
       }
       this.createSpiderChart(tagStats);
-      this.spiderChartDataStatus = this.tagsLeaderboard.length === 0 ? 'noData' : 'good';
+      // this.spiderChartDataStatus = this.tags.length < 3 ? 'empty' : tagStats.length === 0 ? 'noData' : 'good';
+      this.spiderChartDataStatus = 'empty';
     });
   }
 

@@ -435,8 +435,12 @@ export const FR = {
         scoreEvolutionChart: {
           title: 'Évolution du niveau de maîtrise',
           subtitle: 'Évolution du niveau moyen de vos équipes par tag.',
-          placeholderTitle: 'Les équipes sont en train de s’échauffer',
-          placeholderSubtitle: 'Les premiers résultats ne devraient plus tarder !',
+          placeholder : {
+            noData: 'Les équipes sont en train de s’échauffer',
+            noDataSubtitle: 'Les premiers résultats ne devraient plus tarder !',
+            empty: 'Vous devez avoir créé au moins 3 tags',
+            createTag: 'Créer un tag',
+          },
         },
         teamsKnowledgeChart: {
           title: 'Niveau de maîtrise de vos équipes par thématique',
@@ -637,7 +641,10 @@ export const FR = {
             title: 'Aperçu des thématiques',
             subtitle: 'Évaluation du niveau moyen de votre collaborateur sur les 12 derniers mois.',
             placeholder: {
-              empty: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
+              empty: 'Vous devez avoir créé au moins 3 tags',
+              createTag: 'Créer un tag',
+              noData: 'Les équipes sont en train de s’échauffer',
+              noDataSubtitle: 'Les premiers résultats ne devraient plus tarder !',
               lessThan3Tags: 'Vous devez sélectionner au moins 3 tags.',
               MoreThan6Tags: 'Vous devez sélectionner au maximum 6 tags.',
             },
