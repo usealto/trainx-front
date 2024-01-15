@@ -43,10 +43,6 @@ export class UserPerformanceComponent implements OnInit {
   userChartOptions!: any;
   userChartStatus: PlaceholderDataStatus = 'loading';
 
-  tagsChartOptions!: any;
-  tagsChartStatus: PlaceholderDataStatus = 'loading';
-  selectedTags: TagDtoApi[] = [];
-
   spiderChartOptions!: any;
   spiderChartStatus: PlaceholderDataStatus = 'loading';
   spiderChartStatusReason: '<3 tags' | '>6 tags' | undefined = undefined;
@@ -84,7 +80,6 @@ export class UserPerformanceComponent implements OnInit {
       .pipe(
         tap((r) => {
           this.tags = r;
-          this.selectedTags = r.slice(0, 1);
           this.selectedSpiderTags = r.slice(0, 6);
         }),
       )
@@ -97,7 +92,6 @@ export class UserPerformanceComponent implements OnInit {
 
   loadPage(): void {
     this.getUserChartScores(this.duration);
-    this.getTagsChartScores(this.duration);
     this.getSpiderChartScores(this.duration);
   }
 
@@ -181,60 +175,6 @@ export class UserPerformanceComponent implements OnInit {
     };
   }
 
-  getTagsChartScores(duration: ScoreDuration): void {
-    this.tagsChartStatus = 'loading';
-    this.scoresRestService
-      .getScores(this.getScoreParams('tags', duration))
-      .pipe(
-        tap((scores) => {
-          this.tagsChartStatus = scores.length > 0 ? 'good' : 'empty';
-          if (scores.length > 0) {
-            this.createTagsChart(scores, duration);
-          }
-        }),
-      )
-      .subscribe();
-  }
-
-  createTagsChart(scores: Score[], duration: ScoreDuration): void {
-    const formatedScores = this.scoresService.formatScores(scores);
-    const points = formatedScores.map((d) => this.statisticsService.transformDataToPoint(d));
-
-    const labels = this.statisticsService
-      .formatLabel(
-        points[0].map((d) => d.x),
-        duration,
-      )
-      .map((s) => this.titleCasePipe.transform(s));
-
-    const dataSets = formatedScores.map((s) => {
-      const d = this.statisticsService.transformDataToPoint(s);
-      return { label: s.label, data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)) };
-    });
-
-    const series = dataSets.map((d) => {
-      return {
-        name: d.label,
-        data: d.data,
-        type: 'line',
-        showSybmol: false,
-        tootlip: {
-          valueFormatter: (value: any) => {
-            return (value as number) + '%';
-          },
-        },
-        lineStyle: {},
-      };
-    });
-
-    this.tagsChartOptions = {
-      xAxis: [{ ...xAxisDatesOptions, data: labels }],
-      yAxis: [{ ...yAxisScoreOptions }],
-      series: series,
-      legend: legendOptions,
-    };
-  }
-
   getUserChartScores(duration: ScoreDuration): void {
     this.userChartStatus = 'loading';
     combineLatest([
@@ -301,11 +241,6 @@ export class UserPerformanceComponent implements OnInit {
     this.loadPage();
   }
 
-  filterTags(event: any): void {
-    this.selectedTags = event;
-    this.getTagsChartScores(this.duration);
-  }
-
   filterSpiderTags(event: any): void {
     this.selectedSpiderTags = event;
     if (this.selectedSpiderTags.length < 3) {
@@ -319,7 +254,7 @@ export class UserPerformanceComponent implements OnInit {
     }
   }
 
-  getScoreParams(type: 'user' | 'team' | 'tags' | 'tagStats', duration: ScoreDuration): any {
+  getScoreParams(type: 'user' | 'team' | 'tagStats', duration: ScoreDuration): any {
     return {
       duration,
       type:
@@ -333,8 +268,6 @@ export class UserPerformanceComponent implements OnInit {
           ? this.user.id
           : type === 'team'
           ? this.userTeam.id
-          : type === 'tags'
-          ? this.selectedTags.map((t) => t.id)
           : this.selectedSpiderTags.map((t) => t.id),
       ],
       timeframe:
@@ -345,8 +278,8 @@ export class UserPerformanceComponent implements OnInit {
           : duration === ScoreDuration.Trimester
           ? ScoreTimeframeEnumApi.Week
           : ScoreTimeframeEnumApi.Day,
-      scoredBy: type === 'tags' || type === 'tagStats' ? ScoreByTypeEnumApi.User : undefined,
-      scoredById: type === 'tags' || type === 'tagStats' ? this.user.id : undefined,
+      scoredBy: type === 'tagStats' ? ScoreByTypeEnumApi.User : undefined,
+      scoredById: type === 'tagStats' ? this.user.id : undefined,
     } as ChartFilters;
   }
 }

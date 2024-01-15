@@ -61,45 +61,6 @@
   <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.user.performance.themeMastering.subtitle }}</p>
 </div>
 
-<alto-placeholder-manager [status]="tagsChartStatus">
-  <div class="panel mb-6">
-    <div class="float-end">
-      <alto-time-picker
-        [duration]="duration"
-        (durationSelected)="updateTimePicker($event)"
-      ></alto-time-picker>
-      <alto-dropdown-filter
-        class="ms-4"
-        [data]="tags"
-        [selectedItems]="selectedTags"
-        [displayLabel]="'name'"
-        [placeholder]="I18ns.statistics.user.performance.themeMastering.tagFilter"
-        (selectChange)="filterTags($event)"
-      >
-      </alto-dropdown-filter>
-    </div>
-    <h3>{{ I18ns.statistics.user.performance.themeMastering.chartTitle }}</h3>
-    <p class="alto-grey mb-4">
-      {{ I18ns.statistics.user.performance.themeMastering.chartSubtitle }}
-    </p>
-    <div class="chart-container">
-      <alto-chart-basicline [chartOption]="tagsChartOptions"></alto-chart-basicline>
-    </div>
-  </div>
-  <div class="nodata-placeholder" empty>
-    <h3 class="mb-5 fs-6">
-      {{ I18ns.statistics.user.performance.themeMastering.chartTitle }}
-    </h3>
-    <div class="text-center">
-      <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
-      <p class="mt-3">
-        {{ I18ns.statistics.user.performance.themeMastering.placeholder.title }}
-      </p>
-    </div>
-  </div>
-  <div class="skeleton-panel mb-5" style="height: 497px" loading></div>
-</alto-placeholder-manager>
-
 <alto-placeholder-manager [status]="spiderChartSectionStatus">
   <div class="panel">
     <alto-dropdown-filter
