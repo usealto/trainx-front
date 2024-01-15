@@ -25,6 +25,7 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
 import { ToastService } from '../../../../../core/toast/toast.service';
 import { StatisticsService } from '../../../services/statistics.service';
+import { AltoRoutes } from '../../../../shared/constants/routes';
 
 @Component({
   selector: 'alto-user-performance',
@@ -34,6 +35,7 @@ import { StatisticsService } from '../../../services/statistics.service';
 export class UserPerformanceComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
+  AltoRoutes = AltoRoutes;
 
   user!: User;
   userTeam!: Team;
@@ -96,7 +98,6 @@ export class UserPerformanceComponent implements OnInit {
   }
 
   getSpiderChartScores(): void {
-    this.spiderChartSectionStatus = this.tags.length ? 'good' : 'empty';
     this.spiderChartStatus = 'loading';
     combineLatest([
       this.scoresRestService.getTagsStats(
@@ -111,7 +112,8 @@ export class UserPerformanceComponent implements OnInit {
         teamStats.sort((a, b) => a.tag.name.localeCompare(b.tag.name)),
         userStats.sort((a, b) => a.label.localeCompare(b.label)),
       );
-      this.spiderChartStatus = 'good';
+      this.spiderChartStatus = userStats.length ? 'good' : 'noData';
+      this.spiderChartSectionStatus = this.tags.length < 3 ? 'empty' : userStats.length ? 'good' : 'noData';
     });
   }
 
