@@ -3,10 +3,10 @@
     <div class="title-container">
       <div
         *ngIf="control.value; else noValue"
-        class="alto-badge"
+        class="pill"
         [ngClass]="{
-          'pill-blue': control.value.color === 'primary',
-          'pill-green': control.value.color === 'success'
+          'pill-blue': control.value.color === EColors.primary,
+          'pill-green': control.value.color === EColors.success
         }"
       >
         <span>{{ control.value.label }}</span>
@@ -28,17 +28,17 @@
     <ng-container *ngIf="options.length > 0; else noOption">
       <div
         *ngFor="let option of options; let index = index; let last = last"
+        class="dropdown-item cursor-pointer"
         [class.border-bottom]="!last"
         (click)="control.value !== option ? toggleOption(option) : null"
-        class="dropdown-item cursor-pointer"
         [class.cursor-pointer]="control.value !== option"
         [class.selected]="control.value === option"
       >
         <div
-          class="alto-badge"
+          class="pill"
           [ngClass]="{
-            'pill-blue': option.color === 'primary',
-            'pill-green': option.color === 'success'
+            'pill-blue': option.color === EColors.primary,
+            'pill-green': option.color === EColors.success
           }"
         >
           <span>{{ option.label }}</span>

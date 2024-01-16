@@ -1,5 +1,5 @@
 import { ScoreDtoApi } from '@usealto/sdk-ts-angular';
-import { PillOption, SelectOption } from '../modules/shared/models/select-option.model';
+import { EColors, PillOption } from '../modules/shared/models/select-option.model';
 
 export enum ScoreFilter {
   Under25 = '< 25%',
@@ -9,18 +9,6 @@ export enum ScoreFilter {
   Over50 = '> 50%',
   Over75 = '> 75%',
 }
-
-export const scoreFilterToPillOptions = (): PillOption[] => {
-  return [
-    new PillOption({ value: ScoreFilter.Under25, label: ScoreFilter.Under25, color: 'primary' }),
-    new PillOption({ value: ScoreFilter.Under50, label: ScoreFilter.Under50, color: 'primary' }),
-    new PillOption({ value: ScoreFilter.Under75, label: ScoreFilter.Under75, color: 'primary'}),
-    new PillOption({ value: ScoreFilter.Over25, label: ScoreFilter.Over25, color: 'success'}),
-    new PillOption({ value: ScoreFilter.Over50, label: ScoreFilter.Over50, color: 'success'}),
-    new PillOption({ value: ScoreFilter.Over75, label: ScoreFilter.Over75, color: 'success'}),
-  ];
-};
-
 
 export interface IScore {
   dates: Date[];
@@ -57,6 +45,17 @@ export class Score implements IScore {
       id: data.id,
       label: data.label,
     });
+  }
+
+  static getFiltersPillOptions(): PillOption[] {
+    return [
+      new PillOption({ value: ScoreFilter.Under25, label: ScoreFilter.Under25, color: EColors.primary }),
+      new PillOption({ value: ScoreFilter.Under50, label: ScoreFilter.Under50, color: EColors.primary }),
+      new PillOption({ value: ScoreFilter.Under75, label: ScoreFilter.Under75, color: EColors.primary }),
+      new PillOption({ value: ScoreFilter.Over25, label: ScoreFilter.Over25, color: EColors.success }),
+      new PillOption({ value: ScoreFilter.Over50, label: ScoreFilter.Over50, color: EColors.success }),
+      new PillOption({ value: ScoreFilter.Over75, label: ScoreFilter.Over75, color: EColors.success }),
+    ];
   }
 
   get rawData(): IScore {

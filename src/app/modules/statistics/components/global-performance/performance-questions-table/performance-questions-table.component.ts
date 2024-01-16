@@ -5,7 +5,6 @@ import { Subscription, combineLatest, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { scoreFilterToPillOptions } from 'src/app/models/score.model';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { QuestionFilters } from 'src/app/modules/programs/models/question.model';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
@@ -14,6 +13,7 @@ import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.
 import { PillOption } from 'src/app/modules/shared/models/select-option.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { Score } from '../../../../../models/score.model';
 
 @Component({
   selector: 'alto-performance-questions-table',
@@ -46,7 +46,7 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
   questionsPageControl = new FormControl(1, { nonNullable: true });
   questionsPageSize = 5;
 
-  scoreOptions: PillOption[] = scoreFilterToPillOptions();
+  scoreOptions: PillOption[] = Score.getFiltersPillOptions();
 
   scoreIsLoading = true;
 
@@ -87,12 +87,12 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
       this.scoreControl.valueChanges
         .pipe(
           startWith(this.scoreControl.value),
-          tap(scoreOption => {
+          tap((scoreOption) => {
             this.questionFilters.score = scoreOption ? scoreOption.value : undefined;
             this.getQuestionsFiltered();
-          })
+          }),
         )
-        .subscribe()
+        .subscribe(),
     );
 
     this.performanceQuestionsTableComponentSubscription.add(
