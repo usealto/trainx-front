@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   GuessDtoPaginatedResponseApi,
   ProgramStatsDtoApi,
+  QuestionSubmittedStatusEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
   UserStatsDtoApi,
@@ -30,11 +31,12 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
 import { IAppData } from '../../../../core/resolvers';
-import { IHomeData } from '../../../../core/resolvers/home.resolver';
 import { ITeamStatsData } from '../../../../core/resolvers/teamStats.resolver';
 import { Company } from '../../../../models/company.model';
 import { Team, TeamStats } from '../../../../models/team.model';
 import { Score } from '../../../../models/score.model';
+import { CommentsRestService } from '../../../programs/services/comments-rest.service';
+import { QuestionsSubmittedRestService } from '../../../programs/services/questions-submitted-rest.service';
 
 @Component({
   selector: 'alto-lead-home',
@@ -106,16 +108,30 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
     public readonly companiesRestService: CompaniesRestService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
+    private readonly commentsRestService: CommentsRestService,
+    private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
   ) {}
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.company = (data[EResolvers.TeamStats] as ITeamStatsData).company;
     this.me = (data[EResolvers.AppResolver] as IAppData).me;
-    this.commentsCount = (data[EResolvers.HomeResolver] as IHomeData).comments.length;
-    this.commentsDataStatus = this.commentsCount === 0 ? 'noData' : 'good';
-    this.questionsCount = (data[EResolvers.HomeResolver] as IHomeData).questionsCount;
-    this.questionsDataStatus = this.questionsCount === 0 ? 'noData' : 'good';
+
+    this.leadHomeComponentSubscription.add(
+      combineLatest([
+        this.commentsRestService.getUnreadComments(),
+        this.questionsSubmittedRestService.getQuestionsCount({
+          status: QuestionSubmittedStatusEnumApi.Submitted,
+        }),
+      ]).subscribe(([unreadComments, questionsCount]) => {
+        console.log('unreadComments', unreadComments);
+        console.log('questionsCount', questionsCount);
+        this.commentsCount = unreadComments.length;
+        this.questionsCount = questionsCount;
+        this.commentsDataStatus = this.commentsCount === 0 ? 'noData' : 'good';
+        this.questionsDataStatus = this.questionsCount === 0 ? 'noData' : 'good';
+      }),
+    );
 
     this.leadHomeComponentSubscription.add(
       this.durationControl.valueChanges

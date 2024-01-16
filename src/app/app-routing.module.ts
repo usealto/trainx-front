@@ -10,7 +10,6 @@ import {
 } from './core/guards';
 import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
 import { appResolver, noSplashScreenResolver } from './core/resolvers';
-import { homeResolver } from './core/resolvers/home.resolver';
 import { teamStatsResolver } from './core/resolvers/teamStats.resolver';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
@@ -73,9 +72,6 @@ const routes: Routes = [
           {
             path: AltoRoutes.leadHome,
             runGuardsAndResolvers: 'always',
-            resolve: {
-              homeResolver: homeResolver, // TODO : replace resolver
-            },
             loadChildren: () => import('./modules/lead-home/lead-home.module').then((m) => m.LeadHomeModule),
           },
           {
