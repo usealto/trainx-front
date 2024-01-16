@@ -56,8 +56,7 @@ export class PerformanceByThemesComponent implements OnInit {
         tagStats = tagStats.filter((tagStats) => this.selectedItems.some((si) => si.id === tagStats.tag.id));
       }
       this.createSpiderChart(tagStats);
-      // this.spiderChartDataStatus = this.tags.length < 3 ? 'empty' : tagStats.length === 0 ? 'noData' : 'good';
-      this.spiderChartDataStatus = 'empty';
+      this.spiderChartDataStatus = this.tags.length < 3 ? 'empty' : tagStats.length === 0 ? 'noData' : 'good';
     });
   }
 
