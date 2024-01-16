@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, of, switchMap, withLatestFrom } from 'rxjs';
+import { catchError, combineLatest, map, of, switchMap, withLatestFrom } from 'rxjs';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { Company } from '../../models/company.model';
 import { CompaniesRestService } from '../../modules/companies/service/companies-rest.service';
@@ -70,7 +70,11 @@ export const AppGuard: CanActivateFn = () => {
           }
           return true;
         }),
-      );
+        catchError(() => {
+          router.navigate(['/', AltoRoutes.noAccess]);
+          return of(false);
+        }),
+      ); 
     }),
   );
 };
