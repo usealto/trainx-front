@@ -112,15 +112,15 @@ export class ProgramsQuestionsComponent implements OnInit {
           this.questions = questions;
           this.questionListStatus = questions.length === 0 ? 'noData' : 'good';
 
-          if (refreshPagination) {
-            this.questionsPage = 1;
-          }
+          // if (refreshPagination) {
+          //   this.questionsPage = 1;
+          // }
 
           if (score) {
             this.questions = this.scoreService.filterByScore(this.questions, score as ScoreFilter, true);
           }
 
-          this.questionPageChange();
+          // this.questionPageChange();
 
           if (this.questionsCount === 0 && !this.isFiltersEmpty) {
             this.questionListStatus = 'noResult';

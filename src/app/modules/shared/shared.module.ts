@@ -52,6 +52,7 @@ import { InputTextComponent } from './components/forms/input-text/input-text.com
 import { InputPillsComponent } from './components/forms/input-pills/input-pills.component';
 import { InputSearchComponent } from './components/forms/input-search/input-search.component';
 import { InputMultipleSelectComponent } from './components/forms/input-multiple-select/input-multiple-select.component';
+import { InputSingleSelectComponent } from './components/forms/input-single-select/input-single-select.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import { InputMultipleSelectComponent } from './components/forms/input-multiple-
     InputPillsComponent,
     InputSearchComponent,
     InputMultipleSelectComponent,
+    InputSingleSelectComponent,
   ],
   imports: [
     CommonModule,
@@ -157,6 +159,7 @@ import { InputMultipleSelectComponent } from './components/forms/input-multiple-
     InputPillsComponent,
     InputSearchComponent,
     InputMultipleSelectComponent,
+    InputSingleSelectComponent,
   ],
   providers: [NgbActiveModal],
 })

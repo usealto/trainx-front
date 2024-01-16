@@ -5,11 +5,13 @@ import { Subscription, combineLatest, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { scoreFilterToPillOptions } from 'src/app/models/score.model';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { QuestionFilters } from 'src/app/modules/programs/models/question.model';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
+import { PillOption } from 'src/app/modules/shared/models/select-option.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 
@@ -34,6 +36,8 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
     search: '',
   };
 
+  scoreControl = new FormControl<PillOption | null>(null);
+
   questions: QuestionStatsDtoApi[] = [];
   questionsPreviousPeriod: QuestionStatsDtoApi[] = [];
   questionsDisplay: QuestionStatsDtoApi[] = [];
@@ -41,6 +45,8 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
   questionsDataStatus: PlaceholderDataStatus = 'loading';
   questionsPageControl = new FormControl(1, { nonNullable: true });
   questionsPageSize = 5;
+
+  scoreOptions: PillOption[] = scoreFilterToPillOptions();
 
   scoreIsLoading = true;
 
@@ -75,6 +81,18 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
           this.scoreIsLoading = false;
           this.getQuestionsFiltered();
         }),
+    );
+
+    this.performanceQuestionsTableComponentSubscription.add(
+      this.scoreControl.valueChanges
+        .pipe(
+          startWith(this.scoreControl.value),
+          tap(scoreOption => {
+            this.questionFilters.score = scoreOption ? scoreOption.value : undefined;
+            this.getQuestionsFiltered();
+          })
+        )
+        .subscribe()
     );
 
     this.performanceQuestionsTableComponentSubscription.add(
