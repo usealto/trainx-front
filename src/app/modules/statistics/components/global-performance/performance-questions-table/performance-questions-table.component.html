@@ -1,8 +1,5 @@
-<div class="row mb-4">
-  <div class="col-4">
+<div class="mb-4 d-flex justify-content-between">
     <alto-search (searchChange)="getQuestionsFiltered({ search: $event })"></alto-search>
-  </div>
-  <div class="col-8 text-end">
     <!-- <alto-dropdown-filter
       class="text-start me-3"
       [data]="teamStore.teams.value"
@@ -12,11 +9,11 @@
       [isColored]="true"
       (selectChange)="getQuestionsFiltered({ teams: $event })"
     ></alto-dropdown-filter> -->
-    <alto-score-filter
-      (selectChange)="getQuestionsFiltered({ score: $event })"
-      class="text-start"
-    ></alto-score-filter>
-  </div>
+    <alto-input-single-select
+      [title]="I18ns.statistics.user.performance.questions.scoreFilter"
+      [control]="scoreControl"
+      [options]="scoreOptions"
+    ></alto-input-single-select>
 </div>
 
 <alto-placeholder-manager [status]="questionsDataStatus">
@@ -44,7 +41,7 @@
       <tbody>
         <tr *ngFor="let quest of paginatedQuestions" class="align-middle">
           <td>
-            {{ quest.question.title | sliceWithDots: 150}}
+            {{ quest.question.title | sliceWithDots : 150 }}
           </td>
           <td class="text-center">
             <ng-container *ngIf="quest.score; else elseTemplate">

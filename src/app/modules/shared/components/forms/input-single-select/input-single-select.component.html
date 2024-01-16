@@ -1,0 +1,54 @@
+<div class="dropdown">
+  <div class="dropdown-input form-control" (click)="toggleDropdown()">
+    <div class="title-container">
+      <div
+        *ngIf="control.value; else noValue"
+        class="alto-badge"
+        [ngClass]="{
+          'pill-blue': control.value.color === 'primary',
+          'pill-green': control.value.color === 'success'
+        }"
+      >
+        <span>{{ control.value.label }}</span>
+      </div>
+      <ng-template #noValue>
+        <p class="title">{{ title }}</p>
+      </ng-template>
+    </div>
+    <div class="d-flex gap-2">
+      <i
+        *ngIf="control.value"
+        class="bi bi-x-lg hover-red"
+        (click)="$event.stopPropagation(); toggleOption(control.value)"
+      ></i>
+      <i class="bi" [ngClass]="isDropdownOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+    </div>
+  </div>
+  <div #dropdownMenu class="dropdown-menu" [ngClass]="{ show: isDropdownOpen }">
+    <ng-container *ngIf="options.length > 0; else noOption">
+      <div
+        *ngFor="let option of options; let index = index; let last = last"
+        [class.border-bottom]="!last"
+        (click)="control.value !== option ? toggleOption(option) : null"
+        class="dropdown-item cursor-pointer"
+        [class.cursor-pointer]="control.value !== option"
+        [class.selected]="control.value === option"
+      >
+        <div
+          class="alto-badge"
+          [ngClass]="{
+            'pill-blue': option.color === 'primary',
+            'pill-green': option.color === 'success'
+          }"
+        >
+          <span>{{ option.label }}</span>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #noOption>
+      <div class="dropdown-item">
+        <p class="fst-italic alto-grey">{{ I18ns.shared.noOption }}</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
