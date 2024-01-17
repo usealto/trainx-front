@@ -37,6 +37,7 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
   };
 
   scoreControl = new FormControl<PillOption | null>(null);
+  searchControl = new FormControl('');
 
   questions: QuestionStatsDtoApi[] = [];
   questionsPreviousPeriod: QuestionStatsDtoApi[] = [];
@@ -89,6 +90,18 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
           startWith(this.scoreControl.value),
           tap((scoreOption) => {
             this.questionFilters.score = scoreOption ? scoreOption.value : undefined;
+            this.getQuestionsFiltered();
+          }),
+        )
+        .subscribe(),
+    );
+
+    this.performanceQuestionsTableComponentSubscription.add(
+      this.searchControl.valueChanges
+        .pipe(
+          startWith(this.searchControl.value),
+          tap((searchTerm) => {
+            this.questionFilters.search = searchTerm ?? '';
             this.getQuestionsFiltered();
           }),
         )

@@ -151,12 +151,12 @@
 
   <div class="row mb-5">
     <div class="col-6">
-      <alto-search
+      <alto-input-search
         data-cy="filterBySearch"
         class="float-start"
-        [searchItems]="userFilters.search"
-        (searchChange)="filterUsers({ search: $event })"
-      ></alto-search>
+        [searchControl]="searchControl"
+        placeholder="{{ I18ns.shared.search }}"
+      ></alto-input-search>
     </div>
 
     <div class="col-6 text-end">

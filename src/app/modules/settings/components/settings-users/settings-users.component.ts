@@ -50,6 +50,9 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
   adminsPageSize = 5;
   adminsPageControl = new FormControl(1, { nonNullable: true });
 
+  searchAdminControl = new FormControl('');
+  searchUserControl = new FormControl('');
+
   usedLicensesCount = 0;
 
   private readonly settingsUsersComponentSubscription = new Subscription();
@@ -93,6 +96,24 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
       this.usersPageControl.valueChanges
         .pipe(startWith(this.usersPageControl.value))
         .subscribe((page) => this.changeUsersPage(page)),
+    );
+
+    this.settingsUsersComponentSubscription.add(
+      this.searchAdminControl.valueChanges
+        .pipe(
+          startWith(''),
+          tap((searchTerm) => this.filterAdmins({ search: searchTerm ?? '' })),
+        )
+        .subscribe(),
+    );
+
+    this.settingsUsersComponentSubscription.add(
+      this.searchUserControl.valueChanges
+        .pipe(
+          startWith(''),
+          tap((searchTerm) => this.filterUsers({ search: searchTerm ?? '' })),
+        )
+        .subscribe(),
     );
   }
 

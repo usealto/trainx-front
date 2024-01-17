@@ -18,13 +18,12 @@
 </p>
 
 <div class="row">
-  <alto-search
+  <alto-input-search
     data-cy="filterBySearch"
     class="float-end d-inline-block"
-    (searchChange)="filterAdmins({ search: $event })"
-  >
-  </alto-search>
-
+    [searchControl]="searchAdminControl"
+    placeholder="{{ I18ns.shared.search }}"
+  ></alto-input-search>
   <div class="col my-5 px-0">
     <div class="table-panel">
       <table class="table">
@@ -189,13 +188,12 @@
       <i class="bi bi-plus-lg"></i>{{ I18ns.settings.users.addUsers.add }}
     </button>
   </div>
-
-  <alto-search
+  <alto-input-search
     data-cy="filterBySearch"
     class="w-50 d-inline-block"
-    (searchChange)="filterUsers({ search: $event })"
-    *ngIf="usersDisplay.length || !userFilterEmpty()"
-  ></alto-search>
+    [searchControl]="searchUserControl"
+    placeholder="{{ I18ns.shared.search }}"
+  ></alto-input-search>
 </div>
 
 <div class="table-panel" *ngIf="usersDisplay.length; else nouser">

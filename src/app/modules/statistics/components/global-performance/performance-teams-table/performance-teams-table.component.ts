@@ -16,7 +16,7 @@ import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.s
 import { Company } from '../../../../../models/company.model';
 import { TeamStats } from '../../../../../models/team.model';
 import { FormControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, startWith, tap } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -48,6 +48,8 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   teamsPageControl = new FormControl(1, { nonNullable: true });
   teamsPageSize = 5;
 
+  searchControl = new FormControl('');
+
   tags: TagDtoApi[] = [];
   scoreIsLoading = false;
 
@@ -71,6 +73,18 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
 
     this.performanceTeamsTableComponentSubscription.add(
       this.teamsPageControl.valueChanges.subscribe((page) => this.changeTeamsPage(page)),
+    );
+
+    this.performanceTeamsTableComponentSubscription.add(
+      this.searchControl.valueChanges
+        .pipe(
+          startWith(this.searchControl.value),
+          tap((searchTerm) => {
+            this.teamFilters.search = searchTerm ?? '';
+            this.getTeamsFiltered();
+          }),
+        )
+        .subscribe(),
     );
   }
 

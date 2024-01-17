@@ -1,5 +1,8 @@
 <div class="mb-4 d-flex justify-content-between">
-    <alto-search (searchChange)="getQuestionsFiltered({ search: $event })"></alto-search>
+    <alto-input-search
+    [searchControl]="searchControl"
+    placeholder="{{ I18ns.shared.search }}"
+    ></alto-input-search>
     <!-- <alto-dropdown-filter
       class="text-start me-3"
       [data]="teamStore.teams.value"

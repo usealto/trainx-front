@@ -70,6 +70,7 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
   previousUsersStats: UserStatsDtoApi[] = [];
   paginatedUsers: UserStatsDtoApi[] = [];
   usersPageControl = new FormControl(1, { nonNullable: true });
+  searchControl = new FormControl('');
   usersPageSize = 5;
   filteredUsers: UserStatsDtoApi[] = [];
   usersTotalQuestions = 0;
@@ -175,6 +176,17 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
       this.usersPageControl.valueChanges.subscribe((page) => {
         this.changeUsersPage(this.filteredUsers, page);
       }),
+    );
+
+    this.leadTeamComponentSubscription.add(
+      this.searchControl.valueChanges
+        .pipe(
+          tap((searchTerm) => {
+            this.userFilters.search = searchTerm ?? '';
+            this.filterUsers();
+          }),
+        )
+        .subscribe(),
     );
   }
 

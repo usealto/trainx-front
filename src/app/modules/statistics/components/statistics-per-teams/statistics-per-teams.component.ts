@@ -46,6 +46,8 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
   teamsDisplay: DataForTable[] = [];
   teamsDataStatus: PlaceholderDataStatus = 'loading';
 
+  searchControl = new FormControl('');
+
   private statisticsPerTeamsComponentSubscription = new Subscription();
 
   constructor(
@@ -67,6 +69,18 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
       this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)).subscribe((duration) => {
         this.getDatas(duration);
       }),
+    );
+
+    this.statisticsPerTeamsComponentSubscription.add(
+      this.searchControl.valueChanges
+        .pipe(
+          startWith(this.searchControl.value),
+          tap((searchTerm) => {
+            this.userFilters.search = searchTerm ?? '';
+            this.filterMembers({ search: searchTerm ?? '' });
+          }),
+        )
+        .subscribe(),
     );
   }
 

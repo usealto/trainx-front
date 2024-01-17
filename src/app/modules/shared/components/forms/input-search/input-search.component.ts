@@ -7,7 +7,7 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./input-search.component.scss'],
 })
 export class InputSearchComponent {
-  @Input() placeholder = 'Search';
+  @Input() placeholder = 'Rechercher';
   @Input() searchControl: FormControl<string | null> = new FormControl(null);
 
   reset(): void {

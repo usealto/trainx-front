@@ -1,6 +1,9 @@
 <div class="row mb-4">
   <div class="col-4">
-    <alto-search (searchChange)="getTeamsFiltered({ search: $event })"></alto-search>
+    <alto-input-search
+    [searchControl]="searchControl"
+    placeholder="{{ I18ns.shared.search }}"
+    ></alto-input-search>
   </div>
   <div class="col-8 text-end">
     <!-- <alto-dropdown-filter

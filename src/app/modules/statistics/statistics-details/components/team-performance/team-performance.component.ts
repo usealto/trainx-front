@@ -199,12 +199,12 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
       ])
         .pipe(
           startWith<[string, string, ScoreDuration]>([
-            this.questionsSearchControl.value,
             this.questionsScoreControl.value,
+            this.questionsSearchControl.value,
             this.durationControl.value,
           ]),
           tap(() => (this.questionsTableDataStatus = 'loading')),
-          switchMap(([search, score, duration]) => {
+          switchMap(([score, search, duration]) => {
             return combineLatest([
               of(search),
               of(score),
@@ -254,6 +254,7 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
             ]);
           }),
           map(([search, usersStats, prevUsersStats]) => {
+            console.log(usersStats);
             this.membersLeaderboard = usersStats.map((r) => ({
               name: r.user.firstname + ' ' + r.user.lastname,
               score: r.score ?? 0,
