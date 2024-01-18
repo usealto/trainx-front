@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TagDtoApi } from '@usealto/sdk-ts-angular';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -6,17 +6,16 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
-import { TeamsStatsFilters } from 'src/app/modules/shared/models/stats.model';
-import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { Company } from '../../../../../models/company.model';
 import { TeamStats } from '../../../../../models/team.model';
 import { FormControl } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, combineLatest, map, startWith, switchMap, tap } from 'rxjs';
+import { SelectOption } from '../../../../shared/models/select-option.model';
+import { TagsRestService } from '../../../../programs/services/tags-rest.service';
 
 @UntilDestroy()
 @Component({
@@ -24,23 +23,26 @@ import { Subscription } from 'rxjs';
   templateUrl: './performance-teams-table.component.html',
   styleUrls: ['./performance-teams-table.component.scss'],
 })
-export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
+export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
 
   @Input() company: Company = {} as Company;
-  @Input() duration: ScoreDuration = ScoreDuration.Year;
+  @Input() durationControl: FormControl<ScoreDuration> = new FormControl(ScoreDuration.Year, {
+    nonNullable: true,
+  });
+
+  searchControl = new FormControl('', { nonNullable: true });
+
+  programOptions: SelectOption[] = [];
+  programsControl = new FormControl([] as FormControl<SelectOption>[], { nonNullable: true });
+
+  tagOptions: SelectOption[] = [];
+  tagsControl = new FormControl([] as FormControl<SelectOption>[], { nonNullable: true });
 
   teamsStats: TeamStats[] = [];
   teamsStatsPrev: TeamStats[] = [];
-
-  teamFilters: TeamsStatsFilters = {
-    programs: [],
-    tags: [],
-    teams: [],
-    search: '',
-  };
 
   teamsDisplay: TeamStats[] = [];
   paginatedTeamsStats: TeamStats[] = [];
@@ -48,7 +50,6 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   teamsPageControl = new FormControl(1, { nonNullable: true });
   teamsPageSize = 5;
 
-  tags: TagDtoApi[] = [];
   scoreIsLoading = false;
 
   private readonly performanceTeamsTableComponentSubscription = new Subscription();
@@ -56,61 +57,75 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
   constructor(
     public readonly teamStore: TeamStore,
     public readonly profileStore: ProfileStore,
-    public readonly programsStore: ProgramsStore,
     public readonly programsRestService: ProgramsRestService,
-    private readonly scoreRestService: ScoresRestService,
+    public readonly tagsRestService: TagsRestService,
   ) {}
 
   ngOnInit(): void {
-    this.tags = this.programsStore.tags.value;
+    this.performanceTeamsTableComponentSubscription.add(
+      this.tagsRestService
+        .getTags()
+        .pipe(
+          startWith([] as TagDtoApi[]),
+          tap((tags) => {
+            this.tagOptions = tags.map((tag) => new SelectOption({ label: tag.name, value: tag.id }));
+            this.programOptions = this.company.programs.map(
+              (program) => new SelectOption({ label: program.name, value: program.id }),
+            );
+          }),
+          switchMap(() => {
+            return combineLatest([
+              this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+              this.programsControl.valueChanges.pipe(startWith(this.programsControl.value)),
+              this.tagsControl.valueChanges.pipe(startWith(this.tagsControl.value)),
+              this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
+            ]);
+          }),
+          map(([duration, programs, tags, search]) => {
+            return <[ScoreDuration, string[], string[], string]>[
+              duration,
+              programs.map(({ value }) => value.value),
+              tags.map(({ value }) => value.value),
+              search,
+            ];
+          }),
+        )
+        .subscribe(([duration, programs, tags, search]) => {
+          let teamStats = this.company.getStatsByPeriod(duration, false);
+          this.teamsStatsPrev = this.company.getStatsByPeriod(duration, true);
 
-    this.teamsStats = this.company.getStatsByPeriod(this.duration, false);
-    this.teamsStatsPrev = this.company.getStatsByPeriod(this.duration, true);
+          if (programs.length) {
+            teamStats = teamStats.filter((t) =>
+              t.programStats?.some((p) => programs.some((pr) => pr === p.programId)),
+            );
+          }
 
-    this.getTeamsFiltered();
+          if (tags.length) {
+            teamStats = teamStats.filter((t) => t.tagStats?.some((p) => tags.some((pr) => pr === p.tagId)));
+          }
+
+          if (search) {
+            teamStats = teamStats.filter((t) =>
+              this.company.teamById
+                .get(t.teamId)
+                ?.name.toLocaleLowerCase()
+                .includes(search.toLocaleLowerCase()),
+            );
+          }
+
+          this.teamsDisplay = teamStats;
+          this.teamsDataStatus = this.teamsDisplay.length === 0 ? 'noData' : 'good';
+          this.changeTeamsPage(1);
+        }),
+    );
 
     this.performanceTeamsTableComponentSubscription.add(
       this.teamsPageControl.valueChanges.subscribe((page) => this.changeTeamsPage(page)),
     );
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['duration']?.firstChange && changes['duration']?.currentValue) {
-      this.getTeamsFiltered();
-    }
-  }
-
-  getTeamsFiltered(
-    {
-      duration = this.teamFilters.duration,
-      programs = this.teamFilters.programs,
-      tags = this.teamFilters.tags,
-      search = this.teamFilters.search,
-    }: TeamsStatsFilters = this.teamFilters,
-  ) {
-    this.teamFilters.duration = duration;
-    this.teamFilters.programs = programs;
-    this.teamFilters.tags = tags;
-    // this.teamFilters.teams = teams;
-    this.teamFilters.search = search;
-
-    let output: TeamStats[] = this.teamsStats;
-    if (programs && programs.length > 0) {
-      output = output.filter((t) => t.programStats?.some((p) => programs.some((pr) => pr === p.programId)));
-    }
-    if (tags && tags.length > 0) {
-      output = output.filter((t) => t.tagStats?.some((p) => tags.some((pr) => pr === p.tagId)));
-    }
-
-    if (search) {
-      output = output.filter(
-        (t) => this.company.teamById.get(t.teamId)?.name.toLowerCase().includes(search.toLowerCase()) ?? true,
-      );
-    }
-
-    this.teamsDisplay = output;
-
-    this.changeTeamsPage(1);
+  ngOnDestroy(): void {
+    this.performanceTeamsTableComponentSubscription.unsubscribe();
   }
 
   private changeTeamsPage(page: number) {
@@ -118,7 +133,6 @@ export class PerformanceTeamsTableComponent implements OnInit, OnChanges {
       (page - 1) * this.teamsPageSize,
       page * this.teamsPageSize,
     );
-    this.teamsDataStatus = this.paginatedTeamsStats.length === 0 ? 'noData' : 'good';
   }
 
   @memoize()

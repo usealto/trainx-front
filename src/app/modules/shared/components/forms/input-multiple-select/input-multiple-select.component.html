@@ -34,7 +34,7 @@
         [class.border-bottom]="!last"
         (click)="toggleOption(checkedOption)"
       >
-        <span>{{ checkedOption.option.label }}</span>
+        <span class="text-truncate">{{ checkedOption.option.label }}</span>
 
         <i *ngIf="checkedOption.isChecked" class="bi bi-check-circle-fill alto-grey"></i>
       </div>

@@ -1,35 +1,25 @@
-<div class="row mb-4">
-  <div class="col-4">
-    <alto-search (searchChange)="getTeamsFiltered({ search: $event })"></alto-search>
-  </div>
-  <div class="col-8 text-end">
-    <!-- <alto-dropdown-filter
-      class="text-start"
-      [data]="getTeamsDropdown(teamsDisplay.length)"
-      [displayLabel]="'longName'"
-      [returnValue]="'id'"
-      [placeholder]="I18ns.programs.programs.filters.team"
-      [isColored]="true"
-      (selectChange)="getTeamsFiltered({ teams: $event })"
+<div class="mb-4 d-flex justify-content-between">
+    <alto-input-search
+      [searchControl]="searchControl"
+      [placeholder]="I18ns.shared.search"
+    ></alto-input-search>
+    <div class="d-flex">
+      <alto-input-multiple-select
       class="me-3"
-    ></alto-dropdown-filter> -->
-    <alto-dropdown-filter
-      class="me-3 text-start"
-      [data]="company.programs"
-      [displayLabel]="'name'"
-      [returnValue]="'id'"
-      [placeholder]="I18ns.programs.questions.filters.programs"
-      (selectChange)="getTeamsFiltered({ programs: $event })"
-    ></alto-dropdown-filter>
-    <alto-dropdown-filter
-      class="text-start"
-      [data]="tags"
-      [returnValue]="'id'"
-      [displayLabel]="'name'"
-      [placeholder]="I18ns.programs.questions.filters.tags"
-      (selectChange)="getTeamsFiltered({ tags: $event })"
-    ></alto-dropdown-filter>
-  </div>
+      [options]="programOptions"
+      [title]="I18ns.programs.questions.filters.programs"
+      [controls]="programsControl"
+      [enableSearch]="true"
+      >
+    </alto-input-multiple-select>
+    <alto-input-multiple-select
+    [options]="tagOptions"
+    [title]="I18ns.programs.questions.filters.tags"
+    [controls]="tagsControl"
+    [enableSearch]="true"
+    >
+  </alto-input-multiple-select>
+</div>
 </div>
 
 <alto-placeholder-manager [status]="teamsDataStatus">
@@ -66,7 +56,9 @@
           ]"
         >
           <td>
-            <span class="alto-badge" [style]="teamStats.teamId | teamColor">{{ company.teamById.get(teamStats.teamId)?.name }}</span>
+            <span class="alto-badge" [style]="teamStats.teamId | teamColor">{{
+              company.teamById.get(teamStats.teamId)?.name
+            }}</span>
           </td>
           <td class="text-center">
             <ng-container *ngIf="teamStats.score; else elseTemplate">
@@ -93,9 +85,6 @@
             </ng-template>
           </td>
           <td>
-            <!-- <ng-template #tagsTooltip>
-                <ng-container *ngFor="let tag of team.tags">{{ tag.label }}<br /></ng-container>
-              </ng-template>-->
             <ng-container *ngIf="teamStats.tagStats && teamStats.tagStats.length > 0; else noTag">
               <alto-colored-pill-list
                 [textLimit]="15"
@@ -110,10 +99,6 @@
             </ng-template>
           </td>
           <td>
-            <!-- <ng-template #programsTooltip>
-                <ng-container *ngFor="let prog of team.programs">{{ prog.label }}<br /></ng-container>
-              </ng-template>-->
-
             <ng-container *ngIf="teamStats.programStats && teamStats.programStats.length > 0; else noProgram">
               <alto-colored-pill-list
                 [textLimit]="15"
