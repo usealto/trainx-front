@@ -5,11 +5,9 @@
     <i class="bi bi-arrow-left-short"></i><span>{{ I18ns.shared.previous }}</span>
   </button>
 
-  <div *ngIf="itemsCount > itemsPerPage">
-    <span class="col-form-label text-nowrap numbers">
-      {{ pageControl.value + ' / ' + pageCount }}
-    </span>
-  </div>
+  <span class="col-form-label text-nowrap numbers">
+    {{ pageControl.value + ' / ' + pageCount }}
+  </span>
 
   <button [disabled]="pageControl.value === pageCount"
   class="btn btn-outline-secondary"

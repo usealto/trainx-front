@@ -58,6 +58,40 @@ export class Score implements IScore {
     ];
   }
 
+  static filterDecimal(filter: ScoreFilter, value: number): boolean {
+    switch (filter) {
+      case ScoreFilter.Under25:
+        return value < 0.25;
+      case ScoreFilter.Under50:
+        return value < 0.5;
+      case ScoreFilter.Under75:
+        return value < 0.75;
+      case ScoreFilter.Over25:
+        return value > 0.25;
+      case ScoreFilter.Over50:
+        return value > 0.5;
+      case ScoreFilter.Over75:
+        return value > 0.75;
+    }
+  }
+
+  static filterPercent(filter: ScoreFilter, value: number): boolean {
+    switch (filter) {
+      case ScoreFilter.Under25:
+        return value < 25;
+      case ScoreFilter.Under50:
+        return value < 50;
+      case ScoreFilter.Under75:
+        return value < 75;
+      case ScoreFilter.Over25:
+        return value > 25;
+      case ScoreFilter.Over50:
+        return value > 50;
+      case ScoreFilter.Over75:
+        return value > 75;
+    }
+  }
+
   get rawData(): IScore {
     return {
       dates: this.dates,

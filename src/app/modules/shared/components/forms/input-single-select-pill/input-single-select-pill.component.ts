@@ -4,11 +4,11 @@ import { FormControl } from '@angular/forms';
 import { I18ns } from '../../../../../core/utils/i18n/I18n';
 
 @Component({
-  selector: 'alto-input-single-select',
-  templateUrl: './input-single-select.component.html',
-  styleUrls: ['./input-single-select.component.scss'],
+  selector: 'alto-input-single-select-pill',
+  templateUrl: './input-single-select-pill.component.html',
+  styleUrls: ['./input-single-select-pill.component.scss'],
 })
-export class InputSingleSelectComponent {
+export class InputSingleSelectPillComponent {
   I18ns = I18ns;
   EColors = EColors;
 

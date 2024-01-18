@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { UserStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, of, startWith, switchMap, tap } from 'rxjs';
 import { IAppData } from 'src/app/core/resolvers';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -28,6 +28,8 @@ import { ProgramsRestService } from '../../../programs/services/programs-rest.se
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
 import { FormControl } from '@angular/forms';
+import { PillOption, SelectOption } from '../../../shared/models/select-option.model';
+import { Score } from '../../../../models/score.model';
 
 interface TeamDisplay {
   id: string;
@@ -37,6 +39,11 @@ interface TeamDisplay {
   totalGuessesCount?: number;
   validGuessesCount?: number;
   questionsPushedCount?: number;
+}
+
+interface IUserWithStats {
+  user: User;
+  stats: UserStatsDtoApi;
 }
 
 @Component({
@@ -61,26 +68,39 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
   teamsPageControl = new FormControl(1, { nonNullable: true });
   teamsPageSize = 5;
   teamsScores: TeamDisplay[] = [];
+
   // Users
   absoluteUsersCount = 0;
   usersCount = 0;
   usersDataStatus: PlaceholderDataStatus = 'loading';
-  usersMap = new Map<string, string>();
+
   users: UserStatsDtoApi[] = [];
   previousUsersStats: UserStatsDtoApi[] = [];
-  paginatedUsers: UserStatsDtoApi[] = [];
-  usersPageControl = new FormControl(1, { nonNullable: true });
-  usersPageSize = 5;
-  filteredUsers: UserStatsDtoApi[] = [];
+
   usersTotalQuestions = 0;
   usersTotalQuestionsProgression: number | null = 0;
   usersQuestionProgression = new Map<string, number>();
-  userFilters: UserFilters = { teams: [] as Team[], score: '' };
-  isFilteredUsers = false;
+
   selectedItems: UserStatsDtoApi[] = [];
 
   rawUsers: User[] = [];
   teamNames: string[] = [];
+
+  usersPageSize = 5;
+  usersData: IUserWithStats[] = [];
+  filteredUsersData: IUserWithStats[] = [];
+
+  usersPageControl = new FormControl(1, { nonNullable: true });
+  searchControl: FormControl<string | null> = new FormControl();
+  selectedTeams: FormControl<FormControl<SelectOption>[]> = new FormControl(
+    [] as FormControl<SelectOption>[],
+    { nonNullable: true },
+  );
+  teamOptions: SelectOption[] = [];
+  selectedScores: FormControl<FormControl<PillOption>[]> = new FormControl([] as FormControl<PillOption>[], {
+    nonNullable: true,
+  });
+  scoreOptions: PillOption[] = Score.getFiltersPillOptions();
 
   private readonly leadTeamComponentSubscription = new Subscription();
 
@@ -88,7 +108,6 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     private readonly offcanvasService: NgbOffcanvas,
     private readonly teamsRestService: TeamsRestService,
     private readonly programsRestService: ProgramsRestService,
-    private readonly usersService: UsersService,
     private readonly scoreRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
     private modalService: NgbModal,
@@ -102,8 +121,10 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.company = (data[EResolvers.AppResolver] as IAppData).company;
     this.rawUsers = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
+    this.usersDataStatus = this.rawUsers.length === 0 ? 'noData' : 'good';
 
     this.teams = this.company.teams;
+    this.teamOptions = this.teams.map((team) => new SelectOption({ label: team.name, value: team.id }));
     this.programs = this.company.programs;
     this.teamNames = this.teams.map((team) => team.name);
     this.teamsStats = this.company.getStatsByPeriod(ScoreDuration.Month, false);
@@ -132,48 +153,67 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
       } as TeamDisplay;
     });
 
+    // users subscription
     this.leadTeamComponentSubscription.add(
       combineLatest([
-        this.scoreRestService.getUsersStats(ScoreDuration.Month),
-        this.scoreRestService.getUsersStats(ScoreDuration.Month, true),
+        this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
+        this.selectedTeams.valueChanges.pipe(startWith(this.selectedTeams.value)),
+        this.selectedScores.valueChanges.pipe(startWith(this.selectedScores.value)),
+        this.usersPageControl.valueChanges.pipe(startWith(this.usersPageControl.value)),
       ])
         .pipe(
-          tap(([usersStats, previousUsersStats]) => {
-            this.users = usersStats;
-            this.usersTotalQuestions = usersStats.reduce(
-              (prev, curr) => prev + (curr.totalGuessesCount || 0),
-              0,
-            );
+          switchMap(([searchTerm, selectedTeamsControls, selectedScoresControls, page]) => {
+            // TODO : API call with all params
 
-            this.usersTotalQuestionsProgression = this.scoreService.getProgression(
-              this.usersTotalQuestions,
-              previousUsersStats.reduce((prev, curr) => prev + (curr.totalGuessesCount || 0), 0),
-            );
-            this.previousUsersStats = previousUsersStats;
-            this.absoluteUsersCount = this.users.length;
-
-            this.users.forEach((user) => {
-              const member = this.teams.find((team) => team.id === user.teamId);
-              this.usersMap.set(user.id, member ? member.name : '');
-            });
-
-            this.changeTeamsPage(1);
-            this.filteredUsers = this.users;
-            this.changeUsersPage(this.users, 1);
+            return of(null);
           }),
         )
         .subscribe(),
     );
 
+    // teams subscription
     this.leadTeamComponentSubscription.add(
-      this.teamsPageControl.valueChanges.subscribe((page) => {
+      this.teamsPageControl.valueChanges.pipe(startWith(this.teamsPageControl.value)).subscribe((page) => {
         this.changeTeamsPage(page);
       }),
     );
 
+    // this.leadTeamComponentSubscription.add(
+    //   combineLatest([
+    //     this.scoreRestService.getUsersStats(ScoreDuration.Month),
+    //     this.scoreRestService.getUsersStats(ScoreDuration.Month, true),
+    //   ])
+    //     .pipe(
+    //       tap(([usersStats, previousUsersStats]) => {
+    //         this.users = usersStats;
+    //         this.usersTotalQuestions = usersStats.reduce(
+    //           (prev, curr) => prev + (curr.totalGuessesCount || 0),
+    //           0,
+    //         );
+
+    //         this.usersTotalQuestionsProgression = this.scoreService.getProgression(
+    //           this.usersTotalQuestions,
+    //           previousUsersStats.reduce((prev, curr) => prev + (curr.totalGuessesCount || 0), 0),
+    //         );
+    //         this.previousUsersStats = previousUsersStats;
+    //         this.absoluteUsersCount = this.users.length;
+
+    //         this.users.forEach((user) => {
+    //           const member = this.teams.find((team) => team.id === user.teamId);
+    //           this.usersMap.set(user.id, member ? member.name : '');
+    //         });
+
+    //         this.changeTeamsPage(1);
+    //         this.filteredUsersData = this.users;
+    //         this.changeUsersPage(this.users, 1);
+    //       }),
+    //     )
+    //     .subscribe(),
+    // );
+
     this.leadTeamComponentSubscription.add(
-      this.usersPageControl.valueChanges.subscribe((page) => {
-        this.changeUsersPage(this.filteredUsers, page);
+      this.teamsPageControl.valueChanges.subscribe((page) => {
+        this.changeTeamsPage(page);
       }),
     );
   }
@@ -194,43 +234,11 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     this.teamsDataStatus = this.paginatedTeams.length === 0 ? 'noData' : 'good';
   }
 
-  filterUsers(
-    {
-      teams = this.userFilters.teams,
-      score = this.userFilters.score,
-      search = this.userFilters.search,
-    }: UserFilters = this.userFilters,
-  ) {
-    this.userFilters.teams = teams;
-    this.userFilters.score = score;
-    this.userFilters.search = search;
-
-    let output = this.usersService.filterUsers<UserStatsDtoApi[]>(this.users, {
-      teams,
-      search,
-    });
-    if (score) {
-      output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
-    }
-    this.filteredUsers = output;
-    this.isFilteredUsers = true;
-    this.changeUsersPage(output, 1);
-  }
-
   resetFilters() {
-    this.filterUsers((this.userFilters = {}));
-    this.selectedItems = [];
-    this.isFilteredUsers = false;
-  }
-
-  changeUsersPage(users: UserStatsDtoApi[], page: number) {
-    this.usersCount = users.length;
-    this.paginatedUsers = this.filteredUsers.slice(
-      (page - 1) * this.usersPageSize,
-      page * this.usersPageSize,
-    );
-    this.usersDataStatus =
-      this.paginatedUsers.length === 0 ? (this.isFilteredUsers ? 'noResult' : 'noData') : 'good';
+    this.searchControl.patchValue(null);
+    this.selectedTeams.patchValue([]);
+    this.selectedScores.patchValue([]);
+    this.usersPageControl.patchValue(1);
   }
 
   openTeamForm(team?: Team) {

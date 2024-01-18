@@ -1,23 +1,15 @@
 <div class="mb-4 d-flex justify-content-between">
-    <alto-search (searchChange)="getQuestionsFiltered({ search: $event })"></alto-search>
-    <!-- <alto-dropdown-filter
-      class="text-start me-3"
-      [data]="teamStore.teams.value"
-      [displayLabel]="'longName'"
-      [returnValue]="'id'"
-      [placeholder]="I18ns.programs.programs.filters.team"
-      [isColored]="true"
-      (selectChange)="getQuestionsFiltered({ teams: $event })"
-    ></alto-dropdown-filter> -->
-    <alto-input-single-select
-      [title]="I18ns.statistics.user.performance.questions.scoreFilter"
-      [control]="scoreControl"
-      [options]="scoreOptions"
-    ></alto-input-single-select>
+  <alto-input-search [searchControl]="questionSearchControl"></alto-input-search>
+
+  <alto-input-single-select-pill
+    [title]="I18ns.statistics.user.performance.questions.scoreFilter"
+    [control]="scoreControl"
+    [options]="scoreOptions"
+  ></alto-input-single-select-pill>
 </div>
 
 <alto-placeholder-manager [status]="questionsDataStatus">
-  <div class="table-panel">
+  <div *ngIf="questionsDataStatus === 'good'" class="table-panel">
     <table class="table">
       <thead>
         <tr>
@@ -39,7 +31,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let quest of paginatedQuestions" class="align-middle">
+        <tr *ngFor="let quest of questionsDisplay" class="align-middle">
           <td>
             {{ quest.question.title | sliceWithDots : 150 }}
           </td>
@@ -59,7 +51,7 @@
             <alto-progression-badge
               class="d-inline-block ms-3"
               [score]="getQuestionPreviousScore(quest)"
-              *ngIf="!scoreIsLoading && getQuestionPreviousScore(quest) !== 0; else noScoreEvolution"
+              *ngIf="getQuestionPreviousScore(quest) !== 0; else noScoreEvolution"
             ></alto-progression-badge>
             <ng-template #noScoreEvolution>
               <p class="alto-grey text-center">
@@ -107,7 +99,7 @@
     <alto-pagination
       class="mx-4 d-block"
       [pageControl]="questionsPageControl"
-      [itemsCount]="questionsDisplay.length"
+      [itemsCount]="questions.length"
       [itemsPerPage]="questionsPageSize"
     ></alto-pagination>
   </div>

@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { Subscription, filter, map, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, filter, startWith, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -21,7 +22,6 @@ import { ToastService } from '../../../../core/toast/toast.service';
 import { Team } from '../../../../models/team.model';
 import { IUser, User } from '../../../../models/user.model';
 import { AddUsersComponent } from './add-users/add-users.component';
-import { FormControl } from '@angular/forms';
 
 @UntilDestroy()
 @Component({
@@ -41,14 +41,16 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
   teams: Team[] = [];
   users: User[] = [];
 
-  paginatedUsers: User[] = [];
   usersDisplay: User[] = [];
   usersPageSize = 10;
   usersPageControl = new FormControl(1, { nonNullable: true });
-  paginatedAdmins: User[] = [];
+
   adminsDisplay: User[] = [];
   adminsPageSize = 5;
   adminsPageControl = new FormControl(1, { nonNullable: true });
+
+  adminSearchControl = new FormControl<string | null>(null);
+  userSearchControl = new FormControl<string | null>(null);
 
   usedLicensesCount = 0;
 
@@ -57,7 +59,6 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
   constructor(
     private readonly userRestService: UsersRestService,
     private readonly offcanvasService: NgbOffcanvas,
-    private readonly usersService: UsersService,
     private readonly modalService: NgbModal,
     private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
     private readonly activatedRoute: ActivatedRoute,
@@ -75,24 +76,42 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
     this.settingsUsersComponentSubscription.add(
       this.store
         .select(FromRoot.selectUsers)
-        .pipe(tap(({ data: userById }) => (this.users = Array.from(userById.values()))))
-        .subscribe(() => {
-          this.displayAdmins();
-          this.displayUsers();
-          this.setUsedLicensesCount();
+        .pipe(
+          tap(({ data: userById }) => {
+            this.users = Array.from(userById.values());
+            this.setUsedLicensesCount();
+          }),
+          switchMap(() => {
+            return combineLatest([
+              this.adminSearchControl.valueChanges.pipe(startWith(this.adminSearchControl.value)),
+              this.adminsPageControl.valueChanges.pipe(startWith(this.adminsPageControl.value)),
+              this.userSearchControl.valueChanges.pipe(startWith(this.userSearchControl.value)),
+              this.usersPageControl.valueChanges.pipe(startWith(this.usersPageControl.value)),
+            ]);
+          }),
+        )
+        .subscribe(([adminSearchTerm, adminPage, userSearchTerm, userPage]) => {
+          const userRegex = userSearchTerm ? new RegExp(userSearchTerm, 'i') : null;
+          const adminRegex = adminSearchTerm ? new RegExp(adminSearchTerm, 'i') : null;
+
+          this.adminsDisplay = this.users
+            .filter((user) => {
+              if (user.isCompanyAdmin()) {
+                return adminRegex ? adminRegex.test(user.fullname) || adminRegex.test(user.email) : true;
+              }
+              return false;
+            })
+            .slice((adminPage - 1) * this.adminsPageSize, adminPage * this.adminsPageSize);
+
+          this.usersDisplay = this.users
+            .filter((user) => {
+              if (user.isCompanyUser() && !user.isCompanyAdmin()) {
+                return userRegex ? userRegex.test(user.fullname) || userRegex.test(user.email) : true;
+              }
+              return false;
+            })
+            .slice((userPage - 1) * this.usersPageSize, userPage * this.usersPageSize);
         }),
-    );
-
-    this.settingsUsersComponentSubscription.add(
-      this.adminsPageControl.valueChanges
-        .pipe(startWith(this.adminsPageControl.value))
-        .subscribe((page) => this.changeAdminsPage(page)),
-    );
-
-    this.settingsUsersComponentSubscription.add(
-      this.usersPageControl.valueChanges
-        .pipe(startWith(this.usersPageControl.value))
-        .subscribe((page) => this.changeUsersPage(page)),
     );
   }
 
@@ -107,34 +126,8 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  private displayAdmins() {
-    this.adminsDisplay = this.usersService.filterUsers<User[]>(
-      this.users.filter((user) => user.isCompanyAdmin()),
-      { search: this.userFilters.search },
-    );
-    this.changeAdminsPage(1);
-  }
-
-  private displayUsers() {
-    this.usersDisplay = this.usersService.filterUsers<User[]>(
-      this.users.filter((user) => user.isCompanyUser() && !user.isCompanyAdmin()),
-      { search: this.userFilters.search },
-    );
-    this.changeUsersPage(1);
-  }
-
   private setUsedLicensesCount() {
     this.usedLicensesCount = this.users.filter((user) => user.hasLicense).length;
-  }
-
-  filterAdmins({ search }: { search: string }) {
-    this.userFilters.search = search;
-    this.displayAdmins();
-  }
-
-  filterUsers({ search }: { search: string }) {
-    this.userFilters.search = search;
-    this.displayUsers();
   }
 
   deleteUser(user: User): void {
@@ -211,17 +204,6 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
           });
         },
       });
-  }
-
-  changeUsersPage(page: number): void {
-    this.paginatedUsers = this.usersDisplay.slice((page - 1) * this.usersPageSize, page * this.usersPageSize);
-  }
-
-  changeAdminsPage(page: number): void {
-    this.paginatedAdmins = this.adminsDisplay.slice(
-      (page - 1) * this.adminsPageSize,
-      page * this.adminsPageSize,
-    );
   }
 
   openUserEditionForm(user: User) {

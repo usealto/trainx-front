@@ -6,13 +6,11 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { QuestionFilters } from 'src/app/modules/programs/models/question.model';
 import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { PillOption } from 'src/app/modules/shared/models/select-option.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { Score } from '../../../../../models/score.model';
 
 @Component({
@@ -24,31 +22,21 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
 
-  // @Input() duration: ScoreDuration = ScoreDuration.Year;
   @Input() durationControl: FormControl<ScoreDuration> = new FormControl(ScoreDuration.Year, {
     nonNullable: true,
   });
 
-  questionFilters: QuestionFilters = {
-    programs: [],
-    tags: [],
-    teams: [],
-    search: '',
-  };
-
-  scoreControl = new FormControl<PillOption | null>(null);
-
   questions: QuestionStatsDtoApi[] = [];
   questionsPreviousPeriod: QuestionStatsDtoApi[] = [];
   questionsDisplay: QuestionStatsDtoApi[] = [];
-  paginatedQuestions: QuestionStatsDtoApi[] = [];
   questionsDataStatus: PlaceholderDataStatus = 'loading';
   questionsPageControl = new FormControl(1, { nonNullable: true });
   questionsPageSize = 5;
 
   scoreOptions: PillOption[] = Score.getFiltersPillOptions();
 
-  scoreIsLoading = true;
+  scoreControl = new FormControl<PillOption | null>(null);
+  questionSearchControl = new FormControl<string | null>(null);
 
   private readonly performanceQuestionsTableComponentSubscription = new Subscription();
 
@@ -56,7 +44,6 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
     public readonly teamStore: TeamStore,
     public readonly programsStore: ProgramsStore,
     private readonly scoreRestService: ScoresRestService,
-    private readonly scoreService: ScoresService,
   ) {}
 
   ngOnInit(): void {
@@ -64,82 +51,50 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
       this.durationControl.valueChanges
         .pipe(
           startWith(this.durationControl.value),
-          tap(() => (this.scoreIsLoading = true)),
           switchMap((duration) => {
             return combineLatest([
               this.scoreRestService.getQuestionsStats(duration),
               this.scoreRestService.getQuestionsStats(duration, true),
             ]);
           }),
-        )
-        .subscribe(([questionsStats, prevQuestionsStats]) => {
-          this.questions = questionsStats;
-          this.questionsDisplay = [...questionsStats];
-          this.changeQuestionsPage(this.questionsPageControl.value);
-
-          this.questionsPreviousPeriod = prevQuestionsStats;
-          this.scoreIsLoading = false;
-          this.getQuestionsFiltered();
-        }),
-    );
-
-    this.performanceQuestionsTableComponentSubscription.add(
-      this.scoreControl.valueChanges
-        .pipe(
-          startWith(this.scoreControl.value),
-          tap((scoreOption) => {
-            this.questionFilters.score = scoreOption ? scoreOption.value : undefined;
-            this.getQuestionsFiltered();
+          tap(([questionsStats, prevQuestionsStats]) => {
+            this.questions = questionsStats;
+            this.questionsPreviousPeriod = prevQuestionsStats;
+          }),
+          switchMap(() => {
+            return combineLatest([
+              this.questionSearchControl.valueChanges.pipe(startWith(this.questionSearchControl.value)),
+              this.scoreControl.valueChanges.pipe(startWith(this.scoreControl.value)),
+              this.questionsPageControl.valueChanges.pipe(startWith(this.questionsPageControl.value)),
+            ]);
           }),
         )
-        .subscribe(),
-    );
+        .subscribe({
+          next: ([search, scoreOption, page]) => {
+            const filter = scoreOption ? (scoreOption.value as ScoreFilter) : null;
+            const regex = search ? new RegExp(search, 'i') : null;
+            this.questionsDisplay = this.questions
+              .filter((question) => {
+                return (
+                  (regex ? regex.test(question.question.title) : true) &&
+                  question.score &&
+                  (filter ? Score.filterPercent(filter, question.score) : true)
+                );
+              })
+              .slice((page - 1) * this.questionsPageSize, page * this.questionsPageSize);
 
-    this.performanceQuestionsTableComponentSubscription.add(
-      this.questionsPageControl.valueChanges.subscribe((page) => this.changeQuestionsPage(page)),
+            if (this.questions.length === 0) {
+              this.questionsDataStatus = 'noData';
+            } else {
+              this.questionsDataStatus = this.questionsDisplay.length ? 'good' : 'empty';
+            }
+          },
+        }),
     );
   }
 
   ngOnDestroy(): void {
     this.performanceQuestionsTableComponentSubscription.unsubscribe();
-  }
-
-  getQuestionsFiltered(
-    {
-      duration = this.questionFilters.duration,
-      teams = this.questionFilters.teams,
-      score = this.questionFilters.score,
-      search = this.questionFilters.search,
-    }: QuestionFilters = this.questionFilters,
-  ) {
-    this.questionFilters.duration = duration;
-    this.questionFilters.teams = teams;
-    this.questionFilters.score = score;
-    this.questionFilters.search = search;
-
-    let output: QuestionStatsDtoApi[] = this.questions;
-
-    if (search) {
-      output = output.filter((t) => t.question.title.toLowerCase().includes(search.toLowerCase()));
-    }
-    if (teams && teams.length > 0) {
-      output = output.filter((q) => q.teams?.some((t) => teams.some((te) => te === t.id)));
-    }
-    if (score) {
-      output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
-    }
-
-    this.questionsDisplay = output;
-
-    this.changeQuestionsPage(1);
-  }
-
-  private changeQuestionsPage(page: number) {
-    this.paginatedQuestions = this.questionsDisplay.slice(
-      (page - 1) * this.questionsPageSize,
-      page * this.questionsPageSize,
-    );
-    this.questionsDataStatus = this.paginatedQuestions.length === 0 ? 'noData' : 'good';
   }
 
   @memoize()

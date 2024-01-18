@@ -33,7 +33,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
     nonNullable: true,
   });
 
-  searchControl = new FormControl('', { nonNullable: true });
+  searchControl = new FormControl<string | null>(null);
 
   programOptions: SelectOption[] = [];
   programsControl = new FormControl([] as FormControl<SelectOption>[], { nonNullable: true });

@@ -18,12 +18,7 @@
 </p>
 
 <div class="row">
-  <alto-search
-    data-cy="filterBySearch"
-    class="float-end d-inline-block"
-    (searchChange)="filterAdmins({ search: $event })"
-  >
-  </alto-search>
+  <alto-input-search [searchControl]="adminSearchControl"></alto-input-search>
 
   <div class="col my-5 px-0">
     <div class="table-panel">
@@ -49,7 +44,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of paginatedAdmins" class="align-middle">
+          <tr *ngFor="let user of adminsDisplay" class="align-middle">
             <td class="px-4">
               <alto-profile-card [user]="user"></alto-profile-card>
             </td>
@@ -190,12 +185,7 @@
     </button>
   </div>
 
-  <alto-search
-    data-cy="filterBySearch"
-    class="w-50 d-inline-block"
-    (searchChange)="filterUsers({ search: $event })"
-    *ngIf="usersDisplay.length || !userFilterEmpty()"
-  ></alto-search>
+  <alto-input-search *ngIf="usersDisplay.length || !userFilterEmpty()" [searchControl]="userSearchControl"></alto-input-search>
 </div>
 
 <div class="table-panel" *ngIf="usersDisplay.length; else nouser">
@@ -221,7 +211,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of paginatedUsers" class="align-middle">
+      <tr *ngFor="let user of usersDisplay" class="align-middle">
         <td class="px-4">
           <alto-profile-card [user]="user"></alto-profile-card>
         </td>
