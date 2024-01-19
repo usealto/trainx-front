@@ -12,7 +12,7 @@ import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsRestService } from 'src/app/modules/programs/services/questions-rest.service';
-import { QuestionFormComponent } from 'src/app/modules/shared/components/question-form/question-form.component';
+import { QuestionFormComponent } from 'src/app/modules/programs/components/create-questions/question-form.component';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { IAppData } from '../../../../core/resolvers';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';

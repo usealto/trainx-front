@@ -15,7 +15,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
 import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
-import { QuestionFormComponent } from 'src/app/modules/shared/components/question-form/question-form.component';
+import { QuestionFormComponent } from 'src/app/modules/programs/components/create-questions/question-form.component';
 import { IAppData } from '../../../../core/resolvers';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
 import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';

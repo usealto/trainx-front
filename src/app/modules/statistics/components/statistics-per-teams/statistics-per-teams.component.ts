@@ -1,19 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { UserStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, startWith, tap } from 'rxjs';
+import { Observable, Subscription, combineLatest, map, of, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { UserFilters } from 'src/app/modules/profile/models/user.model';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
+import { SelectOption } from 'src/app/modules/shared/models/select-option.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../core/resolvers';
 import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
-import * as FromRoot from '../../../../core/store/store.reducer';
 import { Company } from '../../../../models/company.model';
 import { Team, TeamStats } from '../../../../models/team.model';
 import { User } from '../../../../models/user.model';
@@ -27,17 +25,18 @@ import { DataForTable } from '../../models/statistics.model';
 export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
-  userFilters: UserFilters = { teams: [] as Team[], score: '' };
+
   durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Trimester, {
     nonNullable: true,
   });
+  searchControl = new FormControl<string | null>(null);
+  teamsControl = new FormControl([] as FormControl<SelectOption>[], { nonNullable: true });
 
   company: Company = {} as Company;
   teams: Team[] = [];
   users: User[] = [];
   members: DataForTable[] = [];
 
-  teamsStats: TeamStats[] = [];
   teamsStatsPrev: TeamStats[] = [];
 
   membersDisplay: DataForTable[] = [];
@@ -60,13 +59,35 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
     this.company = (data[EResolvers.AppResolver] as IAppData).company;
     this.users = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
     this.teams = this.company.teams;
-    this.teamsStats = this.company.getStatsByPeriod(this.durationControl.value, false);
-    this.teamsStatsPrev = this.company.getStatsByPeriod(this.durationControl.value, true);
+    // this.teamsStats = this.company.getStatsByPeriod(this.durationControl.value, false);
+    // this.teamsStatsPrev = this.company.getStatsByPeriod(this.durationControl.value, true);
+
+    // this.statisticsPerTeamsComponentSubscription.add(
+    //   this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)).subscribe((duration) => {
+    //     this.getDatas(duration);
+    //   }),
+    // );
 
     this.statisticsPerTeamsComponentSubscription.add(
-      this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)).subscribe((duration) => {
-        this.getDatas(duration);
-      }),
+      combineLatest([
+        this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+        this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
+        this.teamsControl.valueChanges.pipe(startWith(this.teamsControl.value)),
+      ])
+        .pipe(
+          switchMap(([duration, search, teams]) => {
+            return combineLatest([
+              this.scoreRestService.getUsersStats(duration),
+              this.scoreRestService.getUsersStats(duration, true),
+              of(duration),
+              of(search),
+              of(teams.map(({ value }) => value.value)),
+            ]);
+          }),
+        )
+        .subscribe(([usersStats, prevUsersStats, duration, search, teams]) => {
+          // this.teamsStats = this.company.getStatsByPeriod(duration, false);
+        }),
     );
   }
 

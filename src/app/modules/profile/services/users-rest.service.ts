@@ -13,17 +13,12 @@ import {
 } from '@usealto/sdk-ts-angular';
 import { Observable, combineLatest, map, of, switchMap, tap } from 'rxjs';
 import { User } from 'src/app/models/user.model';
-import { ProfileStore } from '../profile.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UsersRestService {
-  constructor(
-    private readonly scoreApi: ScoresApiService,
-    private readonly userApi: UsersApiService,
-    private userStore: ProfileStore,
-  ) {}
+  constructor(private readonly scoreApi: ScoresApiService, private readonly userApi: UsersApiService) {}
 
   getUsers(): Observable<User[]> {
     return this.userApi.getUsers({ page: 1, sortBy: 'createdAt:asc', itemsPerPage: 1000 }).pipe(
@@ -49,10 +44,6 @@ export class UsersRestService {
         return usersDtos.flat().map(User.fromDto);
       }),
     );
-  }
-
-  resetUsers() {
-    this.userStore.users.value = [];
   }
 
   getUsersCount(params: GetUsersRequestParams): Observable<number> {

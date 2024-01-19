@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
-import { UserStatsDtoApi } from '@usealto/sdk-ts-angular';
+import { GetUsersStatsRequestParams, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { Subscription, combineLatest, of, startWith, switchMap, tap } from 'rxjs';
 import { IAppData } from 'src/app/core/resolvers';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
@@ -74,7 +74,7 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
   usersCount = 0;
   usersDataStatus: PlaceholderDataStatus = 'loading';
 
-  users: UserStatsDtoApi[] = [];
+  usersStats: UserStatsDtoApi[] = [];
   previousUsersStats: UserStatsDtoApi[] = [];
 
   usersTotalQuestions = 0;
@@ -97,9 +97,7 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     { nonNullable: true },
   );
   teamOptions: SelectOption[] = [];
-  selectedScores: FormControl<FormControl<PillOption>[]> = new FormControl([] as FormControl<PillOption>[], {
-    nonNullable: true,
-  });
+  selectedScoreControl: FormControl<PillOption | null> = new FormControl(null);
   scoreOptions: PillOption[] = Score.getFiltersPillOptions();
 
   private readonly leadTeamComponentSubscription = new Subscription();
@@ -158,17 +156,71 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
       combineLatest([
         this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
         this.selectedTeams.valueChanges.pipe(startWith(this.selectedTeams.value)),
-        this.selectedScores.valueChanges.pipe(startWith(this.selectedScores.value)),
+        this.selectedScoreControl.valueChanges.pipe(startWith(this.selectedScoreControl.value)),
         this.usersPageControl.valueChanges.pipe(startWith(this.usersPageControl.value)),
       ])
         .pipe(
-          switchMap(([searchTerm, selectedTeamsControls, selectedScoresControls, page]) => {
-            // TODO : API call with all params
+          switchMap(([searchTerm, selectedTeamsControls, selectedScore, page]) => {
+            let scoreAboveOrEqual: number | undefined;
+            let scoreBelowOrEqual: number | undefined;
 
-            return of(null);
+            switch (selectedScore?.value) {
+              case ScoreFilter.Under25:
+                scoreBelowOrEqual = 25;
+                break;
+              case ScoreFilter.Under50:
+                scoreBelowOrEqual = 50;
+                break;
+              case ScoreFilter.Under75:
+                scoreBelowOrEqual = 75;
+                break;
+              case ScoreFilter.Over25:
+                scoreAboveOrEqual = 25;
+                break;
+              case ScoreFilter.Over50:
+                scoreAboveOrEqual = 50;
+                break;
+              case ScoreFilter.Over75:
+                scoreAboveOrEqual = 75;
+                break;
+            }
+
+            const req: GetUsersStatsRequestParams = {
+              page,
+              teamIds: selectedTeamsControls.map((control) => control.value.value).join(','),
+              search: searchTerm || undefined,
+              scoreAboveOrEqual,
+              scoreBelowOrEqual,
+            };
+
+            return combineLatest([
+              this.scoreRestService.getUsersStats(ScoreDuration.Year, false, req),
+              this.scoreRestService.getUsersStats(ScoreDuration.Year, true, req),
+            ]);
           }),
         )
-        .subscribe(),
+        .subscribe(([usersStats, previousUsersStats]) => {
+          this.usersStats = usersStats;
+          this.usersTotalQuestions = usersStats.reduce(
+            (prev, curr) => prev + (curr.totalGuessesCount || 0),
+            0,
+          );
+
+          this.usersTotalQuestionsProgression = this.scoreService.getProgression(
+            this.usersTotalQuestions,
+            previousUsersStats.reduce((prev, curr) => prev + (curr.totalGuessesCount || 0), 0),
+          );
+          this.previousUsersStats = previousUsersStats;
+          this.absoluteUsersCount = this.usersStats.length;
+
+          this.filteredUsersData = this.usersStats.map((userStats) => {
+            const matchingUser = this.rawUsers.find((rawUser) => rawUser.id === userStats.user.id);
+            return {
+              user: matchingUser || User.fromDto(userStats.user),
+              stats: userStats,
+            };
+          });
+        }),
     );
 
     // teams subscription
@@ -235,9 +287,9 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
   }
 
   resetFilters() {
-    this.searchControl.patchValue(null);
-    this.selectedTeams.patchValue([]);
-    this.selectedScores.patchValue([]);
+    this.searchControl.patchValue(null, { emitEvent: false });
+    this.selectedTeams.patchValue([], { emitEvent: false });
+    this.selectedScoreControl.patchValue(null, { emitEvent: false });
     this.usersPageControl.patchValue(1);
   }
 
@@ -318,7 +370,7 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
 
   @memoize()
   getTeamUsersCount(teamId: string): number {
-    return this.users.filter((user) => user.teamId === teamId).length;
+    return this.usersStats.filter((user) => user.teamId === teamId).length;
   }
 
   @memoize()

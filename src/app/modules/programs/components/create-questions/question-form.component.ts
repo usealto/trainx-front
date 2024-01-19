@@ -27,11 +27,11 @@ import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { Program } from '../../../../models/program.model';
-import { QuestionForm } from '../../../programs/models/question.form';
-import { ProgramsRestService } from '../../../programs/services/programs-rest.service';
-import { QuestionsRestService } from '../../../programs/services/questions-rest.service';
-import { QuestionsSubmittedRestService } from '../../../programs/services/questions-submitted-rest.service';
-import { TagsRestService } from '../../../programs/services/tags-rest.service';
+import { QuestionForm } from '../../models/question.form';
+import { ProgramsRestService } from '../../services/programs-rest.service';
+import { QuestionsRestService } from '../../services/questions-rest.service';
+import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
+import { TagsRestService } from '../../services/tags-rest.service';
 
 @UntilDestroy()
 @Component({

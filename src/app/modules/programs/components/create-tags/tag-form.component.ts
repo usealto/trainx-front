@@ -11,13 +11,13 @@ import {
   QuestionDtoApi,
   TagDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { TagForm } from '../../../models/tag.form';
-import { ProgramsRestService } from '../../../services/programs-rest.service';
-import { TagsRestService } from '../../../services/tags-rest.service';
+import { TagForm } from '../../models/tag.form';
+import { ProgramsRestService } from '../../services/programs-rest.service';
+import { TagsRestService } from '../../services/tags-rest.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
 import { Store } from '@ngrx/store';
-import * as FromRoot from '../../../../../core/store/store.reducer';
-import { Program } from '../../../../../models/program.model';
+import * as FromRoot from '../../../../core/store/store.reducer';
+import { Program } from '../../../../models/program.model';
 
 @Component({
   selector: 'alto-tags-form',

@@ -1,21 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AltoConnectorEnumApi, CompanyDtoApiConnectorEnumApi } from '@usealto/sdk-ts-angular';
 import { switchMap, tap } from 'rxjs';
-import { ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { CompaniesStore } from 'src/app/modules/companies/companies.store';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
 import { environment } from '../../../../../environments/environment';
 import { updateCompany } from '../../../../core/store/root/root.action';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { ToastService } from '../../../../core/toast/toast.service';
-import { Company, ICompany } from '../../../../models/company.model';
+import { Company } from '../../../../models/company.model';
+import { User } from '../../../../models/user.model';
 import { TriggersService } from '../../services/triggers.service';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 
@@ -25,20 +22,20 @@ enum ModalType {
   ChangeConnector = 'changeConnector',
 }
 
-@UntilDestroy()
 @Component({
   selector: 'alto-settings-integrations',
   templateUrl: './settings-integrations.component.html',
   styleUrls: ['./settings-integrations.component.scss'],
 })
 export class SettingsIntegrationsComponent implements OnInit {
+  @Input() company!: Company;
+  @Input() users!: User[];
+
   registerForm!: FormGroup;
   EmojiName = EmojiName;
   I18ns = I18ns;
   ModalType = ModalType;
   Connector = AltoConnectorEnumApi;
-
-  company: Company = new Company({} as ICompany);
 
   nbUsers = 0;
   nbUsersConnectorInactive = 0;
@@ -55,9 +52,6 @@ export class SettingsIntegrationsComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private readonly companiesRestService: CompaniesRestService,
-    private readonly companiesStore: CompaniesStore,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly resolversService: ResolversService,
     private readonly toastService: ToastService,
     private readonly triggersService: TriggersService,
     private formBuilder: FormBuilder,
@@ -65,24 +59,18 @@ export class SettingsIntegrationsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.store.select(FromRoot.selectCompany).subscribe((company) => {
-      this.company = company.data;
-      this.isIntegrationEnabled = company.data.isIntegrationEnabled ?? false;
-      this.isConnectorActivated = company.data.isConnectorActive ?? false;
-      this.isWebAppActivated = company.data.usersHaveWebAccess ?? false;
-      this.connector =
-        company.data.connector === CompanyDtoApiConnectorEnumApi.Slack
-          ? AltoConnectorEnumApi.Slack
-          : company.data.connector === CompanyDtoApiConnectorEnumApi.GoogleChat
-          ? AltoConnectorEnumApi.GoogleChat
-          : AltoConnectorEnumApi.Unknown;
-    });
-    this.store.select(FromRoot.selectUsers).subscribe((users) => {
-      this.nbUsers = users.data.size;
-      this.nbUsersConnectorInactive = Array.from(users.data.values()).filter(
-        (user) => !user.isConnectorActive,
-      ).length;
-    });
+    this.isIntegrationEnabled = this.company.isIntegrationEnabled ?? false;
+    this.isConnectorActivated = this.company.isConnectorActive ?? false;
+    this.isWebAppActivated = this.company.usersHaveWebAccess ?? false;
+    this.connector =
+      this.company.connector === CompanyDtoApiConnectorEnumApi.Slack
+        ? AltoConnectorEnumApi.Slack
+        : this.company.connector === CompanyDtoApiConnectorEnumApi.GoogleChat
+        ? AltoConnectorEnumApi.GoogleChat
+        : AltoConnectorEnumApi.Unknown;
+
+    this.nbUsers = this.users.length;
+    this.nbUsersConnectorInactive = this.users.filter((user) => !user.isConnectorActive).length;
 
     //custom email validator
     this.registerForm = this.formBuilder.group({
@@ -165,7 +153,6 @@ export class SettingsIntegrationsComponent implements OnInit {
             this.store.dispatch(updateCompany({ company }));
           }),
           switchMap(() => this.store.select(FromRoot.selectCompany)),
-          untilDestroyed(this),
         )
         .subscribe({
           next: ({ data: company }) => {
@@ -183,9 +170,7 @@ export class SettingsIntegrationsComponent implements OnInit {
         .pipe(
           tap((company) => {
             this.isWebAppActivated = isActivated;
-            this.companiesStore.myCompany.value = company;
           }),
-          untilDestroyed(this),
         )
         .subscribe();
     }
@@ -204,12 +189,7 @@ export class SettingsIntegrationsComponent implements OnInit {
               ? AltoConnectorEnumApi.GoogleChat
               : AltoConnectorEnumApi.Unknown,
         })
-        .pipe(
-          tap((company) => {
-            this.companiesStore.myCompany.value = company;
-          }),
-          untilDestroyed(this),
-        )
+        .pipe()
         .subscribe();
     }
   }

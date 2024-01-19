@@ -1,21 +1,20 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TagDtoApi } from '@usealto/sdk-ts-angular';
+import { Subscription, combineLatest, map, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
 import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { Company } from '../../../../../models/company.model';
 import { TeamStats } from '../../../../../models/team.model';
-import { FormControl } from '@angular/forms';
-import { Subscription, combineLatest, map, startWith, switchMap, tap } from 'rxjs';
-import { SelectOption } from '../../../../shared/models/select-option.model';
 import { TagsRestService } from '../../../../programs/services/tags-rest.service';
+import { SelectOption } from '../../../../shared/models/select-option.model';
 
 @UntilDestroy()
 @Component({
@@ -56,7 +55,6 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
 
   constructor(
     public readonly teamStore: TeamStore,
-    public readonly profileStore: ProfileStore,
     public readonly programsRestService: ProgramsRestService,
     public readonly tagsRestService: TagsRestService,
   ) {}

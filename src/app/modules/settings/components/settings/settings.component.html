@@ -9,5 +9,5 @@
 ></alto-tabs>
 <span [ngSwitch]="activeTab">
   <alto-settings-users *ngSwitchCase="1"></alto-settings-users>
-  <alto-settings-integrations *ngSwitchCase="2"></alto-settings-integrations>
+  <alto-settings-integrations *ngSwitchCase="2" [company]="company" [users]="users"></alto-settings-integrations>
 </span>

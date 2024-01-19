@@ -74,7 +74,7 @@ export const AppGuard: CanActivateFn = () => {
           router.navigate(['/', AltoRoutes.noAccess]);
           return of(false);
         }),
-      ); 
+      );
     }),
   );
 };

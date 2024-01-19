@@ -43,7 +43,7 @@
       class="mb-4 col-4"
       *ngFor="let prog of programsDisplay | slice : (pageControl.value - 1) * pageSize : pageControl.value * pageSize"
     >
-      <alto-program-card
+      <!-- <alto-program-card
         [displayToggle]="displayToggle"
         [score]="programsScores.get(prog.id)"
         [progress]="programsProgress.get(prog.id)"
@@ -52,7 +52,7 @@
         [allTeamsCount]="teamStore.teams.value.length"
         [membersHaveValidatedCount]="programsMemberHaveValidatedCount.get(prog.id)"
         data-cy="programCard"
-      ></alto-program-card>
+      ></alto-program-card> -->
     </div>
     <div *ngIf="count < 3" class="my-4 col-4">
       <div class="nodata-placeholder m-0">

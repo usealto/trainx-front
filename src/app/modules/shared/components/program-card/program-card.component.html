@@ -13,15 +13,15 @@
     class="panel cursor-pointer"
     [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, program.id]"
   >
-    
-    <p 
-      class="title" 
+
+    <p
+      class="title"
       [ngClass]="{ 'w-100': !displayToggle }"
       ngbTooltip="{{ program.name.length > 35 ? program.name : '' }}"
     >
       {{ program.name }}
     </p>
-    
+
     <ng-container *ngIf="program.teams.length > 0; else elseTeams">
       <span  ngbTooltip="{{ teamHover(program) }}">
         <p class="d-inline-block me-2">
@@ -53,7 +53,7 @@
         {{ score ? (score | percent) : '-' }}
       </span>
     </p>
-    <p class="score">
+    <!-- <p class="score">
       <span>
         <img class="pe-1 mb-2" [src]="Emoji.RollerCoaster | emoji" height="14" width="14" />
         {{ I18ns.programs.programs.progress }}
@@ -61,7 +61,7 @@
       <span class="float-end alto-score" [class]="(progress ? progress * 100 : '') | pillColor">
         {{ progress ? (progress | percent) : '-' }}
       </span>
-    </p>
+    </p> -->
     <p class="score">
       <span>
         <img class="pe-1 mb-2" [src]="Emoji.CheckMarkButton | emoji" height="14" width="14" />

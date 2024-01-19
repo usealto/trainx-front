@@ -23,7 +23,7 @@ import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ValidationService } from 'src/app/modules/shared/services/validation.service';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
-import { QuestionFormComponent } from '../../../shared/components/question-form/question-form.component';
+import { QuestionFormComponent } from '../create-questions/question-form.component';
 import { ProgramForm } from '../../models/programs.form';
 import { QuestionDisplayLight } from '../../models/question.model';
 import { ProgramsStore } from '../../programs.store';

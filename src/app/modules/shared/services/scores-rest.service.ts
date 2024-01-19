@@ -41,9 +41,7 @@ export class ScoresRestService {
   getUsersStats(
     duration: ScoreDuration,
     isProgression?: boolean,
-    id?: string,
-    sortBy?: string,
-    teamId?: string,
+    reqParams: GetUsersStatsRequestParams = {},
   ): Observable<UserStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
@@ -58,15 +56,14 @@ export class ScoresRestService {
       dateBefore = new Date();
       dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
+
     return this.statsApi
       .getUsersStats({
-        teamIds: teamId,
         from: dateAfter,
         to: dateBefore,
         respondsRegularlyThreshold: 0.42,
-        userId: id,
-        sortBy: sortBy,
         itemsPerPage: 1000,
+        ...reqParams,
       } as GetUsersStatsRequestParams)
       .pipe(map((r) => r.data || []));
   }
@@ -136,11 +133,7 @@ export class ScoresRestService {
   }
 
   // Cloned from getTeamsStats() to use in resolver => Return TeamStats[] and not TeamStatsDtoApi[]
-  getTeamsStatsObj(
-    duration: ScoreDuration,
-    isProgression = false,
-    sortBy?: string,
-  ): Observable<TeamStats[]> {
+  getTeamsStatsObj(duration: ScoreDuration, isProgression = false, sortBy?: string): Observable<TeamStats[]> {
     let dateAfter: Date;
     let dateBefore: Date;
 
@@ -165,7 +158,11 @@ export class ScoresRestService {
       } as GetTeamsStatsRequestParams)
       .pipe(
         map((response) =>
-          response.data ? response.data.map((dto) => TeamStats.fromDto(dto, dateAfter, dateBefore, duration, isProgression)) : [],
+          response.data
+            ? response.data.map((dto) =>
+                TeamStats.fromDto(dto, dateAfter, dateBefore, duration, isProgression),
+              )
+            : [],
         ),
       );
   }
@@ -190,7 +187,7 @@ export class ScoresRestService {
     }
 
     return this.statsApi
-      .getProgramsStats({ ...reqParams, itemsPerPage: 400, from: dateAfter, to: dateBefore })
+      .getProgramsStats({ itemsPerPage: 400, from: dateAfter, to: dateBefore, ...reqParams })
       .pipe(map((r) => r.data || []));
   }
 

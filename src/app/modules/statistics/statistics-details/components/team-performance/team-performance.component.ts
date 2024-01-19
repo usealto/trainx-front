@@ -249,8 +249,8 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
           switchMap(([search, duration]) => {
             return combineLatest([
               of(search),
-              this.scoresRestService.getUsersStats(duration, false, undefined, undefined, this.teamId),
-              this.scoresRestService.getUsersStats(duration, true, undefined, undefined, this.teamId),
+              this.scoresRestService.getUsersStats(duration, false, { teamIds: this.teamId }),
+              this.scoresRestService.getUsersStats(duration, true, { teamIds: this.teamId }),
             ]);
           }),
           map(([search, usersStats, prevUsersStats]) => {

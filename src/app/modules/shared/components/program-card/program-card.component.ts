@@ -13,10 +13,9 @@ import { AltoRoutes } from '../../constants/routes';
 })
 export class ProgramCardComponent implements OnInit, OnChanges {
   @Input() displayToggle = false;
-  @Input() program!: ProgramDtoApi;
+  @Input() program!: ProgramDtoApi; // TODO : create interface for all inputs
   @Input() programRun!: ProgramRunApi;
   @Input() score: number | undefined;
-  @Input() progress: number | undefined;
   @Input() participation: number | undefined;
   @Input() allTeamsCount: number | undefined;
   @Input() membersHaveValidatedCount!: string | undefined;

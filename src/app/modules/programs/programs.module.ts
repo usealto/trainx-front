@@ -5,8 +5,8 @@ import { CreateProgramsComponent } from './components/create-programs/create-pro
 import { ProgramsFormComponent } from './components/create-programs/programs-form/programs-form.component';
 import { QuestionsTableComponent } from './components/create-programs/questions-table/questions-table.component';
 import { ProgramsComponent } from './components/programs/programs.component';
-import { QuestionSubmittedFormComponent } from './components/questions/question-submitted-form/question-submitted-form.component';
-import { TagsFormComponent } from './components/tags/tag-form/tag-form.component';
+import { QuestionSubmittedFormComponent } from '../training/components/training/question-submitted-form/question-submitted-form.component';
+import { TagsFormComponent } from './components/create-tags/tag-form.component';
 import { ProgramsRoutingModule } from './programs-routing.module';
 import { ProgramsQuestionsComponent } from './components/programs/programs-questions/programs-questions.component';
 

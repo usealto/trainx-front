@@ -25,9 +25,9 @@ export class QuestionsRestService {
 
   getQuestions(req?: GetQuestionsRequestParams): Observable<QuestionDtoApi[]> {
     const par = {
+      page: 1,
+      itemsPerPage: 800,
       ...req,
-      page: req?.page ?? 1,
-      itemsPerPage: req?.itemsPerPage ?? 800,
     };
 
     return this.questionApi.getQuestions(par).pipe(map((r) => r.data ?? []));
@@ -48,10 +48,7 @@ export class QuestionsRestService {
   }
 
   createQuestion(createQuestionDtoApi: CreateQuestionDtoApi) {
-    return this.questionApi.createQuestion({ createQuestionDtoApi }).pipe(
-      map((d) => d.data),
-      tap((q) => this.programStore.questionsInitList.add(q)),
-    );
+    return this.questionApi.createQuestion({ createQuestionDtoApi }).pipe(map((d) => d.data));
   }
 
   updateQuestion(patchQuestionRequestParams: PatchQuestionRequestParams) {
@@ -59,12 +56,6 @@ export class QuestionsRestService {
   }
 
   deleteQuestion(id: string) {
-    return this.questionApi.deleteQuestion({ id }).pipe(
-      tap(() => {
-        this.programStore.questionsInitList.value = this.programStore.questionsInitList.value.filter(
-          (p) => p.id !== id,
-        );
-      }),
-    );
+    return this.questionApi.deleteQuestion({ id });
   }
 }

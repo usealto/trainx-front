@@ -37,14 +37,14 @@
     {{ I18ns.statistics.perTeams.sections.members }}
   </h2>
   <p class="alto-grey mb-4">{{ I18ns.statistics.perTeams.sections.membersSubtitle }}</p>
-  <alto-dropdown-filter
+  <alto-input-multiple-select
     class="float-end"
-    [placeholder]="I18ns.statistics.perTeams.teamsFilter"
-    [data]="teams"
-    [displayLabel]="'name'"
-    (selectChange)="filterMembers({ teams: $event })"
-  ></alto-dropdown-filter>
-  <alto-search class="mb-5" (searchChange)="filterMembers({ search: $event })"></alto-search>
+    [title]="I18ns.statistics.perTeams.teamsFilter"
+    [controls]="teamsControl"
+    [enableSearch]="true"
+  >
+  </alto-input-multiple-select>
+  <alto-input-search class="mb-5" [searchControl]="searchControl" [placeholder]="I18ns.shared.search"></alto-input-search>
 
   <alto-placeholder-manager [status]="membersDataStatus">
     <alto-per-teams-table [type]="'user'" [data]="membersDisplay"></alto-per-teams-table>

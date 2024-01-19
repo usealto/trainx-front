@@ -46,8 +46,8 @@ export class ContinuingTrainingComponent implements OnInit {
     this.me = (data[EResolvers.AppResolver] as IAppData).me;
 
     combineLatest([
-      this.scoresRestService.getUsersStats(ScoreDuration.Month, false, this.me.id),
-      this.scoresRestService.getUsersStats(ScoreDuration.Month, true, this.me.id),
+      this.scoresRestService.getUsersStats(ScoreDuration.Month, false, { ids: this.me.id }),
+      this.scoresRestService.getUsersStats(ScoreDuration.Month, true, { ids: this.me.id }),
       this.guessRestService.getGuesses({ createdBy: this.me.id, itemsPerPage: 500 }, ScoreDuration.Trimester),
       this.guessRestService.getGuesses(
         { createdBy: this.me.id, itemsPerPage: 500 },

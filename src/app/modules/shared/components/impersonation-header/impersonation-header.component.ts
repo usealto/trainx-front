@@ -1,12 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserDtoApiRolesEnumApi } from '@usealto/sdk-ts-angular';
-import { ProfileStore } from 'src/app/modules/profile/profile.store';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import * as FromRoot from './../../../../core/store/store.reducer';
 import { Store } from '@ngrx/store';
-import { IUser, User } from 'src/app/models/user.model';
 import { setUserMe } from 'src/app/core/store/root/root.action';
+import { IUser, User } from 'src/app/models/user.model';
+import * as FromRoot from './../../../../core/store/store.reducer';
 @Component({
   selector: 'alto-impersonation-header',
   templateUrl: './impersonation-header.component.html',

@@ -46,7 +46,7 @@ import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
 import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { PlaceholderManagerComponent } from './components/placeholder-manager/placeholder-manager.component';
-import { QuestionFormComponent } from './components/question-form/question-form.component';
+import { QuestionFormComponent } from '../programs/components/create-questions/question-form.component';
 import { ImpersonationHeaderComponent } from './components/impersonation-header/impersonation-header.component';
 import { InputTextComponent } from './components/forms/input-text/input-text.component';
 import { InputPillsComponent } from './components/forms/input-pills/input-pills.component';

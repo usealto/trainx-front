@@ -95,8 +95,8 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
             return combineLatest([
               of(duration),
               this.scoreRestService.getScores(this.getScoreParams('answers', duration)),
-              this.scoreRestService.getUsersStats(duration, false, undefined, undefined, this.team.id),
-              this.scoreRestService.getUsersStats(duration, true, undefined, undefined, this.team.id),
+              this.scoreRestService.getUsersStats(duration, false, { teamIds: this.team.id }),
+              this.scoreRestService.getUsersStats(duration, true, { teamIds: this.team.id }),
               this.scoreRestService.getScores(this.getScoreParams('comments', duration)),
               this.scoreRestService.getScores(this.getScoreParams('submitedQuestions', duration)),
             ]);

@@ -123,20 +123,16 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
         this.questionsSubmittedRestService.getQuestionsCount({
           status: QuestionSubmittedStatusEnumApi.Submitted,
         }),
-      ]).subscribe(([unreadComments, questionsCount]) => {
-        console.log('unreadComments', unreadComments);
-        console.log('questionsCount', questionsCount);
-        this.commentsCount = unreadComments.length;
-        this.questionsCount = questionsCount;
-        this.commentsDataStatus = this.commentsCount === 0 ? 'noData' : 'good';
-        this.questionsDataStatus = this.questionsCount === 0 ? 'noData' : 'good';
-      }),
-    );
-
-    this.leadHomeComponentSubscription.add(
-      this.durationControl.valueChanges
+      ])
         .pipe(
-          startWith(this.durationControl.value),
+          switchMap(([unreadComments, questionsCount]) => {
+            this.commentsCount = unreadComments.length;
+            this.questionsCount = questionsCount;
+            this.commentsDataStatus = this.commentsCount === 0 ? 'noData' : 'good';
+            this.questionsDataStatus = this.questionsCount === 0 ? 'noData' : 'good';
+
+            return this.durationControl.valueChanges.pipe(startWith(this.durationControl.value));
+          }),
           tap((duration) => {
             this.setTeamsAndStats(duration);
           }),
