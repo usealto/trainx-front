@@ -1,6 +1,6 @@
 {
-  "name": "assessment-front",
-  "short_name": "assessment-front",
+  "name": "TrainX by cockpit",
+  "short_name": "TrainX",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
