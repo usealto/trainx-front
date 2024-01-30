@@ -1,6 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { TagDtoApi } from '@usealto/sdk-ts-angular';
 import { Subscription, combineLatest, map, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -9,14 +8,13 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
+import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { Company } from '../../../../../models/company.model';
 import { TeamStats } from '../../../../../models/team.model';
 import { TagsRestService } from '../../../../programs/services/tags-rest.service';
 import { SelectOption } from '../../../../shared/models/select-option.model';
+import { EScoreDuration } from '../../../../../models/score.model';
 
-@UntilDestroy()
 @Component({
   selector: 'alto-performance-teams-table',
   templateUrl: './performance-teams-table.component.html',
@@ -26,9 +24,10 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+  EPlaceholderStatus = EPlaceholderStatus;
 
   @Input() company: Company = {} as Company;
-  @Input() durationControl: FormControl<ScoreDuration> = new FormControl(ScoreDuration.Year, {
+  @Input() durationControl: FormControl<EScoreDuration> = new FormControl(EScoreDuration.Year, {
     nonNullable: true,
   });
 
@@ -45,7 +44,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
 
   teamsDisplay: TeamStats[] = [];
   paginatedTeamsStats: TeamStats[] = [];
-  teamsDataStatus: PlaceholderDataStatus = 'loading';
+  teamsDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   teamsPageControl = new FormControl(1, { nonNullable: true });
   teamsPageSize = 5;
 
@@ -80,7 +79,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
             ]);
           }),
           map(([duration, programs, tags, search]) => {
-            return <[ScoreDuration, string[], string[], string]>[
+            return <[EScoreDuration, string[], string[], string]>[
               duration,
               programs.map(({ value }) => value.value),
               tags.map(({ value }) => value.value),
@@ -112,7 +111,8 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
           }
 
           this.teamsDisplay = teamStats;
-          this.teamsDataStatus = this.teamsDisplay.length === 0 ? 'noData' : 'good';
+          this.teamsDataStatus =
+            this.teamsDisplay.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
           this.changeTeamsPage(1);
         }),
     );

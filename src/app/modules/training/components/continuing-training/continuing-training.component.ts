@@ -8,9 +8,9 @@ import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.s
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { GuessesRestService } from '../../services/guesses-rest.service';
+import { EScoreDuration } from '../../../../models/score.model';
 
 @Component({
   selector: 'alto-continuing-training',
@@ -46,24 +46,27 @@ export class ContinuingTrainingComponent implements OnInit {
     this.me = (data[EResolvers.AppResolver] as IAppData).me;
 
     combineLatest([
-      this.scoresRestService.getUsersStats(ScoreDuration.Month, false, { ids: this.me.id }),
-      this.scoresRestService.getUsersStats(ScoreDuration.Month, true, { ids: this.me.id }),
-      this.guessRestService.getGuesses({ createdBy: this.me.id, itemsPerPage: 500 }, ScoreDuration.Trimester),
+      this.scoresRestService.getPaginatedUsersStats(EScoreDuration.Month, false, { ids: this.me.id }),
+      this.scoresRestService.getPaginatedUsersStats(EScoreDuration.Month, true, { ids: this.me.id }),
       this.guessRestService.getGuesses(
         { createdBy: this.me.id, itemsPerPage: 500 },
-        ScoreDuration.Trimester,
+        EScoreDuration.Trimester,
+      ),
+      this.guessRestService.getGuesses(
+        { createdBy: this.me.id, itemsPerPage: 500 },
+        EScoreDuration.Trimester,
         true,
       ),
     ])
       .pipe(
-        tap(([userScore, previousSCore, guesses, previousGuesses]) => {
+        tap(([{ data: userScore = [] }, { data: previousScore = [] }, guesses, previousGuesses]) => {
           this.regularity = this.getParticipationDays(guesses.data) / (this.daysInPeriod * this.threshold);
           const previousRegularity =
             this.getParticipationDays(previousGuesses.data) / (this.daysInPeriod * this.threshold);
           this.regularityProgression = this.regularity - previousRegularity;
 
-          this.avgScore = userScore.find((u) => u.id === this.me.id)?.score ?? 0;
-          const previousAvgScore = previousSCore.find((u) => u.id === this.me.id)?.score ?? 0;
+          this.avgScore = userScore?.find((u) => u.id === this.me.id)?.score ?? 0;
+          const previousAvgScore = previousScore?.find((u) => u.id === this.me.id)?.score ?? 0;
           this.avgScoreProgression = this.avgScore - previousAvgScore;
 
           this.streak = this.me.currentStreak?.count;

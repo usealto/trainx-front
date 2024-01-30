@@ -10,7 +10,7 @@ import {
 } from './core/guards';
 import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
 import { appResolver, noSplashScreenResolver } from './core/resolvers';
-import { teamStatsResolver } from './core/resolvers/teamStats.resolver';
+import { leadResolver } from './core/resolvers/lead.resolver';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
 import { JwtComponent } from './layout/jwt/jwt.component';
@@ -21,6 +21,7 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
+import { EResolvers } from './core/resolvers/resolvers.service';
 
 const routes: Routes = [
   {
@@ -29,7 +30,7 @@ const routes: Routes = [
     canActivate: [AppGuard, AuthGuard, PreventSmallScreenGuard],
     canActivateChild: [AuthGuard],
     resolve: {
-      appResolver,
+      [EResolvers.AppResolver]: appResolver,
     },
     runGuardsAndResolvers: 'always',
     children: [
@@ -65,7 +66,7 @@ const routes: Routes = [
         canActivate: [leadAccessGuard],
         runGuardsAndResolvers: 'always',
         resolve: {
-          teamStats: teamStatsResolver,
+          [EResolvers.LeadResolver]: leadResolver,
         },
         children: [
           { path: '', redirectTo: AltoRoutes.leadHome, pathMatch: 'full' },
@@ -158,7 +159,6 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes, {
       preloadingStrategy: FlagBasedPreloadingStrategy,
-      scrollPositionRestoration: 'top',
     }),
   ],
   exports: [RouterModule],

@@ -1,7 +1,7 @@
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ScreenType } from './screen-type';
-import { ScoreDuration } from '../../modules/shared/models/score.model';
 import { addDays, addHours } from 'date-fns';
+import { EScoreDuration } from '../../models/score.model';
 
 export class Helpers {
   static dateRegex = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)$/;
@@ -82,7 +82,7 @@ export class Helpers {
     }
   }
 
-  static getPreviousPeriod(duration: ScoreDuration): Date[] {
+  static getPreviousPeriod(duration: EScoreDuration): Date[] {
     let date = new Date();
     date = addDays(date, 1); //! TEMPORARY FIX to get data from actual day
     switch (duration) {
@@ -102,27 +102,27 @@ export class Helpers {
         date = addDays(date, -60);
         break;
     }
-    return [date, this.getStartDate(duration as ScoreDuration)];
+    return [date, this.getStartDate(duration as EScoreDuration)];
   }
 
-  static getStartDate(duration: ScoreDuration): Date {
+  static getStartDate(duration: EScoreDuration): Date {
     let date = new Date();
     const gmtDataOffset = -date.getTimezoneOffset() / 60;
 
     switch (duration) {
-      case ScoreDuration.Week:
+      case EScoreDuration.Week:
         date = addDays(date, -7);
         break;
-      case ScoreDuration.Month:
+      case EScoreDuration.Month:
         date = addDays(date, -30);
         break;
-      case ScoreDuration.Trimester:
+      case EScoreDuration.Trimester:
         date = addDays(date, -90);
         break;
-      case ScoreDuration.Year:
+      case EScoreDuration.Year:
         date = addDays(date, -365);
         break;
-      case ScoreDuration.All:
+      case EScoreDuration.All:
         date = new Date(2022, 0, 1);
         break;
     }

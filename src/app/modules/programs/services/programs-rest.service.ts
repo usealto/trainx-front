@@ -13,9 +13,9 @@ import {
 import { addDays } from 'date-fns';
 import { filter, map, Observable, tap } from 'rxjs';
 import { Program } from '../../../models/program.model';
-import { ScoreDuration } from '../../shared/models/score.model';
 import { ScoresService } from '../../shared/services/scores.service';
 import { ProgramsStore } from '../programs.store';
+import { EScoreDuration } from '../../../models/score.model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +29,7 @@ export class ProgramsRestService {
 
   getProgramsPaginated(
     req: GetProgramsRequestParams,
-    duration?: ScoreDuration,
+    duration?: EScoreDuration,
     isProgression = false,
   ): Observable<ProgramDtoPaginatedResponseApi> {
     const par = {

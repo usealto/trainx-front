@@ -12,7 +12,7 @@ export class InputSingleSelectPillComponent {
   I18ns = I18ns;
   EColors = EColors;
 
-  @Input() title?: string;
+  @Input() placeholder?: string;
   @Input() control: FormControl<PillOption | null> = new FormControl(null);
   @Input() options: PillOption[] = [];
 

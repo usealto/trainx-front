@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 
@@ -7,7 +7,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
   templateUrl: './pagination.component.html',
   styleUrls: ['./pagination.component.scss'],
 })
-export class PaginationComponent implements OnInit {
+export class PaginationComponent implements OnChanges {
   @Input() pageControl = new FormControl(1, { nonNullable: true });
   @Input() itemsCount = 0;
   @Input() itemsPerPage = 0;
@@ -15,7 +15,7 @@ export class PaginationComponent implements OnInit {
   pageCount = 0;
   I18ns = I18ns;
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     this.pageCount = Math.ceil(this.itemsCount / this.itemsPerPage);
   }
 

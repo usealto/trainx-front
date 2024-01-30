@@ -16,9 +16,3 @@ export default meta;
 type Story = StoryObj<ProgramCardListComponent>;
 
 export const ProgramCardListHome: Story = {};
-
-export const ProgramCardListProgram: Story = {
-  args: {
-    place: 'program',
-  },
-};

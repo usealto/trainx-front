@@ -1,19 +1,33 @@
-:host {
-  vertical-align: bottom;
-}
-
-.btn-group {
+.timepicker-container {
+  display: flex;
+  flex-wrap: nowrap;
   height: 36px;
   background-color: white;
   border-radius: 3.33rem;
-}
-.btn-check:checked + .btn {
-  color: #1d2939;
-  background-color: var(--gray-50);
-  border-color: var(--bs-btn-border-color);
-}
-.btn-group label {
-  padding: 0 1.333rem;
-  line-height: 34px;
-  font-size: 0.833rem;
+  border: 1px solid var(--gray-200);
+
+  .timepicker {
+    cursor: pointer;
+
+    &.left {
+      border-right: 1px solid var(--gray-200);
+      border-radius: 3.33rem 0 0 3.33rem;
+    }
+
+    &.right {
+      border-left: 1px solid var(--gray-200);
+      border-radius: 0 3.33rem 3.33rem 0;
+    }
+
+    p {
+      padding: 0 1.333rem;
+      line-height: 34px;
+      font-size: 0.833rem;
+      font-weight: 600;
+    }
+
+    &.checked {
+      background-color: var(--gray-50);
+    }
+  }
 }

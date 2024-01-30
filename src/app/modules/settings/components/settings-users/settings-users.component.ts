@@ -22,6 +22,12 @@ import { ToastService } from '../../../../core/toast/toast.service';
 import { Team } from '../../../../models/team.model';
 import { IUser, User } from '../../../../models/user.model';
 import { AddUsersComponent } from './add-users/add-users.component';
+import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
+
+interface IUserInfos {
+  user: User;
+  hasLicense: FormControl<boolean>;
+}
 
 @UntilDestroy()
 @Component({
@@ -31,26 +37,30 @@ import { AddUsersComponent } from './add-users/add-users.component';
   providers: [ReplaceInTranslationPipe],
 })
 export class SettingsUsersComponent implements OnInit, OnDestroy {
-  userFilters: UserFilters = { search: '' };
-
   I18ns = I18ns;
   EmojiName = EmojiName;
 
-  company: Company = new Company({} as ICompany);
-  me: User = new User({} as IUser);
+  company!: Company;
+  me!: User;
   teams: Team[] = [];
-  users: User[] = [];
 
-  usersDisplay: User[] = [];
+  usersInfos: IUserInfos[] = [];
+
+  usersDisplay: IUserInfos[] = [];
+  usersPage = 1;
   usersPageSize = 10;
   usersPageControl = new FormControl(1, { nonNullable: true });
 
-  adminsDisplay: User[] = [];
+  adminsDisplay: IUserInfos[] = [];
+  adminsPage = 1;
   adminsPageSize = 5;
   adminsPageControl = new FormControl(1, { nonNullable: true });
 
   adminSearchControl = new FormControl<string | null>(null);
   userSearchControl = new FormControl<string | null>(null);
+
+  usersDataStatus = EPlaceholderStatus.LOADING;
+  adminsDataStatus = EPlaceholderStatus.LOADING;
 
   usedLicensesCount = 0;
 
@@ -73,61 +83,94 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
     this.company = (data[EResolvers.AppResolver] as IAppData).company;
     this.teams = this.company.teams;
 
+    const users = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
+    this.usedLicensesCount = users.filter((user) => user.hasLicense).length;
+    this.usersInfos = users.map((user) => {
+      return {
+        user: user,
+        hasLicense: new FormControl<boolean>(user.hasLicense),
+      } as IUserInfos;
+    });
+
+    this.usersInfos.forEach(({ user, hasLicense }) => {
+      this.settingsUsersComponentSubscription.add(
+        hasLicense.valueChanges
+          .pipe(
+            switchMap(() => {
+              return this.userRestService.patchUser(user.id, { hasLicense: !user.hasLicense });
+            }),
+          )
+          .subscribe({
+            next: (updatedUser) => {
+              this.store.dispatch(patchUser({ user: updatedUser }));
+              const index = this.usersInfos.findIndex(({ user }) => user.id === updatedUser.id);
+              this.usersInfos[index].user = updatedUser;
+              this.usedLicensesCount = this.usersInfos.filter(({ user }) => user.hasLicense).length;
+            },
+            error: () => {
+              hasLicense.setValue(user.hasLicense, { emitEvent: false });
+            },
+          }),
+      );
+    });
+
     this.settingsUsersComponentSubscription.add(
-      this.store
-        .select(FromRoot.selectUsers)
-        .pipe(
-          tap(({ data: userById }) => {
-            this.users = Array.from(userById.values());
-            this.setUsedLicensesCount();
-          }),
-          switchMap(() => {
-            return combineLatest([
-              this.adminSearchControl.valueChanges.pipe(startWith(this.adminSearchControl.value)),
-              this.adminsPageControl.valueChanges.pipe(startWith(this.adminsPageControl.value)),
-              this.userSearchControl.valueChanges.pipe(startWith(this.userSearchControl.value)),
-              this.usersPageControl.valueChanges.pipe(startWith(this.usersPageControl.value)),
-            ]);
-          }),
-        )
-        .subscribe(([adminSearchTerm, adminPage, userSearchTerm, userPage]) => {
-          const userRegex = userSearchTerm ? new RegExp(userSearchTerm, 'i') : null;
-          const adminRegex = adminSearchTerm ? new RegExp(adminSearchTerm, 'i') : null;
+      combineLatest([
+        this.adminSearchControl.valueChanges.pipe(startWith(this.adminSearchControl.value)),
+        this.userSearchControl.valueChanges.pipe(startWith(this.userSearchControl.value)),
+      ]).subscribe(([adminSearchTerm, userSearchTerm]) => {
+        const userRegex = userSearchTerm ? new RegExp(userSearchTerm, 'i') : null;
+        const adminRegex = adminSearchTerm ? new RegExp(adminSearchTerm, 'i') : null;
 
-          this.adminsDisplay = this.users
-            .filter((user) => {
-              if (user.isCompanyAdmin()) {
-                return adminRegex ? adminRegex.test(user.fullname) || adminRegex.test(user.email) : true;
-              }
-              return false;
-            })
-            .slice((adminPage - 1) * this.adminsPageSize, adminPage * this.adminsPageSize);
+        this.adminsDisplay = this.usersInfos.filter(({ user }) => {
+          if (user.isCompanyAdmin()) {
+            return adminRegex ? adminRegex.test(user.fullname) || adminRegex.test(user.email) : true;
+          }
+          return false;
+        });
 
-          this.usersDisplay = this.users
-            .filter((user) => {
-              if (user.isCompanyUser() && !user.isCompanyAdmin()) {
-                return userRegex ? userRegex.test(user.fullname) || userRegex.test(user.email) : true;
-              }
-              return false;
-            })
-            .slice((userPage - 1) * this.usersPageSize, userPage * this.usersPageSize);
-        }),
+        this.usersDisplay = this.usersInfos.filter(({ user }) => {
+          if (user.isCompanyUser() && !user.isCompanyAdmin()) {
+            return userRegex ? userRegex.test(user.fullname) || userRegex.test(user.email) : true;
+          }
+          return false;
+        });
+
+        const adminsCount = this.usersInfos.filter(({ user }) => user.isCompanyAdmin()).length;
+        const usersCount = this.usersInfos.filter(
+          ({ user }) => user.isCompanyUser() && !user.isCompanyAdmin(),
+        ).length;
+
+        this.adminsDataStatus =
+          adminsCount <= 0
+            ? EPlaceholderStatus.NO_DATA
+            : this.adminsDisplay.length <= 0
+            ? EPlaceholderStatus.NO_RESULT
+            : EPlaceholderStatus.GOOD;
+        this.usersDataStatus =
+          usersCount <= 0
+            ? EPlaceholderStatus.NO_DATA
+            : this.usersDisplay.length <= 0
+            ? EPlaceholderStatus.NO_RESULT
+            : EPlaceholderStatus.GOOD;
+      }),
+    );
+
+    this.settingsUsersComponentSubscription.add(
+      this.adminsPageControl.valueChanges.subscribe((adminsPage) => {
+        this.adminsPage = adminsPage;
+      }),
+    );
+
+    this.settingsUsersComponentSubscription.add(
+      this.usersPageControl.valueChanges.subscribe((usersPage) => {
+        this.usersPage = usersPage;
+      }),
     );
   }
 
   ngOnDestroy(): void {
     this.settingsUsersComponentSubscription.unsubscribe();
-  }
-
-  toggleUserLicense(user: User): void {
-    this.userRestService
-      .patchUser(user.id, { hasLicense: !user.hasLicense })
-      .pipe(tap((patchedUser) => this.store.dispatch(patchUser({ user: patchedUser }))))
-      .subscribe();
-  }
-
-  private setUsedLicensesCount() {
-    this.usedLicensesCount = this.users.filter((user) => user.hasLicense).length;
   }
 
   deleteUser(user: User): void {
@@ -143,11 +186,15 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
     componentInstance.objectDeleted
       .pipe(
         switchMap(() => this.userRestService.deleteUser(user.id)),
-        tap(() => this.store.dispatch(removeUser({ user }))),
         tap(() => modalRef.close()),
         untilDestroyed(this),
       )
       .subscribe({
+        next: () => {
+          this.store.dispatch(removeUser({ user }));
+          const index = this.usersInfos.findIndex(({ user: u }) => u.id === user.id);
+          this.usersInfos.splice(index, 1);
+        },
         error: () => {
           this.toastService.show({
             type: 'danger',
@@ -183,11 +230,17 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
       .pipe(
         filter((x) => !!x),
         switchMap(() => {
-          // TODO : update store instead of using rest service (may impact AddUsersComponent)
           return this.userRestService.getUsers();
         }),
         tap((users) => {
           this.store.dispatch(setUsers({ users }));
+          users.forEach((u) => {
+            const isNewUser = this.usersInfos.some((userInfo) => userInfo.user.id === u.id);
+
+            if (!isNewUser) {
+              this.usersInfos.push({ user: u, hasLicense: new FormControl(u.hasLicense) } as IUserInfos);
+            }
+          });
         }),
       )
       .subscribe({
@@ -219,8 +272,10 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
 
     instance.editedUser
       .pipe(
-        tap((user) => {
+        tap((updatedUser) => {
           this.store.dispatch(patchUser({ user }));
+          const index = this.usersInfos.findIndex(({ user }) => user.id === updatedUser.id);
+          this.usersInfos[index].user = updatedUser;
         }),
       )
       .subscribe();
@@ -262,9 +317,5 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
       default:
         return '#F8F9FC';
     }
-  }
-
-  userFilterEmpty(): boolean {
-    return this.userFilters.search === '' || this.userFilters.search == undefined;
   }
 }

@@ -16,7 +16,7 @@ interface ICheckedOption {
   styleUrls: ['./input-multiple-select.component.scss'],
 })
 export class InputMultipleSelectComponent implements OnInit, OnDestroy {
-  @Input() title?: string;
+  @Input() placeholder?: string;
   @Input() enableSearch = false;
   @Input() controls: FormControl<FormControl<SelectOption>[]> = new FormControl(
     [] as FormControl<SelectOption>[],

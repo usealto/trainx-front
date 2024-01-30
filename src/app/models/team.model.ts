@@ -1,9 +1,13 @@
-import { ProgramStatsLightDtoApi, TagStatsLightDtoApi, TeamDtoApi, TeamStatsDtoApi } from '@usealto/sdk-ts-angular';
+import {
+  ProgramStatsLightDtoApi,
+  TagStatsLightDtoApi,
+  TeamDtoApi,
+  TeamStatsDtoApi,
+} from '@usealto/sdk-ts-angular';
 import { BaseStats, IBaseStats } from './stats.model';
 import { compareAsc } from 'date-fns';
-import { ScoreDuration } from '../modules/shared/models/score.model';
 import { BaseModel, IBaseModel } from './base.model';
-
+import { EScoreDuration } from './score.model';
 
 export interface ITeam extends IBaseModel {
   name: string;
@@ -62,7 +66,7 @@ export class Team extends BaseModel implements ITeam {
     return this.stats.filter(({ scoreById }) => scoreById === id);
   }
 
-  getStatByPeriod(duration: ScoreDuration, isPrev = false): TeamStats | undefined {
+  getStatByPeriod(duration: EScoreDuration, isPrev = false): TeamStats | undefined {
     const filteredStats = this.stats.filter(
       (stat) => stat.scoreDuration === duration && stat.isPrev === isPrev,
     );
@@ -78,7 +82,7 @@ export interface ITeamStats extends IBaseStats {
   questionsSubmittedCount: number;
   validGuessesCount: number;
   tagStats: ITeamTagStats[];
-  scoreDuration: ScoreDuration;
+  scoreDuration: EScoreDuration;
   isPrev: boolean;
 }
 
@@ -90,7 +94,7 @@ export class TeamStats extends BaseStats implements ITeamStats {
   questionsSubmittedCount: number;
   validGuessesCount: number;
   tagStats: TeamTagStats[];
-  scoreDuration: ScoreDuration;
+  scoreDuration: EScoreDuration;
   isPrev: boolean;
 
   constructor(data: ITeamStats) {
@@ -110,7 +114,7 @@ export class TeamStats extends BaseStats implements ITeamStats {
     data: TeamStatsDtoApi,
     from: Date,
     to: Date,
-    duration: ScoreDuration,
+    duration: EScoreDuration,
     isPrev: boolean,
   ): TeamStats {
     return new TeamStats({

@@ -7,18 +7,17 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { StatisticsService } from 'src/app/modules/statistics/services/statistics.service';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
 import { IAppData } from '../../../../core/resolvers';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
+import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { Team } from 'src/app/models/team.model';
 import { EChartsOption, SeriesOption } from 'echarts';
-import { Score } from '../../../../models/score.model';
+import { EScoreDuration, Score } from '../../../../models/score.model';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -29,7 +28,7 @@ import { FormControl } from '@angular/forms';
 export class UserHomeStatisticsComponent implements OnInit {
   I18ns = I18ns;
 
-  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
     nonNullable: true,
   });
 
@@ -47,7 +46,7 @@ export class UserHomeStatisticsComponent implements OnInit {
   finishedProgramsCountProgression = 0;
 
   EmojiName = EmojiName;
-  userChartStatus: PlaceholderDataStatus = 'loading';
+  userChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   userChartOptions!: EChartsOption;
 
   constructor(
@@ -75,15 +74,15 @@ export class UserHomeStatisticsComponent implements OnInit {
     });
   }
 
-  getScore(duration: ScoreDuration) {
+  getScore(duration: EScoreDuration) {
     combineLatest([
-      this.scoresRestService.getUsersStats(duration, false),
-      this.scoresRestService.getUsersStats(duration, true),
+      this.scoresRestService.getPaginatedUsersStats(duration),
+      this.scoresRestService.getPaginatedUsersStats(duration, true),
     ])
       .pipe(
-        map(([curr, prev]) => [
-          curr.filter((u) => u.id === this.user.id),
-          prev.filter((u) => u.id === this.user.id),
+        map(([{ data: usersStats = [] }, { data: prevUsersStats = [] }]) => [
+          usersStats.filter((u) => u.id === this.user.id) ?? [],
+          prevUsersStats.filter((u) => u.id === this.user.id) ?? [],
         ]),
         tap(([curr, prev]) => {
           this.userScore = curr[0]?.score ?? 0;
@@ -94,13 +93,13 @@ export class UserHomeStatisticsComponent implements OnInit {
       .subscribe();
   }
 
-  getUserChartScores(duration: ScoreDuration): void {
-    this.userChartStatus = 'loading';
+  getUserChartScores(duration: EScoreDuration): void {
+    this.userChartStatus = EPlaceholderStatus.LOADING;
 
-    const timeframe = (duration: ScoreDuration) =>
-      duration === ScoreDuration.Year
+    const timeframe = (duration: EScoreDuration) =>
+      duration === EScoreDuration.Year
         ? ScoreTimeframeEnumApi.Month
-        : duration === ScoreDuration.Trimester
+        : duration === EScoreDuration.Trimester
         ? ScoreTimeframeEnumApi.Week
         : ScoreTimeframeEnumApi.Day;
 
@@ -120,7 +119,8 @@ export class UserHomeStatisticsComponent implements OnInit {
     ])
       .pipe(
         tap(([userScores, teamScores]) => {
-          this.userChartStatus = userScores.length > 0 ? 'good' : 'empty';
+          this.userChartStatus =
+            userScores.length > 0 ? EPlaceholderStatus.LOADING : EPlaceholderStatus.NO_RESULT;
           if (userScores.length > 0) {
             this.createUserChart(userScores[0], teamScores[0], duration);
           }
@@ -129,7 +129,7 @@ export class UserHomeStatisticsComponent implements OnInit {
       .subscribe();
   }
 
-  getFinishedPrograms(duration: ScoreDuration) {
+  getFinishedPrograms(duration: EScoreDuration) {
     combineLatest([
       this.programsRestService.getProgramsPaginated({ teamIds: this.user.teamId }, duration),
       this.programsRestService.getProgramsPaginated({ teamIds: this.user.teamId }, duration, true),
@@ -166,7 +166,7 @@ export class UserHomeStatisticsComponent implements OnInit {
       .subscribe();
   }
 
-  getGuessesCount(duration: ScoreDuration) {
+  getGuessesCount(duration: EScoreDuration) {
     combineLatest([
       this.guessesRestService.getGuesses({ createdBy: this.user.id, itemsPerPage: 1 }, duration),
       this.guessesRestService.getGuesses({ createdBy: this.user.id, itemsPerPage: 1 }, duration, true),
@@ -183,7 +183,7 @@ export class UserHomeStatisticsComponent implements OnInit {
       .subscribe();
   }
 
-  createUserChart(userScores: Score, teamScores: Score, duration: ScoreDuration): void {
+  createUserChart(userScores: Score, teamScores: Score, duration: EScoreDuration): void {
     const [formattedUserScores, formattedTeamScores] = this.scoresService.formatScores([
       userScores,
       teamScores,

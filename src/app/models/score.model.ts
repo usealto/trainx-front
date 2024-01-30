@@ -1,7 +1,16 @@
 import { ScoreDtoApi } from '@usealto/sdk-ts-angular';
 import { EColors, PillOption } from '../modules/shared/models/select-option.model';
 
-export enum ScoreFilter {
+export enum EScoreDuration {
+  Day = 'day',
+  Week = 'week',
+  Month = 'month',
+  Trimester = 'trimester',
+  Year = 'year',
+  All = 'all',
+}
+
+export enum EScoreFilter {
   Under25 = '< 25%',
   Under50 = '< 50%',
   Under75 = '< 75%',
@@ -49,45 +58,45 @@ export class Score implements IScore {
 
   static getFiltersPillOptions(): PillOption[] {
     return [
-      new PillOption({ value: ScoreFilter.Under25, label: ScoreFilter.Under25, color: EColors.primary }),
-      new PillOption({ value: ScoreFilter.Under50, label: ScoreFilter.Under50, color: EColors.primary }),
-      new PillOption({ value: ScoreFilter.Under75, label: ScoreFilter.Under75, color: EColors.primary }),
-      new PillOption({ value: ScoreFilter.Over25, label: ScoreFilter.Over25, color: EColors.success }),
-      new PillOption({ value: ScoreFilter.Over50, label: ScoreFilter.Over50, color: EColors.success }),
-      new PillOption({ value: ScoreFilter.Over75, label: ScoreFilter.Over75, color: EColors.success }),
+      new PillOption({ value: EScoreFilter.Under25, label: EScoreFilter.Under25, color: EColors.primary }),
+      new PillOption({ value: EScoreFilter.Under50, label: EScoreFilter.Under50, color: EColors.primary }),
+      new PillOption({ value: EScoreFilter.Under75, label: EScoreFilter.Under75, color: EColors.primary }),
+      new PillOption({ value: EScoreFilter.Over25, label: EScoreFilter.Over25, color: EColors.success }),
+      new PillOption({ value: EScoreFilter.Over50, label: EScoreFilter.Over50, color: EColors.success }),
+      new PillOption({ value: EScoreFilter.Over75, label: EScoreFilter.Over75, color: EColors.success }),
     ];
   }
 
-  static filterDecimal(filter: ScoreFilter, value: number): boolean {
+  static filterDecimal(filter: EScoreFilter, value: number): boolean {
     switch (filter) {
-      case ScoreFilter.Under25:
+      case EScoreFilter.Under25:
         return value < 0.25;
-      case ScoreFilter.Under50:
+      case EScoreFilter.Under50:
         return value < 0.5;
-      case ScoreFilter.Under75:
+      case EScoreFilter.Under75:
         return value < 0.75;
-      case ScoreFilter.Over25:
+      case EScoreFilter.Over25:
         return value > 0.25;
-      case ScoreFilter.Over50:
+      case EScoreFilter.Over50:
         return value > 0.5;
-      case ScoreFilter.Over75:
+      case EScoreFilter.Over75:
         return value > 0.75;
     }
   }
 
-  static filterPercent(filter: ScoreFilter, value: number): boolean {
+  static filterPercent(filter: EScoreFilter, value: number): boolean {
     switch (filter) {
-      case ScoreFilter.Under25:
+      case EScoreFilter.Under25:
         return value < 25;
-      case ScoreFilter.Under50:
+      case EScoreFilter.Under50:
         return value < 50;
-      case ScoreFilter.Under75:
+      case EScoreFilter.Under75:
         return value < 75;
-      case ScoreFilter.Over25:
+      case EScoreFilter.Over25:
         return value > 25;
-      case ScoreFilter.Over50:
+      case EScoreFilter.Over50:
         return value > 50;
-      case ScoreFilter.Over75:
+      case EScoreFilter.Over75:
         return value > 75;
     }
   }

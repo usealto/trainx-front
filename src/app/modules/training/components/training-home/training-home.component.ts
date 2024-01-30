@@ -8,12 +8,12 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { User } from 'src/app/models/user.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../core/resolvers';
 import { GetProgramRunsRequestParams, ProgramRunDtoPaginatedResponseApi } from '@usealto/sdk-ts-angular';
 import { Program } from '../../../../models/program.model';
 import { ITrainingCardData } from '../../../shared/components/training-card/training-card.component';
+import { EScoreFilter } from '../../../../models/score.model';
 
 enum OngoingFilter {
   All = 'All',
@@ -27,7 +27,11 @@ enum DoneFilter {
 }
 
 type DoneFilters = { scoreStatus?: DoneFilter; search?: string };
-type AllProgramsFilters = { progress?: ScoreFilter | string; score?: ScoreFilter | string; search?: string };
+type AllProgramsFilters = {
+  progress?: EScoreFilter | string;
+  score?: EScoreFilter | string;
+  search?: string;
+};
 
 @UntilDestroy()
 @Component({
@@ -154,12 +158,12 @@ export class TrainingHomeComponent implements OnInit {
 
     const outputP = this.scoresService.filterByScore(
       output.filter((p) => p.inProgress),
-      progress as ScoreFilter,
+      progress as EScoreFilter,
       false,
     );
     const outputS = this.scoresService.filterByScore(
       output.filter((p) => !p.inProgress),
-      score as ScoreFilter,
+      score as EScoreFilter,
       false,
     );
 

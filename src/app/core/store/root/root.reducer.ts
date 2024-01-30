@@ -9,6 +9,7 @@ import {
   removeUser,
   setCompany,
   setPrograms,
+  setTags,
   setTeams,
   setTeamsStats,
   setUserMe,
@@ -16,6 +17,7 @@ import {
   updateCompany,
   updatePrograms,
 } from '../root/root.action';
+import { TagDtoApi } from '@usealto/sdk-ts-angular';
 
 export class TimestampedEntity<T> {
   data: T;
@@ -36,12 +38,14 @@ export interface RootState {
   company: TimestampedEntity<Company>;
   usersById: TimestampedEntity<Map<string, User>>;
   teamsStatsTimestamp?: Date;
+  tags: TimestampedEntity<TagDtoApi[]>; // TODO : create Tag model in our domain
 }
 
 export const initialState: RootState = {
   me: new TimestampedEntity<User>(new User({} as IUser), null),
   company: new TimestampedEntity<Company>(new Company({} as ICompany), null),
   usersById: new TimestampedEntity<Map<string, User>>(new Map(), null),
+  tags: new TimestampedEntity<TagDtoApi[]>([], null),
 };
 
 export const rootReducer = createReducer(
@@ -147,4 +151,11 @@ export const rootReducer = createReducer(
       company: new TimestampedEntity(company),
     };
   }),
+  on(
+    setTags,
+    (state, { tags }): RootState => ({
+      ...state,
+      tags: new TimestampedEntity(tags),
+    }),
+  ),
 );

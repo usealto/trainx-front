@@ -4,7 +4,7 @@ import { tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
-import { AltoRoutes } from '../../constants/routes';
+import { AltoRoutes } from '../../../../shared/constants/routes';
 
 @Component({
   selector: 'alto-program-card',

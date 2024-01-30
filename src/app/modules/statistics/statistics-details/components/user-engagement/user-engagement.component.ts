@@ -10,13 +10,12 @@ import { ITeam, Team } from 'src/app/models/team.model';
 import { IUser, User } from 'src/app/models/user.model';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
+import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
 import { StatisticsService } from '../../../services/statistics.service';
-import { Score } from 'src/app/models/score.model';
+import { EScoreDuration, Score } from 'src/app/models/score.model';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -30,15 +29,15 @@ export class UserEngagementComponent implements OnInit {
 
   user!: User;
   userTeam!: Team;
-  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Trimester, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
   });
 
   answersChartOptions!: any;
-  answersChartStatus: PlaceholderDataStatus = 'loading';
+  answersChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   contributionChartOptions!: any;
-  contributionChartStatus: PlaceholderDataStatus = 'loading';
+  contributionChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   constructor(
     private readonly router: Router,
@@ -63,25 +62,26 @@ export class UserEngagementComponent implements OnInit {
     });
   }
 
-  loadPage(duration: ScoreDuration): void {
+  loadPage(duration: EScoreDuration): void {
     this.getAnswersChart(duration);
     this.getContributionChart(duration);
   }
 
-  getContributionChart(duration: ScoreDuration): void {
-    this.contributionChartStatus = 'loading';
+  getContributionChart(duration: EScoreDuration): void {
+    this.contributionChartStatus = EPlaceholderStatus.LOADING;
     combineLatest([
       this.scoreRestService.getScores(this.getScoreparams('submitedQuestions', duration)),
       this.scoreRestService.getScores(this.getScoreparams('comments', duration)),
     ]).subscribe(([answers, comments]) => {
-      this.contributionChartStatus = answers.length || comments.length ? 'good' : 'empty';
+      this.contributionChartStatus =
+        answers.length || comments.length ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
       if (answers.length || comments.length) {
         this.createContributionChart(comments, answers, duration);
       }
     });
   }
 
-  createContributionChart(comments: Score[], submitedQuestions: Score[], duration: ScoreDuration): void {
+  createContributionChart(comments: Score[], submitedQuestions: Score[], duration: EScoreDuration): void {
     const formatedComments = this.scoresService.formatScores(comments);
     const formatedQuestionsSubmitted = this.scoresService.formatScores(submitedQuestions);
     const aggregatedComments = this.statisticsService.transformDataToPointByCounts(formatedComments[0]);
@@ -140,17 +140,17 @@ export class UserEngagementComponent implements OnInit {
     };
   }
 
-  getAnswersChart(duration: ScoreDuration): void {
-    this.answersChartStatus = 'loading';
+  getAnswersChart(duration: EScoreDuration): void {
+    this.answersChartStatus = EPlaceholderStatus.LOADING;
     this.scoreRestService.getScores(this.getScoreparams('answers', duration)).subscribe((scores) => {
-      this.answersChartStatus = scores.length ? 'good' : 'empty';
+      this.answersChartStatus = scores.length ? EPlaceholderStatus.LOADING : EPlaceholderStatus.NO_DATA;
       if (scores.length) {
         this.createAnswersChart(scores[0], duration);
       }
     });
   }
 
-  createAnswersChart(scores: Score, duration: ScoreDuration): void {
+  createAnswersChart(scores: Score, duration: EScoreDuration): void {
     const formatedScores = this.scoresService.formatScores([scores]);
     const points = this.statisticsService.transformDataToPointByCounts(formatedScores[0]);
     const labels = this.statisticsService
@@ -198,7 +198,7 @@ export class UserEngagementComponent implements OnInit {
     };
   }
 
-  getScoreparams(type: 'answers' | 'comments' | 'submitedQuestions', duration: ScoreDuration): ChartFilters {
+  getScoreparams(type: 'answers' | 'comments' | 'submitedQuestions', duration: EScoreDuration): ChartFilters {
     return {
       duration: duration,
       type:
@@ -210,9 +210,9 @@ export class UserEngagementComponent implements OnInit {
       scoredBy: ScoreByTypeEnumApi.User,
       scoredById: this.user.id,
       timeframe:
-        duration === ScoreDuration.Year
+        duration === EScoreDuration.Year
           ? ScoreTimeframeEnumApi.Month
-          : duration === ScoreDuration.Trimester
+          : duration === EScoreDuration.Trimester
           ? ScoreTimeframeEnumApi.Week
           : ScoreTimeframeEnumApi.Day,
     };

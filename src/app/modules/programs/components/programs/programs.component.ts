@@ -1,31 +1,21 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { GetProgramsStatsRequestParams, QuestionSubmittedDtoApi, TagDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, filter, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { IAppData } from '../../../../core/resolvers';
+import { ILeadData } from '../../../../core/resolvers/lead.resolver';
 import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
-import { Program } from '../../../../models/program.model';
-import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
+import { Company } from '../../../../models/company.model';
 import { ITabOption } from '../../../shared/components/tabs/tabs.component';
-import { ScoreDuration, ScoreFilter } from '../../../shared/models/score.model';
-import { QuestionDisplay } from '../../models/question.model';
-import { TagFilters } from '../../models/tag.model';
 import { ProgramsStore } from '../../programs.store';
-import { QuestionsRestService } from '../../services/questions-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 import { TagsServiceService } from '../../services/tags-service.service';
-import { TagsFormComponent } from '../create-tags/tag-form.component';
-import { SelectOption } from '../../../shared/models/select-option.model';
+import { TagDtoApi } from '@usealto/sdk-ts-angular';
 
 enum EProgramsTabs {
   Programs = 'programs',
@@ -39,14 +29,17 @@ enum EProgramsTabs {
   styleUrls: ['./programs.component.scss'],
   providers: [ReplaceInTranslationPipe],
 })
-export class ProgramsComponent implements OnInit, OnDestroy {
+export class ProgramsComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
 
-  programs: Program[] = [];
+  company!: Company;
+  tags: TagDtoApi[] = [];
+  // programs: Program[] = [];
+  EProgramsTabs = EProgramsTabs;
 
-  pageSize = 9;
+  // pageSize = 9;
 
   tabOptions: ITabOption[] = [
     { label: I18ns.programs.tabs.programs, value: EProgramsTabs.Programs },
@@ -54,12 +47,13 @@ export class ProgramsComponent implements OnInit, OnDestroy {
     { label: I18ns.programs.tabs.tags, value: EProgramsTabs.Tags },
   ];
   activeTab = new FormControl(this.tabOptions[0], { nonNullable: true });
-  pageControl = new FormControl(1, { nonNullable: true });
-  teamsOptions = new FormControl<FormControl<SelectOption>[]>([], { nonNullable: true });
-  durationControl = new FormControl<ScoreDuration>(ScoreDuration.All, { nonNullable: true });
-  searchControl = new FormControl<string | null>(null);
 
-  programsComponentSubscription = new Subscription();
+  // pageControl = new FormControl(1, { nonNullable: true });
+  // teamsOptions = new FormControl<FormControl<SelectOption>[]>([], { nonNullable: true });
+  // durationControl = new FormControl<ScoreDuration>(ScoreDuration.All, { nonNullable: true });
+  // searchControl = new FormControl<string | null>(null);
+
+  // programsComponentSubscription = new Subscription();
 
   constructor(
     private readonly scoresRestServices: ScoresRestService,
@@ -76,89 +70,80 @@ export class ProgramsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.programs = (data[EResolvers.AppResolver] as IAppData).company.programs;
-    this.teamsOptions.setValue(
-      (data[EResolvers.AppResolver] as IAppData).company.teams.map((x) => {
-        return new FormControl(new SelectOption({ value: x.id, label: x.name }), { nonNullable: true });
-      }),
-    );
-
-    console.log('programs on init : ', new Set(this.programs.map(({ name }) => name)));
-
-    this.programsComponentSubscription.add(
-      this.activeTab.valueChanges
-        .pipe(
-          startWith(this.activeTab.value),
-          filter((selectedTab) => selectedTab.value === EProgramsTabs.Programs),
-          switchMap(() => {
-            return combineLatest([
-              this.pageControl.valueChanges.pipe(startWith(this.pageControl.value)),
-              this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
-              this.teamsOptions.valueChanges.pipe(startWith(this.teamsOptions.value)),
-              this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
-            ]);
-          }),
-          switchMap(([page, searchTerm, selectedTeams, selectedDuration]) => {
-            const regex = searchTerm ? new RegExp(searchTerm, 'i') : null;
-            console.log(
-              'filtered programs : ',
-              this.programs
-                .filter(({ name }) => {
-                  return regex ? regex.test(name) : true;
-                })
-                .splice((page - 1) * this.pageSize, page * this.pageSize),
-            );
-
-            const req: GetProgramsStatsRequestParams = {
-              page,
-              // itemsPerPage: this.pageSize,
-              // ids: this.programs
-              //   .filter(({ name }) => {
-              //     return regex ? regex.test(name) : true;
-              //   })
-              //   .splice((page - 1) * this.pageSize, page * this.pageSize)
-              //   .map(({ id }) => id)
-              //   .join(','),
-              teamIds: selectedTeams.map((x) => x.value.value).join(','),
-            };
-
-            return this.scoresRestServices.getProgramsStats(selectedDuration, false, req);
-          }),
-        )
-        .subscribe((stats) => {
-          console.log('stats : ', stats);
-        }),
-    );
-    // this.programsComponentSubscription.add(
-    //   this.tagsPageControl.valueChanges
-    //     .pipe(startWith(this.tagsPageControl.value))
-    //     .subscribe((page) => this.changeTagsPage(page, this.tags as TagDisplay[])),
-    // );
-
-    // this.programsComponentSubscription.add(
-    //   this.scoresRestServices
-    //     .getTagsStats(ScoreDuration.All, false)
-    //     .pipe(
-    //       tap((stats) => {
-    //         stats.forEach((stat) => {
-    //           this.tagsScore.set(stat.tag.id, stat.score || 0);
-    //         });
-    //       }),
-    //       switchMap(() => {
-    //         return this.activeTab.valueChanges;
-    //       }),
-    //     )
-    //     .subscribe({
-    //       next: () => {
-    //         this.resetFilters();
-    //       },
-    //     }),
-    // );
+    this.company = (data[EResolvers.LeadResolver] as ILeadData).company;
+    this.tags = (data[EResolvers.LeadResolver] as ILeadData).tags;
   }
 
-  ngOnDestroy(): void {
-    this.programsComponentSubscription.unsubscribe();
-  }
+  // ngOnInit(): void {
+  //   const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+  //   this.programs = (data[EResolvers.AppResolver] as IAppData).company.programs;
+  //   this.teamsOptions.setValue(
+  //     (data[EResolvers.AppResolver] as IAppData).company.teams.map((x) => {
+  //       return new FormControl(new SelectOption({ value: x.id, label: x.name }), { nonNullable: true });
+  //     }),
+  //   );
+
+  //   console.log('programs on init : ', new Set(this.programs.map(({ name }) => name)));
+
+  //   this.programsComponentSubscription.add(
+  //     this.activeTab.valueChanges
+  //       .pipe(
+  //         startWith(this.activeTab.value),
+  //         filter((selectedTab) => selectedTab.value === EProgramsTabs.Programs),
+  //         switchMap(() => {
+  //           return combineLatest([
+  //             this.pageControl.valueChanges.pipe(startWith(this.pageControl.value)),
+  //             this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
+  //             this.teamsOptions.valueChanges.pipe(startWith(this.teamsOptions.value)),
+  //             this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+  //           ]);
+  //         }),
+  //         switchMap(([page, searchTerm, selectedTeams, selectedDuration]) => {
+  //           const req: GetProgramsStatsRequestParams = {
+  //             page,
+  //             search: searchTerm ?? undefined,
+  //             itemsPerPage: this.pageSize,
+  //             teamIds: selectedTeams.map((x) => x.value.value).join(','),
+  //           };
+
+  //           return this.scoresRestServices.getProgramsStats(selectedDuration, false, req);
+  //         }),
+  //       )
+  //       .subscribe((stats) => {
+  //         console.log('stats : ', stats);
+  //       }),
+  //   );
+
+  //   this.programsComponentSubscription.add(
+  //     this.tagsPageControl.valueChanges
+  //       .pipe(startWith(this.tagsPageControl.value))
+  //       .subscribe((page) => this.changeTagsPage(page, this.tags as TagDisplay[])),
+  //   );
+
+  //   this.programsComponentSubscription.add(
+  //     this.scoresRestServices
+  //       .getTagsStats(ScoreDuration.All, false)
+  //       .pipe(
+  //         tap((stats) => {
+  //           stats.forEach((stat) => {
+  //             this.tagsScore.set(stat.tag.id, stat.score || 0);
+  //           });
+  //         }),
+  //         switchMap(() => {
+  //           return this.activeTab.valueChanges;
+  //         }),
+  //       )
+  //       .subscribe({
+  //         next: () => {
+  //           this.resetFilters();
+  //         },
+  //       }),
+  //   );
+  // }
+
+  // ngOnDestroy(): void {
+  //   this.programsComponentSubscription.unsubscribe();
+  // }
 
   // handleTabChange(value: any) {
   //   this.activeTab = value;

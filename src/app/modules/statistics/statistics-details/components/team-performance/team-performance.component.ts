@@ -9,24 +9,23 @@ import {
   TagStatsDtoApi,
   UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, map, of, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { Score } from 'src/app/models/score.model';
+import { EScoreDuration, EScoreFilter, Score } from 'src/app/models/score.model';
 import { Team } from 'src/app/models/team.model';
 import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
+import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { PillOption, SelectOption } from '../../../../shared/models/select-option.model';
 import { Point, StatisticsService } from '../../../services/statistics.service';
-import { SelectOption } from '../../../../shared/models/select-option.model';
 
 @Component({
   selector: 'alto-team-performance',
@@ -42,28 +41,28 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
   team!: Team;
 
   teamChartOption: any = {};
-  teamChartStatus: PlaceholderDataStatus = 'loading';
+  teamChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   membersLeaderboard: { name: string; score: number }[] = [];
-  membersLeaderboardStatus: PlaceholderDataStatus = 'loading';
+  membersLeaderboardStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   membersOptions: SelectOption[] = [];
   membersChartControl = new FormControl([] as FormControl<SelectOption>[], {
     nonNullable: true,
   });
 
   spiderChartOptions: any = {};
-  spiderChartDataStatus: PlaceholderDataStatus = 'loading';
+  spiderChartDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   tagsControl = new FormControl([] as FormControl<SelectOption>[], {
     nonNullable: true,
   });
   tagsOptions: SelectOption[] = [];
 
   tagsLeaderboard: { name: string; score: number }[] = [];
-  tagsLeaderboardStatus: PlaceholderDataStatus = 'loading';
+  tagsLeaderboardStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   membersTable: UserStatsDtoApi[] = [];
   membersPageControl = new FormControl(1, { nonNullable: true });
   membersTablePageSize = 5;
-  membersTableDataStatus: PlaceholderDataStatus = 'loading';
+  membersTableDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   displayMemberTables: UserStatsDtoApi[] = [];
   previousMembersStats: UserStatsDtoApi[] = [];
   membersSearchControl: FormControl<string> = new FormControl<string>('', { nonNullable: true });
@@ -71,13 +70,14 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
   questionsTable: QuestionStatsDtoApi[] = [];
   questionsPageControl = new FormControl(1, { nonNullable: true });
   questionsTablePageSize = 5;
-  questionsTableDataStatus: PlaceholderDataStatus = 'loading';
+  questionsTableDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   displayQuestionsTables: QuestionStatsDtoApi[] = [];
   previousQuestionsStats: QuestionStatsDtoApi[] = [];
   questionsSearchControl: FormControl<string> = new FormControl<string>('', { nonNullable: true });
-  questionsScoreControl: FormControl<string> = new FormControl<string>('', { nonNullable: true });
+  scoreOptions: PillOption[] = Score.getFiltersPillOptions();
+  questionsScoreControl = new FormControl<PillOption | null>(null);
 
-  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Trimester, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
   });
   private readonly performanceByTeamsSubscription: Subscription = new Subscription();
@@ -115,7 +115,7 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
         this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
       ])
         .pipe(
-          tap(() => (this.teamChartStatus = 'loading')),
+          tap(() => (this.teamChartStatus = EPlaceholderStatus.LOADING)),
           switchMap(([selectedMembers, duration]) => {
             return combineLatest([
               of(selectedMembers),
@@ -135,7 +135,10 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
             }
 
             this.createTeamChart(memberScores, globalScores, duration);
-            this.teamChartStatus = [...memberScores, globalScores].length > 0 ? 'good' : 'noData';
+            this.teamChartStatus =
+              [...memberScores, globalScores].length > 0
+                ? EPlaceholderStatus.GOOD
+                : EPlaceholderStatus.NO_DATA;
           },
         }),
     );
@@ -160,26 +163,30 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
             return this.tagsControl.valueChanges.pipe(startWith(this.tagsControl.value));
           }),
           tap(() => {
-            this.spiderChartDataStatus = 'loading';
-            this.tagsLeaderboardStatus = 'loading';
+            this.spiderChartDataStatus = EPlaceholderStatus.LOADING;
+            this.tagsLeaderboardStatus = EPlaceholderStatus.LOADING;
           }),
           switchMap((selectedTags) => {
             return combineLatest([
               of(selectedTags),
-              this.scoresRestService.getTagsStats(ScoreDuration.Year, false, this.teamId),
+              this.scoresRestService.getPaginatedTagsStats(EScoreDuration.Year, false, this.teamId),
             ]);
           }),
-          map(([selectedTags, tagStats]) => {
+          map(([selectedTags, paginatedTagStats]) => {
+            let tagStats = paginatedTagStats.data ?? [];
+
             this.tagsLeaderboard = tagStats.map((tag) => {
               return {
                 name: tag.tag.name,
                 score: tag.score ?? 0,
               };
             });
-            this.tagsLeaderboardStatus = this.tagsLeaderboard.length === 0 ? 'noData' : 'good';
+            this.tagsLeaderboardStatus =
+              this.tagsLeaderboard.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
             const selectedTagIds = selectedTags.map((tag) => tag.value.value);
             tagStats = tagStats.filter((tag) => selectedTagIds.includes(tag.tag.id));
-            this.spiderChartDataStatus = tagStats.length === 0 ? 'noData' : 'good';
+            this.spiderChartDataStatus =
+              tagStats.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
             if (selectedTags.length > 0) {
               tagStats = tagStats.filter((tag) => tagStats.includes(tag));
             }
@@ -194,79 +201,76 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
     this.performanceByTeamsSubscription.add(
       combineLatest([
         this.questionsScoreControl.valueChanges,
-        this.questionsSearchControl.valueChanges,
+        this.questionsSearchControl.valueChanges.pipe(debounceTime(300)),
         this.durationControl.valueChanges,
       ])
         .pipe(
-          startWith<[string, string, ScoreDuration]>([
-            this.questionsSearchControl.value,
+          startWith<[PillOption | null, string, EScoreDuration]>([
             this.questionsScoreControl.value,
+            this.questionsSearchControl.value,
             this.durationControl.value,
           ]),
-          tap(() => (this.questionsTableDataStatus = 'loading')),
+          tap(() => (this.questionsTableDataStatus = EPlaceholderStatus.LOADING)),
           switchMap(([search, score, duration]) => {
             return combineLatest([
               of(search),
               of(score),
-              this.scoresRestService.getQuestionsStats(duration, false, undefined, this.teamId),
-              this.scoresRestService.getQuestionsStats(duration, true, undefined, this.teamId),
+              this.scoresRestService.getPaginatedQuestionsStats(duration, false, { teamIds: this.teamId }),
+              this.scoresRestService.getPaginatedQuestionsStats(duration, true, { teamIds: this.teamId }),
             ]);
           }),
-          map(([search, scoreFilter, questionsStats, prevQuestionsStats]) => {
+        )
+        .subscribe(
+          ([scoreFilter, search, { data: questionsStats = [] }, { data: prevQuestionsStats = [] }]) => {
             if (search) {
+              const regex = new RegExp(search, 'i');
               questionsStats = questionsStats.filter((question) => {
-                const s = search.toLowerCase();
-                const title = question.question.title.toLowerCase();
-                return title.includes(s);
+                return regex.test(question.question.title);
               });
             }
             if (scoreFilter) {
               questionsStats = this.scoresService.filterByScore(
                 questionsStats,
-                scoreFilter as ScoreFilter,
+                scoreFilter.value as EScoreFilter,
                 true,
               );
             }
-            return [questionsStats, prevQuestionsStats];
-          }),
-        )
-        .subscribe(([questionsStats, prevQuestionsStats]) => {
-          this.questionsTable = questionsStats;
-          this.previousQuestionsStats = prevQuestionsStats;
-          this.changeQuestionsPage(1);
-          this.questionsTableDataStatus = this.questionsTable.length > 0 ? 'good' : 'noData';
-        }),
+            this.questionsTable = questionsStats;
+            this.previousQuestionsStats = prevQuestionsStats;
+            this.changeQuestionsPage(1);
+            this.questionsTableDataStatus =
+              this.questionsTable.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
+          },
+        ),
     );
 
     this.performanceByTeamsSubscription.add(
       combineLatest([this.membersSearchControl.valueChanges, this.durationControl.valueChanges])
         .pipe(
-          startWith<[string, ScoreDuration]>([this.membersSearchControl.value, this.durationControl.value]),
+          startWith<[string, EScoreDuration]>([this.membersSearchControl.value, this.durationControl.value]),
           tap(() => {
-            this.membersTableDataStatus = 'loading';
-            this.membersLeaderboardStatus = 'loading';
+            this.membersTableDataStatus = EPlaceholderStatus.LOADING;
+            this.membersLeaderboardStatus = EPlaceholderStatus.LOADING;
           }),
           switchMap(([search, duration]) => {
             return combineLatest([
-              of(search),
-              this.scoresRestService.getUsersStats(duration, false, { teamIds: this.teamId }),
-              this.scoresRestService.getUsersStats(duration, true, { teamIds: this.teamId }),
+              this.scoresRestService.getPaginatedUsersStats(duration, false, {
+                search: search,
+                teamIds: this.teamId,
+              }),
+              this.scoresRestService.getPaginatedUsersStats(duration, true, {
+                search: search,
+                teamIds: this.teamId,
+              }),
             ]);
           }),
-          map(([search, usersStats, prevUsersStats]) => {
+          map(([{ data: usersStats = [] }, { data: prevUsersStats = [] }]) => {
             this.membersLeaderboard = usersStats.map((r) => ({
               name: r.user.firstname + ' ' + r.user.lastname,
               score: r.score ?? 0,
             }));
-            this.membersLeaderboardStatus = this.membersLeaderboard.length > 0 ? 'good' : 'noData';
-            if (search) {
-              usersStats = usersStats.filter((user) => {
-                const s = search.toLowerCase();
-                const firstname = user.user.firstname.toLowerCase();
-                const lastname = user.user.lastname.toLowerCase();
-                return firstname.includes(s) || lastname.includes(s);
-              });
-            }
+            this.membersLeaderboardStatus =
+              this.membersLeaderboard.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
             return [usersStats, prevUsersStats];
           }),
         )
@@ -274,13 +278,14 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
           (this.membersTable = usersStats),
             (this.previousMembersStats = prevUsersStats),
             this.changeMembersPage(1);
-          this.membersTableDataStatus = this.membersTable.length > 0 ? 'good' : 'noData';
+          this.membersTableDataStatus =
+            this.membersTable.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
         }),
     );
 
     this.performanceByTeamsSubscription.add(
       this.membersPageControl.valueChanges.subscribe((page) => {
-        this.changeQuestionsPage(page);
+        this.changeMembersPage(page);
       }),
     );
 
@@ -354,7 +359,7 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
     };
   }
 
-  createTeamChart(scores: Score[], global: Score[], duration: ScoreDuration): void {
+  createTeamChart(scores: Score[], global: Score[], duration: EScoreDuration): void {
     // /!\ scores can be empty /!\
     const formattedScores = scores.length ? this.scoresService.formatScores(scores) : [];
     const formattedGlobalScores = this.scoresService.formatScores(global);
@@ -433,7 +438,7 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
     };
   }
 
-  getScoreParams(duration: ScoreDuration, global: boolean): ChartFilters {
+  getScoreParams(duration: EScoreDuration, global: boolean): ChartFilters {
     return {
       duration: duration,
       type: global ? ScoreTypeEnumApi.Team : ScoreTypeEnumApi.User,
@@ -441,9 +446,9 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
       scoredBy: undefined,
       scoredById: undefined,
       timeframe:
-        duration === ScoreDuration.Year
+        duration === EScoreDuration.Year
           ? ScoreTimeframeEnumApi.Month
-          : duration === ScoreDuration.Trimester
+          : duration === EScoreDuration.Trimester
           ? ScoreTimeframeEnumApi.Week
           : ScoreTimeframeEnumApi.Day,
     };

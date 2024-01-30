@@ -11,7 +11,6 @@ import { Team } from 'src/app/models/team.model';
 import { IAppData } from '../../../../../core/resolvers';
 import { ProgramForm } from '../../../models/programs.form';
 import { TagsRestService } from '../../../services/tags-rest.service';
-import { ICompany } from '../../../../../models/company.model';
 
 @UntilDestroy()
 @Component({

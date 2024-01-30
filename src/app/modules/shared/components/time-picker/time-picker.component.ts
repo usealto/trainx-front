@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
+import { EScoreDuration } from '../../../../models/score.model';
 
-export type TimePickerOption = ScoreDuration.Year | ScoreDuration.Trimester | ScoreDuration.Month;
+export type TimePickerOption = EScoreDuration.Year | EScoreDuration.Trimester | EScoreDuration.Month;
 
 @Component({
   selector: 'alto-time-picker',
@@ -12,8 +12,15 @@ export type TimePickerOption = ScoreDuration.Year | ScoreDuration.Trimester | Sc
 })
 export class TimePickerComponent {
   I18ns = I18ns;
-  ScoreDuration = ScoreDuration;
-  @Input() durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
-    nonNullable: true,
-  });
+  ScoreDuration = EScoreDuration;
+  @Input() durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(
+    EScoreDuration.Year,
+    {
+      nonNullable: true,
+    },
+  );
+
+  changeDuration(duration: EScoreDuration): void {
+    this.durationControl.patchValue(duration);
+  }
 }

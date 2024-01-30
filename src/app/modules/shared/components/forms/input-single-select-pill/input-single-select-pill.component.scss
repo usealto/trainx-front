@@ -58,7 +58,8 @@
     .pill {
       color: var(--blue-gray-600);
       background: var(--blue-gray-50);
-
+      border-radius: 1.5rem;
+      padding: 0 0.5rem;
       &.pill-blue {
         color: var(--bs-primary);
         background: #eff8ff;

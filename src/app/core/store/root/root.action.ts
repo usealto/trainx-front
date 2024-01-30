@@ -1,6 +1,7 @@
-import { User } from 'src/app/models/user.model';
 import { createAction, props } from '@ngrx/store';
+import { TagDtoApi } from '@usealto/sdk-ts-angular';
 import { Team, TeamStats } from 'src/app/models/team.model';
+import { User } from 'src/app/models/user.model';
 import { Company } from '../../../models/company.model';
 import { Program } from '../../../models/program.model';
 
@@ -18,6 +19,9 @@ export const setTeamsStats = createAction('[Team] Set Team Stats', props<{ teamS
 // Program
 export const setPrograms = createAction('[Program] Set Programs', props<{ programs: Program[] }>());
 export const updatePrograms = createAction('[Program] Update Programs', props<{ programs: Program[] }>());
+
+// Tag
+export const setTags = createAction('[Tag] Set Tags', props<{ tags: TagDtoApi[] }>());
 
 // Company
 export const setCompany = createAction('[Company] Set Company', props<{ company: Company }>());

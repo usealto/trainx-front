@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
+import { combineLatest, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   CreateTagDtoApi,
   GetTagsRequestParams,
@@ -44,6 +44,30 @@ export class TagsRestService {
     return this.tagApi.getTags(par).pipe();
   }
 
+  getAllTags(): Observable<TagDtoApi[]> {
+    return this.tagApi.getTags({ page: 1, itemsPerPage: 1000, sortBy: 'name:asc' }).pipe(
+      switchMap(({ data, meta }) => {
+        const reqs: Observable<TagDtoApi[]>[] = [of(data ? data : [])];
+        let totalPages = meta.totalPage ?? 1;
+
+        for (let i = 2; i <= totalPages; i++) {
+          reqs.push(
+            this.tagApi.getTags({ page: i, itemsPerPage: 1000, sortBy: 'name:asc' }).pipe(
+              tap(({ meta }) => {
+                if (meta.totalPage !== totalPages) {
+                  totalPages = meta.totalPage;
+                }
+              }),
+              map((r) => r.data ?? []),
+            ),
+          );
+        }
+        return combineLatest(reqs);
+      }),
+      map((tags) => tags.flat()),
+    );
+  }
+
   createTag(createTagDtoApi: CreateTagDtoApi): Observable<TagDtoApi | undefined> {
     return this.tagApi.createTag({ createTagDtoApi }).pipe(
       map((r) => r.data),
@@ -65,8 +89,8 @@ export class TagsRestService {
   deleteTag(id: string) {
     return this.tagApi.deleteTag({ id });
   }
-  
-  resetTags(){
+
+  resetTags() {
     this.programStore.tags.reset();
   }
 }

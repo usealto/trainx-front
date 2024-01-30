@@ -7,15 +7,11 @@ import {
   ProgramRunsApiService,
   QuestionDtoPaginatedResponseApi,
 } from '@usealto/sdk-ts-angular';
-import { addDays } from 'date-fns';
-import { Observable, combineLatest, map, switchMap, tap } from 'rxjs';
-import { User } from 'src/app/models/user.model';
+import { Observable, map } from 'rxjs';
+import { ProgramRun } from '../../../models/program-run.model';
 import { UsersRestService } from '../../profile/services/users-rest.service';
-import { ScoreDuration } from '../../shared/models/score.model';
 import { ScoresService } from '../../shared/services/scores.service';
 import { ProgramsRestService } from './programs-rest.service';
-import { Program } from '../../../models/program.model';
-import { ProgramRun } from '../../../models/program-run.model';
 
 @Injectable({
   providedIn: 'root',

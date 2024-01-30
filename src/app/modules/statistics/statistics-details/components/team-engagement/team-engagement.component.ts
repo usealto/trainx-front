@@ -14,13 +14,12 @@ import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.s
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { Company } from 'src/app/models/company.model';
-import { Score } from 'src/app/models/score.model';
+import { EScoreDuration, Score } from 'src/app/models/score.model';
 import { Team } from 'src/app/models/team.model';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
+import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
@@ -42,24 +41,24 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
   company!: Company;
   users: User[] = [];
 
-  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Trimester, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
   });
 
   answersChart: any;
-  answersChartStatus: PlaceholderDataStatus = 'loading';
+  answersChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   membersLeaderboard: { name: string; score: number; progression: number }[] = [];
-  membersLeaderboardStatus: PlaceholderDataStatus = 'loading';
+  membersLeaderboardStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   contributionChart: any;
-  contributionChartStatus: PlaceholderDataStatus = 'loading';
+  contributionChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   membersTable: DataForTable[] = [];
-  membersTableSearch = '';
+  membersTableSearchControl = new FormControl<string | null>(null);
   paginatedMembersTable: DataForTable[] = [];
   membersTablePageSize = 5;
-  membersTableStatus: PlaceholderDataStatus = 'loading';
+  membersTableStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   hasConnector = false;
 
   pageControl: FormControl<number> = new FormControl(1, { nonNullable: true });
@@ -83,29 +82,40 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
     this.users = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
 
     this.teamEngagementComponentSubscription.add(
-      this.durationControl.valueChanges
+      combineLatest([
+        this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+        this.membersTableSearchControl.valueChanges.pipe(startWith(this.membersTableSearchControl.value)),
+      ])
         .pipe(
-          startWith(this.durationControl.value),
           tap(() => {
-            this.answersChartStatus = 'loading';
-            this.membersLeaderboardStatus = 'loading';
-            this.contributionChartStatus = 'loading';
+            this.answersChartStatus = EPlaceholderStatus.LOADING;
+            this.membersLeaderboardStatus = EPlaceholderStatus.LOADING;
+            this.contributionChartStatus = EPlaceholderStatus.LOADING;
           }),
-          switchMap((duration) => {
+          switchMap(([duration, search]) => {
             return combineLatest([
               of(duration),
+              of(search),
               this.scoreRestService.getScores(this.getScoreParams('answers', duration)),
-              this.scoreRestService.getUsersStats(duration, false, { teamIds: this.team.id }),
-              this.scoreRestService.getUsersStats(duration, true, { teamIds: this.team.id }),
+              this.scoreRestService.getPaginatedUsersStats(duration, false, { teamIds: this.team.id }),
+              this.scoreRestService.getPaginatedUsersStats(duration, true, { teamIds: this.team.id }),
               this.scoreRestService.getScores(this.getScoreParams('comments', duration)),
               this.scoreRestService.getScores(this.getScoreParams('submitedQuestions', duration)),
             ]);
           }),
         )
         .subscribe(
-          ([duration, answersScores, usersStats, prevUsersStats, commentsScores, submitedCommentsScores]) => {
+          ([
+            duration,
+            search,
+            answersScores,
+            { data: usersStats = [] },
+            { data: prevUsersStats = [] },
+            commentsScores,
+            submitedCommentsScores,
+          ]) => {
             this.createAnswersChart(answersScores, duration);
-            this.getMembersTable(usersStats, prevUsersStats, this.company);
+            this.getMembersTable(usersStats, prevUsersStats, this.company, search);
             this.getMembersLeaderboard(usersStats, prevUsersStats);
             this.createContributionsChart(commentsScores, submitedCommentsScores, duration);
           },
@@ -123,7 +133,7 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
     this.teamEngagementComponentSubscription.unsubscribe();
   }
 
-  createContributionsChart(comments: Score[], submitedQuestions: Score[], duration: ScoreDuration): void {
+  createContributionsChart(comments: Score[], submitedQuestions: Score[], duration: EScoreDuration): void {
     const formattedComments = this.scoreService.formatScores(comments);
     const formattedSubmitedQuestions = this.scoreService.formatScores(submitedQuestions);
 
@@ -183,20 +193,24 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
       series: series,
       legend: legendOptions,
     };
-    this.contributionChartStatus = comments.length > 0 || submitedQuestions.length > 0 ? 'good' : 'noData';
+    this.contributionChartStatus =
+      comments.length > 0 || submitedQuestions.length > 0
+        ? EPlaceholderStatus.GOOD
+        : EPlaceholderStatus.NO_DATA;
   }
 
-  filterMembersTable({ search = this.membersTableSearch }): void {
-    this.membersTableSearch = search;
-  }
-
-  getMembersTable(users: UserStatsDtoApi[], previousUsers: UserStatsDtoApi[], company: CompanyDtoApi): void {
+  getMembersTable(
+    users: UserStatsDtoApi[],
+    previousUsers: UserStatsDtoApi[],
+    company: CompanyDtoApi,
+    search: string | null,
+  ): void {
     this.hasConnector = company.isConnectorActive ?? false;
     let temp = users;
-    if (this.membersTableSearch && this.membersTableSearch !== '') {
+    if (search) {
+      const regex = new RegExp(search, 'i');
       temp = temp.filter((u) => {
-        const s = this.membersTableSearch.toLowerCase();
-        return u.user.firstname.toLowerCase().includes(s) || u.user.lastname.toLowerCase().includes(s);
+        return regex.test(u.user.firstname) || regex.test(u.user.lastname) || regex.test(u.user.email);
       });
     }
     this.membersTable = this.users.map((user) => {
@@ -204,7 +218,8 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
       const prevUser = previousUsers.find((u) => u.user.id === user.id) ?? ({} as UserStatsDtoApi);
       return this.dataFormUserTableMapper(user, userStats, prevUser);
     });
-    this.membersTableStatus = this.membersTable.length > 0 ? 'good' : 'noData';
+    this.membersTableStatus =
+      this.membersTable.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
     this.changeMembersTablePage(1);
   }
 
@@ -261,10 +276,11 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
         };
       })
       .sort((a, b) => b.score - a.score);
-    this.membersLeaderboardStatus = this.membersLeaderboard.length > 0 ? 'good' : 'noData';
+    this.membersLeaderboardStatus =
+      this.membersLeaderboard.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
   }
 
-  createAnswersChart(scores: Score[], duration: ScoreDuration): void {
+  createAnswersChart(scores: Score[], duration: EScoreDuration): void {
     const formatedScores = this.scoreService.formatScores(scores);
     const aggregatedData = this.statisticsService.transformDataToPointByCounts(formatedScores[0]);
     const labels = this.statisticsService
@@ -310,10 +326,10 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
       series: series,
       legend: legendOptions,
     };
-    this.answersChartStatus = scores.length > 0 ? 'good' : 'noData';
+    this.answersChartStatus = scores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
   }
 
-  getScoreParams(type: 'answers' | 'comments' | 'submitedQuestions', duration: ScoreDuration): ChartFilters {
+  getScoreParams(type: 'answers' | 'comments' | 'submitedQuestions', duration: EScoreDuration): ChartFilters {
     return {
       duration: duration,
       type:
@@ -325,9 +341,9 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
       scoredBy: ScoreByTypeEnumApi.Team,
       scoredById: this.team.id,
       timeframe:
-        duration === ScoreDuration.Year
+        duration === EScoreDuration.Year
           ? ScoreTimeframeEnumApi.Month
-          : duration === ScoreDuration.Trimester
+          : duration === EScoreDuration.Trimester
           ? ScoreTimeframeEnumApi.Week
           : ScoreTimeframeEnumApi.Day,
     };

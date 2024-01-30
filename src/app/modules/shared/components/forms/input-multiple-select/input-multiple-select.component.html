@@ -5,12 +5,12 @@
   >
 
     <div class="title-container">
-      <p class="title">{{ title }}</p>
-      <span *ngIf="controls.value.length > 0" class="alto-badge ms-1">{{ controls.value.length }}</span>
+      <p class="title">{{ placeholder }}</p>
+      <span [class.invisible]="!controls.value.length" class="alto-badge ms-1">{{ controls.value.length }}</span>
     </div>
 
     <div class="d-flex gap-2">
-      <i *ngIf="controls.value.length" class="bi bi-x-lg hover-red" (click)="$event.stopPropagation(); toggleAllOptions(false)"></i>
+      <i [class.invisible]="!controls.value.length" class="bi bi-x-lg hover-red" (click)="$event.stopPropagation(); toggleAllOptions(false)"></i>
       <i class="bi" [ngClass]="isDropdownOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
     </div>
   </div>
@@ -21,11 +21,11 @@
     (click)="$event.stopPropagation()"
   >
 
-    <input type="text" [formControl]="searchControl" class="dropdown-item border-bottom" [placeholder]="I18ns.shared.search">
+    <input *ngIf="options.length > 0" type="text" [formControl]="searchControl" class="dropdown-item border-bottom" [placeholder]="I18ns.shared.search">
 
-    <ng-container *ngIf="options.length > 0; else noOption">
-      <div class="dropdown-item border-bottom" (click)="toggleAllOptions()">
-        <p class="alto-grey cursor-pointer">{{ I18ns.shared.selectAll }}</p>
+    <ng-container *ngIf="filteredOptions.length > 0; else noOption">
+      <div *ngIf="!searchControl.value" class="dropdown-item border-bottom cursor-pointer" (click)="toggleAllOptions()">
+        <p class="alto-grey">{{ I18ns.shared.selectAll }}</p>
       </div>
 
       <div
@@ -41,7 +41,7 @@
     </ng-container>
 
     <ng-template #noOption>
-      <div class="dropdown-item">
+      <div class="noOption">
         <p class="fst-italic alto-grey">{{ I18ns.shared.noOption }}</p>
       </div>
     </ng-template>

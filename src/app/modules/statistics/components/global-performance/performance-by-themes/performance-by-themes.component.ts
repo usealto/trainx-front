@@ -1,18 +1,14 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { Subscription, combineLatest, map, of, startWith, switchMap, tap } from 'rxjs';
-import { EmojiName } from 'src/app/core/utils/emoji/data';
-import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ProgramsStore } from 'src/app/modules/programs/programs.store';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
-import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TagDtoApi, TagStatsDtoApi } from '@usealto/sdk-ts-angular';
+import { Subscription, combineLatest, map, of, startWith, switchMap } from 'rxjs';
+import { EmojiName } from 'src/app/core/utils/emoji/data';
+import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
+import { EScoreDuration } from '../../../../../models/score.model';
 import { TagsRestService } from '../../../../programs/services/tags-rest.service';
-import { ChartsService } from '../../../../charts/charts.service';
+import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 
-@UntilDestroy()
 @Component({
   selector: 'alto-performance-by-themes',
   templateUrl: './performance-by-themes.component.html',
@@ -21,23 +17,22 @@ import { ChartsService } from '../../../../charts/charts.service';
 export class PerformanceByThemesComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
+  EPlaceholderStatus = EPlaceholderStatus;
 
   tags: TagDtoApi[] = [];
   selectedTags: TagDtoApi[] = [];
   tagsControl: FormControl<TagDtoApi[]> = new FormControl<TagDtoApi[]>([], { nonNullable: true });
-  spiderChartDataStatus: PlaceholderDataStatus = 'loading';
+  spiderChartDataStatus = EPlaceholderStatus.LOADING;
   spiderChartOptions: any = {};
 
   tagsLeaderboard: { name: string; score: number }[] = [];
-  tagsDataStatus: PlaceholderDataStatus = 'loading';
+  tagsDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   tagStatsSubscription: Subscription = new Subscription();
 
   constructor(
     private readonly tagsRestService: TagsRestService,
-    public readonly programsStore: ProgramsStore,
     private readonly scoresRestService: ScoresRestService,
-    private readonly chartService: ChartsService,
   ) {}
 
   ngOnInit(): void {
@@ -45,31 +40,29 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
       this.tagsControl.valueChanges
         .pipe(startWith(this.tagsControl.value))
         .pipe(
-          tap(() => (this.spiderChartDataStatus = 'loading')),
           switchMap((selectedTags) => {
             return combineLatest([
               this.tagsRestService.getTags(),
-              this.scoresRestService.getTagsStats(ScoreDuration.Year),
+              this.scoresRestService.getPaginatedTagsStats(EScoreDuration.Year),
               of(selectedTags),
             ]);
           }),
-          map(([tags, tagStats, selectedTags]) => {
+          map(([tags, paginatedTagsStats, selectedTags]) => {
+            const tagStats = paginatedTagsStats.data ?? [];
+
             this.tags = tags;
             this.selectedTags = selectedTags;
             tagStats.filter((t) => t.score && t.score >= 0);
-            this.spiderChartDataStatus = tagStats.length === 0 ? 'noData' : 'good';
+            this.spiderChartDataStatus =
+              tagStats.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
             this.tagsLeaderboard = tagStats.map((t) => ({ name: t.tag.name, score: t.score ?? 0 }));
-            this.tagsDataStatus = this.tagsLeaderboard.length === 0 ? 'noData' : 'good';
-            return (
-              tagStats
-                // .filter((tag) => selectedTags.includes(tag.tag))
-                .splice(0, 6)
-                .sort((a, b) => a.tag.name.localeCompare(b.tag.name))
-            );
+            this.tagsDataStatus =
+              this.tagsLeaderboard.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
+            return tagStats.splice(0, 6).sort((a, b) => a.tag.name.localeCompare(b.tag.name));
           }),
         )
         .subscribe((tagStats) => {
-          this.createSpiderChart(tagStats);
+          this.setSpiderChartOptions(tagStats);
         }),
     );
   }
@@ -78,7 +71,7 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
     this.tagStatsSubscription.unsubscribe();
   }
 
-  createSpiderChart(tagStats: TagStatsDtoApi[]) {
+  setSpiderChartOptions(tagStats: TagStatsDtoApi[]) {
     this.spiderChartOptions = {
       color: ['#475467'],
       radar: {

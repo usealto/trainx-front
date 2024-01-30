@@ -6,16 +6,14 @@ import { Subscription, combineLatest, of, startWith, switchMap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { Company } from '../../../../../models/company.model';
-import { Score } from '../../../../../models/score.model';
+import { EScoreDuration, Score } from '../../../../../models/score.model';
 import { TeamStats } from '../../../../../models/team.model';
+import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { SelectOption } from '../../../../shared/models/select-option.model';
 import { StatisticsService } from '../../../services/statistics.service';
 
@@ -25,7 +23,7 @@ import { StatisticsService } from '../../../services/statistics.service';
   styleUrls: ['./performance-by-teams.component.scss'],
 })
 export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
-  @Input() durationControl: FormControl<ScoreDuration> = new FormControl(ScoreDuration.Year, {
+  @Input() durationControl: FormControl<EScoreDuration> = new FormControl(EScoreDuration.Year, {
     nonNullable: true,
   });
   @Input() company!: Company;
@@ -33,15 +31,16 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
   init = true;
+  EPlaceholderStatus = EPlaceholderStatus;
 
   teamsScore: Score[] = [];
   selectedTeamsScores: Score[] = [];
   scoredTeams: { label: string; score: number | null; progression: number | null }[] = [];
-  scoreDataStatus: PlaceholderDataStatus = 'loading';
+  scoreDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   teamsLeaderboard: { name: string; score: number }[] = [];
   teamsLeaderboardCount = 0;
-  teamsLeaderboardDataStatus: PlaceholderDataStatus = 'loading';
+  teamsLeaderboardDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   chartOption: any = {};
 
   selectedScoresControl = new FormControl([] as FormControl<SelectOption>[], { nonNullable: true });
@@ -51,7 +50,6 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
 
   constructor(
     private titleCasePipe: TitleCasePipe,
-    public readonly teamStore: TeamStore,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresServices: ScoresService,
     private readonly statisticsServices: StatisticsService,
@@ -111,7 +109,8 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
               score: t.score ?? 0,
             }));
 
-          this.teamsLeaderboardDataStatus = this.teamsLeaderboard.length === 0 ? 'noData' : 'good';
+          this.teamsLeaderboardDataStatus =
+            this.teamsLeaderboard.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
 
           this.getTeamsScores(teamStats, previousTeamStats);
         }),
@@ -132,14 +131,15 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
       .sort((a, b) => (a.score && b.score ? b.score - a.score : 0));
   }
 
-  createScoreEvolutionChart(scores: Score[], globalScore: Score, duration: ScoreDuration) {
+  createScoreEvolutionChart(scores: Score[], globalScore: Score, duration: EScoreDuration) {
     const allFormattedScores = this.scoresServices.formatScores([...scores, globalScore]);
 
     // pop global score
     const formattedScores = [...allFormattedScores];
     const formattedGlobalScore = formattedScores.pop() as Score;
 
-    this.scoreDataStatus = formattedScores.length === 0 ? 'noData' : 'good';
+    this.scoreDataStatus =
+      formattedScores.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
     // Aligns Global with Score's Length so thay start on the same month
     const globalPoints = this.statisticsServices
       .transformDataToPoint(formattedGlobalScore)
@@ -197,14 +197,14 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
   }
 
   @memoize()
-  getScoreParams(duration: ScoreDuration, global: boolean): ChartFilters {
+  getScoreParams(duration: EScoreDuration, global: boolean): ChartFilters {
     return {
-      duration: duration ?? ScoreDuration.Year,
+      duration: duration ?? EScoreDuration.Year,
       type: global ? ScoreTypeEnumApi.Guess : ScoreTypeEnumApi.Team,
       timeframe:
-        duration === ScoreDuration.Year
+        duration === EScoreDuration.Year
           ? ScoreTimeframeEnumApi.Month
-          : duration === ScoreDuration.Trimester
+          : duration === EScoreDuration.Trimester
           ? ScoreTimeframeEnumApi.Week
           : ScoreTimeframeEnumApi.Day,
     } as ChartFilters;

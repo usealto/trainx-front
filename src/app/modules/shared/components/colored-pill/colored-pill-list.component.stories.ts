@@ -1,5 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/angular';
-import { ColoredPillListComponent } from './colored-pill.component';
+import { ColoredPillListComponent } from './colored-pill-list.component';
 
 const meta: Meta<ColoredPillListComponent> = {
   title: 'Shared/ColoredPill',
@@ -8,8 +8,8 @@ const meta: Meta<ColoredPillListComponent> = {
   render: (args: ColoredPillListComponent) => ({
     props: {
       ...args,
-    }
-  })
+    },
+  }),
 };
 
 export default meta;
@@ -23,7 +23,7 @@ export const List: Story = {
       { name: 'test', id: 'AFE8238asdfr4' },
       { name: 'alpha', id: 'FF1238asdfr4' },
       { name: 'beta', id: '9DAA38asdfr4' },
-      { name: 'gamma', id: 'AEE123qsd' }
+      { name: 'gamma', id: 'AEE123qsd' },
     ],
   },
 };
@@ -36,11 +36,10 @@ export const ListColored: Story = {
       { name: 'test', id: 'AFE8238asdfr4' },
       { name: 'alpha', id: 'FF1238asdfr4' },
       { name: 'beta', id: '9DAA38asdfr4' },
-      { name: 'gamma', id: 'AEE123qsd' }
+      { name: 'gamma', id: 'AEE123qsd' },
     ],
   },
 };
-
 
 export const ListLimited: Story = {
   args: {
@@ -50,12 +49,11 @@ export const ListLimited: Story = {
   },
 };
 
-
 export const ListTooltip: Story = {
   args: {
     limit: 3,
     hasDynamicColor: false,
     data: ['test', 'alpha', 'beta', 'gamma'],
-    tooltip: ['test', 'alpha', 'beta', 'gamma'],
+    tooltipOnLimit: ['test', 'alpha', 'beta', 'gamma'],
   },
 };

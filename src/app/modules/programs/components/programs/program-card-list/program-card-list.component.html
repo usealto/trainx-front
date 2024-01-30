@@ -1,4 +1,108 @@
-<span [ngSwitch]="place">
+<div class="d-flex justify-content-between align-items-center mb-5">
+  <div>
+    <h2>
+      <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" width="16" height="16" />
+      {{ I18ns.programs.programs.title }} ({{ company.programs.length }})
+    </h2>
+    <p class="mt-2 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
+  </div>
+
+  <a type="button"
+  class="btn btn-primary"
+  [routerLink]="AltoRoutes.programsCreate"
+>
+  <i class="bi bi-plus-lg"></i>
+  <div>
+    {{ I18ns.programs.programs.createProgram }}
+  </div>
+</a>
+</div>
+
+
+<div *ngFor="let programCards of programCardsRows" class="programs-row mb-5">
+  <div *ngFor="let programCard of programCards"
+  class="program-card"
+  [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]"
+  [class.disabled]="!programCard.program.isActive">
+    <div class="title-section mb-2">
+      <p *ngIf="programCard.program.name.length < 35" class="subtitle">
+        {{ programCard.program.name }}
+      </p>
+
+      <p>INPUT TOGGLE</p>
+    </div>
+    <ng-container *ngIf="programCard.program.teamIds.length > 0; else noTeam">
+      <div class="teams-section">
+        <img [src]="Emoji.BustsInSilhouette | emoji" height="16" width="16" />
+        <p class="teams-title">
+          {{ I18ns.shared.assignedTeams }} :
+        </p>
+        <div class="tooltip-container">
+          <span class="alto-badge teams">{{ programCard.program.teamIds.length }}</span>
+
+          <div class="tooltip-text">
+            <p>{{ programCard.teamsTooltip }}</p>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #noTeam>
+      <div class="alto-badge">{{ I18ns.shared.noTeam }}</div>
+    </ng-template>
+
+    <hr />
+
+    <div class="score-section">
+      <div class="score-details">
+        <p class="score-row">
+          <span class="subtitle">
+            <img class="pe-1 mb-2" [src]="Emoji.PlayButton | emoji" height="14" width="14" />
+            {{ I18ns.programs.programs.involvement }}
+          </span>
+          <span class="alto-score" [class]="(programCard.participation ? programCard.participation * 100 : '') | pillColor">
+            {{ programCard.participation ? (programCard.participation | percent) : '-' }}
+          </span>
+        </p>
+        <p class="score-row">
+          <span class="subtitle">
+            <img class="pe-1 mb-2" [src]="Emoji.SportsMedal | emoji" height="14" width="14" />
+            {{ I18ns.programs.programs.score }}
+          </span>
+          <span class="alto-score" [class]="(programCard.score ? programCard.score * 100 : '') | pillColor">
+            {{ programCard.score ? (programCard.score | percent) : '-' }}
+          </span>
+        </p>
+        <p class="score-row">
+          <span class="subtitle">
+            <img class="pe-1 mb-2" [src]="Emoji.CheckMarkButton | emoji" height="14" width="14" />
+            {{ I18ns.programs.programs.membersHaveValidated }}
+          </span>
+          <span
+          class="alto-score"
+          [class]="(programCard.userValidatedProgramCount ? programCard.userValidatedProgramCount * 100 : '') | pillColor">
+            {{ programCard.userValidatedProgramCount }}
+          </span>
+        </p>
+      </div>
+      <p class="fs-7 alto-grey">{{ I18ns.shared.createdAt }} {{ programCard.program.createdAt | date }}</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- <div class="form-check form-switch" style="z-index: 100" [ngClass]="{ invisible: !displayToggle }">
+  <input
+    #activate
+    type="checkbox"
+    class="form-check-input"
+    [checked]="program.isActive"
+    (click)="changeIsActive(program.id, activate.checked)"
+  />
+</div>
+
+<div class="panel inactive" *ngIf="!program.isActive"></div> -->
+
+<!-- <span [ngSwitch]="place">
   <ng-container *ngIf="!this.isActive">
     <div class="row mb-5" *ngSwitchCase="'program'">
       <div class="col-5">
@@ -43,7 +147,7 @@
       class="mb-4 col-4"
       *ngFor="let prog of programsDisplay | slice : (pageControl.value - 1) * pageSize : pageControl.value * pageSize"
     >
-      <!-- <alto-program-card
+      <alto-program-card
         [displayToggle]="displayToggle"
         [score]="programsScores.get(prog.id)"
         [progress]="programsProgress.get(prog.id)"
@@ -52,7 +156,7 @@
         [allTeamsCount]="teamStore.teams.value.length"
         [membersHaveValidatedCount]="programsMemberHaveValidatedCount.get(prog.id)"
         data-cy="programCard"
-      ></alto-program-card> -->
+      ></alto-program-card>
     </div>
     <div *ngIf="count < 3" class="my-4 col-4">
       <div class="nodata-placeholder m-0">
@@ -109,4 +213,4 @@
     aria-label="Default pagination"
   ></alto-pagination>
   </div>
-</alto-placeholder-manager>
+</alto-placeholder-manager> -->

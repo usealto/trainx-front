@@ -9,6 +9,11 @@ import { Company } from '../../../../models/company.model';
 import { ITabOption } from '../../../shared/components/tabs/tabs.component';
 import { User } from '../../../../models/user.model';
 
+enum ESettingsTab {
+  Users = 'users',
+  Diffusion = 'diffusion',
+}
+
 @Component({
   selector: 'alto-settings',
   templateUrl: './settings.component.html',
@@ -17,14 +22,14 @@ import { User } from '../../../../models/user.model';
 export class SettingsComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
-  activeTab = 1;
+  ESettingsTab = ESettingsTab;
 
   company!: Company;
   users!: User[];
 
   tabOptions: ITabOption[] = [
-    { label: I18ns.settings.users.title, value: 1 },
-    { label: I18ns.settings.continuousSession.title, value: 2 },
+    { label: I18ns.settings.users.title, value: ESettingsTab.Users },
+    { label: I18ns.settings.continuousSession.title, value: ESettingsTab.Diffusion },
   ];
   tabControl = new FormControl<ITabOption>(this.tabOptions[0], { nonNullable: true });
 

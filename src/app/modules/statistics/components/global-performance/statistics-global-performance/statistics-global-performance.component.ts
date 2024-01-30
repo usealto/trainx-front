@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
-import * as FromRoot from '../../../../../core/store/store.reducer';
+import { EResolvers, ResolversService } from '../../../../../core/resolvers/resolvers.service';
+import { ILeadData } from '../../../../../core/resolvers/lead.resolver';
 import { Company } from '../../../../../models/company.model';
-import { tap } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { EScoreDuration } from '../../../../../models/score.model';
 
 @Component({
   selector: 'alto-statistics-global-performance',
@@ -16,16 +16,18 @@ import { FormControl } from '@angular/forms';
 export class StatisticsGlobalPerformanceComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
-  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
     nonNullable: true,
   });
   company: Company = {} as Company;
 
-  constructor(private readonly store: Store<FromRoot.AppState>) {}
+  constructor(
+    private readonly resolversService: ResolversService,
+    private readonly activatedRoute: ActivatedRoute,
+  ) {}
+
   ngOnInit(): void {
-    this.store
-      .select(FromRoot.selectCompany)
-      .pipe(tap(({ data: company }) => (this.company = company)))
-      .subscribe();
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.company = (data[EResolvers.LeadResolver] as ILeadData).company;
   }
 }

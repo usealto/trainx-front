@@ -10,12 +10,12 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { Company } from 'src/app/models/company.model';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../core/resolvers';
+import { EScoreDuration } from '../../../../models/score.model';
 import { Team, TeamStats } from '../../../../models/team.model';
+import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { DataForTable } from '../../models/statistics.model';
 import { StatisticsService } from '../../services/statistics.service';
 
@@ -37,19 +37,19 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   leaderboard: { name: string; score: number; progression: number }[] = [];
 
   guessChartOptions: any = {};
-  guessesDataStatus: PlaceholderDataStatus = 'loading';
-  guessesLeaderboardDataStatus: PlaceholderDataStatus = 'loading';
+  guessesDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
+  guessesLeaderboardDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   collaborationChartOptions: any = {};
-  collaborationDataStatus: PlaceholderDataStatus = 'loading';
+  collaborationDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
-  teamsDataStatus: PlaceholderDataStatus = 'loading';
+  teamsDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   teams: Team[] = [];
   paginatedTeams: DataForTable[] = [];
 
   hasConnector = false;
 
-  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
     nonNullable: true,
   });
   pageControl: FormControl<number> = new FormControl(1, { nonNullable: true });
@@ -89,20 +89,24 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     );
   }
 
-  private getActivityData(duration: ScoreDuration): Observable<[TeamStats[], TeamStats[]]> {
+  private getActivityData(duration: EScoreDuration): Observable<[TeamStats[], TeamStats[]]> {
     return this.scoresRestService
       .getScores({
         duration: duration,
         type: ScoreTypeEnumApi.Guess,
         timeframe:
-          duration === ScoreDuration.Year
+          duration === EScoreDuration.Year
             ? ScoreTimeframeEnumApi.Month
-            : duration === ScoreDuration.Trimester
+            : duration === EScoreDuration.Trimester
             ? ScoreTimeframeEnumApi.Week
             : ScoreTimeframeEnumApi.Day,
       })
       .pipe(
-        tap((scores) => (this.guessesDataStatus = scores.length === 0 ? 'noData' : 'good')),
+        tap(
+          (scores) =>
+            (this.guessesDataStatus =
+              scores.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD),
+        ),
         filter((scores) => scores.length > 0),
         tap((scores) => {
           const formattedScores = this.scoresService.formatScores(scores);
@@ -155,7 +159,8 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
         }),
         tap(
           ([currentsStats]) =>
-            (this.guessesLeaderboardDataStatus = currentsStats.length === 0 ? 'noData' : 'good'),
+            (this.guessesLeaderboardDataStatus =
+              currentsStats.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD),
         ),
         tap(([currentStats, previousStats]) => {
           currentStats = currentStats.sort((a, b) => (b.totalGuessesCount || 0) - (a.totalGuessesCount || 0));
@@ -174,15 +179,15 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
       );
   }
 
-  private getTeamEngagementData(duration: ScoreDuration) {
+  private getTeamEngagementData(duration: EScoreDuration) {
     return combineLatest([
       this.scoresRestService.getScores({
         duration: duration,
         type: ScoreTypeEnumApi.Comment,
         timeframe:
-          duration === ScoreDuration.Year
+          duration === EScoreDuration.Year
             ? ScoreTimeframeEnumApi.Month
-            : duration === ScoreDuration.Trimester
+            : duration === EScoreDuration.Trimester
             ? ScoreTimeframeEnumApi.Week
             : ScoreTimeframeEnumApi.Day,
       }),
@@ -190,9 +195,9 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
         duration: duration,
         type: ScoreTypeEnumApi.QuestionSubmitted,
         timeframe:
-          duration === ScoreDuration.Year
+          duration === EScoreDuration.Year
             ? ScoreTimeframeEnumApi.Month
-            : duration === ScoreDuration.Trimester
+            : duration === EScoreDuration.Trimester
             ? ScoreTimeframeEnumApi.Week
             : ScoreTimeframeEnumApi.Day,
       }),
@@ -202,7 +207,9 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
       }),
       tap(([commentsScores, questionsSubmittedScores]) => {
         this.collaborationDataStatus =
-          commentsScores.length === 0 && questionsSubmittedScores.length === 0 ? 'noData' : 'good';
+          commentsScores.length === 0 && questionsSubmittedScores.length === 0
+            ? EPlaceholderStatus.NO_DATA
+            : EPlaceholderStatus.GOOD;
       }),
       filter(
         ([commentsScores, questionsSubmittedScores]) =>
@@ -273,7 +280,8 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   }
 
   private getTeamDataForTable(page: number): void {
-    this.teamsDataStatus = this.teamsStats.length === 0 ? 'noData' : 'good';
+    this.teamsDataStatus =
+      this.teamsStats.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
     this.hasConnector = this.company.isConnectorActive ?? false;
     this.teams = this.teamsStats.map((t) => this.company.teams.find((team) => team.id === t.teamId) as Team);
 

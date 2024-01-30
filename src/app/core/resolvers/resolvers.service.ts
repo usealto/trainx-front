@@ -1,17 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IAppData } from './app.resolver';
-import { ITeamStatsData } from './teamStats.resolver';
+import { ILeadData } from './lead.resolver';
 
 export enum EResolvers {
   AppResolver = 'appResolver',
   LeadResolver = 'leadResolver',
-  TeamStats = 'teamStats',
-  Programs = 'programs',
 }
 
 export type ResolverData = {
-  [key: string]: IAppData | ITeamStatsData;
+  [key: string]: IAppData | ILeadData;
 };
 
 @Injectable()

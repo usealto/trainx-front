@@ -9,13 +9,13 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
 import { IAppData } from '../../../../core/resolvers';
 import { Program } from '../../../../models/program.model';
 import { ITrainingCardData } from '../../../shared/components/training-card/training-card.component';
 import { ITabOption } from '../../../shared/components/tabs/tabs.component';
+import { EScoreDuration } from '../../../../models/score.model';
 
 interface LeaderboardUser {
   position: number;
@@ -34,7 +34,7 @@ export class UserHomeComponent implements OnInit, OnDestroy {
   user!: User;
   users: User[] = [];
   programs: Program[] = [];
-  ScoreDuration = ScoreDuration;
+  ScoreDuration = EScoreDuration;
   //programs-run data
   guessesCount = 0;
   myProgramRunsCards: ITrainingCardData[] = [];
@@ -42,11 +42,10 @@ export class UserHomeComponent implements OnInit, OnDestroy {
   continuousSessionUsers: User[] = [];
 
   //team data
-  // durationTabs = ScoreDuration.Week;
   durationOptions: ITabOption[] = [
-    { label: I18ns.shared.dateFilter.week, value: ScoreDuration.Week },
-    { label: I18ns.shared.dateFilter.month, value: ScoreDuration.Month },
-    { label: I18ns.shared.dateFilter.year, value: ScoreDuration.Year },
+    { label: I18ns.shared.dateFilter.week, value: EScoreDuration.Week },
+    { label: I18ns.shared.dateFilter.month, value: EScoreDuration.Month },
+    { label: I18ns.shared.dateFilter.year, value: EScoreDuration.Year },
   ];
   durationControl = new FormControl<ITabOption>(this.durationOptions[0], {
     nonNullable: true,
@@ -54,7 +53,6 @@ export class UserHomeComponent implements OnInit, OnDestroy {
   leaderboardUsers: LeaderboardUser[] | undefined = undefined;
 
   pageSize = 2;
-  // TODO : pagination is managed in the template, we need to subscribe and handle the page changes in a subscription
   pageControl: FormControl<number> = new FormControl(1, { nonNullable: true });
   private readonly userHomeComponentSubscription = new Subscription();
 
@@ -117,15 +115,15 @@ export class UserHomeComponent implements OnInit, OnDestroy {
           }),
           switchMap((duration) => {
             return combineLatest([
-              this.scoreRestService.getUsersStats(duration.value, false),
-              this.scoreRestService.getUsersStats(duration.value, true),
+              this.scoreRestService.getPaginatedUsersStats(duration.value),
+              this.scoreRestService.getPaginatedUsersStats(duration.value, true),
             ]);
           }),
         )
         .subscribe({
-          next: ([usersStats, previousScoredUsers]) => {
+          next: ([{ data: usersStats = [] }, { data: previousUsersStats = [] }]) => {
             const filteredUsersStats = usersStats.filter((user) => user.teamId === this.user.teamId);
-            const filteredPreviousScoredUsers = previousScoredUsers.filter(
+            const filteredPreviousScoredUsers = previousUsersStats.filter(
               (user) => user.teamId === this.user.teamId,
             );
 

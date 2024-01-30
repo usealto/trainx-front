@@ -13,7 +13,7 @@
     <div class="float-end d-flex">
       <alto-input-multiple-select
       class="me-4"
-      [title]="I18ns.statistics.team.masteryLevel.teamFilter"
+      [placeholder]="I18ns.statistics.team.masteryLevel.teamFilter"
       [controls]="membersChartControl"
       [options]="membersOptions"
       [enableSearch]="true"
@@ -85,7 +85,7 @@
     <div class="float-end">
       <alto-input-multiple-select
       class="me-4"
-      [title]="I18ns.statistics.team.perThemes.tagFilter"
+      [placeholder]="I18ns.statistics.team.perThemes.tagFilter"
       [controls]="tagsControl"
       [options]="tagsOptions"
       [enableSearch]="true"
@@ -129,6 +129,7 @@
 
 <alto-placeholder-manager [status]="tagsLeaderboardStatus">
   <alto-leaderboard
+    *ngIf="tagsLeaderboardStatus === 'good'"
     [config]="['score']"
     [title]="I18ns.statistics.team.perThemes.leaderboardTitle"
     [subtitle]="I18ns.statistics.team.perThemes.leaderboardSubtitle"
@@ -160,10 +161,12 @@
     </h2>
     <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.members.subtitle }}</p>
   </div>
-  <!-- <alto-search (searchChange)="getMembersTable(durationControl.value, $event)"></alto-search> -->
+  <div class="d-flex">
+    <alto-input-search class="me-auto" [searchControl]="membersSearchControl"></alto-input-search>
+  </div>
 </div>
 <alto-placeholder-manager [status]="membersTableDataStatus">
-  <div class="table-panel">
+  <div *ngIf="membersTableDataStatus === 'good'" class="table-panel">
     <table class="table">
       <thead>
         <tr>
@@ -256,18 +259,19 @@
     </h2>
     <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.questions.subtitle }}</p>
   </div>
-  <!-- <alto-search
-    [searchItems]="questionsTableSearch"
-    (searchChange)="filterQuestionsTable({ search: $event })"
-  ></alto-search>
-  <alto-score-filter
-    class="float-end"
-    (selectChange)="filterQuestionsTable({ score: $event })"
-  ></alto-score-filter> -->
+  <div class="d-flex justify-content-between">
+    <alto-input-search [searchControl]="questionsSearchControl"></alto-input-search>
+    <alto-input-single-select-pill
+    [placeholder]="I18ns.shared.level"
+    [control]="questionsScoreControl"
+    [options]="scoreOptions"
+    >
+  </alto-input-single-select-pill>
+</div>
 </div>
 
 <alto-placeholder-manager [status]="questionsTableDataStatus">
-  <div class="table-panel">
+  <div *ngIf="questionsTableDataStatus === 'good'" class="table-panel">
     <table class="table">
       <thead>
         <tr>

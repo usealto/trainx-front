@@ -1,40 +1,38 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { GetUsersStatsRequestParams, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, of, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, map, startWith, switchMap, tap } from 'rxjs';
 import { IAppData } from 'src/app/core/resolvers';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { Team, TeamStats } from 'src/app/models/team.model';
+import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { UserFilters } from 'src/app/modules/profile/models/user.model';
-import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { setCompany, setTeams } from '../../../../core/store/root/root.action';
+import { patchUser, setCompany, setTeams } from '../../../../core/store/root/root.action';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { Company } from '../../../../models/company.model';
 import { Program } from '../../../../models/program.model';
+import { EScoreDuration, EScoreFilter, Score } from '../../../../models/score.model';
 import { ProgramsRestService } from '../../../programs/services/programs-rest.service';
+import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { PillOption, SelectOption } from '../../../shared/models/select-option.model';
+import { GuessesRestService } from '../../../training/services/guesses-rest.service';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
-import { FormControl } from '@angular/forms';
-import { PillOption, SelectOption } from '../../../shared/models/select-option.model';
-import { Score } from '../../../../models/score.model';
 
 interface TeamDisplay {
   id: string;
   name: string;
-  team: Team;
+  createdAt: Date;
   score?: number;
   totalGuessesCount?: number;
   validGuessesCount?: number;
@@ -57,48 +55,42 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
 
   company: Company = {} as Company;
-
   programs: Program[] = [];
 
   // Teams
-  teams: Team[] = [];
-  teamsStats: TeamStats[] = [];
-  paginatedTeams: TeamDisplay[] = [];
-  teamsDataStatus: PlaceholderDataStatus = 'loading';
-  teamsPageControl = new FormControl(1, { nonNullable: true });
+  teamsById: Map<string, Team> = new Map();
   teamsPageSize = 5;
-  teamsScores: TeamDisplay[] = [];
+
+  teamsPageControl = new FormControl(1, { nonNullable: true });
+
+  teamsDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
+  teamsDisplay: TeamDisplay[] = [];
+  paginatedTeams: TeamDisplay[] = [];
 
   // Users
-  absoluteUsersCount = 0;
+  rawUsers: User[] = [];
+  totalGuessCount = 0;
+  totalGuessCountProgression: number | null = 0;
+  usersPageSize = 5;
   usersCount = 0;
-  usersDataStatus: PlaceholderDataStatus = 'loading';
 
   usersStats: UserStatsDtoApi[] = [];
   previousUsersStats: UserStatsDtoApi[] = [];
 
-  usersTotalQuestions = 0;
-  usersTotalQuestionsProgression: number | null = 0;
-  usersQuestionProgression = new Map<string, number>();
-
-  selectedItems: UserStatsDtoApi[] = [];
-
-  rawUsers: User[] = [];
-  teamNames: string[] = [];
-
-  usersPageSize = 5;
-  usersData: IUserWithStats[] = [];
-  filteredUsersData: IUserWithStats[] = [];
-
   usersPageControl = new FormControl(1, { nonNullable: true });
   searchControl: FormControl<string | null> = new FormControl();
-  selectedTeams: FormControl<FormControl<SelectOption>[]> = new FormControl(
+
+  teamsOptions: SelectOption[] = [];
+  selectedTeamsControl: FormControl<FormControl<SelectOption>[]> = new FormControl(
     [] as FormControl<SelectOption>[],
     { nonNullable: true },
   );
-  teamOptions: SelectOption[] = [];
-  selectedScoreControl: FormControl<PillOption | null> = new FormControl(null);
+
   scoreOptions: PillOption[] = Score.getFiltersPillOptions();
+  selectedScoreControl: FormControl<PillOption | null> = new FormControl(null);
+
+  usersDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
+  filteredUsersData: IUserWithStats[] = [];
 
   private readonly leadTeamComponentSubscription = new Subscription();
 
@@ -113,80 +105,91 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
     private readonly store: Store<FromRoot.AppState>,
+    private readonly guessesRestService: GuessesRestService,
   ) {}
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.company = (data[EResolvers.AppResolver] as IAppData).company;
     this.rawUsers = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
-    this.usersDataStatus = this.rawUsers.length === 0 ? 'noData' : 'good';
+    this.teamsById = this.company.teamById;
+    this.teamsOptions = Array.from(this.teamsById.values()).map(
+      (team) => new SelectOption({ label: team.name, value: team.id }),
+    );
+    const teamStats = this.company.getTeamStatsByPeriod(EScoreDuration.Year, false);
 
-    this.teams = this.company.teams;
-    this.teamOptions = this.teams.map((team) => new SelectOption({ label: team.name, value: team.id }));
-    this.programs = this.company.programs;
-    this.teamNames = this.teams.map((team) => team.name);
-    this.teamsStats = this.company.getStatsByPeriod(ScoreDuration.Month, false);
-    this.teamsScores = this.teams.map((team) => {
-      const matchingStats = this.teamsStats.find((teamStat) => teamStat.teamId === team.id);
-      if (!matchingStats) {
-        return {
-          id: team.id,
-          name: team.name,
-          team: team,
-          score: 0,
-          totalGuessesCount: 0,
-          validGuessesCount: 0,
-          questionsPushedCount: 0,
-        } as TeamDisplay;
-      }
-
+    this.teamsDisplay = teamStats.map((teamStat) => {
+      const team = this.teamsById.get(teamStat.teamId);
       return {
-        id: team.id,
-        name: team.name,
-        team: team,
-        score: matchingStats.score,
-        totalGuessesCount: matchingStats.totalGuessesCount,
-        validGuessesCount: matchingStats.validGuessesCount,
-        questionsPushedCount: matchingStats.questionsPushedCount,
+        id: teamStat.teamId,
+        name: team?.name,
+        createdAt: team?.createdAt,
+        score: teamStat.score,
+        totalGuessesCount: teamStat.totalGuessesCount,
+        validGuessesCount: teamStat.validGuessesCount,
+        questionsPushedCount: teamStat.questionsPushedCount,
       } as TeamDisplay;
     });
+
+    this.teamsDataStatus =
+      this.teamsDisplay.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
+
+    this.usersDataStatus = EPlaceholderStatus.LOADING;
 
     // users subscription
     this.leadTeamComponentSubscription.add(
       combineLatest([
-        this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
-        this.selectedTeams.valueChanges.pipe(startWith(this.selectedTeams.value)),
-        this.selectedScoreControl.valueChanges.pipe(startWith(this.selectedScoreControl.value)),
-        this.usersPageControl.valueChanges.pipe(startWith(this.usersPageControl.value)),
+        this.guessesRestService.getGuesses(undefined, EScoreDuration.Month, false),
+        this.guessesRestService.getGuesses(undefined, EScoreDuration.Month, true),
       ])
         .pipe(
+          map(([totalGuesses, prevTotalGuesses]) => {
+            return [
+              totalGuesses.data ? totalGuesses.data.length : 0,
+              prevTotalGuesses.data ? prevTotalGuesses.data.length : 0,
+            ];
+          }),
+          tap(([guessesCount, prevGuessesCount]) => {
+            this.totalGuessCount = guessesCount;
+            this.totalGuessCountProgression =
+              prevGuessesCount > 0 ? (guessesCount - prevGuessesCount) / prevGuessesCount : 0;
+          }),
+          switchMap(() => {
+            return combineLatest([
+              this.searchControl.valueChanges.pipe(startWith(this.searchControl.value), debounceTime(300)),
+              this.selectedTeamsControl.valueChanges.pipe(startWith(this.selectedTeamsControl.value)),
+              this.selectedScoreControl.valueChanges.pipe(startWith(this.selectedScoreControl.value)),
+              this.usersPageControl.valueChanges.pipe(startWith(this.usersPageControl.value)),
+            ]);
+          }),
           switchMap(([searchTerm, selectedTeamsControls, selectedScore, page]) => {
             let scoreAboveOrEqual: number | undefined;
             let scoreBelowOrEqual: number | undefined;
 
             switch (selectedScore?.value) {
-              case ScoreFilter.Under25:
-                scoreBelowOrEqual = 25;
+              case EScoreFilter.Under25:
+                scoreBelowOrEqual = 0.25;
                 break;
-              case ScoreFilter.Under50:
-                scoreBelowOrEqual = 50;
+              case EScoreFilter.Under50:
+                scoreBelowOrEqual = 0.5;
                 break;
-              case ScoreFilter.Under75:
-                scoreBelowOrEqual = 75;
+              case EScoreFilter.Under75:
+                scoreBelowOrEqual = 0.75;
                 break;
-              case ScoreFilter.Over25:
-                scoreAboveOrEqual = 25;
+              case EScoreFilter.Over25:
+                scoreAboveOrEqual = 0.25;
                 break;
-              case ScoreFilter.Over50:
-                scoreAboveOrEqual = 50;
+              case EScoreFilter.Over50:
+                scoreAboveOrEqual = 0.5;
                 break;
-              case ScoreFilter.Over75:
-                scoreAboveOrEqual = 75;
+              case EScoreFilter.Over75:
+                scoreAboveOrEqual = 0.75;
                 break;
             }
 
             const req: GetUsersStatsRequestParams = {
               page,
+              itemsPerPage: this.usersPageSize,
               teamIds: selectedTeamsControls.map((control) => control.value.value).join(','),
               search: searchTerm || undefined,
               scoreAboveOrEqual,
@@ -194,24 +197,15 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
             };
 
             return combineLatest([
-              this.scoreRestService.getUsersStats(ScoreDuration.Year, false, req),
-              this.scoreRestService.getUsersStats(ScoreDuration.Year, true, req),
+              this.scoreRestService.getPaginatedUsersStats(EScoreDuration.Year, false, req),
+              this.scoreRestService.getPaginatedUsersStats(EScoreDuration.Year, true, req),
             ]);
           }),
         )
-        .subscribe(([usersStats, previousUsersStats]) => {
-          this.usersStats = usersStats;
-          this.usersTotalQuestions = usersStats.reduce(
-            (prev, curr) => prev + (curr.totalGuessesCount || 0),
-            0,
-          );
-
-          this.usersTotalQuestionsProgression = this.scoreService.getProgression(
-            this.usersTotalQuestions,
-            previousUsersStats.reduce((prev, curr) => prev + (curr.totalGuessesCount || 0), 0),
-          );
-          this.previousUsersStats = previousUsersStats;
-          this.absoluteUsersCount = this.usersStats.length;
+        .subscribe(([{ meta, data: paginatedUsersStats = [] }, { data: prevPaginatedUsersStats = [] }]) => {
+          this.usersCount = meta.totalItems;
+          this.usersStats = paginatedUsersStats;
+          this.previousUsersStats = prevPaginatedUsersStats;
 
           this.filteredUsersData = this.usersStats.map((userStats) => {
             const matchingUser = this.rawUsers.find((rawUser) => rawUser.id === userStats.user.id);
@@ -220,6 +214,8 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
               stats: userStats,
             };
           });
+          this.usersDataStatus =
+            this.usersStats.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_RESULT;
         }),
     );
 
@@ -229,71 +225,29 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
         this.changeTeamsPage(page);
       }),
     );
-
-    // this.leadTeamComponentSubscription.add(
-    //   combineLatest([
-    //     this.scoreRestService.getUsersStats(ScoreDuration.Month),
-    //     this.scoreRestService.getUsersStats(ScoreDuration.Month, true),
-    //   ])
-    //     .pipe(
-    //       tap(([usersStats, previousUsersStats]) => {
-    //         this.users = usersStats;
-    //         this.usersTotalQuestions = usersStats.reduce(
-    //           (prev, curr) => prev + (curr.totalGuessesCount || 0),
-    //           0,
-    //         );
-
-    //         this.usersTotalQuestionsProgression = this.scoreService.getProgression(
-    //           this.usersTotalQuestions,
-    //           previousUsersStats.reduce((prev, curr) => prev + (curr.totalGuessesCount || 0), 0),
-    //         );
-    //         this.previousUsersStats = previousUsersStats;
-    //         this.absoluteUsersCount = this.users.length;
-
-    //         this.users.forEach((user) => {
-    //           const member = this.teams.find((team) => team.id === user.teamId);
-    //           this.usersMap.set(user.id, member ? member.name : '');
-    //         });
-
-    //         this.changeTeamsPage(1);
-    //         this.filteredUsersData = this.users;
-    //         this.changeUsersPage(this.users, 1);
-    //       }),
-    //     )
-    //     .subscribe(),
-    // );
-
-    this.leadTeamComponentSubscription.add(
-      this.teamsPageControl.valueChanges.subscribe((page) => {
-        this.changeTeamsPage(page);
-      }),
-    );
   }
 
   ngOnDestroy(): void {
     this.leadTeamComponentSubscription.unsubscribe();
   }
 
-  loadData() {
-    return combineLatest([
-      this.scoreRestService.getUsersStats(ScoreDuration.Month),
-      this.scoreRestService.getUsersStats(ScoreDuration.Month, true),
-    ]).subscribe();
-  }
-
   changeTeamsPage(page: number) {
-    this.paginatedTeams = this.teamsScores.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
-    this.teamsDataStatus = this.paginatedTeams.length === 0 ? 'noData' : 'good';
+    this.paginatedTeams = this.teamsDisplay.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
   }
 
   resetFilters() {
-    this.searchControl.patchValue(null, { emitEvent: false });
-    this.selectedTeams.patchValue([], { emitEvent: false });
-    this.selectedScoreControl.patchValue(null, { emitEvent: false });
-    this.usersPageControl.patchValue(1);
+    this.searchControl.reset(null, { emitEvent: false });
+    this.selectedTeamsControl.reset([] as FormControl<SelectOption>[], { emitEvent: false });
+    this.selectedScoreControl.reset(null, { emitEvent: false });
+    this.usersPageControl.reset(1, { emitEvent: false });
+
+    this.searchControl.updateValueAndValidity({ emitEvent: true });
+    this.selectedTeamsControl.updateValueAndValidity({ emitEvent: true });
+    this.selectedScoreControl.updateValueAndValidity({ emitEvent: true });
+    this.usersPageControl.updateValueAndValidity({ emitEvent: true });
   }
 
-  openTeamForm(team?: Team) {
+  openTeamForm(teamId?: string) {
     const canvasRef = this.offcanvasService.open(TeamFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
@@ -301,10 +255,10 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
 
     const instance = canvasRef.componentInstance as TeamFormComponent;
 
-    instance.team = team;
+    instance.team = teamId ? this.teamsById.get(teamId) : undefined;
     instance.programs = this.programs;
     instance.users = this.rawUsers;
-    instance.teamsNames = this.teamNames;
+    instance.teamsNames = Array.from(this.teamsById.values()).map((t) => t.name);
 
     canvasRef.closed
       .pipe(
@@ -324,7 +278,7 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
       });
   }
 
-  deleteTeam(team: Team) {
+  deleteTeam(teamId: string) {
     const modalRef = this.modalService.open(DeleteModalComponent, {
       centered: true,
       size: 'md',
@@ -332,17 +286,20 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
 
     const componentInstance = modalRef.componentInstance as DeleteModalComponent;
     componentInstance.data = {
-      title: this.replaceInTranslationPipe.transform(I18ns.leadTeam.teams.deleteModal.title, team.name),
+      title: this.replaceInTranslationPipe.transform(
+        I18ns.leadTeam.teams.deleteModal.title,
+        this.teamsById.get(teamId)?.name,
+      ),
       subtitle: this.replaceInTranslationPipe.transform(
         I18ns.leadTeam.teams.deleteModal.subtitle,
-        this.getTeamUsersCount(team.id),
+        this.getTeamUsersCount(teamId),
       ),
     };
 
     componentInstance.objectDeleted
       .pipe(
         switchMap(() => {
-          return this.teamsRestService.deleteTeam(team.id);
+          return this.teamsRestService.deleteTeam(teamId);
         }),
         switchMap(() => {
           return this.teamsRestService.getTeams();
@@ -355,7 +312,7 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  openUserEditionForm(user: UserStatsDtoApi) {
+  openUserEditionForm(user: User) {
     const canvasRef = this.offcanvasService.open(UserEditFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
@@ -363,11 +320,14 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
 
     const instance = canvasRef.componentInstance as UserEditFormComponent;
 
-    instance.user = User.fromDto(user.user);
-    instance.teams = this.teams;
-    canvasRef.closed.pipe(tap(() => this.loadData())).subscribe();
+    instance.user = user;
+    instance.teams = Array.from(this.teamsById.values());
+    canvasRef.closed.subscribe((user) => {
+      this.store.dispatch(patchUser({ user: user }));
+    });
   }
 
+  // TODO : ???
   @memoize()
   getTeamUsersCount(teamId: string): number {
     return this.usersStats.filter((user) => user.teamId === teamId).length;

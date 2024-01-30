@@ -7,9 +7,9 @@ import {
 import { BaseStats, IBaseStats, IRanking, Ranking } from './stats.model';
 import { compareAsc } from 'date-fns';
 import { ITeam, Team, TeamStats } from './team.model';
-import { ScoreDuration } from '../modules/shared/models/score.model';
 import { BaseModel, IBaseModel } from './base.model';
 import { IProgram, Program } from './program.model';
+import { EScoreDuration } from './score.model';
 
 export interface ICompany extends IBaseModel {
   name: string;
@@ -106,10 +106,33 @@ export class Company extends BaseModel implements ICompany {
     return this.stats.filter(({ scoreById }) => scoreById === id);
   }
 
-  getStatsByPeriod(duration: ScoreDuration, isPrev: boolean): TeamStats[] {
+  getStatsByPeriod(duration: EScoreDuration, isPrev: boolean): TeamStats[] {
     return this.teams
       .map((team) => team.getStatByPeriod(duration, isPrev))
       .filter((stat) => stat !== undefined) as TeamStats[];
+  }
+
+  getTeamStatsByPeriod(duration: EScoreDuration, isPrev: boolean): TeamStats[] {
+    return this.teams.map((team) => {
+      const stats = team.getStatByPeriod(duration, isPrev);
+
+      return {
+        programStats: stats?.programStats,
+        teamId: team.id,
+        questionsPushedCount: stats?.questionsPushedCount ?? 0,
+        commentsCount: stats?.commentsCount ?? 0,
+        questionsSubmittedCount: stats?.questionsSubmittedCount ?? 0,
+        validGuessesCount: stats?.validGuessesCount ?? 0,
+        tagStats: stats?.tagStats,
+        scoreDuration: stats?.scoreDuration,
+        isPrev: stats?.isPrev,
+        from: stats?.from,
+        to: stats?.to,
+        score: stats?.score ?? 0,
+        totalGuessesCount: stats?.totalGuessesCount ?? 0,
+        scoreById: stats?.scoreById ?? '',
+      } as TeamStats;
+    });
   }
 
   getTeamPrograms(teamId: string): Program[] {

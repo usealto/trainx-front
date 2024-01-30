@@ -7,14 +7,14 @@
       <alto-input-multiple-select
       class="me-3"
       [options]="programOptions"
-      [title]="I18ns.programs.questions.filters.programs"
+      [placeholder]="I18ns.programs.questions.filters.programs"
       [controls]="programsControl"
       [enableSearch]="true"
       >
     </alto-input-multiple-select>
     <alto-input-multiple-select
     [options]="tagOptions"
-    [title]="I18ns.programs.questions.filters.tags"
+    [placeholder]="I18ns.programs.questions.filters.tags"
     [controls]="tagsControl"
     [enableSearch]="true"
     >
@@ -23,7 +23,7 @@
 </div>
 
 <alto-placeholder-manager [status]="teamsDataStatus">
-  <div class="table-panel">
+  <div *ngIf="teamsDataStatus === EPlaceholderStatus.GOOD" class="table-panel">
     <table class="table">
       <thead>
         <tr>

@@ -3,11 +3,14 @@
   <h1>{{ I18ns.settings.title }}</h1>
 </div>
 
-<alto-tabs
-  class="alto-tabs mb-5"
+<div class="mb-4">
+  <alto-tabs
+  [selectedControl]="tabControl"
   [options]="tabOptions"
-></alto-tabs>
-<span [ngSwitch]="activeTab">
-  <alto-settings-users *ngSwitchCase="1"></alto-settings-users>
-  <alto-settings-integrations *ngSwitchCase="2" [company]="company" [users]="users"></alto-settings-integrations>
+  ></alto-tabs>
+</div>
+
+<span [ngSwitch]="tabControl.value.value">
+  <alto-settings-users *ngSwitchCase="ESettingsTab.Users"></alto-settings-users>
+  <alto-settings-integrations *ngSwitchCase="ESettingsTab.Diffusion" [company]="company" [users]="users"></alto-settings-integrations>
 </span>

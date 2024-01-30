@@ -155,7 +155,6 @@ export const ProgramCardWithScore: Story = {
 
 export const ProgramCardWithProgression: Story = {
   args: {
-    progress: 0.9,
     program: {
       owner: {
         id: 'string',

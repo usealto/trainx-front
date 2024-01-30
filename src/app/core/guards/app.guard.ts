@@ -70,11 +70,11 @@ export const AppGuard: CanActivateFn = () => {
           }
           return true;
         }),
-        catchError(() => {
-          router.navigate(['/', AltoRoutes.noAccess]);
-          return of(false);
-        }),
       );
+    }),
+    catchError(() => {
+      router.navigate(['/', AltoRoutes.noAccess]);
+      return of(false);
     }),
   );
 };

@@ -1,8 +1,8 @@
 <alto-placeholder-manager [status]="scoreDataStatus">
-  <div class="panel mb-5">
+  <div *ngIf="scoreDataStatus === EPlaceholderStatus.GOOD" class="panel mb-5">
     <alto-input-multiple-select
     class="float-end mx-2"
-    [title]="I18ns.statistics.globalPerformance.perTeamPerformance.teamFilter"
+    [placeholder]="I18ns.statistics.globalPerformance.perTeamPerformance.teamFilter"
     [controls]="selectedScoresControl"
     [options]="scoresOptions"
     [enableSearch]="true">

@@ -45,6 +45,7 @@ export const FR = {
     waitingForNewResults: "Dans l'attente de nouveaux résultats.",
     days: ['jour', 'jours'],
     score: 'Score',
+    level: 'Niveau',
     imageBadge: {
       userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],
     },
@@ -99,6 +100,7 @@ export const FR = {
     noScore: 'Aucune réponse',
     noEvolution: 'Aucune évolution',
     noTag: 'Aucun tag',
+    error: 'Une erreur est survenue',
   },
   leadHome: {
     title: 'Bonjour ',
@@ -224,6 +226,8 @@ export const FR = {
       title: 'Questions de vos programmes',
       subtitle: "Retrouvez l'ensemble des questions de votre organisation.",
       createQuestion: 'Créer une question',
+      questionCreated: 'Question créée',
+      questionDeleted: 'Question supprimée',
 
       placeholder: {
         noData: 'Aucun résultat correspondant',
@@ -500,6 +504,10 @@ export const FR = {
         noGuess: 'Aucune réponse',
         noComments: 'Aucun commentaire',
         noSuggestion: 'Aucune suggestion',
+        noDataPlaceholder: {
+          title: 'Les équipes sont en train de s’échauffer',
+          subtitle: 'Les premiers résultats ne devraient plus tarder !',
+        },
       },
     },
     team: {

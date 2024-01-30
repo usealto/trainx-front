@@ -2,14 +2,14 @@
   <alto-input-search [searchControl]="questionSearchControl"></alto-input-search>
 
   <alto-input-single-select-pill
-    [title]="I18ns.statistics.user.performance.questions.scoreFilter"
+    [placeholder]="I18ns.statistics.user.performance.questions.scoreFilter"
     [control]="scoreControl"
     [options]="scoreOptions"
   ></alto-input-single-select-pill>
 </div>
 
 <alto-placeholder-manager [status]="questionsDataStatus">
-  <div *ngIf="questionsDataStatus === 'good'" class="table-panel">
+  <div class="table-panel">
     <table class="table">
       <thead>
         <tr>
@@ -31,14 +31,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let quest of questionsDisplay" class="align-middle">
+        <tr *ngFor="let questionInfos of questions" class="align-middle">
           <td>
-            {{ quest.question.title | sliceWithDots : 150 }}
+            {{ questionInfos.question.title | sliceWithDots : 150 }}
           </td>
           <td class="text-center">
-            <ng-container *ngIf="quest.score; else elseTemplate">
-              <span class="alto-score" [class]="(quest.score || 0) * 100 | pillColor">{{
-                quest.score | percent
+            <ng-container *ngIf="questionInfos.currentStats.score; else elseTemplate">
+              <span class="alto-score" [class]="(questionInfos.currentStats.score || 0) * 100 | pillColor">{{
+                questionInfos.currentStats.score | percent
               }}</span>
             </ng-container>
             <ng-template #elseTemplate>
@@ -50,8 +50,8 @@
           <td class="text-center">
             <alto-progression-badge
               class="d-inline-block ms-3"
-              [score]="getQuestionPreviousScore(quest)"
-              *ngIf="getQuestionPreviousScore(quest) !== 0; else noScoreEvolution"
+              [score]="questionInfos.progression"
+              *ngIf="questionInfos.previousStats?.score !== 0; else noScoreEvolution"
             ></alto-progression-badge>
             <ng-template #noScoreEvolution>
               <p class="alto-grey text-center">
@@ -60,17 +60,8 @@
             </ng-template>
           </td>
           <td class="text-center">
-            <!-- todo when api is ready -->
-            <!-- <div class="progress">
-            <div
-              class="progress-bar d-inline-block"
-              role="progressbar"
-              [style]="'width:' + (quest.usersCount / quest.totalUsersCount | percent : '1.0-0' : 'en-US')"
-            ></div>
-          </div> -->
-            <!-- {{ quest.usersCount }}/{{ quest.totalUsersCount }} -->
-            <span *ngIf="quest.usersCount > 0; else noUsersCount">
-              {{ quest.usersCount }}
+            <span *ngIf="questionInfos.currentStats.usersCount > 0; else noUsersCount">
+              {{ questionInfos.currentStats.usersCount }}
             </span>
             <ng-template #noUsersCount>
               <p class="alto-grey text-center">
@@ -79,12 +70,12 @@
             </ng-template>
           </td>
           <td>
-            <ng-container *ngIf="quest.teams && getBadTeams(quest.teams).length > 0; else noBadTeam">
+            <ng-container *ngIf="questionInfos.currentStats.teams; else noBadTeam">
               <alto-colored-pill-list
                 [hasDynamicColor]="true"
                 [limit]="3"
                 [textLimit]="15"
-                [data]="getBadTeams(quest.teams)"
+                [data]="getBadTeams(questionInfos.currentStats.teams)"
               ></alto-colored-pill-list>
             </ng-container>
             <ng-template #noBadTeam>
@@ -97,9 +88,10 @@
       </tbody>
     </table>
     <alto-pagination
+      *ngIf="questionsDataStatus === EPlaceholderStatus.GOOD"
       class="mx-4 d-block"
       [pageControl]="questionsPageControl"
-      [itemsCount]="questions.length"
+      [itemsCount]="questionsCount"
       [itemsPerPage]="questionsPageSize"
     ></alto-pagination>
   </div>

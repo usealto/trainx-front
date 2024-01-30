@@ -9,7 +9,13 @@
   <alto-tabs [options]="tabOptions" [selectedControl]="activeTab"></alto-tabs>
 </div>
 
-<div *ngIf="activeTab.value?.value === 'programs'">
+<ng-container [ngSwitch]="activeTab.value.value">
+  <alto-program-card-list *ngSwitchCase="EProgramsTabs.Programs" [company]="company"></alto-program-card-list>
+  <alto-programs-questions *ngSwitchCase="EProgramsTabs.Questions" [company]="company" [tags]="tags"></alto-programs-questions>
+  <ng-container *ngSwitchCase="EProgramsTabs.Tags"></ng-container>
+</ng-container>
+
+<!-- <div *ngIf="activeTab.value?.value === 'programs'">
   <div class="d-flex justify-content-between align-items-center mb-5">
     <div>
       <h2 id="programsAnchor">
@@ -31,13 +37,13 @@
     </a>
   </div>
 
-  <alto-program-card-list data-cy="programCardList" [place]="'program'"></alto-program-card-list>
-</div>
+  <alto-program-card-list></alto-program-card-list>
+</div> -->
 
 <!-- QUESTIONS -->
-<div *ngIf="activeTab.value?.value === 'questions'" class="questions">
+<!-- <div *ngIf="activeTab.value?.value === 'questions'" class="questions">
   <alto-programs-questions [programs]="programs"></alto-programs-questions>
-</div>
+</div> -->
 
 <!-- TAGS -->
 <!-- <div *ngIf="activeTab.value?.value === 'tags'">

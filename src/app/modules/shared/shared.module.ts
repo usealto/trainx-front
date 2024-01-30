@@ -20,7 +20,7 @@ import { LoadingModule } from 'src/app/core/utils/loading/loading.module';
 import { UtilsPipeModule } from 'src/app/core/utils/pipe/utils-pipe.module';
 import { AnchorNavigatorComponent } from './components/anchor-navigator/anchor-navigator.component';
 import { ButtonGroupComponent } from './components/button-group/button-group.component';
-import { ColoredPillListComponent } from './components/colored-pill/colored-pill.component';
+import { ColoredPillListComponent } from './components/colored-pill/colored-pill-list.component';
 import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
 import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-filter.component';
 import { IconBadgeComponent } from './components/icon-badge/icon-badge.component';
@@ -29,8 +29,6 @@ import { ImgBadgeComponent } from './components/img-badge/img-badge.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { PeriodFilterComponent } from './components/period-filter/period-filter.component';
 import { ProfileCardComponent } from './components/profile-card/profile-card.component';
-import { ProgramCardListComponent } from './components/program-card-list/program-card-list.component';
-import { ProgramCardComponent } from './components/program-card/program-card.component';
 import { ProgressionBadgeComponent } from './components/progression-badge/progression-badge.component';
 import { ProgressionFilterComponent } from './components/progression-filter/progression-filter.component';
 import { QuestionDeleteModalComponent } from './components/question-delete-modal/question-delete-modal.component';
@@ -53,12 +51,12 @@ import { InputPillsComponent } from './components/forms/input-pills/input-pills.
 import { InputSearchComponent } from './components/forms/input-search/input-search.component';
 import { InputMultipleSelectComponent } from './components/forms/input-multiple-select/input-multiple-select.component';
 import { InputSingleSelectPillComponent } from './components/forms/input-single-select-pill/input-single-select-pill.component';
+import { InputToggleComponent } from './components/forms/input-toggle/input-toggle.component';
 
 @NgModule({
   declarations: [
     ProgressionPillPipe,
     ProgressionPillArrowPipe,
-    ProgramCardComponent,
     ProgressionBadgeComponent,
     ColoredPillListComponent,
     ImgBadgeComponent,
@@ -68,7 +66,6 @@ import { InputSingleSelectPillComponent } from './components/forms/input-single-
     TabsComponent,
     ProfileCardComponent,
     PeriodFilterComponent,
-    ProgramCardListComponent,
     TimePickerComponent,
     TeamColorPipe,
     PaginationComponent,
@@ -91,6 +88,7 @@ import { InputSingleSelectPillComponent } from './components/forms/input-single-
     InputSearchComponent,
     InputMultipleSelectComponent,
     InputSingleSelectPillComponent,
+    InputToggleComponent,
   ],
   imports: [
     CommonModule,
@@ -113,7 +111,6 @@ import { InputSingleSelectPillComponent } from './components/forms/input-single-
   exports: [
     TranslationModule,
     NgbNavModule,
-    ProgramCardComponent,
     ProgressionBadgeComponent,
     ColoredPillListComponent,
     AnchorNavigatorComponent,
@@ -122,7 +119,6 @@ import { InputSingleSelectPillComponent } from './components/forms/input-single-
     TabsComponent,
     SearchComponent,
     PeriodFilterComponent,
-    ProgramCardListComponent,
     TeamColorPipe,
     ProgressionPillPipe,
     ProgressionPillArrowPipe,
@@ -160,6 +156,7 @@ import { InputSingleSelectPillComponent } from './components/forms/input-single-
     InputSearchComponent,
     InputMultipleSelectComponent,
     InputSingleSelectPillComponent,
+    InputToggleComponent,
   ],
   providers: [NgbActiveModal],
 })

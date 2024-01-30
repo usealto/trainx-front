@@ -1,10 +1,10 @@
 import { ScoreByTypeEnumApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
-import { ScoreDuration } from './score.model';
+import { EScoreDuration } from '../../../models/score.model';
 
 export interface ChartFilters {
   team?: string;
   user?: string;
-  duration?: ScoreDuration | string;
+  duration?: EScoreDuration | string;
   type?: ScoreTypeEnumApi;
   timeframe?: ScoreTimeframeEnumApi;
   // limit?: number;

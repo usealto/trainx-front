@@ -87,10 +87,7 @@
     <span class="ms-2 alto-badge" [style]="team.id | teamColor">{{ team.name }}</span>
   </h2>
   <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.teamMembers.subtitle }}</p>
-  <alto-search
-    [searchItems]="membersTableSearch"
-    (searchChange)="filterMembersTable({ search: $event })"
-  ></alto-search>
+  <alto-input-search [searchControl]="membersTableSearchControl"></alto-input-search>
 </div>
 
 <alto-placeholder-manager [status]="membersTableStatus">

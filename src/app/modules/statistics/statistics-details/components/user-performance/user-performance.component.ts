@@ -12,14 +12,13 @@ import { combineLatest, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { Score } from 'src/app/models/score.model';
+import { EScoreDuration, Score } from 'src/app/models/score.model';
 import { Team } from 'src/app/models/team.model';
 import { IUser, User } from 'src/app/models/user.model';
 import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
+import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
@@ -38,22 +37,22 @@ export class UserPerformanceComponent implements OnInit {
 
   user!: User;
   userTeam!: Team;
-  durationControl: FormControl<ScoreDuration> = new FormControl<ScoreDuration>(ScoreDuration.Year, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
     nonNullable: true,
   });
   tags: TagDtoApi[] = [];
 
   userChartOptions!: any;
-  userChartStatus: PlaceholderDataStatus = 'loading';
+  userChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   tagsChartOptions!: any;
-  tagsChartStatus: PlaceholderDataStatus = 'loading';
+  tagsChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   selectedTags: TagDtoApi[] = [];
 
   spiderChartOptions!: any;
-  spiderChartStatus: PlaceholderDataStatus = 'loading';
+  spiderChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   spiderChartStatusReason: '<3 tags' | '>6 tags' | undefined = undefined;
-  spiderChartSectionStatus: PlaceholderDataStatus = 'loading';
+  spiderChartSectionStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   selectedSpiderTags: TagDtoApi[] = [];
 
   constructor(
@@ -110,22 +109,24 @@ export class UserPerformanceComponent implements OnInit {
   }
 
   getSpiderChartScores(): void {
-    this.spiderChartSectionStatus = this.tags.length ? 'good' : 'empty';
-    this.spiderChartStatus = 'loading';
+    this.spiderChartSectionStatus = this.tags.length ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
+    this.spiderChartStatus = EPlaceholderStatus.LOADING;
     combineLatest([
-      this.scoresRestService.getTagsStats(
-        ScoreDuration.Year,
+      this.scoresRestService.getPaginatedTagsStats(
+        EScoreDuration.Year,
         false,
         this.user.teamId,
         this.selectedSpiderTags.map((t) => t.id),
       ),
-      this.scoresRestService.getScores(this.getScoreParams('tagStats', ScoreDuration.Year)),
-    ]).subscribe(([teamStats, userStats]) => {
+      this.scoresRestService.getScores(this.getScoreParams('tagStats', EScoreDuration.Year)),
+    ]).subscribe(([paginatedTeamStats, userStats]) => {
+      const teamStats = paginatedTeamStats.data ?? [];
+
       this.createSpiderChart(
         teamStats.sort((a, b) => a.tag.name.localeCompare(b.tag.name)),
         userStats.sort((a, b) => a.label.localeCompare(b.label)),
       );
-      this.spiderChartStatus = 'good';
+      this.spiderChartStatus = EPlaceholderStatus.GOOD;
     });
   }
 
@@ -178,13 +179,13 @@ export class UserPerformanceComponent implements OnInit {
     };
   }
 
-  getTagsChartScores(duration: ScoreDuration): void {
-    this.tagsChartStatus = 'loading';
+  getTagsChartScores(duration: EScoreDuration): void {
+    this.tagsChartStatus = EPlaceholderStatus.LOADING;
     this.scoresRestService
       .getScores(this.getScoreParams('tags', duration))
       .pipe(
         tap((scores) => {
-          this.tagsChartStatus = scores.length > 0 ? 'good' : 'empty';
+          this.tagsChartStatus = scores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
           if (scores.length > 0) {
             this.createTagsChart(scores, duration);
           }
@@ -193,7 +194,7 @@ export class UserPerformanceComponent implements OnInit {
       .subscribe();
   }
 
-  createTagsChart(scores: Score[], duration: ScoreDuration): void {
+  createTagsChart(scores: Score[], duration: EScoreDuration): void {
     const formatedScores = this.scoresService.formatScores(scores);
     const points = formatedScores.map((d) => this.statisticsService.transformDataToPoint(d));
 
@@ -232,15 +233,15 @@ export class UserPerformanceComponent implements OnInit {
     };
   }
 
-  getUserChartScores(duration: ScoreDuration): void {
-    this.userChartStatus = 'loading';
+  getUserChartScores(duration: EScoreDuration): void {
+    this.userChartStatus = EPlaceholderStatus.LOADING;
     combineLatest([
       this.scoresRestService.getScores(this.getScoreParams('user', duration)),
       this.scoresRestService.getScores(this.getScoreParams('team', duration)),
     ])
       .pipe(
         tap(([userScores, teamScores]) => {
-          this.userChartStatus = userScores.length > 0 ? 'good' : 'empty';
+          this.userChartStatus = userScores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
           if (userScores.length > 0) {
             this.createUserChart(userScores[0], teamScores[0], duration);
           }
@@ -249,7 +250,7 @@ export class UserPerformanceComponent implements OnInit {
       .subscribe();
   }
 
-  createUserChart(userScores: Score, teamScores: Score, duration: ScoreDuration): void {
+  createUserChart(userScores: Score, teamScores: Score, duration: EScoreDuration): void {
     const [formattedUserScores, formattedTeamScores] = this.scoresService.formatScores([
       userScores,
       teamScores,
@@ -308,16 +309,16 @@ export class UserPerformanceComponent implements OnInit {
     this.selectedSpiderTags = event;
     if (this.selectedSpiderTags.length < 3) {
       this.spiderChartStatusReason = '<3 tags';
-      this.spiderChartStatus = 'empty';
+      this.spiderChartStatus = EPlaceholderStatus.NO_DATA;
     } else if (this.selectedSpiderTags.length > 6) {
       this.spiderChartStatusReason = '>6 tags';
-      this.spiderChartStatus = 'empty';
+      this.spiderChartStatus = EPlaceholderStatus.NO_DATA;
     } else {
       this.getSpiderChartScores();
     }
   }
 
-  getScoreParams(type: 'user' | 'team' | 'tags' | 'tagStats', duration: ScoreDuration): any {
+  getScoreParams(type: 'user' | 'team' | 'tags' | 'tagStats', duration: EScoreDuration): any {
     return {
       duration,
       type:
@@ -338,9 +339,9 @@ export class UserPerformanceComponent implements OnInit {
       timeframe:
         type === 'tagStats'
           ? ScoreTimeframeEnumApi.Year
-          : duration === ScoreDuration.Year
+          : duration === EScoreDuration.Year
           ? ScoreTimeframeEnumApi.Month
-          : duration === ScoreDuration.Trimester
+          : duration === EScoreDuration.Trimester
           ? ScoreTimeframeEnumApi.Week
           : ScoreTimeframeEnumApi.Day,
       scoredBy: type === 'tags' || type === 'tagStats' ? ScoreByTypeEnumApi.User : undefined,

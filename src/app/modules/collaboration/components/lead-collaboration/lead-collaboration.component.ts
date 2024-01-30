@@ -14,7 +14,7 @@ import { EmojiPipe } from 'src/app/core/utils/emoji/emoji.pipe';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
+import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 
 export enum ETypeValue {
   COMMENTS = 'comments',
@@ -118,7 +118,7 @@ export class LeadCollaborationComponent implements OnInit {
     allowResetFilters: boolean;
   };
 
-  contributionDataStatus: PlaceholderDataStatus = 'loading';
+  contributionDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   constructor(
     private readonly commentsRestService: CommentsRestService,
@@ -278,7 +278,7 @@ export class LeadCollaborationComponent implements OnInit {
 
     this.showMoreButton = data.length > this.itemsPerPage;
 
-    this.contributionDataStatus = data.length === 0 ? 'noData' : 'good';
+    this.contributionDataStatus = data.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
     if (data.length === 0) {
       if (this.comments.length > 0 || this.submittedQuestions.length > 0) {
         this.emptyPlaceholderData = {
@@ -429,7 +429,7 @@ export class LeadCollaborationComponent implements OnInit {
     this.selectedPeriodsFilters = [];
     this.emptyPlaceholderData = undefined;
     this.getSelectedTabData();
-    if(this.selectedTab.value !== ETabValue.ALL) {
+    if (this.selectedTab.value !== ETabValue.ALL) {
       this.handleTabChange(this.tabs[2]);
     }
   }
