@@ -18,76 +18,128 @@
 </a>
 </div>
 
+<div class="buttons-row">
+  <alto-input-search [searchControl]="searchControl"></alto-input-search>
 
-<div *ngFor="let programCards of programCardsRows" class="programs-row mb-5">
-  <div *ngFor="let programCard of programCards"
-  class="program-card"
-  [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]"
-  [class.disabled]="!programCard.program.isActive">
-    <div class="title-section mb-2">
-      <p *ngIf="programCard.program.name.length < 35" class="subtitle">
-        {{ programCard.program.name }}
-      </p>
+  <div class="buttons-section">
+    <alto-input-multiple-select
+    [placeholder]="I18ns.leadTeam.members.filters.teams"
+    [controls]="teamsControls"
+    [options]="teamsOptions"
+    [enableSearch]="true">
+    </alto-input-multiple-select>
 
-      <p>INPUT TOGGLE</p>
-    </div>
-    <ng-container *ngIf="programCard.program.teamIds.length > 0; else noTeam">
-      <div class="teams-section">
-        <img [src]="Emoji.BustsInSilhouette | emoji" height="16" width="16" />
-        <p class="teams-title">
-          {{ I18ns.shared.assignedTeams }} :
-        </p>
-        <div class="tooltip-container">
-          <span class="alto-badge teams">{{ programCard.program.teamIds.length }}</span>
-
-          <div class="tooltip-text">
-            <p>{{ programCard.teamsTooltip }}</p>
-          </div>
-        </div>
-      </div>
-    </ng-container>
-    <ng-template #noTeam>
-      <div class="alto-badge">{{ I18ns.shared.noTeam }}</div>
-    </ng-template>
-
-    <hr />
-
-    <div class="score-section">
-      <div class="score-details">
-        <p class="score-row">
-          <span class="subtitle">
-            <img class="pe-1 mb-2" [src]="Emoji.PlayButton | emoji" height="14" width="14" />
-            {{ I18ns.programs.programs.involvement }}
-          </span>
-          <span class="alto-score" [class]="(programCard.participation ? programCard.participation * 100 : '') | pillColor">
-            {{ programCard.participation ? (programCard.participation | percent) : '-' }}
-          </span>
-        </p>
-        <p class="score-row">
-          <span class="subtitle">
-            <img class="pe-1 mb-2" [src]="Emoji.SportsMedal | emoji" height="14" width="14" />
-            {{ I18ns.programs.programs.score }}
-          </span>
-          <span class="alto-score" [class]="(programCard.score ? programCard.score * 100 : '') | pillColor">
-            {{ programCard.score ? (programCard.score | percent) : '-' }}
-          </span>
-        </p>
-        <p class="score-row">
-          <span class="subtitle">
-            <img class="pe-1 mb-2" [src]="Emoji.CheckMarkButton | emoji" height="14" width="14" />
-            {{ I18ns.programs.programs.membersHaveValidated }}
-          </span>
-          <span
-          class="alto-score"
-          [class]="(programCard.userValidatedProgramCount ? programCard.userValidatedProgramCount * 100 : '') | pillColor">
-            {{ programCard.userValidatedProgramCount }}
-          </span>
-        </p>
-      </div>
-      <p class="fs-7 alto-grey">{{ I18ns.shared.createdAt }} {{ programCard.program.createdAt | date }}</p>
-    </div>
+    <alto-input-single-select-pill
+    [placeholder]="I18ns.leadTeam.members.filters.score"
+    [control]="scoreControl"
+    [options]="scoreOptions">
+    </alto-input-single-select-pill>
   </div>
 </div>
+
+<alto-placeholder-manager [status]="dataStatus">
+  <div *ngFor="let programCards of programCardsRows" class="programs-row mb-5">
+    <div *ngFor="let programCard of programCards"
+    class="program-card"
+    [class.disabled]="!programCard.program.isActive"
+    [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]">
+      <div class="title-section mb-2">
+        <p *ngIf="programCard.program.name.length < 35" class="subtitle">
+          {{ programCard.program.name }}
+        </p>
+
+        <div (click)="$event.stopPropagation()">
+          <alto-input-toggle [control]="programCard.isActiveControl"></alto-input-toggle>
+        </div>
+      </div>
+      <ng-container *ngIf="programCard.program.teamIds.length > 0; else noTeam">
+        <div class="teams-section">
+          <img [src]="Emoji.BustsInSilhouette | emoji" height="16" width="16" />
+          <p class="teams-title">
+            {{ I18ns.shared.assignedTeams }} :
+          </p>
+          <div class="tooltip-container">
+            <span class="alto-badge teams">{{ programCard.program.teamIds.length }}</span>
+
+            <div class="tooltip-text">
+              <p>{{ programCard.teamsTooltip }}</p>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #noTeam>
+        <div class="alto-badge">{{ I18ns.shared.noTeam }}</div>
+      </ng-template>
+
+      <hr />
+
+      <div class="score-section">
+        <div class="score-details">
+          <p class="score-row">
+            <span class="subtitle">
+              <img class="pe-1 mb-2" [src]="Emoji.PlayButton | emoji" height="14" width="14" />
+              {{ I18ns.programs.programs.involvement }}
+            </span>
+            <span class="alto-score" [class]="(programCard.participation ? programCard.participation * 100 : '') | pillColor">
+              {{ programCard.participation ? (programCard.participation | percent) : '-' }}
+            </span>
+          </p>
+          <p class="score-row">
+            <span class="subtitle">
+              <img class="pe-1 mb-2" [src]="Emoji.SportsMedal | emoji" height="14" width="14" />
+              {{ I18ns.programs.programs.score }}
+            </span>
+            <span class="alto-score" [class]="(programCard.score ? programCard.score * 100 : '') | pillColor">
+              {{ programCard.score ? (programCard.score | percent) : '-' }}
+            </span>
+          </p>
+          <p class="score-row">
+            <span class="subtitle">
+              <img class="pe-1 mb-2" [src]="Emoji.CheckMarkButton | emoji" height="14" width="14" />
+              {{ I18ns.programs.programs.membersHaveValidated }}
+            </span>
+            <span
+            class="alto-score"
+            [class]="(programCard.userValidatedProgramCount ? programCard.userValidatedProgramCount * 100 : '') | pillColor">
+              {{ programCard.userValidatedProgramCount }}
+            </span>
+          </p>
+        </div>
+        <p class="fs-7 alto-grey">{{ I18ns.shared.createdAt }} {{ programCard.program.createdAt | date }}</p>
+      </div>
+    </div>
+  </div>
+
+  <alto-pagination
+  [pageControl]="pageControl"
+  [itemsCount]="itemsCount"
+  [itemsPerPage]="pageSize">
+  </alto-pagination>
+
+  <div class="row mb-4" loading>
+    <div *ngFor="let key of [1, 2, 3]" class="mb-4 col-4">
+      <div class="skeleton-panel" style="height: 18rem"></div>
+    </div>
+  </div>
+
+  <div class="nodata-placeholder text-center" noResult>
+    <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+    <p class="mt-3">{{ I18ns.programs.programs.placeholderTitle }}</p>
+    <span class="mt-3 d-block">{{ I18ns.programs.programs.placeholderSubtitle }}</span>
+    <button class="btn btn-primary mt-4" (click)="resetFilters()">
+      <i class="bi bi-arrow-clockwise"></i>
+      {{ I18ns.shared.resetFilters }}
+    </button>
+  </div>
+
+  <div class="nodata-placeholder text-center" noData>
+    <img [src]="Emoji.BuildingConstruction | emoji" height="24" width="24" />
+    <p class="mt-3">{{ I18ns.leadHome.ongoingPrograms.placeholder }}</p>
+    <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new"
+      ><i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+    </a>
+  </div>
+</alto-placeholder-manager>
 
 
 <!-- <div class="form-check form-switch" style="z-index: 100" [ngClass]="{ invisible: !displayToggle }">

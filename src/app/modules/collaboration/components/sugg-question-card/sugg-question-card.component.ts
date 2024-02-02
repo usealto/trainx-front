@@ -19,7 +19,6 @@ import { QuestionFormComponent } from 'src/app/modules/programs/components/creat
 import { IAppData } from '../../../../core/resolvers';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
 import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
-import { ICompany } from '../../../../models/company.model';
 
 @UntilDestroy()
 @Component({

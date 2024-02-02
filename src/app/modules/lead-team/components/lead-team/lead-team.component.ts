@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { GetUsersStatsRequestParams, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, debounceTime, map, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
 import { IAppData } from 'src/app/core/resolvers';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -92,6 +92,7 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
   usersDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   filteredUsersData: IUserWithStats[] = [];
 
+  private init = true;
   private readonly leadTeamComponentSubscription = new Subscription();
 
   constructor(
@@ -111,6 +112,7 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.company = (data[EResolvers.AppResolver] as IAppData).company;
+    this.programs = [...this.company.programs];
     this.rawUsers = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
     this.teamsById = this.company.teamById;
     this.teamsOptions = Array.from(this.teamsById.values()).map(
@@ -156,12 +158,14 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
           }),
           switchMap(() => {
             return combineLatest([
-              this.searchControl.valueChanges.pipe(startWith(this.searchControl.value), debounceTime(300)),
+              this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
               this.selectedTeamsControl.valueChanges.pipe(startWith(this.selectedTeamsControl.value)),
               this.selectedScoreControl.valueChanges.pipe(startWith(this.selectedScoreControl.value)),
               this.usersPageControl.valueChanges.pipe(startWith(this.usersPageControl.value)),
             ]);
           }),
+          debounceTime(this.init ? 0 : 200),
+          tap(() => (this.init = false)),
           switchMap(([searchTerm, selectedTeamsControls, selectedScore, page]) => {
             let scoreAboveOrEqual: number | undefined;
             let scoreBelowOrEqual: number | undefined;
@@ -236,15 +240,10 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
   }
 
   resetFilters() {
-    this.searchControl.reset(null, { emitEvent: false });
-    this.selectedTeamsControl.reset([] as FormControl<SelectOption>[], { emitEvent: false });
-    this.selectedScoreControl.reset(null, { emitEvent: false });
-    this.usersPageControl.reset(1, { emitEvent: false });
-
-    this.searchControl.updateValueAndValidity({ emitEvent: true });
-    this.selectedTeamsControl.updateValueAndValidity({ emitEvent: true });
-    this.selectedScoreControl.updateValueAndValidity({ emitEvent: true });
-    this.usersPageControl.updateValueAndValidity({ emitEvent: true });
+    this.searchControl.reset(null);
+    this.selectedTeamsControl.reset([] as FormControl<SelectOption>[]);
+    this.selectedScoreControl.reset(null);
+    this.usersPageControl.reset(1);
   }
 
   openTeamForm(teamId?: string) {
@@ -260,21 +259,35 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     instance.users = this.rawUsers;
     instance.teamsNames = Array.from(this.teamsById.values()).map((t) => t.name);
 
-    canvasRef.closed
+    instance.newTeam
       .pipe(
-        switchMap(() => {
-          return combineLatest([this.teamsRestService.getTeams(), this.programsRestService.getProgramsObj()]);
+        switchMap((team) => {
+          return combineLatest([of(team), this.programsRestService.getProgramsObj()]);
         }),
       )
-      .subscribe({
-        next: ([teams, programs]) => {
-          const updatedCompany = new Company({
-            ...this.company.rawData,
-            teams: teams.map((team) => team.rawData),
-            programs: programs.map((program) => program.rawData),
+      .subscribe(([team, programs]) => {
+        const updatedCompany = new Company({
+          ...this.company.rawData,
+          teams: Array.from(this.teamsById.set(team.id, team).values()),
+          programs: programs.map((program) => program.rawData),
+        });
+
+        this.store.dispatch(setCompany({ company: updatedCompany }));
+
+        const teamIndex = this.teamsDisplay.findIndex((t) => t.id === team.id);
+        if (this.teamsDisplay[teamIndex]) {
+          this.teamsDisplay[teamIndex].name = team.name;
+        }
+
+        if (programs.length > 0) {
+          programs.forEach((program) => {
+            const i = this.programs.findIndex((p) => p.id === program.id);
+
+            if (i !== -1) {
+              this.programs[i] = program;
+            }
           });
-          this.store.dispatch(setCompany({ company: updatedCompany }));
-        },
+        }
       });
   }
 

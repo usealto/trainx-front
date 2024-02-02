@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
-import { Team } from 'src/app/models/team.model';
-import { User } from 'src/app/models/user.model';
-import { IAppData } from '../../../../../core/resolvers';
-import { Company, ICompany } from '../../../../../models/company.model';
+import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AltoRoutes } from '../../../../shared/constants/routes';
+
+enum EStatisticsDetailsPerformanceTabs {
+  Team = 'team',
+  User = 'user',
+}
 
 @Component({
   selector: 'alto-statistics-details-performance',
@@ -12,26 +14,20 @@ import { Company, ICompany } from '../../../../../models/company.model';
   styleUrls: ['./statistics-details-performance.component.scss'],
 })
 export class StatisticsDetailsPerformanceComponent implements OnInit {
-  team!: Team;
-  user!: User;
-  type: 'team' | 'user' = 'team';
-  constructor(
-    private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly resolversService: ResolversService,
-  ) {}
+  EStatisticsDetailsPerformanceTabs = EStatisticsDetailsPerformanceTabs;
+
+  readonly tabOptions = [
+    { label: EStatisticsDetailsPerformanceTabs.Team, value: EStatisticsDetailsPerformanceTabs.Team },
+    { label: EStatisticsDetailsPerformanceTabs.User, value: EStatisticsDetailsPerformanceTabs.User },
+  ];
+
+  activeTab = new FormControl(this.tabOptions[0], { nonNullable: true });
+
+  constructor(private readonly router: Router) {}
 
   ngOnInit(): void {
-    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    const users = (data[EResolvers.AppResolver] as IAppData).userById;
-    const teams = (data[EResolvers.AppResolver] as IAppData).company.teams;
-
-    const id = this.router.url.split('/').pop() || '';
-    this.type = this.router.url.split('/')[3] === 'team' ? 'team' : 'user';
-    if (this.type === 'team') {
-      this.team = teams.find((t) => t.id === id) || ({} as Team);
-    } else {
-      this.user = users.get(id) || ({} as User);
+    if (this.router.url.split('/')[3] !== AltoRoutes.statTeam) {
+      this.activeTab.patchValue(this.tabOptions[1]);
     }
   }
 }

@@ -23,6 +23,7 @@ export class InputMultipleSelectComponent implements OnInit, OnDestroy {
     { nonNullable: true },
   );
   @Input() options: SelectOption[] = [];
+  @Input() isForm = false;
 
   I18ns = I18ns;
   isDropdownOpen = false;

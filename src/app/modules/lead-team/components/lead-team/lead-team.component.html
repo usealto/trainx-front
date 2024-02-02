@@ -3,8 +3,6 @@
   <h1 data-cy="leadTeamTitle">{{ I18ns.leadTeam.title }}</h1>
 </div>
 
-<button (click)="resetFilters()">RESET FILTERS</button>
-
 <!-- TEAMS -->
 <div>
   <button type="button" class="btn btn-primary float-end" (click)="openTeamForm()">
@@ -165,8 +163,7 @@
       <alto-input-single-select-pill
       [options]="scoreOptions"
       [placeholder]="I18ns.leadTeam.members.filters.score"
-      [control]="selectedScoreControl"
-      >
+      [control]="selectedScoreControl">
       </alto-input-single-select-pill>
     </div>
   </div>

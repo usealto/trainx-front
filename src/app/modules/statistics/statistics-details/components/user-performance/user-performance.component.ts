@@ -112,12 +112,10 @@ export class UserPerformanceComponent implements OnInit {
     this.spiderChartSectionStatus = this.tags.length ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
     this.spiderChartStatus = EPlaceholderStatus.LOADING;
     combineLatest([
-      this.scoresRestService.getPaginatedTagsStats(
-        EScoreDuration.Year,
-        false,
-        this.user.teamId,
-        this.selectedSpiderTags.map((t) => t.id),
-      ),
+      this.scoresRestService.getPaginatedTagsStats(EScoreDuration.Year, false, {
+        teamIds: this.user.teamId,
+        ids: this.selectedSpiderTags.map((t) => t.id).join(','),
+      }),
       this.scoresRestService.getScores(this.getScoreParams('tagStats', EScoreDuration.Year)),
     ]).subscribe(([paginatedTeamStats, userStats]) => {
       const teamStats = paginatedTeamStats.data ?? [];

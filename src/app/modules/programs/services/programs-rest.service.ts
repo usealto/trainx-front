@@ -125,7 +125,9 @@ export class ProgramsRestService {
     });
   }
 
-  activate(id: string, active: boolean) {
-    return this.programApi.patchProgram({ id, patchProgramDtoApi: { isActive: active } });
+  activate(id: string, active: boolean): Observable<Program> {
+    return this.programApi
+      .patchProgram({ id, patchProgramDtoApi: { isActive: active } })
+      .pipe(map((p) => Program.fromDto(p.data as ProgramDtoApi)));
   }
 }

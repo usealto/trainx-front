@@ -72,7 +72,10 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
 
     this.statisticsGlobalEngagementComponentSubscription.add(
       combineLatest([
-        this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+        this.durationControl.valueChanges.pipe(
+          startWith(this.durationControl.value),
+          tap(() => this.pageControl.patchValue(1)),
+        ),
         this.pageControl.valueChanges.pipe(startWith(this.pageControl.value)),
       ])
         .pipe(

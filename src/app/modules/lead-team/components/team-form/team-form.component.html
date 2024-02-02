@@ -18,65 +18,33 @@
 <hr />
 
 <div class="px-6 sidebar-body">
-  <form *ngIf="teamForm" [formGroup]="teamForm">
-    <label class="form-label required">{{ I18ns.leadTeam.teams.form.longName }}</label>
-    <input
-      data-cy="editLongnameInput"
-      type="text"
-      class="form-control"
-      formControlName="name"
-      placeholder="{{ I18ns.leadTeam.teams.form.longNamePlaceholder }}"
-    />
-    <p
-      class="text-end mt-2"
-      [ngClass]="{
-        'text-danger': teamForm.controls.name.errors?.['nameNotAllowed'],
-        invisible: !teamForm.controls.name.errors?.['nameNotAllowed']
-      }"
-    >
-      {{ I18ns.leadTeam.teams.duplicateName }}
-    </p>
+  <form [formGroup]="teamForm">
+  <label class="form-label required">{{ I18ns.leadTeam.teams.form.longName }}</label>
+  <input
+  data-cy="editLongnameInput"
+  type="text"
+  class="form-control"
+  formControlName="nameControl"
+  placeholder="{{ I18ns.leadTeam.teams.form.longNamePlaceholder }}"
+  />
+  <p
+    class="text-end mt-2"
+    [class]="teamForm.controls.nameControl.errors?.['nameNotAllowed'] ? 'text-danger' : 'invisible'"
+  >
+    {{ I18ns.leadTeam.teams.duplicateName }}
+  </p>
 
-    <!-- <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.invitationEmails }}</label>
-    <ng-select class="alto-form"
-      [items]="users"
-      [multiple]="true"
-      [placeholder]="I18ns.leadTeam.teams.form.invitationEmailsPlaceholder"
-      [selectableGroup]="true"
-      [closeOnSelect]="false"
-      [bindLabel]="'email'"
-      formControlName="invitationEmails"
-    >
-    </ng-select>
-    <p>{{ I18ns.leadTeam.teams.form.invitationEmailsSubtitle }}</p> -->
-
-    <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.Programs }}</label>
-
-    <ng-select
-      class="alto-form mb-4"
-      data-cy="editProgramSelector"
-      [items]="programs"
-      [multiple]="true"
-      bindLabel="name"
-      [placeholder]="I18ns.leadTeam.teams.form.programsPlaceholder"
-      [closeOnSelect]="false"
-      [selectableGroup]="true"
-      formControlName="programs"
-    >
-      <ng-template ng-label-tmp let-item="item" let-clear="clear">
-        <div class="alto-badge">
-          <span data-cy="programsNames">{{ item.name | sliceWithDots : 30 }}</span>
-          <span class="cursor-pointer ms-2 align-middle" (click)="clear(item)" aria-hidden="true">
-            <i data-cy="deleteIcon" class="bi bi-x-lg"></i>
-          </span>
-        </div>
-      </ng-template>
-      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-        <span class="alto-badge">{{ item.name | sliceWithDots : 30 }}</span>
-        <i class="bi bi-check-circle-fill"></i>
-      </ng-template>
-    </ng-select>
-  </form>
+  <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.Programs }}</label>
+  <alto-input-multiple-select
+  class="mb-4"
+  [options]="programOptions"
+  [controls]="teamForm.controls.programsControls"
+  [placeholder]="I18ns.leadTeam.teams.form.programsPlaceholder"
+  [enableSearch]="true"
+  [isForm]="true"
+  >
+  </alto-input-multiple-select>
+</form>
 </div>
 <div class="footer">
   <hr class="m-0" />
@@ -84,27 +52,13 @@
     <button type="button" class="btn cancel-btn" aria-label="Close" (click)="activeOffcanvas.dismiss()">
       {{ I18ns.shared.cancel }}
     </button>
-    <ng-container *ngIf="team; else elseTemplate">
-      <input
-        data-cy="btnSave"
-        type="submit"
-        class="btn btn-primary float-end"
-        [disabled]="!teamForm.valid"
-        [value]="I18ns.shared.save"
-        (click)="createTeam()"
-      />
-    </ng-container>
-    <ng-template #elseTemplate>
-      <button
-        data-cy="btnSave"
-        type="submit"
-        class="btn btn-primary float-end"
-        [disabled]="!teamForm.valid"
-        [value]="I18ns.shared.save"
-        (click)="createTeam()"
-      >
-        <i class="bi bi-plus-lg"></i><span>{{ I18ns.shared.create }}</span>
-      </button>
-    </ng-template>
+    <input
+      data-cy="btnSave"
+      type="submit"
+      class="btn btn-primary float-end"
+      [disabled]="!teamForm.valid"
+      [value]="I18ns.shared.save"
+      (click)="submit()"
+    />
   </div>
 </div>

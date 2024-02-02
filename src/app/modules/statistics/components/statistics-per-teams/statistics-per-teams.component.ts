@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UserStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, of, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, of, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { SelectOption } from 'src/app/modules/shared/models/select-option.model';
@@ -45,6 +45,7 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
   teamsDisplay: DataForTable[] = [];
   teamsDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
+  private init = true;
   private statisticsPerTeamsComponentSubscription = new Subscription();
 
   constructor(
@@ -69,6 +70,8 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
         this.teamsControl.valueChanges.pipe(startWith(this.teamsControl.value)),
       ])
         .pipe(
+          debounceTime(this.init ? 0 : 200),
+          tap(() => (this.init = false)),
           switchMap(([duration, search, teams]) => {
             return combineLatest([
               this.scoreRestService.getPaginatedUsersStats(duration, false, {
@@ -106,8 +109,13 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.teamsDataStatus =
             this.teamsDisplay.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
+
           this.membersDataStatus =
-            this.membersDisplay.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_RESULT;
+            this.membersDisplay.length <= 0
+              ? this.searchControl.value !== '' || this.teamsControl.value.length > 0
+                ? EPlaceholderStatus.NO_RESULT
+                : EPlaceholderStatus.NO_DATA
+              : EPlaceholderStatus.GOOD;
         }),
     );
   }

@@ -1,30 +1,26 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { map, Observable } from 'rxjs';
-import * as FromRoot from '../store/store.reducer';
+import { map } from 'rxjs';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import * as FromRoot from '../store/store.reducer';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class EditProgramGuard implements CanActivate {
-  constructor(private store: Store<FromRoot.AppState>, private router: Router) {}
+export const EditProgramGuard: CanActivateFn = (activatedRoute) => {
+  const store = inject<Store<FromRoot.AppState>>(Store<FromRoot.AppState>);
+  const router = inject(Router);
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    const programId = route.paramMap.get('id');
+  const programId = activatedRoute.paramMap.get('id');
 
-    return this.store.select(FromRoot.selectCompany).pipe(
-      map(({ data: company }) => {
-        const programExists = company.programs.some((program) => program.id === programId);
+  return store.select(FromRoot.selectCompany).pipe(
+    map(({ data: company }) => {
+      const programExists = company.programs.some((program) => program.id === programId);
 
-        if (!programExists) {
-          this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.programs]);
-          return false;
-        }
+      if (!programExists) {
+        router.navigate(['/', AltoRoutes.lead, AltoRoutes.programs]);
+        return false;
+      }
 
-        return true;
-      }),
-    );
-  }
-}
+      return true;
+    }),
+  );
+};

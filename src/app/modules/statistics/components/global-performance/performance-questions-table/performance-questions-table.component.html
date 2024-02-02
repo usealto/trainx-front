@@ -51,7 +51,7 @@
             <alto-progression-badge
               class="d-inline-block ms-3"
               [score]="questionInfos.progression"
-              *ngIf="questionInfos.previousStats?.score !== 0; else noScoreEvolution"
+              *ngIf="questionInfos.progression !== undefined; else noScoreEvolution"
             ></alto-progression-badge>
             <ng-template #noScoreEvolution>
               <p class="alto-grey text-center">
@@ -97,6 +97,12 @@
   </div>
 
   <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noData>
+    <div class="text-center">
+      <img [src]="Emoji.Collision | emoji" height="24" width="24" />
+      <p class="mt-3">{{ I18ns.statistics.globalPerformance.questionsTable.placeholder }}</p>
+    </div>
+  </div>
+  <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noResult>
     <div class="text-center">
       <img [src]="Emoji.Collision | emoji" height="24" width="24" />
       <p class="mt-3">{{ I18ns.statistics.globalPerformance.questionsTable.placeholder }}</p>

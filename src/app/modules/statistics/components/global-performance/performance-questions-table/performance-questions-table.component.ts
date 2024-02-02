@@ -6,7 +6,7 @@ import {
   QuestionStatsDtoApi,
   QuestionStatsTeamDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, startWith, switchMap } from 'rxjs';
+import { Subscription, combineLatest, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { PillOption } from 'src/app/modules/shared/models/select-option.model';
@@ -53,13 +53,15 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.performanceQuestionsTableComponentSubscription.add(
       combineLatest([
-        this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
-        this.questionSearchControl.valueChanges.pipe(startWith(this.questionSearchControl.value)),
-        this.scoreControl.valueChanges.pipe(startWith(this.scoreControl.value)),
+        combineLatest([
+          this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+          this.questionSearchControl.valueChanges.pipe(startWith(this.questionSearchControl.value)),
+          this.scoreControl.valueChanges.pipe(startWith(this.scoreControl.value)),
+        ]).pipe(tap(() => this.questionsPageControl.setValue(1))),
         this.questionsPageControl.valueChanges.pipe(startWith(this.questionsPageControl.value)),
       ])
         .pipe(
-          switchMap(([duration, searchTerm, score, page]) => {
+          switchMap(([[duration, searchTerm, score], page]) => {
             const req: GetQuestionsStatsRequestParams = {
               search: searchTerm ?? undefined,
               page,

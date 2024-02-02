@@ -1,16 +1,20 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { GetProgramsStatsRequestParams } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, startWith, switchMap } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, map, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { Company } from '../../../../../models/company.model';
 import { Program } from '../../../../../models/program.model';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { AltoRoutes } from '../../../../shared/constants/routes';
-import { SelectOption } from '../../../../shared/models/select-option.model';
+import { PillOption, SelectOption } from '../../../../shared/models/select-option.model';
 import { ScoresRestService } from '../../../../shared/services/scores-rest.service';
-import { EScoreDuration } from '../../../../../models/score.model';
+import { EScoreDuration, EScoreFilter, Score } from '../../../../../models/score.model';
+import { ProgramsRestService } from '../../../services/programs-rest.service';
+import * as FromRoot from '../../../../../core/store/store.reducer';
+import { Store } from '@ngrx/store';
+import { updatePrograms } from '../../../../../core/store/root/root.action';
 
 interface IProgramCard {
   program: Program;
@@ -18,6 +22,7 @@ interface IProgramCard {
   participation?: number;
   userValidatedProgramCount?: number;
   teamsTooltip?: string;
+  isActiveControl: FormControl<boolean>;
 }
 
 @Component({
@@ -25,7 +30,7 @@ interface IProgramCard {
   templateUrl: './program-card-list.component.html',
   styleUrls: ['./program-card-list.component.scss'],
 })
-export class ProgramCardListComponent implements OnInit {
+export class ProgramCardListComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
@@ -37,83 +42,87 @@ export class ProgramCardListComponent implements OnInit {
 
   readonly pageSize = 9;
   pageControl = new FormControl(1, { nonNullable: true });
-  teamsOptions = new FormControl<FormControl<SelectOption>[]>([], { nonNullable: true });
+  itemsCount = 0;
+
   searchControl = new FormControl<string | null>(null);
 
+  teamsControls = new FormControl<FormControl<SelectOption>[]>([], { nonNullable: true });
+  teamsOptions: SelectOption[] = [];
+
+  scoreControl: FormControl<PillOption | null> = new FormControl(null);
+  scoreOptions = Score.getFiltersPillOptions();
+
   dataStatus = EPlaceholderStatus.LOADING;
+  private init = true;
   private readonly programCardListComponent = new Subscription();
-
-  // @Output() programTotal = new EventEmitter<number>();
-  // @Input() place: 'home' | 'program' = 'home';
-  // @Input() isActive = false;
-
-  // programs: ProgramDtoApi[] = [];
-  // programsDisplay: ProgramDtoApi[] = [];
-
-  // programsScores = new Map<string, number>();
-  // programsProgress = new Map<string, number>();
-  // programsInvolvement = new Map<string, number>();
-  // programsMemberHaveValidatedCount = new Map<string, string>();
-  // pageControl = new FormControl(1, { nonNullable: true });
-  // count = 0;
-  // pageSize = 3;
-
-  // programFilters: ProgramFilters = { teams: [], search: '' };
-
-  // displayToggle = false;
-  // isSearchResult = false;
-  // selectedItems: ProgramDtoApi[] = [];
-  // ongoingProgramsDataStatus: PlaceholderDataStatus = 'loading';
+  private readonly activeProgramsSubscription = new Subscription();
 
   constructor(
-    // private readonly scoreService: ScoresService,
-    // private readonly programService: ProgramsService,
-    // public readonly teamStore: TeamStore,
-    // public readonly programStore: ProgramsStore,
     private readonly scoresRestService: ScoresRestService,
+    private readonly programsRestService: ProgramsRestService,
+    private readonly store: Store<FromRoot.AppState>,
   ) {}
 
   ngOnInit(): void {
-    // if (this.place === 'home' || this.isActive) {
-    //   this.displayToggle = false;
-    // } else if (this.place === 'program') {
-    //   this.displayToggle = true;
-    // }
-    // this.getPrograms();
-    // this.setPageSize();
-    this.teamsOptions = new FormControl(
-      this.company.teams.map((team) => {
-        return new FormControl<SelectOption>(new SelectOption({ value: team.id, label: team.name }), {
-          nonNullable: true,
-        });
-      }),
-      { nonNullable: true },
-    );
+    this.teamsOptions = this.company.teams.map((team) => {
+      return new SelectOption({ value: team.id, label: team.name });
+    });
 
     this.programCardListComponent.add(
       combineLatest([
         this.pageControl.valueChanges.pipe(startWith(this.pageControl.value)),
-        this.teamsOptions.valueChanges.pipe(startWith(this.teamsOptions.value)),
-        this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
+        combineLatest([
+          this.teamsControls.valueChanges.pipe(
+            startWith(this.teamsControls.value),
+            map((teamsControls) => teamsControls.map((x) => x.value)),
+          ),
+          this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
+          this.scoreControl.valueChanges.pipe(startWith(this.scoreControl.value)),
+        ]).pipe(tap(() => this.pageControl.patchValue(1))),
       ])
         .pipe(
-          switchMap(([page, teamsControls, search]) => {
+          debounceTime(this.init ? 0 : 200),
+          tap(() => (this.init = false)),
+          switchMap(([page, [selectedTeamsOptions, search, selectedScoreOption]]) => {
             const req: GetProgramsStatsRequestParams = {
               page,
               itemsPerPage: this.pageSize,
               search: search ?? undefined,
-              teamIds: teamsControls.map((x) => x.value.value).join(','),
+              teamIds: selectedTeamsOptions.length
+                ? selectedTeamsOptions.map((x) => x.value).join(',')
+                : undefined,
             };
+
+            switch (selectedScoreOption?.value) {
+              case EScoreFilter.Under25:
+                req.scoreBelowOrEqual = 0.25;
+                break;
+              case EScoreFilter.Under50:
+                req.scoreBelowOrEqual = 0.5;
+                break;
+              case EScoreFilter.Under75:
+                req.scoreBelowOrEqual = 0.75;
+                break;
+              case EScoreFilter.Over25:
+                req.scoreAboveOrEqual = 0.25;
+                break;
+              case EScoreFilter.Over50:
+                req.scoreAboveOrEqual = 0.5;
+                break;
+              case EScoreFilter.Over75:
+                req.scoreAboveOrEqual = 0.75;
+                break;
+            }
 
             return this.scoresRestService.getPaginatedProgramsStats(EScoreDuration.All, false, req);
           }),
         )
-        .subscribe((paginatedProgramsStats) => {
-          const stats = paginatedProgramsStats.data ?? [];
+        .subscribe(({ data: stats = [], meta }) => {
+          this.itemsCount = meta.totalItems;
 
           this.dataStatus =
             stats.length === 0
-              ? this.teamsOptions.value.length || this.searchControl.value
+              ? this.teamsControls.value.length || this.searchControl.value || this.scoreControl.value
                 ? EPlaceholderStatus.NO_RESULT
                 : EPlaceholderStatus.NO_DATA
               : EPlaceholderStatus.GOOD;
@@ -130,7 +139,36 @@ export class ProgramCardListComponent implements OnInit {
                 })
                 .filter((t) => !!t)
                 .join(', '),
+              isActiveControl: new FormControl(
+                (this.company.programById.get(stat.program.id) as Program).isActive,
+                {
+                  nonNullable: true,
+                },
+              ),
             };
+          });
+
+          this.programCards.forEach(({ program, isActiveControl }) => {
+            this.activeProgramsSubscription.add(
+              isActiveControl.valueChanges
+                .pipe(
+                  switchMap((isActive) => {
+                    return this.programsRestService.activate(program.id, isActive);
+                  }),
+                  switchMap((updatedProgram) => {
+                    this.store.dispatch(updatePrograms({ programs: [updatedProgram] }));
+                    return this.store.select(FromRoot.selectCompany);
+                  }),
+                  tap(({ data: company }) => {
+                    this.company = company;
+                  }),
+                )
+                .subscribe({
+                  next: () => {
+                    this.pageControl.patchValue(this.pageControl.value);
+                  },
+                }),
+            );
           });
 
           this.programCardsRows = this.programCards.reduce<IProgramCard[][]>((acc, programCard, index) => {
@@ -142,13 +180,15 @@ export class ProgramCardListComponent implements OnInit {
     );
   }
 
+  ngOnDestroy(): void {
+    this.programCardListComponent.unsubscribe();
+    this.activeProgramsSubscription.unsubscribe();
+  }
+
   resetFilters() {
-    this.searchControl.patchValue(null, { emitEvent: false });
-    this.teamsOptions.patchValue([], { emitEvent: false });
+    this.searchControl.patchValue(null);
+    this.teamsControls.patchValue([]);
+    this.scoreControl.patchValue(null);
     this.pageControl.patchValue(1);
-    // this.filterPrograms((this.programFilters = {}));
-    // this.selectedItems = [];
-    // this.isSearchResult = false;
-    // this.ongoingProgramsDataStatus = 'good';
   }
 }

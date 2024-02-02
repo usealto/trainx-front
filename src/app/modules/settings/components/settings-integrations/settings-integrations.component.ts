@@ -149,7 +149,6 @@ export class SettingsIntegrationsComponent implements OnInit {
         .patchCompany(this.company.id, { isIntegrationEnabled: isActivated })
         .pipe(
           tap((company) => {
-            // Dispatch l'action updateCompany pour mettre à jour l'état dans NgRx
             this.store.dispatch(updateCompany({ company }));
           }),
           switchMap(() => this.store.select(FromRoot.selectCompany)),
@@ -169,16 +168,21 @@ export class SettingsIntegrationsComponent implements OnInit {
         .patchCompany(this.company.id, { usersHaveWebAccess: isActivated })
         .pipe(
           tap((company) => {
-            this.isWebAppActivated = isActivated;
+            this.store.dispatch(updateCompany({ company }));
           }),
+          switchMap(() => this.store.select(FromRoot.selectCompany)),
         )
-        .subscribe();
+        .subscribe({
+          next: ({ data: company }) => {
+            this.company = company;
+            this.isWebAppActivated = isActivated;
+          },
+        });
     }
   }
 
   changeConnector(connector: AltoConnectorEnumApi) {
     this.emailSent = false;
-    this.connector = connector;
     if (this.company?.id) {
       this.companiesRestService
         .patchCompany(this.company.id, {
@@ -189,8 +193,18 @@ export class SettingsIntegrationsComponent implements OnInit {
               ? AltoConnectorEnumApi.GoogleChat
               : AltoConnectorEnumApi.Unknown,
         })
-        .pipe()
-        .subscribe();
+        .pipe(
+          tap((company) => {
+            this.store.dispatch(updateCompany({ company }));
+          }),
+          switchMap(() => this.store.select(FromRoot.selectCompany)),
+        )
+        .subscribe({
+          next: ({ data: company }) => {
+            this.company = company;
+            this.connector = connector;
+          },
+        });
     }
   }
 

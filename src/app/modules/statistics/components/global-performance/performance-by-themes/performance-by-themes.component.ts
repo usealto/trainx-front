@@ -38,8 +38,8 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.tagStatsSubscription.add(
       this.tagsControl.valueChanges
-        .pipe(startWith(this.tagsControl.value))
         .pipe(
+          startWith(this.tagsControl.value),
           switchMap((selectedTags) => {
             return combineLatest([
               this.tagsRestService.getTags(),

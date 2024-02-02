@@ -1,11 +1,16 @@
-<button type="button" class="btn btn-primary float-end" (click)="openQuestionForm()">
-  <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.questions.createQuestion }}</span>
-</button>
-<h2 id="questionsAnchor">
-  <img class="emoji" [src]="Emoji.RedQuestionMark | emoji" />
-  {{ I18ns.programs.questions.title }}
-</h2>
-<p class="mt-3 mb-3 alto-grey">{{ I18ns.programs.questions.subtitle }}</p>
+<div class="title-row mb-4">
+  <div>
+    <h2>
+      <img class="emoji" [src]="Emoji.RedQuestionMark | emoji" />
+      {{ I18ns.programs.questions.title }}
+    </h2>
+    <p class="mt-3 mb-3 alto-grey">{{ I18ns.programs.questions.subtitle }}</p>
+  </div>
+
+  <button type="button" class="btn btn-primary" (click)="openQuestionForm()">
+    <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.questions.createQuestion }}</span>
+  </button>
+</div>
 
 <div class="filters-row mb-4">
   <alto-input-search [searchControl]="searchControl"></alto-input-search>

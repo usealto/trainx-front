@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -6,12 +6,6 @@ import { FormControl } from '@angular/forms';
   templateUrl: './input-toggle.component.html',
   styleUrls: ['./input-toggle.component.scss'],
 })
-export class InputToggleComponent implements OnInit {
+export class InputToggleComponent {
   @Input() control: FormControl<boolean> = new FormControl<boolean>(false, { nonNullable: true });
-
-  ngOnInit(): void {
-    this.control.valueChanges.subscribe((value) => {
-      console.log(value);
-    });
-  }
 }

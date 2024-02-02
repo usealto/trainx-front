@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -6,7 +7,6 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { IAppData } from '../../../../../core/resolvers';
 import { ITabOption } from '../../../../shared/components/tabs/tabs.component';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'alto-statistics-details',
@@ -27,7 +27,7 @@ export class StatisticsDetailsComponent implements OnInit {
   id!: string;
   name!: string;
 
-  tabsOptions: ITabOption[] = [
+  readonly tabsOptions: ITabOption[] = [
     { label: I18ns.statistics.globalPerformance.navbarTitle, value: AltoRoutes.performance },
     { label: I18ns.statistics.globalEngagement.title, value: AltoRoutes.engagement },
   ];

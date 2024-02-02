@@ -166,8 +166,6 @@ export class ScoresRestService {
   getPaginatedTagsStats(
     duration: EScoreDuration,
     isProgression = false,
-    teamId?: string,
-    ids?: string[],
     reqParams?: GetTagsStatsRequestParams,
   ): Observable<TagStatsDtoPaginatedResponseApi> {
     let dateAfter: Date;
@@ -185,11 +183,9 @@ export class ScoresRestService {
     }
 
     return this.statsApi.getTagsStats({
-      ids: ids ? ids.join(',') : undefined,
       itemsPerPage: 400,
       from: dateAfter,
       to: dateBefore,
-      teamIds: teamId ? teamId : undefined,
       ...reqParams,
     } as GetTagsStatsRequestParams);
   }

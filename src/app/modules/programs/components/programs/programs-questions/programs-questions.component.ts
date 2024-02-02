@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -7,7 +7,7 @@ import {
   TagDtoApi,
   TagLightDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, debounceTime, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, map, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { QuestionFormComponent } from 'src/app/modules/programs/components/create-questions/question-form.component';
@@ -34,7 +34,7 @@ interface IQuestionInfos {
   templateUrl: './programs-questions.component.html',
   styleUrls: ['./programs-questions.component.scss'],
 })
-export class ProgramsQuestionsComponent implements OnInit {
+export class ProgramsQuestionsComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
@@ -59,14 +59,15 @@ export class ProgramsQuestionsComponent implements OnInit {
   selectedScoreControl: FormControl<PillOption | null> = new FormControl(null);
   scoreOptions: PillOption[] = Score.getFiltersPillOptions();
 
-  questionsDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
+  questionsDataStatus = EPlaceholderStatus.LOADING;
+  private init = true;
   private readonly programsQuestionsComponentSubscription = new Subscription();
 
   constructor(
     private readonly scoresRestService: ScoresRestService,
     private readonly questionsRestService: QuestionsRestService,
     private readonly offcanvasService: NgbOffcanvas,
-    private modalService: NgbModal,
+    private readonly modalService: NgbModal,
     private readonly toastService: ToastService,
   ) {}
 
@@ -80,20 +81,30 @@ export class ProgramsQuestionsComponent implements OnInit {
 
     this.programsQuestionsComponentSubscription.add(
       combineLatest([
-        this.searchControl.valueChanges.pipe(startWith(this.searchControl.value), debounceTime(300)),
         this.questionsPageControl.valueChanges.pipe(startWith(this.questionsPageControl.value)),
-        this.selectedProgramsControl.valueChanges.pipe(startWith(this.selectedProgramsControl.value)),
-        this.selectedTagsControl.valueChanges.pipe(startWith(this.selectedTagsControl.value)),
-        this.selectedScoreControl.valueChanges.pipe(startWith(this.selectedScoreControl.value)),
+        combineLatest([
+          this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
+          this.selectedProgramsControl.valueChanges.pipe(
+            startWith(this.selectedProgramsControl.value),
+            map((programsControls) => programsControls.map((x) => x.value)),
+          ),
+          this.selectedTagsControl.valueChanges.pipe(
+            startWith(this.selectedTagsControl.value),
+            map((tagsControls) => tagsControls.map((x) => x.value)),
+          ),
+          this.selectedScoreControl.valueChanges.pipe(startWith(this.selectedScoreControl.value)),
+        ]).pipe(tap(() => this.questionsPageControl.patchValue(1))),
       ])
         .pipe(
-          switchMap(([searchTerm, page, programsControls, tagsControls, score]) => {
+          debounceTime(this.init ? 0 : 200),
+          tap(() => (this.init = false)),
+          switchMap(([page, [searchTerm, selectedProgramsOptions, selectedTagsOptions, score]]) => {
             const req: GetQuestionsStatsRequestParams = {
               search: searchTerm ?? undefined,
               itemsPerPage: this.questionsPageSize,
               page,
-              programIds: programsControls.map((x) => x.value.value).join(','),
-              tagIds: tagsControls.map((x) => x.value.value).join(','),
+              programIds: selectedProgramsOptions.map((x) => x.value).join(','),
+              tagIds: selectedTagsOptions.map((x) => x.value).join(','),
             };
 
             switch (score?.value) {
@@ -136,72 +147,22 @@ export class ProgramsQuestionsComponent implements OnInit {
               };
             });
             this.questionsDataStatus =
-              this.questionsInfos.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
+              this.questionsInfos.length === 0
+                ? this.searchControl.value ||
+                  this.selectedProgramsControl.value.length ||
+                  this.selectedTagsControl.value.length ||
+                  this.selectedScoreControl.value
+                  ? EPlaceholderStatus.NO_RESULT
+                  : EPlaceholderStatus.NO_DATA
+                : EPlaceholderStatus.GOOD;
           },
         }),
     );
   }
 
-  // getQuestions(
-  //   {
-  //     programs = this.questionFilters.programs,
-  //     tags = this.questionFilters.tags,
-  //     score = this.questionFilters.score,
-  //     search = this.questionFilters.search,
-  //   }: QuestionFilters = this.questionFilters,
-  //   refreshPagination = false,
-  // ) {
-  // this.questionFilters.programs = programs;
-  // this.questionFilters.tags = tags;
-  // this.questionFilters.score = score;
-  // this.questionFilters.search = search;
-  // let obs$;
-  // if (this.isFiltersEmpty || this.onlyScoreFilter) {
-  //   obs$ = this.programsStore.questionsInitList.value$;
-  // } else {
-  //   obs$ = this.questionsRestService
-  //     .getQuestions({
-  //       programIds: programs?.join(','),
-  //       tagIds: tags?.join(','),
-  //       search,
-  //     })
-  //     .pipe(
-  //       map((questions) => {
-  //         const output = questions as QuestionDisplay[];
-  //         output.forEach((question) => (question.score = this.getQuestionScore(question.id)));
-  //         return output;
-  //       }),
-  //     );
-  // }
-  // obs$
-  //   .pipe(
-  //     tap((questions) => {
-  //       // this.questions = questions;
-  //       // this.questionListStatus = questions.length === 0 ? 'noData' : 'good';
-  //       // if (refreshPagination) {
-  //       //   this.questionsPage = 1;
-  //       // }
-  //       if (score) {
-  //         this.questions = this.scoreService.filterByScore(this.questions, score as ScoreFilter, true);
-  //       }
-  //       // this.questionPageChange();
-  //       if (this.questionsCount === 0 && !this.isFiltersEmpty) {
-  //         this.questionListStatus = 'noResult';
-  //       }
-  //     }),
-  //     take(1),
-  //   )
-  //   .subscribe();
-  // }
-
-  // questionPageChange(page: number) {
-  //   this.questionsCount = this.questions.length;
-
-  //   this.paginatedQuestions = this.questions.slice(
-  //     (page - 1) * this.questionsPageSize,
-  //     page * this.questionsPageSize,
-  //   );
-  // }
+  ngOnDestroy(): void {
+    this.programsQuestionsComponentSubscription.unsubscribe();
+  }
 
   openQuestionForm(question?: QuestionDtoApi) {
     const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
@@ -260,18 +221,10 @@ export class ProgramsQuestionsComponent implements OnInit {
   }
 
   resetFilters() {
-    this.searchControl.patchValue(null, { emitEvent: false });
-    this.selectedProgramsControl.patchValue([], { emitEvent: false });
-    this.selectedTagsControl.patchValue([], { emitEvent: false });
-    this.selectedScoreControl.patchValue(null, { emitEvent: false });
+    this.searchControl.patchValue(null);
+    this.selectedProgramsControl.patchValue([]);
+    this.selectedTagsControl.patchValue([]);
+    this.selectedScoreControl.patchValue(null);
     this.questionsPageControl.patchValue(1);
-  }
-
-  getTagTooltip(question: QuestionDtoApi) {
-    return question.tags ? question.tags.map((p) => p.name).join(', ') : '';
-  }
-
-  getProgramTooltip(question: QuestionDtoApi) {
-    return question.programs ? question.programs.map((p) => p.name).join(', ') : '';
   }
 }

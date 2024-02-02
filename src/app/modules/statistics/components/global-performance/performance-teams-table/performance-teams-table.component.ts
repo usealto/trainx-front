@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TagDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, map, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, debounceTime, map, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -48,8 +48,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
   teamsPageControl = new FormControl(1, { nonNullable: true });
   teamsPageSize = 5;
 
-  scoreIsLoading = false;
-
+  private init = true;
   private readonly performanceTeamsTableComponentSubscription = new Subscription();
 
   constructor(
@@ -78,6 +77,8 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
               this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
             ]);
           }),
+          debounceTime(this.init ? 0 : 200),
+          tap(() => (this.init = false)),
           map(([duration, programs, tags, search]) => {
             return <[EScoreDuration, string[], string[], string]>[
               duration,

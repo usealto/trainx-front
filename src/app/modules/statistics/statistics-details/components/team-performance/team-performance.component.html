@@ -14,7 +14,7 @@
       <alto-input-multiple-select
       class="me-4"
       [placeholder]="I18ns.statistics.team.masteryLevel.teamFilter"
-      [controls]="membersChartControl"
+      [controls]="membersFilterControl"
       [options]="membersOptions"
       [enableSearch]="true"
       >
@@ -31,6 +31,7 @@
       <alto-chart-basicline [chartOption]="teamChartOption"></alto-chart-basicline>
     </div>
   </div>
+
   <div class="nodata-placeholder" noData>
     <h3 class="mb-5 fs-6">
       {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}
@@ -45,6 +46,7 @@
       </span>
     </div>
   </div>
+
   <div class="skeleton-panel mb-5" style="height: 497px" loading></div>
 </alto-placeholder-manager>
 
@@ -180,26 +182,26 @@
       </thead>
       <tbody>
         <tr
-          *ngFor="let member of displayMemberTables"
+          *ngFor="let memberInfos of membersInfos"
           [routerLink]="[
             '/',
             AltoRoutes.lead,
             AltoRoutes.statistics,
             AltoRoutes.statUser,
             AltoRoutes.performance,
-            member.id
+            memberInfos.user.id
           ]"
         >
           <td class="px-4">
-            <alto-profile-card [user]="member.user"></alto-profile-card>
+            <alto-profile-card [user]="memberInfos.user"></alto-profile-card>
           </td>
           <td class="text-center">
             <span
-              *ngIf="member.score; else noScore"
+              *ngIf="memberInfos.userStats.score !== undefined; else noScore"
               class="alto-score"
-              [class]="(member.score || 0) * 100 | pillColor"
+              [class]="(memberInfos.userStats.score) * 100 | pillColor"
             >
-              {{ member.score | percent }}
+              {{ memberInfos.userStats.score | percent }}
             </span>
             <ng-template #noScore
               ><p class="alto-grey text-center">{{ I18ns.shared.noScore }}</p></ng-template
@@ -207,8 +209,8 @@
           </td>
           <td class="text-center">
             <alto-progression-badge
-              *ngIf="getMemberProgression(member) !== 0; else noEvolution"
-              [score]="getMemberProgression(member)"
+              *ngIf="memberInfos.progression !== undefined; else noEvolution"
+              [score]="memberInfos.progression"
             ></alto-progression-badge>
             <ng-template #noEvolution>
               <p class="alto-grey text-center">{{ I18ns.shared.noEvolution }}</p></ng-template
@@ -216,10 +218,10 @@
           </td>
           <td>
             <alto-colored-pill-list
-              *ngIf="member.tags && member.tags.length > 0; else noTag"
+              *ngIf="memberInfos.userStats.tags; else noTag"
               color="primary"
               [textLimit]="15"
-              [data]="member.tags || [] | sort : 'asc' : 'score' | slice : 0 : 3"
+              [data]="memberInfos.userStats.tags | sort : 'asc' : 'score' | slice : 0 : 3"
             ></alto-colored-pill-list>
             <ng-template #noTag>
               <p class="alto-grey">{{ I18ns.shared.noTag }}</p>
@@ -232,7 +234,7 @@
       class="mx-4 d-block"
       [pageControl]="membersPageControl"
       [itemsPerPage]="membersTablePageSize"
-      [itemsCount]="membersTable.length"
+      [itemsCount]="membersTotalItems"
     ></alto-pagination>
   </div>
   <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noData>
@@ -288,17 +290,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let question of displayQuestionsTables">
+        <tr *ngFor="let questionInfos of questionsInfos">
           <td>
-            <p class="alto-grey">{{ question.label }}</p>
+            <p class="alto-grey">{{ questionInfos.question.title }}</p>
           </td>
           <td class="text-center">
             <span
-              *ngIf="question.score; else noScore"
+              *ngIf="questionInfos.questionStats.score !== undefined; else noScore"
               class="alto-score"
-              [class]="(question.score || 0) * 100 | pillColor"
+              [class]="(questionInfos.questionStats.score) * 100 | pillColor"
             >
-              {{ question.score | percent }}
+              {{ questionInfos.questionStats.score | percent }}
             </span>
             <ng-template #noScore
               ><p class="alto-grey text-center">{{ I18ns.shared.noScore }}</p></ng-template
@@ -306,16 +308,16 @@
           </td>
           <td class="text-center">
             <alto-progression-badge
-              *ngIf="getQuestionProgression(question) !== 0; else noEvolution"
-              [score]="getQuestionProgression(question)"
+              *ngIf="questionInfos.progression !== undefined; else noEvolution"
+              [score]="questionInfos.progression"
             ></alto-progression-badge>
             <ng-template #noEvolution>
               <p class="alto-grey text-center">{{ I18ns.shared.noEvolution }}</p></ng-template
             >
           </td>
           <td class="text-center">
-            <p *ngIf="question.usersCount > 0; else noMember">
-              {{ question.usersCount }}
+            <p *ngIf="questionInfos.questionStats.usersCount > 0; else noMember">
+              {{ questionInfos.questionStats.usersCount }}
             </p>
             <ng-template #noMember>
               {{ I18ns.statistics.team.questions.table.noMember }}
@@ -328,7 +330,7 @@
       class="mx-4 d-block"
       [pageControl]="questionsPageControl"
       [itemsPerPage]="questionsTablePageSize"
-      [itemsCount]="questionsTable.length"
+      [itemsCount]="questionsTotalItems"
     ></alto-pagination>
   </div>
   <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noData>

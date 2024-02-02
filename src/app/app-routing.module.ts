@@ -159,6 +159,7 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes, {
       preloadingStrategy: FlagBasedPreloadingStrategy,
+      scrollPositionRestoration: 'top',
     }),
   ],
   exports: [RouterModule],

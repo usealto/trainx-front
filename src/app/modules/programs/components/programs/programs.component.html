@@ -12,7 +12,7 @@
 <ng-container [ngSwitch]="activeTab.value.value">
   <alto-program-card-list *ngSwitchCase="EProgramsTabs.Programs" [company]="company"></alto-program-card-list>
   <alto-programs-questions *ngSwitchCase="EProgramsTabs.Questions" [company]="company" [tags]="tags"></alto-programs-questions>
-  <ng-container *ngSwitchCase="EProgramsTabs.Tags"></ng-container>
+  <alto-programs-tags *ngSwitchCase="EProgramsTabs.Tags"></alto-programs-tags>
 </ng-container>
 
 <!-- <div *ngIf="activeTab.value?.value === 'programs'">

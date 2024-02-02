@@ -1,12 +1,24 @@
-.program-search {
-  width: 26.67rem;
+.buttons-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  .buttons-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+  }
 }
 
 .programs-row {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
+  gap: 1.5rem;
 
   .program-card {
     height: 18rem;
@@ -70,10 +82,14 @@
       }
     }
 
-
-
     &.disabled {
+      cursor: default;
+      filter: grayscale(100%);
+      opacity: 0.5;
 
+      &:hover {
+        border-color: var(--gray-200);
+      }
     }
   }
 }
