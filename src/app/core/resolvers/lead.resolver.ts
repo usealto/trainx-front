@@ -26,7 +26,7 @@ export const leadResolver: ResolveFn<ILeadData> = () => {
   ]).pipe(
     switchMap(([timestamp, tags]) => {
       return combineLatest([
-        timestamp === null || timestamp === undefined || Date.now() - timestamp.getTime() > 60000
+        timestamp === null || timestamp === undefined || Date.now() - timestamp.getTime() > 120000
           ? combineLatest([
               scoresRestService.getPaginatedTeamsStats(EScoreDuration.Month),
               scoresRestService.getPaginatedTeamsStats(EScoreDuration.Month, true),

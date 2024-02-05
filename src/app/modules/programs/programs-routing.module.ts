@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AltoRoutes } from '../shared/constants/routes';
-import { CreateProgramsComponent } from './components/create-programs/create-programs.component';
 import { ProgramsComponent } from './components/programs/programs.component';
-import { EditProgramGuard } from '../../core/guards/edit-program.guard';
+import { editProgramResolver } from '../../core/resolvers/edit-program.resolver';
+import { EditProgramsComponent } from './components/edit-program/edit-program.component';
 
 const routes: Routes = [
   {
@@ -11,16 +11,11 @@ const routes: Routes = [
     component: ProgramsComponent,
   },
   {
-    path: AltoRoutes.programsCreate,
-    component: CreateProgramsComponent,
-  },
-  {
     path: AltoRoutes.programsEdit + '/:id',
-    canActivate: [EditProgramGuard], // if false: redirect to programs
-    // resolve: {
-    //   editProgramResolver: ProgramsResolver, // find program to edit in company
-    // },
-    component: CreateProgramsComponent,
+    resolve: {
+      editProgramResolver: editProgramResolver,
+    },
+    component: EditProgramsComponent,
   },
 ];
 

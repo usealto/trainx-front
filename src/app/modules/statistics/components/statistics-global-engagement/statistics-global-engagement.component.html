@@ -40,7 +40,7 @@
 
 <alto-placeholder-manager [status]="guessesLeaderboardDataStatus">
   <alto-leaderboard
-    *ngIf="guessesLeaderboardDataStatus === 'good'"
+    *ngIf="guessesLeaderboardDataStatus === EPlaceholderStatus.GOOD"
     [config]="['count', 'progress']"
     [data]="leaderboard"
     [title]="I18ns.statistics.globalEngagement.leaderboard.title"

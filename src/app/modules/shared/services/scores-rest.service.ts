@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
-  GetProgramRunsRequestParams,
   GetProgramsStatsRequestParams,
   GetQuestionsStatsRequestParams,
   GetScoresRequestParams,
   GetTagsStatsRequestParams,
   GetTeamsStatsRequestParams,
   GetUsersStatsRequestParams,
-  ProgramRunDtoApi,
-  ProgramRunsApiService,
   ProgramStatsDtoPaginatedResponseApi,
   QuestionStatsDtoPaginatedResponseApi,
   ScoreByTypeEnumApi,
@@ -18,11 +15,12 @@ import {
   ScoresApiService,
   ScoresResponseDtoApi,
   StatsApiService,
+  TagStatsDtoApi,
   TagStatsDtoPaginatedResponseApi,
   UserStatsDtoPaginatedResponseApi,
 } from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
-import { Observable, filter, map } from 'rxjs';
+import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
 import { EScoreDuration, Score } from '../../../models/score.model';
 import { TeamStats } from '../../../models/team.model';
 import { ChartFilters } from '../../shared/models/chart.model';
@@ -35,7 +33,6 @@ export class ScoresRestService {
   constructor(
     private readonly scoresApi: ScoresApiService,
     private readonly service: ScoresService,
-    private readonly programsApi: ProgramRunsApiService,
     private readonly statsApi: StatsApiService,
   ) {}
 
@@ -97,7 +94,6 @@ export class ScoresRestService {
     } as GetQuestionsStatsRequestParams);
   }
 
-  // Cloned from getTeamsStats() to use in resolver => Return TeamStats[] and not TeamStatsDtoApi[]
   getPaginatedTeamsStats(
     duration: EScoreDuration,
     isProgression = false,
@@ -188,6 +184,32 @@ export class ScoresRestService {
       to: dateBefore,
       ...reqParams,
     } as GetTagsStatsRequestParams);
+  }
+
+  getAllTagsStats(): Observable<TagStatsDtoApi[]> {
+    return this.statsApi.getTagsStats({ page: 1, itemsPerPage: 1000 }).pipe(
+      switchMap(({ data, meta }) => {
+        const reqs: Observable<TagStatsDtoApi[]>[] = [of(data ? data : [])];
+        let totalPages = meta.totalPage ?? 1;
+
+        for (let i = 2; i <= totalPages; i++) {
+          reqs.push(
+            this.statsApi.getTagsStats({ page: i, sortBy: 'createdAt:asc', itemsPerPage: 1000 }).pipe(
+              tap(({ meta }) => {
+                if (meta.totalPage !== totalPages) {
+                  totalPages = meta.totalPage;
+                }
+              }),
+              map(({ data }) => (data ? data : [])),
+            ),
+          );
+        }
+        return combineLatest(reqs);
+      }),
+      map((tagsStatsDtos) => {
+        return tagsStatsDtos.flat();
+      }),
+    );
   }
 
   getScores(

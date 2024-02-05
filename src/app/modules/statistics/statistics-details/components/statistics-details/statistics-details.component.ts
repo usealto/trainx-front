@@ -7,6 +7,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { IAppData } from '../../../../../core/resolvers';
 import { ITabOption } from '../../../../shared/components/tabs/tabs.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'alto-statistics-details',
@@ -34,6 +35,7 @@ export class StatisticsDetailsComponent implements OnInit {
 
   tabControl = new FormControl<ITabOption>(this.tabsOptions[0], { nonNullable: true });
   emptyTeam = false;
+  private readonly statisticsDetailsComponentSubscription = new Subscription();
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
@@ -64,10 +66,11 @@ export class StatisticsDetailsComponent implements OnInit {
         this.emptyTeam = users.every(({ teamId }) => teamId !== team.id);
       }
     }
-  }
 
-  tabChange(val: string) {
-    const selectedTab = this.tabsOptions.find((t) => t.value === val)?.value || this.tabsOptions[0].value;
-    this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, this.type, selectedTab, this.id]);
+    this.statisticsDetailsComponentSubscription.add(
+      this.tabControl.valueChanges.subscribe((tab) => {
+        this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, this.type, tab.value, this.id]);
+      }),
+    );
   }
 }

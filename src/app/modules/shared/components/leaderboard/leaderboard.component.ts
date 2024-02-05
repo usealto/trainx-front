@@ -5,13 +5,13 @@ import { memoize } from 'src/app/core/utils/memoize/memoize';
 
 export type DataDisplay = 'count' | 'progress' | 'score';
 
-export interface LeaderboardData {
+export interface ILeaderboardData {
   name: string;
   score: number;
   progression?: number;
 }
 
-interface LeaderboardDataDisplay extends LeaderboardData {
+interface LeaderboardDataDisplay extends ILeaderboardData {
   index: number;
 }
 
@@ -24,7 +24,7 @@ export class LeaderboardComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
 
-  @Input() data!: LeaderboardData[];
+  @Input() data!: ILeaderboardData[];
   @Input() size = 3;
   @Input() title!: string;
   @Input() subtitle!: string;

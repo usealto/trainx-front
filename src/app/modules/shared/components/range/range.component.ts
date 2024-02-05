@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'alto-range',
@@ -7,5 +8,5 @@ import { Component, Input } from '@angular/core';
 })
 export class RangeComponent {
   @Input() formControlName = '';
-  @Input() control: any;
+  @Input() control: FormControl<number | null> = new FormControl(75);
 }

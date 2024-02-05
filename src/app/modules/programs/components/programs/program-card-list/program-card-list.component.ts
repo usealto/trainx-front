@@ -87,7 +87,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
             const req: GetProgramsStatsRequestParams = {
               page,
               itemsPerPage: this.pageSize,
-              search: search ?? undefined,
+              search: search || undefined,
               teamIds: selectedTeamsOptions.length
                 ? selectedTeamsOptions.map((x) => x.value).join(',')
                 : undefined,

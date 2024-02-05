@@ -60,9 +60,8 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.performanceTeamsTableComponentSubscription.add(
       this.tagsRestService
-        .getTags()
+        .getAllTags()
         .pipe(
-          startWith([] as TagDtoApi[]),
           tap((tags) => {
             this.tagOptions = tags.map((tag) => new SelectOption({ label: tag.name, value: tag.id }));
             this.programOptions = this.company.programs.map(

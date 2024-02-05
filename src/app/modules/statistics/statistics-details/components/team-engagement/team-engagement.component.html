@@ -30,15 +30,18 @@
 
 <alto-placeholder-manager [status]="membersLeaderboardStatus">
   <alto-leaderboard
-    [config]="['count', 'progress']"
-    [data]="membersLeaderboard"
-    [title]="I18ns.statistics.team.teamActivity.leaderboardTitle"
-    [subtitle]="I18ns.statistics.team.teamActivity.leaderboardSubtitle"
-  ></alto-leaderboard>
+  *ngIf="membersLeaderboardStatus === EPlaceholderStatus.GOOD"
+  [config]="['count', 'progress']"
+  [data]="membersLeaderboard"
+  [title]="I18ns.statistics.team.teamActivity.leaderboardTitle"
+  [subtitle]="I18ns.statistics.team.teamActivity.leaderboardSubtitle">
+  </alto-leaderboard>
+
   <div class="nodata-placeholder text-center" noData>
     <img [src]="EmojiName.Trophy | emoji" height="24" width="24" />
     <p class="fw-bold">{{ I18ns.statistics.team.membersEngagement.leaderboardPlaceholder.title }}</p>
   </div>
+
   <div class="skeleton-panel" style="height: 332px" loading></div>
 </alto-placeholder-manager>
 
@@ -78,16 +81,21 @@
 
 <div class="mb-5">
   <alto-time-picker
-    class="float-end"
-    [durationControl]="durationControl"
+  class="float-end"
+  [durationControl]="durationControl"
   ></alto-time-picker>
-  <h2>
-    <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" height="16" width="16" />
-    {{ I18ns.statistics.team.teamMembers.title }}
-    <span class="ms-2 alto-badge" [style]="team.id | teamColor">{{ team.name }}</span>
-  </h2>
-  <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.teamMembers.subtitle }}</p>
-  <alto-input-search [searchControl]="membersTableSearchControl"></alto-input-search>
+  <div class="col-6">
+    <h2>
+      <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" height="16" width="16" />
+      {{ I18ns.statistics.team.teamMembers.title }}
+      <span class="ms-2 alto-badge" [style]="team.id | teamColor">{{ team.name }}</span>
+    </h2>
+    <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.teamMembers.subtitle }}</p>
+  </div>
+
+  <div class="d-flex">
+    <alto-input-search [searchControl]="membersTableSearchControl"></alto-input-search>
+  </div>
 </div>
 
 <alto-placeholder-manager [status]="membersTableStatus">

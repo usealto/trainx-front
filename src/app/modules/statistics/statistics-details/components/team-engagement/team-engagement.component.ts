@@ -36,6 +36,7 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   EmojiName = EmojiName;
   AltoRoutes = AltoRoutes;
+  EPlaceholderStatus = EPlaceholderStatus;
 
   team!: Team;
   company!: Company;

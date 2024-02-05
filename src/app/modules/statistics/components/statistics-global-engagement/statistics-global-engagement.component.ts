@@ -28,6 +28,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
   AltoRoutes = AltoRoutes;
+  EPlaceholderStatus = EPlaceholderStatus;
 
   company!: Company;
 

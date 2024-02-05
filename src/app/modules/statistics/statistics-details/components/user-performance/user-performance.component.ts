@@ -1,5 +1,5 @@
 import { Location, TitleCasePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   ScoreByTypeEnumApi,
@@ -8,7 +8,7 @@ import {
   TagDtoApi,
   TagStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { combineLatest, tap } from 'rxjs';
+import { Subscription, combineLatest, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -31,29 +31,23 @@ import { FormControl } from '@angular/forms';
   templateUrl: './user-performance.component.html',
   styleUrls: ['./user-performance.component.scss'],
 })
-export class UserPerformanceComponent implements OnInit {
+export class UserPerformanceComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   EmojiName = EmojiName;
 
   user!: User;
-  userTeam!: Team;
+  team!: Team;
   durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
     nonNullable: true,
   });
-  tags: TagDtoApi[] = [];
 
   userChartOptions!: any;
-  userChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
-
-  tagsChartOptions!: any;
-  tagsChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
-  selectedTags: TagDtoApi[] = [];
+  userChartStatus = EPlaceholderStatus.LOADING;
 
   spiderChartOptions!: any;
-  spiderChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
-  spiderChartStatusReason: '<3 tags' | '>6 tags' | undefined = undefined;
-  spiderChartSectionStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
-  selectedSpiderTags: TagDtoApi[] = [];
+  spiderChartStatus = EPlaceholderStatus.LOADING;
+
+  private readonly userPerformanceComponentSubscription = new Subscription();
 
   constructor(
     private readonly router: Router,
@@ -71,62 +65,64 @@ export class UserPerformanceComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     const usersById = (data[EResolvers.AppResolver] as IAppData).userById;
-    const teamsById = (data[EResolvers.AppResolver] as IAppData).company.teams;
+    const teamsById = (data[EResolvers.AppResolver] as IAppData).company.teamById;
+
+    // TODO : move logic into a guard or resolver
     const userId = this.router.url.split('/').pop() || '';
     this.user = usersById.get(userId) || new User({} as IUser);
-    if (
-      !this.user.teamId ||
-      this.user.teamId === '' ||
-      teamsById.find((t) => t.id === this.user.teamId) === undefined
-    ) {
+    if (!this.user.teamId || this.user.teamId === '' || !teamsById.has(this.user.teamId)) {
       this.location.back();
       this.toastService.show({ type: 'danger', text: I18ns.statistics.user.toasts.noTeam });
     } else {
-      this.userTeam = teamsById.find((t) => t.id === this.user.teamId) as Team;
+      this.team = teamsById.get(this.user.teamId) as Team;
     }
 
-    this.tagsRestService
-      .getTags()
-      .pipe(
-        tap((r) => {
-          this.tags = r;
-          this.selectedTags = r.slice(0, 1);
-          this.selectedSpiderTags = r.slice(0, 6);
-        }),
-      )
-      .subscribe({
-        next: () => {
-          this.getSpiderChartScores();
-          this.getUserChartScores(this.durationControl.value);
-          this.getTagsChartScores(this.durationControl.value);
-        },
-      });
+    this.userPerformanceComponentSubscription.add();
 
-    this.durationControl.valueChanges.subscribe((duration) => {
-      this.getUserChartScores(duration);
-      this.getTagsChartScores(duration);
-    });
+    // this.tagsRestService
+    //   .getTags()
+    //   .pipe(
+    //     tap((r) => {
+    //       this.tags = r;
+    //       this.selectedTags = r.slice(0, 1);
+    //       this.selectedSpiderTags = r.slice(0, 6);
+    //     }),
+    //   )
+    //   .subscribe({
+    //     next: () => {
+    //       this.getSpiderChartScores();
+    //       this.getUserChartScores(this.durationControl.value);
+    //     },
+    //   });
+
+    // this.durationControl.valueChanges.subscribe((duration) => {
+    //   this.getUserChartScores(duration);
+    // });
   }
 
-  getSpiderChartScores(): void {
-    this.spiderChartSectionStatus = this.tags.length ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
-    this.spiderChartStatus = EPlaceholderStatus.LOADING;
-    combineLatest([
-      this.scoresRestService.getPaginatedTagsStats(EScoreDuration.Year, false, {
-        teamIds: this.user.teamId,
-        ids: this.selectedSpiderTags.map((t) => t.id).join(','),
-      }),
-      this.scoresRestService.getScores(this.getScoreParams('tagStats', EScoreDuration.Year)),
-    ]).subscribe(([paginatedTeamStats, userStats]) => {
-      const teamStats = paginatedTeamStats.data ?? [];
-
-      this.createSpiderChart(
-        teamStats.sort((a, b) => a.tag.name.localeCompare(b.tag.name)),
-        userStats.sort((a, b) => a.label.localeCompare(b.label)),
-      );
-      this.spiderChartStatus = EPlaceholderStatus.GOOD;
-    });
+  ngOnDestroy(): void {
+    this.userPerformanceComponentSubscription.unsubscribe();
   }
+
+  // getSpiderChartScores(): void {
+  //   this.spiderChartSectionStatus = this.tags.length ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
+  //   this.spiderChartStatus = EPlaceholderStatus.LOADING;
+  //   combineLatest([
+  //     this.scoresRestService.getPaginatedTagsStats(EScoreDuration.Year, false, {
+  //       teamIds: this.user.teamId,
+  //       ids: this.selectedSpiderTags.map((t) => t.id).join(','),
+  //     }),
+  //     this.scoresRestService.getScores(this.getScoreParams('tagStats', EScoreDuration.Year)),
+  //   ]).subscribe(([paginatedTeamStats, userStats]) => {
+  //     const teamStats = paginatedTeamStats.data ?? [];
+
+  //     this.createSpiderChart(
+  //       teamStats.sort((a, b) => a.tag.name.localeCompare(b.tag.name)),
+  //       userStats.sort((a, b) => a.label.localeCompare(b.label)),
+  //     );
+  //     this.spiderChartStatus = EPlaceholderStatus.GOOD;
+  //   });
+  // }
 
   createSpiderChart(teamScores: TagStatsDtoApi[], userScores: Score[]): void {
     this.spiderChartOptions = {
@@ -177,76 +173,22 @@ export class UserPerformanceComponent implements OnInit {
     };
   }
 
-  getTagsChartScores(duration: EScoreDuration): void {
-    this.tagsChartStatus = EPlaceholderStatus.LOADING;
-    this.scoresRestService
-      .getScores(this.getScoreParams('tags', duration))
-      .pipe(
-        tap((scores) => {
-          this.tagsChartStatus = scores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
-          if (scores.length > 0) {
-            this.createTagsChart(scores, duration);
-          }
-        }),
-      )
-      .subscribe();
-  }
-
-  createTagsChart(scores: Score[], duration: EScoreDuration): void {
-    const formatedScores = this.scoresService.formatScores(scores);
-    const points = formatedScores.map((d) => this.statisticsService.transformDataToPoint(d));
-
-    const dataSets = formatedScores.map((s) => {
-      const d = this.statisticsService.transformDataToPoint(s);
-      return { label: s.label, data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)) };
-    });
-
-    const labels = this.statisticsService
-      .formatLabel(
-        points[0].map((d) => d.x),
-        duration,
-      )
-      .map((s) => this.titleCasePipe.transform(s));
-
-    const series = dataSets.map((d) => {
-      return {
-        name: d.label,
-        data: d.data,
-        type: 'line',
-        showSybmol: false,
-        tooltip: {
-          valueFormatter: (value: any) => {
-            return (value as number) + '%';
-          },
-        },
-        lineStyle: {},
-      };
-    });
-
-    this.tagsChartOptions = {
-      xAxis: [{ ...xAxisDatesOptions, data: labels }],
-      yAxis: [{ ...yAxisScoreOptions }],
-      series: series,
-      legend: legendOptions,
-    };
-  }
-
-  getUserChartScores(duration: EScoreDuration): void {
-    this.userChartStatus = EPlaceholderStatus.LOADING;
-    combineLatest([
-      this.scoresRestService.getScores(this.getScoreParams('user', duration)),
-      this.scoresRestService.getScores(this.getScoreParams('team', duration)),
-    ])
-      .pipe(
-        tap(([userScores, teamScores]) => {
-          this.userChartStatus = userScores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
-          if (userScores.length > 0) {
-            this.createUserChart(userScores[0], teamScores[0], duration);
-          }
-        }),
-      )
-      .subscribe();
-  }
+  // getUserChartScores(duration: EScoreDuration): void {
+  //   this.userChartStatus = EPlaceholderStatus.LOADING;
+  //   combineLatest([
+  //     this.scoresRestService.getScores(this.getScoreParams('user', duration)),
+  //     this.scoresRestService.getScores(this.getScoreParams('team', duration)),
+  //   ])
+  //     .pipe(
+  //       tap(([userScores, teamScores]) => {
+  //         this.userChartStatus = userScores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
+  //         if (userScores.length > 0) {
+  //           this.createUserChart(userScores[0], teamScores[0], duration);
+  //         }
+  //       }),
+  //     )
+  //     .subscribe();
+  // }
 
   createUserChart(userScores: Score, teamScores: Score, duration: EScoreDuration): void {
     const [formattedUserScores, formattedTeamScores] = this.scoresService.formatScores([
@@ -298,52 +240,51 @@ export class UserPerformanceComponent implements OnInit {
     };
   }
 
-  filterTags(event: any): void {
-    this.selectedTags = event;
-    this.getTagsChartScores(this.durationControl.value);
-  }
+  // filterTags(event: any): void {
+  //   this.selectedTags = event;
+  // }
 
-  filterSpiderTags(event: any): void {
-    this.selectedSpiderTags = event;
-    if (this.selectedSpiderTags.length < 3) {
-      this.spiderChartStatusReason = '<3 tags';
-      this.spiderChartStatus = EPlaceholderStatus.NO_DATA;
-    } else if (this.selectedSpiderTags.length > 6) {
-      this.spiderChartStatusReason = '>6 tags';
-      this.spiderChartStatus = EPlaceholderStatus.NO_DATA;
-    } else {
-      this.getSpiderChartScores();
-    }
-  }
+  // filterSpiderTags(event: any): void {
+  //   this.selectedSpiderTags = event;
+  //   if (this.selectedSpiderTags.length < 3) {
+  //     this.spiderChartStatusReason = '<3 tags';
+  //     this.spiderChartStatus = EPlaceholderStatus.NO_DATA;
+  //   } else if (this.selectedSpiderTags.length > 6) {
+  //     this.spiderChartStatusReason = '>6 tags';
+  //     this.spiderChartStatus = EPlaceholderStatus.NO_DATA;
+  //   } else {
+  //     this.getSpiderChartScores();
+  //   }
+  // }
 
-  getScoreParams(type: 'user' | 'team' | 'tags' | 'tagStats', duration: EScoreDuration): any {
-    return {
-      duration,
-      type:
-        type === 'user'
-          ? ScoreTypeEnumApi.User
-          : type === 'team'
-          ? ScoreTypeEnumApi.Team
-          : ScoreTypeEnumApi.Tag,
-      ids: [
-        type === 'user'
-          ? this.user.id
-          : type === 'team'
-          ? this.userTeam.id
-          : type === 'tags'
-          ? this.selectedTags.map((t) => t.id)
-          : this.selectedSpiderTags.map((t) => t.id),
-      ],
-      timeframe:
-        type === 'tagStats'
-          ? ScoreTimeframeEnumApi.Year
-          : duration === EScoreDuration.Year
-          ? ScoreTimeframeEnumApi.Month
-          : duration === EScoreDuration.Trimester
-          ? ScoreTimeframeEnumApi.Week
-          : ScoreTimeframeEnumApi.Day,
-      scoredBy: type === 'tags' || type === 'tagStats' ? ScoreByTypeEnumApi.User : undefined,
-      scoredById: type === 'tags' || type === 'tagStats' ? this.user.id : undefined,
-    } as ChartFilters;
-  }
+  // getScoreParams(type: 'user' | 'team' | 'tags' | 'tagStats', duration: EScoreDuration): any {
+  //   return {
+  //     duration,
+  //     type:
+  //       type === 'user'
+  //         ? ScoreTypeEnumApi.User
+  //         : type === 'team'
+  //         ? ScoreTypeEnumApi.Team
+  //         : ScoreTypeEnumApi.Tag,
+  //     ids: [
+  //       type === 'user'
+  //         ? this.user.id
+  //         : type === 'team'
+  //         ? this.userTeam.id
+  //         : type === 'tags'
+  //         ? this.selectedTags.map((t) => t.id)
+  //         : this.selectedSpiderTags.map((t) => t.id),
+  //     ],
+  //     timeframe:
+  //       type === 'tagStats'
+  //         ? ScoreTimeframeEnumApi.Year
+  //         : duration === EScoreDuration.Year
+  //         ? ScoreTimeframeEnumApi.Month
+  //         : duration === EScoreDuration.Trimester
+  //         ? ScoreTimeframeEnumApi.Week
+  //         : ScoreTimeframeEnumApi.Day,
+  //     scoredBy: type === 'tags' || type === 'tagStats' ? ScoreByTypeEnumApi.User : undefined,
+  //     scoredById: type === 'tags' || type === 'tagStats' ? this.user.id : undefined,
+  //   } as ChartFilters;
+  // }
 }

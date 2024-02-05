@@ -36,13 +36,12 @@
 
 <alto-placeholder-manager [status]="teamsLeaderboardDataStatus">
   <alto-leaderboard
-    *ngIf="teamsLeaderboardDataStatus === 'good'"
-    [config]="['score']"
-    [title]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title"
-    [subtitle]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.subtitle"
-    [data]="teamsLeaderboard"
-    [size]="3"
-  >
+  *ngIf="teamsLeaderboardDataStatus === EPlaceholderStatus.GOOD"
+  [config]="['score']"
+  [title]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title"
+  [subtitle]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.subtitle"
+  [data]="teamsLeaderboard"
+  [size]="3">
   </alto-leaderboard>
 
   <div class="nodata-placeholder" noData>

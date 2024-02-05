@@ -97,15 +97,13 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
           this.createScoreEvolutionChart(filteredScores, scoresPrev[0], this.durationControl.value);
           this.init = false;
 
-          const teams = this.company.teams;
-
           const teamStats = this.company.getStatsByPeriod(this.durationControl.value, false);
           const previousTeamStats = this.company.getStatsByPeriod(this.durationControl.value, true);
 
           this.teamsLeaderboard = teamStats
             .filter((t) => t.score && t.score >= 0)
             .map((t) => ({
-              name: teams.filter((team) => t.teamId === team.id)[0].name,
+              name: this.company.teamById.get(t.teamId)?.name ?? '',
               score: t.score ?? 0,
             }));
 

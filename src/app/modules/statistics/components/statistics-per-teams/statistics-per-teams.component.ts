@@ -75,11 +75,11 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
           switchMap(([duration, search, teams]) => {
             return combineLatest([
               this.scoreRestService.getPaginatedUsersStats(duration, false, {
-                search: search ?? undefined,
+                search: search || undefined,
                 teamIds: teams.map(({ value }) => value.value).join(','),
               }),
               this.scoreRestService.getPaginatedUsersStats(duration, true, {
-                search: search ?? undefined,
+                search: search || undefined,
                 teamIds: teams.map(({ value }) => value.value).join(','),
               }),
               of(duration),

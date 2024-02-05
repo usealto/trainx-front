@@ -29,7 +29,7 @@ export class TimestampedEntity<T> {
   }
 
   needsUpdate(): boolean {
-    return this.timestamp === null || Date.now() - this.timestamp.getTime() > 60000;
+    return this.timestamp === null || Date.now() - this.timestamp.getTime() > 120000;
   }
 }
 
@@ -125,6 +125,7 @@ export const rootReducer = createReducer(
 
     return {
       ...state,
+      teamsStatsTimestamp: new Date(),
       company: new TimestampedEntity(company),
     };
   }),

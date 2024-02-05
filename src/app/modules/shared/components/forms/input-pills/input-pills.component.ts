@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { Subscription, startWith } from 'rxjs';
 
 import { PillOption } from '../../../models/select-option.model';
+import { I18ns } from '../../../../../core/utils/i18n/I18n';
 
 @Component({
   selector: 'alto-input-pills',
@@ -10,6 +11,8 @@ import { PillOption } from '../../../models/select-option.model';
   styleUrls: ['input-pills.component.scss'],
 })
 export class InputPillsComponent implements OnInit, OnDestroy {
+  I18ns = I18ns;
+
   @Input() placeholder = '';
   @Input() controls: FormControl<FormControl<PillOption>[]> = new FormControl(
     [] as FormControl<PillOption>[],

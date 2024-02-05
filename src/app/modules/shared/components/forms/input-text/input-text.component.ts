@@ -8,5 +8,5 @@ import { FormControl } from '@angular/forms';
 })
 export class InputTextComponent {
   @Input() placeholder = '';
-  @Input() control!: FormControl;
+  @Input() control = new FormControl<string | null>(null);
 }

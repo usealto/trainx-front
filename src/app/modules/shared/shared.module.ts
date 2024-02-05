@@ -52,7 +52,7 @@ import { InputSearchComponent } from './components/forms/input-search/input-sear
 import { InputMultipleSelectComponent } from './components/forms/input-multiple-select/input-multiple-select.component';
 import { InputSingleSelectPillComponent } from './components/forms/input-single-select-pill/input-single-select-pill.component';
 import { InputToggleComponent } from './components/forms/input-toggle/input-toggle.component';
-
+import { InputSingleSelectComponent } from './components/forms/input-single-select/input-single-select.component';
 @NgModule({
   declarations: [
     ProgressionPillPipe,
@@ -89,6 +89,7 @@ import { InputToggleComponent } from './components/forms/input-toggle/input-togg
     InputMultipleSelectComponent,
     InputSingleSelectPillComponent,
     InputToggleComponent,
+    InputSingleSelectComponent,
   ],
   imports: [
     CommonModule,
@@ -157,6 +158,7 @@ import { InputToggleComponent } from './components/forms/input-toggle/input-togg
     InputMultipleSelectComponent,
     InputSingleSelectPillComponent,
     InputToggleComponent,
+    InputSingleSelectComponent,
   ],
   providers: [NgbActiveModal],
 })

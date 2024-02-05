@@ -1,0 +1,103 @@
+<div class="header-panel2">
+  <img class="emoji-title me-4" [src]="EmojiName.Bullseye | emoji" width="28" height="28">
+  <h1>{{program ? I18ns.programs.forms.edit : I18ns.programs.forms.create}}</h1>
+</div>
+
+<div class="mt-4 form-nav">
+  <div *ngFor="let tabOption of tabsOptions" class="step" [class.highlight-step]="tabsControl.value === tabOption" (click)="switchTab(tabOption)">
+    <i class="fs-5 tab-icon me-3 bi" [class]="tabOption.value === ETab.Informations ? 'bi-file-text' : tabOption.value === ETab.Questions ? 'bi-question-circle' : 'bi-share'"></i>
+    <span>{{ tabOption.label }}</span>
+  </div>
+</div>
+
+<ng-container [ngSwitch]="tabsControl.value.value">
+  <div *ngSwitchCase="ETab.Informations">
+    <div class="infos">
+      <i class="me-3 bi bi-info-circle"></i>
+      <span>{{I18ns.programs.forms.step1.subtitle}}</span>
+    </div>
+    <form [formGroup]="programFormGroup">
+      <div class="row">
+        <div class="col-left">
+          <img class="emoji" [src]="EmojiName.PageFacingUp | emoji" width="20" height="20" />
+          <div>
+            <label class="form-label required">{{ I18ns.programs.forms.step1.name }}</label>
+            <p>{{ I18ns.programs.forms.step1.nameSubtitle }}</p>
+          </div>
+        </div>
+        <div class="col">
+          <input type="text" class="form-control" formControlName="nameControl" [placeholder]="I18ns.programs.forms.step1.namePlaceholder">
+          <p
+          class="text-end mt-2"
+          [ngClass]="{
+          'text-danger': programFormGroup.controls.nameControl.errors?.['nameNotAllowed'],
+          invisible: !programFormGroup.controls.nameControl.errors?.['nameNotAllowed']
+        }"
+        > {{ I18ns.programs.forms.step1.duplicateName }} </p>
+        </div>
+      </div>
+      <hr>
+      <!-- doit être conditionné à la première création du program -->
+      <div class="row">
+        <div class="col-left">
+          <img class="emoji" [src]="EmojiName.Label | emoji" width="20" height="20"/>
+          <div>
+            <label class="form-label required">{{ I18ns.programs.forms.step1.tags }}</label>
+            <p>{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
+          </div>
+        </div>
+        <div class="col">
+          <alto-input-pills [options]="tagOptions" [controls]="tagControls" [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder" ></alto-input-pills>
+        </div>
+      </div>
+      <!-- ----------------------- -->
+      <hr>
+      <div class="row">
+        <div class="col-left">
+          <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="20" height="20"/>
+          <div>
+            <label class="form-label">{{ I18ns.programs.forms.step1.teams }}</label>
+            <p>{{ I18ns.programs.forms.step1.teamsSubtitle }}</p>
+          </div>
+        </div>
+        <div class="col">
+          <alto-input-pills [options]="teamOptions" [controls]="programFormGroup.controls.teamControls" [placeholder]="I18ns.programs.forms.step1.teamsPlaceholder" ></alto-input-pills>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-left">
+          <img class="emoji" [src]="EmojiName.Warning | emoji" width="20" height="20"/>
+          <div>
+            <label class="form-label required">{{ I18ns.programs.forms.step1.priority }}</label>
+            <p>{{ I18ns.programs.forms.step1.prioritySubtitle }}</p>
+          </div>
+        </div>
+        <div class="col">
+          <alto-input-single-select [placeholder]="I18ns.programs.forms.step1.priorityPlaceholder" [options]="priorityOptions" [control]="programFormGroup.controls.priorityControl"></alto-input-single-select>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-left">
+          <img class="emoji" [src]="EmojiName.SportsMedal | emoji" width="20" height="20"/>
+          <div>
+            <label class="form-label required">{{ I18ns.programs.forms.step1.expectation }}</label>
+            <p>{{ I18ns.programs.forms.step1.expectationSubtitle }}</p>
+          </div>
+        </div>
+        <div class="col">
+          <alto-range [control]="programFormGroup.controls.expectationControl"></alto-range>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div *ngSwitchCase="ETab.Questions">
+    questions
+  </div>
+
+  <div *ngSwitchCase="ETab.Summary">
+    summary
+  </div>
+</ng-container>

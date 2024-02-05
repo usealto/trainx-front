@@ -1,0 +1,73 @@
+:host {
+  display: block;
+  padding: var(--alto-page-padding);
+}
+.emoji-title {
+  height: 2rem;
+}
+h1 {
+  vertical-align: middle;
+}
+
+.infos {
+  height: 4.333rem;
+  background-color: var(--primary-25);
+  border-radius: 0.67rem;
+  padding: 1.14rem 1.7rem;
+  color: var(--primary-600);
+  margin-bottom: 4rem;
+}
+
+.form-nav {
+  border-bottom: 1px solid var(--gray-200);
+  .step {
+    display: inline-block;
+    padding-bottom: 1rem;
+    font-size: 1.167rem;
+    height: 3rem;
+    line-height: 3rem;
+    padding: 0 1.333rem;
+    border-radius: 0.667rem 0.667rem 0 0;
+    margin-right: 3rem;
+  }
+  .highlight-step {
+    background-color: var(--bs-primary);
+    color: white;
+    font-weight: 600;
+
+    .tab-icon {
+      color: white;
+    }
+  }
+}
+
+form {
+  display: block;
+
+  hr {
+    margin: 2rem 0;
+    border-color: var(--gray-300);
+  }
+
+  .emoji {
+    height: 1.7rem;
+    vertical-align: top;
+    margin-right: 0.667rem;
+  }
+  .col-left {
+    width: 25.667rem;
+    & div {
+      width: 22rem;
+      display: inline-block;
+    }
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 1rem;
+    & + p {
+      color: var(--gray-500);
+      font-size: 0.833rem;
+    }
+  }
+}
