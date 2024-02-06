@@ -1,9 +1,9 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Subscription, startWith } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { DataForTable } from '../../../models/statistics.model';
-import { Subscription, startWith } from 'rxjs';
 
 @Component({
   selector: 'alto-per-teams-table',

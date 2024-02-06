@@ -212,6 +212,7 @@ export class ScoresRestService {
     );
   }
 
+  // TODO : clean
   getScores(
     { duration, type, team, timeframe, sortBy, user, ids, scoredBy, scoredById }: ChartFilters,
     isProgression = false,

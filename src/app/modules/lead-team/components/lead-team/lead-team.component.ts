@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { GetUsersStatsRequestParams, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, concat, debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
 import { IAppData } from 'src/app/core/resolvers';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -92,7 +92,6 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
   usersDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   filteredUsersData: IUserWithStats[] = [];
 
-  private init = true;
   private readonly leadTeamComponentSubscription = new Subscription();
 
   constructor(
@@ -158,15 +157,15 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
           }),
           switchMap(() => {
             return combineLatest([
-              this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
-              this.selectedTeamsControl.valueChanges.pipe(startWith(this.selectedTeamsControl.value)),
-              this.selectedScoreControl.valueChanges.pipe(startWith(this.selectedScoreControl.value)),
               this.usersPageControl.valueChanges.pipe(startWith(this.usersPageControl.value)),
+              combineLatest([
+                concat(of(this.searchControl.value), this.searchControl.valueChanges.pipe(debounceTime(300))),
+                this.selectedTeamsControl.valueChanges.pipe(startWith(this.selectedTeamsControl.value)),
+                this.selectedScoreControl.valueChanges.pipe(startWith(this.selectedScoreControl.value)),
+              ]).pipe(tap(() => this.usersPageControl.setValue(1))),
             ]);
           }),
-          debounceTime(this.init ? 0 : 200),
-          tap(() => (this.init = false)),
-          switchMap(([searchTerm, selectedTeamsControls, selectedScore, page]) => {
+          switchMap(([page, [searchTerm, selectedTeamsControls, selectedScore]]) => {
             let scoreAboveOrEqual: number | undefined;
             let scoreBelowOrEqual: number | undefined;
 

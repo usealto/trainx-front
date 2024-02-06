@@ -4,7 +4,7 @@
 </div>
 
 <div class="mt-4 form-nav">
-  <div *ngFor="let tabOption of tabsOptions" class="step" [class.highlight-step]="tabsControl.value === tabOption" (click)="switchTab(tabOption)">
+  <div *ngFor="let tabOption of tabsOptions" class="step cursor-pointer" [class.highlight-step]="tabsControl.value === tabOption" (click)="switchTab(tabOption)">
     <i class="fs-5 tab-icon me-3 bi" [class]="tabOption.value === ETab.Informations ? 'bi-file-text' : tabOption.value === ETab.Questions ? 'bi-question-circle' : 'bi-share'"></i>
     <span>{{ tabOption.label }}</span>
   </div>
@@ -37,21 +37,21 @@
         </div>
       </div>
       <hr>
-      <!-- doit être conditionné à la première création du program -->
-      <div class="row">
-        <div class="col-left">
-          <img class="emoji" [src]="EmojiName.Label | emoji" width="20" height="20"/>
-          <div>
-            <label class="form-label required">{{ I18ns.programs.forms.step1.tags }}</label>
-            <p>{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
+      <ng-container *ngIf="!program">
+        <div  class="row">
+          <div class="col-left">
+            <img class="emoji" [src]="EmojiName.Label | emoji" width="20" height="20"/>
+            <div>
+              <label class="form-label">{{ I18ns.programs.forms.step1.tags }}</label>
+              <p>{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
+            </div>
+          </div>
+          <div class="col">
+            <alto-input-pills [options]="tagOptions" [controls]="tagControls" [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder" ></alto-input-pills>
           </div>
         </div>
-        <div class="col">
-          <alto-input-pills [options]="tagOptions" [controls]="tagControls" [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder" ></alto-input-pills>
-        </div>
-      </div>
-      <!-- ----------------------- -->
-      <hr>
+        <hr>
+      </ng-container>
       <div class="row">
         <div class="col-left">
           <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="20" height="20"/>
@@ -91,10 +91,94 @@
         </div>
       </div>
     </form>
+    <hr class="mt-8 bottom-hr" />
+    <div class="d-flex flex-nowrap justify-content-between">
+        <button class="btn btn-outline-secondary" (click)="cancel()">
+          {{ I18ns.shared.cancel }}
+        </button>
+        <button class="btn btn-primary" [disabled]="programFormGroup && !programFormGroup.valid" (click)="submitForm()">
+          {{ I18ns.programs.forms.step1.create }}
+        </button>
+    </div>
+
   </div>
 
   <div *ngSwitchCase="ETab.Questions">
-    questions
+    <div class="infos">
+      <i class="me-3 bi bi-info-circle"></i>
+      <span class="">{{ I18ns.programs.forms.step2.subtitle }}</span>
+    </div>
+
+    <alto-placeholder-manager [status]="associatedQuestionsDataStatus">
+      <!-- associated questions -->
+      <div class="d-flex flex-nowrap justify-content-between mb-6">
+        <div>
+          <h2>
+            <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" width="16" height="16" />
+            {{ I18ns.programs.forms.step2.associatedQuestions.title }}
+          </h2>
+          <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.associatedQuestions.subtitle }}</p>
+          <alto-input-search [searchControl]="associatedQuestionsSearchControl"></alto-input-search>
+        </div>
+          <button class="btn btn-primary mb-8">
+            <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
+          </button>
+      </div>
+      <div class="panel questions-panel">
+        <div *ngFor="let associatedQuestion of associatedQuestions" class="row">
+          <div class="form-check form-switch col-1">
+            <input
+              class="form-check-input cursor-pointer"
+              type="checkbox"
+              [checked]="true"
+            />
+          </div>
+          <div class="col-9 fs-7 fw-medium lh-lg">{{ associatedQuestion.title }}</div>
+          <div class="col-2 text-end cursor-pointer">
+            <i class="bi bi-pen"></i>
+          </div>
+        </div>
+      </div>
+      <alto-pagination class="mt-4 px-3" [pageControl]="associatedQuestionsPageControl" [itemsCount]="associatedQuestionsCount" [itemsPerPage]="10"></alto-pagination>
+
+      <div noResult class="text-center">
+        <p class="fw-medium mb-8">{{ I18ns.shared.noData }}</p>
+        <p class="fw-medium mb-8">{{ I18ns.shared.noDataSubtitle }}</p>
+      </div>
+
+      <div noData class="text-center">
+        <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.newSubtitle }}</p>
+
+        <button class="btn btn-primary mb-8">
+          <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
+        </button>
+        <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.or }}</p>
+      </div>
+    </alto-placeholder-manager>
+
+    <h2 class="mt-8">
+      <img class="emoji" [src]=" associatedQuestionsDataStatus === EPlaceholderStatus.NO_DATA ? EmojiName.Memo : EmojiName.RedQuestionMark | emoji" width="16" height="16" />
+      {{ associatedQuestionsDataStatus === EPlaceholderStatus.NO_DATA ? I18ns.programs.forms.step2.existing2.title : I18ns.programs.forms.step2.existing.title }}
+    </h2>
+    <p class="subtitle alto-grey mb-4">{{ associatedQuestionsDataStatus === EPlaceholderStatus.NO_DATA ? I18ns.programs.forms.step2.existing2.subtitle : I18ns.programs.forms.step2.existing.subtitle }}</p>
+
+    <div class="panel questions-panel">
+      <div *ngFor="let question of questions" class="row">
+        <div class="form-check form-switch col-1">
+          <input
+            class="form-check-input cursor-pointer"
+            type="checkbox"
+            [checked]="false"
+          />
+        </div>
+        <div class="col-9 fs-7 fw-medium lh-lg">{{ question.title }}</div>
+        <div class="col-2 text-end cursor-pointer">
+          <i class="bi bi-pen"></i>
+        </div>
+      </div>
+    </div>
+    <alto-pagination class="mt-4 px-3" [pageControl]="questionsPageControl" [itemsCount]="questionsCount" [itemsPerPage]="10"></alto-pagination>
+
   </div>
 
   <div *ngSwitchCase="ETab.Summary">

@@ -1,19 +1,19 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { TagDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, debounceTime, map, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, concat, debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { Company } from '../../../../../models/company.model';
+import { EScoreDuration } from '../../../../../models/score.model';
 import { TeamStats } from '../../../../../models/team.model';
 import { TagsRestService } from '../../../../programs/services/tags-rest.service';
+import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { SelectOption } from '../../../../shared/models/select-option.model';
-import { EScoreDuration } from '../../../../../models/score.model';
+import { debounce } from 'cypress/types/lodash';
 
 @Component({
   selector: 'alto-performance-teams-table',
@@ -48,7 +48,6 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
   teamsPageControl = new FormControl(1, { nonNullable: true });
   teamsPageSize = 5;
 
-  private init = true;
   private readonly performanceTeamsTableComponentSubscription = new Subscription();
 
   constructor(
@@ -70,16 +69,18 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
           }),
           switchMap(() => {
             return combineLatest([
-              this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
-              this.programsControl.valueChanges.pipe(startWith(this.programsControl.value)),
-              this.tagsControl.valueChanges.pipe(startWith(this.tagsControl.value)),
-              this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
+              this.teamsPageControl.valueChanges.pipe(startWith(this.teamsPageControl.value)),
+              combineLatest([
+                this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+                this.programsControl.valueChanges.pipe(startWith(this.programsControl.value)),
+                this.tagsControl.valueChanges.pipe(startWith(this.tagsControl.value)),
+                concat(of(this.searchControl.value), this.searchControl.valueChanges.pipe(debounceTime(300))),
+              ]).pipe(tap(() => this.teamsPageControl.setValue(1))),
             ]);
           }),
-          debounceTime(this.init ? 0 : 200),
-          tap(() => (this.init = false)),
-          map(([duration, programs, tags, search]) => {
-            return <[EScoreDuration, string[], string[], string]>[
+          map(([page, [duration, programs, tags, search]]) => {
+            return <[number, EScoreDuration, string[], string[], string]>[
+              page,
               duration,
               programs.map(({ value }) => value.value),
               tags.map(({ value }) => value.value),
@@ -87,7 +88,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
             ];
           }),
         )
-        .subscribe(([duration, programs, tags, search]) => {
+        .subscribe(([page, duration, programs, tags, search]) => {
           let teamStats = this.company.getStatsByPeriod(duration, false);
           this.teamsStatsPrev = this.company.getStatsByPeriod(duration, true);
 
@@ -113,24 +114,16 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
           this.teamsDisplay = teamStats;
           this.teamsDataStatus =
             this.teamsDisplay.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
-          this.changeTeamsPage(1);
+          this.paginatedTeamsStats = this.teamsDisplay.slice(
+            (page - 1) * this.teamsPageSize,
+            page * this.teamsPageSize,
+          );
         }),
-    );
-
-    this.performanceTeamsTableComponentSubscription.add(
-      this.teamsPageControl.valueChanges.subscribe((page) => this.changeTeamsPage(page)),
     );
   }
 
   ngOnDestroy(): void {
     this.performanceTeamsTableComponentSubscription.unsubscribe();
-  }
-
-  private changeTeamsPage(page: number) {
-    this.paginatedTeamsStats = this.teamsDisplay.slice(
-      (page - 1) * this.teamsPageSize,
-      page * this.teamsPageSize,
-    );
   }
 
   @memoize()

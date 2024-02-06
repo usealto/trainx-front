@@ -89,7 +89,9 @@
               <alto-colored-pill-list
                 [textLimit]="15"
                 color="primary"
-                [data]="teamStats.tagStats | sort : 'asc' : 'score' | slice : 0 : 3"
+                [data]="teamStats.tagStats | sort : 'asc' : 'score'"
+                [limit]="3"
+                [tooltipOnLimit]="true"
               ></alto-colored-pill-list>
             </ng-container>
             <ng-template #noTag>
@@ -102,7 +104,9 @@
             <ng-container *ngIf="teamStats.programStats && teamStats.programStats.length > 0; else noProgram">
               <alto-colored-pill-list
                 [textLimit]="15"
-                [data]="getLowestScorePrograms(teamStats.teamId) | slice : 0 : 3"
+                [data]="getLowestScorePrograms(teamStats.teamId)"
+                [limit]="3"
+                [tooltipOnLimit]="true"
               ></alto-colored-pill-list>
             </ng-container>
             <ng-template #noProgram>

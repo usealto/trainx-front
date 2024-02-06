@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { GetTagsStatsRequestParams, TagDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, debounceTime, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, concat, debounceTime, of, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from '../../../../../core/utils/emoji/data';
 import { I18ns } from '../../../../../core/utils/i18n/I18n';
 import { ReplaceInTranslationPipe } from '../../../../../core/utils/i18n/replace-in-translation.pipe';
@@ -38,7 +38,6 @@ export class ProgramsTagsComponent implements OnInit, OnDestroy {
   itemsCount = 0;
 
   tagsDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
-  private init = true;
   private readonly programsTagsComponentSubscription = new Subscription();
 
   constructor(
@@ -54,13 +53,11 @@ export class ProgramsTagsComponent implements OnInit, OnDestroy {
       combineLatest([
         this.pageControl.valueChanges.pipe(startWith(this.pageControl.value)),
         combineLatest([
-          this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
+          concat(of(this.searchControl.value), this.searchControl.valueChanges.pipe(debounceTime(300))),
           this.scoreControl.valueChanges.pipe(startWith(this.scoreControl.value)),
         ]).pipe(tap(() => this.pageControl.patchValue(1))),
       ])
         .pipe(
-          debounceTime(this.init ? 0 : 200),
-          tap(() => (this.init = false)),
           switchMap(([page, [searchTerm, score]]) => {
             const req: GetTagsStatsRequestParams = {
               page,

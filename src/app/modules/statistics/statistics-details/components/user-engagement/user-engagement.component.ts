@@ -1,35 +1,34 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScoreByTypeEnumApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
-import { combineLatest } from 'rxjs';
+import { Subscription, combineLatest, startWith, switchMap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { EScoreDuration, Score } from 'src/app/models/score.model';
 import { ITeam, Team } from 'src/app/models/team.model';
 import { IUser, User } from 'src/app/models/user.model';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
-import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
+import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { StatisticsService } from '../../../services/statistics.service';
-import { EScoreDuration, Score } from 'src/app/models/score.model';
-import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'alto-user-engagement',
   templateUrl: './user-engagement.component.html',
   styleUrls: ['./user-engagement.component.scss'],
 })
-export class UserEngagementComponent implements OnInit {
+export class UserEngagementComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   EmojiName = EmojiName;
 
   user!: User;
   userTeam!: Team;
-  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
+  durationControl = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
   });
 
@@ -39,9 +38,11 @@ export class UserEngagementComponent implements OnInit {
   contributionChartOptions!: any;
   contributionChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
+  private readonly userEngagementComponentSubscription = new Subscription();
+
   constructor(
     private readonly router: Router,
-    private readonly scoreRestService: ScoresRestService,
+    private readonly scoresRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly statisticsService: StatisticsService,
     private readonly titleCasePipe: TitleCasePipe,
@@ -53,32 +54,84 @@ export class UserEngagementComponent implements OnInit {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     const usersById = (data[EResolvers.AppResolver] as IAppData).userById;
     const teamsById = (data[EResolvers.AppResolver] as IAppData).company.teams;
+
+    // TODO : move logic into guard or resolver
     const userId = this.router.url.split('/').pop() || '';
     this.user = usersById.get(userId) || new User({} as IUser);
     this.userTeam = teamsById.find((t) => t.id === this.user.teamId) || new Team({} as ITeam);
-    this.loadPage(this.durationControl.value);
-    this.durationControl.valueChanges.subscribe((duration) => {
-      this.loadPage(duration);
-    });
+
+    this.userEngagementComponentSubscription.add(
+      this.durationControl.valueChanges
+        .pipe(
+          startWith(this.durationControl.value),
+          switchMap((duration) => {
+            let timeframe: ScoreTimeframeEnumApi;
+
+            switch (duration) {
+              case EScoreDuration.Year:
+                timeframe = ScoreTimeframeEnumApi.Month;
+                break;
+              case EScoreDuration.Trimester:
+                timeframe = ScoreTimeframeEnumApi.Week;
+                break;
+              default:
+                timeframe = ScoreTimeframeEnumApi.Day;
+                break;
+            }
+
+            return combineLatest([
+              this.scoresRestService.getScores({
+                duration,
+                timeframe,
+                type: ScoreTypeEnumApi.Guess,
+                scoredBy: ScoreByTypeEnumApi.User,
+                scoredById: this.user.id,
+              }),
+              this.scoresRestService.getScores({
+                duration,
+                timeframe,
+                type: ScoreTypeEnumApi.Comment,
+                scoredBy: ScoreByTypeEnumApi.User,
+                scoredById: this.user.id,
+              }),
+              this.scoresRestService.getScores({
+                duration,
+                timeframe,
+                type: ScoreTypeEnumApi.QuestionSubmitted,
+                scoredBy: ScoreByTypeEnumApi.User,
+                scoredById: this.user.id,
+              }),
+            ]);
+          }),
+        )
+        .subscribe({
+          next: ([answersScores, commentsScores, questionsSubmittedScores]) => {
+            this.answersChartStatus = answersScores.length
+              ? EPlaceholderStatus.GOOD
+              : EPlaceholderStatus.NO_DATA;
+            this.contributionChartStatus =
+              commentsScores.length || questionsSubmittedScores.length
+                ? EPlaceholderStatus.GOOD
+                : EPlaceholderStatus.NO_DATA;
+
+            if (answersScores.length) {
+              this.createAnswersChart(answersScores[0], this.durationControl.value);
+            }
+
+            if (commentsScores.length || questionsSubmittedScores.length) {
+              this.createContributionChart(
+                commentsScores,
+                questionsSubmittedScores,
+                this.durationControl.value,
+              );
+            }
+          },
+        }),
+    );
   }
 
-  loadPage(duration: EScoreDuration): void {
-    this.getAnswersChart(duration);
-    this.getContributionChart(duration);
-  }
-
-  getContributionChart(duration: EScoreDuration): void {
-    this.contributionChartStatus = EPlaceholderStatus.LOADING;
-    combineLatest([
-      this.scoreRestService.getScores(this.getScoreparams('submitedQuestions', duration)),
-      this.scoreRestService.getScores(this.getScoreparams('comments', duration)),
-    ]).subscribe(([answers, comments]) => {
-      this.contributionChartStatus =
-        answers.length || comments.length ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
-      if (answers.length || comments.length) {
-        this.createContributionChart(comments, answers, duration);
-      }
-    });
+  ngOnDestroy(): void {
+    this.userEngagementComponentSubscription.unsubscribe();
   }
 
   createContributionChart(comments: Score[], submitedQuestions: Score[], duration: EScoreDuration): void {
@@ -140,16 +193,6 @@ export class UserEngagementComponent implements OnInit {
     };
   }
 
-  getAnswersChart(duration: EScoreDuration): void {
-    this.answersChartStatus = EPlaceholderStatus.LOADING;
-    this.scoreRestService.getScores(this.getScoreparams('answers', duration)).subscribe((scores) => {
-      this.answersChartStatus = scores.length ? EPlaceholderStatus.LOADING : EPlaceholderStatus.NO_DATA;
-      if (scores.length) {
-        this.createAnswersChart(scores[0], duration);
-      }
-    });
-  }
-
   createAnswersChart(scores: Score, duration: EScoreDuration): void {
     const formatedScores = this.scoresService.formatScores([scores]);
     const points = this.statisticsService.transformDataToPointByCounts(formatedScores[0]);
@@ -195,26 +238,6 @@ export class UserEngagementComponent implements OnInit {
       ],
       series: series,
       legend: legendOptions,
-    };
-  }
-
-  getScoreparams(type: 'answers' | 'comments' | 'submitedQuestions', duration: EScoreDuration): ChartFilters {
-    return {
-      duration: duration,
-      type:
-        type === 'answers'
-          ? ScoreTypeEnumApi.Guess
-          : type === 'comments'
-          ? ScoreTypeEnumApi.Comment
-          : ScoreTypeEnumApi.QuestionSubmitted,
-      scoredBy: ScoreByTypeEnumApi.User,
-      scoredById: this.user.id,
-      timeframe:
-        duration === EScoreDuration.Year
-          ? ScoreTimeframeEnumApi.Month
-          : duration === EScoreDuration.Trimester
-          ? ScoreTimeframeEnumApi.Week
-          : ScoreTimeframeEnumApi.Day,
     };
   }
 }

@@ -7,7 +7,7 @@ import {
   TagDtoApi,
   TagLightDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, debounceTime, map, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, concat, debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { QuestionFormComponent } from 'src/app/modules/programs/components/create-questions/question-form.component';
@@ -60,7 +60,6 @@ export class ProgramsQuestionsComponent implements OnInit, OnDestroy {
   scoreOptions: PillOption[] = Score.getFiltersPillOptions();
 
   questionsDataStatus = EPlaceholderStatus.LOADING;
-  private init = true;
   private readonly programsQuestionsComponentSubscription = new Subscription();
 
   constructor(
@@ -83,7 +82,7 @@ export class ProgramsQuestionsComponent implements OnInit, OnDestroy {
       combineLatest([
         this.questionsPageControl.valueChanges.pipe(startWith(this.questionsPageControl.value)),
         combineLatest([
-          this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
+          concat(of(this.searchControl.value), this.searchControl.valueChanges.pipe(debounceTime(300))),
           this.selectedProgramsControl.valueChanges.pipe(
             startWith(this.selectedProgramsControl.value),
             map((programsControls) => programsControls.map((x) => x.value)),
@@ -93,14 +92,12 @@ export class ProgramsQuestionsComponent implements OnInit, OnDestroy {
             map((tagsControls) => tagsControls.map((x) => x.value)),
           ),
           this.selectedScoreControl.valueChanges.pipe(startWith(this.selectedScoreControl.value)),
-        ]).pipe(tap(() => this.questionsPageControl.patchValue(1))),
+        ]).pipe(tap(() => this.questionsPageControl.setValue(1))),
       ])
         .pipe(
-          debounceTime(this.init ? 0 : 200),
-          tap(() => (this.init = false)),
           switchMap(([page, [searchTerm, selectedProgramsOptions, selectedTagsOptions, score]]) => {
             const req: GetQuestionsStatsRequestParams = {
-              search: searchTerm ?? undefined,
+              search: searchTerm || undefined,
               itemsPerPage: this.questionsPageSize,
               page,
               programIds: selectedProgramsOptions.map((x) => x.value).join(','),

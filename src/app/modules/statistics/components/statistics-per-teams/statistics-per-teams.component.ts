@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UserStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, debounceTime, of, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, concat, debounceTime, of, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { SelectOption } from 'src/app/modules/shared/models/select-option.model';
@@ -45,7 +45,6 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
   teamsDisplay: DataForTable[] = [];
   teamsDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
-  private init = true;
   private statisticsPerTeamsComponentSubscription = new Subscription();
 
   constructor(
@@ -65,14 +64,12 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
 
     this.statisticsPerTeamsComponentSubscription.add(
       combineLatest([
+        concat(of(this.searchControl.value), this.searchControl.valueChanges.pipe(debounceTime(300))),
         this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
-        this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
         this.teamsControl.valueChanges.pipe(startWith(this.teamsControl.value)),
       ])
         .pipe(
-          debounceTime(this.init ? 0 : 200),
-          tap(() => (this.init = false)),
-          switchMap(([duration, search, teams]) => {
+          switchMap(([search, duration, teams]) => {
             return combineLatest([
               this.scoreRestService.getPaginatedUsersStats(duration, false, {
                 search: search || undefined,

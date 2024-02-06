@@ -426,9 +426,9 @@ export const FR = {
         subtitle:
           "Retrouvez une vue d'ensemble sur le niveau de maîtrise de vos équipes selon leurs thématiques.",
         spiderChart: {
-          title: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
-          subtitle: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
-          global: 'Score de vos équipes',
+          title: 'Aperçu des thématiques',
+          subtitle: "Évaluation du niveau moyen de l'entreprise sur les 12 derniers mois.",
+          global: 'Score global',
           placeholders: {
             noData: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
             notEnoughTags: 'Vous devez avoir créé au moins 3 tags.',
@@ -612,6 +612,10 @@ export const FR = {
           placeholder: {
             title: 'Votre collaborateur est en train de s’échauffer',
             subtitle: 'Les premiers résultats ne devraient plus tarder !',
+          },
+          spiderChart: {
+            userScore: 'Score du collaborateur',
+            teamScore: 'Score de l’équipe',
           },
         },
         themeMastering: {

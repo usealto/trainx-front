@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { GetProgramsStatsRequestParams } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, debounceTime, map, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, concat, debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { Company } from '../../../../../models/company.model';
@@ -53,7 +53,6 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
   scoreOptions = Score.getFiltersPillOptions();
 
   dataStatus = EPlaceholderStatus.LOADING;
-  private init = true;
   private readonly programCardListComponent = new Subscription();
   private readonly activeProgramsSubscription = new Subscription();
 
@@ -72,18 +71,16 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
       combineLatest([
         this.pageControl.valueChanges.pipe(startWith(this.pageControl.value)),
         combineLatest([
+          concat(of(this.searchControl.value), this.searchControl.valueChanges.pipe(debounceTime(300))),
           this.teamsControls.valueChanges.pipe(
             startWith(this.teamsControls.value),
             map((teamsControls) => teamsControls.map((x) => x.value)),
           ),
-          this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
           this.scoreControl.valueChanges.pipe(startWith(this.scoreControl.value)),
-        ]).pipe(tap(() => this.pageControl.patchValue(1))),
+        ]).pipe(tap(() => this.pageControl.setValue(1))),
       ])
         .pipe(
-          debounceTime(this.init ? 0 : 200),
-          tap(() => (this.init = false)),
-          switchMap(([page, [selectedTeamsOptions, search, selectedScoreOption]]) => {
+          switchMap(([page, [search, selectedTeamsOptions, selectedScoreOption]]) => {
             const req: GetProgramsStatsRequestParams = {
               page,
               itemsPerPage: this.pageSize,

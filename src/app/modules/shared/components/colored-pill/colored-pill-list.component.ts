@@ -32,11 +32,8 @@ export class ColoredPillListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.data.length > this.limit) {
-      this.tooltip = this.data
-        .slice(this.limit, this.data.length - 1)
-        .map(this.getText)
-        .join(', ');
+    if (this.tooltipOnLimit && this.data.length > this.limit) {
+      this.tooltip = this.data.slice(this.limit, this.data.length).map(this.getText).join(', ');
     }
   }
 }

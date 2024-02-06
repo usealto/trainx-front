@@ -9,7 +9,7 @@ import {
   ScoreTypeEnumApi,
   UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, of, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, concat, debounceTime, of, startWith, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -26,6 +26,7 @@ import { IAppData } from '../../../../../core/resolvers';
 import { User } from '../../../../../models/user.model';
 import { DataForTable } from '../../../models/statistics.model';
 import { StatisticsService } from '../../../services/statistics.service';
+import { ILeaderboardData } from '../../../../shared/components/leaderboard/leaderboard.component';
 
 @Component({
   selector: 'alto-team-engagement',
@@ -40,7 +41,7 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
 
   team!: Team;
   company!: Company;
-  users: User[] = [];
+  usersById: Map<string, User> = new Map();
 
   durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
@@ -49,7 +50,7 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
   answersChart: any;
   answersChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
-  membersLeaderboard: { name: string; score: number; progression: number }[] = [];
+  membersLeaderboard: ILeaderboardData[] = [];
   membersLeaderboardStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   contributionChart: any;
@@ -57,12 +58,11 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
 
   membersTable: DataForTable[] = [];
   membersTableSearchControl = new FormControl<string | null>(null);
-  paginatedMembersTable: DataForTable[] = [];
   membersTablePageSize = 5;
   membersTableStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
-  hasConnector = false;
+  membersTablePageControl: FormControl<number> = new FormControl(1, { nonNullable: true });
+  membersTableItemsCount = 0;
 
-  pageControl: FormControl<number> = new FormControl(1, { nonNullable: true });
   private teamEngagementComponentSubscription = new Subscription();
 
   constructor(
@@ -80,53 +80,110 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.company = (data[EResolvers.AppResolver] as IAppData).company;
     this.team = this.company.teams.find((u) => u.id === teamId) as Team;
-    this.users = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
+    this.usersById = (data[EResolvers.AppResolver] as IAppData).userById;
 
     this.teamEngagementComponentSubscription.add(
       combineLatest([
-        this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
-        this.membersTableSearchControl.valueChanges.pipe(startWith(this.membersTableSearchControl.value)),
+        this.scoreRestService.getPaginatedUsersStats(EScoreDuration.Year, false, {
+          teamIds: this.team.id,
+          sortBy: 'score:asc',
+          itemsPerPage: 3,
+        }),
+        this.scoreRestService.getPaginatedUsersStats(EScoreDuration.Year, false, {
+          teamIds: this.team.id,
+          sortBy: 'score:desc',
+          itemsPerPage: 3,
+        }),
       ])
         .pipe(
-          tap(() => {
-            this.answersChartStatus = EPlaceholderStatus.LOADING;
-            this.membersLeaderboardStatus = EPlaceholderStatus.LOADING;
-            this.contributionChartStatus = EPlaceholderStatus.LOADING;
+          tap(([{ data: flopUsersStats = [] }, { data: topUsersStats = [] }]) => {
+            const userIds = Array.from(new Set([...flopUsersStats, ...topUsersStats].map((u) => u.user.id)));
+            const statsByUserId: Map<string, UserStatsDtoApi> = new Map(
+              [...flopUsersStats, ...topUsersStats].map((u) => [u.user.id, u]),
+            );
+
+            this.membersLeaderboard = userIds.map((id) => {
+              const user = this.usersById.get(id) ?? ({} as User);
+              const userStats = statsByUserId.get(id) ?? ({} as UserStatsDtoApi);
+              return {
+                name: user.fullname,
+                score: userStats.totalGuessesCount ?? 0,
+                progression: 0,
+              };
+            });
+
+            this.membersLeaderboardStatus =
+              this.membersLeaderboard.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
           }),
-          switchMap(([duration, search]) => {
+          switchMap(() => {
+            return this.durationControl.valueChanges.pipe(startWith(this.durationControl.value));
+          }),
+          switchMap((duration) => {
             return combineLatest([
               of(duration),
-              of(search),
               this.scoreRestService.getScores(this.getScoreParams('answers', duration)),
-              this.scoreRestService.getPaginatedUsersStats(duration, false, { teamIds: this.team.id }),
-              this.scoreRestService.getPaginatedUsersStats(duration, true, { teamIds: this.team.id }),
               this.scoreRestService.getScores(this.getScoreParams('comments', duration)),
               this.scoreRestService.getScores(this.getScoreParams('submitedQuestions', duration)),
             ]);
           }),
         )
-        .subscribe(
-          ([
-            duration,
-            search,
-            answersScores,
-            { data: usersStats = [] },
-            { data: prevUsersStats = [] },
-            commentsScores,
-            submitedCommentsScores,
-          ]) => {
-            this.createAnswersChart(answersScores, duration);
-            this.getMembersTable(usersStats, prevUsersStats, this.company, search);
-            this.getMembersLeaderboard(usersStats, prevUsersStats);
-            this.createContributionsChart(commentsScores, submitedCommentsScores, duration);
+        .subscribe({
+          next: ([duration, anwsersScores, commentsScores, submittedQuestionsScores]) => {
+            this.createAnswersChart(anwsersScores, duration);
+            this.createContributionsChart(commentsScores, submittedQuestionsScores, duration);
+
+            this.answersChartStatus =
+              anwsersScores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
+
+            this.contributionChartStatus =
+              commentsScores.length > 0 || submittedQuestionsScores.length > 0
+                ? EPlaceholderStatus.GOOD
+                : EPlaceholderStatus.NO_DATA;
           },
-        ),
+        }),
     );
 
     this.teamEngagementComponentSubscription.add(
-      this.pageControl.valueChanges.subscribe((page) => {
-        this.changeMembersTablePage(page);
-      }),
+      combineLatest([
+        this.membersTablePageControl.valueChanges.pipe(startWith(this.membersTablePageControl.value)),
+        combineLatest([
+          concat(
+            of(this.membersTableSearchControl.value),
+            this.membersTableSearchControl.valueChanges.pipe(debounceTime(300)),
+          ),
+          this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+        ]).pipe(tap(() => this.membersTablePageControl.setValue(1))),
+      ])
+        .pipe(
+          switchMap(([page, [search, duration]]) => {
+            return this.scoreRestService
+              .getPaginatedUsersStats(duration, false, {
+                teamIds: this.team.id,
+                itemsPerPage: this.membersTablePageSize,
+                page: page,
+                search: search || undefined,
+              })
+              .pipe(
+                switchMap((paginatedUsersStats) => {
+                  this.membersTableItemsCount = paginatedUsersStats.meta.totalItems;
+                  return combineLatest([
+                    of(paginatedUsersStats),
+                    this.scoreRestService.getPaginatedUsersStats(duration, true, {
+                      teamIds: this.team.id,
+                      ids: paginatedUsersStats.data?.map((u) => u.user.id).join(',') ?? undefined,
+                      itemsPerPage: this.membersTablePageSize,
+                    }),
+                  ]);
+                }),
+              );
+          }),
+        )
+        .subscribe(([{ data: usersStats = [] }, { data: prevUsersStats = [] }]) => {
+          this.getMembersTable(usersStats, prevUsersStats);
+
+          this.membersTableStatus =
+            usersStats.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
+        }),
     );
   }
 
@@ -194,34 +251,19 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
       series: series,
       legend: legendOptions,
     };
-    this.contributionChartStatus =
-      comments.length > 0 || submitedQuestions.length > 0
-        ? EPlaceholderStatus.GOOD
-        : EPlaceholderStatus.NO_DATA;
   }
 
-  getMembersTable(
-    users: UserStatsDtoApi[],
-    previousUsers: UserStatsDtoApi[],
-    company: CompanyDtoApi,
-    search: string | null,
-  ): void {
-    this.hasConnector = company.isConnectorActive ?? false;
-    let temp = users;
-    if (search) {
-      const regex = new RegExp(search, 'i');
-      temp = temp.filter((u) => {
-        return regex.test(u.user.firstname) || regex.test(u.user.lastname) || regex.test(u.user.email);
-      });
-    }
-    this.membersTable = this.users.map((user) => {
-      const userStats = temp.find((u) => u.user.id === user.id) ?? ({} as UserStatsDtoApi);
-      const prevUser = previousUsers.find((u) => u.user.id === user.id) ?? ({} as UserStatsDtoApi);
-      return this.dataFormUserTableMapper(user, userStats, prevUser);
+  getMembersTable(usersStats: UserStatsDtoApi[], prevUsersStats: UserStatsDtoApi[]): void {
+    // this.membersTable = Array.from(this.usersById.values()).map((user) => {
+    //   const userStats = usersStats.find((u) => u.user.id === user.id) ?? ({} as UserStatsDtoApi);
+    //   const prevUser = prevUsersStats.find((u) => u.user.id === user.id) ?? ({} as UserStatsDtoApi);
+    //   return this.dataFormUserTableMapper(user, userStats, prevUser);
+    // });
+    this.membersTable = usersStats.map((userStat) => {
+      const user = this.usersById.get(userStat.user.id) ?? ({} as User);
+      const prevUser = prevUsersStats.find((u) => u.user.id === userStat.user.id) ?? ({} as UserStatsDtoApi);
+      return this.dataFormUserTableMapper(user, userStat, prevUser);
     });
-    this.membersTableStatus =
-      this.membersTable.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
-    this.changeMembersTablePage(1);
   }
 
   private dataFormUserTableMapper(
@@ -254,31 +296,6 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
         ) ?? 0,
       leastMasteredTags: [''],
     } as DataForTable;
-  }
-
-  private changeMembersTablePage(page: number): void {
-    this.paginatedMembersTable = this.membersTable.slice(
-      (page - 1) * this.membersTablePageSize,
-      page * this.membersTablePageSize,
-    );
-  }
-
-  getMembersLeaderboard(current: UserStatsDtoApi[], previous: UserStatsDtoApi[]) {
-    current = current.filter((t) => t.score && t.score >= 0);
-    previous = previous.filter((t) => t.score && t.score >= 0);
-    this.membersLeaderboard = current
-      .map((c) => {
-        const previousScore = previous.find((p) => p.user.id === c.user.id)?.score;
-        const progression = this.scoreService.getProgression(c.score, previousScore);
-        return {
-          name: c.user.firstname + ' ' + c.user.lastname,
-          score: c.totalGuessesCount ?? 0,
-          progression: progression ?? 0,
-        };
-      })
-      .sort((a, b) => b.score - a.score);
-    this.membersLeaderboardStatus =
-      this.membersLeaderboard.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
   }
 
   createAnswersChart(scores: Score[], duration: EScoreDuration): void {
@@ -327,7 +344,6 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
       series: series,
       legend: legendOptions,
     };
-    this.answersChartStatus = scores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
   }
 
   getScoreParams(type: 'answers' | 'comments' | 'submitedQuestions', duration: EScoreDuration): ChartFilters {

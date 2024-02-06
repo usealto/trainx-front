@@ -106,26 +106,26 @@
           <th scope="col" class="w-25">
             {{ I18ns.statistics.team.membersEngagement.table.name }}
           </th>
-          <th *ngIf="hasConnector" scope="col" class="text-center">
+          <th *ngIf="company.isConnectorActive" scope="col" class="text-center">
             {{ I18ns.statistics.team.membersEngagement.table.answersProgression }}
           </th>
-          <th *ngIf="hasConnector" scope="col" class="text-center">
+          <th *ngIf="company.isConnectorActive" scope="col" class="text-center">
             {{ I18ns.statistics.team.membersEngagement.table.answers }}
           </th>
-          <th *ngIf="hasConnector" scope="col" class="text-center">
+          <th *ngIf="company.isConnectorActive" scope="col" class="text-center">
             {{ I18ns.statistics.team.membersEngagement.table.questionsPushed }}
           </th>
           <th scope="col" class="text-center">
             {{ I18ns.statistics.team.membersEngagement.table.submitedQuestions }}
           </th>
-          <th scope="col" class="wtext-center">
+          <th scope="col" class="text-center">
             {{ I18ns.statistics.team.membersEngagement.table.comments }}
           </th>
         </tr>
       </thead>
       <tbody>
         <tr
-          *ngFor="let user of paginatedMembersTable"
+          *ngFor="let user of membersTable"
           [routerLink]="[
             '/',
             AltoRoutes.lead,
@@ -138,7 +138,7 @@
           <td>
             <alto-profile-card [user]="user.owner"></alto-profile-card>
           </td>
-          <td *ngIf="hasConnector" class="text-center">
+          <td *ngIf="company.isConnectorActive" class="text-center">
             <span
               *ngIf="user.questionsPushedCount; else noQuestionProgression"
               class="alto-score"
@@ -149,7 +149,7 @@
               I18ns.statistics.globalEngagement.teamsTable.columns.noQuestions
             }}</ng-template>
           </td>
-          <td *ngIf="hasConnector">
+          <td *ngIf="company.isConnectorActive">
             <p class="alto-grey text-center" *ngIf="user.answeredQuestionsCount > 0; else noAnswers">
               {{ user.answeredQuestionsCount }}
             </p>
@@ -159,7 +159,7 @@
               </p>
             </ng-template>
           </td>
-          <td *ngIf="hasConnector">
+          <td *ngIf="company.isConnectorActive">
             <p *ngIf="user.questionsPushedCount > 0; else noQuestionsPushed" class="alto-grey text-center">
               {{ user.questionsPushedCount }}
             </p>
@@ -202,9 +202,9 @@
     </table>
     <alto-pagination
       class="mx-4 d-block"
-      [pageControl]="pageControl"
+      [pageControl]="membersTablePageControl"
       [itemsPerPage]="membersTablePageSize"
-      [itemsCount]="membersTable.length"
+      [itemsCount]="membersTableItemsCount"
     ></alto-pagination>
   </div>
   <div class="nodata-placeholder text-center" noData>
