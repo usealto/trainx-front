@@ -1,10 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subscription, combineLatest, concat, debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
+import { TagDtoApi } from '@usealto/sdk-ts-angular';
+import { Subscription, combineLatest, concat, debounceTime, map, of, startWith, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { Company } from '../../../../../models/company.model';
@@ -13,7 +13,6 @@ import { TeamStats } from '../../../../../models/team.model';
 import { TagsRestService } from '../../../../programs/services/tags-rest.service';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { SelectOption } from '../../../../shared/models/select-option.model';
-import { debounce } from 'cypress/types/lodash';
 
 @Component({
   selector: 'alto-performance-teams-table',
@@ -26,10 +25,11 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
   AltoRoutes = AltoRoutes;
   EPlaceholderStatus = EPlaceholderStatus;
 
-  @Input() company: Company = {} as Company;
   @Input() durationControl: FormControl<EScoreDuration> = new FormControl(EScoreDuration.Year, {
     nonNullable: true,
   });
+  @Input() company: Company = {} as Company;
+  @Input() tags: TagDtoApi[] = [];
 
   searchControl = new FormControl<string | null>(null);
 
@@ -51,33 +51,27 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
   private readonly performanceTeamsTableComponentSubscription = new Subscription();
 
   constructor(
-    public readonly teamStore: TeamStore,
     public readonly programsRestService: ProgramsRestService,
     public readonly tagsRestService: TagsRestService,
   ) {}
 
   ngOnInit(): void {
+    this.tagOptions = this.tags.map((tag) => new SelectOption({ label: tag.name, value: tag.id }));
+    this.programOptions = this.company.programs.map(
+      (program) => new SelectOption({ label: program.name, value: program.id }),
+    );
+
     this.performanceTeamsTableComponentSubscription.add(
-      this.tagsRestService
-        .getAllTags()
+      combineLatest([
+        this.teamsPageControl.valueChanges.pipe(startWith(this.teamsPageControl.value)),
+        combineLatest([
+          this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+          this.programsControl.valueChanges.pipe(startWith(this.programsControl.value)),
+          this.tagsControl.valueChanges.pipe(startWith(this.tagsControl.value)),
+          concat(of(this.searchControl.value), this.searchControl.valueChanges.pipe(debounceTime(300))),
+        ]).pipe(tap(() => this.teamsPageControl.setValue(1))),
+      ])
         .pipe(
-          tap((tags) => {
-            this.tagOptions = tags.map((tag) => new SelectOption({ label: tag.name, value: tag.id }));
-            this.programOptions = this.company.programs.map(
-              (program) => new SelectOption({ label: program.name, value: program.id }),
-            );
-          }),
-          switchMap(() => {
-            return combineLatest([
-              this.teamsPageControl.valueChanges.pipe(startWith(this.teamsPageControl.value)),
-              combineLatest([
-                this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
-                this.programsControl.valueChanges.pipe(startWith(this.programsControl.value)),
-                this.tagsControl.valueChanges.pipe(startWith(this.tagsControl.value)),
-                concat(of(this.searchControl.value), this.searchControl.valueChanges.pipe(debounceTime(300))),
-              ]).pipe(tap(() => this.teamsPageControl.setValue(1))),
-            ]);
-          }),
           map(([page, [duration, programs, tags, search]]) => {
             return <[number, EScoreDuration, string[], string[], string]>[
               page,

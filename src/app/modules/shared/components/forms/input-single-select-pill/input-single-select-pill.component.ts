@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostListener, Input } from '@angular/core';
-import { EColors, PillOption } from '../../../models/select-option.model';
 import { FormControl } from '@angular/forms';
 import { I18ns } from '../../../../../core/utils/i18n/I18n';
+import { PillOption } from '../../../models/select-option.model';
 
 @Component({
   selector: 'alto-input-single-select-pill',
@@ -10,11 +10,11 @@ import { I18ns } from '../../../../../core/utils/i18n/I18n';
 })
 export class InputSingleSelectPillComponent {
   I18ns = I18ns;
-  EColors = EColors;
 
   @Input() placeholder?: string;
   @Input() control: FormControl<PillOption | null> = new FormControl(null);
   @Input() options: PillOption[] = [];
+  @Input() hasPillAppearance = true;
 
   isDropdownOpen = false;
 

@@ -168,7 +168,7 @@
     </div>
   </div>
 
-  <div *ngIf="usersDataStatus === 'good'" class="table-panel">
+  <div class="table-panel">
     <table class="table members-table">
       <thead>
         <tr>
@@ -188,19 +188,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of filteredUsersData" class="align-middle" data-cy="companyMembersTable">
+        <tr *ngFor="let userInfos of filteredUsersData" class="align-middle" data-cy="companyMembersTable">
           <td>
-            <alto-profile-card data-cy="profileCard" [user]="user.user"></alto-profile-card>
+            <alto-profile-card data-cy="profileCard" [user]="userInfos.user"></alto-profile-card>
           </td>
           <td>
-            <span *ngIf="user.user.teamId" data-cy="memberTeamName" class="alto-badge" [style]="user.user.teamId | teamColor">
-              {{ teamsById.get(user.user.teamId)?.name }}
+            <span *ngIf="userInfos.user.teamId && teamsById.has(userInfos.user.teamId)" data-cy="memberTeamName" class="alto-badge" [style]="userInfos.user.teamId | teamColor">
+              {{ teamsById.get(userInfos.user.teamId)?.name }}
             </span>
           </td>
           <td class="text-center">
-            <ng-container *ngIf="(user.stats.totalGuessesCount || 0) > 0; else noScore">
-              <span data-cy="progressBadge" class="alto-score" [class]="(user.stats.score || 0) * 100 | pillColor">
-                {{ user.stats.score | percent }}
+            <ng-container *ngIf="(userInfos.stats.totalGuessesCount || 0) > 0; else noScore">
+              <span data-cy="progressBadge" class="alto-score" [class]="(userInfos.stats.score || 0) * 100 | pillColor">
+                {{ userInfos.stats.score | percent }}
               </span>
             </ng-container>
             <ng-template #noScore>
@@ -208,13 +208,13 @@
             </ng-template>
           </td>
           <td class="text-center">
-            <ng-container *ngIf="(user.stats.totalGuessesCount ?? 0) > 0; else noData">
+            <ng-container *ngIf="(userInfos.stats.totalGuessesCount ?? 0) > 0; else noData">
               <span class="w-10 d-inline-block">
-                {{ user.stats.totalGuessesCount }}
+                {{ userInfos.stats.totalGuessesCount }}
               </span>
               <alto-progression-badge
                 class="d-inline-block ms-3"
-                [score]="getQuestionsByUser(user.user.id, user.stats.totalGuessesCount)"
+                [score]="getQuestionsByUser(userInfos.user.id, userInfos.stats.totalGuessesCount)"
               ></alto-progression-badge>
             </ng-container>
             <ng-template #noData>
@@ -225,7 +225,7 @@
             <i
               data-cy="editCompanyMember"
               class="fs-5 bi bi-pen cursor-pointer float-end me-4"
-              (click)="openUserEditionForm(user.user)"
+              (click)="openUserEditionForm(userInfos.user)"
             ></i>
           </td>
         </tr>

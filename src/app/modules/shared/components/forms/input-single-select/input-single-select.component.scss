@@ -1,12 +1,18 @@
 .dropdown {
   display: block;
+
   .dropdown-input {
     display: flex;
     align-items: center;
     flex-direction: row;
     justify-content: space-between;
     height: 3.167rem;
+    border-radius: 3.167rem;
     cursor: pointer;
+
+    &.form {
+      border-radius: 0.3rem;
+    }
   }
 
   .dropdown-input-form {

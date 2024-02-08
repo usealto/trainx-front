@@ -254,9 +254,8 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     const instance = canvasRef.componentInstance as TeamFormComponent;
 
     instance.team = teamId ? this.teamsById.get(teamId) : undefined;
-    instance.programs = this.programs;
     instance.users = this.rawUsers;
-    instance.teamsNames = Array.from(this.teamsById.values()).map((t) => t.name);
+    instance.company = this.company;
 
     instance.newTeam
       .pipe(
@@ -339,10 +338,9 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     });
   }
 
-  // TODO : ???
   @memoize()
   getTeamUsersCount(teamId: string): number {
-    return this.usersStats.filter((user) => user.teamId === teamId).length;
+    return this.rawUsers.filter((user) => user.teamId === teamId).length;
   }
 
   @memoize()

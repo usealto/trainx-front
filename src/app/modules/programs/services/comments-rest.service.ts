@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
+import { combineLatest, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   CommentDtoApi,
   CommentDtoPaginatedResponseApi,
@@ -40,23 +40,27 @@ export class CommentsRestService {
     }
   }
 
-  getCommentsCount(req?: GetCommentsRequestParams): Observable<number> {
-    const par = {
-      page: 1,
-      itemsPerPage: 1,
-      ...req,
-    } as GetCommentsRequestParams;
+  getAllComments(req?: GetCommentsRequestParams): Observable<CommentDtoApi[]> {
+    return this.commentApi.getComments({ page: 1, itemsPerPage: 1000, ...req }).pipe(
+      switchMap(({ data, meta }) => {
+        const reqs: Observable<CommentDtoApi[]>[] = [of(data ? data : [])];
+        let totalPages = meta.totalPage ?? 1;
 
-    return this.commentApi.getComments(par).pipe(map((r) => r.meta.totalItems ?? 0));
-  }
-
-  getCommentsPaginated(req?: GetCommentsRequestParams): Observable<CommentDtoPaginatedResponseApi> {
-    const par = {
-      page: 1,
-      itemsPerPage: 25,
-      ...req,
-    };
-
-    return this.commentApi.getComments(par);
+        for (let i = 2; i <= totalPages; i++) {
+          reqs.push(
+            this.commentApi.getComments({ page: i, itemsPerPage: 1000, ...req }).pipe(
+              tap(({ meta }) => {
+                if (meta.totalPage !== totalPages) {
+                  totalPages = meta.totalPage;
+                }
+              }),
+              map((r) => r.data ?? []),
+            ),
+          );
+        }
+        return combineLatest(reqs);
+      }),
+      map((comments) => comments.flat()),
+    );
   }
 }

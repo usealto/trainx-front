@@ -4,10 +4,10 @@
 <div class="row px-6 g-0 align-items-center">
   <alto-icon-badge [size]="3.3333" icon="bi-people" color="badge-double-primary"></alto-icon-badge>
   <div class="col ms-4">
-    <h2 *ngIf="user && user.roles.length > 1" class="mb-0">
+    <h2 *ngIf="user.roles.length > 1" class="mb-0">
       {{ I18ns.leadTeam.members.forms.edition.editAdmin }}
     </h2>
-    <h2 *ngIf="user && user.roles.length === 1" class="mb-0">
+    <h2 *ngIf="user.roles.length === 1" class="mb-0">
       {{ I18ns.leadTeam.members.forms.edition.editUser }}
     </h2>
   </div>
@@ -18,59 +18,29 @@
 <div class="px-6 sidebar-body">
   <form *ngIf="userForm" [formGroup]="userForm">
     <label class="form-label required mt-4">{{ I18ns.leadTeam.members.forms.edition.team }}</label>
-    <ng-select
-      data-cy="editMemberTeam"
-      [items]="teams"
-      [multiple]="false"
-      bindLabel="name"
-      [placeholder]="I18ns.leadTeam.members.forms.edition.teamsPlaceholder"
-      [closeOnSelect]="true"
-      [selectableGroup]="true"
-      bindValue="id"
-      formControlName="team"
-      class="w-100"
-    >
-      <ng-template ng-label-tmp let-item="item">
-        <div class="alto-badge" [style]="item.id | teamColor">
-          <span>{{ item.name }}</span>
-        </div>
-      </ng-template>
-      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-        <span class="alto-badge" [style]="item.id | teamColor">
-          {{ item.name }}
-        </span>
-      </ng-template>
-    </ng-select>
 
-    <label class="mt-4 required" *ngIf="me.id !== user?.id">{{
+    <alto-input-single-select-pill
+    [control]="teamControl"
+    [options]="teamsOptions"
+    [hasPillAppearance]="false">
+    </alto-input-single-select-pill>
+
+    <label class="mt-4 required" *ngIf="me.id !== user.id">{{
       I18ns.leadTeam.members.forms.edition.type
     }}</label>
-    <select
-      data-cy="editMemberRole"
-      *ngIf="me.id !== user?.id"
-      class="form-select"
-      formControlName="type"
-      id="type"
-    >
-      <option data-cy="editMemberRoleOption" value="company-user">
-        {{ I18ns.leadTeam.members.forms.edition.standardType }}
-      </option>
-      <option data-cy="editMemberRoleOption" value="company-admin">
-        {{ I18ns.leadTeam.members.forms.edition.adminType }}
-      </option>
-    </select>
-    <p
-      class="mt-3 subtitles"
-      *ngIf="me.id !== user?.id && userForm.controls.type.value === 'company-user'"
-    >
-      {{ I18ns.leadTeam.members.forms.edition.userSubtitle }}
+
+    <alto-input-single-select
+    [control]="typeControl"
+    [options]="rolesOptions"
+    [hasPillAppearance]="false">
+    </alto-input-single-select>
+
+    <p class="mt-3 subtitles">
+      {{ typeControl.value.value === UserDtoApiRolesEnumApi.CompanyUser
+        ? I18ns.leadTeam.members.forms.edition.userSubtitle
+        : I18ns.leadTeam.members.forms.edition.adminSubtitle }}
     </p>
-    <p
-      class="mt-3 subtitles"
-      *ngIf="me.id !== user?.id && userForm.controls.type.value === 'company-admin'"
-    >
-      {{ I18ns.leadTeam.members.forms.edition.adminSubtitle }}
-    </p>
+
   </form>
 </div>
 <div class="footer">

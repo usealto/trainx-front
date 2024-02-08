@@ -1,8 +1,7 @@
-import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
-import { SelectOption } from '../../../models/select-option.model';
+import { Component, ElementRef, HostListener, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { I18ns } from '../../../../../core/utils/i18n/I18n';
-import { Subscription } from 'rxjs';
+import { SelectOption } from '../../../models/select-option.model';
 
 @Component({
   selector: 'alto-input-single-select',
@@ -15,10 +14,9 @@ export class InputSingleSelectComponent {
   @Input() placeholder?: string;
   @Input() options: SelectOption[] = [];
   @Input() control: FormControl<SelectOption | null> = new FormControl();
+  @Input() hasPillAppearance = true;
 
   isDropdownOpen = false;
-
-  private readonly InputSingleSelectComponentSubscription = new Subscription();
 
   constructor(private el: ElementRef) {}
 

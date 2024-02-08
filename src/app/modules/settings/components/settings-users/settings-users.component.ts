@@ -9,20 +9,18 @@ import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.s
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
-import { Company, ICompany } from 'src/app/models/company.model';
+import { Company } from 'src/app/models/company.model';
 import { UserEditFormComponent } from 'src/app/modules/lead-team/components/user-edit-form/user-edit-form.component';
-import { UserFilters } from 'src/app/modules/profile/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
 import { IAppData } from '../../../../core/resolvers';
 import { patchUser, removeUser, setUsers } from '../../../../core/store/root/root.action';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { Team } from '../../../../models/team.model';
-import { IUser, User } from '../../../../models/user.model';
-import { AddUsersComponent } from './add-users/add-users.component';
+import { User } from '../../../../models/user.model';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { AddUsersComponent } from './add-users/add-users.component';
 
 interface IUserInfos {
   user: User;

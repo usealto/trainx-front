@@ -1,6 +1,7 @@
 <div class="dropdown">
   <div
     class="dropdown-input form-control cursor-pointer d-flex justify-content-between align-items-center"
+    [class.form]="!hasPillAppearance"
     (click)="toggleDropdown()"
   >
     <div>
@@ -8,7 +9,7 @@
         <div
           *ngFor="let itemControl of controls.value; let index = index"
           class="alto-badge me-2 cursor-pointer"
-          [style]="'color: white; background-color: ' + itemControl.value.color"
+          [style]="'border: 1px solid white; background-color: ' + itemControl.value.pillColor.bg + '; color: ' + itemControl.value.pillColor.color"
         >
           <span class="d-flex justify-content-between align-items-center gap-2">
             {{ itemControl.value.label }}
@@ -38,7 +39,7 @@
   >
     <ng-container *ngIf="filteredOptions.length > 0; else noOption">
       <div *ngIf="filteredOptions.length > 1" class="dropdown-item border-bottom" (click)="addAll()">
-        <p class="alto-grey">Select all</p>
+        <p class="alto-grey">{{ I18ns.shared.selectAll }}</p>
       </div>
 
       <div
@@ -47,7 +48,7 @@
         [class.border-bottom]="!last"
         (click)="addPill(option)"
       >
-        <div class="alto-badge" [style]="'color: white; background-color: ' + option.color">
+        <div class="alto-badge" [style]="'background-color: ' + option.pillColor.bg + '; color :' + option.pillColor.color">
           <span>{{ option.label }}</span>
         </div>
       </div>
@@ -55,7 +56,7 @@
 
     <ng-template #noOption>
       <div class="dropdown-item">
-        <p class="fst-italic alto-grey">{{I18ns.shared.noOption}}</p>
+        <p class="fst-italic alto-grey">{{ I18ns.shared.noOption }}</p>
       </div>
     </ng-template>
   </div>

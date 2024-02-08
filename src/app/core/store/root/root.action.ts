@@ -19,6 +19,7 @@ export const setTeamsStats = createAction('[Team] Set Team Stats', props<{ teamS
 // Program
 export const setPrograms = createAction('[Program] Set Programs', props<{ programs: Program[] }>());
 export const updatePrograms = createAction('[Program] Update Programs', props<{ programs: Program[] }>());
+export const addProgram = createAction('[Program] Add Program', props<{ program: Program }>());
 
 // Tag
 export const setTags = createAction('[Tag] Set Tags', props<{ tags: TagDtoApi[] }>());

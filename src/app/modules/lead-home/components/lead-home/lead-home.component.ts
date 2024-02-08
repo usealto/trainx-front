@@ -115,15 +115,13 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
 
     this.leadHomeComponentSubscription.add(
       combineLatest([
-        this.commentsRestService.getUnreadComments(),
-        this.questionsSubmittedRestService.getQuestionsCount({
-          status: QuestionSubmittedStatusEnumApi.Submitted,
-        }),
+        this.commentsRestService.getAllComments({ isRead: false }),
+        this.questionsSubmittedRestService.getAllQuestions(QuestionSubmittedStatusEnumApi.Submitted),
       ])
         .pipe(
-          switchMap(([unreadComments, questionsCount]) => {
+          switchMap(([unreadComments, submittedQuestions]) => {
             this.commentsCount = unreadComments.length;
-            this.questionsCount = questionsCount;
+            this.questionsCount = submittedQuestions.length;
             this.commentsDataStatus =
               this.commentsCount === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
             this.questionsDataStatus =

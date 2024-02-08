@@ -7,41 +7,23 @@ import {
   QuestionDtoPaginatedResponseApi,
   QuestionsApiService,
 } from '@usealto/sdk-ts-angular';
-import { map, Observable, tap } from 'rxjs';
-import { ProgramsStore } from '../programs.store';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QuestionsRestService {
-  constructor(
-    private readonly questionApi: QuestionsApiService,
-    private readonly programStore: ProgramsStore,
-  ) {}
+  constructor(private readonly questionApi: QuestionsApiService) {}
 
-  getQuestion(id: string): Observable<QuestionDtoApi | undefined> {
+  getQuestionById(id: string): Observable<QuestionDtoApi | undefined> {
     return this.questionApi.getQuestionById({ id: id }).pipe(map((r) => r.data));
-  }
-
-  getQuestions(req?: GetQuestionsRequestParams): Observable<QuestionDtoApi[]> {
-    const par = {
-      page: 1,
-      itemsPerPage: 800,
-      ...req,
-    };
-
-    return this.questionApi.getQuestions(par).pipe(map((r) => r.data ?? []));
-  }
-
-  getQuestionById(id: string): Observable<QuestionDtoApi | null> {
-    return this.questionApi.getQuestionById({ id }).pipe(map((r) => r.data ?? null));
   }
 
   getQuestionsPaginated(req?: GetQuestionsRequestParams): Observable<QuestionDtoPaginatedResponseApi> {
     const par = {
+      page: 1,
+      itemsPerPage: 25,
       ...req,
-      page: req?.page ?? 1,
-      itemsPerPage: req?.itemsPerPage ?? 25,
     };
 
     return this.questionApi.getQuestions(par).pipe();

@@ -19,32 +19,21 @@
 
 <div class="px-6 sidebar-body">
   <form [formGroup]="teamForm">
-  <label class="form-label required">{{ I18ns.leadTeam.teams.form.longName }}</label>
-  <input
-  data-cy="editLongnameInput"
-  type="text"
-  class="form-control"
-  formControlName="nameControl"
-  placeholder="{{ I18ns.leadTeam.teams.form.longNamePlaceholder }}"
-  />
-  <p
-    class="text-end mt-2"
-    [class]="teamForm.controls.nameControl.errors?.['nameNotAllowed'] ? 'text-danger' : 'invisible'"
-  >
-    {{ I18ns.leadTeam.teams.duplicateName }}
-  </p>
+    <label class="form-label required">{{ I18ns.leadTeam.teams.form.longName }}</label>
+    <alto-input-text
+    [placeholder]="I18ns.leadTeam.teams.form.longNamePlaceholder"
+    [control]="nameControl">
+    </alto-input-text>
 
-  <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.Programs }}</label>
-  <alto-input-multiple-select
-  class="mb-4"
-  [options]="programOptions"
-  [controls]="teamForm.controls.programsControls"
-  [placeholder]="I18ns.leadTeam.teams.form.programsPlaceholder"
-  [enableSearch]="true"
-  [isForm]="true"
-  >
-  </alto-input-multiple-select>
-</form>
+    <label class="mt-4 form-label">{{ I18ns.leadTeam.teams.form.Programs }}</label>
+
+    <alto-input-pills
+    [placeholder]="I18ns.leadTeam.teams.form.programsPlaceholder"
+    [controls]="programsControls"
+    [options]="programOptions"
+    [hasPillAppearance]="false">
+    </alto-input-pills>
+  </form>
 </div>
 <div class="footer">
   <hr class="m-0" />

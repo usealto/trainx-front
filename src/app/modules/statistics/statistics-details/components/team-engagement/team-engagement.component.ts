@@ -83,20 +83,40 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
     this.usersById = (data[EResolvers.AppResolver] as IAppData).userById;
 
     this.teamEngagementComponentSubscription.add(
-      combineLatest([
-        this.scoreRestService.getPaginatedUsersStats(EScoreDuration.Year, false, {
-          teamIds: this.team.id,
-          sortBy: 'score:asc',
-          itemsPerPage: 3,
-        }),
-        this.scoreRestService.getPaginatedUsersStats(EScoreDuration.Year, false, {
-          teamIds: this.team.id,
-          sortBy: 'score:desc',
-          itemsPerPage: 3,
-        }),
-      ])
+      this.durationControl.valueChanges
+        .pipe(startWith(this.durationControl.value))
         .pipe(
-          tap(([{ data: flopUsersStats = [] }, { data: topUsersStats = [] }]) => {
+          switchMap((duration) => {
+            return combineLatest([
+              of(duration),
+              this.scoreRestService.getPaginatedUsersStats(duration, false, {
+                teamIds: this.team.id,
+                sortBy: 'score:asc',
+                itemsPerPage: 3,
+              }),
+              this.scoreRestService.getPaginatedUsersStats(duration, false, {
+                teamIds: this.team.id,
+                sortBy: 'score:desc',
+                itemsPerPage: 3,
+              }),
+              this.scoreRestService.getScores(this.getScoreParams('answers', duration)),
+              this.scoreRestService.getScores(this.getScoreParams('comments', duration)),
+              this.scoreRestService.getScores(this.getScoreParams('submitedQuestions', duration)),
+            ]);
+          }),
+        )
+        .subscribe({
+          next: ([
+            duration,
+            { data: flopUsersStats = [] },
+            { data: topUsersStats = [] },
+            anwsersScores,
+            commentsScores,
+            submittedQuestionsScores,
+          ]) => {
+            this.createAnswersChart(anwsersScores, duration);
+            this.createContributionsChart(commentsScores, submittedQuestionsScores, duration);
+
             const userIds = Array.from(new Set([...flopUsersStats, ...topUsersStats].map((u) => u.user.id)));
             const statsByUserId: Map<string, UserStatsDtoApi> = new Map(
               [...flopUsersStats, ...topUsersStats].map((u) => [u.user.id, u]),
@@ -114,23 +134,6 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
 
             this.membersLeaderboardStatus =
               this.membersLeaderboard.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
-          }),
-          switchMap(() => {
-            return this.durationControl.valueChanges.pipe(startWith(this.durationControl.value));
-          }),
-          switchMap((duration) => {
-            return combineLatest([
-              of(duration),
-              this.scoreRestService.getScores(this.getScoreParams('answers', duration)),
-              this.scoreRestService.getScores(this.getScoreParams('comments', duration)),
-              this.scoreRestService.getScores(this.getScoreParams('submitedQuestions', duration)),
-            ]);
-          }),
-        )
-        .subscribe({
-          next: ([duration, anwsersScores, commentsScores, submittedQuestionsScores]) => {
-            this.createAnswersChart(anwsersScores, duration);
-            this.createContributionsChart(commentsScores, submittedQuestionsScores, duration);
 
             this.answersChartStatus =
               anwsersScores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
@@ -254,11 +257,6 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
   }
 
   getMembersTable(usersStats: UserStatsDtoApi[], prevUsersStats: UserStatsDtoApi[]): void {
-    // this.membersTable = Array.from(this.usersById.values()).map((user) => {
-    //   const userStats = usersStats.find((u) => u.user.id === user.id) ?? ({} as UserStatsDtoApi);
-    //   const prevUser = prevUsersStats.find((u) => u.user.id === user.id) ?? ({} as UserStatsDtoApi);
-    //   return this.dataFormUserTableMapper(user, userStats, prevUser);
-    // });
     this.membersTable = usersStats.map((userStat) => {
       const user = this.usersById.get(userStat.user.id) ?? ({} as User);
       const prevUser = prevUsersStats.find((u) => u.user.id === userStat.user.id) ?? ({} as UserStatsDtoApi);

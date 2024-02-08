@@ -1,24 +1,28 @@
-<div class="mb-5">
-  <h2>
-    <img class="emoji align-middle mb-2" [src]="EmojiName.Locomotive | emoji" height="16" width="16" />
-    {{ I18ns.statistics.user.engagement.userActivity.title }}
-    <div class="ms-4 user-profile d-inline-block">
-      <alto-img-badge [user]="user" [size]="24" class="d-inline-block align-bottom"></alto-img-badge>
-      <span class="mb-2 ms-2 fw-medium alto-grey d-inline-block align-middle">
-        {{ user.firstname + ' ' + user.lastname }}
-      </span>
-    </div>
-    <span class="ms-4 alto-badge" [style]="userTeam.id | teamColor">{{ userTeam.name }}</span>
-  </h2>
-  <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.user.engagement.userActivity.subtitle }}</p>
+<div class="d-flex justify-content-between align-items-center mb-5">
+  <div>
+    <h2>
+      <img class="emoji align-middle mb-2" [src]="EmojiName.Locomotive | emoji" height="16" width="16" />
+      {{ I18ns.statistics.user.engagement.userActivity.title }}
+      <div class="ms-4 user-profile d-inline-block">
+        <alto-img-badge [user]="user" [size]="24" class="d-inline-block align-bottom"></alto-img-badge>
+        <span class="mb-2 ms-2 fw-medium alto-grey d-inline-block align-middle">
+          {{ user.firstname + ' ' + user.lastname }}
+        </span>
+      </div>
+      <span class="ms-4 alto-badge" [style]="userTeam.id | teamColor">{{ userTeam.name }}</span>
+    </h2>
+    <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.user.engagement.userActivity.subtitle }}</p>
+  </div>
+
+  <alto-time-picker
+  class="float-end"
+  [durationControl]="durationControl"
+  ></alto-time-picker>
 </div>
 
 <alto-placeholder-manager [status]="answersChartStatus">
   <div class="panel">
-    <alto-time-picker
-      class="float-end"
-      [durationControl]="durationControl"
-    ></alto-time-picker>
+
     <h3>{{ I18ns.statistics.user.engagement.userActivity.chartTitle }}</h3>
     <p class="alto-grey mb-4">
       {{ I18ns.statistics.user.engagement.userActivity.chartSubtitle }}
@@ -46,26 +50,30 @@
 
 <hr class="my-7" />
 
-<div class="mb-5">
-  <h2>
-    <img class="emoji align-middle mb-2" [src]="EmojiName.NerdFace | emoji" height="16" width="16" />
-    {{ I18ns.statistics.user.engagement.userEngagement.title }}
-    <div class="ms-4 user-profile d-inline-block">
-      <alto-img-badge [user]="user" [size]="24" class="d-inline-block align-bottom"></alto-img-badge>
-      <span class="mb-2 ms-2 fw-medium alto-grey d-inline-block align-middle">
-        {{ user.firstname + ' ' + user.lastname }}
-      </span>
-    </div>
-    <span class="ms-4 alto-badge" [style]="userTeam.id | teamColor">{{ userTeam.name }}</span>
-  </h2>
-  <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.user.engagement.userEngagement.subtitle }}</p>
+<div class="d-flex justify-content-between align-items-center mb-5">
+  <div>
+    <h2>
+      <img class="emoji align-middle mb-2" [src]="EmojiName.NerdFace | emoji" height="16" width="16" />
+      {{ I18ns.statistics.user.engagement.userEngagement.title }}
+      <div class="ms-4 user-profile d-inline-block">
+        <alto-img-badge [user]="user" [size]="24" class="d-inline-block align-bottom"></alto-img-badge>
+        <span class="mb-2 ms-2 fw-medium alto-grey d-inline-block align-middle">
+          {{ user.fullname }}
+        </span>
+      </div>
+      <span class="ms-4 alto-badge" [style]="userTeam.id | teamColor">{{ userTeam.name }}</span>
+    </h2>
+    <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.user.engagement.userEngagement.subtitle }}</p>
+  </div>
+
+  <alto-time-picker
+  class="float-end"
+  [durationControl]="durationControl"
+  ></alto-time-picker>
 </div>
+
 <alto-placeholder-manager [status]="contributionChartStatus">
   <div class="panel">
-    <alto-time-picker
-      class="float-end"
-      [durationControl]="durationControl"
-    ></alto-time-picker>
     <h3>{{ I18ns.statistics.user.engagement.userEngagement.chartTitle }}</h3>
     <p class="alto-grey mb-4">
       {{ I18ns.statistics.user.engagement.userEngagement.chartSubtitle }}

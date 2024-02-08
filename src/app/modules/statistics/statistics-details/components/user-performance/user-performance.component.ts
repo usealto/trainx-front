@@ -15,6 +15,7 @@ import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/mod
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
+import { ILeadData } from '../../../../../core/resolvers/lead.resolver';
 import { ToastService } from '../../../../../core/toast/toast.service';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { SelectOption } from '../../../../shared/models/select-option.model';
@@ -50,7 +51,6 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly statisticsService: StatisticsService,
-    private readonly tagsRestService: TagsRestService,
     readonly titleCasePipe: TitleCasePipe,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
@@ -59,9 +59,13 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // TODO : data should come from parent component
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     const usersById = (data[EResolvers.AppResolver] as IAppData).userById;
     const teamsById = (data[EResolvers.AppResolver] as IAppData).company.teamById;
+    const tagsDtos = (data[EResolvers.LeadResolver] as ILeadData).tags;
+
+    this.tagsOptions = tagsDtos.map((tagDto) => new SelectOption({ label: tagDto.name, value: tagDto.id }));
 
     // TODO : move logic into a guard or resolver
     const userId = this.router.url.split('/').pop() || '';
@@ -127,19 +131,13 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
 
     // Spider chart subscription
     this.userPerformanceComponentSubscription.add(
-      combineLatest([
-        this.tagsRestService.getAllTags(),
-        this.scoresRestService.getPaginatedTagsStats(EScoreDuration.Year, false, {
+      this.scoresRestService
+        .getPaginatedTagsStats(EScoreDuration.Year, false, {
           sortBy: 'score:desc',
           itemsPerPage: 6,
-        }),
-      ])
+        })
         .pipe(
-          tap(([tagsDtos, { data: bestTagsStats = [] }]) => {
-            this.tagsOptions = tagsDtos.map(
-              (tagDto) => new SelectOption({ label: tagDto.name, value: tagDto.id }),
-            );
-
+          tap(({ data: bestTagsStats = [] }) => {
             this.tagsControl.setValue(
               bestTagsStats.map((tagStats) => {
                 return new FormControl(

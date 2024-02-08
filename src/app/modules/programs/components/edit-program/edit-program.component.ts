@@ -1,40 +1,40 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
-import { IEditProgramData } from '../../../../core/resolvers/edit-program.resolver';
-import { Program } from '../../../../models/program.model';
-import { I18ns, getTranslation } from '../../../../core/utils/i18n/I18n';
-import { EmojiName } from '../../../../core/utils/emoji/data';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ValidationService } from '../../../shared/services/validation.service';
-import { IAppData } from '../../../../core/resolvers';
-import {
-  PriorityEnumApi,
-  ProgramDtoApiPriorityEnumApi,
-  QuestionDtoApi,
-  TagDtoApi,
-} from '@usealto/sdk-ts-angular';
-import { ITabOption } from '../../../shared/components/tabs/tabs.component';
-import { EColors, PillOption, SelectOption } from '../../../shared/models/select-option.model';
+import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { PriorityEnumApi, ProgramDtoApiPriorityEnumApi, QuestionDtoApi } from '@usealto/sdk-ts-angular';
 import {
   Observable,
   Subscription,
   combineLatest,
+  concat,
   debounceTime,
+  filter,
   map,
   of,
   startWith,
   switchMap,
   tap,
 } from 'rxjs';
-import { TagsRestService } from '../../services/tags-rest.service';
-import { ProgramsRestService } from '../../services/programs-rest.service';
-import { Store } from '@ngrx/store';
+import { IAppData } from '../../../../core/resolvers';
+import { IEditProgramData } from '../../../../core/resolvers/edit-program.resolver';
+import { ILeadData } from '../../../../core/resolvers/lead.resolver';
+import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
+import { addProgram } from '../../../../core/store/root/root.action';
 import * as FromRoot from '../../../../core/store/store.reducer';
-import { setPrograms } from '../../../../core/store/root/root.action';
+import { EmojiName } from '../../../../core/utils/emoji/data';
+import { I18ns, getTranslation } from '../../../../core/utils/i18n/I18n';
+import { Program } from '../../../../models/program.model';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { ITabOption } from '../../../shared/components/tabs/tabs.component';
+import { PillOption, SelectOption } from '../../../shared/models/select-option.model';
+import { ValidationService } from '../../../shared/services/validation.service';
+import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
+import { TagsRestService } from '../../services/tags-rest.service';
+import { Company } from '../../../../models/company.model';
+import { Team } from '../../../../models/team.model';
 
 enum Etab {
   Informations = 'informations',
@@ -55,6 +55,7 @@ export class EditProgramsComponent implements OnInit {
 
   private readonly programFormSubscription = new Subscription();
 
+  company!: Company;
   program?: Program;
 
   tabsOptions: ITabOption[] = [
@@ -63,8 +64,6 @@ export class EditProgramsComponent implements OnInit {
     { value: Etab.Summary, label: I18ns.programs.forms.step3.title },
   ];
   tabsControl = new FormControl<ITabOption>(this.tabsOptions[0], { nonNullable: true });
-
-  programs: Program[] = [];
 
   tagOptions: PillOption[] = [];
   tagControls: FormControl<FormControl<PillOption>[]> = new FormControl([], { nonNullable: true });
@@ -77,32 +76,21 @@ export class EditProgramsComponent implements OnInit {
       } as SelectOption),
   );
 
-  programFormGroup = new FormGroup({
-    nameControl: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [
-        Validators.required,
-        this.validationService.uniqueStringValidation(
-          this.programs.map((p) => p.name),
-          'nameNotAllowed',
-        ),
-      ],
-    }),
-    expectationControl: new FormControl<number>(75, { nonNullable: true, validators: Validators.required }),
-    priorityControl: new FormControl<SelectOption | null>(null, {
-      validators: Validators.required,
-    }),
-    teamControls: new FormControl<FormControl<PillOption>[]>([], { nonNullable: true }),
-  });
+  programFormGroup!: FormGroup<{
+    nameControl: FormControl<string>;
+    expectationControl: FormControl<number>;
+    priorityControl: FormControl<SelectOption | null>;
+    teamControls: FormControl<FormControl<PillOption>[]>;
+  }>;
 
   associatedQuestionsDataStatus = EPlaceholderStatus.LOADING;
-  associatedQuestionsSearchControl = new FormControl<string>('', { nonNullable: true });
+  associatedQuestionsSearchControl = new FormControl<string | null>(null);
   associatedQuestionsPageControl = new FormControl<number>(1, { nonNullable: true });
   associatedQuestions: QuestionDtoApi[] = [];
   associatedQuestionsCount = 0;
 
   questionsDataStatus = EPlaceholderStatus.LOADING;
-  questionsSearchControl = new FormControl<string>('', { nonNullable: true });
+  questionsSearchControl = new FormControl<string | null>(null);
   questionsPageControl = new FormControl<number>(1, { nonNullable: true });
   questions: QuestionDtoApi[] = [];
   questionsCount = 0;
@@ -120,86 +108,98 @@ export class EditProgramsComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    const company = (data[EResolvers.AppResolver] as IAppData).company;
+    const tags = (data[EResolvers.LeadResolver] as ILeadData).tags;
+    this.company = (data[EResolvers.AppResolver] as IAppData).company;
     this.program = (data[EResolvers.EditProgramResolver] as IEditProgramData).program;
-    this.programs = company.programs;
 
-    this.programFormSubscription.add(
-      this.tagsRestService
-        .getTags()
-        .pipe(
-          tap((tags: TagDtoApi[]) => {
-            this.tagOptions = tags.map(
-              (tag) =>
-                ({
-                  value: tag.id,
-                  label: tag.name,
-                  color: EColors.primary,
-                } as PillOption),
-            );
-
-            this.teamOptions = company.teams.map(
-              (team) =>
-                ({
-                  label: team.name,
-                  value: team.id,
-                  color: EColors.primary,
-                } as PillOption),
-            );
-          }),
-        )
-        .subscribe(() => {
-          if (this.program) {
-            const programTeams = company.teams.filter((team) => this.program?.teamIds.includes(team.id));
-            this.programFormGroup.setValue({
-              nameControl: this.program.name,
-              expectationControl: this.program.expectation,
-              priorityControl: {
-                value: this.program.priority,
-                label: getTranslation(I18ns.shared.priorities, this.program.priority.toLowerCase()),
-              } as SelectOption,
-              teamControls: programTeams.map(
-                (team) =>
-                  new FormControl<PillOption>(
-                    {
-                      value: team.id,
-                      label: team.name,
-                      color: EColors.primary,
-                    } as PillOption,
-                    { nonNullable: true },
-                  ),
-              ),
-            });
-          }
+    this.tagOptions = tags.map(
+      (tag) =>
+        new PillOption({
+          value: tag.id,
+          label: tag.name,
+          pillColor: PillOption.getPrimaryPillColor(),
         }),
     );
+
+    this.teamOptions = this.company.teams.map(
+      (team) =>
+        new PillOption({
+          label: team.name,
+          value: team.id,
+          pillColor: PillOption.getPillColorFromId(team.id),
+        }),
+    );
+
+    this.programFormGroup = new FormGroup({
+      nameControl: new FormControl<string>(this.program ? this.program.name : '', {
+        nonNullable: true,
+        validators: [
+          Validators.required,
+          this.validationService.uniqueStringValidation(
+            this.company.programs.map((p) => p.name),
+            I18ns.programs.forms.step1.duplicateName,
+          ),
+        ],
+      }),
+      expectationControl: new FormControl<number>(this.program ? this.program.expectation : 75, {
+        nonNullable: true,
+        validators: Validators.required,
+      }),
+      priorityControl: new FormControl<SelectOption | null>(
+        this.program
+          ? ({
+              value: this.program.priority,
+              label: getTranslation(I18ns.shared.priorities, this.program.priority.toLowerCase()),
+            } as SelectOption)
+          : null,
+        {
+          validators: Validators.required,
+        },
+      ),
+      teamControls: new FormControl<FormControl<PillOption>[]>(
+        this.program
+          ? this.program.teamIds.map((teamId) => {
+              const team = this.company.teamById.get(teamId) as Team;
+              return new FormControl<PillOption>(
+                {
+                  value: team.id,
+                  label: team.name,
+                  pillColor: PillOption.getPrimaryPillColor(),
+                } as PillOption,
+                { nonNullable: true },
+              );
+            })
+          : [],
+        { nonNullable: true },
+      ),
+    });
 
     this.programFormSubscription.add(
       combineLatest([
         this.associatedQuestionsPageControl.valueChanges.pipe(
           startWith(this.associatedQuestionsPageControl.value),
         ),
-        this.associatedQuestionsSearchControl.valueChanges.pipe(
-          startWith(this.associatedQuestionsSearchControl.value),
-          debounceTime(200),
-          tap(() => this.associatedQuestionsPageControl.patchValue(1)),
+        concat(
+          of(this.associatedQuestionsSearchControl.value),
+          this.associatedQuestionsSearchControl.valueChanges.pipe(
+            debounceTime(200),
+            tap(() => this.associatedQuestionsPageControl.patchValue(1)),
+          ),
         ),
       ])
         .pipe(
+          filter(() => !!this.program),
           switchMap(([page, search]) => {
             return this.questionsRestService.getQuestionsPaginated({
               itemsPerPage: 10,
-              page: page,
-              programIds: this.program?.id,
-              search: search,
+              page,
+              programIds: (this.program as Program).id,
+              search: search || undefined,
             });
           }),
-          map((res) => {
-            this.associatedQuestionsCount = res.meta.totalItems;
-            return res.data;
-          }),
         )
-        .subscribe((associatedQuestions) => {
+        .subscribe(({ data: associatedQuestions, meta }) => {
+          this.associatedQuestionsCount = meta.totalItems;
           this.associatedQuestions = associatedQuestions ?? [];
           this.associatedQuestionsDataStatus = associatedQuestions
             ? EPlaceholderStatus.GOOD
@@ -212,27 +212,28 @@ export class EditProgramsComponent implements OnInit {
     this.programFormSubscription.add(
       combineLatest([
         this.questionsPageControl.valueChanges.pipe(startWith(this.questionsPageControl.value)),
-        this.questionsSearchControl.valueChanges.pipe(
-          startWith(this.questionsSearchControl.value),
-          debounceTime(200),
-          tap(() => this.questionsPageControl.patchValue(1)),
+        concat(
+          of(this.questionsSearchControl.value),
+          this.questionsSearchControl.valueChanges.pipe(
+            debounceTime(200),
+            tap(() => this.questionsPageControl.patchValue(1)),
+          ),
         ),
       ])
         .pipe(
+          filter(() => !!this.program),
           switchMap(([page, search]) => {
             return this.questionsRestService.getQuestionsPaginated({
               itemsPerPage: 10,
-              page: page,
+              page,
               tagIds: this.tagControls.value.map((tagControl) => tagControl.value.value).join(','),
-              search: search,
+              search: search || undefined,
+              notInProgramIds: (this.program as Program).id,
             });
           }),
-          map((res) => {
-            this.questionsCount = res.meta.totalItems;
-            return res.data;
-          }),
         )
-        .subscribe((questions) => {
+        .subscribe(({ data: questions, meta }) => {
+          this.questionsCount = meta.totalItems;
           this.questions = questions ?? [];
           this.questionsDataStatus = questions
             ? EPlaceholderStatus.GOOD
@@ -249,35 +250,45 @@ export class EditProgramsComponent implements OnInit {
     const newProg = {
       name: nameControl.value,
       priority: priorityControl.value?.value as PriorityEnumApi,
-      teamIds: teamControls.value.map((teamControl) => teamControl.value.value).map((id) => ({ id: id })),
+      teamIds: teamControls.value.map((teamControl) => teamControl.value.value).map((id) => ({ id })),
       expectation: expectationControl.value,
     };
 
-    let $obs: Observable<any>;
+    // let $obs: Observable<any>;
 
-    if (this.program) {
-      $obs = this.programFormGroup.dirty
-        ? this.programRestService.updateProgram(this.program.id, newProg)
-        : of(null);
-    } else {
-      $obs = this.programRestService.createProgram(newProg);
-    }
+    // if (this.program) {
+    //   $obs = this.programFormGroup.dirty
+    //     ? this.programRestService.updateProgram(this.program.id, newProg)
+    //     : of(null);
+    // } else {
+    //   $obs = this.programRestService.createProgram(newProg);
+    // }
 
-    $obs.pipe(map((res) => Program.fromDto(res.data))).subscribe((updatedProgram) => {
-      const newPrograms = [...this.programs];
+    // $obs.pipe(map((res) => Program.fromDto(res.data))).subscribe((updatedProgram) => {
+    //   this.store.dispatch(addProgram({ program: updatedProgram }));
+    //   this.program = updatedProgram;
 
-      if (this.program) {
-        const indexToUpdate = this.programs.findIndex((p) => p.id === this.program?.id);
-        newPrograms[indexToUpdate] = updatedProgram;
-      } else {
-        newPrograms.push(updatedProgram);
-      }
+    //   this.switchTab(this.tabsOptions[1]);
+    // });
 
-      this.store.dispatch(setPrograms({ programs: newPrograms }));
-      this.program = updatedProgram;
+    (this.program
+      ? this.programRestService.updateProgram(this.program.id, newProg)
+      : this.programRestService.createProgram(newProg)
+    )
+      .pipe(
+        switchMap((updatedProgram) => {
+          this.store.dispatch(addProgram({ program: updatedProgram }));
 
-      this.switchTab({ value: Etab.Questions, label: I18ns.programs.forms.step2.title });
-    });
+          return this.store
+            .select(FromRoot.selectCompany)
+            .pipe(map(({ data: company }) => company.programById.get(updatedProgram.id) as Program));
+        }),
+      )
+      .subscribe((updatedProgram) => {
+        this.program = updatedProgram;
+
+        this.switchTab(this.tabsOptions[1]);
+      });
   }
 
   cancel(): void {
@@ -285,7 +296,8 @@ export class EditProgramsComponent implements OnInit {
   }
 
   switchTab(option: ITabOption): void {
-    //submit le form si on créé un nouveau programme
-    this.tabsControl.setValue(option);
+    if (this.program) {
+      this.tabsControl.setValue(option);
+    }
   }
 }

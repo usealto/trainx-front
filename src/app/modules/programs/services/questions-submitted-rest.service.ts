@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
 import {
   CreateQuestionSubmittedDtoApiStatusEnumApi,
-  GetQuestionsSubmittedRequestParams,
   PatchQuestionSubmittedRequestParams,
   QuestionsSubmittedApiService,
   QuestionSubmittedDtoApi,
-  QuestionSubmittedDtoPaginatedResponseApi,
+  QuestionSubmittedStatusEnumApi,
 } from '@usealto/sdk-ts-angular';
+import { combineLatest, map, Observable, of, switchMap, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -19,26 +18,28 @@ export class QuestionsSubmittedRestService {
     return this.questionSubmittedApi.getQuestionSubmittedById({ id }).pipe(map((r) => r.data));
   }
 
-  getQuestionsCount(req?: GetQuestionsSubmittedRequestParams): Observable<number> {
-    const par = {
-      page: 1,
-      itemsPerPage: 1,
-      ...req,
-    } as GetQuestionsSubmittedRequestParams;
+  getAllQuestions(status?: QuestionSubmittedStatusEnumApi): Observable<QuestionSubmittedDtoApi[]> {
+    return this.questionSubmittedApi.getQuestionsSubmitted({ page: 1, itemsPerPage: 1000, status }).pipe(
+      switchMap(({ data, meta }) => {
+        const reqs: Observable<QuestionSubmittedDtoApi[]>[] = [of(data ? data : [])];
+        let totalPages = meta.totalPage ?? 1;
 
-    return this.questionSubmittedApi.getQuestionsSubmitted(par).pipe(map((r) => r.meta.totalItems ?? 0));
-  }
-
-  getQuestionsPaginated(
-    req?: GetQuestionsSubmittedRequestParams,
-  ): Observable<QuestionSubmittedDtoPaginatedResponseApi> {
-    const par = {
-      page: 1,
-      itemsPerPage: 25,
-      ...req,
-    } as GetQuestionsSubmittedRequestParams;
-
-    return this.questionSubmittedApi.getQuestionsSubmitted(par).pipe();
+        for (let i = 2; i <= totalPages; i++) {
+          reqs.push(
+            this.questionSubmittedApi.getQuestionsSubmitted({ page: i, itemsPerPage: 1000, status }).pipe(
+              tap(({ meta }) => {
+                if (meta.totalPage !== totalPages) {
+                  totalPages = meta.totalPage;
+                }
+              }),
+              map((r) => r.data ?? []),
+            ),
+          );
+        }
+        return combineLatest(reqs);
+      }),
+      map((r) => r.flat()),
+    );
   }
 
   update(req: PatchQuestionSubmittedRequestParams) {

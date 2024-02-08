@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -20,7 +20,7 @@ interface LeaderboardDataDisplay extends ILeaderboardData {
   templateUrl: './leaderboard.component.html',
   styleUrls: ['./leaderboard.component.scss'],
 })
-export class LeaderboardComponent implements OnInit {
+export class LeaderboardComponent implements OnChanges {
   Emoji = EmojiName;
   I18ns = I18ns;
 
@@ -35,7 +35,7 @@ export class LeaderboardComponent implements OnInit {
 
   leaderboard: LeaderboardDataDisplay[] = [];
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     this.data = this.data.sort((a, b) => b.score - a.score);
     this.leaderboard = this.data.map((e, i) => ({ ...e, index: i + 1 }));
     const temp = [...this.leaderboard];

@@ -3,14 +3,19 @@
   <h1>{{program ? I18ns.programs.forms.edit : I18ns.programs.forms.create}}</h1>
 </div>
 
-<div class="mt-4 form-nav">
-  <div *ngFor="let tabOption of tabsOptions" class="step cursor-pointer" [class.highlight-step]="tabsControl.value === tabOption" (click)="switchTab(tabOption)">
+<div class="mt-4 form-nav mb-4">
+  <div *ngFor="let tabOption of tabsOptions"
+  class="step cursor-pointer"
+  [class.cursor-pointer]="!!program"
+  [class.highlight-step]="tabsControl.value === tabOption"
+  (click)="switchTab(tabOption)">
     <i class="fs-5 tab-icon me-3 bi" [class]="tabOption.value === ETab.Informations ? 'bi-file-text' : tabOption.value === ETab.Questions ? 'bi-question-circle' : 'bi-share'"></i>
     <span>{{ tabOption.label }}</span>
   </div>
 </div>
 
 <ng-container [ngSwitch]="tabsControl.value.value">
+  <!-- INFORMATIONS TAB -->
   <div *ngSwitchCase="ETab.Informations">
     <div class="infos">
       <i class="me-3 bi bi-info-circle"></i>
@@ -26,14 +31,7 @@
           </div>
         </div>
         <div class="col">
-          <input type="text" class="form-control" formControlName="nameControl" [placeholder]="I18ns.programs.forms.step1.namePlaceholder">
-          <p
-          class="text-end mt-2"
-          [ngClass]="{
-          'text-danger': programFormGroup.controls.nameControl.errors?.['nameNotAllowed'],
-          invisible: !programFormGroup.controls.nameControl.errors?.['nameNotAllowed']
-        }"
-        > {{ I18ns.programs.forms.step1.duplicateName }} </p>
+        <alto-input-text [control]="programFormGroup.controls.nameControl" [placeholder]="I18ns.programs.forms.step1.namePlaceholder"></alto-input-text>
         </div>
       </div>
       <hr>
@@ -47,7 +45,12 @@
             </div>
           </div>
           <div class="col">
-            <alto-input-pills [options]="tagOptions" [controls]="tagControls" [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder" ></alto-input-pills>
+            <alto-input-pills
+            [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder"
+            [controls]="tagControls"
+            [options]="tagOptions"
+            [hasPillAppearance]="false">
+            </alto-input-pills>
           </div>
         </div>
         <hr>
@@ -61,7 +64,12 @@
           </div>
         </div>
         <div class="col">
-          <alto-input-pills [options]="teamOptions" [controls]="programFormGroup.controls.teamControls" [placeholder]="I18ns.programs.forms.step1.teamsPlaceholder" ></alto-input-pills>
+          <alto-input-pills
+          [placeholder]="I18ns.programs.forms.step1.teamsPlaceholder"
+          [controls]="programFormGroup.controls.teamControls"
+          [options]="teamOptions"
+          [hasPillAppearance]="false">
+          </alto-input-pills>
         </div>
       </div>
       <hr>
@@ -74,7 +82,12 @@
           </div>
         </div>
         <div class="col">
-          <alto-input-single-select [placeholder]="I18ns.programs.forms.step1.priorityPlaceholder" [options]="priorityOptions" [control]="programFormGroup.controls.priorityControl"></alto-input-single-select>
+          <alto-input-single-select
+          [placeholder]="I18ns.programs.forms.step1.priorityPlaceholder"
+          [control]="programFormGroup.controls.priorityControl"
+          [options]="priorityOptions"
+          [hasPillAppearance]="false">
+          </alto-input-single-select>
         </div>
       </div>
       <hr>
@@ -96,13 +109,14 @@
         <button class="btn btn-outline-secondary" (click)="cancel()">
           {{ I18ns.shared.cancel }}
         </button>
-        <button class="btn btn-primary" [disabled]="programFormGroup && !programFormGroup.valid" (click)="submitForm()">
+        <button type="submit" class="btn btn-primary" [disabled]="!programFormGroup.dirty || !programFormGroup.valid" (click)="submitForm()">
           {{ I18ns.programs.forms.step1.create }}
         </button>
     </div>
 
   </div>
 
+  <!-- QUESTIONS TAB -->
   <div *ngSwitchCase="ETab.Questions">
     <div class="infos">
       <i class="me-3 bi bi-info-circle"></i>
@@ -111,35 +125,43 @@
 
     <alto-placeholder-manager [status]="associatedQuestionsDataStatus">
       <!-- associated questions -->
-      <div class="d-flex flex-nowrap justify-content-between mb-6">
+      <div class="d-flex justify-content-between align-items-center mb-2">
         <div>
           <h2>
             <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" width="16" height="16" />
             {{ I18ns.programs.forms.step2.associatedQuestions.title }}
           </h2>
           <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.associatedQuestions.subtitle }}</p>
-          <alto-input-search [searchControl]="associatedQuestionsSearchControl"></alto-input-search>
         </div>
-          <button class="btn btn-primary mb-8">
-            <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
-          </button>
+        <button class="btn btn-primary">
+          <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
+        </button>
       </div>
-      <div class="panel questions-panel">
-        <div *ngFor="let associatedQuestion of associatedQuestions" class="row">
-          <div class="form-check form-switch col-1">
-            <input
-              class="form-check-input cursor-pointer"
-              type="checkbox"
-              [checked]="true"
-            />
-          </div>
-          <div class="col-9 fs-7 fw-medium lh-lg">{{ associatedQuestion.title }}</div>
-          <div class="col-2 text-end cursor-pointer">
-            <i class="bi bi-pen"></i>
+
+      <div>
+        <alto-input-search class="d-flex mb-4" [searchControl]="associatedQuestionsSearchControl"></alto-input-search>
+
+        <div class="panel questions-panel">
+          <div *ngFor="let associatedQuestion of associatedQuestions" class="row">
+            <div class="form-check form-switch col-1">
+              <input
+                class="form-check-input cursor-pointer"
+                type="checkbox"
+                [checked]="true"
+              />
+            </div>
+            <div class="col-9 fs-7 fw-medium lh-lg">{{ associatedQuestion.title }}</div>
+            <div class="col-2 text-end cursor-pointer">
+              <i class="bi bi-pen"></i>
+            </div>
           </div>
         </div>
+        <alto-pagination class="mt-4 px-3"
+        [pageControl]="associatedQuestionsPageControl"
+        [itemsCount]="associatedQuestionsCount"
+        [itemsPerPage]="10">
+        </alto-pagination>
       </div>
-      <alto-pagination class="mt-4 px-3" [pageControl]="associatedQuestionsPageControl" [itemsCount]="associatedQuestionsCount" [itemsPerPage]="10"></alto-pagination>
 
       <div noResult class="text-center">
         <p class="fw-medium mb-8">{{ I18ns.shared.noData }}</p>
@@ -181,6 +203,7 @@
 
   </div>
 
+  <!-- SUMMARY TAB -->
   <div *ngSwitchCase="ETab.Summary">
     summary
   </div>

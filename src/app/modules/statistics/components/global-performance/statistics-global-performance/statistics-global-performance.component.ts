@@ -7,6 +7,7 @@ import { EResolvers, ResolversService } from '../../../../../core/resolvers/reso
 import { ILeadData } from '../../../../../core/resolvers/lead.resolver';
 import { Company } from '../../../../../models/company.model';
 import { EScoreDuration } from '../../../../../models/score.model';
+import { TagDtoApi } from '@usealto/sdk-ts-angular';
 
 @Component({
   selector: 'alto-statistics-global-performance',
@@ -20,6 +21,7 @@ export class StatisticsGlobalPerformanceComponent implements OnInit {
     nonNullable: true,
   });
   company: Company = {} as Company;
+  tags: TagDtoApi[] = [];
 
   constructor(
     private readonly resolversService: ResolversService,
@@ -29,5 +31,6 @@ export class StatisticsGlobalPerformanceComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.company = (data[EResolvers.LeadResolver] as ILeadData).company;
+    this.tags = (data[EResolvers.LeadResolver] as ILeadData).tags;
   }
 }

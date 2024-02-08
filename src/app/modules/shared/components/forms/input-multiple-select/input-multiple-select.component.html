@@ -23,7 +23,7 @@
     [style]="isForm ? 'max-width: 100%' : ''"
   >
 
-    <input *ngIf="options.length > 0" type="text" [formControl]="searchControl" class="dropdown-item dropdown-search border-bottom" [placeholder]="I18ns.shared.search">
+    <input *ngIf="enableSearch && options.length > 0" type="text" [formControl]="searchControl" class="dropdown-item dropdown-search border-bottom" [placeholder]="I18ns.shared.search">
 
     <ng-container *ngIf="filteredOptions.length > 0; else noOption">
       <div *ngIf="!searchControl.value" class="dropdown-item border-bottom cursor-pointer" (click)="toggleAllOptions()">

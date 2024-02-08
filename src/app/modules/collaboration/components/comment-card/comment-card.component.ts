@@ -104,7 +104,7 @@ export class CommentCardComponent implements OnInit {
   openQuestionForm(question?: QuestionLightDtoApi) {
     if (question) {
       this.questionRestService
-        .getQuestion(question.id)
+        .getQuestionById(question.id)
         .pipe(
           tap((q) => {
             if (q) {

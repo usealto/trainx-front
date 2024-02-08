@@ -1,5 +1,5 @@
 import { ScoreDtoApi } from '@usealto/sdk-ts-angular';
-import { EColors, PillOption } from '../modules/shared/models/select-option.model';
+import { PillOption } from '../modules/shared/models/select-option.model';
 
 export enum EScoreDuration {
   Day = 'day',
@@ -58,12 +58,36 @@ export class Score implements IScore {
 
   static getFiltersPillOptions(): PillOption[] {
     return [
-      new PillOption({ value: EScoreFilter.Under25, label: EScoreFilter.Under25, color: EColors.primary }),
-      new PillOption({ value: EScoreFilter.Under50, label: EScoreFilter.Under50, color: EColors.primary }),
-      new PillOption({ value: EScoreFilter.Under75, label: EScoreFilter.Under75, color: EColors.primary }),
-      new PillOption({ value: EScoreFilter.Over25, label: EScoreFilter.Over25, color: EColors.success }),
-      new PillOption({ value: EScoreFilter.Over50, label: EScoreFilter.Over50, color: EColors.success }),
-      new PillOption({ value: EScoreFilter.Over75, label: EScoreFilter.Over75, color: EColors.success }),
+      new PillOption({
+        value: EScoreFilter.Under25,
+        label: EScoreFilter.Under25,
+        pillColor: PillOption.getPrimaryPillColor(),
+      }),
+      new PillOption({
+        value: EScoreFilter.Under50,
+        label: EScoreFilter.Under50,
+        pillColor: PillOption.getPrimaryPillColor(),
+      }),
+      new PillOption({
+        value: EScoreFilter.Under75,
+        label: EScoreFilter.Under75,
+        pillColor: PillOption.getPrimaryPillColor(),
+      }),
+      new PillOption({
+        value: EScoreFilter.Over25,
+        label: EScoreFilter.Over25,
+        pillColor: PillOption.getSuccessPillColor(),
+      }),
+      new PillOption({
+        value: EScoreFilter.Over50,
+        label: EScoreFilter.Over50,
+        pillColor: PillOption.getSuccessPillColor(),
+      }),
+      new PillOption({
+        value: EScoreFilter.Over75,
+        label: EScoreFilter.Over75,
+        pillColor: PillOption.getSuccessPillColor(),
+      }),
     ];
   }
 

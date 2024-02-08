@@ -28,6 +28,7 @@
 
     &.checked {
       background-color: var(--gray-50);
+      pointer-events: none;
     }
   }
 }

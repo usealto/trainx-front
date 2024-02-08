@@ -23,7 +23,6 @@ import { EScoreDuration } from '../../../models/score.model';
 export class ProgramsRestService {
   constructor(
     private readonly programApi: ProgramsApiService,
-    private readonly programStore: ProgramsStore,
     private readonly scoresService: ScoresService,
   ) {}
 
@@ -51,15 +50,6 @@ export class ProgramsRestService {
     return this.programApi.getPrograms(par);
   }
 
-  updateProgram(id: string, patchProgramDtoApi: PatchProgramDtoApi): Observable<ProgramDtoResponseApi> {
-    return this.programApi.patchProgram({ id, patchProgramDtoApi }).pipe(
-      tap(() => {
-        this.programStore.programsInitCardList.reset();
-      }),
-    );
-  }
-
-  // Cloned from getPrograms() to return Program[] and not ProgramDtoApi[]
   getProgramsObj(): Observable<Program[]> {
     const par = {
       page: 1,
@@ -82,21 +72,19 @@ export class ProgramsRestService {
   }
 
   createProgram(createProgramDtoApi: CreateProgramDtoApi) {
-    return this.programApi.createProgram({ createProgramDtoApi }).pipe(
-      tap(() => {
-        this.programStore.programsInitCardList.reset();
-      }),
-    );
+    return this.programApi
+      .createProgram({ createProgramDtoApi })
+      .pipe(map(({ data }) => Program.fromDto(data as ProgramDtoApi)));
+  }
+
+  updateProgram(id: string, patchProgramDtoApi: PatchProgramDtoApi): Observable<Program> {
+    return this.programApi
+      .patchProgram({ id, patchProgramDtoApi })
+      .pipe(map(({ data }) => Program.fromDto(data as ProgramDtoApi)));
   }
 
   deleteProgram(id: string): Observable<DeleteResponseApi> {
-    return this.programApi.deleteProgram({ id }).pipe(
-      tap(() => {
-        this.programStore.programsInitCardList.value = this.programStore.programsInitCardList.value.filter(
-          (p) => p.program.id !== id,
-        );
-      }),
-    );
+    return this.programApi.deleteProgram({ id });
   }
 
   addOrRemoveQuestion(

@@ -4,6 +4,7 @@ import { Program } from '../../../models/program.model';
 import { Team } from '../../../models/team.model';
 import { IUser, User } from '../../../models/user.model';
 import {
+  addProgram,
   addUser,
   patchUser,
   removeUser,
@@ -145,6 +146,15 @@ export const rootReducer = createReducer(
       state.company.data.programs.map((program) => [program.id, program]),
     );
     programs.forEach((program) => programsById.set(program.id, program));
+    const company = new Company({ ...state.company.data, programs: [...programsById.values()] });
+
+    return {
+      ...state,
+      company: new TimestampedEntity(company),
+    };
+  }),
+  on(addProgram, (state, { program }): RootState => {
+    const programsById = state.company.data.programById.set(program.id, program);
     const company = new Company({ ...state.company.data, programs: [...programsById.values()] });
 
     return {

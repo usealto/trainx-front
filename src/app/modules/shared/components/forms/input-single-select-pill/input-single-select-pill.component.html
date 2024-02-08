@@ -1,5 +1,5 @@
 <div class="dropdown">
-  <div class="dropdown-input form-control" (click)="toggleDropdown()">
+  <div class="dropdown-input form-control" [class.form]="!hasPillAppearance" (click)="toggleDropdown()">
     <div class="title-container">
       <div
         *ngIf="control.value; else noValue"
@@ -32,10 +32,7 @@
       >
         <div
           class="pill"
-          [ngClass]="{
-            'pill-blue': option.color === EColors.primary,
-            'pill-green': option.color === EColors.success
-          }"
+          [style]="'background-color: ' + option.pillColor.bg + '; color: ' + option.pillColor.color"
         >
           <span>{{ option.label }}</span>
         </div>

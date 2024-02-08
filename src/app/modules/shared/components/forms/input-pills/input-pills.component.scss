@@ -3,9 +3,17 @@
 
   .dropdown-input {
     min-height: 3.167rem;
+    border-radius: 3.167rem;
+
+    &.form {
+      border-radius: 0.3rem;
+    }
   }
 
   .dropdown-menu {
+    max-width: 200%;
+    max-height: 25rem;
+    overflow-y: scroll;
     display: none;
     position: absolute;
     background-color: #fff;
@@ -26,9 +34,5 @@
       }
     }
   }
-}
-
-.alto-badge {
-  border: solid 2px #ffff
 }
 

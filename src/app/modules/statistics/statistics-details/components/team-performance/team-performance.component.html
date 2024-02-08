@@ -1,4 +1,4 @@
-<div class="mb-5">
+<div class="d-flex justify-content-between align-items-center mb-5">
   <div class="col-6">
     <h2>
       <img class="emoji" [src]="EmojiName.FlexedBiceps | emoji" height="16" width="16" />
@@ -7,10 +7,24 @@
     </h2>
     <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.masteryLevel.subtitle }}</p>
   </div>
+
+  <div class="d-flex align-items-center">
+    <alto-time-picker
+      [durationControl]="durationControl"
+    ></alto-time-picker>
+  </div>
 </div>
 
 <div class="panel mb-4">
-  <div class="float-end d-flex">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h3>{{ I18ns.statistics.team.masteryLevel.chartTitle }}</h3>
+      <p class="alto-grey mb-4">
+        {{ I18ns.statistics.team.masteryLevel.chartSubtitle }}
+      </p>
+    </div>
+
+
     <alto-input-multiple-select
     class="me-4"
     [placeholder]="I18ns.statistics.team.masteryLevel.teamFilter"
@@ -19,14 +33,8 @@
     [enableSearch]="true"
     >
     </alto-input-multiple-select>
-    <alto-time-picker
-      [durationControl]="durationControl"
-    ></alto-time-picker>
   </div>
-  <h3>{{ I18ns.statistics.team.masteryLevel.chartTitle }}</h3>
-  <p class="alto-grey mb-4">
-    {{ I18ns.statistics.team.masteryLevel.chartSubtitle }}
-  </p>
+
 
   <alto-placeholder-manager [status]="teamChartStatus">
     <div class="chart-container">
@@ -86,7 +94,14 @@
 </div>
 
 <div class="panel mb-4">
-  <div class="float-end">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h3>{{ I18ns.statistics.team.perThemes.chartTitle }}</h3>
+      <p class="alto-grey mb-4">
+        {{ I18ns.statistics.team.perThemes.chartSubtitle }}
+      </p>
+    </div>
+
     <alto-input-multiple-select
     class="me-4"
     [placeholder]="I18ns.statistics.team.perThemes.tagFilter"
@@ -96,11 +111,6 @@
     >
     </alto-input-multiple-select>
   </div>
-
-  <h3>{{ I18ns.statistics.team.perThemes.chartTitle }}</h3>
-  <p class="alto-grey mb-4">
-    {{ I18ns.statistics.team.perThemes.chartSubtitle }}
-  </p>
 
   <alto-placeholder-manager [status]="spiderChartDataStatus">
     <div class="chart-container">

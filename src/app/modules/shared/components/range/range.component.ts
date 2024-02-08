@@ -7,6 +7,5 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./range.component.scss'],
 })
 export class RangeComponent {
-  @Input() formControlName = '';
   @Input() control: FormControl<number | null> = new FormControl(75);
 }

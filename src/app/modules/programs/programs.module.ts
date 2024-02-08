@@ -11,7 +11,6 @@ import { ProgramsRoutingModule } from './programs-routing.module';
 import { ProgramsQuestionsComponent } from './components/programs/programs-questions/programs-questions.component';
 import { ProgramsTagsComponent } from './components/programs/programs-tags/programs-tags.component';
 import { ProgramCardListComponent } from './components/programs/program-card-list/program-card-list.component';
-import { ProgramCardComponent } from './components/programs/program-card/program-card.component';
 import { EditProgramsComponent } from './components/edit-program/edit-program.component';
 
 @NgModule({
@@ -22,7 +21,6 @@ import { EditProgramsComponent } from './components/edit-program/edit-program.co
     TagsFormComponent,
     QuestionSubmittedFormComponent,
     QuestionsTableComponent,
-    ProgramCardComponent,
     ProgramCardListComponent,
     ProgramsQuestionsComponent,
     ProgramsTagsComponent,

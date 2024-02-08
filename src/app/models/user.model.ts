@@ -32,11 +32,11 @@ export class User extends BaseModel implements IUser {
 
   constructor(data: IUser) {
     super(data);
-    this.firstname = data.firstname ?? '';
-    this.lastname = data.lastname ?? '';
-    this.email = data.email ?? '';
+    this.firstname = data.firstname;
+    this.lastname = data.lastname;
+    this.email = data.email;
     this.roles = data.roles ?? [];
-    this.teamId = data.teamId ?? '';
+    this.teamId = data.teamId;
     this.stats = data.stats?.map((s) => new UserStats(s)) ?? [];
     this.companyId = data.companyId ?? '';
     this.longestStreak = data.longestStreak ?? ({} as StreakDtoApi);
