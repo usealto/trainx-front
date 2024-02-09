@@ -11,11 +11,10 @@ import {
   ProgramsApiService,
 } from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
-import { filter, map, Observable, tap } from 'rxjs';
+import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
 import { Program } from '../../../models/program.model';
-import { ScoresService } from '../../shared/services/scores.service';
-import { ProgramsStore } from '../programs.store';
 import { EScoreDuration } from '../../../models/score.model';
+import { ScoresService } from '../../shared/services/scores.service';
 
 @Injectable({
   providedIn: 'root',
@@ -32,10 +31,10 @@ export class ProgramsRestService {
     isProgression = false,
   ): Observable<ProgramDtoPaginatedResponseApi> {
     const par = {
+      page: 1,
+      itemsPerPage: 300,
+      sortBy: 'name:asc',
       ...req,
-      page: req?.page ?? 1,
-      itemsPerPage: req?.itemsPerPage ?? 300,
-      sortBy: req?.sortBy ?? 'name:asc',
     } as GetProgramsRequestParams;
 
     if (duration) {
@@ -50,24 +49,27 @@ export class ProgramsRestService {
     return this.programApi.getPrograms(par);
   }
 
-  getProgramsObj(): Observable<Program[]> {
-    const par = {
-      page: 1,
-      itemsPerPage: 400,
-      sortBy: 'name:asc',
-    } as GetProgramsRequestParams;
+  getAllPrograms(req?: GetProgramsRequestParams): Observable<Program[]> {
+    return this.programApi.getPrograms({ page: 1, itemsPerPage: 400, sortBy: 'name:asc', ...req }).pipe(
+      switchMap(({ data, meta }) => {
+        const reqs: Observable<ProgramDtoApi[]>[] = [of(data ? data : [])];
+        let totalPages = meta.totalPage ?? 1;
 
-    return this.programApi.getPrograms(par).pipe(
-      map((d) => {
-        return d.data ? d.data.map((p) => Program.fromDto(p)) : [];
+        for (let i = 2; i <= totalPages; i++) {
+          reqs.push(
+            this.programApi.getPrograms({ page: i, itemsPerPage: 400, sortBy: 'name:asc', ...req }).pipe(
+              tap(({ meta }) => {
+                if (meta.totalPage !== totalPages) {
+                  totalPages = meta.totalPage;
+                }
+              }),
+              map((r) => r.data ?? []),
+            ),
+          );
+        }
+        return combineLatest(reqs);
       }),
-    );
-  }
-
-  getProgram(id: string): Observable<ProgramDtoApi> {
-    return this.programApi.getProgramById({ id }).pipe(
-      filter((p) => !!p.data),
-      map((d) => d.data || ({} as ProgramDtoApi)),
+      map((programs) => programs.flat().map((p) => Program.fromDto(p))),
     );
   }
 
@@ -103,6 +105,17 @@ export class ProgramsRestService {
         altoBaseIdsDtoApi: { ids: [questionId] },
       });
     }
+  }
+
+  addQuestionToProgram(programId: string, questionId: string): Observable<ProgramDtoResponseApi> {
+    return this.programApi.addQuestionsToProgram({ id: programId, altoBaseIdsDtoApi: { ids: [questionId] } });
+  }
+
+  removeQuestionFromProgram(programId: string, questionId: string): Observable<ProgramDtoResponseApi> {
+    return this.programApi.removeQuestionsFromProgram({
+      id: programId,
+      altoBaseIdsDtoApi: { ids: [questionId] },
+    });
   }
 
   getAssignments(ids: string[]): Observable<ProgramAssignmentDtoPaginatedResponseApi> {

@@ -45,7 +45,7 @@ export const AppGuard: CanActivateFn = () => {
             ? combineLatest([
                 companiesRestService.getCompanyById(user.companyId),
                 teamsRestService.getTeams(),
-                programsRestService.getProgramsObj(),
+                programsRestService.getAllPrograms(),
               ]).pipe(
                 switchMap(([company, teams, programs]) => {
                   if (!company) {

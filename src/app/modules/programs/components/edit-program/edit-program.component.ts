@@ -5,7 +5,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { PriorityEnumApi, ProgramDtoApiPriorityEnumApi, QuestionDtoApi } from '@usealto/sdk-ts-angular';
 import {
-  Observable,
   Subscription,
   combineLatest,
   concat,
@@ -25,7 +24,9 @@ import { addProgram } from '../../../../core/store/root/root.action';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { EmojiName } from '../../../../core/utils/emoji/data';
 import { I18ns, getTranslation } from '../../../../core/utils/i18n/I18n';
+import { Company } from '../../../../models/company.model';
 import { Program } from '../../../../models/program.model';
+import { Team } from '../../../../models/team.model';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { ITabOption } from '../../../shared/components/tabs/tabs.component';
 import { PillOption, SelectOption } from '../../../shared/models/select-option.model';
@@ -33,8 +34,8 @@ import { ValidationService } from '../../../shared/services/validation.service';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
-import { Company } from '../../../../models/company.model';
-import { Team } from '../../../../models/team.model';
+import { QuestionFormComponent } from '../create-questions/question-form.component';
+import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 
 enum Etab {
   Informations = 'informations',
@@ -65,8 +66,13 @@ export class EditProgramsComponent implements OnInit {
   ];
   tabsControl = new FormControl<ITabOption>(this.tabsOptions[0], { nonNullable: true });
 
-  tagOptions: PillOption[] = [];
-  tagControls: FormControl<FormControl<PillOption>[]> = new FormControl([], { nonNullable: true });
+  // Informations tab
+  programFormGroup!: FormGroup<{
+    nameControl: FormControl<string>;
+    expectationControl: FormControl<number>;
+    priorityControl: FormControl<SelectOption | null>;
+    teamControls: FormControl<FormControl<PillOption>[]>;
+  }>;
   teamOptions: PillOption[] = [];
   priorityOptions: SelectOption[] = Object.values(ProgramDtoApiPriorityEnumApi).map(
     (p) =>
@@ -76,12 +82,8 @@ export class EditProgramsComponent implements OnInit {
       } as SelectOption),
   );
 
-  programFormGroup!: FormGroup<{
-    nameControl: FormControl<string>;
-    expectationControl: FormControl<number>;
-    priorityControl: FormControl<SelectOption | null>;
-    teamControls: FormControl<FormControl<PillOption>[]>;
-  }>;
+  // Questions tab
+  readonly questionsPageSize = 10;
 
   associatedQuestionsDataStatus = EPlaceholderStatus.LOADING;
   associatedQuestionsSearchControl = new FormControl<string | null>(null);
@@ -95,6 +97,9 @@ export class EditProgramsComponent implements OnInit {
   questions: QuestionDtoApi[] = [];
   questionsCount = 0;
 
+  tagOptions: PillOption[] = [];
+  tagControls: FormControl<FormControl<PillOption>[]> = new FormControl([], { nonNullable: true });
+
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
@@ -104,6 +109,7 @@ export class EditProgramsComponent implements OnInit {
     private readonly programRestService: ProgramsRestService,
     private readonly questionsRestService: QuestionsRestService,
     private readonly store: Store<FromRoot.AppState>,
+    private readonly offcanvasService: NgbOffcanvas,
   ) {}
 
   ngOnInit(): void {
@@ -191,17 +197,17 @@ export class EditProgramsComponent implements OnInit {
           filter(() => !!this.program),
           switchMap(([page, search]) => {
             return this.questionsRestService.getQuestionsPaginated({
-              itemsPerPage: 10,
+              itemsPerPage: this.questionsPageSize,
               page,
               programIds: (this.program as Program).id,
               search: search || undefined,
             });
           }),
         )
-        .subscribe(({ data: associatedQuestions, meta }) => {
+        .subscribe(({ data: associatedQuestions = [], meta }) => {
           this.associatedQuestionsCount = meta.totalItems;
-          this.associatedQuestions = associatedQuestions ?? [];
-          this.associatedQuestionsDataStatus = associatedQuestions
+          this.associatedQuestions = associatedQuestions;
+          this.associatedQuestionsDataStatus = associatedQuestions.length
             ? EPlaceholderStatus.GOOD
             : this.associatedQuestionsSearchControl.value !== ''
             ? EPlaceholderStatus.NO_RESULT
@@ -219,23 +225,27 @@ export class EditProgramsComponent implements OnInit {
             tap(() => this.questionsPageControl.patchValue(1)),
           ),
         ),
+        this.tagControls.valueChanges.pipe(
+          startWith(this.tagControls.value),
+          map((tagControls) => tagControls.map((tagControl) => tagControl.value.value)),
+        ),
       ])
         .pipe(
           filter(() => !!this.program),
-          switchMap(([page, search]) => {
+          switchMap(([page, search, selectedTagsIds]) => {
             return this.questionsRestService.getQuestionsPaginated({
-              itemsPerPage: 10,
+              itemsPerPage: this.questionsPageSize,
               page,
-              tagIds: this.tagControls.value.map((tagControl) => tagControl.value.value).join(','),
+              tagIds: selectedTagsIds.length ? selectedTagsIds.join(',') : undefined,
               search: search || undefined,
               notInProgramIds: (this.program as Program).id,
             });
           }),
         )
-        .subscribe(({ data: questions, meta }) => {
+        .subscribe(({ data: questions = [], meta }) => {
           this.questionsCount = meta.totalItems;
-          this.questions = questions ?? [];
-          this.questionsDataStatus = questions
+          this.questions = questions;
+          this.questionsDataStatus = questions.length
             ? EPlaceholderStatus.GOOD
             : this.questionsSearchControl.value !== ''
             ? EPlaceholderStatus.NO_RESULT
@@ -254,23 +264,6 @@ export class EditProgramsComponent implements OnInit {
       expectation: expectationControl.value,
     };
 
-    // let $obs: Observable<any>;
-
-    // if (this.program) {
-    //   $obs = this.programFormGroup.dirty
-    //     ? this.programRestService.updateProgram(this.program.id, newProg)
-    //     : of(null);
-    // } else {
-    //   $obs = this.programRestService.createProgram(newProg);
-    // }
-
-    // $obs.pipe(map((res) => Program.fromDto(res.data))).subscribe((updatedProgram) => {
-    //   this.store.dispatch(addProgram({ program: updatedProgram }));
-    //   this.program = updatedProgram;
-
-    //   this.switchTab(this.tabsOptions[1]);
-    // });
-
     (this.program
       ? this.programRestService.updateProgram(this.program.id, newProg)
       : this.programRestService.createProgram(newProg)
@@ -279,16 +272,48 @@ export class EditProgramsComponent implements OnInit {
         switchMap((updatedProgram) => {
           this.store.dispatch(addProgram({ program: updatedProgram }));
 
-          return this.store
-            .select(FromRoot.selectCompany)
-            .pipe(map(({ data: company }) => company.programById.get(updatedProgram.id) as Program));
+          return combineLatest([of(updatedProgram.id), this.store.select(FromRoot.selectCompany)]);
         }),
       )
-      .subscribe((updatedProgram) => {
-        this.program = updatedProgram;
+      .subscribe(([updatedProgramId, { data: company }]) => {
+        this.program = company.programById.get(updatedProgramId) as Program;
 
         this.switchTab(this.tabsOptions[1]);
       });
+  }
+
+  openQuestionForm(question?: QuestionDtoApi): void {
+    const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
+      position: 'end',
+      panelClass: 'overflow-auto',
+    });
+
+    const instance = canvasRef.componentInstance;
+    instance.question = question;
+    instance.createdQuestion.subscribe({
+      next: () => {
+        this.resetAssociatedQuestionsSearch();
+        this.resetQuestionsSearch();
+      },
+    });
+  }
+
+  addAssociatedQuestion(question: QuestionDtoApi): void {
+    this.programRestService.addQuestionToProgram(this.program?.id as string, question.id).subscribe({
+      next: () => {
+        this.resetAssociatedQuestionsSearch();
+        this.resetQuestionsSearch();
+      },
+    });
+  }
+
+  removeAssociatedQuestion(question: QuestionDtoApi): void {
+    this.programRestService.removeQuestionFromProgram(this.program?.id as string, question.id).subscribe({
+      next: () => {
+        this.resetAssociatedQuestionsSearch();
+        this.resetQuestionsSearch();
+      },
+    });
   }
 
   cancel(): void {
@@ -299,5 +324,13 @@ export class EditProgramsComponent implements OnInit {
     if (this.program) {
       this.tabsControl.setValue(option);
     }
+  }
+
+  resetAssociatedQuestionsSearch(): void {
+    this.associatedQuestionsSearchControl.patchValue(null);
+  }
+
+  resetQuestionsSearch(): void {
+    this.questionsSearchControl.patchValue(null);
   }
 }

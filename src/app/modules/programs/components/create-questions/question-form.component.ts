@@ -72,7 +72,6 @@ export class QuestionFormComponent implements OnInit {
   }
 
   constructor(
-    private readonly programService: ProgramsRestService,
     private readonly tagService: TagsRestService,
     private readonly questionService: QuestionsRestService,
     private readonly questionSubmittedRestService: QuestionsSubmittedRestService,

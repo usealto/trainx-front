@@ -88,4 +88,11 @@ form {
   .form-switch {
     margin: 0;
   }
+
+  .question-overflow {
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

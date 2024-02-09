@@ -260,7 +260,7 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     instance.newTeam
       .pipe(
         switchMap((team) => {
-          return combineLatest([of(team), this.programsRestService.getProgramsObj()]);
+          return combineLatest([of(team), this.programsRestService.getAllPrograms()]);
         }),
       )
       .subscribe(([team, programs]) => {

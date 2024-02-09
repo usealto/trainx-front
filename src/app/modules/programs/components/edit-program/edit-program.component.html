@@ -110,7 +110,7 @@
           {{ I18ns.shared.cancel }}
         </button>
         <button type="submit" class="btn btn-primary" [disabled]="!programFormGroup.dirty || !programFormGroup.valid" (click)="submitForm()">
-          {{ I18ns.programs.forms.step1.create }}
+          {{ program ? I18ns.programs.forms.step1.edit : I18ns.programs.forms.step1.create }}
         </button>
     </div>
 
@@ -123,49 +123,53 @@
       <span class="">{{ I18ns.programs.forms.step2.subtitle }}</span>
     </div>
 
-    <alto-placeholder-manager [status]="associatedQuestionsDataStatus">
-      <!-- associated questions -->
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <div>
-          <h2>
-            <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" width="16" height="16" />
-            {{ I18ns.programs.forms.step2.associatedQuestions.title }}
-          </h2>
-          <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.associatedQuestions.subtitle }}</p>
-        </div>
-        <button class="btn btn-primary">
-          <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
-        </button>
-      </div>
-
+    <div class="d-flex justify-content-between align-items-center mb-2">
       <div>
-        <alto-input-search class="d-flex mb-4" [searchControl]="associatedQuestionsSearchControl"></alto-input-search>
+        <h2>
+          <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" width="16" height="16" />
+          {{ I18ns.programs.forms.step2.associatedQuestions.title }}
+        </h2>
+        <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.associatedQuestions.subtitle }}</p>
+      </div>
+      <button class="btn btn-primary" (click)="openQuestionForm()">
+        <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
+      </button>
+    </div>
 
-        <div class="panel questions-panel">
-          <div *ngFor="let associatedQuestion of associatedQuestions" class="row">
-            <div class="form-check form-switch col-1">
-              <input
-                class="form-check-input cursor-pointer"
-                type="checkbox"
-                [checked]="true"
-              />
-            </div>
-            <div class="col-9 fs-7 fw-medium lh-lg">{{ associatedQuestion.title }}</div>
-            <div class="col-2 text-end cursor-pointer">
-              <i class="bi bi-pen"></i>
-            </div>
+    <alto-input-search class="d-flex mb-4" [searchControl]="associatedQuestionsSearchControl"></alto-input-search>
+
+    <alto-placeholder-manager [status]="associatedQuestionsDataStatus">
+      <div class="panel questions-panel">
+        <div *ngFor="let associatedQuestion of associatedQuestions" class="d-flex justify-content-between align-items-center row">
+          <div class="d-flex align-items-center form-check form-switch col-10">
+            <input
+              class="form-check-input cursor-pointer me-8"
+              type="checkbox"
+              [checked]="true"
+              (click)="removeAssociatedQuestion(associatedQuestion)"
+            />
+            <span class="question-overflow fs-7 fw-medium">{{ associatedQuestion.title }}</span>
+          </div>
+
+          <div class="col-2 text-end cursor-pointer" (click)="openQuestionForm(associatedQuestion)">
+            <i class="bi bi-pen"></i>
           </div>
         </div>
-        <alto-pagination class="mt-4 px-3"
-        [pageControl]="associatedQuestionsPageControl"
-        [itemsCount]="associatedQuestionsCount"
-        [itemsPerPage]="10">
-        </alto-pagination>
       </div>
+      <alto-pagination class="mt-4 px-3"
+      [pageControl]="associatedQuestionsPageControl"
+      [itemsCount]="associatedQuestionsCount"
+      [itemsPerPage]="questionsPageSize">
+      </alto-pagination>
 
-      <div noResult class="text-center">
-        <p class="fw-medium mb-8">{{ I18ns.shared.noData }}</p>
-        <p class="fw-medium mb-8">{{ I18ns.shared.noDataSubtitle }}</p>
+      <div noResult class="nodata-placeholder text-center">
+        <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+        <p class="fw-medium">{{ I18ns.shared.noData }}</p>
+        <p class="fw-medium">{{ I18ns.shared.noDataSubtitle }}</p>
+        <button class="btn btn-primary mt-4" (click)="resetAssociatedQuestionsSearch()">
+          <i class="bi bi-arrow-clockwise"></i>
+          {{ I18ns.shared.resetFilters }}
+        </button>
       </div>
 
       <div noData class="text-center">
@@ -184,23 +188,71 @@
     </h2>
     <p class="subtitle alto-grey mb-4">{{ associatedQuestionsDataStatus === EPlaceholderStatus.NO_DATA ? I18ns.programs.forms.step2.existing2.subtitle : I18ns.programs.forms.step2.existing.subtitle }}</p>
 
-    <div class="panel questions-panel">
-      <div *ngFor="let question of questions" class="row">
-        <div class="form-check form-switch col-1">
-          <input
-            class="form-check-input cursor-pointer"
-            type="checkbox"
-            [checked]="false"
-          />
-        </div>
-        <div class="col-9 fs-7 fw-medium lh-lg">{{ question.title }}</div>
-        <div class="col-2 text-end cursor-pointer">
-          <i class="bi bi-pen"></i>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <alto-input-search [searchControl]="questionsSearchControl"></alto-input-search>
+
+      <alto-input-multiple-select
+      [placeholder]="I18ns.programs.questions.filters.tags"
+      [controls]="tagControls"
+      [options]="tagOptions"
+      [enableSearch]="true">
+      </alto-input-multiple-select>
+    </div>
+
+    <alto-placeholder-manager [status]="questionsDataStatus">
+      <div class="panel questions-panel">
+        <div *ngFor="let question of questions" class="d-flex justify-content-between align-items-center row">
+          <div class="d-flex align-items-center form-check form-switch col-10">
+            <input
+              class="form-check-input cursor-pointer me-8"
+              type="checkbox"
+              [checked]="false"
+              (click)="addAssociatedQuestion(question)"
+            />
+            <span class="question-overflow fs-7 fw-medium">{{ question.title }}</span>
+          </div>
+
+          <div class="col-2 text-end cursor-pointer" (click)="openQuestionForm(question)">
+            <i class="bi bi-pen"></i>
+          </div>
         </div>
       </div>
-    </div>
-    <alto-pagination class="mt-4 px-3" [pageControl]="questionsPageControl" [itemsCount]="questionsCount" [itemsPerPage]="10"></alto-pagination>
 
+      <alto-pagination
+      class="mt-4 px-3"
+      [pageControl]="questionsPageControl"
+      [itemsCount]="questionsCount"
+      [itemsPerPage]="questionsPageSize">
+      </alto-pagination>
+
+      <div class="nodata-placeholder text-center" noResult>
+        <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+        <p class="fw-medium">{{ I18ns.shared.noData }}</p>
+        <p class="fw-medium">{{ I18ns.shared.noDataSubtitle }}</p>
+        <button class="btn btn-primary mt-4" (click)="resetQuestionsSearch()">
+          <i class="bi bi-arrow-clockwise"></i>
+          {{ I18ns.shared.resetFilters }}
+        </button>
+      </div>
+
+      <div noData class="text-center">
+        <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.newSubtitle }}</p>
+
+        <button class="btn btn-primary mb-8">
+          <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
+        </button>
+        <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.or }}</p>
+      </div>
+    </alto-placeholder-manager>
+
+    <div class="d-flex flex-nowrap justify-content-between">
+      <button class="btn btn-outline-secondary" (click)="switchTab(tabsOptions[0])">
+        {{ I18ns.shared.previous }}
+      </button>
+      <button class="btn btn-primary" (click)="switchTab(tabsOptions[2])">
+        {{ I18ns.shared.next }}
+      </button>
+  </div>
   </div>
 
   <!-- SUMMARY TAB -->

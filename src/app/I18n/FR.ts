@@ -307,6 +307,7 @@ export const FR = {
         expectation: 'Score attendu',
         expectationSubtitle: 'Déterminez le niveau que vos équipes sont censées atteindre à ce programme.',
         create: 'Créer le programme',
+        edit: 'Éditer le programme',
       },
       step2: {
         title: 'Questions',
