@@ -2,9 +2,11 @@
   display: block;
   padding: var(--alto-page-padding);
 }
+
 .emoji-title {
   height: 2rem;
 }
+
 h1 {
   vertical-align: middle;
 }
@@ -95,4 +97,46 @@ form {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+
+.summary {
+  border: 1px solid var(--gray-200);
+  border-radius: 0.667rem;
+  margin-bottom: 3rem;
+
+  .title {
+    background-color: var(--gray-50);
+    width: 100%;
+    height: 100%;
+    border-radius: 0.667rem 0.667rem 0 0;
+    border-bottom: 1px solid var(--gray-200);
+  }
+
+  .summary-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 3.333rem;
+    padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+
+    .summary-label {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 1rem;
+
+      font-weight: 600;
+      font-size: 1rem;
+    }
+  }
+}
+
+.delete-button-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }

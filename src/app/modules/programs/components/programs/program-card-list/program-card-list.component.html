@@ -42,7 +42,9 @@
     <div *ngFor="let programCard of programCards"
     class="program-card"
     [class.disabled]="!programCard.program.isActive"
-    [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]">
+    [routerLink]=" programCard.program.isActive
+    ? ['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]
+    : null">
       <div class="title-section mb-2">
         <p *ngIf="programCard.program.name.length < 35" class="subtitle">
           {{ programCard.program.name }}

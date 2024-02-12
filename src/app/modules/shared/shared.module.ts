@@ -18,21 +18,32 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { TranslationModule } from 'src/app/core/utils/i18n/translation.module';
 import { LoadingModule } from 'src/app/core/utils/loading/loading.module';
 import { UtilsPipeModule } from 'src/app/core/utils/pipe/utils-pipe.module';
+import { QuestionFormComponent } from '../programs/components/create-questions/question-form.component';
 import { AnchorNavigatorComponent } from './components/anchor-navigator/anchor-navigator.component';
 import { ButtonGroupComponent } from './components/button-group/button-group.component';
 import { ColoredPillListComponent } from './components/colored-pill/colored-pill-list.component';
 import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
 import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-filter.component';
+import { InputMultipleSelectComponent } from './components/forms/input-multiple-select/input-multiple-select.component';
+import { InputPillsComponent } from './components/forms/input-pills/input-pills.component';
+import { InputRangeComponent } from './components/forms/input-range/input-range.component';
+import { InputSearchComponent } from './components/forms/input-search/input-search.component';
+import { InputSingleSelectPillComponent } from './components/forms/input-single-select-pill/input-single-select-pill.component';
+import { InputSingleSelectComponent } from './components/forms/input-single-select/input-single-select.component';
+import { InputTextComponent } from './components/forms/input-text/input-text.component';
+import { InputToggleComponent } from './components/forms/input-toggle/input-toggle.component';
 import { IconBadgeComponent } from './components/icon-badge/icon-badge.component';
 import { ImgBadgeListComponent } from './components/img-badge-list/img-badge-list.component';
 import { ImgBadgeComponent } from './components/img-badge/img-badge.component';
+import { ImpersonationHeaderComponent } from './components/impersonation-header/impersonation-header.component';
+import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { PeriodFilterComponent } from './components/period-filter/period-filter.component';
+import { PlaceholderManagerComponent } from './components/placeholder-manager/placeholder-manager.component';
 import { ProfileCardComponent } from './components/profile-card/profile-card.component';
 import { ProgressionBadgeComponent } from './components/progression-badge/progression-badge.component';
 import { ProgressionFilterComponent } from './components/progression-filter/progression-filter.component';
 import { QuestionDeleteModalComponent } from './components/question-delete-modal/question-delete-modal.component';
-import { RangeComponent } from './components/range/range.component';
 import { ScoreFilterComponent } from './components/score-filter/score-filter.component';
 import { SearchComponent } from './components/search/search.component';
 import { TabsComponent } from './components/tabs/tabs.component';
@@ -42,17 +53,6 @@ import { TrainingCardComponent } from './components/training-card/training-card.
 import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
-import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
-import { PlaceholderManagerComponent } from './components/placeholder-manager/placeholder-manager.component';
-import { QuestionFormComponent } from '../programs/components/create-questions/question-form.component';
-import { ImpersonationHeaderComponent } from './components/impersonation-header/impersonation-header.component';
-import { InputTextComponent } from './components/forms/input-text/input-text.component';
-import { InputPillsComponent } from './components/forms/input-pills/input-pills.component';
-import { InputSearchComponent } from './components/forms/input-search/input-search.component';
-import { InputMultipleSelectComponent } from './components/forms/input-multiple-select/input-multiple-select.component';
-import { InputSingleSelectPillComponent } from './components/forms/input-single-select-pill/input-single-select-pill.component';
-import { InputToggleComponent } from './components/forms/input-toggle/input-toggle.component';
-import { InputSingleSelectComponent } from './components/forms/input-single-select/input-single-select.component';
 @NgModule({
   declarations: [
     ProgressionPillPipe,
@@ -78,7 +78,6 @@ import { InputSingleSelectComponent } from './components/forms/input-single-sele
     QuestionDeleteModalComponent,
     IconBadgeComponent,
     DeleteModalComponent,
-    RangeComponent,
     LeaderboardComponent,
     PlaceholderManagerComponent,
     QuestionFormComponent,
@@ -90,6 +89,7 @@ import { InputSingleSelectComponent } from './components/forms/input-single-sele
     InputSingleSelectPillComponent,
     InputToggleComponent,
     InputSingleSelectComponent,
+    InputRangeComponent,
   ],
   imports: [
     CommonModule,
@@ -146,7 +146,6 @@ import { InputSingleSelectComponent } from './components/forms/input-single-sele
     TextCounterComponent,
     QuestionDeleteModalComponent,
     EmojiPipe,
-    RangeComponent,
     DeleteModalComponent,
     LeaderboardComponent,
     PlaceholderManagerComponent,
@@ -159,6 +158,7 @@ import { InputSingleSelectComponent } from './components/forms/input-single-sele
     InputSingleSelectPillComponent,
     InputToggleComponent,
     InputSingleSelectComponent,
+    InputRangeComponent,
   ],
   providers: [NgbActiveModal],
 })

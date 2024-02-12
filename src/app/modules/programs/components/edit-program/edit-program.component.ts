@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { PriorityEnumApi, ProgramDtoApiPriorityEnumApi, QuestionDtoApi } from '@usealto/sdk-ts-angular';
 import {
@@ -33,9 +34,7 @@ import { PillOption, SelectOption } from '../../../shared/models/select-option.m
 import { ValidationService } from '../../../shared/services/validation.service';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
-import { TagsRestService } from '../../services/tags-rest.service';
 import { QuestionFormComponent } from '../create-questions/question-form.component';
-import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 
 enum Etab {
   Informations = 'informations',
@@ -104,7 +103,6 @@ export class EditProgramsComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
     private readonly validationService: ValidationService,
-    private readonly tagsRestService: TagsRestService,
     private readonly location: Location,
     private readonly programRestService: ProgramsRestService,
     private readonly questionsRestService: QuestionsRestService,
@@ -142,7 +140,9 @@ export class EditProgramsComponent implements OnInit {
         validators: [
           Validators.required,
           this.validationService.uniqueStringValidation(
-            this.company.programs.map((p) => p.name),
+            this.company.programs
+              .filter(({ id }) => (this.program ? id !== this.program.id : true))
+              .map((p) => p.name),
             I18ns.programs.forms.step1.duplicateName,
           ),
         ],
@@ -254,6 +254,17 @@ export class EditProgramsComponent implements OnInit {
     );
   }
 
+  cancel(): void {
+    this.location.back();
+  }
+
+  switchTab(option: ITabOption): void {
+    if (this.program) {
+      this.tabsControl.setValue(option);
+    }
+  }
+
+  // INFORMATIONS TAB
   submitForm(): void {
     const { nameControl, expectationControl, priorityControl, teamControls } = this.programFormGroup.controls;
 
@@ -282,6 +293,7 @@ export class EditProgramsComponent implements OnInit {
       });
   }
 
+  // QUESTIONS TAB
   openQuestionForm(question?: QuestionDtoApi): void {
     const canvasRef = this.offcanvasService.open(QuestionFormComponent, {
       position: 'end',
@@ -316,21 +328,21 @@ export class EditProgramsComponent implements OnInit {
     });
   }
 
-  cancel(): void {
-    this.location.back();
-  }
-
-  switchTab(option: ITabOption): void {
-    if (this.program) {
-      this.tabsControl.setValue(option);
-    }
-  }
-
   resetAssociatedQuestionsSearch(): void {
     this.associatedQuestionsSearchControl.patchValue(null);
   }
 
   resetQuestionsSearch(): void {
     this.questionsSearchControl.patchValue(null);
+  }
+
+  // SUMMARY TAB
+  deleteProgram(): void {
+    this.programRestService.deleteProgram(this.program?.id as string).subscribe({
+      next: () => {
+        // this.store.dispatch(addProgram({ program: this.program as Program, remove: true }));
+        this.location.back();
+      },
+    });
   }
 }

@@ -36,7 +36,7 @@
       </div>
       <hr>
       <ng-container *ngIf="!program">
-        <div  class="row">
+        <div class="row align-items-center">
           <div class="col-left">
             <img class="emoji" [src]="EmojiName.Label | emoji" width="20" height="20"/>
             <div>
@@ -55,7 +55,7 @@
         </div>
         <hr>
       </ng-container>
-      <div class="row">
+      <div class="row align-items-center">
         <div class="col-left">
           <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="20" height="20"/>
           <div>
@@ -73,7 +73,7 @@
         </div>
       </div>
       <hr>
-      <div class="row">
+      <div class="row align-items-center">
         <div class="col-left">
           <img class="emoji" [src]="EmojiName.Warning | emoji" width="20" height="20"/>
           <div>
@@ -91,7 +91,7 @@
         </div>
       </div>
       <hr>
-      <div class="row">
+      <div class="row align-items-center">
         <div class="col-left">
           <img class="emoji" [src]="EmojiName.SportsMedal | emoji" width="20" height="20"/>
           <div>
@@ -100,7 +100,8 @@
           </div>
         </div>
         <div class="col">
-          <alto-range [control]="programFormGroup.controls.expectationControl"></alto-range>
+          <!-- <alto-range [control]="programFormGroup.controls.expectationControl"></alto-range> -->
+          <alto-input-range [control]="programFormGroup.controls.expectationControl"></alto-input-range>
         </div>
       </div>
     </form>
@@ -257,6 +258,60 @@
 
   <!-- SUMMARY TAB -->
   <div *ngSwitchCase="ETab.Summary">
-    summary
+    <div class="infos">
+      <i class="me-3 bi bi-info-circle"></i>
+      <span>{{I18ns.programs.forms.step3.subtitle}}</span>
+    </div>
+
+    <h2 class="mb-5">
+      <img class="emoji" [src]="EmojiName.PageFacingUp | emoji" width="18" height="18" />
+      {{ I18ns.programs.forms.step3.title2 }}
+    </h2>
+
+    <div class="summary">
+      <div class="title summary-row">
+        <h2>{{ program?.name }}</h2>
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-label">
+          <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="20" height="20" />
+          {{ I18ns.programs.forms.step1.teams }}
+        </div>
+        <span class="alto-badge">
+          {{ program?.teamIds?.length ?? 0 }}
+        </span>
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-label">
+          <img class="emoji" [src]="EmojiName.SportsMedal | emoji" width="20" height="20" />
+          {{ I18ns.programs.forms.step1.expectation }}
+        </div>
+        <span class="alto-score pill-green">{{ (program?.expectation ?? 0) / 100 | percent }}</span>
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-label">
+          <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" width="20" height="20" />
+          {{ I18ns.programs.forms.questionCount }}
+        </div>
+        <span class="alto-badge">{{ program?.questionsCount }}</span>
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-label">
+          <img class="emoji" [src]="EmojiName.Warning | emoji" width="20" height="20" />
+          {{ I18ns.programs.forms.step1.priority }}
+        </div>
+        <span class="alto-badge">{{ program?.priority }}</span>
+      </div>
+    </div>
+
+    <div class="delete-button-row">
+      <a class="btn btn-danger" (click)="deleteProgram()">
+        <i class="bi bi-trash3"></i><span>{{ I18ns.programs.delete.btn }}</span>
+      </a>
+    </div>
   </div>
 </ng-container>

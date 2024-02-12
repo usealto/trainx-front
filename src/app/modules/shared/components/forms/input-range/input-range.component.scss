@@ -1,0 +1,23 @@
+.input-range-container {
+  width: 100%;
+
+  .input-range {
+    width: 100%;
+  }
+}
+
+
+datalist {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  // writing-mode: vertical-lr;
+  width: 100%;
+
+  option {
+    padding: 0;
+    color: var(--gray-500);
+    width: 18px;
+    // transform: translateX(50%);
+  }
+}
