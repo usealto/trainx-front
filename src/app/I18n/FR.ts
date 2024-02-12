@@ -347,7 +347,9 @@ export const FR = {
       btn: 'Supprimer le programme',
       title: 'Supprimer le programme "{{}}"',
       subtitle:
-        'Ce programme est assigné à {{}} équipes, êtes-vous sûrs de vouloir le supprimer ? Cette action est irreversible.',
+        'Ce programme est assigné à {{}} équipes, êtes-vous sûr de vouloir le supprimer ? Cette action est irréversible.',
+      success: 'Le programme a bien été supprimé',
+      error: 'Une erreur est survenue lors de la suppression du programme',
     },
   },
   statistics: {

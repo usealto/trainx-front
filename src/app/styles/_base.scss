@@ -85,6 +85,10 @@ hr {
   cursor: pointer;
 }
 
+.no-pointer-event {
+  pointer-events: none;
+}
+
 .fw-medium {
   font-weight: 600 !important;
 }

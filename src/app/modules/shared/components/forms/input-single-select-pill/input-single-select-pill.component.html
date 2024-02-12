@@ -1,5 +1,5 @@
 <div class="dropdown">
-  <div class="dropdown-input form-control" [class.form]="!hasPillAppearance" (click)="toggleDropdown()">
+  <div class="dropdown-input form-control" [class.form]="hasFormAppearance" (click)="toggleDropdown()">
     <div class="title-container">
       <div
         *ngIf="control.value; else noValue"

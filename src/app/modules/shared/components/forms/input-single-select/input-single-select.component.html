@@ -1,5 +1,5 @@
 <div class="dropdown">
-  <div class="dropdown-input form-control" [class.form]="!hasPillAppearance" (click)="toggleDropdown()">
+  <div class="dropdown-input form-control" [class.form]="hasFormAppearance" (click)="toggleDropdown()">
     <div class="title-container">
       <p
         *ngIf="control.value; else noValue"
@@ -20,9 +20,10 @@
     <ng-container *ngIf="options.length > 0; else noOption">
     <div
       *ngFor="let option of options; let index = index; let last = last"
-      class="dropdown-item cursor-pointer"
+      class="dropdown-item"
       [class.border-bottom]="!last"
-      (click)="control.value !== option ? toggleOption(option) : null"
+      [class.no-pointer-event]="control.value === option"
+      (click)="toggleOption(option)"
       [class.cursor-pointer]="control.value !== option"
       [class.selected]="control.value === option"
       >

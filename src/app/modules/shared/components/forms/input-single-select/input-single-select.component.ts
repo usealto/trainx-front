@@ -14,7 +14,7 @@ export class InputSingleSelectComponent {
   @Input() placeholder?: string;
   @Input() options: SelectOption[] = [];
   @Input() control: FormControl<SelectOption | null> = new FormControl();
-  @Input() hasPillAppearance = true;
+  @Input() hasFormAppearance = false;
 
   isDropdownOpen = false;
 
@@ -34,10 +34,9 @@ export class InputSingleSelectComponent {
   }
 
   toggleOption(option: SelectOption): void {
-    if (this.control.value === option) {
-      this.control.setValue(null);
-    } else {
-      this.control.setValue(option);
-    }
+    this.control.patchValue(option);
+    this.control.markAsDirty();
+    this.control.markAsTouched();
+    this.isDropdownOpen = false;
   }
 }

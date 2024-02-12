@@ -22,6 +22,7 @@ h1 {
 
 .form-nav {
   border-bottom: 1px solid var(--gray-200);
+
   .step {
     display: inline-block;
     padding-bottom: 1rem;
@@ -110,6 +111,10 @@ form {
     height: 100%;
     border-radius: 0.667rem 0.667rem 0 0;
     border-bottom: 1px solid var(--gray-200);
+
+    h2 {
+      margin: 0;
+    }
   }
 
   .summary-row {

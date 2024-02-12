@@ -2,7 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { PriorityEnumApi, ProgramDtoApiPriorityEnumApi, QuestionDtoApi } from '@usealto/sdk-ts-angular';
 import {
@@ -21,7 +21,7 @@ import { IAppData } from '../../../../core/resolvers';
 import { IEditProgramData } from '../../../../core/resolvers/edit-program.resolver';
 import { ILeadData } from '../../../../core/resolvers/lead.resolver';
 import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
-import { addProgram } from '../../../../core/store/root/root.action';
+import { addProgram, deleteProgram } from '../../../../core/store/root/root.action';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { EmojiName } from '../../../../core/utils/emoji/data';
 import { I18ns, getTranslation } from '../../../../core/utils/i18n/I18n';
@@ -35,6 +35,9 @@ import { ValidationService } from '../../../shared/services/validation.service';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../create-questions/question-form.component';
+import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
+import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
+import { ToastService } from '../../../../core/toast/toast.service';
 
 enum Etab {
   Informations = 'informations',
@@ -46,6 +49,7 @@ enum Etab {
   selector: 'alto-edit-program',
   templateUrl: './edit-program.component.html',
   styleUrls: ['./edit-program.component.scss'],
+  providers: [ReplaceInTranslationPipe],
 })
 export class EditProgramsComponent implements OnInit {
   I18ns = I18ns;
@@ -73,13 +77,21 @@ export class EditProgramsComponent implements OnInit {
     teamControls: FormControl<FormControl<PillOption>[]>;
   }>;
   teamOptions: PillOption[] = [];
-  priorityOptions: SelectOption[] = Object.values(ProgramDtoApiPriorityEnumApi).map(
-    (p) =>
-      ({
-        value: p,
-        label: getTranslation(I18ns.shared.priorities, p.toLowerCase()),
-      } as SelectOption),
-  );
+
+  priorityOptions: SelectOption[] = [
+    new SelectOption({
+      value: ProgramDtoApiPriorityEnumApi.High,
+      label: getTranslation(I18ns.shared.priorities, 'high'),
+    }),
+    new SelectOption({
+      value: ProgramDtoApiPriorityEnumApi.Medium,
+      label: getTranslation(I18ns.shared.priorities, 'medium'),
+    }),
+    new SelectOption({
+      value: ProgramDtoApiPriorityEnumApi.Low,
+      label: getTranslation(I18ns.shared.priorities, 'low'),
+    }),
+  ];
 
   // Questions tab
   readonly questionsPageSize = 10;
@@ -108,6 +120,9 @@ export class EditProgramsComponent implements OnInit {
     private readonly questionsRestService: QuestionsRestService,
     private readonly store: Store<FromRoot.AppState>,
     private readonly offcanvasService: NgbOffcanvas,
+    private readonly modalService: NgbModal,
+    private readonly toastService: ToastService,
+    private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
   ) {}
 
   ngOnInit(): void {
@@ -261,6 +276,9 @@ export class EditProgramsComponent implements OnInit {
   switchTab(option: ITabOption): void {
     if (this.program) {
       this.tabsControl.setValue(option);
+      if (option === this.tabsOptions[1]) {
+        this.resetQuestionsTab();
+      }
     }
   }
 
@@ -286,10 +304,19 @@ export class EditProgramsComponent implements OnInit {
           return combineLatest([of(updatedProgram.id), this.store.select(FromRoot.selectCompany)]);
         }),
       )
-      .subscribe(([updatedProgramId, { data: company }]) => {
-        this.program = company.programById.get(updatedProgramId) as Program;
+      .subscribe({
+        next: ([updatedProgramId, { data: company }]) => {
+          this.program = company.programById.get(updatedProgramId) as Program;
 
-        this.switchTab(this.tabsOptions[1]);
+          if (this.tabsControl.value === this.tabsOptions[0]) {
+            this.switchTab(this.tabsOptions[1]);
+          } else {
+            this.toastService.show({
+              type: 'success',
+              text: I18ns.programs.forms.step3.validatedToast,
+            });
+          }
+        },
       });
   }
 
@@ -304,8 +331,7 @@ export class EditProgramsComponent implements OnInit {
     instance.question = question;
     instance.createdQuestion.subscribe({
       next: () => {
-        this.resetAssociatedQuestionsSearch();
-        this.resetQuestionsSearch();
+        this.resetQuestionsTab();
       },
     });
   }
@@ -313,8 +339,7 @@ export class EditProgramsComponent implements OnInit {
   addAssociatedQuestion(question: QuestionDtoApi): void {
     this.programRestService.addQuestionToProgram(this.program?.id as string, question.id).subscribe({
       next: () => {
-        this.resetAssociatedQuestionsSearch();
-        this.resetQuestionsSearch();
+        this.resetQuestionsTab();
       },
     });
   }
@@ -322,8 +347,7 @@ export class EditProgramsComponent implements OnInit {
   removeAssociatedQuestion(question: QuestionDtoApi): void {
     this.programRestService.removeQuestionFromProgram(this.program?.id as string, question.id).subscribe({
       next: () => {
-        this.resetAssociatedQuestionsSearch();
-        this.resetQuestionsSearch();
+        this.resetQuestionsTab();
       },
     });
   }
@@ -336,13 +360,50 @@ export class EditProgramsComponent implements OnInit {
     this.questionsSearchControl.patchValue(null);
   }
 
+  private resetQuestionsTab(): void {
+    this.resetAssociatedQuestionsSearch();
+    this.resetQuestionsSearch();
+  }
+
   // SUMMARY TAB
   deleteProgram(): void {
-    this.programRestService.deleteProgram(this.program?.id as string).subscribe({
-      next: () => {
-        // this.store.dispatch(addProgram({ program: this.program as Program, remove: true }));
-        this.location.back();
-      },
+    const modalRef = this.modalService.open(DeleteModalComponent, {
+      centered: true,
+      size: 'md',
     });
+    const componentInstance = modalRef.componentInstance as DeleteModalComponent;
+    componentInstance.data = {
+      title: this.replaceInTranslationPipe.transform(
+        I18ns.programs.delete.title,
+        this.program?.name as string,
+      ),
+      subtitle: this.replaceInTranslationPipe.transform(
+        I18ns.programs.delete.subtitle,
+        this.program?.teamIds.length.toString(),
+      ),
+    };
+
+    componentInstance.objectDeleted
+      .pipe(
+        switchMap(() => {
+          return this.programRestService.deleteProgram(this.program?.id as string);
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.store.dispatch(deleteProgram({ programId: this.program?.id as string }));
+          this.location.back();
+          this.toastService.show({
+            type: 'success',
+            text: I18ns.programs.delete.success,
+          });
+        },
+        error: () => {
+          this.toastService.show({
+            type: 'danger',
+            text: I18ns.programs.delete.error,
+          });
+        },
+      });
   }
 }

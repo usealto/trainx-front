@@ -38,7 +38,11 @@
 </div>
 
 <alto-placeholder-manager [status]="dataStatus">
-  <div *ngFor="let programCards of programCardsRows" class="programs-row mb-5">
+  <div
+  *ngFor="let programCards of programCardsRows"
+  class="programs-row mb-5"
+  [class.full-row]="programCards.length === 3"
+  [class.partial-row]="programCards.length < 3">
     <div *ngFor="let programCard of programCards"
     class="program-card"
     [class.disabled]="!programCard.program.isActive"

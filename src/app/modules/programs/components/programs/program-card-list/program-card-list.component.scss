@@ -16,8 +16,16 @@
 .programs-row {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+
+  &.full-row {
+    justify-content: space-between;
+  }
+
+  &.partial-row {
+    justify-content: flex-start;
+    gap: 1rem;
+  }
 
   .program-card {
     height: 18rem;

@@ -6,6 +6,7 @@ import { IUser, User } from '../../../models/user.model';
 import {
   addProgram,
   addUser,
+  deleteProgram,
   patchUser,
   removeUser,
   setCompany,
@@ -156,6 +157,16 @@ export const rootReducer = createReducer(
   on(addProgram, (state, { program }): RootState => {
     const programsById = state.company.data.programById.set(program.id, program);
     const company = new Company({ ...state.company.data, programs: [...programsById.values()] });
+
+    return {
+      ...state,
+      company: new TimestampedEntity(company),
+    };
+  }),
+  on(deleteProgram, (state, { programId }): RootState => {
+    const updatedProgramsById = new Map(state.company.data.programById);
+    updatedProgramsById.delete(programId);
+    const company = new Company({ ...state.company.data, programs: [...updatedProgramsById.values()] });
 
     return {
       ...state,

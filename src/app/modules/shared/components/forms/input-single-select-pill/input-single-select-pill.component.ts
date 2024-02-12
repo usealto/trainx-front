@@ -14,7 +14,7 @@ export class InputSingleSelectPillComponent {
   @Input() placeholder?: string;
   @Input() control: FormControl<PillOption | null> = new FormControl(null);
   @Input() options: PillOption[] = [];
-  @Input() hasPillAppearance = true;
+  @Input() hasFormAppearance = false;
 
   isDropdownOpen = false;
 
