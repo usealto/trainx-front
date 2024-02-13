@@ -121,7 +121,7 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
     this.statisticsPerTeamsComponentSubscription.unsubscribe();
   }
 
-  dataForTeamTableMapper(team?: Team, t?: TeamStats, tProg?: TeamStats) {
+  dataForTeamTableMapper(team?: Team, t?: TeamStats, tProg?: TeamStats): DataForTable {
     return {
       team: team,
       globalScore: t?.score,
@@ -141,7 +141,7 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
     } as DataForTable;
   }
 
-  dataForMembersTableMapper(user?: User, u?: UserStatsDtoApi, uProg?: UserStatsDtoApi) {
+  dataForMembersTableMapper(user?: User, u?: UserStatsDtoApi, uProg?: UserStatsDtoApi): DataForTable {
     return {
       owner: user,
       globalScore: u?.score,

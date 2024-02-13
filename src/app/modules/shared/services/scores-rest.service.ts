@@ -17,6 +17,7 @@ import {
   StatsApiService,
   TagStatsDtoApi,
   TagStatsDtoPaginatedResponseApi,
+  UserStatsDtoApi,
   UserStatsDtoPaginatedResponseApi,
 } from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
@@ -62,6 +63,57 @@ export class ScoresRestService {
       itemsPerPage: 1000,
       ...reqParams,
     } as GetUsersStatsRequestParams);
+  }
+
+  getDurationUsersStats(
+    duration: EScoreDuration,
+    isProgression = false,
+    req: GetUsersStatsRequestParams = {},
+  ): Observable<UserStatsDtoApi[]> {
+    let dateAfter: Date;
+    let dateBefore: Date;
+
+    if (isProgression) {
+      const [start, end] = this.service.getPreviousPeriod(duration);
+
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration);
+      dateBefore = new Date();
+      dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
+    }
+
+    req.from = dateAfter;
+    req.to = dateBefore;
+
+    return this.statsApi
+      .getUsersStats({ page: 1, sortBy: 'createdAt: asc', itemsPerPage: 1000, ...req })
+      .pipe(
+        switchMap(({ data, meta }) => {
+          const reqs: Observable<UserStatsDtoApi[]>[] = [of(data ? data : [])];
+          let totalPages = meta.totalPage ?? 1;
+
+          for (let i = 2; i <= totalPages; i++) {
+            reqs.push(
+              this.statsApi
+                .getUsersStats({ page: i, sortBy: 'createdAt:asc', itemsPerPage: 1000, ...req })
+                .pipe(
+                  tap(({ meta }) => {
+                    if (meta.totalPage !== totalPages) {
+                      totalPages = meta.totalPage;
+                    }
+                  }),
+                  map(({ data }) => (data ? data : [])),
+                ),
+            );
+          }
+          return combineLatest(reqs);
+        }),
+        map((usersStatsDtos) => {
+          return usersStatsDtos.flat();
+        }),
+      );
   }
 
   getPaginatedQuestionsStats(

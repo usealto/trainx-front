@@ -20,7 +20,6 @@ import { LoadingModule } from 'src/app/core/utils/loading/loading.module';
 import { UtilsPipeModule } from 'src/app/core/utils/pipe/utils-pipe.module';
 import { QuestionFormComponent } from '../programs/components/create-questions/question-form.component';
 import { AnchorNavigatorComponent } from './components/anchor-navigator/anchor-navigator.component';
-import { ButtonGroupComponent } from './components/button-group/button-group.component';
 import { ColoredPillListComponent } from './components/colored-pill/colored-pill-list.component';
 import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
 import { DropdownFilterComponent } from './components/dropdown-filter/dropdown-filter.component';
@@ -53,6 +52,7 @@ import { TrainingCardComponent } from './components/training-card/training-card.
 import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe';
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
+import { InputButtonGroupComponent } from './components/forms/input-button-group/input-button-group.component';
 @NgModule({
   declarations: [
     ProgressionPillPipe,
@@ -73,7 +73,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     ScoreFilterComponent,
     ProgressionFilterComponent,
     ImgBadgeListComponent,
-    ButtonGroupComponent,
+    InputButtonGroupComponent,
     TextCounterComponent,
     QuestionDeleteModalComponent,
     IconBadgeComponent,
@@ -142,7 +142,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
     ScoreFilterComponent,
     ProgressionFilterComponent,
     ImgBadgeListComponent,
-    ButtonGroupComponent,
+    InputButtonGroupComponent,
     TextCounterComponent,
     QuestionDeleteModalComponent,
     EmojiPipe,

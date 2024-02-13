@@ -11,6 +11,7 @@ import {
   concat,
   debounceTime,
   filter,
+  first,
   map,
   of,
   startWith,
@@ -57,8 +58,6 @@ export class EditProgramsComponent implements OnInit {
   ETab = Etab;
   EPlaceholderStatus = EPlaceholderStatus;
 
-  private readonly programFormSubscription = new Subscription();
-
   company!: Company;
   program?: Program;
 
@@ -81,15 +80,15 @@ export class EditProgramsComponent implements OnInit {
   priorityOptions: SelectOption[] = [
     new SelectOption({
       value: ProgramDtoApiPriorityEnumApi.High,
-      label: getTranslation(I18ns.shared.priorities, 'high'),
+      label: getTranslation(I18ns.shared.priorities, ProgramDtoApiPriorityEnumApi.High),
     }),
     new SelectOption({
       value: ProgramDtoApiPriorityEnumApi.Medium,
-      label: getTranslation(I18ns.shared.priorities, 'medium'),
+      label: getTranslation(I18ns.shared.priorities, ProgramDtoApiPriorityEnumApi.Medium),
     }),
     new SelectOption({
       value: ProgramDtoApiPriorityEnumApi.Low,
-      label: getTranslation(I18ns.shared.priorities, 'low'),
+      label: getTranslation(I18ns.shared.priorities, ProgramDtoApiPriorityEnumApi.Low),
     }),
   ];
 
@@ -110,6 +109,8 @@ export class EditProgramsComponent implements OnInit {
 
   tagOptions: PillOption[] = [];
   tagControls: FormControl<FormControl<PillOption>[]> = new FormControl([], { nonNullable: true });
+
+  private readonly editProgramComponentSubscription = new Subscription();
 
   constructor(
     private readonly activatedRoute: ActivatedRoute,
@@ -195,7 +196,7 @@ export class EditProgramsComponent implements OnInit {
       ),
     });
 
-    this.programFormSubscription.add(
+    this.editProgramComponentSubscription.add(
       combineLatest([
         this.associatedQuestionsPageControl.valueChanges.pipe(
           startWith(this.associatedQuestionsPageControl.value),
@@ -230,7 +231,7 @@ export class EditProgramsComponent implements OnInit {
         }),
     );
 
-    this.programFormSubscription.add(
+    this.editProgramComponentSubscription.add(
       combineLatest([
         this.questionsPageControl.valueChanges.pipe(startWith(this.questionsPageControl.value)),
         concat(
@@ -284,6 +285,7 @@ export class EditProgramsComponent implements OnInit {
 
   // INFORMATIONS TAB
   submitForm(): void {
+    const createMode = !this.program;
     const { nameControl, expectationControl, priorityControl, teamControls } = this.programFormGroup.controls;
 
     const newProg = {
@@ -303,12 +305,14 @@ export class EditProgramsComponent implements OnInit {
 
           return combineLatest([of(updatedProgram.id), this.store.select(FromRoot.selectCompany)]);
         }),
+        first(),
       )
       .subscribe({
         next: ([updatedProgramId, { data: company }]) => {
           this.program = company.programById.get(updatedProgramId) as Program;
-
-          if (this.tabsControl.value === this.tabsOptions[0]) {
+        },
+        complete: () => {
+          if (this.tabsControl.value === this.tabsOptions[0] && createMode) {
             this.switchTab(this.tabsOptions[1]);
           } else {
             this.toastService.show({

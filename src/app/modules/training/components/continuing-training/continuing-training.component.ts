@@ -48,11 +48,11 @@ export class ContinuingTrainingComponent implements OnInit {
     combineLatest([
       this.scoresRestService.getPaginatedUsersStats(EScoreDuration.Month, false, { ids: this.me.id }),
       this.scoresRestService.getPaginatedUsersStats(EScoreDuration.Month, true, { ids: this.me.id }),
-      this.guessRestService.getGuesses(
+      this.guessRestService.getPaginatedGuesses(
         { createdBy: this.me.id, itemsPerPage: 500 },
         EScoreDuration.Trimester,
       ),
-      this.guessRestService.getGuesses(
+      this.guessRestService.getPaginatedGuesses(
         { createdBy: this.me.id, itemsPerPage: 500 },
         EScoreDuration.Trimester,
         true,
@@ -80,7 +80,7 @@ export class ContinuingTrainingComponent implements OnInit {
 
   continuousSessionGetGuessesCount() {
     this.guessesRestService
-      .getGuesses({
+      .getPaginatedGuesses({
         createdAfter: addDays(new Date(), -1),
         createdBefore: addDays(new Date(), 1),
       })

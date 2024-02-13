@@ -14,6 +14,11 @@
 
 <datalist>
   <ng-container *ngFor="let option of options">
-    <option [value]="option.value" [label]="option.label"></option>
+    <option
+    class="cursor-pointer"
+    (click)="selectOption(option)"
+    [value]="option.value"
+    [label]="option.label">
+    </option>
   </ng-container>
 </datalist>

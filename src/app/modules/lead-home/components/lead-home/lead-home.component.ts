@@ -285,8 +285,8 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
     this.expectedGuessCount = teamsStats.reduce((acc, team) => acc + (team.questionsPushedCount ?? 0), 0);
 
     return combineLatest([
-      this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration),
-      this.guessesRestService.getGuesses({ itemsPerPage: 1 }, duration, true),
+      this.guessesRestService.getPaginatedGuesses({ itemsPerPage: 1 }, duration),
+      this.guessesRestService.getPaginatedGuesses({ itemsPerPage: 1 }, duration, true),
     ]).pipe(
       tap(([guesses, previousGuesses]) => {
         this.guessCount = guesses.meta.totalItems;

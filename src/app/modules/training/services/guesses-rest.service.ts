@@ -17,7 +17,7 @@ import { EScoreDuration } from '../../../models/score.model';
 export class GuessesRestService {
   constructor(private readonly guessesApi: GuessesApiService, private readonly scoreService: ScoresService) {}
 
-  getGuesses(
+  getPaginatedGuesses(
     params?: GetGuessesRequestParams,
     duration?: EScoreDuration,
     isProgression?: boolean,

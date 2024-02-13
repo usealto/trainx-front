@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { AltoConnectorEnumApi, CompanyDtoApiConnectorEnumApi } from '@usealto/sdk-ts-angular';
-import { switchMap, tap } from 'rxjs';
+import { first, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
@@ -152,6 +152,7 @@ export class SettingsIntegrationsComponent implements OnInit {
             this.store.dispatch(updateCompany({ company }));
           }),
           switchMap(() => this.store.select(FromRoot.selectCompany)),
+          first(),
         )
         .subscribe({
           next: ({ data: company }) => {
@@ -171,6 +172,7 @@ export class SettingsIntegrationsComponent implements OnInit {
             this.store.dispatch(updateCompany({ company }));
           }),
           switchMap(() => this.store.select(FromRoot.selectCompany)),
+          first(),
         )
         .subscribe({
           next: ({ data: company }) => {
@@ -198,6 +200,7 @@ export class SettingsIntegrationsComponent implements OnInit {
             this.store.dispatch(updateCompany({ company }));
           }),
           switchMap(() => this.store.select(FromRoot.selectCompany)),
+          first(),
         )
         .subscribe({
           next: ({ data: company }) => {

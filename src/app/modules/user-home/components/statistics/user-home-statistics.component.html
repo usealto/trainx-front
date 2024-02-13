@@ -1,14 +1,11 @@
-<div class="row mt-6 mb-4">
+<div class="header mt-6 mb-4">
   <div class="col-5">
     <h2 class="title">{{ I18ns.userHome.statistics.title }}</h2>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.userHome.statistics.subtitle }}</p>
   </div>
-  <div class="col-7 text-end">
-    <alto-time-picker
-      class="time-picker2"
-      [durationControl]="durationControl"
-    ></alto-time-picker>
-  </div>
+  <alto-time-picker
+  [durationControl]="durationControl">
+  </alto-time-picker>
 </div>
 <div class="row">
   <div class="col-3 statistics-panel">
@@ -84,7 +81,7 @@
         <alto-chart-basicline [chartOption]="userChartOptions" [initOptions]="{height: '280px'}"></alto-chart-basicline>
       </div>
     </div>
-    <div class="nodata-placeholder chart-container" empty>
+    <div class="nodata-placeholder chart-container" noData>
       <div class="text-center">
         <img [src]="EmojiName.FourOclock | emoji" height="24" width="24" />
         <p class="mt-3">

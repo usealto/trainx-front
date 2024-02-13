@@ -49,6 +49,50 @@ export class ProgramsRestService {
     return this.programApi.getPrograms(par);
   }
 
+  getAllDurationPrograms(
+    req: GetProgramsRequestParams,
+    duration?: EScoreDuration,
+    isProgression = false,
+  ): Observable<Program[]> {
+    const par = {
+      page: 1,
+      itemsPerPage: 300,
+      sortBy: 'name:asc',
+      ...req,
+    } as GetProgramsRequestParams;
+
+    if (duration) {
+      par.createdAfter = isProgression
+        ? this.scoresService.getPreviousPeriod(duration)[0]
+        : this.scoresService.getStartDate(duration);
+      par.createdBefore = isProgression
+        ? this.scoresService.getPreviousPeriod(duration)[1]
+        : addDays(new Date(), 1); //! TEMPORARY FIX to get data from actual day
+    }
+
+    return this.programApi.getPrograms(par).pipe(
+      switchMap(({ data, meta }) => {
+        const reqs: Observable<ProgramDtoApi[]>[] = [of(data ? data : [])];
+        let totalPages = meta.totalPage ?? 1;
+
+        for (let i = 2; i <= totalPages; i++) {
+          reqs.push(
+            this.programApi.getPrograms({ page: i, itemsPerPage: 300, sortBy: 'name:asc', ...req }).pipe(
+              tap(({ meta }) => {
+                if (meta.totalPage !== totalPages) {
+                  totalPages = meta.totalPage;
+                }
+              }),
+              map((r) => r.data ?? []),
+            ),
+          );
+        }
+        return combineLatest(reqs);
+      }),
+      map((programs) => programs.flat().map((p) => Program.fromDto(p))),
+    );
+  }
+
   getAllPrograms(req?: GetProgramsRequestParams): Observable<Program[]> {
     return this.programApi.getPrograms({ page: 1, itemsPerPage: 400, sortBy: 'name:asc', ...req }).pipe(
       switchMap(({ data, meta }) => {

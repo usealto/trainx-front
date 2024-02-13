@@ -14,6 +14,15 @@ import { GetProgramRunsRequestParams, ProgramRunDtoPaginatedResponseApi } from '
 import { Program } from '../../../../models/program.model';
 import { ITrainingCardData } from '../../../shared/components/training-card/training-card.component';
 import { EScoreFilter } from '../../../../models/score.model';
+import { ITabOption } from 'src/app/modules/shared/components/tabs/tabs.component';
+import { FormControl } from '@angular/forms';
+import { SelectOption } from 'src/app/modules/shared/models/select-option.model';
+
+enum EtrainingTabs {
+  Ongoing = 'Ongoing',
+  Done = 'Done',
+  ShowAll = 'ShowAll',
+}
 
 enum OngoingFilter {
   All = 'All',
@@ -42,12 +51,52 @@ type AllProgramsFilters = {
 export class TrainingHomeComponent implements OnInit {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
-  OngoingFilter = OngoingFilter;
-  DoneFilter = DoneFilter;
-  activeTab = 1;
+  EtrainingTabs = EtrainingTabs;
+
+  tabOptions: ITabOption[] = [
+    {
+      label: I18ns.training.tabs.onGoing,
+      value: EtrainingTabs.Ongoing,
+    },
+    {
+      label: I18ns.training.tabs.done,
+      value: EtrainingTabs.Done,
+    },
+    {
+      label: I18ns.training.tabs.showAll,
+      value: EtrainingTabs.ShowAll,
+    },
+  ];
+  tabControl = new FormControl<ITabOption>(this.tabOptions[0], { nonNullable: true });
+
+  ongoingFilterOptions: SelectOption[] = [
+    new SelectOption({
+      label: I18ns.training.onGoing.filters.showAll,
+      value: OngoingFilter.All,
+    }),
+    new SelectOption({
+      label: I18ns.training.onGoing.filters.started,
+      value: OngoingFilter.Started,
+    }),
+    new SelectOption({
+      label: I18ns.training.onGoing.filters.new,
+      value: OngoingFilter.New,
+    }),
+  ];
+  ongoingFilterControl = new FormControl<SelectOption>(this.ongoingFilterOptions[0], { nonNullable: true });
+
+  completionFilterOptions: SelectOption[] = [
+    new SelectOption({ label: I18ns.training.donePrograms.filters.showAll, value: DoneFilter.All }),
+    new SelectOption({ label: I18ns.training.donePrograms.filters.good, value: DoneFilter.Good }),
+    new SelectOption({ label: I18ns.training.donePrograms.filters.notGood, value: DoneFilter.NotGood }),
+  ];
+  completionFilterControl = new FormControl<SelectOption>(this.completionFilterOptions[0], {
+    nonNullable: true,
+  });
 
   guessesCount = 0;
   startedProgramsCount = 0;
+
   doneFilters: DoneFilters = { scoreStatus: DoneFilter.All, search: '' };
   allProgramsFilters: AllProgramsFilters = { search: '' };
 
@@ -94,8 +143,8 @@ export class TrainingHomeComponent implements OnInit {
       .subscribe();
   }
 
-  switchTab(index: number) {
-    this.activeTab = index;
+  switchTab(selectedOption: ITabOption): void {
+    this.tabControl.patchValue(selectedOption);
   }
 
   onGoingFilter(val: OngoingFilter) {
@@ -186,7 +235,7 @@ export class TrainingHomeComponent implements OnInit {
 
   backToTrainings() {
     this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training]);
-    this.switchTab(1);
+    // this.switchTab(1);
   }
 
   resetFilters() {

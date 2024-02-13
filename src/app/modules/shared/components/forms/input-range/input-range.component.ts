@@ -24,4 +24,10 @@ export class InputRangeComponent {
     { value: 75, label: '75' },
     { value: 100, label: '100%' },
   ];
+
+  selectOption(option: IRangeOption): void {
+    this.control.patchValue(option.value);
+    this.control.markAsTouched();
+    this.control.markAsDirty();
+  }
 }

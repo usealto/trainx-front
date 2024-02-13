@@ -3,26 +3,19 @@ import {
   CreateProgramRunDtoApi,
   GetAllProgramRunQuestionsPaginatedRequestParams,
   GetProgramRunsRequestParams,
+  ProgramRunDtoApi,
   ProgramRunDtoPaginatedResponseApi,
   ProgramRunsApiService,
   QuestionDtoPaginatedResponseApi,
 } from '@usealto/sdk-ts-angular';
-import { Observable, map } from 'rxjs';
+import { Observable, combineLatest, map, of, switchMap, tap } from 'rxjs';
 import { ProgramRun } from '../../../models/program-run.model';
-import { UsersRestService } from '../../profile/services/users-rest.service';
-import { ScoresService } from '../../shared/services/scores.service';
-import { ProgramsRestService } from './programs-rest.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProgramRunsRestService {
-  constructor(
-    private readonly programRunApi: ProgramRunsApiService,
-    private readonly programsRestService: ProgramsRestService,
-    private readonly scoresService: ScoresService,
-    private readonly usersService: UsersRestService,
-  ) {}
+  constructor(private readonly programRunApi: ProgramRunsApiService) {}
 
   getProgramRunsPaginated(req: GetProgramRunsRequestParams): Observable<ProgramRunDtoPaginatedResponseApi> {
     const par = {
@@ -34,17 +27,27 @@ export class ProgramRunsRestService {
     return this.programRunApi.getProgramRuns(par);
   }
 
-  getUserProgramRuns(userId: string, programIds?: string[]): Observable<ProgramRun[]> {
-    return this.getProgramRunsPaginated({
-      createdBy: userId,
-    } as GetProgramRunsRequestParams).pipe(
-      map((programRuns: ProgramRunDtoPaginatedResponseApi) => {
-        return (
-          programRuns.data
-            ?.filter((dto) => programIds?.includes(dto.programId) ?? true)
-            .map((dto) => ProgramRun.fromDto(dto)) || []
-        );
+  getAllProgramRuns(req: GetProgramRunsRequestParams): Observable<ProgramRun[]> {
+    return this.programRunApi.getProgramRuns(req).pipe(
+      switchMap(({ data, meta }) => {
+        const reqs: Observable<ProgramRunDtoApi[]>[] = [of(data ? data : [])];
+        let totalPages = meta.totalPage ?? 1;
+
+        for (let i = 2; i <= totalPages; i++) {
+          reqs.push(
+            this.programRunApi.getProgramRuns({ page: i, itemsPerPage: 300, ...req }).pipe(
+              tap(({ meta }) => {
+                if (meta.totalPage !== totalPages) {
+                  totalPages = meta.totalPage;
+                }
+              }),
+              map((r) => r.data ?? []),
+            ),
+          );
+        }
+        return combineLatest(reqs);
       }),
+      map((programs) => programs.flat().map((p) => ProgramRun.fromDto(p))),
     );
   }
 

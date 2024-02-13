@@ -4,7 +4,18 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { GetUsersStatsRequestParams, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, concat, debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
+import {
+  Subscription,
+  combineLatest,
+  concat,
+  debounceTime,
+  first,
+  map,
+  of,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { IAppData } from 'src/app/core/resolvers';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -140,8 +151,8 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     // users subscription
     this.leadTeamComponentSubscription.add(
       combineLatest([
-        this.guessesRestService.getGuesses(undefined, EScoreDuration.Month, false),
-        this.guessesRestService.getGuesses(undefined, EScoreDuration.Month, true),
+        this.guessesRestService.getPaginatedGuesses(undefined, EScoreDuration.Month, false),
+        this.guessesRestService.getPaginatedGuesses(undefined, EScoreDuration.Month, true),
       ])
         .pipe(
           map(([totalGuesses, prevTotalGuesses]) => {
@@ -263,29 +274,31 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
           return combineLatest([of(team), this.programsRestService.getAllPrograms()]);
         }),
       )
-      .subscribe(([team, programs]) => {
-        const updatedCompany = new Company({
-          ...this.company.rawData,
-          teams: Array.from(this.teamsById.set(team.id, team).values()),
-          programs: programs.map((program) => program.rawData),
-        });
-
-        this.store.dispatch(setCompany({ company: updatedCompany }));
-
-        const teamIndex = this.teamsDisplay.findIndex((t) => t.id === team.id);
-        if (this.teamsDisplay[teamIndex]) {
-          this.teamsDisplay[teamIndex].name = team.name;
-        }
-
-        if (programs.length > 0) {
-          programs.forEach((program) => {
-            const i = this.programs.findIndex((p) => p.id === program.id);
-
-            if (i !== -1) {
-              this.programs[i] = program;
-            }
+      .subscribe({
+        next: ([team, programs]) => {
+          const updatedCompany = new Company({
+            ...this.company.rawData,
+            teams: Array.from(this.teamsById.set(team.id, team).values()),
+            programs: programs.map((program) => program.rawData),
           });
-        }
+
+          this.store.dispatch(setCompany({ company: updatedCompany }));
+
+          const teamIndex = this.teamsDisplay.findIndex((t) => t.id === team.id);
+          if (this.teamsDisplay[teamIndex]) {
+            this.teamsDisplay[teamIndex].name = team.name;
+          }
+
+          if (programs.length > 0) {
+            programs.forEach((program) => {
+              const i = this.programs.findIndex((p) => p.id === program.id);
+
+              if (i !== -1) {
+                this.programs[i] = program;
+              }
+            });
+          }
+        },
       });
   }
 

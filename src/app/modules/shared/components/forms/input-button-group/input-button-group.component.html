@@ -1,0 +1,9 @@
+<div class="button-group-container">
+  <div *ngFor="let option of options; let first = first; let last = last"
+  class="option"
+  [class.checked]="control.value === option"
+  [class.left]="first"
+  [class.right]="last">
+    <p>{{ option.label }}</p>
+  </div>
+</div>

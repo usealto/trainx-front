@@ -1,64 +1,28 @@
 <h1>{{ I18ns.training.title }}</h1>
 <p class="mt-2 mb-4 alto-grey fs-6b">{{ I18ns.training.subtitle }}</p>
+
 <!-- TABS -->
-<input
-  type="radio"
-  class="btn-check"
-  (click)="switchTab(1)"
-  id="tab1"
-  autocomplete="off"
-  [checked]="activeTab === 1"
-/>
-<label class="alto-tab-btn" for="tab1">
-  {{ I18ns.training.tabs.onGoing }}
-  <span class="ms-3 badge rounded-pill" [ngClass]="activeTab === 1 ? 'alto-orange-bg' : 'alto-dark-grey-bg'">
-    {{ startedProgramsCount }}
-  </span>
-</label>
-
-<input
-  type="radio"
-  class="btn-check"
-  (click)="switchTab(2)"
-  id="tab2"
-  autocomplete="off"
-  [checked]="activeTab === 2"
-/>
-<label class="alto-tab-btn" for="tab2">
-  {{ I18ns.training.tabs.done }}
-</label>
-
-<div class="vertical-divider"></div>
-
-<input
-  type="radio"
-  class="btn-check"
-  (click)="switchTab(3)"
-  id="tab3"
-  autocomplete="off"
-  [checked]="activeTab === 3"
-/>
-<label class="alto-tab-btn ms-4" for="tab3">
-  {{ I18ns.training.tabs.showAll }}
-</label>
+<div class="alto-tabs-container">
+  <ng-container *ngFor="let option of tabOptions; let index = index; let last = last">
+    <div
+      (click)="switchTab(option)"
+      class="tab-btn"
+      [class.check]="tabControl.value === option">
+      {{option.label}}
+      <span *ngIf="index === 0" class="ms-3 badge rounded-pill" [ngClass]="tabControl.value === option ? 'alto-orange-bg' : 'alto-dark-grey-bg'">
+        {{ startedProgramsCount }}
+      </span>
+    </div>
+    <div *ngIf="index === tabOptions.length - 2" class="vertical-divider"></div>
+  </ng-container>
+</div>
 
 <hr />
 
-<ng-container [ngSwitch]="activeTab">
-  <ng-container *ngSwitchCase="1">
+<ng-container [ngSwitch]="tabControl.value.value">
+  <ng-container *ngSwitchCase="EtrainingTabs.Ongoing">
     <!--  ONGOING -->
-
-    <alto-button-group
-      class="float-end"
-      [value]="OngoingFilter.All + ''"
-      [items]="[
-        { label: I18ns.training.onGoing.filters.showAll, value: OngoingFilter.All },
-        { label: I18ns.training.onGoing.filters.started, value: OngoingFilter.Started },
-        { label: I18ns.training.onGoing.filters.new, value: OngoingFilter.New }
-      ]"
-      (valueSelected)="onGoingFilter($event)"
-    ></alto-button-group>
-
+      <alto-input-button-group [control]="ongoingFilterControl" [options]="ongoingFilterOptions"></alto-input-button-group>
     <h2>{{ I18ns.training.onGoing.title }}</h2>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.onGoing.subtitle }}</p>
 
@@ -92,7 +56,7 @@
       </div>
     </alto-training-cards-list>
   </ng-container>
-  <ng-container *ngSwitchCase="2">
+  <ng-container *ngSwitchCase="EtrainingTabs.Done">
     <!-- DONE -->
     <h2>{{ I18ns.training.donePrograms.title }}</h2>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.donePrograms.subtitle }}</p>
@@ -114,15 +78,7 @@
 
     <div class="row mb-4">
       <div class="col-7">
-        <alto-button-group
-          [value]="DoneFilter.All + ''"
-          [items]="[
-            { label: I18ns.training.donePrograms.filters.showAll, value: DoneFilter.All },
-            { label: I18ns.training.donePrograms.filters.good, value: DoneFilter.Good },
-            { label: I18ns.training.donePrograms.filters.notGood, value: DoneFilter.NotGood }
-          ]"
-          (valueSelected)="doneFilter({ scoreStatus: $event })"
-        ></alto-button-group>
+        <alto-input-button-group [options]="completionFilterOptions" [control]="completionFilterControl"></alto-input-button-group>
       </div>
       <div class="col-5 text-end">
         <alto-search (searchChange)="doneFilter({ search: $event })"></alto-search>
@@ -140,7 +96,7 @@
       </div>
     </alto-training-cards-list>
   </ng-container>
-  <ng-container *ngSwitchCase="3">
+  <ng-container *ngSwitchCase="EtrainingTabs.ShowAll">
     <!-- SHOW ALL -->
     <h2>{{ I18ns.training.showAll.title }}</h2>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.showAll.subtitle }}</p>

@@ -1,9 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { GuessDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
+import { GuessDtoApi } from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
-import { Subscription, combineLatest, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, startWith, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
@@ -12,17 +12,13 @@ import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { GuessesRestService } from 'src/app/modules/training/services/guesses-rest.service';
 import { IAppData } from '../../../../core/resolvers';
+import { EmojiName } from '../../../../core/utils/emoji/data';
 import { Program } from '../../../../models/program.model';
-import { ITrainingCardData } from '../../../shared/components/training-card/training-card.component';
-import { ITabOption } from '../../../shared/components/tabs/tabs.component';
 import { EScoreDuration } from '../../../../models/score.model';
+import { ILeaderboardData } from '../../../shared/components/leaderboard/leaderboard.component';
+import { ITrainingCardData } from '../../../shared/components/training-card/training-card.component';
+import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 
-interface LeaderboardUser {
-  position: number;
-  user?: UserDtoApi;
-  score: number | undefined;
-  progression: number;
-}
 @Component({
   selector: 'alto-user-home',
   templateUrl: './user-home.component.html',
@@ -31,6 +27,8 @@ interface LeaderboardUser {
 export class UserHomeComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+  EmojiName = EmojiName;
+
   user!: User;
   users: User[] = [];
   programs: Program[] = [];
@@ -42,15 +40,11 @@ export class UserHomeComponent implements OnInit, OnDestroy {
   continuousSessionUsers: User[] = [];
 
   //team data
-  durationOptions: ITabOption[] = [
-    { label: I18ns.shared.dateFilter.week, value: EScoreDuration.Week },
-    { label: I18ns.shared.dateFilter.month, value: EScoreDuration.Month },
-    { label: I18ns.shared.dateFilter.year, value: EScoreDuration.Year },
-  ];
-  durationControl = new FormControl<ITabOption>(this.durationOptions[0], {
+  durationControl = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
   });
-  leaderboardUsers: LeaderboardUser[] | undefined = undefined;
+  leaderboardUsers: ILeaderboardData[] = [];
+  leaderboardDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   pageSize = 2;
   pageControl: FormControl<number> = new FormControl(1, { nonNullable: true });
@@ -72,11 +66,11 @@ export class UserHomeComponent implements OnInit, OnDestroy {
 
     this.userHomeComponentSubscription.add(
       combineLatest([
-        this.programRunsRestService.getUserProgramRuns(
-          this.user.id,
-          this.programs.map(({ id }) => id),
-        ),
-        this.guessesRestService.getGuesses({
+        this.programRunsRestService.getAllProgramRuns({
+          userId: this.user.id,
+          programIds: this.programs.map(({ id }) => id).join(','),
+        }),
+        this.guessesRestService.getPaginatedGuesses({
           createdAfter: addDays(new Date(), -1),
           createdBefore: addDays(new Date(), 1),
         }),
@@ -113,10 +107,11 @@ export class UserHomeComponent implements OnInit, OnDestroy {
           switchMap(() => {
             return this.durationControl.valueChanges;
           }),
+          startWith(this.durationControl.value),
           switchMap((duration) => {
             return combineLatest([
-              this.scoreRestService.getPaginatedUsersStats(duration.value),
-              this.scoreRestService.getPaginatedUsersStats(duration.value, true),
+              this.scoreRestService.getPaginatedUsersStats(duration),
+              this.scoreRestService.getPaginatedUsersStats(duration, true),
             ]);
           }),
         )
@@ -128,7 +123,7 @@ export class UserHomeComponent implements OnInit, OnDestroy {
             );
 
             this.leaderboardUsers = filteredUsersStats
-              .map((scoredUser, index) => {
+              .map((scoredUser) => {
                 const user = this.users.find((user) => user.id === scoredUser.id);
                 const previousScoredUser = filteredPreviousScoredUsers.find(
                   (user) => user.id === scoredUser.id,
@@ -138,13 +133,15 @@ export class UserHomeComponent implements OnInit, OnDestroy {
                     ? scoredUser.score - previousScoredUser.score
                     : 0;
                 return {
-                  position: index + 1,
-                  user: user,
-                  score: scoredUser.score,
+                  name: user?.fullname as string,
+                  score: scoredUser.score ?? 0,
                   progression: progression,
-                } as LeaderboardUser;
+                };
               })
               .slice(0, 5);
+
+            this.leaderboardDataStatus =
+              this.leaderboardUsers.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
           },
         }),
     );

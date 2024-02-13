@@ -1,8 +1,8 @@
 <div class="alto-tabs-container">
-  <div *ngFor="let option of options"
-  (click)="switchTab(option)"
-  class="tab-btn"
-  [class.check]="selectedControl.value?.value === option.value">
+    <div *ngFor="let option of options"
+    (click)="switchTab(option)"
+    class="tab-btn"
+    [class.check]="selectedControl.value?.value === option.value">
     {{ option.label }}
   </div>
 </div>

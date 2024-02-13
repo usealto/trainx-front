@@ -130,7 +130,7 @@ export class TrainingComponent implements OnInit {
         switchMap(() =>
           combineLatest([
             this.programRunsRestService.getMyProgramRunsQuestions({ id: this.programRun?.id ?? '' }),
-            this.guessRestService.getGuesses({
+            this.guessRestService.getPaginatedGuesses({
               createdBy: this.user.id,
               programRunIds: this.programRun?.id,
             }),
