@@ -1,22 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { Observable, combineLatest, map, of, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, concat, debounceTime, of, startWith, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { User } from 'src/app/models/user.model';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
+import { ITabOption } from 'src/app/modules/shared/components/tabs/tabs.component';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { PillOption, SelectOption } from 'src/app/modules/shared/models/select-option.model';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../core/resolvers';
-import { GetProgramRunsRequestParams, ProgramRunDtoPaginatedResponseApi } from '@usealto/sdk-ts-angular';
 import { Program } from '../../../../models/program.model';
+import { EScoreFilter, Score } from '../../../../models/score.model';
 import { ITrainingCardData } from '../../../shared/components/training-card/training-card.component';
-import { EScoreFilter } from '../../../../models/score.model';
-import { ITabOption } from 'src/app/modules/shared/components/tabs/tabs.component';
-import { FormControl } from '@angular/forms';
-import { SelectOption } from 'src/app/modules/shared/models/select-option.model';
+import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 
 enum EtrainingTabs {
   Ongoing = 'Ongoing',
@@ -29,29 +27,27 @@ enum OngoingFilter {
   Started = 'Started',
   New = 'New',
 }
+
 enum DoneFilter {
   All = 'All',
   Good = 'Good',
   NotGood = 'NotGood',
 }
 
-type DoneFilters = { scoreStatus?: DoneFilter; search?: string };
-type AllProgramsFilters = {
-  progress?: EScoreFilter | string;
-  score?: EScoreFilter | string;
-  search?: string;
-};
-
-@UntilDestroy()
 @Component({
   selector: 'alto-training-home',
   templateUrl: './training-home.component.html',
   styleUrls: ['./training-home.component.scss'],
 })
-export class TrainingHomeComponent implements OnInit {
+export class TrainingHomeComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   EtrainingTabs = EtrainingTabs;
+
+  me!: User;
+  usersById!: Map<string, User>;
+  programsById!: Map<string, Program>;
+  allTrainingCards: ITrainingCardData[] = [];
 
   tabOptions: ITabOption[] = [
     {
@@ -69,6 +65,9 @@ export class TrainingHomeComponent implements OnInit {
   ];
   tabControl = new FormControl<ITabOption>(this.tabOptions[0], { nonNullable: true });
 
+  // ONGOING TAB
+  // ongoing section
+  ongoingTrainingCards: ITrainingCardData[] = [];
   ongoingFilterOptions: SelectOption[] = [
     new SelectOption({
       label: I18ns.training.onGoing.filters.showAll,
@@ -84,36 +83,47 @@ export class TrainingHomeComponent implements OnInit {
     }),
   ];
   ongoingFilterControl = new FormControl<SelectOption>(this.ongoingFilterOptions[0], { nonNullable: true });
+  ongoingPageControl = new FormControl<number>(1, { nonNullable: true });
+  readonly ongoingPageSize = 3;
+  ongoingTotalItems = 0;
+  ongoingDataStatus = EPlaceholderStatus.LOADING;
 
-  completionFilterOptions: SelectOption[] = [
+  // toImprove section
+  toImproveTrainingCards: ITrainingCardData[] = [];
+  toImprovePageControl = new FormControl<number>(1, { nonNullable: true });
+  readonly toImprovePageSize = 3;
+  toImproveTotalItems = 0;
+  toImproveDataStatus = EPlaceholderStatus.LOADING;
+
+  // FINISHED TAB
+  finishedTrainingCards: ITrainingCardData[] = [];
+  finishedPageControl = new FormControl<number>(1, { nonNullable: true });
+  finishedProgramsSearchControl = new FormControl<string | null>(null);
+  finishedTotalItems = 0;
+  finishedFilterOptions: SelectOption[] = [
     new SelectOption({ label: I18ns.training.donePrograms.filters.showAll, value: DoneFilter.All }),
     new SelectOption({ label: I18ns.training.donePrograms.filters.good, value: DoneFilter.Good }),
     new SelectOption({ label: I18ns.training.donePrograms.filters.notGood, value: DoneFilter.NotGood }),
   ];
-  completionFilterControl = new FormControl<SelectOption>(this.completionFilterOptions[0], {
+  finishedFilterControl = new FormControl<SelectOption>(this.finishedFilterOptions[0], {
     nonNullable: true,
   });
+  readonly finishedPageSize = 3;
+  finishedDataStatus = EPlaceholderStatus.LOADING;
 
-  guessesCount = 0;
-  startedProgramsCount = 0;
+  // SEE ALL TAB
+  allProgramsSearchControl = new FormControl<string | null>(null);
+  allProgramsPageControl = new FormControl<number>(1, { nonNullable: true });
 
-  doneFilters: DoneFilters = { scoreStatus: DoneFilter.All, search: '' };
-  allProgramsFilters: AllProgramsFilters = { search: '' };
+  readonly scoreOptions: PillOption[] = Score.getFiltersPillOptions();
+  allProgramsScoreControl = new FormControl<PillOption | null>(null);
+  allProgramsProgressControl = new FormControl<PillOption | null>(null);
+  allProgramsTrainingCards: ITrainingCardData[] = [];
+  allProgramsTotalItems = 0;
+  readonly allProgramsPageSize = 9;
+  allProgramsDataStatus = EPlaceholderStatus.LOADING;
 
-  programs: Program[] = [];
-
-  onGoingPrograms: ITrainingCardData[] = [];
-  onGoingProgramsDisplay?: ITrainingCardData[];
-  improveScorePrograms?: ITrainingCardData[];
-  doneProgramsFiltered?: ITrainingCardData[];
-  donePrograms?: ITrainingCardData[];
-  allPrograms?: ITrainingCardData[];
-  allProgramsFiltered?: ITrainingCardData[];
-  me!: User;
-  users!: Map<string, User>;
-  selectedItems: ITrainingCardData[] = [];
-  disabledCountScore?: number;
-  disabledCountProgress?: number;
+  private readonly trainingHomeComponentSubscription = new Subscription();
 
   constructor(
     private readonly programRunsRestService: ProgramRunsRestService,
@@ -126,178 +136,262 @@ export class TrainingHomeComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.me = (data[EResolvers.AppResolver] as IAppData).me;
-    this.users = (data[EResolvers.AppResolver] as IAppData).userById;
-    this.programs = (data[EResolvers.AppResolver] as IAppData).company.programs;
-    this.getMyProgramRunsCards(this.me.id)
+    this.usersById = (data[EResolvers.AppResolver] as IAppData).userById;
+    this.programsById = (data[EResolvers.AppResolver] as IAppData).company.programById;
+
+    this.programRunsRestService
+      .getAllProgramRuns({ createdBy: this.me.id })
       .pipe(
-        tap((a) => {
-          this.allPrograms = this.allProgramsFiltered = a;
-          this.disabledCountScore = a.filter((r) => !r.inProgress).length;
-          this.disabledCountProgress = a.filter((r) => r.inProgress).length;
-          this.onGoingPrograms = this.onGoingProgramsDisplay = a.filter((r) => r.inProgress && r.duration);
-          this.startedProgramsCount = this.onGoingPrograms.filter((p) => !!p.programRunId).length;
-          this.improveScorePrograms = a.filter((r) => !r.inProgress && r.score < r.expectation);
-          this.donePrograms = this.doneProgramsFiltered = a.filter((r) => !r.inProgress);
+        tap((programRuns) => {
+          this.allTrainingCards = programRuns
+            .filter((programRun) => this.programsById.has(programRun.programId))
+            .map((programRun) => {
+              const program = this.programsById.get(programRun.programId) as Program;
+              return {
+                title: program.name,
+                score: (programRun.goodGuessesCount / programRun.questionsCount) * 100,
+                updatedAt: programRun.updatedAt,
+                programRunId: programRun.id,
+                programId: programRun.programId,
+                expectation: program.expectation ?? 0,
+                inProgress: !programRun.finishedAt,
+                duration: programRun.questionsCount * 30,
+              };
+            });
         }),
       )
-      .subscribe();
+      .subscribe({
+        complete: () => {
+          // add ongoing subscription
+          this.trainingHomeComponentSubscription.add(
+            combineLatest([
+              this.ongoingFilterControl.valueChanges.pipe(
+                startWith(this.ongoingFilterControl.value),
+                tap(() => this.ongoingPageControl.patchValue(1)),
+              ),
+              this.ongoingPageControl.valueChanges.pipe(startWith(this.ongoingPageControl.value)),
+            ])
+              .pipe(tap(() => (this.ongoingDataStatus = EPlaceholderStatus.LOADING)))
+              .subscribe({
+                next: ([filter, page]) => {
+                  let filteredCards = this.allTrainingCards.filter(
+                    (card) => card.inProgress && card.duration,
+                  );
+
+                  switch (filter.value) {
+                    case OngoingFilter.All:
+                      break;
+                    case OngoingFilter.New:
+                      filteredCards = filteredCards.filter((card) => !card.programRunId);
+                      break;
+                    case OngoingFilter.Started:
+                      filteredCards = filteredCards.filter((card) => card.programRunId);
+                      break;
+                  }
+
+                  this.ongoingTotalItems = filteredCards.length;
+                  this.ongoingTrainingCards = filteredCards.slice(
+                    (page - 1) * this.ongoingPageSize,
+                    page * this.ongoingPageSize,
+                  );
+
+                  this.ongoingDataStatus = this.ongoingTrainingCards.length
+                    ? EPlaceholderStatus.GOOD
+                    : EPlaceholderStatus.NO_DATA;
+                },
+              }),
+          );
+
+          // add toImprove subscription
+          this.trainingHomeComponentSubscription.add(
+            this.toImprovePageControl.valueChanges
+              .pipe(startWith(this.toImprovePageControl.value))
+              .subscribe({
+                next: (page) => {
+                  const filteredCards = this.allTrainingCards.filter(
+                    (card) => !card.inProgress && card.score < card.expectation,
+                  );
+
+                  this.toImproveTotalItems = filteredCards.length;
+                  this.toImproveTrainingCards = filteredCards.slice(
+                    (page - 1) * this.toImprovePageSize,
+                    page * this.toImprovePageSize,
+                  );
+
+                  this.toImproveDataStatus = this.toImproveTrainingCards.length
+                    ? EPlaceholderStatus.GOOD
+                    : EPlaceholderStatus.NO_DATA;
+                },
+              }),
+          );
+
+          // add finished subscription
+          this.trainingHomeComponentSubscription.add(
+            combineLatest([
+              this.finishedFilterControl.valueChanges.pipe(startWith(this.finishedFilterControl.value)),
+              concat(
+                of(this.finishedProgramsSearchControl.value),
+                this.finishedProgramsSearchControl.valueChanges.pipe(
+                  debounceTime(200),
+                  tap(() => this.finishedPageControl.setValue(1)),
+                ),
+              ),
+              this.finishedPageControl.valueChanges.pipe(startWith(this.finishedPageControl.value)),
+            ]).subscribe({
+              next: ([filter, search, page]) => {
+                let filteredCards = this.allTrainingCards.filter((card) => !card.inProgress);
+
+                switch (filter.value) {
+                  case DoneFilter.All:
+                    break;
+                  case DoneFilter.Good:
+                    filteredCards = filteredCards.filter((card) => card.score >= card.expectation);
+                    break;
+                  case DoneFilter.NotGood:
+                    filteredCards = filteredCards.filter((card) => card.score < card.expectation);
+                    break;
+                }
+
+                if (search) {
+                  const regex = new RegExp(search, 'i');
+                  filteredCards = filteredCards.filter((card) => regex.test(card.title));
+                }
+
+                this.finishedTotalItems = filteredCards.length;
+
+                this.finishedTrainingCards = filteredCards.slice(
+                  (page - 1) * this.finishedPageSize,
+                  page * this.finishedPageSize,
+                );
+
+                this.finishedDataStatus = this.finishedTrainingCards.length
+                  ? EPlaceholderStatus.GOOD
+                  : search
+                  ? EPlaceholderStatus.NO_RESULT
+                  : EPlaceholderStatus.NO_DATA;
+              },
+            }),
+          );
+          // add seeAll subscription
+          this.trainingHomeComponentSubscription.add(
+            combineLatest([
+              this.allProgramsScoreControl.valueChanges.pipe(startWith(this.allProgramsScoreControl.value)),
+              this.allProgramsProgressControl.valueChanges.pipe(
+                startWith(this.allProgramsProgressControl.value),
+              ),
+              concat(
+                of(this.allProgramsSearchControl.value),
+                this.allProgramsSearchControl.valueChanges.pipe(
+                  debounceTime(200),
+                  tap(() => this.allProgramsPageControl.setValue(1)),
+                ),
+              ),
+              this.allProgramsPageControl.valueChanges.pipe(startWith(this.allProgramsPageControl.value)),
+            ]).subscribe({
+              next: ([score, progress, search, page]) => {
+                let filteredCards = this.allTrainingCards;
+
+                if (score) {
+                  const scoreFilter = score.value as EScoreFilter;
+                  switch (scoreFilter) {
+                    case EScoreFilter.Under25:
+                      filteredCards = filteredCards.filter((card) => card.score < 25);
+                      break;
+                    case EScoreFilter.Under50:
+                      filteredCards = filteredCards.filter((card) => card.score < 50);
+                      break;
+                    case EScoreFilter.Under75:
+                      filteredCards = filteredCards.filter((card) => card.score < 75);
+                      break;
+                    case EScoreFilter.Over25:
+                      filteredCards = filteredCards.filter((card) => card.score >= 25);
+                      break;
+                    case EScoreFilter.Over50:
+                      filteredCards = filteredCards.filter((card) => card.score >= 50);
+                      break;
+                    case EScoreFilter.Over75:
+                      filteredCards = filteredCards.filter((card) => card.score >= 75);
+                      break;
+                  }
+                }
+
+                if (progress) {
+                  const progressFilter = progress.value as EScoreFilter;
+                  switch (progressFilter) {
+                    case EScoreFilter.Under25:
+                      filteredCards = filteredCards.filter((card) => card.score < 25);
+                      break;
+                    case EScoreFilter.Under50:
+                      filteredCards = filteredCards.filter((card) => card.score < 50);
+                      break;
+                    case EScoreFilter.Under75:
+                      filteredCards = filteredCards.filter((card) => card.score < 75);
+                      break;
+                    case EScoreFilter.Over25:
+                      filteredCards = filteredCards.filter((card) => card.score >= 25);
+                      break;
+                    case EScoreFilter.Over50:
+                      filteredCards = filteredCards.filter((card) => card.score >= 50);
+                      break;
+                    case EScoreFilter.Over75:
+                      filteredCards = filteredCards.filter((card) => card.score >= 75);
+                      break;
+                  }
+                }
+
+                if (search) {
+                  const regex = new RegExp(search, 'i');
+                  filteredCards = filteredCards.filter((card) => regex.test(card.title));
+                }
+
+                this.allProgramsTotalItems = filteredCards.length;
+
+                this.allProgramsTrainingCards = filteredCards.slice(
+                  (page - 1) * this.allProgramsPageSize,
+                  page * this.allProgramsPageSize,
+                );
+
+                this.allProgramsDataStatus = filteredCards.length
+                  ? EPlaceholderStatus.GOOD
+                  : EPlaceholderStatus.NO_RESULT;
+              },
+            }),
+          );
+        },
+      });
+
+    this.trainingHomeComponentSubscription.add(
+      this.tabControl.valueChanges.subscribe({
+        next: () => {
+          this.ongoingPageControl.patchValue(1);
+          this.toImprovePageControl.patchValue(1);
+          this.finishedPageControl.patchValue(1);
+          this.allProgramsPageControl.patchValue(1);
+        },
+      }),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.trainingHomeComponentSubscription.unsubscribe();
   }
 
   switchTab(selectedOption: ITabOption): void {
     this.tabControl.patchValue(selectedOption);
   }
 
-  onGoingFilter(val: OngoingFilter) {
-    switch (val) {
-      case OngoingFilter.All:
-        this.onGoingProgramsDisplay = this.onGoingPrograms;
-        break;
-      case OngoingFilter.Started:
-        this.onGoingProgramsDisplay = this.onGoingPrograms.filter((p) => !!p.programRunId);
-        break;
-      case OngoingFilter.New:
-        this.onGoingProgramsDisplay = this.onGoingPrograms.filter((p) => !p.programRunId);
-        break;
-    }
-  }
-
-  doneFilter(val: DoneFilters) {
-    let { search, scoreStatus } = val;
-
-    search ||= this.doneFilters.search;
-    scoreStatus ||= DoneFilter.All;
-
-    this.doneFilters = { search, scoreStatus };
-
-    switch (scoreStatus) {
-      case DoneFilter.All:
-        this.doneProgramsFiltered = this.donePrograms;
-        break;
-      case DoneFilter.Good:
-        this.doneProgramsFiltered = this.donePrograms?.filter((p) => p.score > p.expectation);
-        break;
-      case DoneFilter.NotGood:
-        this.doneProgramsFiltered = this.donePrograms?.filter((p) => p.score < p.expectation);
-        break;
-    }
-    if (search) {
-      this.doneProgramsFiltered = this.doneProgramsFiltered?.filter((p) => p.title.includes(search ?? ''));
-    }
-  }
-
-  allProgramsFilter(filters: AllProgramsFilters) {
-    let { score, progress, search } = filters;
-
-    search ??= this.allProgramsFilters.search;
-    if (score === null) {
-      // When the value is unselected from the dropdown
-      score = undefined;
-    } else {
-      score ||= this.allProgramsFilters.score;
-    }
-    if (progress === null) {
-      progress = undefined;
-    } else {
-      progress ||= this.allProgramsFilters.progress;
-    }
-
-    this.allProgramsFilters = { score, progress, search };
-
-    let output: ITrainingCardData[] = this.allPrograms ?? [];
-
-    const outputP = this.scoresService.filterByScore(
-      output.filter((p) => p.inProgress),
-      progress as EScoreFilter,
-      false,
-    );
-    const outputS = this.scoresService.filterByScore(
-      output.filter((p) => !p.inProgress),
-      score as EScoreFilter,
-      false,
-    );
-
-    if (score) {
-      output = outputS;
-    }
-    if (progress) {
-      output = outputP;
-    }
-    if (score && progress) {
-      output = outputP.concat(outputS);
-    }
-
-    if (search) {
-      output = output.filter((p) => p.title.includes(search ?? ''));
-    }
-
-    this.allProgramsFiltered = output;
-  }
-
   backToTrainings() {
     this.router.navigate(['/', AltoRoutes.user, AltoRoutes.training]);
-    // this.switchTab(1);
+    this.tabControl.patchValue(this.tabOptions[0]);
   }
 
-  resetFilters() {
-    this.allProgramsFilter((this.allProgramsFilters = {}));
-    this.selectedItems = [];
+  resetFinishedFilters(): void {
+    this.finishedProgramsSearchControl.patchValue(null);
   }
 
-  @memoize()
-  getUser(id: string): User | undefined {
-    return this.users.get(id);
-  }
-
-  getMyProgramRunsCards(userId: string): Observable<ITrainingCardData[]> {
-    let myPrograms: ITrainingCardData[] = [];
-    return this.programRunsRestService
-      .getProgramRunsPaginated({
-        createdBy: userId,
-      } as GetProgramRunsRequestParams)
-      .pipe(
-        map((programRuns: ProgramRunDtoPaginatedResponseApi) => {
-          return this.programs.reduce((output, p) => {
-            const progRun = programRuns.data?.filter((x) => x.programId === p.id)[0] || null;
-
-            output.push({
-              title: p.name,
-              score: !progRun ? 0 : (progRun.goodGuessesCount / progRun.questionsCount) * 100,
-              updatedAt: progRun?.updatedAt,
-              programRunId: progRun?.id,
-              programId: p.id,
-              expectation: p.expectation,
-              inProgress: !progRun?.finishedAt,
-              duration: (progRun?.questionsCount ? progRun?.questionsCount : p.questionsCount) * 30,
-            });
-            return output;
-          }, [] as ITrainingCardData[]);
-        }),
-        tap((arr) => {
-          myPrograms = arr.sort((a, b) => (b.updatedAt?.getTime() ?? 0) - (a.updatedAt?.getTime() ?? 0));
-        }),
-        switchMap((arr) =>
-          combineLatest([
-            this.programRunsRestService.getProgramRunsPaginated({
-              isFinished: true,
-              programIds: arr.map((x) => x.programId).join(','),
-            }),
-            of(this.users),
-          ]),
-        ),
-        map(([prs, users]) => {
-          myPrograms = myPrograms.map((pDisp) => ({
-            ...pDisp,
-            users:
-              prs.data?.reduce((result, pr) => {
-                const user = users.get(pr.createdBy ?? '');
-                if (pr.programId === pDisp.programId && user && !result.find((u) => u.id === user.id)) {
-                  result.push(user);
-                }
-                return result;
-              }, [] as User[]) ?? [],
-          }));
-          return myPrograms;
-        }),
-      );
+  resetAllProgramsFilters(): void {
+    this.allProgramsScoreControl.patchValue(null);
+    this.allProgramsProgressControl.patchValue(null);
+    this.allProgramsSearchControl.patchValue(null);
   }
 }

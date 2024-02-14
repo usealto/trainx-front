@@ -45,6 +45,7 @@ export const FR = {
     waitingForNewResults: "Dans l'attente de nouveaux résultats.",
     days: ['jour', 'jours'],
     score: 'Score',
+    progress: 'Avancement',
     level: 'Niveau',
     imageBadge: {
       userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],

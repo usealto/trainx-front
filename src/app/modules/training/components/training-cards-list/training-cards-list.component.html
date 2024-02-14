@@ -1,16 +1,6 @@
-<div class="row" *ngIf="data && data.length > 0">
-  <div class="col-4" *ngFor="let item of data | slice : (pageControl.value - 1) * pageSize : pageControl.value * pageSize">
+<div class="row">
+  <div class="col-4" *ngFor="let item of data">
     <alto-training-card class="mb-4" [data]="item"></alto-training-card>
   </div>
 </div>
 
-<!-- NO DATA PLACEHOLDER -->
-<ng-content *ngIf="data && data?.length === 0"></ng-content>
-
-<div *ngIf="!data" class="alto-placeholder mb-4"></div>
-
-<alto-pagination
-[pageControl]="pageControl"
-[itemsCount]="data?.length || 0"
-[itemsPerPage]="pageSize">
-</alto-pagination>

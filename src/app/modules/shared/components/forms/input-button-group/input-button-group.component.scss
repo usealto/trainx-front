@@ -3,8 +3,6 @@
   flex-wrap: nowrap;
   width: fit-content;
   height: 36px;
-  margin-top: 10px;
-  margin-bottom: 10px;
   border-radius: 3.33rem;
   border: 1px solid var(--gray-200);
 
@@ -12,8 +10,8 @@
     cursor: pointer;
     padding: 0 1.333rem;
 
-    .checked {
-      background-color: var(--alto-medi);
+    &.checked {
+      background-color: var(--alto-medium-grey);
     }
 
     &.left {
@@ -27,9 +25,8 @@
     }
 
     p {
-      padding: 0 1.333rem;
       line-height: 34px;
-      font-size: 0.833rem;
+      font-size: 1rem;
       font-weight: 600;
     }
   }

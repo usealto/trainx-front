@@ -11,7 +11,7 @@ import {
   ProgramsApiService,
 } from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
-import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, map, of, switchMap, tap } from 'rxjs';
 import { Program } from '../../../models/program.model';
 import { EScoreDuration } from '../../../models/score.model';
 import { ScoresService } from '../../shared/services/scores.service';

@@ -46,12 +46,12 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
 
   usersDisplay: IUserInfos[] = [];
   usersPage = 1;
-  usersPageSize = 10;
+  readonly usersPageSize = 10;
   usersPageControl = new FormControl(1, { nonNullable: true });
 
   adminsDisplay: IUserInfos[] = [];
   adminsPage = 1;
-  adminsPageSize = 5;
+  readonly adminsPageSize = 5;
   adminsPageControl = new FormControl(1, { nonNullable: true });
 
   adminSearchControl = new FormControl<string | null>(null);

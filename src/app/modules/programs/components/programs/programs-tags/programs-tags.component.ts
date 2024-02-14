@@ -62,7 +62,7 @@ export class ProgramsTagsComponent implements OnInit, OnDestroy {
             const req: GetTagsStatsRequestParams = {
               page,
               itemsPerPage: this.itemsPerPage,
-              // search: searchTerm ?? undefined,
+              search: searchTerm || undefined,
             };
 
             switch (score?.value) {

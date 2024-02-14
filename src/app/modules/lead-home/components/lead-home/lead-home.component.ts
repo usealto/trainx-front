@@ -18,7 +18,6 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { IUser, User } from 'src/app/models/user.model';
 import { ETypeValue } from 'src/app/modules/collaboration/components/lead-collaboration/lead-collaboration.component';
 import { CompaniesRestService } from 'src/app/modules/companies/service/companies-rest.service';
-import { ProgramsStore } from 'src/app/modules/programs/programs.store';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
@@ -98,7 +97,6 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
     private readonly scoresRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
     private readonly statisticsServices: StatisticsService,
-    public readonly programsStore: ProgramsStore,
     public readonly programsRestService: ProgramsRestService,
     public readonly guessesRestService: GuessesRestService,
     public readonly companiesRestService: CompaniesRestService,

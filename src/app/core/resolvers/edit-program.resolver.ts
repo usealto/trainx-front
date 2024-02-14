@@ -1,9 +1,9 @@
-import { ResolveFn, Router } from '@angular/router';
-import { Program } from '../../models/program.model';
-import { map, of, tap } from 'rxjs';
 import { inject } from '@angular/core';
-import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { ResolveFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { map, of } from 'rxjs';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
+import { Program } from '../../models/program.model';
 import * as FromRoot from '../store/store.reducer';
 
 export interface IEditProgramData {

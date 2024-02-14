@@ -10,7 +10,7 @@
       [class.check]="tabControl.value === option">
       {{option.label}}
       <span *ngIf="index === 0" class="ms-3 badge rounded-pill" [ngClass]="tabControl.value === option ? 'alto-orange-bg' : 'alto-dark-grey-bg'">
-        {{ startedProgramsCount }}
+        {{ ongoingTotalItems }}
       </span>
     </div>
     <div *ngIf="index === tabOptions.length - 2" class="vertical-divider"></div>
@@ -22,19 +22,34 @@
 <ng-container [ngSwitch]="tabControl.value.value">
   <ng-container *ngSwitchCase="EtrainingTabs.Ongoing">
     <!--  ONGOING -->
+    <div class="d-flex flex-nowrap justify-content-between">
+      <div>
+        <h2>{{ I18ns.training.onGoing.title }}</h2>
+        <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.onGoing.subtitle }}</p>
+      </div>
       <alto-input-button-group [control]="ongoingFilterControl" [options]="ongoingFilterOptions"></alto-input-button-group>
-    <h2>{{ I18ns.training.onGoing.title }}</h2>
-    <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.onGoing.subtitle }}</p>
-
-    <div>
-      <alto-training-cards-list [pageSize]="3" [data]="onGoingProgramsDisplay">
+    </div>
+    <alto-placeholder-manager [status]="ongoingDataStatus">
+      <alto-training-cards-list [pageSize]="ongoingPageSize" [data]="ongoingTrainingCards">
         <div class="panel text-center p-6 mb-4">
           <i class="alto-badge-big fs-5 bi bi-file-text"></i>
           <h2 class="my-4">{{ I18ns.training.onGoing.noData }}</h2>
           <p class="alto-grey">{{ I18ns.training.onGoing.noDataSubtitle }}</p>
         </div>
       </alto-training-cards-list>
-    </div>
+
+      <alto-pagination
+      [pageControl]="ongoingPageControl"
+      [itemsCount]="ongoingTotalItems"
+      [itemsPerPage]="ongoingPageSize">
+    </alto-pagination>
+
+      <div noData class="panel text-center p-6 mb-4">
+        <i class="alto-badge-big fs-5 bi bi-file-text"></i>
+        <h2 class="my-4">{{ I18ns.training.onGoing.noData }}</h2>
+        <p class="alto-grey mb-4">{{ I18ns.training.onGoing.noDataSubtitle }}</p>
+      </div>
+  </alto-placeholder-manager>
 
     <hr />
 
@@ -48,94 +63,129 @@
     <h2>{{ I18ns.training.donePrograms.title }}</h2>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.donePrograms.subtitle2 }}</p>
 
-    <alto-training-cards-list [pageSize]="3" [data]="improveScorePrograms">
-      <div class="panel text-center p-6 mb-4">
-        <i class="alto-badge-big fs-5 bi bi-file-text"></i>
-        <h2 class="my-4">{{ I18ns.training.donePrograms.noData }}</h2>
-        <p class="alto-grey">{{ I18ns.training.donePrograms.noDataSubtitle }}</p>
-      </div>
-    </alto-training-cards-list>
+    <alto-placeholder-manager [status]="finishedDataStatus">
+      <alto-training-cards-list [pageSize]="toImprovePageSize" [data]="toImproveTrainingCards">
+      </alto-training-cards-list>
+
+      <alto-pagination
+      [pageControl]="toImprovePageControl"
+      [itemsCount]="toImproveTotalItems"
+      [itemsPerPage]="toImprovePageSize">
+    </alto-pagination>
+
+    <div noData class="panel text-center p-6 mb-4">
+      <i class="alto-badge-big fs-5 bi bi-file-text"></i>
+      <h2 class="my-4">{{ I18ns.training.donePrograms.noData }}</h2>
+      <p class="alto-grey">{{ I18ns.training.donePrograms.noDataSubtitle }}</p>
+    </div>
+  </alto-placeholder-manager>
+
   </ng-container>
   <ng-container *ngSwitchCase="EtrainingTabs.Done">
     <!-- DONE -->
     <h2>{{ I18ns.training.donePrograms.title }}</h2>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.donePrograms.subtitle }}</p>
 
-    <alto-training-cards-list [pageSize]="3" [data]="improveScorePrograms">
-      <div class="panel text-center p-6 mb-4">
-        <i class="alto-badge-big fs-5 bi bi-file-text"></i>
-        <h2 class="my-4">{{ I18ns.training.donePrograms.noData }}</h2>
-        <p class="alto-grey mb-4">{{ I18ns.training.donePrograms.noDataSubtitle }}</p>
-        <button class="btn btn-outline-secondary" (click)="backToTrainings()">
-          {{ I18ns.training.donePrograms.backButton }}
-        </button>
-      </div>
-    </alto-training-cards-list>
+    <alto-placeholder-manager>
+
+      <alto-training-cards-list [pageSize]="toImprovePageSize" [data]="toImproveTrainingCards">
+      </alto-training-cards-list>
+
+      <alto-pagination
+      [pageControl]="toImprovePageControl"
+      [itemsCount]="toImproveTotalItems"
+      [itemsPerPage]="toImprovePageSize">
+    </alto-pagination>
+
+    <div noData class="panel text-center p-6 mb-4">
+      <i class="alto-badge-big fs-5 bi bi-file-text"></i>
+      <h2 class="my-4">{{ I18ns.training.donePrograms.noData }}</h2>
+      <p class="alto-grey mb-4">{{ I18ns.training.donePrograms.noDataSubtitle }}</p>
+      <button class="btn btn-outline-secondary" (click)="backToTrainings()">
+        {{ I18ns.training.donePrograms.backButton }}
+      </button>
+    </div>
+  </alto-placeholder-manager>
+
     <hr />
 
     <h2>{{ I18ns.training.donePrograms.title2 }}</h2>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.donePrograms.subtitle3 }}</p>
 
-    <div class="row mb-4">
-      <div class="col-7">
-        <alto-input-button-group [options]="completionFilterOptions" [control]="completionFilterControl"></alto-input-button-group>
-      </div>
-      <div class="col-5 text-end">
-        <alto-search (searchChange)="doneFilter({ search: $event })"></alto-search>
-      </div>
+    <div class="mb-4 d-flex flex-nowrap justify-content-between">
+        <alto-input-button-group [options]="finishedFilterOptions" [control]="finishedFilterControl"></alto-input-button-group>
+        <alto-input-search [searchControl]="finishedProgramsSearchControl"></alto-input-search>
     </div>
 
-    <alto-training-cards-list [pageSize]="9" [data]="doneProgramsFiltered">
-      <div class="panel text-center p-6 mb-4">
-        <i class="alto-badge-big fs-5 bi bi-file-text"></i>
-        <h2 class="my-4">{{ I18ns.training.donePrograms.noData }}</h2>
-        <p class="alto-grey mb-4">{{ I18ns.training.donePrograms.noDataSubtitle }}</p>
-        <button class="btn btn-outline-secondary" (click)="backToTrainings()">
-          {{ I18ns.training.donePrograms.backButton }}
-        </button>
-      </div>
-    </alto-training-cards-list>
+    <alto-placeholder-manager [status]="finishedDataStatus">
+
+      <alto-training-cards-list [pageSize]="finishedPageSize" [data]="finishedTrainingCards">
+      </alto-training-cards-list>
+      <alto-pagination
+      [pageControl]="finishedPageControl"
+      [itemsCount]="finishedTotalItems"
+      [itemsPerPage]="finishedPageSize">
+    </alto-pagination>
+
+    <div noData class="panel text-center p-6 mb-4">
+      <i class="alto-badge-big fs-5 bi bi-file-text"></i>
+      <h2 class="my-4">{{ I18ns.training.donePrograms.noData }}</h2>
+      <p class="alto-grey mb-4">{{ I18ns.training.donePrograms.noDataSubtitle }}</p>
+      <button class="btn btn-outline-secondary" (click)="backToTrainings()">
+        {{ I18ns.training.donePrograms.backButton }}
+      </button>
+    </div>
+  </alto-placeholder-manager>
   </ng-container>
+
   <ng-container *ngSwitchCase="EtrainingTabs.ShowAll">
     <!-- SHOW ALL -->
     <h2>{{ I18ns.training.showAll.title }}</h2>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.showAll.subtitle }}</p>
 
-    <div class="row mb-4">
-      <div class="col-7">
-        <alto-score-filter
-          [disabled]="disabledCountScore! < 1"
-          [selectedItems]="selectedItems"
-          (selectChange)="allProgramsFilter({ score: $event })"
-        ></alto-score-filter>
-        <alto-progression-filter
-          [disabled]="disabledCountProgress! < 1"
-          [selectedItems]="selectedItems"
-          (selectChange)="allProgramsFilter({ progress: $event })"
-        ></alto-progression-filter>
+    <div class="mb-4 d-flex flex-nowrap justify-content-between">
+      <div class="d-flex flex-nowrap gap-2">
+        <alto-input-single-select-pill
+          [placeholder]="I18ns.shared.level"
+          [control]="allProgramsScoreControl"
+          [options]="scoreOptions"
+        >
+        </alto-input-single-select-pill>
+        <alto-input-single-select-pill
+          [placeholder]="I18ns.shared.progress"
+          [control]="allProgramsProgressControl"
+          [options]="scoreOptions"
+        >
+        </alto-input-single-select-pill>
       </div>
-      <div class="col-5 text-end">
-        <alto-search (searchChange)="allProgramsFilter({ search: $event })"> </alto-search>
-      </div>
+        <alto-input-search [searchControl]="allProgramsSearchControl"></alto-input-search>
     </div>
 
-    <alto-training-cards-list [pageSize]="9" [data]="allProgramsFiltered">
-      <div class="panel text-center p-6 mb-4" *ngIf="allPrograms?.length === 0; else noResult">
+    <alto-placeholder-manager [status]="allProgramsDataStatus">
+
+    <alto-training-cards-list [pageSize]="allProgramsPageSize" [data]="allProgramsTrainingCards">
+    </alto-training-cards-list>
+
+    <alto-pagination
+    [pageControl]="allProgramsPageControl"
+    [itemsCount]="allProgramsTotalItems"
+    [itemsPerPage]="allProgramsPageSize">
+    </alto-pagination>
+
+      <div noData class="panel text-center p-6 mb-4">
         <i class="alto-badge-big fs-5 bi bi-file-text"></i>
         <h2 class="my-4">{{ I18ns.training.donePrograms.noData }}</h2>
         <p class="alto-grey">{{ I18ns.training.donePrograms.noDataSubtitle }}</p>
       </div>
-      <ng-template #noResult>
-        <div class="panel text-center p-6 mb-4">
-          <i class="alto-badge-big fs-5 bi bi-search"></i>
-          <h2 class="my-4">{{ I18ns.training.donePrograms.noResult }}</h2>
-          <p class="alto-grey mb-4">{{ I18ns.training.donePrograms.noResultSubtitle }}</p>
-          <button class="btn btn-outline-secondary" (click)="resetFilters()">
-            <i class="bi bi-arrow-repeat"></i>
-            {{ I18ns.shared.resetFilters }}
-          </button>
-        </div>
-      </ng-template>
-    </alto-training-cards-list>
+      <div noResult class="panel text-center p-6 mb-4">
+        <i class="alto-badge-big fs-5 bi bi-search"></i>
+        <h2 class="my-4">{{ I18ns.training.donePrograms.noResult }}</h2>
+        <p class="alto-grey mb-4">{{ I18ns.training.donePrograms.noResultSubtitle }}</p>
+        <button class="btn btn-outline-secondary" (click)="resetAllProgramsFilters()">
+          <i class="bi bi-arrow-repeat"></i>
+          {{ I18ns.shared.resetFilters }}
+        </button>
+      </div>
+  </alto-placeholder-manager>
   </ng-container>
 </ng-container>

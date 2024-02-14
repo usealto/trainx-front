@@ -8,15 +8,11 @@ import { SelectOption } from '../../../models/select-option.model';
   templateUrl: './input-button-group.component.html',
   styleUrls: ['./input-button-group.component.scss'],
 })
-export class InputButtonGroupComponent implements OnInit {
+export class InputButtonGroupComponent {
   I18ns = I18ns;
 
   @Input() options: SelectOption[] = [];
   @Input() control: FormControl<SelectOption | null> = new FormControl();
-
-  ngOnInit(): void {
-    console.log('options : ', this.options);
-  }
 
   toggleOption(option: SelectOption): void {
     this.control.patchValue(option);

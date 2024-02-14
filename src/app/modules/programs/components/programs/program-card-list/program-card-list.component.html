@@ -9,13 +9,12 @@
 
   <a type="button"
   class="btn btn-primary"
-  [routerLink]="AltoRoutes.programsCreate"
->
-  <i class="bi bi-plus-lg"></i>
-  <div>
-    {{ I18ns.programs.programs.createProgram }}
-  </div>
-</a>
+  [routerLink]="AltoRoutes.programsCreate">
+    <i class="bi bi-plus-lg"></i>
+    <div>
+      {{ I18ns.programs.programs.createProgram }}
+    </div>
+  </a>
 </div>
 
 <div class="buttons-row">
@@ -50,7 +49,7 @@
     ? ['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]
     : null">
       <div class="title-section mb-2">
-        <p *ngIf="programCard.program.name.length < 35" class="subtitle">
+        <p class="title-overflow subtitle">
           {{ programCard.program.name }}
         </p>
 
@@ -146,129 +145,3 @@
     </a>
   </div>
 </alto-placeholder-manager>
-
-
-<!-- <div class="form-check form-switch" style="z-index: 100" [ngClass]="{ invisible: !displayToggle }">
-  <input
-    #activate
-    type="checkbox"
-    class="form-check-input"
-    [checked]="program.isActive"
-    (click)="changeIsActive(program.id, activate.checked)"
-  />
-</div>
-
-<div class="panel inactive" *ngIf="!program.isActive"></div> -->
-
-<!-- <span [ngSwitch]="place">
-  <ng-container *ngIf="!this.isActive">
-    <div class="row mb-5" *ngSwitchCase="'program'">
-      <div class="col-5">
-        <alto-search
-          data-cy="programSearch"
-          class="d-inline-block program-search"
-          [searchItems]="programFilters.search"
-          (searchChange)="filterPrograms({ search: $event })"
-        ></alto-search>
-      </div>
-      <div class="col-7 text-end">
-        <alto-dropdown-filter
-          class="me-3 text-start"
-          data-cy="programTeamFilter"
-          [data]="teamStore.teams.value"
-          [displayLabel]="'name'"
-          [placeholder]="I18ns.programs.programs.filters.teams"
-          [selectedItems]="selectedItems"
-          (selectChange)="filterPrograms({ teams: $event })"
-          [isColored]="true"
-        ></alto-dropdown-filter>
-        <alto-score-filter
-          class="me-3 text-start"
-          data-cy="filterByScore"
-          [selectedItems]="selectedItems"
-          (selectChange)="filterPrograms({ score: $event })"
-        ></alto-score-filter>
-        <alto-progression-filter
-          class="text-start"
-          [disabled]="programs.length === 0"
-          [selectedItems]="selectedItems"
-          (selectChange)="filterPrograms({ progress: $event })"
-        ></alto-progression-filter>
-      </div>
-    </div>
-  </ng-container>
-  <div *ngSwitchDefault></div>
-</span>
-<alto-placeholder-manager [status]="ongoingProgramsDataStatus">
-  <div class="row mb-4">
-    <div
-      class="mb-4 col-4"
-      *ngFor="let prog of programsDisplay | slice : (pageControl.value - 1) * pageSize : pageControl.value * pageSize"
-    >
-      <alto-program-card
-        [displayToggle]="displayToggle"
-        [score]="programsScores.get(prog.id)"
-        [progress]="programsProgress.get(prog.id)"
-        [participation]="programsInvolvement.get(prog.id)"
-        [program]="prog"
-        [allTeamsCount]="teamStore.teams.value.length"
-        [membersHaveValidatedCount]="programsMemberHaveValidatedCount.get(prog.id)"
-        data-cy="programCard"
-      ></alto-program-card>
-    </div>
-    <div *ngIf="count < 3" class="my-4 col-4">
-      <div class="nodata-placeholder m-0">
-        <div class="text-center">
-          <img [src]="Emoji.FlexedBiceps | emoji" height="24" width="24" />
-          <p class="mt-3">{{ I18ns.leadHome.ongoingPrograms.cardPlaceholder }}</p>
-          <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
-            <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <alto-pagination
-    [pageControl]="pageControl"
-    [itemsCount]="count"
-    [itemsPerPage]="pageSize"
-    aria-label="Default pagination"
-  ></alto-pagination>
-
-  <div class="nodata-placeholder text-center" noResult>
-    <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
-    <p class="mt-3">{{ I18ns.programs.programs.placeholderTitle }}</p>
-    <span class="mt-3 d-block">{{ I18ns.programs.programs.placeholderSubtitle }}</span>
-    <button class="btn btn-primary mt-4" (click)="resetFilters()">
-      <i class="bi bi-arrow-clockwise"></i>
-      {{ I18ns.shared.resetFilters }}
-    </button>
-  </div>
-  <div *ngIf="this.isActive" class="nodata-placeholder text-center" noData>
-    <img [src]="Emoji.BuildingConstruction | emoji" height="24" width="24" />
-    <p class="mt-3">{{ I18ns.leadHome.ongoingPrograms.placeholder }}</p>
-    <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new"
-      ><i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
-    </a>
-  </div>
-  <div *ngIf="!this.isActive" class="nodata-placeholder text-center" noData>
-    <img [src]="Emoji.BeachWithUmbrella | emoji" height="24" width="24" />
-    <p class="mt-3">{{ I18ns.programs.activePrograms.placeholderTitle }}</p>
-    <span class="mt-3 d-block">{{ I18ns.programs.activePrograms.placeholderSubtitle }}</span>
-    <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new"
-      ><i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
-    </a>
-  </div>
-  <div class="row mb-4" loading>
-    <div *ngFor="let key of [1, 2, 3]" class="mb-4 col-4">
-      <div class="skeleton-panel" style="height: 226px"></div>
-    </div>
-    <alto-pagination
-    [pageControl]="pageControl"
-    [itemsCount]="count"
-    [itemsPerPage]="pageSize"
-    aria-label="Default pagination"
-  ></alto-pagination>
-  </div>
-</alto-placeholder-manager> -->

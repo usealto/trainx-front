@@ -32,6 +32,7 @@ import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
+import { ResolversService } from '../../../../core/resolvers/resolvers.service';
 
 @UntilDestroy()
 @Component({
@@ -84,7 +85,7 @@ export class QuestionFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    combineLatest([this.tagService.getTags(), this.store.select(FromRoot.selectCompany)])
+    combineLatest([this.tagService.getAllTags(), this.store.select(FromRoot.selectCompany)])
       .pipe(
         tap(([tags, { data: company }]) => {
           this.tags = tags ?? [];

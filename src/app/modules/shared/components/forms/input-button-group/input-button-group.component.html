@@ -1,5 +1,6 @@
 <div class="button-group-container">
   <div *ngFor="let option of options; let first = first; let last = last"
+  (click)="toggleOption(option)"
   class="option"
   [class.checked]="control.value === option"
   [class.left]="first"

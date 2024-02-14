@@ -139,7 +139,7 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
 
     this.performanceByTeamsSubscription.add(
       this.tagsRestService
-        .getTags()
+        .getAllTags()
         .pipe(
           tap((tags) => {
             this.tagsOptions = tags.map((tag) => new SelectOption({ label: tag.name, value: tag.id }));

@@ -42,7 +42,7 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
           startWith(this.tagsControl.value),
           switchMap((selectedTags) => {
             return combineLatest([
-              this.tagsRestService.getTags(),
+              this.tagsRestService.getAllTags(),
               this.scoresRestService.getPaginatedTagsStats(EScoreDuration.Year),
               of(selectedTags),
             ]);
