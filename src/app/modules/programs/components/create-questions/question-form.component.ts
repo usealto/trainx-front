@@ -28,11 +28,10 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { Program } from '../../../../models/program.model';
 import { QuestionForm } from '../../models/question.form';
-import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
-import { ResolversService } from '../../../../core/resolvers/resolvers.service';
+import { Company } from '../../../../models/company.model';
 
 @UntilDestroy()
 @Component({
@@ -47,6 +46,8 @@ export class QuestionFormComponent implements OnInit {
   @Input() program: ProgramDtoApi | undefined;
   @Input() question?: QuestionDtoApi;
   @Input() questionSubmitted?: QuestionSubmittedDtoApi;
+  @Input() tags: TagDtoApi[] = [];
+  @Input() company!: Company;
   @Input() isSubmitted = false;
   @Input() isProgramEdit = false;
   @Input() stayOpen = false;
@@ -58,17 +59,16 @@ export class QuestionFormComponent implements OnInit {
   isEdit = false;
 
   programs: Program[] = [];
-  tags: TagDtoApi[] = [];
 
   questionHardLimit = 300;
   questionSoftLimit = 150;
   answerHardLimit = 200;
   answerSoftLimit = 75;
 
-  public get answersAccepted(): FormArray<FormControl<string>> {
+  get answersAccepted(): FormArray<FormControl<string>> {
     return this.questionForm.controls.answersAccepted as FormArray<FormControl<string>>;
   }
-  public get answersWrong(): FormArray<FormControl<string>> {
+  get answersWrong(): FormArray<FormControl<string>> {
     return this.questionForm.controls.answersWrong as FormArray<FormControl<string>>;
   }
 

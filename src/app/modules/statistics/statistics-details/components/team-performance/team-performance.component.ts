@@ -30,6 +30,7 @@ import { EPlaceholderStatus } from '../../../../shared/components/placeholder-ma
 import { PillOption, SelectOption } from '../../../../shared/models/select-option.model';
 import { Point, StatisticsService } from '../../../services/statistics.service';
 import { ILeaderboardData } from '../../../../shared/components/leaderboard/leaderboard.component';
+import { ILeadData } from '../../../../../core/resolvers/lead.resolver';
 
 interface IMemberInfos {
   user: User;
@@ -113,7 +114,6 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly statisticService: StatisticsService,
-    private readonly tagsRestService: TagsRestService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
   ) {}
@@ -129,6 +129,10 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
     this.membersOptions = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values())
       .filter((u) => u.teamId === this.teamId)
       .map((user) => new SelectOption({ label: user.fullname, value: user.id }));
+    this.tagsOptions = Array.from((data[EResolvers.LeadResolver] as ILeadData).tags).map(
+      (tag) => new SelectOption({ label: tag.name, value: tag.id }),
+    );
+    this.resetTagsFilters();
     if (this.membersOptions.length) {
       this.membersFilterControl.setValue([
         new FormControl(this.membersOptions[0], {
@@ -136,15 +140,11 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
         }),
       ]);
     }
-
     this.performanceByTeamsSubscription.add(
-      this.tagsRestService
-        .getAllTags()
+      this.tagsControl.valueChanges
         .pipe(
-          tap((tags) => {
-            this.tagsOptions = tags.map((tag) => new SelectOption({ label: tag.name, value: tag.id }));
-            this.resetTagsFilters();
-          }),
+          startWith(this.tagsControl.value),
+          map((tagsControls) => tagsControls.map((x) => x.value)),
           switchMap(() => {
             return this.tagsControl.valueChanges.pipe(
               startWith(this.tagsControl.value),

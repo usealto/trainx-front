@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TagDtoApi, TagStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { Subscription, combineLatest, map, of, startWith, switchMap } from 'rxjs';
@@ -6,7 +6,6 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { EScoreDuration } from '../../../../../models/score.model';
-import { TagsRestService } from '../../../../programs/services/tags-rest.service';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 
 @Component({
@@ -19,7 +18,7 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   EPlaceholderStatus = EPlaceholderStatus;
 
-  tags: TagDtoApi[] = [];
+  @Input() tags: TagDtoApi[] = [];
   selectedTags: TagDtoApi[] = [];
   tagsControl: FormControl<TagDtoApi[]> = new FormControl<TagDtoApi[]>([], { nonNullable: true });
   spiderChartDataStatus = EPlaceholderStatus.LOADING;
@@ -30,10 +29,7 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
 
   tagStatsSubscription: Subscription = new Subscription();
 
-  constructor(
-    private readonly tagsRestService: TagsRestService,
-    private readonly scoresRestService: ScoresRestService,
-  ) {}
+  constructor(private readonly scoresRestService: ScoresRestService) {}
 
   ngOnInit(): void {
     this.tagStatsSubscription.add(
@@ -42,15 +38,11 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
           startWith(this.tagsControl.value),
           switchMap((selectedTags) => {
             return combineLatest([
-              this.tagsRestService.getAllTags(),
               this.scoresRestService.getPaginatedTagsStats(EScoreDuration.Year),
               of(selectedTags),
             ]);
           }),
-          map(([tags, paginatedTagsStats, selectedTags]) => {
-            const tagStats = paginatedTagsStats.data ?? [];
-
-            this.tags = tags;
+          map(([{ data: tagStats = [] }, selectedTags]) => {
             this.selectedTags = selectedTags;
             tagStats.filter((t) => t.score && t.score >= 0);
             this.spiderChartDataStatus =

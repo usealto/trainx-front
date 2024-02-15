@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CommentDtoApi, QuestionLightDtoApi } from '@usealto/sdk-ts-angular';
+import { CommentDtoApi, QuestionLightDtoApi, TagDtoApi } from '@usealto/sdk-ts-angular';
 import { of, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
@@ -16,6 +16,8 @@ import { QuestionsRestService } from 'src/app/modules/programs/services/question
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { IAppData } from '../../../../core/resolvers';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
+import { ILeadData } from '../../../../core/resolvers/lead.resolver';
+import { Company } from '../../../../models/company.model';
 
 @UntilDestroy()
 @Component({
@@ -32,7 +34,8 @@ export class CommentCardComponent implements OnInit {
   AltoRoutes = AltoRoutes;
 
   users!: Map<string, User>;
-  teams!: Team[];
+  company!: Company;
+  tags: TagDtoApi[] = [];
 
   constructor(
     private readonly modalService: NgbModal,
@@ -48,7 +51,8 @@ export class CommentCardComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.users = (data[EResolvers.AppResolver] as IAppData).userById;
-    this.teams = (data[EResolvers.AppResolver] as IAppData).company.teams;
+    this.company = (data[EResolvers.LeadResolver] as ILeadData).company;
+    this.tags = (data[EResolvers.LeadResolver] as ILeadData).tags;
   }
 
   archiveComment(): void {
@@ -97,7 +101,7 @@ export class CommentCardComponent implements OnInit {
 
   getTeam(userId: string): Team | undefined {
     const u = this.users.get(userId);
-    return this.teams.find((t) => t.id === u?.teamId);
+    return u?.teamId ? this.company.teamById.get(u.teamId) : undefined;
   }
 
   openQuestionForm(question?: QuestionLightDtoApi) {
@@ -112,6 +116,8 @@ export class CommentCardComponent implements OnInit {
                 panelClass: 'overflow-auto',
               });
               canvasRef.componentInstance.question = q;
+              canvasRef.componentInstance.tags = this.tags;
+              canvasRef.componentInstance.company = this.company;
               canvasRef.componentInstance.createdQuestion.subscribe();
             }
           }),
