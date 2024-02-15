@@ -79,8 +79,6 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
   tagsLeaderboard: ILeaderboardData[] = [];
   tagsDataStatus = EPlaceholderStatus.LOADING;
 
-  // membersTable: UserStatsDtoApi[] = [];
-
   membersInfos: IMemberInfos[] = [];
   membersSearchControl = new FormControl<string | null>(null, { nonNullable: true });
   membersPageControl = new FormControl(1, { nonNullable: true });
