@@ -130,9 +130,9 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
               score: stat.score,
               participation: stat.participation,
               userValidatedProgramCount: stat.userValidatedProgramCount,
-              teamsTooltip: stat.teams
-                .map(({ team }) => {
-                  return this.company.teamById.get(team.id)?.name ?? undefined;
+              teamsTooltip: (this.company.programById.get(stat.program.id) as Program).teamIds
+                .map((teamId) => {
+                  return this.company.teamById.get(teamId)?.name ?? undefined;
                 })
                 .filter((t) => !!t)
                 .join(', '),
