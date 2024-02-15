@@ -91,9 +91,9 @@
             </p>
             <a
               class="d-inline-block text-primary text-decoration-underline mb-3"
-              href="https://workspace.google.com/marketplace/app/alto/1076506336192"
+              [href]="environment.googleChatAppURL"
               target="_blank"
-              >{{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatLink }}</a
+              >{{ environment.googleChatAppURL }}</a
             >
             <p class="onboarding-texts">
               {{ I18ns.settings.continuousSession.integrations.gchatSubtitle.googleChatInstructions2 }}

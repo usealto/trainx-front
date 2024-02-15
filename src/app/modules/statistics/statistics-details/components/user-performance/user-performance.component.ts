@@ -20,6 +20,7 @@ import { ToastService } from '../../../../../core/toast/toast.service';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { SelectOption } from '../../../../shared/models/select-option.model';
 import { StatisticsService } from '../../../services/statistics.service';
+import { AltoRoutes } from '../../../../shared/constants/routes';
 
 @Component({
   selector: 'alto-user-performance',
@@ -29,6 +30,7 @@ import { StatisticsService } from '../../../services/statistics.service';
 export class UserPerformanceComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   EmojiName = EmojiName;
+  AltoRoutes = AltoRoutes;
 
   user!: User;
   team!: Team;

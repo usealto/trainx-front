@@ -36,6 +36,7 @@ export class SettingsIntegrationsComponent implements OnInit {
   I18ns = I18ns;
   ModalType = ModalType;
   Connector = AltoConnectorEnumApi;
+  environment = environment;
 
   nbUsers = 0;
   nbUsersConnectorInactive = 0;
