@@ -157,7 +157,6 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
               this.spiderChartDataStatus = EPlaceholderStatus.NO_DATA;
               return false;
             }
-            this.spiderChartDataStatus = EPlaceholderStatus.LOADING;
             return true;
           }),
           switchMap((selectedTags) => {
