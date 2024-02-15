@@ -13,6 +13,7 @@ import { TeamStats } from '../../../../../models/team.model';
 import { TagsRestService } from '../../../../programs/services/tags-rest.service';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { SelectOption } from '../../../../shared/models/select-option.model';
+import { BaseStats } from '../../../../../models/stats.model';
 
 @Component({
   selector: 'alto-performance-teams-table',
@@ -83,21 +84,25 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
           }),
         )
         .subscribe(([page, duration, programs, tags, search]) => {
-          let teamStats = this.company.getStatsByPeriod(duration, false);
+          this.teamsStats = this.company.getStatsByPeriod(duration, false);
           this.teamsStatsPrev = this.company.getStatsByPeriod(duration, true);
 
+          let filteredTeamsStats: TeamStats[] = this.company.getStatsByPeriod(duration, false);
+
           if (programs.length) {
-            teamStats = teamStats.filter((t) =>
+            filteredTeamsStats = this.teamsStats.filter((t) =>
               t.programStats?.some((p) => programs.some((pr) => pr === p.programId)),
             );
           }
 
           if (tags.length) {
-            teamStats = teamStats.filter((t) => t.tagStats?.some((p) => tags.some((pr) => pr === p.tagId)));
+            filteredTeamsStats = this.teamsStats.filter((t) =>
+              t.tagStats?.some((p) => tags.some((pr) => pr === p.tagId)),
+            );
           }
 
           if (search) {
-            teamStats = teamStats.filter((t) =>
+            filteredTeamsStats = this.teamsStats.filter((t) =>
               this.company.teamById
                 .get(t.teamId)
                 ?.name.toLocaleLowerCase()
@@ -105,13 +110,15 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
             );
           }
 
-          this.teamsDisplay = teamStats;
-          this.teamsDataStatus =
-            this.teamsDisplay.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
+          filteredTeamsStats.sort(BaseStats.StatsCmp);
+
+          this.teamsDisplay = filteredTeamsStats;
           this.paginatedTeamsStats = this.teamsDisplay.slice(
             (page - 1) * this.teamsPageSize,
             page * this.teamsPageSize,
           );
+          this.teamsDataStatus =
+            this.teamsDisplay.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
         }),
     );
   }

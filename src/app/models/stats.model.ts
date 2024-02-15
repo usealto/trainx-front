@@ -51,6 +51,10 @@ export class BaseStats implements IBaseStats {
     this.scoreById = data.scoreById;
   }
 
+  static StatsCmp(a: BaseStats, b: BaseStats): number {
+    return b.score - a.score;
+  }
+
   get rawData(): IBaseStats {
     return {
       from: this.from,

@@ -39,6 +39,7 @@ import { PillOption, SelectOption } from '../../../shared/models/select-option.m
 import { GuessesRestService } from '../../../training/services/guesses-rest.service';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
+import { ToastService } from '../../../../core/toast/toast.service';
 
 interface TeamDisplay {
   id: string;
@@ -122,31 +123,8 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.company = (data[EResolvers.AppResolver] as IAppData).company;
-    this.programs = [...this.company.programs];
+    this.initFromCompany(this.company);
     this.rawUsers = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
-    this.teamsById = this.company.teamById;
-    this.teamsOptions = Array.from(this.teamsById.values()).map(
-      (team) => new SelectOption({ label: team.name, value: team.id }),
-    );
-    const teamStats = this.company.getTeamStatsByPeriod(EScoreDuration.Year, false);
-
-    this.teamsDisplay = teamStats.map((teamStat) => {
-      const team = this.teamsById.get(teamStat.teamId);
-      return {
-        id: teamStat.teamId,
-        name: team?.name,
-        createdAt: team?.createdAt,
-        score: teamStat.score,
-        totalGuessesCount: teamStat.totalGuessesCount,
-        validGuessesCount: teamStat.validGuessesCount,
-        questionsPushedCount: teamStat.questionsPushedCount,
-      } as TeamDisplay;
-    });
-
-    this.teamsDataStatus =
-      this.teamsDisplay.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
-
-    this.usersDataStatus = EPlaceholderStatus.LOADING;
 
     // users subscription
     this.leadTeamComponentSubscription.add(
@@ -245,6 +223,31 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     this.leadTeamComponentSubscription.unsubscribe();
   }
 
+  private initFromCompany(company: Company): void {
+    this.programs = [...company.programs];
+    this.teamsById = company.teamById;
+    this.teamsOptions = Array.from(company.teamById.values()).map(
+      (team) => new SelectOption({ label: team.name, value: team.id }),
+    );
+    const teamStats = company.getTeamStatsByPeriod(EScoreDuration.Year, false);
+
+    this.teamsDisplay = teamStats.map((teamStat) => {
+      const team = this.teamsById.get(teamStat.teamId);
+      return {
+        id: teamStat.teamId,
+        name: team?.name,
+        createdAt: team?.createdAt,
+        score: teamStat.score,
+        totalGuessesCount: teamStat.totalGuessesCount,
+        validGuessesCount: teamStat.validGuessesCount,
+        questionsPushedCount: teamStat.questionsPushedCount,
+      } as TeamDisplay;
+    });
+
+    this.teamsDataStatus =
+      this.teamsDisplay.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
+  }
+
   changeTeamsPage(page: number) {
     this.paginatedTeams = this.teamsDisplay.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
   }
@@ -273,10 +276,7 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
         switchMap((team) => {
           return combineLatest([of(team), this.programsRestService.getAllPrograms()]);
         }),
-        first(),
-      )
-      .subscribe({
-        next: ([team, programs]) => {
+        switchMap(([team, programs]) => {
           const updatedCompany = new Company({
             ...this.company.rawData,
             teams: Array.from(this.teamsById.set(team.id, team).values()),
@@ -299,6 +299,15 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
               }
             });
           }
+
+          return this.store.select(FromRoot.selectCompany);
+        }),
+        first(),
+      )
+      .subscribe({
+        next: ({ data: company }) => {
+          this.company = company;
+          this.initFromCompany(company);
         },
       });
   }

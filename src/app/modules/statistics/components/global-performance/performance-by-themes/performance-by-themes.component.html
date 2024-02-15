@@ -1,11 +1,21 @@
 <alto-placeholder-manager [status]="spiderChartDataStatus">
   <div class="score-evolution-chart panel mb-5">
-    <h3>
-      {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.title }}
-    </h3>
-    <p class="alto-grey mb-4">
-      {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.subtitle }}
-    </p>
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h3>
+          {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.title }}
+        </h3>
+        <p class="alto-grey mb-4">
+          {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.subtitle }}
+        </p>
+      </div>
+
+      <alto-input-multiple-select
+      [placeholder]="I18ns.leadHome.graph.tagFilter"
+      [controls]="tagsControl"
+      [options]="tagsOptions">
+      </alto-input-multiple-select>
+    </div>
 
     <div *ngIf="selectedTags.length >= 3 || selectedTags.length <= 6; else tagFilterError" class="chart-container">
       <alto-chart-radar

@@ -17,7 +17,7 @@ import { TagDtoApi } from '@usealto/sdk-ts-angular';
 export class StatisticsGlobalPerformanceComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
-  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
   });
   company: Company = {} as Company;

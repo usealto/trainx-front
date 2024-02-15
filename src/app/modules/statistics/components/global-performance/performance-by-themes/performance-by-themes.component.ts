@@ -1,12 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TagDtoApi, TagStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, map, of, startWith, switchMap } from 'rxjs';
+import { Subscription, combineLatest, filter, map, of, startWith, switchMap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { EScoreDuration } from '../../../../../models/score.model';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { SelectOption } from '../../../../shared/models/select-option.model';
 
 @Component({
   selector: 'alto-performance-by-themes',
@@ -20,7 +21,10 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
 
   @Input() tags: TagDtoApi[] = [];
   selectedTags: TagDtoApi[] = [];
-  tagsControl: FormControl<TagDtoApi[]> = new FormControl<TagDtoApi[]>([], { nonNullable: true });
+  tagsControl: FormControl<FormControl<SelectOption>[]> = new FormControl([], {
+    nonNullable: true,
+  });
+  tagsOptions: SelectOption[] = [];
   spiderChartDataStatus = EPlaceholderStatus.LOADING;
   spiderChartOptions: any = {};
 
@@ -32,18 +36,30 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
   constructor(private readonly scoresRestService: ScoresRestService) {}
 
   ngOnInit(): void {
+    this.tagsOptions = this.tags.map((tag) => new SelectOption({ value: tag.id, label: tag.name }));
+    this.tagsControl = new FormControl(
+      this.tagsOptions.slice(0, 6).map((tagOption) => new FormControl(tagOption, { nonNullable: true })),
+      { nonNullable: true },
+    );
+
     this.tagStatsSubscription.add(
       this.tagsControl.valueChanges
         .pipe(
           startWith(this.tagsControl.value),
-          switchMap((selectedTags) => {
-            return combineLatest([
-              this.scoresRestService.getPaginatedTagsStats(EScoreDuration.Year),
-              of(selectedTags),
-            ]);
+          map((tagsControls) => tagsControls.map((t) => t.value)),
+          filter((selectedTags) => {
+            if (selectedTags.length < 3 || selectedTags.length > 6) {
+              this.spiderChartDataStatus = EPlaceholderStatus.NO_DATA;
+              return false;
+            }
+            return true;
           }),
-          map(([{ data: tagStats = [] }, selectedTags]) => {
-            this.selectedTags = selectedTags;
+          switchMap((selectedTags) => {
+            return this.scoresRestService.getPaginatedTagsStats(EScoreDuration.Year, false, {
+              ids: selectedTags.map((t) => t.value).join(','),
+            });
+          }),
+          map(({ data: tagStats = [] }) => {
             tagStats.filter((t) => t.score && t.score >= 0);
             this.spiderChartDataStatus =
               tagStats.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;

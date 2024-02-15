@@ -18,19 +18,18 @@ import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { EScoreDuration, EScoreFilter, Score } from 'src/app/models/score.model';
 import { Team } from 'src/app/models/team.model';
-import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
+import { ILeadData } from '../../../../../core/resolvers/lead.resolver';
 import { User } from '../../../../../models/user.model';
+import { ILeaderboardData } from '../../../../shared/components/leaderboard/leaderboard.component';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { PillOption, SelectOption } from '../../../../shared/models/select-option.model';
 import { Point, StatisticsService } from '../../../services/statistics.service';
-import { ILeaderboardData } from '../../../../shared/components/leaderboard/leaderboard.component';
-import { ILeadData } from '../../../../../core/resolvers/lead.resolver';
 
 interface IMemberInfos {
   user: User;

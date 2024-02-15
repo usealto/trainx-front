@@ -54,9 +54,9 @@ export const FR = {
       on: 'sur',
     },
     priorities: {
-      high: 'Haute',
-      medium: 'Moyenne',
-      low: 'Basse',
+      High: 'Haute',
+      Medium: 'Moyenne',
+      Low: 'Basse',
     },
     status: {
       title: 'Status',

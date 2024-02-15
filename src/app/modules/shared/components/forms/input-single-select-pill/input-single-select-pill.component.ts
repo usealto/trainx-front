@@ -39,5 +39,8 @@ export class InputSingleSelectPillComponent {
     } else {
       this.control.setValue(option);
     }
+    this.control.markAsDirty();
+    this.control.markAsTouched();
+    this.isDropdownOpen = false;
   }
 }
