@@ -140,6 +140,7 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
         }),
       ]);
     }
+
     this.performanceByTeamsSubscription.add(
       this.tagsControl.valueChanges
         .pipe(
@@ -186,7 +187,6 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
         this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
       ])
         .pipe(
-          tap(() => (this.teamChartStatus = EPlaceholderStatus.LOADING)),
           switchMap(([selectedMembers, duration]) => {
             return combineLatest([
               of(selectedMembers),
