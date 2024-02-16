@@ -22,7 +22,7 @@ export const TrainingCard: Story = {
       title: 'programme 1',
       score: 80,
       expectation: 90,
-      isProgress: true,
+      inProgress: true,
     },
   },
 };

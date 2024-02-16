@@ -33,34 +33,23 @@
   <div class="w-75 pe-8">
     <!-- FILTERS -->
     <div class="content-header">
-      <alto-dropdown-filter
-        data-cy="collaboratorFilter"
-        [placeholder]="I18ns.collaboration.filters.contributor"
-        [data]="contributors"
-        [selectedItems]="selectedContributorsFilters"
-        (selectChange)="handleContributorChange($event)"
-      >
-      </alto-dropdown-filter>
+      <alto-input-multiple-select
+      [placeholder]="I18ns.collaboration.filters.contributor"
+      [controls]="selectedContributorsControl"
+      [options]="contributorsOptions">
+      </alto-input-multiple-select>
 
       <div class="header-end">
-        <alto-dropdown-filter
-          data-cy="typeFilter"
-          [placeholder]="I18ns.collaboration.filters.filterType"
-          [data]="filters"
-          [selectedItems]="selectedTypesFilters"
-          [enableSearch]="false"
-          (selectChange)="handleTypeChange($event)"
-        >
-        </alto-dropdown-filter>
-        <alto-dropdown-filter
-          data-cy="periodFilter"
-          [placeholder]="I18ns.collaboration.filters.period"
-          [data]="periods"
-          [selectedItems]="selectedPeriodsFilters"
-          [enableSearch]="false"
-          (selectChange)="handlePeriodChange($event)"
-        >
-        </alto-dropdown-filter>
+        <alto-input-multiple-select
+        [placeholder]="I18ns.collaboration.filters.filterType"
+        [controls]="selectedTypesControl"
+        [options]="typesOptions">
+        </alto-input-multiple-select>
+        <alto-input-multiple-select
+        [placeholder]="I18ns.collaboration.filters.period"
+        [controls]="selectedPeriodsControl"
+        [options]="periodsOptions">
+        </alto-input-multiple-select>
       </div>
     </div>
 

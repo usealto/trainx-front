@@ -52,8 +52,8 @@ export class SeeQuestionComponent implements OnInit {
         }),
         switchMap((id) =>
           combineLatest([
-            this.questionRestSerive.getQuestion(id),
-            this.commentsRestService.getUnreadComments({ questionId: id }, true),
+            this.questionRestSerive.getQuestionById(id),
+            this.commentsRestService.getAllComments({ questionId: id, isRead: false }),
           ]),
         ),
         tap({

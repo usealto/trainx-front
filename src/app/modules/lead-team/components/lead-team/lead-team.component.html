@@ -84,10 +84,10 @@
             <td class="text-start">
               {{ team.createdAt | date : 'shortDate' }}
             </td>
-            <td class="cursor-pointer px-3" (click)="deleteTeam(team)">
+            <td class="cursor-pointer px-3" (click)="deleteTeam(team.id)">
               <i [attr.data-cy]="'deleteTeam' + team.name" class="fs-5 bi bi-trash3 float-end"></i>
             </td>
-            <td class="cursor-pointer px-3" (click)="openTeamForm(team)">
+            <td class="cursor-pointer px-3" (click)="openTeamForm(team.id)">
               <i data-cy="editTeam" class="fs-5 bi bi-pen float-end me-4"></i>
             </td>
           </tr>
@@ -95,10 +95,9 @@
       </table>
       <alto-pagination
         class="mx-4 d-block"
-        [collectionSize]="teams.length"
-        (pageChange)="changeTeamsPage($event)"
-        [pageSize]="teamsPageSize"
-        [page]="teamsPage"
+        [pageControl]="teamsPageControl"
+        [itemsCount]="teamsDisplay.length"
+        [itemsPerPage]="teamsPageSize"
       ></alto-pagination>
     </div>
 
@@ -126,13 +125,12 @@
   <p class="alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
 </div>
 
-<alto-placeholder-manager [status]="usersDataStatus">
   <div class="panel mb-5 align-items-center">
     <div class="border-end">
       <alto-icon-badge [size]="4" icon="bi bi-people-fill" class="me-4"></alto-icon-badge>
       <div>
         <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.total }}</p>
-        <h1 class="mb-0">{{ absoluteUsersCount }}</h1>
+        <h1 class="mb-0">{{ rawUsers.length }}</h1>
       </div>
     </div>
     <div class="second-col">
@@ -140,44 +138,33 @@
 
       <div class="flex-grow-1">
         <p class="alto-grey mb-2">{{ I18ns.leadTeam.members.statistics.totalAnswers }}</p>
-        <h1 class="mb-0 d-inline-block">{{ usersTotalQuestions }}</h1>
+        <h1 class="mb-0 d-inline-block">{{ totalGuessCount }}</h1>
         <alto-progression-badge
           class="float-end"
-          [score]="usersTotalQuestionsProgression"
+          [score]="totalGuessCountProgression"
           ngbTooltip="{{ I18ns.leadTeam.members.statistics.tooltip }}"
         ></alto-progression-badge>
       </div>
     </div>
   </div>
 
-  <div class="row mb-5">
-    <div class="col-6">
-      <alto-search
-        data-cy="filterBySearch"
-        class="float-start"
-        [searchItems]="userFilters.search"
-        (searchChange)="filterUsers({ search: $event })"
-      ></alto-search>
-    </div>
-
-    <div class="col-6 text-end">
-      <alto-dropdown-filter
-        data-cy="filterByTeam"
-        class="me-3 text-start"
-        [data]="teams"
-        [displayLabel]="'name'"
-        [isColored]="true"
+  <alto-placeholder-manager [status]="usersDataStatus">
+  <div class="d-flex justify-content-between mb-5">
+    <alto-input-search [searchControl]="searchControl"></alto-input-search>
+    <div class="d-flex">
+      <alto-input-multiple-select
+        class="me-3"
+        [options]="teamsOptions"
         [placeholder]="I18ns.leadTeam.members.filters.teams"
-        [selectedItems]="selectedItems"
-        (selectChange)="filterUsers({ teams: $event })"
-      ></alto-dropdown-filter>
+        [controls]="selectedTeamsControl"
+        [enableSearch]="true"
+      ></alto-input-multiple-select>
 
-      <alto-score-filter
-        class="text-start"
-        data-cy="filterByScore"
-        [selectedItems]="selectedItems"
-        (selectChange)="filterUsers({ score: $event })"
-      ></alto-score-filter>
+      <alto-input-single-select-pill
+      [options]="scoreOptions"
+      [placeholder]="I18ns.leadTeam.members.filters.score"
+      [control]="selectedScoreControl">
+      </alto-input-single-select-pill>
     </div>
   </div>
 
@@ -201,19 +188,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of paginatedUsers" class="align-middle" data-cy="companyMembersTable">
+        <tr *ngFor="let userInfos of filteredUsersData" class="align-middle" data-cy="companyMembersTable">
           <td>
-            <alto-profile-card data-cy="profileCard" [user]="user.user"></alto-profile-card>
+            <alto-profile-card data-cy="profileCard" [user]="userInfos.user"></alto-profile-card>
           </td>
           <td>
-            <span data-cy="memberTeamName" class="alto-badge" [style]="user.teamId || '' | teamColor">
-              {{ usersMap.get(user.id) }}
+            <span *ngIf="userInfos.user.teamId && teamsById.has(userInfos.user.teamId)" data-cy="memberTeamName" class="alto-badge" [style]="userInfos.user.teamId | teamColor">
+              {{ teamsById.get(userInfos.user.teamId)?.name }}
             </span>
           </td>
           <td class="text-center">
-            <ng-container *ngIf="(user.totalGuessesCount || 0) > 0; else noScore">
-              <span data-cy="progressBadge" class="alto-score" [class]="(user.score || 0) * 100 | pillColor">
-                {{ user.score | percent }}
+            <ng-container *ngIf="(userInfos.stats.totalGuessesCount || 0) > 0; else noScore">
+              <span data-cy="progressBadge" class="alto-score" [class]="(userInfos.stats.score || 0) * 100 | pillColor">
+                {{ userInfos.stats.score | percent }}
               </span>
             </ng-container>
             <ng-template #noScore>
@@ -221,13 +208,13 @@
             </ng-template>
           </td>
           <td class="text-center">
-            <ng-container *ngIf="(user.totalGuessesCount ?? 0) > 0; else noData">
+            <ng-container *ngIf="(userInfos.stats.totalGuessesCount ?? 0) > 0; else noData">
               <span class="w-10 d-inline-block">
-                {{ user.totalGuessesCount }}
+                {{ userInfos.stats.totalGuessesCount }}
               </span>
               <alto-progression-badge
                 class="d-inline-block ms-3"
-                [score]="getQuestionsByUser(user.id, user.totalGuessesCount)"
+                [score]="getQuestionsByUser(userInfos.user.id, userInfos.stats.totalGuessesCount)"
               ></alto-progression-badge>
             </ng-container>
             <ng-template #noData>
@@ -238,7 +225,7 @@
             <i
               data-cy="editCompanyMember"
               class="fs-5 bi bi-pen cursor-pointer float-end me-4"
-              (click)="openUserEditionForm(user)"
+              (click)="openUserEditionForm(userInfos.user)"
             ></i>
           </td>
         </tr>
@@ -246,15 +233,14 @@
     </table>
 
     <alto-pagination
-      class="mx-4 d-block"
-      [collectionSize]="usersCount"
-      (pageChange)="changeUsersPage(filteredUsers, $event)"
-      [pageSize]="usersPageSize"
-      [page]="usersPage"
+    class="mx-4 d-block"
+    [pageControl]="usersPageControl"
+    [itemsCount]="usersCount"
+    [itemsPerPage]="usersPageSize"
     ></alto-pagination>
   </div>
 
-  <div *ngIf="!isFilteredUsers" class="nodata-placeholder text-center" noData>
+  <div class="nodata-placeholder text-center" noData>
     <img [src]="Emoji.Eyes | emoji" height="24" width="24" />
     <p class="mt-3">{{ I18ns.leadTeam.members.table.placeholderTitle }}</p>
     <span class="mt-3 d-block">{{ I18ns.leadTeam.members.table.placeholderSubtitle }}</span>
@@ -262,7 +248,7 @@
       <i class="bi bi-plus-lg"></i>{{ I18ns.leadTeam.createTeam }}
     </button>
   </div>
-  <div *ngIf="isFilteredUsers" class="nodata-placeholder text-center" noResult>
+  <div class="nodata-placeholder text-center" noResult>
     <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
     <p class="mt-3">{{ I18ns.shared.noData }}</p>
     <span class="mt-3 d-block">{{ I18ns.shared.noDataSubtitle }}</span>
@@ -271,16 +257,13 @@
       {{ I18ns.shared.resetFilters }}
     </button>
   </div>
-  <div style="height: 542px" loading>
-    <div class="skeleton-panel mb-5" style="height: 82px" loading></div>
-    <div class="row mb-5">
-      <div class="col-6">
-        <alto-search class="float-start"></alto-search>
-      </div>
-      <div class="col-6 text-end">
-        <alto-dropdown-filter class="me-3 text-start"></alto-dropdown-filter>
-
-        <alto-score-filter class="text-start"></alto-score-filter>
+  <div style="height: 522px" loading>
+    <div class="skeleton-panel mb-5" style="height: 82px"></div>
+    <div class="d-flex justify-content-between">
+      <alto-input-search></alto-input-search>
+      <div class="d-flex mb-3">
+        <alto-input-multiple-select></alto-input-multiple-select>
+        <alto-input-single-select-pill></alto-input-single-select-pill>
       </div>
     </div>
     <div class="skeleton-panel" style="height: 356px"></div>

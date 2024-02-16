@@ -1,2 +1,4 @@
-<alto-team-engagement *ngIf="type === 'team'"></alto-team-engagement>
-<alto-user-engagement *ngIf="type === 'user'"></alto-user-engagement>
+<ng-container [ngSwitch]="activeTab.value.value">
+  <alto-team-engagement *ngSwitchCase="EStatisticsDetailsEngagementTabs.Team"></alto-team-engagement>
+  <alto-user-engagement *ngSwitchCase="EStatisticsDetailsEngagementTabs.User"></alto-user-engagement>
+</ng-container>

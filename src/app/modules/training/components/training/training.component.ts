@@ -6,7 +6,6 @@ import {
   GetNextQuestionsForUserRequestParams,
   GuessSourceEnumApi,
   NextQuestionDtoApi,
-  ProgramDtoApi,
   ProgramRunDtoApi,
   QuestionApi,
   QuestionDtoApi,
@@ -16,14 +15,17 @@ import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.s
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
 import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { QuestionSubmittedFormComponent } from 'src/app/modules/programs/components/questions/question-submitted-form/question-submitted-form.component';
+import { QuestionSubmittedFormComponent } from 'src/app/modules/training/components/training/question-submitted-form/question-submitted-form.component';
 import { ProgramRunsRestService } from 'src/app/modules/programs/services/program-runs-rest.service';
 import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { IAppData } from '../../../../core/resolvers';
+import { Program } from '../../../../models/program.model';
 import { GuessesRestService } from '../../services/guesses-rest.service';
 import { ExplanationComponent } from '../explanation/explanation.component';
+import * as FromRoot from '../../../../core/store/store.reducer';
+import { Store } from '@ngrx/store';
 
 interface AnswerCard {
   answer: string;
@@ -55,7 +57,7 @@ export class TrainingComponent implements OnInit {
   questionsGoodAnswers = 0;
 
   programId = '';
-  program?: ProgramDtoApi;
+  program?: Program;
   programRun?: ProgramRunDtoApi;
   score = 0;
 
@@ -81,6 +83,7 @@ export class TrainingComponent implements OnInit {
     private readonly offcanvasService: NgbOffcanvas,
     private modalService: NgbModal,
     private readonly resolversService: ResolversService,
+    private store: Store<FromRoot.AppState>,
   ) {}
 
   ngOnInit(): void {
@@ -114,8 +117,9 @@ export class TrainingComponent implements OnInit {
           this.programRun = pr;
           this.questionsGoodAnswers = pr?.goodGuessesCount ?? 0;
         }),
-        switchMap(() => this.programsRestService.getPrograms()),
-        tap((progs) => {
+        switchMap(() => this.store.select(FromRoot.selectCompany)),
+        map(({ data: company }) => company.programs),
+        tap((progs: Program[]) => {
           this.program = progs.find((p) => p.id === this.programId);
           if (this.programRun) {
             this.questionsCount = this.programRun.questionsCount;
@@ -126,7 +130,7 @@ export class TrainingComponent implements OnInit {
         switchMap(() =>
           combineLatest([
             this.programRunsRestService.getMyProgramRunsQuestions({ id: this.programRun?.id ?? '' }),
-            this.guessRestService.getGuesses({
+            this.guessRestService.getPaginatedGuesses({
               createdBy: this.user.id,
               programRunIds: this.programRun?.id,
             }),
@@ -136,7 +140,7 @@ export class TrainingComponent implements OnInit {
           this.questionsAnswered = guesses.meta.totalItems;
           this.questionNumber = this.questionsAnswered;
           this.remainingQuestions =
-            questions.data?.filter((q) => guesses.data?.every((g) => g.questionId !== q.id)) ?? [];
+            questions.data?.filter((q: any) => guesses.data?.every((g: any) => g.questionId !== q.id)) ?? [];
           this.getNextQuestion();
         }),
         untilDestroyed(this),

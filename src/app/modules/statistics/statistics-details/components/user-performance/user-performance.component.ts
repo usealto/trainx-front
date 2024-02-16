@@ -1,29 +1,24 @@
 import { Location, TitleCasePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  ScoreByTypeEnumApi,
-  ScoreTimeframeEnumApi,
-  ScoreTypeEnumApi,
-  TagDtoApi,
-  TagStatsDtoApi,
-} from '@usealto/sdk-ts-angular';
-import { combineLatest, tap } from 'rxjs';
+import { ScoreByTypeEnumApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
+import { Subscription, combineLatest, filter, map, startWith, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { Score } from 'src/app/models/score.model';
+import { EScoreDuration, Score } from 'src/app/models/score.model';
 import { Team } from 'src/app/models/team.model';
 import { IUser, User } from 'src/app/models/user.model';
 import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
-import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
+import { ILeadData } from '../../../../../core/resolvers/lead.resolver';
 import { ToastService } from '../../../../../core/toast/toast.service';
+import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { SelectOption } from '../../../../shared/models/select-option.model';
 import { StatisticsService } from '../../../services/statistics.service';
 import { AltoRoutes } from '../../../../shared/constants/routes';
 
@@ -32,31 +27,32 @@ import { AltoRoutes } from '../../../../shared/constants/routes';
   templateUrl: './user-performance.component.html',
   styleUrls: ['./user-performance.component.scss'],
 })
-export class UserPerformanceComponent implements OnInit {
+export class UserPerformanceComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   EmojiName = EmojiName;
   AltoRoutes = AltoRoutes;
 
   user!: User;
-  userTeam!: Team;
-  duration: ScoreDuration = ScoreDuration.Trimester;
-  tags: TagDtoApi[] = [];
+  team!: Team;
 
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
+    nonNullable: true,
+  });
   userChartOptions!: any;
-  userChartStatus: PlaceholderDataStatus = 'loading';
+  userChartStatus = EPlaceholderStatus.LOADING;
 
   spiderChartOptions!: any;
-  spiderChartStatus: PlaceholderDataStatus = 'loading';
-  spiderChartStatusReason: '<3 tags' | '>6 tags' | undefined = undefined;
-  spiderChartSectionStatus: PlaceholderDataStatus = 'loading';
-  selectedSpiderTags: TagDtoApi[] = [];
+  spiderChartStatus = EPlaceholderStatus.LOADING;
+  tagsOptions: SelectOption[] = [];
+  tagsControl = new FormControl([] as FormControl<SelectOption>[], { nonNullable: true });
+
+  private readonly userPerformanceComponentSubscription = new Subscription();
 
   constructor(
     private readonly router: Router,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly statisticsService: StatisticsService,
-    private readonly tagsRestService: TagsRestService,
     readonly titleCasePipe: TitleCasePipe,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
@@ -65,70 +61,164 @@ export class UserPerformanceComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // TODO : data should come from parent component
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     const usersById = (data[EResolvers.AppResolver] as IAppData).userById;
-    const teamsById = (data[EResolvers.AppResolver] as IAppData).teamById;
+    const teamsById = (data[EResolvers.AppResolver] as IAppData).company.teamById;
+    const tagsDtos = (data[EResolvers.LeadResolver] as ILeadData).tags;
+
+    this.tagsOptions = tagsDtos.map((tagDto) => new SelectOption({ label: tagDto.name, value: tagDto.id }));
+
+    // TODO : move logic into a guard or resolver
     const userId = this.router.url.split('/').pop() || '';
     this.user = usersById.get(userId) || new User({} as IUser);
-    if (!this.user.teamId || this.user.teamId === '' || teamsById.get(this.user.teamId) === undefined) {
+    if (!this.user.teamId || this.user.teamId === '' || !teamsById.has(this.user.teamId)) {
       this.location.back();
       this.toastService.show({ type: 'danger', text: I18ns.statistics.user.toasts.noTeam });
     } else {
-      this.userTeam = teamsById.get(this.user.teamId) as Team;
+      this.team = teamsById.get(this.user.teamId) as Team;
     }
 
-    this.tagsRestService
-      .getTags()
-      .pipe(
-        tap((r) => {
-          this.tags = r;
-          this.selectedSpiderTags = r.slice(0, 6);
+    // User chart subscription
+    this.userPerformanceComponentSubscription.add(
+      this.durationControl.valueChanges
+        .pipe(
+          startWith(this.durationControl.value),
+          switchMap((duration) => {
+            let timeframe: ScoreTimeframeEnumApi;
+
+            switch (duration) {
+              case EScoreDuration.Year:
+                timeframe = ScoreTimeframeEnumApi.Month;
+                break;
+              case EScoreDuration.Trimester:
+                timeframe = ScoreTimeframeEnumApi.Week;
+                break;
+              default:
+                timeframe = ScoreTimeframeEnumApi.Day;
+                break;
+            }
+
+            return combineLatest([
+              this.scoresRestService.getScores({
+                duration,
+                type: ScoreTypeEnumApi.User,
+                ids: [this.user.id],
+                timeframe,
+              }),
+              this.scoresRestService.getScores({
+                duration,
+                type: ScoreTypeEnumApi.Team,
+                ids: [this.user.teamId as string],
+                timeframe,
+              }),
+            ]);
+          }),
+          filter(([userScores, teamScores]) => {
+            if (userScores.length === 0 && teamScores.length === 0) {
+              this.userChartStatus = EPlaceholderStatus.NO_DATA;
+              return false;
+            }
+            return true;
+          }),
+        )
+        .subscribe({
+          next: ([userScores, teamScores]) => {
+            this.createUserChart(userScores[0], teamScores[0], this.durationControl.value);
+            this.userChartStatus =
+              userScores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
+          },
         }),
-      )
-      .subscribe({
-        next: () => {
-          this.loadPage();
-        },
-      });
+    );
+
+    // Spider chart subscription
+    this.userPerformanceComponentSubscription.add(
+      this.scoresRestService
+        .getPaginatedTagsStats(EScoreDuration.Year, false, {
+          sortBy: 'score:desc',
+          itemsPerPage: 6,
+        })
+        .pipe(
+          tap(({ data: bestTagsStats = [] }) => {
+            this.tagsControl.setValue(
+              bestTagsStats.map((tagStats) => {
+                return new FormControl(
+                  this.tagsOptions.find((tagOption) => tagOption.value === tagStats.tag.id) as SelectOption,
+                  { nonNullable: true },
+                );
+              }),
+            );
+          }),
+          switchMap(() => {
+            return this.tagsControl.valueChanges.pipe(
+              startWith(this.tagsControl.value),
+              map((tags) => tags.map((tag) => tag.value)),
+            );
+          }),
+          filter((selectedTags) => {
+            if (selectedTags.length < 3 || selectedTags.length > 6) {
+              this.spiderChartStatus = EPlaceholderStatus.NO_DATA;
+              return false;
+            }
+            return true;
+          }),
+          switchMap((selectedTagsOptions) => {
+            return combineLatest([
+              this.scoresRestService.getScores({
+                duration: EScoreDuration.Year,
+                type: ScoreTypeEnumApi.Tag,
+                team: this.user.teamId,
+                timeframe: ScoreTimeframeEnumApi.Year,
+                ids: selectedTagsOptions.map(({ value }) => value),
+              }),
+              this.scoresRestService.getScores({
+                duration: EScoreDuration.Year,
+                type: ScoreTypeEnumApi.Tag,
+                scoredBy: ScoreByTypeEnumApi.User,
+                scoredById: this.user.id,
+                timeframe: ScoreTimeframeEnumApi.Year,
+                ids: selectedTagsOptions.map(({ value }) => value),
+              }),
+            ]).pipe(
+              tap(([teamScores, userScores]) => {
+                this.createSpiderChart(
+                  selectedTagsOptions.map(({ label }) => label),
+                  teamScores.map((teamScore) => {
+                    return teamScore.averages[0] ? Math.round((teamScore.averages[0] * 10000) / 100) : null;
+                  }),
+                  userScores.map((userScore) => {
+                    return userScore.averages[0] ? Math.round((userScore.averages[0] * 10000) / 100) : null;
+                  }),
+                );
+              }),
+            );
+          }),
+        )
+        .subscribe({
+          next: ([teamScores, userScores]) => {
+            if (teamScores.length > 0 || userScores.length > 0) {
+              this.spiderChartStatus = EPlaceholderStatus.GOOD;
+            }
+          },
+        }),
+    );
   }
 
-  loadPage(): void {
-    this.getUserChartScores(this.duration);
-    this.getSpiderChartScores();
+  ngOnDestroy(): void {
+    this.userPerformanceComponentSubscription.unsubscribe();
   }
 
-  getSpiderChartScores(): void {
-    this.spiderChartStatus = 'loading';
-    combineLatest([
-      this.scoresRestService.getTagsStats(
-        ScoreDuration.Year,
-        false,
-        this.user.teamId,
-        this.selectedSpiderTags.map((t) => t.id),
-      ),
-      this.scoresRestService.getScores(this.getScoreParams('tagStats', ScoreDuration.Year)),
-    ]).subscribe(([teamStats, userStats]) => {
-      this.createSpiderChart(
-        teamStats.sort((a, b) => a.tag.name.localeCompare(b.tag.name)),
-        userStats.sort((a, b) => a.label.localeCompare(b.label)),
-      );
-      this.spiderChartStatus = userStats.length ? 'good' : 'noData';
-      this.spiderChartSectionStatus = this.tags.length < 3 ? 'empty' : userStats.length ? 'good' : 'noData';
-    });
-  }
-
-  createSpiderChart(teamScores: TagStatsDtoApi[], userScores: Score[]): void {
+  createSpiderChart(
+    selectedTagsLabels: string[],
+    teamScores: (number | null)[],
+    userScores: (number | null)[],
+  ): void {
     this.spiderChartOptions = {
       color: ['#475467', '#FF917C'],
       radar: {
-        indicator: teamScores.map((s) => {
-          return { name: s.tag.name, max: 100 };
+        indicator: selectedTagsLabels.map((name) => {
+          return { name, max: 100 };
         }),
-        radius: '70%',
-        axisName: {
-          color: '#667085',
-          padding: [3, 10],
-        },
       },
       series: [
         {
@@ -136,8 +226,8 @@ export class UserPerformanceComponent implements OnInit {
           // silent: true,
           data: [
             {
-              value: teamScores.map((s) => (s.score ? Math.round((s.score * 10000) / 100) : s.score)),
-              name: "Score de l'équipe",
+              value: teamScores,
+              name: I18ns.statistics.user.performance.masteringLevel.spiderChart.teamScore,
               symbol: 'rect',
               symbolSize: 12,
               lineStyle: {
@@ -150,10 +240,8 @@ export class UserPerformanceComponent implements OnInit {
           type: 'radar',
           data: [
             {
-              value: userScores.map((u) =>
-                u.averages[0] ? Math.round((u.averages[0] * 10000) / 100) : null,
-              ),
-              name: 'Score du collaborateur',
+              value: userScores,
+              name: I18ns.statistics.user.performance.masteringLevel.spiderChart.userScore,
               areaStyle: {
                 color: 'rgba(255, 145, 124, 0.6)',
                 offset: 0,
@@ -161,40 +249,20 @@ export class UserPerformanceComponent implements OnInit {
               label: {
                 show: true,
                 formatter: function (params: any) {
-                  return (params.value as string) + ' %';
+                  if (params.value !== null && params.value !== undefined) {
+                    return (params.value as string) + ' %';
+                  }
+                  return undefined;
                 },
               },
             },
           ],
         },
       ],
-      legend: {
-        bottom: 0,
-        icon: 'circle',
-        itemWidth: 8,
-        textStyle: { color: '#667085' },
-      },
     };
   }
 
-  getUserChartScores(duration: ScoreDuration): void {
-    this.userChartStatus = 'loading';
-    combineLatest([
-      this.scoresRestService.getScores(this.getScoreParams('user', duration)),
-      this.scoresRestService.getScores(this.getScoreParams('team', duration)),
-    ])
-      .pipe(
-        tap(([userScores, teamScores]) => {
-          this.userChartStatus = userScores.length > 0 ? 'good' : 'empty';
-          if (userScores.length > 0) {
-            this.createUserChart(userScores[0], teamScores[0], duration);
-          }
-        }),
-      )
-      .subscribe();
-  }
-
-  createUserChart(userScores: Score, teamScores: Score, duration: ScoreDuration): void {
+  createUserChart(userScores: Score, teamScores: Score, duration: EScoreDuration): void {
     const [formattedUserScores, formattedTeamScores] = this.scoresService.formatScores([
       userScores,
       teamScores,
@@ -202,10 +270,16 @@ export class UserPerformanceComponent implements OnInit {
 
     const teamPoints = this.statisticsService.transformDataToPoint(formattedTeamScores);
 
-    const labels = this.statisticsService.formatLabel(
-      teamPoints.map((d) => d.x),
-      duration,
-    );
+    let labels: string[] = [];
+
+    if (teamPoints.length === 0) {
+      labels = [];
+    } else {
+      labels = this.statisticsService.formatLabel(
+        teamPoints.map((d) => d.x),
+        duration,
+      );
+    }
 
     const dataSets = [formattedUserScores, formattedTeamScores].map((scores) => {
       const d = this.statisticsService.transformDataToPoint(scores);
@@ -236,52 +310,5 @@ export class UserPerformanceComponent implements OnInit {
       series: series,
       legend: legendOptions,
     };
-  }
-
-  updateTimePicker(event: any): void {
-    this.duration = event;
-    this.loadPage();
-  }
-
-  filterSpiderTags(event: any): void {
-    this.selectedSpiderTags = event;
-    if (this.selectedSpiderTags.length < 3) {
-      this.spiderChartStatusReason = '<3 tags';
-      this.spiderChartStatus = 'empty';
-    } else if (this.selectedSpiderTags.length > 6) {
-      this.spiderChartStatusReason = '>6 tags';
-      this.spiderChartStatus = 'empty';
-    } else {
-      this.getSpiderChartScores();
-    }
-  }
-
-  getScoreParams(type: 'user' | 'team' | 'tagStats', duration: ScoreDuration): any {
-    return {
-      duration,
-      type:
-        type === 'user'
-          ? ScoreTypeEnumApi.User
-          : type === 'team'
-          ? ScoreTypeEnumApi.Team
-          : ScoreTypeEnumApi.Tag,
-      ids: [
-        type === 'user'
-          ? this.user.id
-          : type === 'team'
-          ? this.userTeam.id
-          : this.selectedSpiderTags.map((t) => t.id),
-      ],
-      timeframe:
-        type === 'tagStats'
-          ? ScoreTimeframeEnumApi.Year
-          : duration === ScoreDuration.Year
-          ? ScoreTimeframeEnumApi.Month
-          : duration === ScoreDuration.Trimester
-          ? ScoreTimeframeEnumApi.Week
-          : ScoreTimeframeEnumApi.Day,
-      scoredBy: type === 'tagStats' ? ScoreByTypeEnumApi.User : undefined,
-      scoredById: type === 'tagStats' ? this.user.id : undefined,
-    } as ChartFilters;
   }
 }

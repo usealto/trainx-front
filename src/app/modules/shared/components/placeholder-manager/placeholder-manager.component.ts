@@ -1,5 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { PlaceholderDataStatus } from '../../models/placeholder.model';
+
+export enum EPlaceholderStatus {
+  GOOD = 'good',
+  NO_RESULT = 'noResult',
+  NO_DATA = 'noData',
+  LOADING = 'loading',
+}
 
 @Component({
   selector: 'alto-placeholder-manager',
@@ -7,5 +13,7 @@ import { PlaceholderDataStatus } from '../../models/placeholder.model';
   styleUrls: ['./placeholder-manager.component.scss'],
 })
 export class PlaceholderManagerComponent {
-  @Input() status: PlaceholderDataStatus = 'good';
+  EPlaceholderStatus = EPlaceholderStatus;
+
+  @Input() status: EPlaceholderStatus = EPlaceholderStatus.GOOD;
 }

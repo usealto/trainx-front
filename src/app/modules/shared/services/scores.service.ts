@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
+import { ScoreDtoApi, ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
 import { addDays, addHours, startOfDay } from 'date-fns';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { Score } from '../../../models/score.model';
-import { ScoreDuration, ScoreFilter, TopFlopDisplay } from '../models/score.model';
+import { EScoreDuration, EScoreFilter, Score } from '../../../models/score.model';
+import { TopFlopDisplay } from '../models/score.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,35 +20,37 @@ export class ScoresService {
   /**
    * @param isDecimal Indications for the score format : true => 0.86 ; false => 86
    */
-  filterByScore<T extends { score?: number }>(data: T[], score: ScoreFilter, isDecimal: boolean): T[] {
+  filterByScore<T extends { score?: number }>(data: T[], score: EScoreFilter, isDecimal: boolean): T[] {
     let scoreCap = 0;
     let isUnder = false;
     switch (score) {
-      case ScoreFilter.Under25:
+      case EScoreFilter.Under25:
         isUnder = true;
         scoreCap = 25;
         break;
-      case ScoreFilter.Under50:
+      case EScoreFilter.Under50:
         isUnder = true;
         scoreCap = 50;
         break;
-      case ScoreFilter.Under75:
+      case EScoreFilter.Under75:
         isUnder = true;
         scoreCap = 75;
         break;
-      case ScoreFilter.Over25:
+      case EScoreFilter.Over25:
         scoreCap = 25;
         break;
-      case ScoreFilter.Over50:
+      case EScoreFilter.Over50:
         scoreCap = 50;
         break;
-      case ScoreFilter.Over75:
+      case EScoreFilter.Over75:
         scoreCap = 75;
         break;
     }
     return data.filter((d) => {
       if (
-        (score === ScoreFilter.Under25 || score === ScoreFilter.Under50 || score === ScoreFilter.Under75) &&
+        (score === EScoreFilter.Under25 ||
+          score === EScoreFilter.Under50 ||
+          score === EScoreFilter.Under75) &&
         d.score === 0
       )
         return true;
@@ -59,31 +61,25 @@ export class ScoresService {
     });
   }
 
-  getYesterday() {
-    const date = new Date();
-    const gmtDataOffset = -date.getTimezoneOffset() / 60;
-    return addHours(startOfDay(date), gmtDataOffset);
-  }
-
   @memoize()
-  getStartDate(duration: ScoreDuration): Date {
+  getStartDate(duration: EScoreDuration): Date {
     let date = new Date();
     const gmtDataOffset = -date.getTimezoneOffset() / 60;
 
     switch (duration) {
-      case ScoreDuration.Week:
+      case EScoreDuration.Week:
         date = addDays(date, -7);
         break;
-      case ScoreDuration.Month:
+      case EScoreDuration.Month:
         date = addDays(date, -30);
         break;
-      case ScoreDuration.Trimester:
+      case EScoreDuration.Trimester:
         date = addDays(date, -90);
         break;
-      case ScoreDuration.Year:
+      case EScoreDuration.Year:
         date = addDays(date, -365);
         break;
-      case ScoreDuration.All:
+      case EScoreDuration.All:
         date = new Date(2022, 0, 1);
         break;
     }
@@ -91,60 +87,7 @@ export class ScoresService {
     return date;
   }
 
-  getDefaultDuration(timeframe: ScoreTimeframeEnumApi): ScoreDuration {
-    switch (timeframe) {
-      case ScoreTimeframeEnumApi.Day:
-        return ScoreDuration.Week;
-      case ScoreTimeframeEnumApi.Week:
-        return ScoreDuration.Month;
-      case ScoreTimeframeEnumApi.Month:
-        return ScoreDuration.Year;
-      default:
-        return ScoreDuration.Year;
-    }
-  }
-
-  getDefaultTimeFrame(duration: ScoreDuration): ScoreTimeframeEnumApi {
-    switch (duration) {
-      case ScoreDuration.Week:
-        return ScoreTimeframeEnumApi.Day;
-      case ScoreDuration.Month:
-        return ScoreTimeframeEnumApi.Week;
-      case ScoreDuration.Year:
-        return ScoreTimeframeEnumApi.Month;
-      default:
-        return ScoreTimeframeEnumApi.Week;
-    }
-  }
-
-  getTop(data: TopFlopDisplay[]) {
-    return data.filter(({ avg }) => !!avg && avg >= 0.5).sort((a, b) => (a.avg < b.avg ? 1 : -1));
-  }
-
-  getFlop(data: TopFlopDisplay[]) {
-    return data.filter(({ avg }) => !!avg && avg < 0.5).sort((a, b) => (a.avg > b.avg ? 1 : -1));
-  }
-
-  /**
-   * ! DEPRECATED
-   * @deprecated The method should not be used
-   */
-  durationToTimeFrame(duration: ScoreDuration): ScoreTimeframeEnumApi {
-    switch (duration) {
-      case ScoreDuration.Day:
-        return ScoreTimeframeEnumApi.Day;
-      case ScoreDuration.Week:
-        return ScoreTimeframeEnumApi.Week;
-      case ScoreDuration.Month:
-        return ScoreTimeframeEnumApi.Month;
-      case ScoreDuration.Year:
-        return ScoreTimeframeEnumApi.Year;
-      default:
-        return ScoreTimeframeEnumApi.Week;
-    }
-  }
-
-  getPreviousPeriod(duration: string | ScoreDuration | undefined): Date[] {
+  getPreviousPeriod(duration: string | EScoreDuration | undefined): Date[] {
     let date = new Date();
     date = addDays(date, 1); //! TEMPORARY FIX to get data from actual day
     switch (duration) {
@@ -164,7 +107,7 @@ export class ScoresService {
         date = addDays(date, -60);
         break;
     }
-    return [date, this.getStartDate(duration as ScoreDuration)];
+    return [date, this.getStartDate(duration as EScoreDuration)];
   }
 
   /**
@@ -193,6 +136,10 @@ export class ScoresService {
   }
 
   formatScores(scores: Score[]): Score[] {
+    if (scores.length === 0 || scores[0] === undefined) {
+      return [];
+    }
+
     const filteredScores = scores.map((ts) => this.filterTimeSeries(ts));
 
     const longestDates = filteredScores.reduce((dates, score) => {

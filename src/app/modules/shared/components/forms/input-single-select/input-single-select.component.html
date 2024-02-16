@@ -1,0 +1,39 @@
+<div class="dropdown">
+  <div class="dropdown-input form-control" [class.form]="hasFormAppearance" (click)="toggleDropdown()">
+    <div class="title-container">
+      <p
+        *ngIf="control.value; else noValue"
+      >
+        {{ control.value.label }}
+      </p>
+      <ng-template #noValue>
+        <p class="title">{{ placeholder }}</p>
+      </ng-template>
+    </div>
+    <div class="d-flex gap-2">
+      <i *ngIf="!mandatoryField && control.value" class="bi bi-x-lg hover-red" (click)="$event.stopPropagation(); toggleOption(control.value)">
+      </i>
+      <i class="bi" [ngClass]="isDropdownOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+    </div>
+  </div>
+  <div #dropdownMenu class="dropdown-menu" [ngClass]="{show: isDropdownOpen}">
+    <ng-container *ngIf="options.length > 0; else noOption">
+    <div
+      *ngFor="let option of options; let index = index; let last = last"
+      class="dropdown-item"
+      [class.border-bottom]="!last"
+      [class.no-pointer-event]="control.value === option"
+      (click)="toggleOption(option)"
+      [class.cursor-pointer]="control.value !== option"
+      [class.selected]="control.value === option"
+      >
+      <span>{{ option.label }}</span>
+    </div>
+  </ng-container>
+  <ng-template #noOption>
+    <div class="dropdown-item">
+      <p class="fst-italic alto-grey">{{ I18ns.shared.noOption }}</p>
+    </div>
+  </ng-template>
+  </div>
+</div>

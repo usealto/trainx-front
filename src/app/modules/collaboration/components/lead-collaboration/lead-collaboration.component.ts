@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -8,13 +9,16 @@ import {
   QuestionSubmittedDtoApiStatusEnumApi,
 } from '@usealto/sdk-ts-angular';
 import { addDays, compareDesc, differenceInDays, isAfter, isBefore, isToday } from 'date-fns';
-import { combineLatest, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { EmojiPipe } from 'src/app/core/utils/emoji/emoji.pipe';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { CommentsRestService } from 'src/app/modules/programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from 'src/app/modules/programs/services/questions-submitted-rest.service';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
+import { IAppData } from '../../../../core/resolvers';
+import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
+import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { SelectOption } from '../../../shared/models/select-option.model';
 
 export enum ETypeValue {
   COMMENTS = 'comments',
@@ -55,7 +59,7 @@ interface IContribution {
   styleUrls: ['./lead-collaboration.component.scss'],
   providers: [EmojiPipe],
 })
-export class LeadCollaborationComponent implements OnInit {
+export class LeadCollaborationComponent implements OnInit, OnDestroy {
   itemsPerPage = 10;
 
   Emoji = EmojiName;
@@ -102,6 +106,17 @@ export class LeadCollaborationComponent implements OnInit {
   selectedContributorsFilters: { id: string; name: string }[] = [];
   selectedPeriodsFilters: { id: EPeriodValue; name: string }[] = [];
 
+  selectedTypesControl = new FormControl([] as FormControl<SelectOption>[], { nonNullable: true });
+  typesOptions: SelectOption[] = this.filters.map(
+    ({ id, name }) => new SelectOption({ value: id, label: name }),
+  );
+  selectedContributorsControl = new FormControl([] as FormControl<SelectOption>[], { nonNullable: true });
+  contributorsOptions: SelectOption[] = [];
+  selectedPeriodsControl = new FormControl([] as FormControl<SelectOption>[], { nonNullable: true });
+  periodsOptions: SelectOption[] = this.periods.map(
+    ({ id, name }) => new SelectOption({ value: id, label: name }),
+  );
+
   contributionsByPeriod: {
     period: EPeriodValue;
     contributions: IContribution[];
@@ -118,7 +133,9 @@ export class LeadCollaborationComponent implements OnInit {
     allowResetFilters: boolean;
   };
 
-  contributionDataStatus: PlaceholderDataStatus = 'loading';
+  contributionDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
+
+  private readonly leadCollaborationComponentSubscription = new Subscription();
 
   constructor(
     private readonly commentsRestService: CommentsRestService,
@@ -127,9 +144,16 @@ export class LeadCollaborationComponent implements OnInit {
     private readonly emojiPipe: EmojiPipe,
     private readonly router: Router,
     private readonly location: Location,
+    private readonly resolversService: ResolversService,
   ) {}
 
+  // TODO : clean
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    const usersById = (data[EResolvers.AppResolver] as IAppData).userById;
+    this.contributorsOptions = [...usersById.values()].map(
+      (user) => new SelectOption({ value: user.id, label: user.fullname }),
+    );
     this.initContributionsByPeriod();
 
     this.activatedRoute.queryParams
@@ -145,33 +169,67 @@ export class LeadCollaborationComponent implements OnInit {
               : [par['type']]
             : [];
           this.selectedTypesFilters = this.filters.filter(({ id }) => typesFromParams.includes(id));
+          this.selectedTypesControl.setValue(
+            this.selectedTypesFilters.map(
+              (filter) =>
+                new FormControl<SelectOption>(
+                  this.typesOptions.find(({ value }) => value === filter.id) as SelectOption,
+                  { nonNullable: true },
+                ),
+            ),
+          );
 
           this.getCollaborationData();
         }),
         untilDestroyed(this),
       )
       .subscribe();
+
+    this.leadCollaborationComponentSubscription.add(
+      combineLatest([
+        this.selectedTypesControl.valueChanges.pipe(
+          tap((selectedTypesOptionsControls) => {
+            const selectedFilters = this.filters.filter(({ id }) =>
+              selectedTypesOptionsControls.map((optionControl) => optionControl.value.value).includes(id),
+            );
+            this.handleTypeChange(selectedFilters);
+          }),
+        ),
+        this.selectedContributorsControl.valueChanges.pipe(
+          tap((selectedContributorsControls) => {
+            const selectedContributors = selectedContributorsControls
+              .map((optionControl) => optionControl.value)
+              .map((option) => {
+                return { id: option.value, name: option.label };
+              });
+            this.handleContributorChange(selectedContributors);
+          }),
+        ),
+        this.selectedPeriodsControl.valueChanges.pipe(
+          tap((selectedPeriodsControls) => {
+            const selectedPeriods = this.periods.filter(({ id }) =>
+              selectedPeriodsControls.map((optionControl) => optionControl.value.value).includes(id),
+            );
+            this.handlePeriodChange(selectedPeriods);
+          }),
+        ),
+      ]).subscribe(),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.leadCollaborationComponentSubscription.unsubscribe();
   }
 
   getCollaborationData(): void {
     combineLatest([
-      this.commentsRestService.getCommentsCount(),
-      this.questionsSubmittedRestService.getQuestionsCount(),
+      this.commentsRestService.getAllComments(),
+      this.questionsSubmittedRestService.getAllQuestions(),
     ])
       .pipe(
-        switchMap(([commentsCount, questionsSubmittedCount]) => {
-          return combineLatest([
-            this.commentsRestService.getCommentsPaginated({
-              itemsPerPage: commentsCount || 1,
-            }),
-            this.questionsSubmittedRestService.getQuestionsPaginated({
-              itemsPerPage: questionsSubmittedCount || 1,
-            }),
-          ]);
-        }),
         tap(([comments, submittedQuestions]) => {
-          this.comments = [...(comments.data ?? [])];
-          this.submittedQuestions = [...(submittedQuestions.data ?? [])];
+          this.comments = comments;
+          this.submittedQuestions = submittedQuestions;
           this.pendingCount =
             this.comments.filter((comment) => !comment.isRead).length +
             this.submittedQuestions.filter(
@@ -278,7 +336,7 @@ export class LeadCollaborationComponent implements OnInit {
 
     this.showMoreButton = data.length > this.itemsPerPage;
 
-    this.contributionDataStatus = data.length === 0 ? 'noData' : 'good';
+    this.contributionDataStatus = data.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
     if (data.length === 0) {
       if (this.comments.length > 0 || this.submittedQuestions.length > 0) {
         this.emptyPlaceholderData = {
@@ -427,11 +485,11 @@ export class LeadCollaborationComponent implements OnInit {
     this.selectedContributorsFilters = [];
     this.selectedTypesFilters = [];
     this.selectedPeriodsFilters = [];
+    this.selectedTypesControl.setValue([]);
+    this.selectedContributorsControl.setValue([]);
+    this.selectedPeriodsControl.setValue([]);
     this.emptyPlaceholderData = undefined;
     this.getSelectedTabData();
-    if(this.selectedTab.value !== ETabValue.ALL) {
-      this.handleTabChange(this.tabs[2]);
-    }
   }
 
   initContributionsByPeriod() {

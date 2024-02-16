@@ -9,8 +9,8 @@ import {
   userAccessGuard,
 } from './core/guards';
 import { FlagBasedPreloadingStrategy } from './core/interceptors/module-loading-strategy';
-import { appResolver, homeResolver, leadResolver, noSplashScreenResolver } from './core/resolvers';
-import { companyResolver } from './core/resolvers/company.resolver';
+import { appResolver, noSplashScreenResolver } from './core/resolvers';
+import { leadResolver } from './core/resolvers/lead.resolver';
 import { AppLayoutComponent } from './layout/app-layout/app-layout.component';
 import { ImpersonateComponent } from './layout/impersonate/impersonate.component';
 import { JwtComponent } from './layout/jwt/jwt.component';
@@ -21,6 +21,7 @@ import { NoWebAccessComponent } from './layout/no-web-access/no-web-access.compo
 import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { AltoRoutes } from './modules/shared/constants/routes';
+import { EResolvers } from './core/resolvers/resolvers.service';
 
 const routes: Routes = [
   {
@@ -29,7 +30,7 @@ const routes: Routes = [
     canActivate: [AppGuard, AuthGuard, PreventSmallScreenGuard],
     canActivateChild: [AuthGuard],
     resolve: {
-      appResolver,
+      [EResolvers.AppResolver]: appResolver,
     },
     runGuardsAndResolvers: 'always',
     children: [
@@ -63,25 +64,20 @@ const routes: Routes = [
       {
         path: AltoRoutes.lead,
         canActivate: [leadAccessGuard],
+        runGuardsAndResolvers: 'always',
         resolve: {
-          leadResolver,
-          companyResolver,
+          [EResolvers.LeadResolver]: leadResolver,
         },
         children: [
           { path: '', redirectTo: AltoRoutes.leadHome, pathMatch: 'full' },
           {
             path: AltoRoutes.leadHome,
-            resolve: {
-              homeResolver,
-            },
+            runGuardsAndResolvers: 'always',
             loadChildren: () => import('./modules/lead-home/lead-home.module').then((m) => m.LeadHomeModule),
           },
           {
             path: AltoRoutes.programs,
             loadChildren: () => import('./modules/programs/programs.module').then((m) => m.ProgramsModule),
-            data: {
-              preload: true,
-            },
           },
           {
             path: AltoRoutes.leadTeams,
@@ -99,9 +95,6 @@ const routes: Routes = [
             path: AltoRoutes.statistics,
             loadChildren: () =>
               import('./modules/statistics/statistics.module').then((m) => m.StatisticsModule),
-            data: {
-              preload: true,
-            },
           },
           {
             path: AltoRoutes.collaboration,

@@ -1,0 +1,24 @@
+<div class="tooltip-container input-range-container">
+  <input
+  class="input-range"
+  type="range"
+  [min]="min"
+  [max]="max"
+  [step]="step"
+  [formControl]="control">
+
+  <div class="tooltip-text" [style]="'left: ' + (control.value * 98) / 100 + '%; transform: translate(-20%, 100%)'">
+    <p>{{ control.value }}</p>
+  </div>
+</div>
+
+<datalist>
+  <ng-container *ngFor="let option of options">
+    <option
+    class="cursor-pointer"
+    (click)="selectOption(option)"
+    [value]="option.value"
+    [label]="option.label">
+    </option>
+  </ng-container>
+</datalist>

@@ -6,6 +6,7 @@ export const AltoRoutes = {
   programs: 'programs',
   programsCreate: 'e/new',
   programsEdit: 'e',
+  programsNew: 'new',
   //
   leadTeams: 'teams',
   settings: 'settings',

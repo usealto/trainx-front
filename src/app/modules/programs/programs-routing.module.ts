@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AltoRoutes } from '../shared/constants/routes';
-import { CreateProgramsComponent } from './components/create-programs/create-programs.component';
 import { ProgramsComponent } from './components/programs/programs.component';
+import { editProgramResolver } from '../../core/resolvers/edit-program.resolver';
+import { EditProgramsComponent } from './components/edit-program/edit-program.component';
 
 const routes: Routes = [
   {
@@ -11,7 +12,10 @@ const routes: Routes = [
   },
   {
     path: AltoRoutes.programsEdit + '/:id',
-    component: CreateProgramsComponent,
+    resolve: {
+      editProgramResolver: editProgramResolver,
+    },
+    component: EditProgramsComponent,
   },
 ];
 

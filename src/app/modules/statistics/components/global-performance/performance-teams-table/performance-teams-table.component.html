@@ -1,39 +1,29 @@
-<div class="row mb-4">
-  <div class="col-4">
-    <alto-search (searchChange)="getTeamsFiltered({ search: $event })"></alto-search>
-  </div>
-  <div class="col-8 text-end">
-    <!-- <alto-dropdown-filter
-      class="text-start"
-      [data]="getTeamsDropdown(teamsDisplay.length)"
-      [displayLabel]="'longName'"
-      [returnValue]="'id'"
-      [placeholder]="I18ns.programs.programs.filters.team"
-      [isColored]="true"
-      (selectChange)="getTeamsFiltered({ teams: $event })"
+<div class="mb-4 d-flex justify-content-between">
+    <alto-input-search
+      [searchControl]="searchControl"
+      [placeholder]="I18ns.shared.search"
+    ></alto-input-search>
+    <div class="d-flex">
+      <alto-input-multiple-select
       class="me-3"
-    ></alto-dropdown-filter> -->
-    <alto-dropdown-filter
-      class="me-3 text-start"
-      [data]="programs"
-      [displayLabel]="'name'"
-      [returnValue]="'id'"
+      [options]="programOptions"
       [placeholder]="I18ns.programs.questions.filters.programs"
-      (selectChange)="getTeamsFiltered({ programs: $event })"
-    ></alto-dropdown-filter>
-    <alto-dropdown-filter
-      class="text-start"
-      [data]="tags"
-      [returnValue]="'id'"
-      [displayLabel]="'name'"
-      [placeholder]="I18ns.programs.questions.filters.tags"
-      (selectChange)="getTeamsFiltered({ tags: $event })"
-    ></alto-dropdown-filter>
-  </div>
+      [controls]="programsControl"
+      [enableSearch]="true"
+      >
+    </alto-input-multiple-select>
+    <alto-input-multiple-select
+    [options]="tagOptions"
+    [placeholder]="I18ns.programs.questions.filters.tags"
+    [controls]="tagsControl"
+    [enableSearch]="true"
+    >
+  </alto-input-multiple-select>
+</div>
 </div>
 
 <alto-placeholder-manager [status]="teamsDataStatus">
-  <div class="table-panel">
+  <div *ngIf="teamsDataStatus === EPlaceholderStatus.GOOD" class="table-panel">
     <table class="table">
       <thead>
         <tr>
@@ -54,7 +44,7 @@
       </thead>
       <tbody>
         <tr
-          *ngFor="let team of paginatedTeams"
+          *ngFor="let teamStats of paginatedTeamsStats"
           class="align-middle"
           [routerLink]="[
             '/',
@@ -62,16 +52,18 @@
             AltoRoutes.statistics,
             AltoRoutes.statTeam,
             AltoRoutes.performance,
-            team.team.id
+            teamStats.teamId
           ]"
         >
           <td>
-            <span class="alto-badge" [style]="team.team.id | teamColor">{{ team.team.name }}</span>
+            <span class="alto-badge" [style]="teamStats.teamId | teamColor">{{
+              company.teamById.get(teamStats.teamId)?.name
+            }}</span>
           </td>
           <td class="text-center">
-            <ng-container *ngIf="team.score; else elseTemplate">
-              <span class="alto-score" [class]="(team.score || 0) * 100 | pillColor">{{
-                team.score | percent
+            <ng-container *ngIf="teamStats.score; else elseTemplate">
+              <span class="alto-score" [class]="(teamStats.score || 0) * 100 | pillColor">{{
+                teamStats.score | percent
               }}</span>
             </ng-container>
             <ng-template #elseTemplate>
@@ -83,8 +75,8 @@
           <td class="text-center">
             <alto-progression-badge
               class="d-inline-block"
-              [score]="getTeamPreviousScore(team)"
-              *ngIf="!scoreIsLoading && getTeamPreviousScore(team) !== 0; else noEvolution"
+              [score]="getTeamPreviousScore(teamStats)"
+              *ngIf="getTeamPreviousScore(teamStats) !== 0; else noEvolution"
             ></alto-progression-badge>
             <ng-template #noEvolution>
               <p class="alto-grey text-center">
@@ -93,14 +85,13 @@
             </ng-template>
           </td>
           <td>
-            <!-- <ng-template #tagsTooltip>
-                <ng-container *ngFor="let tag of team.tags">{{ tag.label }}<br /></ng-container>
-              </ng-template>-->
-            <ng-container *ngIf="team.tags && team.tags.length > 0; else noTag">
+            <ng-container *ngIf="teamStats.tagStats && teamStats.tagStats.length > 0; else noTag">
               <alto-colored-pill-list
                 [textLimit]="15"
                 color="primary"
-                [data]="team.tags | sort : 'asc' : 'score' | slice : 0 : 3"
+                [data]="teamStats.tagStats | sort : 'asc' : 'score'"
+                [limit]="3"
+                [tooltipOnLimit]="true"
               ></alto-colored-pill-list>
             </ng-container>
             <ng-template #noTag>
@@ -110,14 +101,12 @@
             </ng-template>
           </td>
           <td>
-            <!-- <ng-template #programsTooltip>
-                <ng-container *ngFor="let prog of team.programs">{{ prog.label }}<br /></ng-container>
-              </ng-template>-->
-
-            <ng-container *ngIf="team.programs && team.programs.length > 0; else noProgram">
+            <ng-container *ngIf="teamStats.programStats && teamStats.programStats.length > 0; else noProgram">
               <alto-colored-pill-list
                 [textLimit]="15"
-                [data]="team.programs || [] | sort : 'asc' : 'score' | slice : 0 : 3"
+                [data]="getLowestScorePrograms(teamStats.teamId)"
+                [limit]="3"
+                [tooltipOnLimit]="true"
               ></alto-colored-pill-list>
             </ng-container>
             <ng-template #noProgram>
@@ -131,18 +120,29 @@
     </table>
     <alto-pagination
       class="mx-4 d-block"
-      [collectionSize]="teamsDisplay.length"
-      (pageChange)="changeTeamsPage($event)"
-      [pageSize]="teamsPageSize"
-      [page]="teamsPage"
+      [pageControl]="teamsPageControl"
+      [itemsCount]="teamsDisplay.length"
+      [itemsPerPage]="teamsPageSize"
     ></alto-pagination>
   </div>
-
+  <div class="text-center nodata-placeholder" noResult>
+    <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+    <p class="mt-3">
+      {{ I18ns.shared.noData }}
+    </p>
+    <span class="d-inline-block mt-3">
+      {{ I18ns.shared.noDataSubtitle }}
+    </span>
+  </div>
   <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noData>
     <div class="text-center">
       <img [src]="Emoji.Eyes | emoji" height="24" width="24" />
       <p class="mt-3">{{ I18ns.statistics.globalPerformance.teamsTable.placeholder }}</p>
+      <a type="button" class="btn btn-primary mt-4" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, AltoRoutes.programsNew]">
+        <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+      </a>
     </div>
   </div>
+
   <div class="skeleton-panel mt-5" style="height: 266px" loading></div>
 </alto-placeholder-manager>

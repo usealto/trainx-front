@@ -3,6 +3,12 @@
   padding: var(--alto-page-padding);
 }
 
+// TODO : HORRIBLE TERRIBLE QUICK FIX
+.z-index-max {
+  position: relative;
+  z-index: 9999;
+}
+
 .welcome-panel {
   background-color: #9bfaa3;
   border-radius: 0.67rem;

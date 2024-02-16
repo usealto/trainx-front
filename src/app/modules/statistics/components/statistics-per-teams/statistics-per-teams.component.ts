@@ -1,128 +1,160 @@
-import { Component, OnInit } from '@angular/core';
-import { TeamDtoApi, TeamStatsDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { combineLatest, tap } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { UserStatsDtoApi } from '@usealto/sdk-ts-angular';
+import { Subscription, combineLatest, concat, debounceTime, of, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { UserFilters } from 'src/app/modules/profile/models/user.model';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
+import { SelectOption } from 'src/app/modules/shared/models/select-option.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { IAppData } from '../../../../core/resolvers';
+import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
+import { Company } from '../../../../models/company.model';
+import { Team, TeamStats } from '../../../../models/team.model';
+import { User } from '../../../../models/user.model';
+import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { DataForTable } from '../../models/statistics.model';
+import { ILeadData } from '../../../../core/resolvers/lead.resolver';
+import { EScoreDuration } from '../../../../models/score.model';
+import { BaseStats } from '../../../../models/stats.model';
 
 @Component({
   selector: 'alto-statistics-per-teams',
   templateUrl: './statistics-per-teams.component.html',
   styleUrls: ['./statistics-per-teams.component.scss'],
 })
-export class StatisticsPerTeamsComponent implements OnInit {
+export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
-  userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
-  duration: ScoreDuration = ScoreDuration.Trimester;
+  EPlaceholderStatus = EPlaceholderStatus;
 
-  teams: TeamDtoApi[] = [];
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
+    nonNullable: true,
+  });
+  searchControl = new FormControl<string | null>(null);
+  teamsControl = new FormControl([] as FormControl<SelectOption>[], { nonNullable: true });
+  teamsOptions: SelectOption[] = [];
+
+  company!: Company;
+  usersById: Map<string, User> = new Map();
   members: DataForTable[] = [];
 
   membersDisplay: DataForTable[] = [];
-  membersDataStatus: PlaceholderDataStatus = 'loading';
+  membersDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   teamsDisplay: DataForTable[] = [];
-  teamsDataStatus: PlaceholderDataStatus = 'loading';
+  teamsDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
+
+  private statisticsPerTeamsComponentSubscription = new Subscription();
 
   constructor(
     private readonly scoreRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
+    private readonly resolversService: ResolversService,
+    private readonly activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
-    this.getDatas();
-  }
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.usersById = (data[EResolvers.AppResolver] as IAppData).userById;
+    this.company = (data[EResolvers.LeadResolver] as ILeadData).company;
+    this.teamsOptions = this.company.teams.map(
+      (team) => new SelectOption({ label: team.name, value: team.id }),
+    );
 
-  getDatas() {
-    combineLatest([
-      this.scoreRestService.getTeamsStats(this.duration),
-      this.scoreRestService.getTeamsStats(this.duration, true),
-      this.scoreRestService.getUsersStats(this.duration),
-      this.scoreRestService.getUsersStats(this.duration, true),
-    ])
-      .pipe(
-        tap(([teams, teamsProg, users, usersProg]) => {
-          this.teams = teams.map((t) => t.team);
+    this.statisticsPerTeamsComponentSubscription.add(
+      combineLatest([
+        concat(of(this.searchControl.value), this.searchControl.valueChanges.pipe(debounceTime(300))),
+        this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+        this.teamsControl.valueChanges.pipe(startWith(this.teamsControl.value)),
+      ])
+        .pipe(
+          switchMap(([search, duration, teams]) => {
+            return combineLatest([
+              this.scoreRestService.getPaginatedUsersStats(duration, false, {
+                search: search || undefined,
+                teamIds: teams.map(({ value }) => value.value).join(','),
+              }),
+              this.scoreRestService.getPaginatedUsersStats(duration, true, {
+                search: search || undefined,
+                teamIds: teams.map(({ value }) => value.value).join(','),
+              }),
+              of(duration),
+            ]);
+          }),
+          tap(([{ data: usersStats = [] }, { data: prevUsersStats = [] }, duration]) => {
+            const teamsStats = this.company.getStatsByPeriod(duration, false);
+            const prevTeamsStats = this.company.getStatsByPeriod(duration, true);
 
-          this.teamsDisplay = teams.map((t) => {
-            const teamProg = teamsProg.find((tp) => tp.team.id === t.team.id);
-            return this.dataForTeamTableMapper(t, teamProg);
-          });
-          this.teamsDataStatus = teams.length === 0 ? 'noData' : 'good';
+            this.teamsDisplay = teamsStats.sort(BaseStats.baseStatsCmp).map((teamStats) =>
+              this.dataForTeamTableMapper(
+                this.company.teamById.get(teamStats.teamId),
+                teamStats,
+                prevTeamsStats.find((s) => s.teamId === teamStats.teamId),
+              ),
+            );
 
-          this.membersDisplay = users.map((u) => {
-            const userProg = usersProg.find((tp) => tp.user.id === u.user.id);
-            return this.dataForMembersTableMapper(u, userProg);
-          });
-          this.members = this.membersDisplay;
-          this.membersDataStatus = users.length === 0 ? 'noData' : 'good';
+            this.membersDisplay = usersStats.map((userStats) =>
+              this.dataForMembersTableMapper(
+                this.usersById.get(userStats.id),
+                userStats,
+                prevUsersStats.find((s) => s.id === userStats.id),
+              ),
+            );
+          }),
+        )
+        .subscribe(() => {
+          this.teamsDataStatus =
+            this.teamsDisplay.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
+
+          this.membersDataStatus =
+            this.membersDisplay.length <= 0
+              ? this.searchControl.value !== '' || this.teamsControl.value.length > 0
+                ? EPlaceholderStatus.NO_RESULT
+                : EPlaceholderStatus.NO_DATA
+              : EPlaceholderStatus.GOOD;
         }),
-      )
-      .subscribe();
+    );
   }
 
-  filterMembers({ search = this.userFilters.search, teams = this.userFilters.teams }) {
-    this.userFilters.search = search;
-    this.userFilters.teams = teams;
-
-    let output = this.members;
-    if (teams && teams.length > 0) {
-      output = output.filter((member) => teams.some((t) => t.id === member.owner?.teamId));
-    }
-    if (search && search !== '') {
-      output = output.filter((member) =>
-        (member.owner?.firstname + ' ' + member.owner?.lastname).toLowerCase().includes(search.toLowerCase()),
-      );
-    }
-
-    this.membersDisplay = output;
-    this.membersDataStatus = output.length === 0 ? 'noResult' : 'good';
+  ngOnDestroy(): void {
+    this.statisticsPerTeamsComponentSubscription.unsubscribe();
   }
 
-  changeDuration(duration: string) {
-    this.duration = duration as ScoreDuration;
-    this.getDatas();
-  }
-
-  dataForTeamTableMapper(t: TeamStatsDtoApi, tProg?: TeamStatsDtoApi) {
+  dataForTeamTableMapper(team?: Team, t?: TeamStats, tProg?: TeamStats): DataForTable {
     return {
-      team: t.team,
-      globalScore: t.score,
-      answeredQuestionsCount: t.totalGuessesCount,
+      team: team,
+      globalScore: t?.score,
+      answeredQuestionsCount: t?.totalGuessesCount,
       answeredQuestionsProgression:
-        this.scoreService.getProgression(t.totalGuessesCount, tProg?.totalGuessesCount) ?? 0,
-      commentsCount: t.commentsCount,
-      commentsProgression: this.scoreService.getProgression(t.commentsCount, tProg?.commentsCount) ?? 0,
-      submittedQuestionsCount: t.questionsSubmittedCount,
+        this.scoreService.getProgression(t?.totalGuessesCount, tProg?.totalGuessesCount) ?? 0,
+      commentsCount: t?.commentsCount,
+      commentsProgression: this.scoreService.getProgression(t?.commentsCount, tProg?.commentsCount) ?? 0,
+      submittedQuestionsCount: t?.questionsSubmittedCount,
       submittedQuestionsProgression:
-        this.scoreService.getProgression(t.questionsSubmittedCount, tProg?.questionsSubmittedCount) ?? 0,
-      leastMasteredTags: t.tags
+        this.scoreService.getProgression(t?.questionsSubmittedCount, tProg?.questionsSubmittedCount) ?? 0,
+      leastMasteredTags: t?.tagStats
         ?.filter((ta) => (ta.score ?? 0) < 50)
         .sort((a, b) => (a.score || 0) - (b.score || 0))
         .slice(0, 3)
-        .map((t) => t.tag.name),
+        .map((t) => t.name),
     } as DataForTable;
   }
 
-  dataForMembersTableMapper(u: UserStatsDtoApi, uProg?: UserStatsDtoApi) {
+  dataForMembersTableMapper(user?: User, u?: UserStatsDtoApi, uProg?: UserStatsDtoApi): DataForTable {
     return {
-      owner: u.user,
-      globalScore: u.score,
-      answeredQuestionsCount: u.totalGuessesCount,
+      owner: user,
+      globalScore: u?.score,
+      answeredQuestionsCount: u?.totalGuessesCount,
       answeredQuestionsProgression:
-        this.scoreService.getProgression(u.totalGuessesCount, uProg?.totalGuessesCount) ?? 0,
-      commentsCount: u.commentsCount,
-      commentsProgression: this.scoreService.getProgression(u.commentsCount, uProg?.commentsCount) ?? 0,
-      submittedQuestionsCount: u.questionsSubmittedCount,
+        this.scoreService.getProgression(u?.totalGuessesCount, uProg?.totalGuessesCount) ?? 0,
+      commentsCount: u?.commentsCount,
+      commentsProgression: this.scoreService.getProgression(u?.commentsCount, uProg?.commentsCount) ?? 0,
+      submittedQuestionsCount: u?.questionsSubmittedCount,
       submittedQuestionsProgression:
-        this.scoreService.getProgression(u.questionsSubmittedCount, uProg?.questionsSubmittedCount) ?? 0,
-      leastMasteredTags: u.tags
+        this.scoreService.getProgression(u?.questionsSubmittedCount, uProg?.questionsSubmittedCount) ?? 0,
+      leastMasteredTags: u?.tags
         ?.filter((ta) => (ta.score ?? 0) < 50)
         .sort((a, b) => (a.score || 0) - (b.score || 0))
         .slice(0, 3)

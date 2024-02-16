@@ -21,13 +21,14 @@
           (I18ns.settings.users.licences | plural : licensesCount)
       }}
     </p>
-    <a
-      *ngIf="assignedLicensesCount > licensesCount"
-      class="ms-4 btn"
-      href=""
-      target="_blank"
-    >
-      <i class="bi bi-gear"></i>
-    </a>
+
+    <div class="tooltip-container btn ms-4">
+      <a>
+        <i class="bi bi-gear"></i>
+      </a>
+      <div class="tooltip-text large">
+        <p>{{ I18ns.settings.users.contactTooltip }}</p>
+      </div>
+    </div>
   </div>
 </div>

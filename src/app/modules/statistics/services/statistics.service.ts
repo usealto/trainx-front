@@ -1,8 +1,7 @@
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
-import { ScoreDuration } from '../../shared/models/score.model';
-import { startOfDay, startOfMonth, startOfWeek, format, parseISO } from 'date-fns';
+import { format, parseISO, startOfDay, startOfMonth, startOfWeek } from 'date-fns';
+import { EScoreDuration, Score } from 'src/app/models/score.model';
 import { ScoresService } from '../../shared/services/scores.service';
-import { Score } from 'src/app/models/score.model';
 
 export interface Point {
   x: Date;
@@ -15,9 +14,9 @@ export interface Point {
 export class StatisticsService {
   constructor(@Inject(LOCALE_ID) public locale: string, private readonly scoresService: ScoresService) {}
 
-  formatLabel(dates: Date[], duration: ScoreDuration): string[] {
+  formatLabel(dates: Date[], duration: EScoreDuration): string[] {
     switch (duration) {
-      case ScoreDuration.Year:
+      case EScoreDuration.Year:
         return dates.map((date) => date.toLocaleDateString(this.locale, { month: 'short' }));
       default:
         return dates.map((date) =>
@@ -26,7 +25,7 @@ export class StatisticsService {
     }
   }
 
-  aggregateDataForScores(score: Score | undefined, duration: ScoreDuration): Point[] {
+  aggregateDataForScores(score: Score | undefined, duration: EScoreDuration): Point[] {
     const data: Point[] = [];
     const groupedData: { [key: string]: (number | null)[] } = {};
     if (score == undefined) {
@@ -34,9 +33,9 @@ export class StatisticsService {
     }
     score.dates.forEach((date, index) => {
       const dateKey = format(
-        duration === ScoreDuration.Year
+        duration === EScoreDuration.Year
           ? startOfMonth(date)
-          : duration === ScoreDuration.Trimester
+          : duration === EScoreDuration.Trimester
           ? startOfWeek(date)
           : startOfDay(date),
         "yyyy-MM-dd'T'HH:mm:ss'Z'",

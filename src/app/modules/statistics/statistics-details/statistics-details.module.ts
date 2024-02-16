@@ -12,7 +12,15 @@ import { StatisticsDetailsEngagementComponent } from './components/statistics-de
 import { UserEngagementComponent } from './components/user-engagement/user-engagement.component';
 
 @NgModule({
-  declarations: [StatisticsDetailsComponent, TeamPerformanceComponent, TeamEngagementComponent, UserPerformanceComponent, StatisticsDetailsPerformanceComponent, StatisticsDetailsEngagementComponent, UserEngagementComponent],
+  declarations: [
+    StatisticsDetailsComponent,
+    TeamPerformanceComponent,
+    TeamEngagementComponent,
+    UserPerformanceComponent,
+    StatisticsDetailsPerformanceComponent,
+    StatisticsDetailsEngagementComponent,
+    UserEngagementComponent,
+  ],
   imports: [CommonModule, StatisticsDetailsRoutingModule, ChartsModule, SharedModule],
 })
 export class StatisticsDetailsModule {}

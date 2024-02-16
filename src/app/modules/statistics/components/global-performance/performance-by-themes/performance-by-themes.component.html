@@ -1,75 +1,70 @@
 <alto-placeholder-manager [status]="spiderChartDataStatus">
-  <div class="score-evolution-chart panel mb-5">
-    <alto-dropdown-filter
-      class="float-end mx-2"
-      [data]="tags"
-      [selectedItems]="selectedItems"
-      [displayLabel]="'name'"
-      [placeholder]="I18ns.statistics.globalPerformance.perThemePerformance.filters.tags"
-      (selectChange)="filterTags($event)"
-    ></alto-dropdown-filter>
-    <h3>
-      {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.title }}
-    </h3>
-    <p class="alto-grey mb-4">
-      {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.subtitle }}
-    </p>
-
-    <div *ngIf="selectedItems.length >=3 && selectedItems.length <= 6; else filterError" class="chart-container">
-      <alto-chart-radar
-        [chartOption]="spiderChartOptions"
-      ></alto-chart-radar>
-    </div>
-
-    <ng-template #filterError>
-      <div
-          class="nodata-placeholder d-flex align-items-center justify-content-center"
-          style="height: 366px"
-        >
-          <div class="text-center">
-            <img [src]="Emoji.FaceWithMonocle | emoji" height="24" width="24" />
-            <p class="mt-3">
-              {{ selectedItems.length <= 3 ? I18ns.statistics.user.performance.themeMastering.spiderChart.placeholder.lessThan3Tags : I18ns.statistics.user.performance.themeMastering.spiderChart.placeholder.MoreThan6Tags }}
-            </p>
-          </div>
+    <div good class="score-evolution-chart panel mb-5">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h3>
+            {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.title }}
+          </h3>
+          <p class="alto-grey mb-4">
+            {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.subtitle }}
+          </p>
         </div>
-    </ng-template>
-  </div>
 
-  <div class="nodata-placeholder" noData>
-    <h2 class="mb-5 fs-6">
-      {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.title }}
-    </h2>
-    <div class="text-center">
-      <img [src]="Emoji.FourOclock | emoji" height="24" width="24" />
-      <p class="mt-3">
-        {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.noData }}
-      </p>
+        <alto-input-multiple-select
+        [placeholder]="I18ns.leadHome.graph.tagFilter"
+        [controls]="tagsControl"
+        [options]="tagsOptions">
+      </alto-input-multiple-select>
+    </div>
+  <alto-placeholder-manager [status]="spiderChartFilterStatus">
+    <alto-chart-radar
+        [chartOption]="spiderChartOptions"
+    ></alto-chart-radar>
+    <div noData class="nodata-placeholder d-flex align-items-center justify-content-center" style="height: 366px">
+      <div class="text-center">
+        <img [src]="Emoji.FaceWithMonocle | emoji" height="24" width="24" />
+        <p class="mt-3">
+          {{ tagsControl.value.length < 3 ? I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.lessThan3Tags : I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.moreThan6Tags}}
+        </p>
+      </div>
+    </div>
+  </alto-placeholder-manager>
+  </div>
+  <div noData>
+    <div class="nodata-placeholder" noData>
+      <h2 class="mb-5 fs-6">
+        {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.title }}
+      </h2>
+      <div class="text-center">
+        <img [src]="Emoji.FourOclock | emoji" height="24" width="24" />
+        <p class="mt-3">
+          {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.noData }}
+        </p>
+        <a type="button" class="d-block btn btn-outline-secondary mt-4" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, AltoRoutes.programsNew]">
+          <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+        </a>
+      </div>
     </div>
   </div>
-  <div class="nodata-placeholder" empty>
-    <h2 class="mb-5 fs-6">
-      {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}
-    </h2>
+  <div class="nodata-placeholder" noResult>
+    <h3 class="mb-5 fs-6">
+      {{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}
+    </h3>
     <div class="text-center">
-      <img [src]="Emoji.FourOclock | emoji" height="24" width="24" />
+      <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
       <p class="mt-3">
-        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholder.empty }}
+        {{ I18ns.shared.placeholders.noResultInTimeframe.title }}
       </p>
-      <button
-        [routerLink]="'/' + AltoRoutes.lead + '/' + AltoRoutes.programs"
-        class="mt-3 btn btn-outline-secondary"
-      >
-        <i class="ps-0 bi bi-plus fs-3"></i>
-        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholder.createTag }}
-      </button>
+      <span class="d-inline-block mt-3">
+        {{ I18ns.shared.placeholders.noResultInTimeframe.subtitle }}
+      </span>
     </div>
   </div>
-  <div class="skeleton-panel mb-5" style="height: 500px" loading></div>
 </alto-placeholder-manager>
 
 <alto-placeholder-manager [status]="tagsDataStatus">
   <alto-leaderboard
+    *ngIf="tagsDataStatus === EPlaceholderStatus.GOOD"
     [config]="['score']"
     [title]="I18ns.statistics.globalPerformance.perThemePerformance.control.title"
     [subtitle]="I18ns.statistics.globalPerformance.perThemePerformance.control.subtitle"
@@ -79,10 +74,13 @@
   </alto-leaderboard>
 
   <div class="nodata-placeholder" noData>
-    <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
+    <h3 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h3>
     <div class="text-center">
       <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
       <p class="mt-3">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.placeholder }}</p>
+      <a type="button" class="d-block btn btn-outline-secondary mt-4" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, AltoRoutes.programsNew]">
+        <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
+      </a>
     </div>
   </div>
   <div class="skeleton-panel mb-5" style="height: 334px" loading></div>

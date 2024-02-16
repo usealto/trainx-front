@@ -1,18 +1,14 @@
 <ng-container [ngSwitch]="status">
-  <ng-container *ngSwitchCase="'good'">
-    <ng-content></ng-content>
-  </ng-container>
-  <ng-container *ngSwitchCase="'noResult'">
+  <ng-container *ngSwitchCase="EPlaceholderStatus.NO_RESULT">
     <ng-content select="[noResult]"></ng-content>
   </ng-container>
-  <ng-container *ngSwitchCase="'noData'">
+  <ng-container *ngSwitchCase="EPlaceholderStatus.NO_DATA">
     <ng-content select="[noData]"></ng-content>
   </ng-container>
-  <ng-container *ngSwitchCase="'empty'">
-    <ng-content select="[empty]"></ng-content>
-  </ng-container>
-  <ng-container *ngSwitchCase="'loading'">
+  <ng-container *ngSwitchCase="EPlaceholderStatus.LOADING">
     <ng-content select="[loading]"></ng-content>
   </ng-container>
-  <ng-container *ngSwitchDefault> </ng-container>
+  <ng-container *ngSwitchDefault>
+    <ng-content></ng-content>
+  </ng-container>
 </ng-container>

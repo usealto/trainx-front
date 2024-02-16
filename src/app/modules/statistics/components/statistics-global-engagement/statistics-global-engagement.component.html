@@ -9,8 +9,7 @@
   <div class="col-6 text-end">
     <alto-time-picker
       class="time-picker"
-      [duration]="duration"
-      (durationSelected)="updateTimePicker($event)"
+      [durationControl]="durationControl"
     ></alto-time-picker>
   </div>
 </div>
@@ -41,6 +40,7 @@
 
 <alto-placeholder-manager [status]="guessesLeaderboardDataStatus">
   <alto-leaderboard
+    *ngIf="guessesLeaderboardDataStatus === EPlaceholderStatus.GOOD"
     [config]="['count', 'progress']"
     [data]="leaderboard"
     [title]="I18ns.statistics.globalEngagement.leaderboard.title"
@@ -69,8 +69,7 @@
   <div class="col-6 text-end">
     <alto-time-picker
       class="time-picker"
-      [duration]="duration"
-      (durationSelected)="updateTimePicker($event)"
+      [durationControl]="durationControl"
     ></alto-time-picker>
   </div>
 </div>
@@ -110,8 +109,7 @@
   <div class="col-6 text-end">
     <alto-time-picker
       class="time-picker"
-      [duration]="duration"
-      (durationSelected)="updateTimePicker($event)"
+      [durationControl]="durationControl"
     ></alto-time-picker>
   </div>
 </div>
@@ -209,10 +207,9 @@
     </table>
     <alto-pagination
       class="mx-4 d-block"
-      [collectionSize]="teamsDisplay.length"
-      (pageChange)="changeTeamsPage($event)"
-      [pageSize]="teamsPageSize"
-      [page]="teamsPage"
+      [pageControl]="pageControl"
+      [itemsCount]="teamsDisplay.length"
+      [itemsPerPage]="teamsPageSize"
     ></alto-pagination>
   </div>
 

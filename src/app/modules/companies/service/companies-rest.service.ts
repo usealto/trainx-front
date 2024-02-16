@@ -1,26 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable, map, tap } from 'rxjs';
-import {
-  CompaniesApiService,
-  CompanyDtoApi,
-  CreateCompanyDtoApi,
-  CompanyDtoResponseApi,
-  PatchCompanyDtoApi,
-  DeleteResponseApi,
-} from '@usealto/sdk-ts-angular';
-import { ProfileStore } from '../../profile/profile.store';
-import { CompaniesStore } from '../companies.store';
+import { CompaniesApiService, CompanyDtoApi, PatchCompanyDtoApi } from '@usealto/sdk-ts-angular';
+import { Observable, map } from 'rxjs';
 import { Company } from 'src/app/models/company.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CompaniesRestService {
-  constructor(
-    private readonly companyApi: CompaniesApiService,
-    private readonly userStore: ProfileStore,
-    private readonly companiesStore: CompaniesStore,
-  ) {}
+  constructor(private readonly companyApi: CompaniesApiService) {}
 
   getCompanyById(id: string): Observable<Company | undefined> {
     return this.companyApi
@@ -28,28 +15,9 @@ export class CompaniesRestService {
       .pipe(map(({ data }) => (data ? Company.fromDto(data) : undefined)));
   }
 
-  getMyCompany(): Observable<CompanyDtoApi> {
-    if (this.companiesStore.myCompany.value) {
-      return this.companiesStore.myCompany.value$;
-    } else {
-      return this.companyApi.getCompanyById({ id: this.userStore.user.value.companyId }).pipe(
-        map((company) => company.data ?? ({} as CompanyDtoApi)),
-        tap((comp) => (this.companiesStore.myCompany.value = comp)),
-      );
-    }
-  }
-
   patchCompany(id: string, patchCompanyDtoApi: PatchCompanyDtoApi): Observable<Company> {
     return this.companyApi
       .patchCompany({ id, patchCompanyDtoApi })
-      .pipe(map(({ data }) => (Company.fromDto(data as CompanyDtoApi))));
-  }
-
-  createCompany(createCompanyDtoApi: CreateCompanyDtoApi) {
-    return this.companyApi.createCompany({ createCompanyDtoApi });
-  }
-
-  deleteCompany(id: string): Observable<DeleteResponseApi> {
-    return this.companyApi.deleteCompany({ id });
+      .pipe(map(({ data }) => Company.fromDto(data as CompanyDtoApi)));
   }
 }

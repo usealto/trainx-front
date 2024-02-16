@@ -1,7 +1,8 @@
-import { UserDtoApi, TeamDtoApi } from "@usealto/sdk-ts-angular";
+import { TeamDtoApi } from "@usealto/sdk-ts-angular";
+import { User } from "../../../models/user.model";
 
 export interface DataForTable {
-    owner?: UserDtoApi ;
+    owner?: User;
     team?: TeamDtoApi;
     globalScore: number;
     answeredQuestionsCount: number;

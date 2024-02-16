@@ -15,7 +15,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ReplaceInTranslationPipe } from 'src/app/core/utils/i18n/replace-in-translation.pipe';
 import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
-import { QuestionFormComponent } from 'src/app/modules/shared/components/question-form/question-form.component';
+import { QuestionFormComponent } from 'src/app/modules/programs/components/create-questions/question-form.component';
 import { IAppData } from '../../../../core/resolvers';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
 import { QuestionsSubmittedRestService } from './../../../programs/services/questions-submitted-rest.service';
@@ -34,7 +34,7 @@ export class SuggQuestionCardComponent implements OnInit {
   I18ns = I18ns;
   StatusEnum = QuestionSubmittedDtoApiStatusEnumApi;
   users: Map<string, User> = new Map();
-  teams: Map<string, Team> = new Map();
+  teams: Team[] = [];
 
   constructor(
     private readonly modalService: NgbModal,
@@ -49,7 +49,7 @@ export class SuggQuestionCardComponent implements OnInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.users = (data[EResolvers.AppResolver] as IAppData).userById;
-    this.teams = (data[EResolvers.AppResolver] as IAppData).teamById;
+    this.teams = (data[EResolvers.AppResolver] as IAppData).company.teams;
   }
 
   refuseQuestion() {
@@ -123,6 +123,6 @@ export class SuggQuestionCardComponent implements OnInit {
 
   getTeam(userId: string): TeamLightDtoApi | undefined {
     const u = this.users.get(userId);
-    return this.teams.get(u?.teamId || '');
+    return this.teams.find((t) => t.id === u?.teamId);
   }
 }

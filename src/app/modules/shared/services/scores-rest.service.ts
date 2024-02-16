@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import {
-  GetProgramRunsRequestParams,
+  CompanyStatsDtoResponseApi,
   GetProgramsStatsRequestParams,
   GetQuestionsStatsRequestParams,
   GetScoresRequestParams,
+  GetTagsStatsRequestParams,
   GetTeamsStatsRequestParams,
   GetUsersStatsRequestParams,
-  ProgramRunDtoApi,
-  ProgramRunsApiService,
-  QuestionStatsDtoApi,
+  ProgramStatsDtoPaginatedResponseApi,
+  QuestionStatsDtoPaginatedResponseApi,
   ScoreByTypeEnumApi,
   ScoreFillValuesEnumApi,
   ScoreTimeframeEnumApi,
@@ -16,15 +16,17 @@ import {
   ScoresApiService,
   ScoresResponseDtoApi,
   StatsApiService,
-  TeamStatsDtoApi,
+  TagStatsDtoApi,
+  TagStatsDtoPaginatedResponseApi,
   UserStatsDtoApi,
+  UserStatsDtoPaginatedResponseApi,
 } from '@usealto/sdk-ts-angular';
 import { addDays } from 'date-fns';
-import { Observable, filter, map } from 'rxjs';
+import { Observable, combineLatest, filter, map, of, switchMap, tap } from 'rxjs';
+import { EScoreDuration, Score } from '../../../models/score.model';
+import { TeamStats } from '../../../models/team.model';
 import { ChartFilters } from '../../shared/models/chart.model';
-import { ScoreDuration, ScoreFilters } from '../models/score.model';
 import { ScoresService } from './scores.service';
-import { Score } from '../../../models/score.model';
 
 @Injectable({
   providedIn: 'root',
@@ -33,16 +35,41 @@ export class ScoresRestService {
   constructor(
     private readonly scoresApi: ScoresApiService,
     private readonly service: ScoresService,
-    private readonly programsApi: ProgramRunsApiService,
     private readonly statsApi: StatsApiService,
   ) {}
 
-  getUsersStats(
-    duration: ScoreDuration,
-    isProgression?: boolean,
-    id?: string,
-    sortBy?: string,
-    teamId?: string,
+  getPaginatedUsersStats(
+    duration: EScoreDuration,
+    isProgression = false,
+    reqParams: GetUsersStatsRequestParams = {},
+  ): Observable<UserStatsDtoPaginatedResponseApi> {
+    let dateAfter: Date;
+    let dateBefore: Date;
+
+    if (isProgression) {
+      const [start, end] = this.service.getPreviousPeriod(duration);
+
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration);
+      dateBefore = new Date();
+      dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
+    }
+
+    return this.statsApi.getUsersStats({
+      from: dateAfter,
+      to: dateBefore,
+      respondsRegularlyThreshold: 0.42,
+      itemsPerPage: 1000,
+      ...reqParams,
+    } as GetUsersStatsRequestParams);
+  }
+
+  getDurationUsersStats(
+    duration: EScoreDuration,
+    isProgression = false,
+    req: GetUsersStatsRequestParams = {},
   ): Observable<UserStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
@@ -57,25 +84,44 @@ export class ScoresRestService {
       dateBefore = new Date();
       dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
+
+    req.from = dateAfter;
+    req.to = dateBefore;
+
     return this.statsApi
-      .getUsersStats({
-        teamIds: teamId,
-        from: dateAfter,
-        to: dateBefore,
-        respondsRegularlyThreshold: 0.42,
-        userId: id,
-        sortBy: sortBy,
-        itemsPerPage: 1000,
-      } as GetUsersStatsRequestParams)
-      .pipe(map((r) => r.data || []));
+      .getUsersStats({ page: 1, sortBy: 'createdAt: asc', itemsPerPage: 1000, ...req })
+      .pipe(
+        switchMap(({ data, meta }) => {
+          const reqs: Observable<UserStatsDtoApi[]>[] = [of(data ? data : [])];
+          let totalPages = meta.totalPage ?? 1;
+
+          for (let i = 2; i <= totalPages; i++) {
+            reqs.push(
+              this.statsApi
+                .getUsersStats({ page: i, sortBy: 'createdAt:asc', itemsPerPage: 1000, ...req })
+                .pipe(
+                  tap(({ meta }) => {
+                    if (meta.totalPage !== totalPages) {
+                      totalPages = meta.totalPage;
+                    }
+                  }),
+                  map(({ data }) => (data ? data : [])),
+                ),
+            );
+          }
+          return combineLatest(reqs);
+        }),
+        map((usersStatsDtos) => {
+          return usersStatsDtos.flat();
+        }),
+      );
   }
 
-  getQuestionsStats(
-    duration: ScoreDuration,
-    isProgression?: boolean,
-    id?: string,
-    teamId?: string,
-  ): Observable<QuestionStatsDtoApi[]> {
+  getPaginatedQuestionsStats(
+    duration: EScoreDuration,
+    isProgression = false,
+    reqParams: GetQuestionsStatsRequestParams = {},
+  ): Observable<QuestionStatsDtoPaginatedResponseApi> {
     let dateAfter: Date;
     let dateBefore: Date;
 
@@ -90,24 +136,22 @@ export class ScoresRestService {
       dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
 
-    return this.statsApi
-      .getQuestionsStats({
-        page: 1,
-        itemsPerPage: 400,
-        from: dateAfter,
-        to: dateBefore,
-        respondsRegularlyThreshold: 0.42,
-        userId: id,
-        teamIds: teamId,
-      } as GetQuestionsStatsRequestParams)
-      .pipe(map((r) => r.data || []));
+    return this.statsApi.getQuestionsStats({
+      page: 1,
+      itemsPerPage: 400,
+      from: dateAfter,
+      to: dateBefore,
+      respondsRegularlyThreshold: 0.42,
+      teamIds: '',
+      ...reqParams,
+    } as GetQuestionsStatsRequestParams);
   }
 
-  getTeamsStats(
-    duration: ScoreDuration,
+  getPaginatedTeamsStats(
+    duration: EScoreDuration,
     isProgression = false,
-    sortBy?: string,
-  ): Observable<TeamStatsDtoApi[]> {
+    req: GetTeamsStatsRequestParams = {},
+  ): Observable<TeamStats[]> {
     let dateAfter: Date;
     let dateBefore: Date;
 
@@ -124,20 +168,28 @@ export class ScoresRestService {
 
     return this.statsApi
       .getTeamsStats({
-        sortBy: sortBy,
         page: 1,
         itemsPerPage: 400,
         from: dateAfter,
         to: dateBefore,
+        ...req,
       } as GetTeamsStatsRequestParams)
-      .pipe(map((r) => r.data || []));
+      .pipe(
+        map((response) =>
+          response.data
+            ? response.data.map((dto) =>
+                TeamStats.fromDto(dto, dateAfter, dateBefore, duration, isProgression),
+              )
+            : [],
+        ),
+      );
   }
 
-  getProgramsStats(
-    duration: ScoreDuration,
+  getPaginatedProgramsStats(
+    duration: EScoreDuration,
     isProgression = false,
     reqParams: GetProgramsStatsRequestParams = {},
-  ) {
+  ): Observable<ProgramStatsDtoPaginatedResponseApi> {
     let dateAfter: Date;
     let dateBefore: Date;
 
@@ -152,12 +204,19 @@ export class ScoresRestService {
       dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
 
-    return this.statsApi
-      .getProgramsStats({ ...reqParams, itemsPerPage: 400, from: dateAfter, to: dateBefore })
-      .pipe(map((r) => r.data || []));
+    return this.statsApi.getProgramsStats({
+      itemsPerPage: 400,
+      from: dateAfter,
+      to: dateBefore,
+      ...reqParams,
+    });
   }
 
-  getTagsStats(duration: ScoreDuration, isProgression = false, teamId?: string, ids?: string[]) {
+  getPaginatedTagsStats(
+    duration: EScoreDuration,
+    isProgression = false,
+    reqParams?: GetTagsStatsRequestParams,
+  ): Observable<TagStatsDtoPaginatedResponseApi> {
     let dateAfter: Date;
     let dateBefore: Date;
 
@@ -172,17 +231,66 @@ export class ScoresRestService {
       dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
 
-    return this.statsApi
-      .getTagsStats({
-        ids: ids ? ids.join(',') : undefined,
-        itemsPerPage: 400,
-        from: dateAfter,
-        to: dateBefore,
-        teamIds: teamId ? teamId : undefined,
-      })
-      .pipe(map((r) => r.data || []));
+    return this.statsApi.getTagsStats({
+      itemsPerPage: 400,
+      from: dateAfter,
+      to: dateBefore,
+      ...reqParams,
+    });
   }
 
+  getCompanyStats(
+    companyId: string,
+    duration: EScoreDuration,
+    isProgression = false,
+  ): Observable<CompanyStatsDtoResponseApi> {
+    let dateAfter: Date;
+    let dateBefore: Date;
+    if (isProgression) {
+      const [start, end] = this.service.getPreviousPeriod(duration);
+
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration);
+      dateBefore = new Date();
+      dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
+    }
+
+    return this.statsApi.getCompanyStats({
+      from: dateAfter,
+      to: dateBefore,
+      id: companyId,
+    });
+  }
+
+  getAllTagsStats(): Observable<TagStatsDtoApi[]> {
+    return this.statsApi.getTagsStats({ page: 1, itemsPerPage: 1000 }).pipe(
+      switchMap(({ data, meta }) => {
+        const reqs: Observable<TagStatsDtoApi[]>[] = [of(data ? data : [])];
+        let totalPages = meta.totalPage ?? 1;
+
+        for (let i = 2; i <= totalPages; i++) {
+          reqs.push(
+            this.statsApi.getTagsStats({ page: i, sortBy: 'createdAt:asc', itemsPerPage: 1000 }).pipe(
+              tap(({ meta }) => {
+                if (meta.totalPage !== totalPages) {
+                  totalPages = meta.totalPage;
+                }
+              }),
+              map(({ data }) => (data ? data : [])),
+            ),
+          );
+        }
+        return combineLatest(reqs);
+      }),
+      map((tagsStatsDtos) => {
+        return tagsStatsDtos.flat();
+      }),
+    );
+  }
+
+  // TODO : clean
   getScores(
     { duration, type, team, timeframe, sortBy, user, ids, scoredBy, scoredById }: ChartFilters,
     isProgression = false,
@@ -190,7 +298,7 @@ export class ScoresRestService {
     const par: GetScoresRequestParams = {
       type: type ?? ScoreTypeEnumApi.Guess,
       timeframe: timeframe ?? ScoreTimeframeEnumApi.Day,
-      dateAfter: this.service.getStartDate(duration as ScoreDuration),
+      dateAfter: this.service.getStartDate(duration as EScoreDuration),
       dateBefore: addDays(new Date(), 1), //! TEMPORARY FIX to get data from actual day
       fillValues: ScoreFillValuesEnumApi.Null,
       sortBy,
@@ -231,28 +339,5 @@ export class ScoresRestService {
       }),
       map((r) => r.scores.map((s) => Score.fromDto(s))),
     );
-  }
-
-  getCompletion(filt: ScoreFilters, isProgression: boolean): Observable<ProgramRunDtoApi[]> {
-    const par = {
-      page: 1,
-      itemPerPage: 300,
-    } as GetProgramRunsRequestParams;
-
-    if (filt.teams) {
-      par.teamIds = filt.teams.join(',');
-    }
-
-    if (isProgression) {
-      const [start, end] = this.service.getPreviousPeriod(filt.duration);
-
-      par.createdAfter = start;
-      par.createdBefore = end;
-    } else {
-      par.createdAfter = this.service.getStartDate(filt.duration as ScoreDuration);
-      par.createdBefore = this.service.getYesterday();
-    }
-
-    return this.programsApi.getProgramRuns(par).pipe(map((r) => r.data || ({} as ProgramRunDtoApi[])));
   }
 }

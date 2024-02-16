@@ -1,43 +1,23 @@
-<div class="btn-group" role="group">
-  <input
-    type="radio"
-    class="btn-check"
-    [name]="ID"
-    [id]="'year' + ID"
-    autocomplete="off"
-    (change)="updateTimePicker($event)"
-    value="year"
-    [checked]="duration === 'year' ? true : false"
-  />
-  <label class="btn btn-outline-secondary" [for]="'year' + ID">{{
-    I18ns.shared.rollingDateFilter.year
-  }}</label>
-
-  <input
-    type="radio"
-    class="btn-check"
-    [name]="ID"
-    [id]="'trimester' + ID"
-    autocomplete="off"
-    [checked]="duration === 'trimester' ? true : false"
-    value="trimester"
-    (change)="updateTimePicker($event)"
-  />
-  <label class="btn btn-outline-secondary" [for]="'trimester' + ID">
-    {{ I18ns.shared.rollingDateFilter.trimester }}
-  </label>
-
-  <input
-    type="radio"
-    class="btn-check"
-    [name]="ID"
-    [id]="'month' + ID"
-    autocomplete="off"
-    [checked]="duration === 'month' ? true : false"
-    value="month"
-    (change)="updateTimePicker($event)"
-  />
-  <label class="btn btn-outline-secondary" [for]="'month' + ID">{{
-    I18ns.shared.rollingDateFilter.month
-  }}</label>
+<div class="timepicker-container">
+  <div
+    class="timepicker left"
+    (click)="changeDuration(ScoreDuration.Year)"
+    [class.checked]="durationControl.value === ScoreDuration.Year"
+  >
+    <p>{{ I18ns.shared.rollingDateFilter.year }}</p>
+  </div>
+  <div
+    class="timepicker"
+    (click)="changeDuration(ScoreDuration.Trimester)"
+    [class.checked]="durationControl.value === ScoreDuration.Trimester"
+  >
+    <p>{{ I18ns.shared.rollingDateFilter.trimester }}</p>
+  </div>
+  <div
+    class="timepicker right"
+    (click)="changeDuration(ScoreDuration.Month)"
+    [class.checked]="durationControl.value === ScoreDuration.Month"
+  >
+    <p>{{ I18ns.shared.rollingDateFilter.month }}</p>
+  </div>
 </div>

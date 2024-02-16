@@ -1,14 +1,8 @@
-<ng-container *ngFor="let item of data; let i = index">
-  <input
-    type="radio"
-    class="btn-check"
-    [name]="ID"
-    (click)="switchTab(item.value)"
-    [id]="'btnradio' + getId(i + ID)"
-    autocomplete="off"
-    [checked]="isChecked(i)"
-  />
-  <label data-cy="selectedTab" class="alto-tab-btn" [for]="'btnradio' + getId(i + ID)">
-    {{ item.label }}
-  </label>
-</ng-container>
+<div class="alto-tabs-container">
+    <div *ngFor="let option of options"
+    (click)="switchTab(option)"
+    class="tab-btn"
+    [class.check]="selectedControl.value?.value === option.value">
+    {{ option.label }}
+  </div>
+</div>
