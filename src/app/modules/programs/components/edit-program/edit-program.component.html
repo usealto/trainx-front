@@ -3,7 +3,7 @@
   <h1>{{program ? I18ns.programs.forms.edit : I18ns.programs.forms.create}}</h1>
 </div>
 
-<div class="mt-4 form-nav mb-4">
+<div class="form-nav mb-8">
   <div *ngFor="let tabOption of tabsOptions"
   class="step cursor-pointer"
   [class.cursor-pointer]="!!program"
@@ -30,8 +30,8 @@
             <p>{{ I18ns.programs.forms.step1.nameSubtitle }}</p>
           </div>
         </div>
-        <div class="col">
-        <alto-input-text [control]="programFormGroup.controls.nameControl" [placeholder]="I18ns.programs.forms.step1.namePlaceholder"></alto-input-text>
+        <div class="col-5">
+          <alto-input-text [control]="programFormGroup.controls.nameControl" [placeholder]="I18ns.programs.forms.step1.namePlaceholder"></alto-input-text>
         </div>
       </div>
       <hr>
@@ -44,7 +44,7 @@
               <p>{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
             </div>
           </div>
-          <div class="col">
+          <div class="col-5">
             <alto-input-pills
             [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder"
             [controls]="tagControls"
@@ -63,7 +63,7 @@
             <p>{{ I18ns.programs.forms.step1.teamsSubtitle }}</p>
           </div>
         </div>
-        <div class="col">
+        <div class="col-5">
           <alto-input-pills
           [placeholder]="I18ns.programs.forms.step1.teamsPlaceholder"
           [controls]="programFormGroup.controls.teamControls"
@@ -81,7 +81,7 @@
             <p>{{ I18ns.programs.forms.step1.prioritySubtitle }}</p>
           </div>
         </div>
-        <div class="col">
+        <div class="col-5">
           <alto-input-single-select
           [placeholder]="I18ns.programs.forms.step1.priorityPlaceholder"
           [control]="programFormGroup.controls.priorityControl"
@@ -99,7 +99,7 @@
             <p>{{ I18ns.programs.forms.step1.expectationSubtitle }}</p>
           </div>
         </div>
-        <div class="col">
+        <div class="col-5">
           <alto-input-range [control]="programFormGroup.controls.expectationControl"></alto-input-range>
         </div>
       </div>

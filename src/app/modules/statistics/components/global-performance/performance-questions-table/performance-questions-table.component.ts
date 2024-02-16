@@ -13,6 +13,7 @@ import { PillOption } from 'src/app/modules/shared/models/select-option.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { Score, EScoreFilter, EScoreDuration } from '../../../../../models/score.model';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 
 interface IQuestionInfos {
   question: QuestionDtoApi;
@@ -30,6 +31,7 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
   EPlaceholderStatus = EPlaceholderStatus;
+  AltoRoutes = AltoRoutes;
 
   @Input() durationControl: FormControl<EScoreDuration> = new FormControl(EScoreDuration.Year, {
     nonNullable: true,
@@ -116,13 +118,12 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
 
             this.questionsCount = questionsStatsMeta.totalItems;
 
-            if (questionsStats.length === 0) {
-              this.questionsDataStatus = EPlaceholderStatus.NO_DATA;
-            } else {
-              this.questionsDataStatus = questionsStats.length
-                ? EPlaceholderStatus.GOOD
-                : EPlaceholderStatus.NO_RESULT;
-            }
+            this.questionsDataStatus =
+              questionsStats.length === 0
+                ? !this.scoreControl.value || !this.questionSearchControl.value
+                  ? EPlaceholderStatus.NO_RESULT
+                  : EPlaceholderStatus.NO_DATA
+                : EPlaceholderStatus.GOOD;
           },
         }),
     );

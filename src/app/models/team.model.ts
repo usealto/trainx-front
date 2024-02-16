@@ -119,8 +119,8 @@ export class TeamStats extends BaseStats implements ITeamStats {
   ): TeamStats {
     return new TeamStats({
       teamId: data.team.id,
-      from: from,
-      to: to,
+      from,
+      to,
       questionsPushedCount: data.questionsPushedCount || 0,
       commentsCount: data.commentsCount || 0,
       questionsSubmittedCount: data.questionsSubmittedCount || 0,
@@ -130,7 +130,7 @@ export class TeamStats extends BaseStats implements ITeamStats {
       tagStats: data.tags?.map((tag) => TeamTagStats.fromDto(tag)) || [],
       programStats: data.programs?.map((program) => TeamProgramStats.fromDto(program)) || [],
       scoreDuration: duration,
-      isPrev: isPrev,
+      isPrev,
     });
   }
 

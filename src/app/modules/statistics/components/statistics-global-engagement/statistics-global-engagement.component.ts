@@ -12,7 +12,7 @@ import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/mod
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
-import { IAppData } from '../../../../core/resolvers';
+import { ILeadData } from '../../../../core/resolvers/lead.resolver';
 import { EScoreDuration } from '../../../../models/score.model';
 import { Team, TeamStats } from '../../../../models/team.model';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
@@ -50,12 +50,12 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
 
   hasConnector = false;
 
-  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
   });
   pageControl: FormControl<number> = new FormControl(1, { nonNullable: true });
   teamsDisplay: DataForTable[] = [];
-  teamsPageSize = 5;
+  readonly teamsPageSize = 5;
   private readonly statisticsGlobalEngagementComponentSubscription = new Subscription();
 
   constructor(
@@ -69,7 +69,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.company = (data[EResolvers.AppResolver] as IAppData).company;
+    this.company = (data[EResolvers.LeadResolver] as ILeadData).company;
 
     this.statisticsGlobalEngagementComponentSubscription.add(
       combineLatest([
@@ -96,7 +96,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   private getActivityData(duration: EScoreDuration): Observable<[TeamStats[], TeamStats[]]> {
     return this.scoresRestService
       .getScores({
-        duration: duration,
+        duration,
         type: ScoreTypeEnumApi.Guess,
         timeframe:
           duration === EScoreDuration.Year
@@ -186,7 +186,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   private getTeamEngagementData(duration: EScoreDuration) {
     return combineLatest([
       this.scoresRestService.getScores({
-        duration: duration,
+        duration,
         type: ScoreTypeEnumApi.Comment,
         timeframe:
           duration === EScoreDuration.Year
@@ -196,7 +196,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             : ScoreTimeframeEnumApi.Day,
       }),
       this.scoresRestService.getScores({
-        duration: duration,
+        duration,
         type: ScoreTypeEnumApi.QuestionSubmitted,
         timeframe:
           duration === EScoreDuration.Year
@@ -289,10 +289,12 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     this.hasConnector = this.company.isConnectorActive ?? false;
     this.teams = this.teamsStats.map((t) => this.company.teams.find((team) => team.id === t.teamId) as Team);
 
-    this.teamsDisplay = this.teamsStats.map((t) => {
-      const teamProg = this.teamsStatsPrev.find((tp) => tp.teamId === t.teamId);
-      return this.dataForTeamTableMapper(t, teamProg);
-    });
+    this.teamsDisplay = this.teamsStats
+      .map((t) => {
+        const teamProg = this.teamsStatsPrev.find((tp) => tp.teamId === t.teamId);
+        return this.dataForTeamTableMapper(t, teamProg);
+      })
+      .sort((a, b) => b.answeredQuestionsProgression - a.answeredQuestionsProgression);
 
     this.paginatedTeams = this.teamsDisplay.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
   }

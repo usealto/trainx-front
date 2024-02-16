@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  CompanyStatsDtoResponseApi,
   GetProgramsStatsRequestParams,
   GetQuestionsStatsRequestParams,
   GetScoresRequestParams,
@@ -235,7 +236,32 @@ export class ScoresRestService {
       from: dateAfter,
       to: dateBefore,
       ...reqParams,
-    } as GetTagsStatsRequestParams);
+    });
+  }
+
+  getCompanyStats(
+    companyId: string,
+    duration: EScoreDuration,
+    isProgression = false,
+  ): Observable<CompanyStatsDtoResponseApi> {
+    let dateAfter: Date;
+    let dateBefore: Date;
+    if (isProgression) {
+      const [start, end] = this.service.getPreviousPeriod(duration);
+
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration);
+      dateBefore = new Date();
+      dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
+    }
+
+    return this.statsApi.getCompanyStats({
+      from: dateAfter,
+      to: dateBefore,
+      id: companyId,
+    });
   }
 
   getAllTagsStats(): Observable<TagStatsDtoApi[]> {

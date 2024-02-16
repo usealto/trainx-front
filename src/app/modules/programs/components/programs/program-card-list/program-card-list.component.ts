@@ -1,26 +1,27 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Store } from '@ngrx/store';
 import { GetProgramsStatsRequestParams } from '@usealto/sdk-ts-angular';
 import { Subscription, combineLatest, concat, debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { updatePrograms } from '../../../../../core/store/root/root.action';
+import * as FromRoot from '../../../../../core/store/store.reducer';
 import { Company } from '../../../../../models/company.model';
 import { Program } from '../../../../../models/program.model';
+import { EScoreDuration, EScoreFilter, Score } from '../../../../../models/score.model';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { AltoRoutes } from '../../../../shared/constants/routes';
 import { PillOption, SelectOption } from '../../../../shared/models/select-option.model';
 import { ScoresRestService } from '../../../../shared/services/scores-rest.service';
-import { EScoreDuration, EScoreFilter, Score } from '../../../../../models/score.model';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
-import * as FromRoot from '../../../../../core/store/store.reducer';
-import { Store } from '@ngrx/store';
-import { updatePrograms } from '../../../../../core/store/root/root.action';
 
 interface IProgramCard {
   program: Program;
   score?: number;
   participation?: number;
   userValidatedProgramCount?: number;
+  totalUsersCount?: number;
   teamsTooltip?: string;
   isActiveControl: FormControl<boolean>;
 }
@@ -83,6 +84,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
           switchMap(([page, [search, selectedTeamsOptions, selectedScoreOption]]) => {
             const req: GetProgramsStatsRequestParams = {
               page,
+              sortBy: 'program.isActive:desc',
               itemsPerPage: this.pageSize,
               search: search || undefined,
               teamIds: selectedTeamsOptions.length
@@ -130,6 +132,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
               score: stat.score,
               participation: stat.participation,
               userValidatedProgramCount: stat.userValidatedProgramCount,
+              totalUsersCount: stat.totalUsersCount,
               teamsTooltip: (this.company.programById.get(stat.program.id) as Program).teamIds
                 .map((teamId) => {
                   return this.company.teamById.get(teamId)?.name ?? undefined;
@@ -160,11 +163,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
                     this.company = company;
                   }),
                 )
-                .subscribe({
-                  next: () => {
-                    this.pageControl.patchValue(this.pageControl.value);
-                  },
-                }),
+                .subscribe(),
             );
           });
 

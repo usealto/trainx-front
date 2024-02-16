@@ -106,33 +106,35 @@ export class AddUsersComponent implements OnInit {
         }
         return of(null);
       });
-      combineLatest(obs$).pipe(
-        tap(() => {
-          const tmpArr: number[] = [];
-          validUsers.forEach((user, key) => tmpArr.push(key));
+      combineLatest(obs$)
+        .pipe(
+          tap(() => {
+            const tmpArr: number[] = [];
+            validUsers.forEach((user, key) => tmpArr.push(key));
 
-          // We reverse keys order to remove lines from the end and keep the index
-          tmpArr.reverse().forEach((key) => {
-            this.removeLine(key);
-          });
+            // We reverse keys order to remove lines from the end and keep the index
+            tmpArr.reverse().forEach((key) => {
+              this.removeLine(key);
+            });
 
-          if (this.userForms.length > 0) {
-            this.toastService.show({
-              text: I18ns.settings.users.addUsers.APIerror,
-              type: 'danger',
-              autoHide: false,
-            });
-          } else {
-            this.toastService.show({
-              text: I18ns.settings.users.addUsers.success,
-              type: 'success',
-              autoHide: false,
-            });
-            this.createdUsers.emit(true);
-            this.activeOffcanvas.close();
-          }
-        }),
-      );
+            if (this.userForms.length > 0) {
+              this.toastService.show({
+                text: I18ns.settings.users.addUsers.APIerror,
+                type: 'danger',
+                autoHide: false,
+              });
+            } else {
+              this.toastService.show({
+                text: I18ns.settings.users.addUsers.success,
+                type: 'success',
+                autoHide: false,
+              });
+              this.createdUsers.emit(true);
+              this.activeOffcanvas.close();
+            }
+          }),
+        )
+        .subscribe();
     }
   }
 

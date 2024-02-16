@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription, debounceTime, startWith } from 'rxjs';
 
@@ -15,7 +15,7 @@ interface ICheckedOption {
   templateUrl: './input-multiple-select.component.html',
   styleUrls: ['./input-multiple-select.component.scss'],
 })
-export class InputMultipleSelectComponent implements OnInit, OnDestroy {
+export class InputMultipleSelectComponent implements OnInit, OnChanges, OnDestroy {
   @Input() placeholder?: string;
   @Input() enableSearch = false;
   @Input() controls: FormControl<FormControl<SelectOption>[]> = new FormControl(
@@ -30,11 +30,26 @@ export class InputMultipleSelectComponent implements OnInit, OnDestroy {
   filteredOptions: ICheckedOption[] = [];
   searchControl: FormControl<string | null> = new FormControl(null);
 
-  private readonly inputMultipleSelectComponentSubscription = new Subscription();
+  private inputMultipleSelectComponentSubscription = new Subscription();
 
   constructor(private el: ElementRef) {}
 
   ngOnInit(): void {
+    this.initOptionsAndSubscriptions();
+  }
+
+  ngOnChanges(): void {
+    this.initOptionsAndSubscriptions();
+  }
+
+  ngOnDestroy(): void {
+    this.inputMultipleSelectComponentSubscription.unsubscribe();
+  }
+
+  private initOptionsAndSubscriptions(): void {
+    this.inputMultipleSelectComponentSubscription.unsubscribe();
+    this.inputMultipleSelectComponentSubscription = new Subscription();
+
     this.filteredOptions = this.options.map((option) => ({
       isChecked: this.controls.value.some((control) => control.value.value === option.value),
       option,
@@ -55,10 +70,6 @@ export class InputMultipleSelectComponent implements OnInit, OnDestroy {
         this.setFilteredOptions(searchTerm);
       }),
     );
-  }
-
-  ngOnDestroy(): void {
-    this.inputMultipleSelectComponentSubscription.unsubscribe();
   }
 
   @HostListener('document:click', ['$event'])

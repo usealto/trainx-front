@@ -81,24 +81,29 @@
   </div>
 
   <alto-placeholder-manager [status]="spiderChartStatus">
-    <alto-chart-radar [chartOption]="spiderChartOptions"></alto-chart-radar>
-
-    <div noData>
-      <ng-container *ngIf="tagsControl.value.length > 2 && tagsControl.value.length < 7; else invalidTags">
-        <div class="nodata-placeholder" noData>
-          <h3 class="mb-5 fs-6">
-            {{ I18ns.statistics.user.performance.themeMastering.spiderChart.title }}
-          </h3>
-          <div class="text-center">
-            <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
-            <p class="mt-3">
-              {{ I18ns.statistics.user.performance.themeMastering.spiderChart.placeholder.empty }}
-            </p>
-          </div>
+    <div good>
+      <alto-placeholder-manager>
+        <alto-chart-radar [chartOption]="spiderChartOptions"></alto-chart-radar>
+        <div noResult>
+          <!-- placeholder moins de 3 ou plus de 6 tags -->
         </div>
-      </ng-container>
+      </alto-placeholder-manager>
+    </div>
+      <div class="nodata-placeholder" noData>
+        <h3 class="mb-5 fs-6">
+          {{ I18ns.statistics.user.performance.themeMastering.spiderChart.title }}
+        </h3>
+        <div class="text-center">
+          <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+          <p class="mt-3">
+            {{ I18ns.statistics.user.performance.themeMastering.spiderChart.placeholder.empty }}
+          </p>
+       </div>
+      </div>
+      <div class="skeleton-panel" style="height: 500px" loading></div>
 
-      <ng-template #invalidTags>
+
+      <!-- <ng-template #invalidTags>
         <div
           *ngIf="tagsControl.value.length < 3"
           class="nodata-placeholder d-flex align-items-center justify-content-center"
@@ -123,9 +128,7 @@
             </p>
           </div>
         </div>
-      </ng-template>
-    </div>
+      </ng-template> -->
 
-    <div class="skeleton-panel" style="height: 400px" loading></div>
   </alto-placeholder-manager>
 </div>

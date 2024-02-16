@@ -13,7 +13,7 @@
     </div>
     <div class="d-flex gap-2">
       <i
-        *ngIf="control.value"
+        *ngIf="!mandatoryField && control.value"
         class="bi bi-x-lg hover-red"
         (click)="$event.stopPropagation(); toggleOption(control.value)"
       ></i>

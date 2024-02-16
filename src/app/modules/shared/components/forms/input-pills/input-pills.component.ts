@@ -65,13 +65,20 @@ export class InputPillsComponent implements OnInit, OnDestroy {
     }
   }
 
+  private markControlsStatuses(): void {
+    this.controls.markAsDirty();
+    this.controls.markAsTouched();
+  }
+
   addPill(value: PillOption): void {
     this.controls.patchValue([...this.controls.value, new FormControl(value, { nonNullable: true })]);
+    this.markControlsStatuses();
   }
 
   removePill(index: number): void {
     if (this.controls.value[index].enabled) {
       this.controls.patchValue(this.controls.value.filter((_, i) => i !== index));
+      this.markControlsStatuses();
     }
   }
 
@@ -81,6 +88,7 @@ export class InputPillsComponent implements OnInit, OnDestroy {
       ...this.filteredOptions.map((option) => new FormControl(option, { nonNullable: true })),
     ]);
 
+    this.markControlsStatuses();
     this.isDropdownOpen = false;
   }
 

@@ -110,7 +110,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
             );
           }
 
-          filteredTeamsStats.sort(BaseStats.StatsCmp);
+          filteredTeamsStats.sort(BaseStats.baseStatsCmp);
 
           this.teamsDisplay = filteredTeamsStats;
           this.paginatedTeamsStats = this.teamsDisplay.slice(
@@ -118,7 +118,11 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
             page * this.teamsPageSize,
           );
           this.teamsDataStatus =
-            this.teamsDisplay.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
+            this.teamsDisplay.length === 0
+              ? !this.tagsControl.value || !this.searchControl.value || !this.programsControl.value
+                ? EPlaceholderStatus.NO_DATA
+                : EPlaceholderStatus.NO_RESULT
+              : EPlaceholderStatus.GOOD;
         }),
     );
   }

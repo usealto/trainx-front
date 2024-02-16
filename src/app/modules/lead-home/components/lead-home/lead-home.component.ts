@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import {
+  CompanyStatsDtoResponseApi,
   GuessDtoPaginatedResponseApi,
   ProgramStatsDtoApi,
   QuestionSubmittedStatusEnumApi,
@@ -82,10 +83,8 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
   statisticTimeRange: ScoreTimeframeEnumApi = ScoreTimeframeEnumApi.Week;
   //
   teamsLeaderboard: { name: string; score: number }[] = [];
-  teamsLeaderboardCount = 0;
   teamsLeaderboardDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   usersLeaderboard: { name: string; score: number }[] = [];
-  usersLeaderboardCount = 0;
   usersLeaderboardDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   topflopLoaded = false;
   chartOption: EChartsOption = {};
@@ -127,15 +126,16 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
 
             return this.durationControl.valueChanges.pipe(startWith(this.durationControl.value));
           }),
-          tap((duration) => {
-            this.setTeamsAndStats(duration);
-          }),
+          // tap((duration) => {
+          //   this.setTeamsAndStats(duration);
+          // }),
           switchMap((duration) => {
             return combineLatest([
               this.createChart(duration),
               this.getProgramsStats(duration),
               this.getGuessesCount(duration),
               this.getTopFlop(duration),
+              this.setAverageScore(duration),
             ]);
           }),
         )
@@ -145,12 +145,6 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.leadHomeComponentSubscription.unsubscribe();
-  }
-
-  setTeamsAndStats(duration: EScoreDuration): void {
-    const teamStatsNow = this.company.getStatsByPeriod(duration, false);
-    const teamStatsPrev = this.company.getStatsByPeriod(duration, true);
-    this.setAverageScore(teamStatsNow, teamStatsPrev);
   }
 
   getProgramDataStatus() {
@@ -221,9 +215,8 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
       };
     });
 
-    this.teamsLeaderboardCount = this.teamsLeaderboard.length;
     this.teamsLeaderboardDataStatus =
-      this.teamsLeaderboardCount === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
+      this.teamsLeaderboard.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
 
     return this.scoresRestService.getPaginatedUsersStats(duration).pipe(
       tap(({ data: rawUsersStats = [] }) => {
@@ -233,22 +226,35 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
           score: u.score ?? 0,
         }));
 
-        this.usersLeaderboardCount = this.usersLeaderboard.length;
         this.usersLeaderboardDataStatus =
-          this.usersLeaderboardCount === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
+          this.usersLeaderboard.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
         this.topflopLoaded = true;
       }),
     );
   }
 
-  setAverageScore(current: TeamStats[], previous: TeamStats[]) {
-    current = current.filter((t) => t.score);
-    previous = previous.filter((t) => t.score);
-    const previousScore = previous.reduce((acc, team) => acc + (team.score ?? 0), 0) / previous.length;
-    this.averageScore =
-      current.filter((t) => t.score).reduce((acc, team) => acc + (team.score ?? 0), 0) / current.length;
-    this.averageScoreProgression = previousScore ? (this.averageScore - previousScore) / previousScore : 0;
-    this.getProgramDataStatus();
+  setAverageScore(
+    duration: EScoreDuration,
+  ): Observable<[CompanyStatsDtoResponseApi, CompanyStatsDtoResponseApi]> {
+    return combineLatest([
+      this.scoresRestService.getCompanyStats(this.company.id, duration),
+      this.scoresRestService.getCompanyStats(this.company.id, duration, true),
+    ]).pipe(
+      tap(([currentStats, previousStats]) => {
+        this.averageScore = currentStats.data?.averageScore ?? 0;
+        this.averageScoreProgression =
+          previousStats.data?.averageScore && currentStats.data?.averageScore
+            ? (currentStats.data?.averageScore - previousStats.data?.averageScore) /
+              previousStats.data?.averageScore
+            : 0;
+
+        if (!(this.averageScore || (this.programsCount || this.expectedGuessCount || 0) > 0)) {
+          this.programDataStatus = EPlaceholderStatus.NO_DATA;
+        } else {
+          this.programDataStatus = EPlaceholderStatus.GOOD;
+        }
+      }),
+    );
   }
 
   getProgramsStats(duration: EScoreDuration): Observable<[ProgramStatsDtoApi[], ProgramStatsDtoApi[]]> {

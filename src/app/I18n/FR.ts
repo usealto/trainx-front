@@ -102,6 +102,12 @@ export const FR = {
     noEvolution: 'Aucune évolution',
     noTag: 'Aucun tag',
     error: 'Une erreur est survenue',
+    placeholders: {
+      noResultInTimeframe: {
+        title: 'Aucune donnée à afficher pour cette période',
+        subtitle: 'Sélectionnez une autre période',
+      },
+    },
   },
   leadHome: {
     title: 'Bonjour ',
@@ -843,6 +849,8 @@ export const FR = {
           "Vos collaborateurs recevront une invitation par mail pour s'inscrire sur Cockpit.",
         Programs: 'Programmes assignés',
         programsPlaceholder: 'Sélectionner les programmes assignés à cette équipe',
+        teamCreated: 'L’équipe a bien été créée',
+        teamCreationError: 'Une erreur est survenue lors de la création de l’équipe',
       },
       deleteModal: {
         title: 'Supprimer l\'équipe "{{}}"',
@@ -985,6 +993,7 @@ export const FR = {
       },
       licences: ['{{}} licence', '{{}} licences'],
       licencesTitle: 'Nombre de licences attribuées',
+      contactTooltip: 'Contacter romain@getcockpit.io pour ajuster votre nombre de licences.',
     },
     continuousSession: {
       title: 'Diffusion',

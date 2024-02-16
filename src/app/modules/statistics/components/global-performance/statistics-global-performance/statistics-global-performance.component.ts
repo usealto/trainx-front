@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { TagDtoApi } from '@usealto/sdk-ts-angular';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { EResolvers, ResolversService } from '../../../../../core/resolvers/resolvers.service';
 import { ILeadData } from '../../../../../core/resolvers/lead.resolver';
+import { EResolvers, ResolversService } from '../../../../../core/resolvers/resolvers.service';
 import { Company } from '../../../../../models/company.model';
 import { EScoreDuration } from '../../../../../models/score.model';
-import { TagDtoApi } from '@usealto/sdk-ts-angular';
 
 @Component({
   selector: 'alto-statistics-global-performance',

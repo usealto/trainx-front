@@ -169,10 +169,9 @@ export class EditProgramsComponent implements OnInit {
       }),
       priorityControl: new FormControl<SelectOption | null>(
         this.program
-          ? ({
-              value: this.program.priority,
-              label: getTranslation(I18ns.shared.priorities, this.program.priority.toLowerCase()),
-            } as SelectOption)
+          ? (this.priorityOptions.find(
+              (priorityOption) => priorityOption.value === this.program?.priority,
+            ) as SelectOption)
           : null,
         {
           validators: Validators.required,
@@ -180,17 +179,11 @@ export class EditProgramsComponent implements OnInit {
       ),
       teamControls: new FormControl<FormControl<PillOption>[]>(
         this.program
-          ? this.program.teamIds.map((teamId) => {
-              const team = this.company.teamById.get(teamId) as Team;
-              return new FormControl<PillOption>(
-                {
-                  value: team.id,
-                  label: team.name,
-                  pillColor: PillOption.getPrimaryPillColor(),
-                } as PillOption,
-                { nonNullable: true },
-              );
-            })
+          ? this.teamOptions
+              .filter((teamOption) => this.program?.teamIds.includes(teamOption.value))
+              .map((teamOption) => {
+                return new FormControl<PillOption>(teamOption, { nonNullable: true });
+              })
           : [],
         { nonNullable: true },
       ),

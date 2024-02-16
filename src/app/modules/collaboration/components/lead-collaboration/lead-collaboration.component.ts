@@ -485,6 +485,9 @@ export class LeadCollaborationComponent implements OnInit, OnDestroy {
     this.selectedContributorsFilters = [];
     this.selectedTypesFilters = [];
     this.selectedPeriodsFilters = [];
+    this.selectedTypesControl.setValue([]);
+    this.selectedContributorsControl.setValue([]);
+    this.selectedPeriodsControl.setValue([]);
     this.emptyPlaceholderData = undefined;
     this.getSelectedTabData();
   }

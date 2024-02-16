@@ -253,7 +253,7 @@ export class SettingsIntegrationsComponent implements OnInit {
 
   openLinkSlack() {
     const url = environment.slackAuthorization + this.company?.id;
-    window.open(url, '_blank');
+    window.open(url);
   }
 
   isSlackActive(): boolean {

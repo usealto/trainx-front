@@ -40,6 +40,8 @@ import { GuessesRestService } from '../../../training/services/guesses-rest.serv
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
 import { ToastService } from '../../../../core/toast/toast.service';
+import { ILeadData } from '../../../../core/resolvers/lead.resolver';
+import { BaseStats } from '../../../../models/stats.model';
 
 interface TeamDisplay {
   id: string;
@@ -118,11 +120,12 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     private readonly resolversService: ResolversService,
     private readonly store: Store<FromRoot.AppState>,
     private readonly guessesRestService: GuessesRestService,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
-    this.company = (data[EResolvers.AppResolver] as IAppData).company;
+    this.company = (data[EResolvers.LeadResolver] as ILeadData).company;
     this.initFromCompany(this.company);
     this.rawUsers = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
 
@@ -231,7 +234,7 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     );
     const teamStats = company.getTeamStatsByPeriod(EScoreDuration.Year, false);
 
-    this.teamsDisplay = teamStats.map((teamStat) => {
+    this.teamsDisplay = teamStats.sort(BaseStats.baseStatsCmp).map((teamStat) => {
       const team = this.teamsById.get(teamStat.teamId);
       return {
         id: teamStat.teamId,
@@ -308,6 +311,18 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
         next: ({ data: company }) => {
           this.company = company;
           this.initFromCompany(company);
+        },
+        complete: () => {
+          this.toastService.show({
+            type: 'success',
+            text: I18ns.leadTeam.teams.form.teamCreated,
+          });
+        },
+        error: () => {
+          this.toastService.show({
+            type: 'danger',
+            text: I18ns.leadTeam.teams.form.teamCreationError,
+          });
         },
       });
   }

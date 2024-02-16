@@ -44,8 +44,8 @@
   [class.partial-row]="programCards.length < 3">
     <div *ngFor="let programCard of programCards"
     class="program-card"
-    [class.disabled]="!programCard.program.isActive"
-    [routerLink]=" programCard.program.isActive
+    [class.disabled]="!programCard.isActiveControl.value"
+    [routerLink]=" programCard.isActiveControl.value
     ? ['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]
     : null">
       <div class="title-section mb-2">
@@ -106,7 +106,7 @@
             <span
             class="alto-score"
             [class]="(programCard.userValidatedProgramCount ? programCard.userValidatedProgramCount * 100 : '') | pillColor">
-              {{ programCard.userValidatedProgramCount }}
+              {{ programCard.userValidatedProgramCount }} / {{ programCard.totalUsersCount }}
             </span>
           </p>
         </div>

@@ -192,6 +192,7 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
           this.store.dispatch(removeUser({ user }));
           const index = this.usersInfos.findIndex(({ user: u }) => u.id === user.id);
           this.usersInfos.splice(index, 1);
+          this.userSearchControl.patchValue(this.userSearchControl.value);
         },
         error: () => {
           this.toastService.show({

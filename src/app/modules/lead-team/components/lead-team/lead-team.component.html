@@ -125,7 +125,6 @@
   <p class="alto-grey">{{ I18ns.leadTeam.members.subtitle }}</p>
 </div>
 
-<alto-placeholder-manager [status]="usersDataStatus">
   <div class="panel mb-5 align-items-center">
     <div class="border-end">
       <alto-icon-badge [size]="4" icon="bi bi-people-fill" class="me-4"></alto-icon-badge>
@@ -149,6 +148,7 @@
     </div>
   </div>
 
+  <alto-placeholder-manager [status]="usersDataStatus">
   <div class="d-flex justify-content-between mb-5">
     <alto-input-search [searchControl]="searchControl"></alto-input-search>
     <div class="d-flex">
@@ -261,7 +261,7 @@
     <div class="skeleton-panel mb-5" style="height: 82px"></div>
     <div class="d-flex justify-content-between">
       <alto-input-search></alto-input-search>
-      <div class="d-flex">
+      <div class="d-flex mb-3">
         <alto-input-multiple-select></alto-input-multiple-select>
         <alto-input-single-select-pill></alto-input-single-select-pill>
       </div>

@@ -1,8 +1,11 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, of, startWith, switchMap } from 'rxjs';
+import { Subscription, combineLatest, of, startWith, switchMap, tap } from 'rxjs';
+import { IAppData } from 'src/app/core/resolvers';
+import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
@@ -16,6 +19,7 @@ import { TeamStats } from '../../../../../models/team.model';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { SelectOption } from '../../../../shared/models/select-option.model';
 import { StatisticsService } from '../../../services/statistics.service';
+import { AltoRoutes } from '../../../../shared/constants/routes';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -28,10 +32,13 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
   });
   @Input() company!: Company;
 
+  AltoRoutes = AltoRoutes;
   Emoji = EmojiName;
   I18ns = I18ns;
   init = true;
   EPlaceholderStatus = EPlaceholderStatus;
+
+  programsCount = 0;
 
   teamsScore: Score[] = [];
   selectedTeamsScores: Score[] = [];
@@ -53,9 +60,13 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresServices: ScoresService,
     private readonly statisticsServices: StatisticsService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly resolversService: ResolversService,
   ) {}
 
   ngOnInit(): void {
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.programsCount = (data[EResolvers.AppResolver] as IAppData).company.programs.length;
     this.performanceByTeamsComponentSubscription.add(
       combineLatest([
         this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
@@ -108,7 +119,11 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
             }));
 
           this.teamsLeaderboardDataStatus =
-            this.teamsLeaderboard.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
+            this.teamsLeaderboard.length === 0
+              ? this.programsCount > 0
+                ? EPlaceholderStatus.NO_RESULT
+                : EPlaceholderStatus.NO_DATA
+              : EPlaceholderStatus.GOOD;
 
           this.getTeamsScores(teamStats, previousTeamStats);
         }),
@@ -137,8 +152,12 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
     const formattedGlobalScore = formattedScores.pop() as Score;
 
     this.scoreDataStatus =
-      formattedScores.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
-    // Aligns Global with Score's Length so thay start on the same month
+      formattedScores.length === 0
+        ? this.programsCount > 0
+          ? EPlaceholderStatus.NO_RESULT
+          : EPlaceholderStatus.NO_DATA
+        : EPlaceholderStatus.GOOD;
+    // Aligns Global with Score's Length so they start on the same month
     const globalPoints = this.statisticsServices
       .transformDataToPoint(formattedGlobalScore)
       .slice(-formattedScores[0]?.averages?.length);

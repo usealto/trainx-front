@@ -1,5 +1,5 @@
-import { Component, ElementRef, HostListener, Input } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, ElementRef, HostListener, Input, OnInit } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
 import { I18ns } from '../../../../../core/utils/i18n/I18n';
 import { SelectOption } from '../../../models/select-option.model';
 
@@ -8,7 +8,7 @@ import { SelectOption } from '../../../models/select-option.model';
   templateUrl: './input-single-select.component.html',
   styleUrls: ['./input-single-select.component.scss'],
 })
-export class InputSingleSelectComponent {
+export class InputSingleSelectComponent implements OnInit {
   I18ns = I18ns;
 
   @Input() placeholder?: string;
@@ -17,8 +17,14 @@ export class InputSingleSelectComponent {
   @Input() hasFormAppearance = false;
 
   isDropdownOpen = false;
+  mandatoryField = false;
 
   constructor(private el: ElementRef) {}
+
+  ngOnInit(): void {
+    this.mandatoryField = this.control.hasValidator(Validators.required);
+    console.log('mandatoryField', this.mandatoryField);
+  }
 
   @HostListener('document:click', ['$event'])
   handleDocumentClick(event: Event) {

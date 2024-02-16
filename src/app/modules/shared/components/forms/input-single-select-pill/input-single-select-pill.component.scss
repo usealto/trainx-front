@@ -29,6 +29,9 @@
   }
 
   .dropdown-menu {
+    max-width: 200%;
+    max-height: 25rem;
+    overflow-y: scroll;
     display: none;
     position: absolute;
     background-color: #fff;

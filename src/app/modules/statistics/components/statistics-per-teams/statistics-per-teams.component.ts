@@ -17,6 +17,7 @@ import { EPlaceholderStatus } from '../../../shared/components/placeholder-manag
 import { DataForTable } from '../../models/statistics.model';
 import { ILeadData } from '../../../../core/resolvers/lead.resolver';
 import { EScoreDuration } from '../../../../models/score.model';
+import { BaseStats } from '../../../../models/stats.model';
 
 @Component({
   selector: 'alto-statistics-per-teams',
@@ -86,7 +87,7 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
             const teamsStats = this.company.getStatsByPeriod(duration, false);
             const prevTeamsStats = this.company.getStatsByPeriod(duration, true);
 
-            this.teamsDisplay = teamsStats.map((teamStats) =>
+            this.teamsDisplay = teamsStats.sort(BaseStats.baseStatsCmp).map((teamStats) =>
               this.dataForTeamTableMapper(
                 this.company.teamById.get(teamStats.teamId),
                 teamStats,

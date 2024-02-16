@@ -1,13 +1,14 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TagDtoApi, TagStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, filter, map, of, startWith, switchMap } from 'rxjs';
+import { Subscription, filter, map, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { EScoreDuration } from '../../../../../models/score.model';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { SelectOption } from '../../../../shared/models/select-option.model';
+import { AltoRoutes } from '../../../../shared/constants/routes';
 
 @Component({
   selector: 'alto-performance-by-themes',
@@ -17,6 +18,7 @@ import { SelectOption } from '../../../../shared/models/select-option.model';
 export class PerformanceByThemesComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
+  AltoRoutes = AltoRoutes;
   EPlaceholderStatus = EPlaceholderStatus;
 
   @Input() tags: TagDtoApi[] = [];
@@ -26,6 +28,7 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
   });
   tagsOptions: SelectOption[] = [];
   spiderChartDataStatus = EPlaceholderStatus.LOADING;
+  spiderChartFilterStatus = EPlaceholderStatus.GOOD;
   spiderChartOptions: any = {};
 
   tagsLeaderboard: { name: string; score: number }[] = [];
@@ -45,14 +48,16 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
     this.tagStatsSubscription.add(
       this.tagsControl.valueChanges
         .pipe(
+          filter(() => {
+            return this.tagsOptions.length > 0;
+          }),
           startWith(this.tagsControl.value),
           map((tagsControls) => tagsControls.map((t) => t.value)),
-          filter((selectedTags) => {
-            if (selectedTags.length < 3 || selectedTags.length > 6) {
-              this.spiderChartDataStatus = EPlaceholderStatus.NO_DATA;
-              return false;
-            }
-            return true;
+          tap((selectedTags) => {
+            this.spiderChartFilterStatus =
+              selectedTags.length < 3 || selectedTags.length > 6
+                ? EPlaceholderStatus.NO_DATA
+                : EPlaceholderStatus.GOOD;
           }),
           switchMap((selectedTags) => {
             return this.scoresRestService.getPaginatedTagsStats(EScoreDuration.Year, false, {
