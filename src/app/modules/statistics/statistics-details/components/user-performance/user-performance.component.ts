@@ -10,7 +10,6 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { EScoreDuration, Score } from 'src/app/models/score.model';
 import { Team } from 'src/app/models/team.model';
 import { IUser, User } from 'src/app/models/user.model';
-import { TagsRestService } from 'src/app/modules/programs/services/tags-rest.service';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
@@ -18,9 +17,9 @@ import { IAppData } from '../../../../../core/resolvers';
 import { ILeadData } from '../../../../../core/resolvers/lead.resolver';
 import { ToastService } from '../../../../../core/toast/toast.service';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { AltoRoutes } from '../../../../shared/constants/routes';
 import { SelectOption } from '../../../../shared/models/select-option.model';
 import { StatisticsService } from '../../../services/statistics.service';
-import { AltoRoutes } from '../../../../shared/constants/routes';
 
 @Component({
   selector: 'alto-user-performance',
@@ -114,8 +113,8 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
               }),
             ]);
           }),
-          filter(([userScores, teamScores]) => {
-            if (userScores.length === 0 && teamScores.length === 0) {
+          filter(([userScores]) => {
+            if (userScores.length === 0) {
               this.userChartStatus = EPlaceholderStatus.NO_DATA;
               return false;
             }
