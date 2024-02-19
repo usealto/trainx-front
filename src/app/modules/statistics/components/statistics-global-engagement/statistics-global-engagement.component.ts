@@ -13,7 +13,7 @@ import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { ILeadData } from '../../../../core/resolvers/lead.resolver';
-import { EScoreDuration } from '../../../../models/score.model';
+import { EScoreDuration, Score } from '../../../../models/score.model';
 import { Team, TeamStats } from '../../../../models/team.model';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { DataForTable } from '../../models/statistics.model';
@@ -83,6 +83,23 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
           tap(([duration, page]) => {
             this.teamsStats = this.company.getStatsByPeriod(duration, false);
             this.teamsStatsPrev = this.company.getStatsByPeriod(duration, true);
+
+            this.teamsStats = this.teamsStats.sort(
+              (a, b) => (b.totalGuessesCount || 0) - (a.totalGuessesCount || 0),
+            );
+            this.teamsStats = this.teamsStats.filter((t) => t.score && t.score >= 0);
+            this.teamsStatsPrev = this.teamsStatsPrev.filter((t) => t.score && t.score >= 0);
+            this.leaderboard = this.teamsStats.map((t) => {
+              const previousScore = this.teamsStatsPrev.find((p) => p.teamId === t.teamId)?.score;
+              const progression = this.scoresService.getProgression(t.score, previousScore);
+              return {
+                name: this.company.teams.find((team) => team.id === t.teamId)?.name ?? '',
+                score: t.totalGuessesCount ? t.totalGuessesCount : 0,
+                progression: progression ? progression : 0,
+              };
+            });
+            this.guessesLeaderboardDataStatus =
+              this.leaderboard.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
             this.getTeamDataForTable(page);
           }),
           switchMap(([duration]) => {
@@ -93,7 +110,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     );
   }
 
-  private getActivityData(duration: EScoreDuration): Observable<[TeamStats[], TeamStats[]]> {
+  private getActivityData(duration: EScoreDuration): Observable<Score[]> {
     return this.scoresRestService
       .getScores({
         duration,
@@ -106,11 +123,9 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             : ScoreTimeframeEnumApi.Day,
       })
       .pipe(
-        tap(
-          (scores) =>
-            (this.guessesDataStatus =
-              scores.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD),
-        ),
+        tap((scores) => {
+          this.guessesDataStatus = scores.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
+        }),
         filter((scores) => scores.length > 0),
         tap((scores) => {
           const formattedScores = this.scoresService.formatScores(scores);
@@ -157,28 +172,6 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             series: series,
             legend: { show: false },
           };
-        }),
-        map((): [TeamStats[], TeamStats[]] => {
-          return [this.teamsStats, this.teamsStatsPrev];
-        }),
-        tap(
-          ([currentsStats]) =>
-            (this.guessesLeaderboardDataStatus =
-              currentsStats.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD),
-        ),
-        tap(([currentStats, previousStats]) => {
-          currentStats = currentStats.sort((a, b) => (b.totalGuessesCount || 0) - (a.totalGuessesCount || 0));
-          currentStats = currentStats.filter((t) => t.score && t.score >= 0);
-          previousStats = previousStats.filter((t) => t.score && t.score >= 0);
-          this.leaderboard = currentStats.map((t) => {
-            const previousScore = previousStats.find((p) => p.teamId === t.teamId)?.score;
-            const progression = this.scoresService.getProgression(t.score, previousScore);
-            return {
-              name: this.company.teams.find((team) => team.id === t.teamId)?.name ?? '',
-              score: t.totalGuessesCount ? t.totalGuessesCount : 0,
-              progression: progression ? progression : 0,
-            };
-          });
         }),
       );
   }
