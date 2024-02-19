@@ -87,8 +87,6 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             this.teamsStats = this.teamsStats.sort(
               (a, b) => (b.totalGuessesCount || 0) - (a.totalGuessesCount || 0),
             );
-            this.teamsStats = this.teamsStats.filter((t) => t.score && t.score >= 0);
-            this.teamsStatsPrev = this.teamsStatsPrev.filter((t) => t.score && t.score >= 0);
             this.leaderboard = this.teamsStats.map((t) => {
               const previousScore = this.teamsStatsPrev.find((p) => p.teamId === t.teamId)?.score;
               const progression = this.scoresService.getProgression(t.score, previousScore);
@@ -280,7 +278,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     this.teamsDataStatus =
       this.teamsStats.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
     this.hasConnector = this.company.isConnectorActive ?? false;
-    this.teams = this.teamsStats.map((t) => this.company.teams.find((team) => team.id === t.teamId) as Team);
+    this.teams = this.teamsStats.map((t) => this.company.teamById.get(t.teamId) as Team);
 
     this.teamsDisplay = this.teamsStats
       .map((t) => {
