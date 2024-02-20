@@ -318,7 +318,7 @@
         {{ I18ns.shared.previous }}
       </button>
       <button class="btn btn-primary" [disabled]="!programFormGroup.dirty || programFormGroup.invalid" (click)="submitForm()">
-        {{ I18ns.programs.forms.step3.validate }}
+        {{ program ? I18ns.programs.forms.step3.validateEdit : I18ns.programs.forms.step3.validate }}
       </button>
     </div>
   </div>
