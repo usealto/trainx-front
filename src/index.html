@@ -30,6 +30,20 @@
     </style>
     <link rel="manifest" href="manifest.webmanifest" />
     <meta name="theme-color" content="#1976d2" />
+    <script type="text/javascript">
+      let allowedHosts = ['trainx.getcockpit.io'];
+      let url = window.location.href,
+      host = url.split('/')[2];
+      console.log('host',host,allowedHosts,allowedHosts.includes(host));
+      if (allowedHosts.includes(host)) {
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })
+        (window,document,'script','dataLayer','GTM-WHFJNB4F');
+      }
+    </script>
   </head>
   <body>
     <div class="first-loader">
