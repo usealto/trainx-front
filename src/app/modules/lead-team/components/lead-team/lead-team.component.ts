@@ -249,6 +249,8 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
 
     this.teamsDataStatus =
       this.teamsDisplay.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
+
+    this.changeTeamsPage(this.teamsPageControl.value);
   }
 
   changeTeamsPage(page: number) {
@@ -353,12 +355,33 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
         switchMap(() => {
           return this.teamsRestService.getTeams();
         }),
-        tap((teams) => {
+        switchMap((teams) => {
           this.store.dispatch(setTeams({ teams }));
-          modalRef.close();
+
+          return this.store.select(FromRoot.selectCompany);
         }),
+        first(),
       )
-      .subscribe();
+      .subscribe({
+        next: ({ data: company }) => {
+          this.company = company;
+          this.initFromCompany(company);
+        },
+        complete: () => {
+          modalRef.close();
+          this.toastService.show({
+            type: 'success',
+            text: I18ns.leadTeam.teams.form.teamDeleted,
+          });
+        },
+        error: () => {
+          modalRef.close();
+          this.toastService.show({
+            type: 'danger',
+            text: I18ns.leadTeam.teams.form.teamDeletionError,
+          });
+        },
+      });
   }
 
   openUserEditionForm(user: User) {

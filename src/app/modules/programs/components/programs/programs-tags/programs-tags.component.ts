@@ -2,7 +2,17 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { GetTagsStatsRequestParams, TagDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, concat, debounceTime, of, startWith, switchMap, tap } from 'rxjs';
+import {
+  Subscription,
+  combineLatest,
+  concat,
+  debounceTime,
+  first,
+  of,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { EmojiName } from '../../../../../core/utils/emoji/data';
 import { I18ns } from '../../../../../core/utils/i18n/I18n';
 import { ReplaceInTranslationPipe } from '../../../../../core/utils/i18n/replace-in-translation.pipe';
@@ -143,7 +153,10 @@ export class ProgramsTagsComponent implements OnInit, OnDestroy {
       ),
     };
     componentInstance.objectDeleted
-      .pipe(switchMap(() => this.tagRestService.deleteTag(tag?.id ?? '')))
+      .pipe(
+        switchMap(() => this.tagRestService.deleteTag(tag?.id ?? '')),
+        first(),
+      )
       .subscribe({
         complete: () => {
           modalRef.close();

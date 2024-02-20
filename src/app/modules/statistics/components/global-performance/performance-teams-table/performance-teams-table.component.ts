@@ -119,9 +119,9 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
           );
           this.teamsDataStatus =
             this.teamsDisplay.length === 0
-              ? !this.tagsControl.value || !this.searchControl.value || !this.programsControl.value
-                ? EPlaceholderStatus.NO_DATA
-                : EPlaceholderStatus.NO_RESULT
+              ? this.tagsControl.value.length > 0 || this.searchControl.value || this.programsControl.value.length > 0
+                ? EPlaceholderStatus.NO_RESULT
+                : EPlaceholderStatus.NO_DATA
               : EPlaceholderStatus.GOOD;
         }),
     );

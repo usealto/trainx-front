@@ -1,7 +1,7 @@
 import { ProgramDtoApi, ProgramDtoApiPriorityEnumApi } from '@usealto/sdk-ts-angular';
-import { BaseStats, IBaseStats } from './stats.model';
 import { compareAsc } from 'date-fns';
 import { BaseModel, IBaseModel } from './base.model';
+import { BaseStats, IBaseStats } from './stats.model';
 
 export interface IProgram extends IBaseModel {
   name: string;
@@ -79,7 +79,7 @@ export class Program extends BaseModel implements IProgram {
     }
   }
 
-   override get rawData(): IProgram {
+  override get rawData(): IProgram {
     return {
       ...super.rawData,
       name: this.name,
@@ -99,7 +99,6 @@ export class Program extends BaseModel implements IProgram {
     return this.stats.filter(({ scoreById }) => scoreById === id);
   }
 }
-
 
 export interface IProgramStats extends IBaseStats {
   participation: number;

@@ -24,11 +24,13 @@ import { ILeadData } from '../../../../core/resolvers/lead.resolver';
 import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
 import { addProgram, deleteProgram } from '../../../../core/store/root/root.action';
 import * as FromRoot from '../../../../core/store/store.reducer';
+import { ToastService } from '../../../../core/toast/toast.service';
 import { EmojiName } from '../../../../core/utils/emoji/data';
 import { I18ns, getTranslation } from '../../../../core/utils/i18n/I18n';
+import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { Company } from '../../../../models/company.model';
 import { Program } from '../../../../models/program.model';
-import { Team } from '../../../../models/team.model';
+import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { ITabOption } from '../../../shared/components/tabs/tabs.component';
 import { PillOption, SelectOption } from '../../../shared/models/select-option.model';
@@ -36,9 +38,6 @@ import { ValidationService } from '../../../shared/services/validation.service';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../create-questions/question-form.component';
-import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
-import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
-import { ToastService } from '../../../../core/toast/toast.service';
 
 enum Etab {
   Informations = 'informations',
