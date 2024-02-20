@@ -1,17 +1,17 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { PatchTeamDtoApi, ProgramDtoApi, TeamDtoApi, UserDtoApi } from '@usealto/sdk-ts-angular';
-import { Observable, combineLatest, filter, of, switchMap, tap } from 'rxjs';
-import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
+import { PatchProgramDtoApi } from '@usealto/sdk-ts-angular';
+import { combineLatest, of, switchMap } from 'rxjs';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { User } from 'src/app/models/user.model';
-import { UsersRestService } from 'src/app/modules/profile/services/users-rest.service';
-import { UsersService } from 'src/app/modules/profile/services/users.service';
-import { ProgramsRestService } from 'src/app/modules/programs/services/programs-rest.service';
 import { ValidationService } from 'src/app/modules/shared/services/validation.service';
-import { TeamForm } from '../../model/team.form';
+import { Program } from '../../../../models/program.model';
+import { Team } from '../../../../models/team.model';
+import { ProgramsRestService } from '../../../programs/services/programs-rest.service';
+import { PillOption } from '../../../shared/models/select-option.model';
 import { TeamsRestService } from '../../services/teams-rest.service';
+import { Company } from '../../../../models/company.model';
 
 @Component({
   selector: 'alto-team-form',
@@ -20,174 +20,116 @@ import { TeamsRestService } from '../../services/teams-rest.service';
 })
 export class TeamFormComponent implements OnInit {
   I18ns = I18ns;
-  @Input() team?: TeamDtoApi;
-  @Output() teamChanged?: EventEmitter<TeamDtoApi> = new EventEmitter<TeamDtoApi>();
-
-  private fb: IFormBuilder = this.fob;
-
-  @Input() teamsNames: string[] = [];
+  @Input() team?: Team;
   @Input() users: User[] = [];
+  @Input() company!: Company;
 
-  teamForm: IFormGroup<TeamForm> = this.fb.group<TeamForm>({
-    name: [
-      '',
-      [Validators.required, this.validationService.uniqueStringValidation(this.teamsNames, 'nameNotAllowed')],
-    ],
-    programs: [],
-    invitationEmails: [],
-  });
+  @Output() newTeam = new EventEmitter<Team>();
 
-  isEdit = false;
-  programs: ProgramDtoApi[] = [];
-  userFilters = { teams: [] as TeamDtoApi[] };
+  programOptions: PillOption[] = [];
+
+  teamForm!: FormGroup<{
+    nameControl: FormControl<string | null>;
+    programsControls: FormControl<FormControl<PillOption>[]>;
+  }>;
+
+  get nameControl(): FormControl<string | null> {
+    return this.teamForm.controls.nameControl as FormControl<string | null>;
+  }
+
+  get programsControls(): FormControl<FormControl<PillOption>[]> {
+    return this.teamForm.controls.programsControls as FormControl<FormControl<PillOption>[]>;
+  }
 
   constructor(
     public activeOffcanvas: NgbActiveOffcanvas,
-    readonly fob: UntypedFormBuilder,
-    private readonly userRestService: UsersRestService,
-    private readonly userService: UsersService,
-    private readonly programService: ProgramsRestService,
-    private readonly teamsRestService: TeamsRestService,
     private readonly validationService: ValidationService,
+    private readonly teamsRestService: TeamsRestService,
+    private readonly programsRestService: ProgramsRestService,
   ) {}
 
   ngOnInit(): void {
-    const teamName = this.team?.name.toLowerCase();
-    const index = this.teamsNames.indexOf(teamName ?? '');
-    if (teamName) {
-      this.teamsNames.splice(index, 1);
-    }
+    this.programOptions = this.company.programs.map(
+      (program) => new PillOption({ label: program.name, value: program.id }),
+    );
 
-    setTimeout(() => {
-      this.programService
-        .getPrograms()
-        .pipe(tap((programs) => (this.programs = programs)))
-        .subscribe();
-
-      if (this.team) {
-        this.teamsRestService
-          .getTeam(this.team.id)
-          .pipe(
-            tap((d) => {
-              if (!d.data) {
-                return;
-              }
-              this.team = d.data;
-              this.isEdit = true;
-              const { name, programs } = this.team;
-              this.userFilters.teams.push(this.team);
-              const filteredUsers = this.userService.filterUsers<UserDtoApi[]>(this.users, this.userFilters);
-
-              this.teamForm.patchValue({
-                name,
-                programs: programs as ProgramDtoApi[],
-                invitationEmails: filteredUsers,
-              });
-            }),
-          )
-          .subscribe();
-      }
+    this.teamForm = new FormGroup({
+      nameControl: new FormControl<string | null>(this.team ? this.team.name : null, {
+        validators: [
+          Validators.required,
+          this.validationService.uniqueStringValidation(
+            this.company.teams.filter(({ id }) => !this.team || id !== this.team.id).map(({ name }) => name),
+            I18ns.leadTeam.teams.duplicateName,
+          ),
+        ],
+      }),
+      programsControls: new FormControl<FormControl<PillOption>[]>(
+        this.team?.programIds.map((programId) => {
+          return new FormControl<PillOption>(
+            this.programOptions.find((option) => option.value === programId) as PillOption,
+            { nonNullable: true },
+          );
+        }) ?? [],
+        {
+          nonNullable: true,
+        },
+      ),
     });
   }
 
-  createTeam() {
-    if (!this.teamForm.value) return;
+  submit(): void {
+    if (this.teamForm.valid && this.teamForm.dirty) {
+      const { nameControl, programsControls } = this.teamForm.controls;
 
-    const { name, programs, invitationEmails } = this.teamForm.value;
-
-    if (!this.isEdit && !this.team) {
-      //CREATION MODE
-      this.teamsRestService
-        .createTeam({ name })
+      (this.team
+        ? this.teamsRestService.updateTeam({
+            id: this.team.id,
+            patchTeamDtoApi: { name: nameControl.value as string },
+          })
+        : this.teamsRestService.createTeam({ name: nameControl.value as string })
+      )
         .pipe(
           switchMap((team) => {
-            this.teamsRestService.resetCache();
-            if (team) {
-              return combineLatest(this.updateTeamInfos(team, programs, invitationEmails));
+            const programIdsToUpdate = [
+              ...(programsControls.value.map((progControl) => progControl.value.value) ?? []).filter(
+                (id) => !team.programIds.includes(id),
+              ),
+              ...(team.programIds.filter(
+                (id) => !programsControls.value.map((progControl) => progControl.value.value).includes(id),
+              ) ?? []),
+            ];
+
+            if (programIdsToUpdate.length === 0) {
+              return combineLatest([of(team)]);
             }
-            return of(null);
-          }),
-          tap(() => {
-            this.teamsRestService.resetCache();
-            this.teamChanged?.emit();
-            this.activeOffcanvas.dismiss();
+
+            const $obs = programIdsToUpdate.map((programId) => {
+              const program = this.company.programById.get(programId) as Program;
+
+              const newTeamIds = [...program.teamIds];
+              if (!newTeamIds.includes(team.id)) {
+                newTeamIds.push(team.id);
+              } else {
+                newTeamIds.splice(newTeamIds.indexOf(team.id), 1);
+              }
+
+              return this.programsRestService.updateProgram(programId, {
+                teamIds: newTeamIds.map((id) => ({ id: id })),
+              } as PatchProgramDtoApi);
+            });
+
+            return combineLatest([of(team), ...$obs]);
           }),
         )
-        .subscribe();
-    } else {
-      //EDIT MODE
-      const params: PatchTeamDtoApi = {
-        name: name,
-      };
-      if (this.team?.id) {
-        this.teamsRestService
-          .updateTeam({ id: this.team.id, patchTeamDtoApi: params })
-          .pipe(
-            filter((team) => !!team),
-            switchMap((team) => {
-              if (team) {
-                this.teamsRestService.resetCache();
-                return combineLatest([
-                  ...[of(team)],
-                  ...this.updateTeamInfos(team, programs, invitationEmails),
-                ]);
-              }
-              return of(null);
-            }),
-            tap((team) => {
-              if (team) {
-                this.teamChanged?.emit(team[0]);
-              }
-              this.activeOffcanvas.close();
-            }),
-          )
-          .subscribe();
-      }
+        .subscribe({
+          next: ([newTeam]) => {
+            this.newTeam.emit(newTeam);
+            this.activeOffcanvas.close();
+          },
+          error: () => {
+            this.activeOffcanvas.close();
+          },
+        });
     }
-  }
-
-  updateTeamInfos(team: TeamDtoApi, formProgs: ProgramDtoApi[], members: UserDtoApi[]): Observable<any>[] {
-    const output$: Observable<any>[] = [of(null)];
-
-    const initialTeamProgs = (this.team?.programs || []).reduce((result, program) => {
-      const longProg = this.programs.find((po) => program.id === po.id);
-      if (longProg && !result.find((p) => p.id === longProg.id)) {
-        result.push(longProg);
-      }
-      return result;
-    }, [] as ProgramDtoApi[]);
-
-    initialTeamProgs.forEach((p) => {
-      if (!formProgs.find((po) => po.id === p.id)) {
-        output$.push(
-          this.programService.updateProgram(p.id, {
-            teamIds: p.teams.filter((t) => t.id !== team.id).map((t) => ({ id: t.id })),
-          }),
-        );
-        this.programService.resetCache();
-      }
-    });
-
-    if (formProgs) {
-      formProgs.forEach((p) => {
-        if (!initialTeamProgs.find((po) => po.id === p.id) && team) {
-          // To Add
-          output$.push(
-            this.programService.updateProgram(p.id, {
-              teamIds: [...p.teams, team].map((t) => ({ id: t.id })),
-            }),
-          );
-          this.programService.resetCache();
-        }
-      });
-    }
-
-    members?.forEach((member) => {
-      if (member.teamId !== team.id) {
-        output$.push(this.userRestService.patchUser(member.id, { teamId: team.id }));
-      }
-    });
-
-    return output$;
   }
 }

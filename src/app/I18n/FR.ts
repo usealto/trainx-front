@@ -26,6 +26,9 @@ export const FR = {
     resetFilters: 'Réinitialiser les filtres',
     reply: 'Répondre',
     search: 'Rechercher',
+    selectAll: 'Tout sélectionner',
+    selectNone: 'Tout désélectionner',
+    noOption: 'Aucune option',
     textNotFound: 'Aucun résultat',
     period: 'Période',
     soon: 'Bientôt',
@@ -42,6 +45,8 @@ export const FR = {
     waitingForNewResults: "Dans l'attente de nouveaux résultats.",
     days: ['jour', 'jours'],
     score: 'Score',
+    progress: 'Avancement',
+    level: 'Niveau',
     imageBadge: {
       userFinished: ['Devenez le premier à terminer', 'a terminé', 'ont terminé'],
     },
@@ -49,9 +54,9 @@ export const FR = {
       on: 'sur',
     },
     priorities: {
-      high: 'Haute',
-      medium: 'Moyenne',
-      low: 'Basse',
+      High: 'Haute',
+      Medium: 'Moyenne',
+      Low: 'Basse',
     },
     status: {
       title: 'Status',
@@ -71,20 +76,20 @@ export const FR = {
       month: '1 mois',
     },
     noSmallScreen: {
-      title: 'Alto n’est pas disponible sur votre taille d’écran.',
+      title: 'TrainX n’est pas disponible sur votre taille d’écran.',
       subtitle: 'Pour accéder au contenu de l’application, connectez-vous sur un ordinateur.',
     },
     noWebAccess: {
-      title: 'Félicitations ! Votre compte Alto est actif',
+      title: 'Félicitations ! Votre compte Cockpit est actif',
       subtitle:
-        "Comme souhaité par vos collaborateurs, vous profiterez bientôt d'Alto directement dans vos outils préférés tels que Slack ou Teams",
+        'Comme souhaité par vos collaborateurs, vous profiterez bientôt de TrainX directement dans vos outils préférés tels que Slack ou Teams',
       goodbye: 'À bientôt !',
     },
     noCompany: {
       title: "Oops ! Nous n'avons pas trouvé votre entreprise.",
       subtitle:
         'Une erreur s’est produite. Contactez-nous et nous ferons notre maximum pour régler la situation.',
-      button: 'Envoyer un mail à Alto',
+      button: 'Envoyer un mail à Cockpit',
     },
     noTeams: {
       title: 'Oops ! Vous n’êtes assigné(e) à aucune équipe.',
@@ -96,6 +101,13 @@ export const FR = {
     noScore: 'Aucune réponse',
     noEvolution: 'Aucune évolution',
     noTag: 'Aucun tag',
+    error: 'Une erreur est survenue',
+    placeholders: {
+      noResultInTimeframe: {
+        title: 'Aucune donnée à afficher pour cette période',
+        subtitle: 'Sélectionnez une autre période',
+      },
+    },
   },
   leadHome: {
     title: 'Bonjour ',
@@ -221,6 +233,8 @@ export const FR = {
       title: 'Questions de vos programmes',
       subtitle: "Retrouvez l'ensemble des questions de votre organisation.",
       createQuestion: 'Créer une question',
+      questionCreated: 'Question créée',
+      questionDeleted: 'Question supprimée',
 
       placeholder: {
         noData: 'Aucun résultat correspondant',
@@ -300,6 +314,7 @@ export const FR = {
         expectation: 'Score attendu',
         expectationSubtitle: 'Déterminez le niveau que vos équipes sont censées atteindre à ce programme.',
         create: 'Créer le programme',
+        edit: 'Éditer le programme',
       },
       step2: {
         title: 'Questions',
@@ -333,13 +348,16 @@ export const FR = {
         createdToast: 'Votre programme a bien été créé',
         validatedToast: 'Vous avez bien finalisé la création de votre programme',
         validate: 'Finaliser la création du programme',
+        validateEdit: "Finaliser l'édition du programme",
       },
     },
     delete: {
       btn: 'Supprimer le programme',
       title: 'Supprimer le programme "{{}}"',
       subtitle:
-        'Ce programme est assigné à {{}} équipes, êtes-vous sûrs de vouloir le supprimer ? Cette action est irreversible.',
+        'Ce programme est assigné à {{}} équipes, êtes-vous sûr de vouloir le supprimer ? Cette action est irréversible.',
+      success: 'Le programme a bien été supprimé',
+      error: 'Une erreur est survenue lors de la suppression du programme',
     },
   },
   statistics: {
@@ -418,9 +436,6 @@ export const FR = {
         title: 'Niveau de maîtrise par thématiques',
         subtitle:
           "Retrouvez une vue d'ensemble sur le niveau de maîtrise de vos équipes selon leurs thématiques.",
-        filters: {
-          tags: 'Tags',
-        },
         spiderChart: {
           title: 'Aperçu des thématiques',
           subtitle: "Évaluation du niveau moyen de l'entreprise sur les 12 derniers mois.",
@@ -430,25 +445,6 @@ export const FR = {
             notEnoughTags: 'Vous devez avoir créé au moins 3 tags.',
             lessThan3Tags: 'Vous devez sélectionner au moins 3 tags.',
             moreThan6Tags: 'Vous devez sélectionner au maximum 6 tags.',
-          },
-        },
-        scoreEvolutionChart: {
-          title: 'Évolution du niveau de maîtrise',
-          subtitle: 'Évolution du niveau moyen de vos équipes par tag.',
-          placeholder : {
-            noData: 'Les équipes sont en train de s’échauffer',
-            noDataSubtitle: 'Les premiers résultats ne devraient plus tarder !',
-            empty: 'Vous devez avoir créé au moins 3 tags',
-            createTag: 'Créer un tag',
-          },
-        },
-        teamsKnowledgeChart: {
-          title: 'Niveau de maîtrise de vos équipes par thématique',
-          subtitle: 'Aperçu du niveau moyen de vos équipes sur le tag sélectionné.',
-          placeholderTitle: 'Quelles thématiques déstabilisent vos équipes ? Vous le saurez prochainement',
-          filters: {
-            tags: 'Tags',
-            teams: 'Équipes',
           },
         },
         control: {
@@ -519,6 +515,10 @@ export const FR = {
         noGuess: 'Aucune réponse',
         noComments: 'Aucun commentaire',
         noSuggestion: 'Aucune suggestion',
+        noDataPlaceholder: {
+          title: 'Les équipes sont en train de s’échauffer',
+          subtitle: 'Les premiers résultats ne devraient plus tarder !',
+        },
       },
     },
     team: {
@@ -626,6 +626,10 @@ export const FR = {
             title: 'Votre collaborateur est en train de s’échauffer',
             subtitle: 'Les premiers résultats ne devraient plus tarder !',
           },
+          spiderChart: {
+            userScore: 'Score du collaborateur',
+            teamScore: 'Score de l’équipe',
+          },
         },
         themeMastering: {
           title: 'Niveau de maîtrise par thématiques du collaborateur',
@@ -638,8 +642,8 @@ export const FR = {
             title: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
           },
           spiderChart: {
-            title: 'Aperçu des thématiques',
-            subtitle: 'Évaluation du niveau moyen de votre collaborateur sur les 12 derniers mois.',
+            title: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
+            subtitle: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
             placeholder: {
               empty: 'Vous devez avoir créé au moins 3 tags',
               createTag: 'Créer un tag',
@@ -843,9 +847,13 @@ export const FR = {
         invitationEmails: 'Invitation par mail',
         invitationEmailsPlaceholder: 'Séparer les emails par une virgule',
         invitationEmailsSubtitle:
-          "Vos collaborateurs recevront une invitation par mail pour s'inscrire à Alto.",
+          "Vos collaborateurs recevront une invitation par mail pour s'inscrire sur Cockpit.",
         Programs: 'Programmes assignés',
         programsPlaceholder: 'Sélectionner les programmes assignés à cette équipe',
+        teamCreated: 'L’équipe a bien été créée',
+        teamCreationError: 'Une erreur est survenue lors de la création de l’équipe',
+        teamDeleted: 'L’équipe a bien été supprimée',
+        teamDeletionError: 'Une erreur est survenue lors de la suppression de l’équipe',
       },
       deleteModal: {
         title: 'Supprimer l\'équipe "{{}}"',
@@ -938,7 +946,7 @@ export const FR = {
       users: 'Utilisateurs standards',
       usersInactiveTooltip: 'Pour réactiver l’intégration, veuillez vous rendre dans l’onglet “Diffusion”.',
       warningTooltip:
-        'Nous rencontrons un problème avec cet utilisateur. Contactez votre administrateur Slack ou la team Alto si le problème persiste.',
+        'Nous rencontrons un problème avec cet utilisateur. Contactez votre administrateur Slack ou la team Cockpit si le problème persiste.',
       usersDesc:
         'Les utilisateurs peuvent participer aux programmes, suggérer des questions et ont accès à des statistiques détaillées sur leurs résultats seulement.',
       table: {
@@ -975,7 +983,7 @@ export const FR = {
         firstname: 'Prénom',
         firstnamePlaceholder: 'Exemple: Phoenix',
         email: 'Adresse email',
-        emailPlaceholder: 'prenom@usealto.com',
+        emailPlaceholder: 'prenom@getcockpit.io',
         duplicateEmail: 'Une autre adresse email est identique.',
         emailDeleted: 'Vous ne pouvez pas re-créer un utilisateur supprimé.',
         invalidEmailFormat: 'Le format de l’adresse email est incorrect.',
@@ -988,6 +996,7 @@ export const FR = {
       },
       licences: ['{{}} licence', '{{}} licences'],
       licencesTitle: 'Nombre de licences attribuées',
+      contactTooltip: 'Contactez romain@getcockpit.io pour ajuster votre nombre de licences.',
     },
     continuousSession: {
       title: 'Diffusion',
@@ -1004,7 +1013,6 @@ export const FR = {
         gchatSubtitle: {
           googleChatInstructionsTitle: 'Comment vos utilisateurs peuvent ajouter Google Chat :',
           googleChatInstructions: 'Ils ont simplement besoin de cliquer sur ce lien :',
-          googleChatLink: 'https://workspace.google.com/marketplace/app/alto/1076506336192',
           googleChatInstructions2: 'Puis cliquer sur “Installer”. C’est tout.',
           emailSendTitle: 'Vous pouvez aussi envoyer les instructions aux utilisateurs non connectés :',
           emailSendButtonText: 'Envoyer les instructions par email',
@@ -1019,9 +1027,9 @@ export const FR = {
         slackSubtitle: {
           notAdminTitle: 'Je ne suis pas administrateur Slack :',
           notAdminText:
-            'Afin qu’Alto puisse interagir avec vos collaborateurs, votre administrateur Slack doit autoriser la connexion à l’application.',
+            'Afin que TrainX puisse interagir avec vos collaborateurs, votre administrateur Slack doit autoriser la connexion à l’application.',
           sendEmail: 'Envoyer un email',
-          emailExemple: 'Ex: philippe@usealto.com',
+          emailExemple: 'Ex: philippe@getcockpit.io',
           emailSendButtonText: 'Envoyer',
           adminTitle: 'Je suis administrateur Slack :',
           adminText:
@@ -1044,7 +1052,7 @@ export const FR = {
           },
           subtitles: {
             activateConnector:
-              'Activer les intégrations vous permettra de diffuser vos questions sur la plateforme de communication choisie. Pour cela, merci de vous rapprocher de la team Alto 🙂(romain@usealto.com).',
+              'Activer les intégrations vous permettra de diffuser vos questions sur la plateforme de communication choisie. Pour cela, merci de vous rapprocher de la team Cockpit 🙂(romain@getcockpit.io).',
             desactivateConnector:
               'Vous et vos collaborateurs ne pourrez plus envoyer de questions via votre canal de communication et ne recevrez plus de messages de notre part. Confirmez-vous ce choix ?',
             activateWebApp:
@@ -1055,7 +1063,7 @@ export const FR = {
               'Vos prochaines questions ne seront plus envoyées via le même canal de communication. Confirmez-vous ce choix ?',
           },
           validBtns: {
-            activateConnector: 'Contacter Alto',
+            activateConnector: 'Contacter Cockpit',
             desactivateConnector: 'Désactiver',
             activateWebApp: 'Activer la web app',
             desactivateWebApp: 'Désactiver la web app',

@@ -7,10 +7,12 @@ import { AbstractControl, ValidatorFn } from '@angular/forms';
 export class ValidationService {
   uniqueStringValidation(data: string[], error: string): ValidatorFn {
     return (control: AbstractControl) => {
-      const typedName = control.value?.toLowerCase();
-
-      if (data && typedName && data.includes(typedName)) {
-        return { [error]: true };
+      const inputValue = control.value;
+      if (
+        inputValue &&
+        data.some((term) => term.toLocaleLowerCase().localeCompare(control.value.toLocaleLowerCase()) === 0)
+      ) {
+        return { error: error };
       }
       return null;
     };

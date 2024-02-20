@@ -278,6 +278,84 @@ h2 {
   animation: 5s shine linear infinite;
 }
 
+.hover-red {
+  &:hover {
+    color: var(--error-600);
+  }
+}
+
+
+/* Tooltip container */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip-container .tooltip-text {
+  visibility: hidden;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 6px;
+
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 100%);
+
+  &.top {
+    top: -5px;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+  }
+
+  &.large {
+    width: 18rem;
+  }
+
+  &.error {
+    background-color: var(--error-400);
+  }
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip-container .tooltip-text::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #555 transparent;
+
+  &.top {
+    top: 100%;
+    bottom: auto;
+    border-color: #555 transparent transparent transparent;
+  }
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip-container .tooltip-text.error::after {
+  border-color: transparent transparent var(--error-400) transparent;
+  color: white;
+}
+
+
 @keyframes shine {
   to {
     background-position-x: -200%;

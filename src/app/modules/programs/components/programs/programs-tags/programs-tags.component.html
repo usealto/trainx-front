@@ -1,0 +1,85 @@
+<div class="title-row mb-4">
+  <div>
+    <h2 id="tagsAnchor">
+      <img class="emoji" [src]="Emoji.Label | emoji" width="16" height="16" />
+      {{ I18ns.programs.tags.title }}
+    </h2>
+    <p class="mt-3 mb-3 alto-grey">{{ I18ns.programs.tags.subtitle }}</p>
+  </div>
+
+  <button type="button" class="btn btn-primary" (click)="openTagForm()">
+    <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.tags.createTag }}</span>
+  </button>
+</div>
+
+<div class="buttons-row mb-4">
+  <alto-input-search [searchControl]="searchControl"></alto-input-search>
+
+  <alto-input-single-select-pill
+  [control]="scoreControl"
+  [options]="scoreOptions"
+  [placeholder]="I18ns.leadTeam.members.filters.score">
+  </alto-input-single-select-pill>
+</div>
+
+<alto-placeholder-manager [status]="tagsDataStatus">
+  <div class="table-panel">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" class="w-20">{{ I18ns.programs.tags.table.name }}</th>
+          <th scope="col" class="text-center">
+            {{ I18ns.programs.tags.table.score }}
+          </th>
+          <th class="w-20" scope="col">{{ I18ns.programs.tags.table.associatedQuestions }}</th>
+          <th class="w-15"></th>
+        </tr>
+      </thead>
+      <tbody [style.height]="53 * tagsInfos.length + 'px'">
+        <tr *ngFor="let tagInfos of tagsInfos">
+          <td>
+            <span class="alto-badge primary">
+              {{ tagInfos.tag.name }}
+            </span>
+          </td>
+          <td class="text-center">
+            <span class="alto-score" [class]="(tagInfos.score) * 100 | pillColor">
+              {{ tagInfos.score | percent }}
+            </span>
+          </td>
+          <td>{{ tagInfos.tag.questionsCount + I18ns.programs.tags.table.questions }}</td>
+          <td class="text-end px-4">
+            <i class="fs-4 bi bi-trash3 cursor-pointer me-4" (click)="deleteTag(tagInfos.tag)"></i>
+            <i class="fs-4 bi bi-pen cursor-pointer" (click)="openTagForm(tagInfos.tag)"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <alto-pagination
+      class="mx-4 d-block"
+      [pageControl]="pageControl"
+      [itemsCount]="itemsCount"
+      [itemsPerPage]="itemsPerPage"
+      aria-label="Default pagination"
+    ></alto-pagination>
+  </div>
+
+  <div class="nodata-placeholder text-center" noData>
+    <img [src]="Emoji.FlexedBiceps | emoji" height="24" width="24" />
+    <p class="mt-3">{{ I18ns.programs.tags.table.placeholder }}</p>
+    <button type="button" class="btn btn-primary mt-4" (click)="openTagForm()">
+      <i class="bi bi-plus-lg"></i>
+      {{ I18ns.programs.tags.createTag }}
+    </button>
+  </div>
+
+  <div class="nodata-placeholder text-center" noResult>
+    <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+    <p class="mt-3">{{ I18ns.shared.noData }}</p>
+    <span class="mt-3 d-block">{{ I18ns.shared.noDataSubtitle }}</span>
+    <button class="btn btn-primary mt-4" (click)="resetFilters()">
+      <i class="bi bi-arrow-clockwise"></i>
+      {{ I18ns.shared.resetFilters }}
+    </button>
+  </div>
+</alto-placeholder-manager>

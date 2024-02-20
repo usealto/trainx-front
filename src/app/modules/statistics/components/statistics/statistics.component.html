@@ -4,8 +4,7 @@
 </div>
 <alto-tabs
   class="tabs d-block fw-bold"
-  (tabChanged)="tabChange($event)"
-  [data]="tabs"
-  [selectedValue]="selectedTab"
+  [options]="tabOptions"
+  [selectedControl]="tabControl"
 ></alto-tabs>
 <router-outlet> </router-outlet>

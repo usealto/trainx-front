@@ -1,18 +1,18 @@
-<div class="mb-5">
-  <h2>
-    <img class="emoji" [src]="EmojiName.Locomotive | emoji" height="16" width="16" />
-    {{ I18ns.statistics.team.teamActivity.title }}
-    <span class="ms-2 alto-badge" [style]="team.id | teamColor">{{ team.name }}</span>
-  </h2>
-  <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.teamActivity.subtitle }}</p>
+<div class="d-flex justify-content-between align-items-center mb-5">
+  <div>
+    <h2>
+      <img class="emoji" [src]="EmojiName.Locomotive | emoji" height="16" width="16" />
+      {{ I18ns.statistics.team.teamActivity.title }}
+      <span class="ms-2 alto-badge" [style]="team.id | teamColor">{{ team.name }}</span>
+    </h2>
+    <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.teamActivity.subtitle }}</p>
+  </div>
+
+  <alto-time-picker [durationControl]="durationControl"></alto-time-picker>
 </div>
+
 <alto-placeholder-manager [status]="answersChartStatus">
   <div class="panel mb-4">
-    <alto-time-picker
-      class="float-end"
-      [duration]="duration"
-      (durationSelected)="updateTimePicker($event)"
-    ></alto-time-picker>
     <h3>{{ I18ns.statistics.team.teamActivity.chartTitle }}</h3>
     <p class="alto-grey mb-4">
       {{ I18ns.statistics.team.teamActivity.chartSubtitle }}
@@ -31,35 +31,37 @@
 
 <alto-placeholder-manager [status]="membersLeaderboardStatus">
   <alto-leaderboard
-    [config]="['count', 'progress']"
-    [data]="membersLeaderboard"
-    [title]="I18ns.statistics.team.teamActivity.leaderboardTitle"
-    [subtitle]="I18ns.statistics.team.teamActivity.leaderboardSubtitle"
-  ></alto-leaderboard>
+  *ngIf="membersLeaderboardStatus === EPlaceholderStatus.GOOD"
+  [config]="['count', 'progress']"
+  [data]="membersLeaderboard"
+  [title]="I18ns.statistics.team.teamActivity.leaderboardTitle"
+  [subtitle]="I18ns.statistics.team.teamActivity.leaderboardSubtitle">
+  </alto-leaderboard>
+
   <div class="nodata-placeholder text-center" noData>
     <img [src]="EmojiName.Trophy | emoji" height="24" width="24" />
     <p class="fw-bold">{{ I18ns.statistics.team.membersEngagement.leaderboardPlaceholder.title }}</p>
   </div>
+
   <div class="skeleton-panel" style="height: 332px" loading></div>
 </alto-placeholder-manager>
 
 <hr class="my-7" />
 
-<div class="mb-5">
-  <h2>
-    <img class="emoji" [src]="EmojiName.NerdFace | emoji" height="16" width="16" />
-    {{ I18ns.statistics.team.membersEngagement.title }}
-    <span class="ms-2 alto-badge" [style]="team.id | teamColor">{{ team.name }}</span>
-  </h2>
-  <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.membersEngagement.subtitle }}</p>
+<div class="d-flex justify-content-between align-items-center mb-5">
+  <div>
+    <h2>
+      <img class="emoji" [src]="EmojiName.NerdFace | emoji" height="16" width="16" />
+      {{ I18ns.statistics.team.membersEngagement.title }}
+      <span class="ms-2 alto-badge" [style]="team.id | teamColor">{{ team.name }}</span>
+    </h2>
+    <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.membersEngagement.subtitle }}</p>
+  </div>
+
+  <alto-time-picker [durationControl]="durationControl"></alto-time-picker>
 </div>
 <alto-placeholder-manager [status]="contributionChartStatus">
   <div class="panel mb-4">
-    <alto-time-picker
-      class="float-end"
-      [duration]="duration"
-      (durationSelected)="updateTimePicker($event)"
-    ></alto-time-picker>
     <h3>{{ I18ns.statistics.team.membersEngagement.chartTitle }}</h3>
     <p class="alto-grey mb-4">
       {{ I18ns.statistics.team.membersEngagement.chartSubtitle }}
@@ -80,20 +82,21 @@
 
 <div class="mb-5">
   <alto-time-picker
-    class="float-end"
-    [duration]="duration"
-    (durationSelected)="updateTimePicker($event)"
+  class="float-end"
+  [durationControl]="durationControl"
   ></alto-time-picker>
-  <h2>
-    <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" height="16" width="16" />
-    {{ I18ns.statistics.team.teamMembers.title }}
-    <span class="ms-2 alto-badge" [style]="team.id | teamColor">{{ team.name }}</span>
-  </h2>
-  <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.teamMembers.subtitle }}</p>
-  <alto-search
-    [searchItems]="membersTableSearch"
-    (searchChange)="filterMembersTable({ search: $event })"
-  ></alto-search>
+  <div class="col-6">
+    <h2>
+      <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" height="16" width="16" />
+      {{ I18ns.statistics.team.teamMembers.title }}
+      <span class="ms-2 alto-badge" [style]="team.id | teamColor">{{ team.name }}</span>
+    </h2>
+    <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.teamMembers.subtitle }}</p>
+  </div>
+
+  <div class="d-flex">
+    <alto-input-search [searchControl]="membersTableSearchControl"></alto-input-search>
+  </div>
 </div>
 
 <alto-placeholder-manager [status]="membersTableStatus">
@@ -104,26 +107,26 @@
           <th scope="col" class="w-25">
             {{ I18ns.statistics.team.membersEngagement.table.name }}
           </th>
-          <th *ngIf="hasConnector" scope="col" class="text-center">
+          <th *ngIf="company.isConnectorActive" scope="col" class="text-center">
             {{ I18ns.statistics.team.membersEngagement.table.answersProgression }}
           </th>
-          <th *ngIf="hasConnector" scope="col" class="text-center">
+          <th *ngIf="company.isConnectorActive" scope="col" class="text-center">
             {{ I18ns.statistics.team.membersEngagement.table.answers }}
           </th>
-          <th *ngIf="hasConnector" scope="col" class="text-center">
+          <th *ngIf="company.isConnectorActive" scope="col" class="text-center">
             {{ I18ns.statistics.team.membersEngagement.table.questionsPushed }}
           </th>
           <th scope="col" class="text-center">
             {{ I18ns.statistics.team.membersEngagement.table.submitedQuestions }}
           </th>
-          <th scope="col" class="wtext-center">
+          <th scope="col" class="text-center">
             {{ I18ns.statistics.team.membersEngagement.table.comments }}
           </th>
         </tr>
       </thead>
       <tbody>
         <tr
-          *ngFor="let user of paginatedMembersTable"
+          *ngFor="let user of membersTable"
           [routerLink]="[
             '/',
             AltoRoutes.lead,
@@ -136,7 +139,7 @@
           <td>
             <alto-profile-card [user]="user.owner"></alto-profile-card>
           </td>
-          <td *ngIf="hasConnector" class="text-center">
+          <td *ngIf="company.isConnectorActive" class="text-center">
             <span
               *ngIf="user.questionsPushedCount; else noQuestionProgression"
               class="alto-score"
@@ -147,7 +150,7 @@
               I18ns.statistics.globalEngagement.teamsTable.columns.noQuestions
             }}</ng-template>
           </td>
-          <td *ngIf="hasConnector">
+          <td *ngIf="company.isConnectorActive">
             <p class="alto-grey text-center" *ngIf="user.answeredQuestionsCount > 0; else noAnswers">
               {{ user.answeredQuestionsCount }}
             </p>
@@ -157,7 +160,7 @@
               </p>
             </ng-template>
           </td>
-          <td *ngIf="hasConnector">
+          <td *ngIf="company.isConnectorActive">
             <p *ngIf="user.questionsPushedCount > 0; else noQuestionsPushed" class="alto-grey text-center">
               {{ user.questionsPushedCount }}
             </p>
@@ -200,10 +203,9 @@
     </table>
     <alto-pagination
       class="mx-4 d-block"
-      [collectionSize]="membersTable.length"
-      (pageChange)="changeMembersTablePage($event)"
-      [pageSize]="membersTablePageSize"
-      [page]="membersTablePage"
+      [pageControl]="membersTablePageControl"
+      [itemsPerPage]="membersTablePageSize"
+      [itemsCount]="membersTableItemsCount"
     ></alto-pagination>
   </div>
   <div class="nodata-placeholder text-center" noData>

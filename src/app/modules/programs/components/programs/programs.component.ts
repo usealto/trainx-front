@@ -1,31 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { QuestionSubmittedDtoApi, TagDtoApi, TagStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Observable, combineLatest, switchMap, tap } from 'rxjs';
+import { FormControl } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { TagDtoApi } from '@usealto/sdk-ts-angular';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
-import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { ILeadData } from '../../../../core/resolvers/lead.resolver';
+import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
-import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
-import { ScoreDuration, ScoreFilter } from '../../../shared/models/score.model';
-import { QuestionDisplay } from '../../models/question.model';
-import { TagFilters } from '../../models/tag.model';
-import { ProgramsStore } from '../../programs.store';
-import { QuestionsRestService } from '../../services/questions-rest.service';
-import { TagsRestService } from '../../services/tags-rest.service';
-import { TagsServiceService } from '../../services/tags-service.service';
-import { TagsFormComponent } from '../tags/tag-form/tag-form.component';
+import { Company } from '../../../../models/company.model';
+import { ITabOption } from '../../../shared/components/tabs/tabs.component';
+import { User } from '../../../../models/user.model';
+import { IAppData } from '../../../../core/resolvers';
 
-interface TagDisplay extends TagDtoApi {
-  score?: number;
+enum EProgramsTabs {
+  Programs = 'programs',
+  Questions = 'questions',
+  Tags = 'tags',
 }
 
-@UntilDestroy()
 @Component({
   selector: 'alto-programs',
   templateUrl: './programs.component.html',
@@ -36,183 +29,26 @@ export class ProgramsComponent implements OnInit {
   Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
-  //
-  activeProgramCount = 0;
 
-  //
-  pillsRowDisplayLimit = 3;
-  submittedQuestions: QuestionSubmittedDtoApi[] = [];
-  submittedQuestionsPage = 1;
-  submittedQuestionsCount = 0;
-  submittedQuestionsPageSize = 10;
-  isSubmittedQuestionsLoading = true;
-  //
-  tags!: TagDtoApi[];
-  paginatedTags!: TagDtoApi[];
-  tagsPage = 1;
-  tagsCount = 0;
-  tagsPageSize = 10;
-  isTagsLoading = true;
-  tagPrograms = new Map<string, string[]>();
-  isTagProgramsLoading = true;
-  tagFilters: TagFilters = { programs: [], contributors: [], search: '', score: '' };
-  tagsScore = new Map<string, number>();
-  isFilteredTags = false;
-  selectedScore = [];
+  company!: Company;
+  tags: TagDtoApi[] = [];
+  EProgramsTabs = EProgramsTabs;
 
-  tabData = [
-    { label: I18ns.programs.tabs.programs, value: 'programs' },
-    { label: I18ns.programs.tabs.questions, value: 'questions' },
-    { label: I18ns.programs.tabs.tags, value: 'tags' },
+  readonly tabOptions: ITabOption[] = [
+    { label: I18ns.programs.tabs.programs, value: EProgramsTabs.Programs },
+    { label: I18ns.programs.tabs.questions, value: EProgramsTabs.Questions },
+    { label: I18ns.programs.tabs.tags, value: EProgramsTabs.Tags },
   ];
-  activeTab = this.tabData[0].value;
+  activeTab = new FormControl(this.tabOptions[0], { nonNullable: true });
 
   constructor(
-    private readonly scoresRestServices: ScoresRestService,
-    private readonly offcanvasService: NgbOffcanvas,
-    private readonly tagRestService: TagsRestService,
-    private readonly tagsService: TagsServiceService,
-    public readonly teamStore: TeamStore,
-    public readonly programsStore: ProgramsStore,
-    private readonly questionsService: QuestionsRestService,
-    private modalService: NgbModal,
-    private readonly scoreService: ScoresService,
-    private replaceInTranslationPipe: ReplaceInTranslationPipe,
+    private readonly resolversService: ResolversService,
+    private readonly activatedRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
-    this.getScoresFromTags().subscribe();
-    setTimeout(() => {
-      combineLatest([
-        this.questionsService.getQuestions(),
-        this.scoresRestServices.getQuestionsStats(ScoreDuration.All, false),
-      ])
-        .pipe(
-          tap(([questions, questionScores]) => {
-            this.programsStore.questionsInitList.value = questions.map((q) => {
-              return {
-                ...q,
-                score: questionScores.find((qs) => qs.id === q.id)?.score || 0,
-              } as QuestionDisplay;
-            });
-          }),
-          untilDestroyed(this),
-        )
-        .subscribe();
-    }, 1000);
-  }
-
-  handleTabChange(value: any) {
-    this.activeTab = value;
-    this.resetFilters();
-  }
-
-  deleteTag(tag: TagDtoApi) {
-    const modalRef = this.modalService.open(DeleteModalComponent, { centered: true, size: 'md' });
-
-    const componentInstance = modalRef.componentInstance as DeleteModalComponent;
-    componentInstance.data = {
-      title: this.replaceInTranslationPipe.transform(I18ns.tags.deleteModal.title, tag.name),
-      subtitle: this.replaceInTranslationPipe.transform(
-        I18ns.tags.deleteModal.subtitle,
-        tag.questionsCount ?? 0,
-      ),
-    };
-    componentInstance.objectDeleted
-      .pipe(
-        switchMap(() => this.tagRestService.deleteTag(tag?.id ?? '')),
-        tap(() => {
-          modalRef.close();
-          this.tagRestService.resetTags();
-          this.getTags();
-        }),
-        untilDestroyed(this),
-      )
-      .subscribe();
-  }
-
-  getScoresFromTags(): Observable<TagStatsDtoApi[]> {
-    return this.scoresRestServices.getTagsStats(ScoreDuration.All, false).pipe(
-      tap((stats) => {
-        stats.forEach((stat) => {
-          this.tagsScore.set(stat.tag.id, stat.score || 0);
-        });
-      }),
-    );
-  }
-
-  @memoize()
-  getTagScore(id: string): number {
-    const output = this.tagsScore.get(id) || 0;
-    return isNaN(output) ? 0 : output;
-  }
-
-  getTags(
-    {
-      programs = this.tagFilters.programs,
-      contributors = this.tagFilters.contributors,
-      search = this.tagFilters.search,
-      score = this.tagFilters.score,
-    }: TagFilters = this.tagFilters,
-  ) {
-    this.isFilteredTags = true;
-    this.isTagsLoading = true;
-
-    this.tagFilters.programs = programs;
-    this.tagFilters.contributors = contributors;
-    this.tagFilters.search = search;
-    this.tagFilters.score = score;
-
-    this.tagRestService
-      .getTags()
-      .pipe(
-        tap((tags) => {
-          this.tags = this.tagsService.filterTags(tags, {
-            programs,
-            contributors,
-            search,
-          }) as TagDisplay[];
-          this.changeTagsPage(this.tags);
-          this.filterTagsByScore(this.tags as TagDisplay[], this.tagFilters.score);
-          this.isTagsLoading = false;
-        }),
-        untilDestroyed(this),
-      )
-      .subscribe();
-  }
-
-  filterTagsByScore(tags: TagDisplay[], score?: string) {
-    if (!score) return;
-    tags.forEach((tag) => (tag.score = this.getTagScore(tag.id)));
-    tags = this.scoreService.filterByScore(tags, score as ScoreFilter, true);
-
-    this.changeTagsPage(tags);
-  }
-
-  openTagForm(tag?: TagDtoApi) {
-    const canvasRef = this.offcanvasService.open(TagsFormComponent, {
-      position: 'end',
-      panelClass: 'overflow-auto',
-    });
-
-    canvasRef.componentInstance.tag = tag;
-    canvasRef.componentInstance.createdTag.pipe(tap(() => this.getTags())).subscribe();
-  }
-
-  changeTagsPage(tags: TagDtoApi[]) {
-    if (this.tagsPage > Math.ceil(tags.length / this.tagsPageSize)) {
-      this.tagsPage = 1;
-    }
-    this.tagsCount = tags.length;
-    this.paginatedTags = tags.slice(
-      (this.tagsPage - 1) * this.tagsPageSize,
-      this.tagsPage * this.tagsPageSize,
-    );
-  }
-
-  resetFilters() {
-    this.getTags((this.tagFilters = {}));
-    this.selectedScore = [];
-    this.isFilteredTags = false;
+    const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.company = (data[EResolvers.LeadResolver] as ILeadData).company;
+    this.tags = (data[EResolvers.LeadResolver] as ILeadData).tags;
   }
 }

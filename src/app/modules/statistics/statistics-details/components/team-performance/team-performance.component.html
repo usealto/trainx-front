@@ -1,4 +1,4 @@
-<div class="mb-5">
+<div class="d-flex justify-content-between align-items-center mb-5">
   <div class="col-6">
     <h2>
       <img class="emoji" [src]="EmojiName.FlexedBiceps | emoji" height="16" width="16" />
@@ -7,56 +7,68 @@
     </h2>
     <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.masteryLevel.subtitle }}</p>
   </div>
+
+  <div class="d-flex align-items-center">
+    <alto-time-picker
+      [durationControl]="durationControl"
+    ></alto-time-picker>
+  </div>
 </div>
-<alto-placeholder-manager [status]="teamChartStatus">
-  <div class="panel mb-4">
-    <div class="float-end">
-      <alto-time-picker
-        class="me-4"
-        [duration]="duration"
-        (durationSelected)="updateTimePicker($event)"
-      ></alto-time-picker>
-      <alto-dropdown-filter
-        [data]="members"
-        [selectedItems]="selectedMembers"
-        [displayLabel]="'firstname'"
-        [placeholder]="I18ns.statistics.team.masteryLevel.teamFilter"
-        (selectChange)="filterMembers($event)"
-      ></alto-dropdown-filter>
+
+<div class="panel mb-4">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h3>{{ I18ns.statistics.team.masteryLevel.chartTitle }}</h3>
+      <p class="alto-grey mb-4">
+        {{ I18ns.statistics.team.masteryLevel.chartSubtitle }}
+      </p>
     </div>
-    <h3>{{ I18ns.statistics.team.masteryLevel.chartTitle }}</h3>
-    <p class="alto-grey mb-4">
-      {{ I18ns.statistics.team.masteryLevel.chartSubtitle }}
-    </p>
+
+
+    <alto-input-multiple-select
+    class="me-4"
+    [placeholder]="I18ns.statistics.team.masteryLevel.teamFilter"
+    [controls]="membersFilterControl"
+    [options]="membersOptions"
+    [enableSearch]="true"
+    >
+    </alto-input-multiple-select>
+  </div>
+
+
+  <alto-placeholder-manager [status]="teamChartStatus">
     <div class="chart-container">
       <alto-chart-basicline [chartOption]="teamChartOption"></alto-chart-basicline>
     </div>
-  </div>
-  <div class="nodata-placeholder" noData>
-    <h3 class="mb-5 fs-6">
-      {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}
-    </h3>
-    <div class="text-center">
-      <img [src]="EmojiName.FlexedBiceps | emoji" height="24" width="24" />
-      <p class="mt-3">
-        {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderTitle }}
-      </p>
-      <span class="d-inline-block mt-3">
-        {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderSubtitle }}
-      </span>
+
+    <div class="nodata-placeholder" noData>
+      <h3 class="mb-5 fs-6">
+        {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}
+      </h3>
+      <div class="text-center">
+        <img [src]="EmojiName.FlexedBiceps | emoji" height="24" width="24" />
+        <p class="mt-3">
+          {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderTitle }}
+        </p>
+        <span class="d-inline-block mt-3">
+          {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderSubtitle }}
+        </span>
+      </div>
     </div>
-  </div>
-  <div class="skeleton-panel mb-5" style="height: 497px" loading></div>
-</alto-placeholder-manager>
+
+    <div class="skeleton-panel mb-5" style="height: 497px" loading></div>
+  </alto-placeholder-manager>
+</div>
+
 
 <alto-placeholder-manager [status]="membersLeaderboardStatus">
   <alto-leaderboard
-    [config]="['score']"
-    [title]="I18ns.statistics.team.masteryLevel.leaderboard"
-    [subtitle]="I18ns.statistics.team.masteryLevel.leaderboardSubtitle"
-    [data]="membersLeaderboard"
-    [size]="3"
-  >
+  *ngIf="membersLeaderboardStatus === EPlaceholderStatus.GOOD"
+  [config]="['score']"
+  [title]="I18ns.statistics.team.masteryLevel.leaderboard"
+  [subtitle]="I18ns.statistics.team.masteryLevel.leaderboardSubtitle"
+  [data]="membersLeaderboard"
+  [size]="3">
   </alto-leaderboard>
   <div class="nodata-placeholder" noData>
     <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}</h2>
@@ -81,89 +93,71 @@
   </div>
 </div>
 
-<alto-placeholder-manager [status]="spiderChartDataStatus">
-  <div class="panel mb-4">
-    <alto-dropdown-filter
-      class="float-end"
-      [data]="tags"
-      [selectedItems]="selectedTags"
-      [displayLabel]="'name'"
-      [placeholder]="I18ns.statistics.team.perThemes.tagFilter"
-      (selectChange)="filterTags($event)"
-    ></alto-dropdown-filter>
-    <h3>{{ I18ns.statistics.team.perThemes.chartTitle }}</h3>
-    <p class="alto-grey mb-4">
-      {{ I18ns.statistics.team.perThemes.chartSubtitle }}
-    </p>
-    <div
-      *ngIf="selectedTags.length >= 3 && selectedTags.length <= 6; else filterError"
-      class="chart-container"
+<div class="panel mb-4">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h3>{{ I18ns.statistics.team.perThemes.chartTitle }}</h3>
+      <p class="alto-grey mb-4">
+        {{ I18ns.statistics.team.perThemes.chartSubtitle }}
+      </p>
+    </div>
+
+    <alto-input-multiple-select
+    class="me-4"
+    [placeholder]="I18ns.statistics.team.perThemes.tagFilter"
+    [controls]="tagsControl"
+    [options]="tagsOptions"
+    [enableSearch]="true"
     >
+    </alto-input-multiple-select>
+  </div>
+
+  <alto-placeholder-manager [status]="spiderChartDataStatus">
+    <div class="chart-container">
       <alto-chart-radar [chartOption]="spiderChartOptions"></alto-chart-radar>
     </div>
-    <ng-template #filterError>
-      <div class="nodata-placeholder d-flex align-items-center justify-content-center" style="height: 366px">
+
+    <div class="nodata-placeholder" noData>
+      <div
+      *ngIf="tagsControl.value.length < 3 || tagsControl.value.length > 6; else noDataPlaceholder"
+      class="nodata-placeholder d-flex align-items-center justify-content-center"
+      style="height: 366px"
+      >
         <div class="text-center">
           <img [src]="EmojiName.FaceWithMonocle | emoji" height="24" width="24" />
           <p class="mt-3">
-            {{
-              selectedTags.length <= 3
-                ? I18ns.statistics.user.performance.themeMastering.spiderChart.placeholder.lessThan3Tags
-                : I18ns.statistics.user.performance.themeMastering.spiderChart.placeholder.MoreThan6Tags
-            }}
+            {{ tagsControl.value.length < 3 ? I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.lessThan3Tags : I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.moreThan6Tags}}
           </p>
         </div>
       </div>
-    </ng-template>
-  </div>
 
-  <div class="nodata-placeholder" noData>
-    <h2 class="mb-5 fs-6">
-      {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}
-    </h2>
-    <div class="text-center">
-      <img [src]="EmojiName.FourOclock | emoji" height="24" width="24" />
-      <p class="mt-3">
-        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholder.noData }}
-      </p>
-      <span class="d-inline-block mt-3">
-        {{
-          I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholder
-            .noDataSubtitle
-        }}
-      </span>
-    </div>
-  </div>
-  <div class="nodata-placeholder" empty>
-    <h2 class="mb-5 fs-6">
-      {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.title }}
-    </h2>
-    <div class="text-center">
-      <img [src]="EmojiName.FourOclock | emoji" height="24" width="24" />
-      <p class="mt-3">
-        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholder.empty }}
-      </p>
-      <button
-        [routerLink]="'/' + AltoRoutes.lead + '/' + AltoRoutes.programs"
-        class="mt-3 btn btn-outline-secondary"
-      >
-        <i class="ps-0 bi bi-plus fs-3"></i>
-        {{ I18ns.statistics.globalPerformance.perThemePerformance.scoreEvolutionChart.placeholder.createTag }}
-      </button>
-    </div>
-  </div>
-  <div class="skeleton-panel mb-5" style="height: 497px" loading></div>
-</alto-placeholder-manager>
+      <ng-template #noDataPlaceholder>
+        <h2 class="mb-5 fs-6">
+          {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.title }}
+        </h2>
+        <div class="text-center">
+          <img [src]="EmojiName.FourOclock | emoji" height="24" width="24" />
+          <p class="mt-3">
+            {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.noData }}
+          </p>
+        </div>
+      </ng-template>
 
-<alto-placeholder-manager [status]="tagsLeaderboardStatus">
+    </div>
+    <div class="skeleton-panel mb-5" style="height: 500px" loading></div>
+  </alto-placeholder-manager>
+</div>
+
+<alto-placeholder-manager [status]="tagsDataStatus">
   <alto-leaderboard
-    [config]="['score']"
-    [title]="I18ns.statistics.team.perThemes.leaderboardTitle"
-    [subtitle]="I18ns.statistics.team.perThemes.leaderboardSubtitle"
-    [data]="tagsLeaderboard"
-    [size]="3"
-  >
+  *ngIf="tagsDataStatus === EPlaceholderStatus.GOOD"
+  [config]="['score']"
+  [title]="I18ns.statistics.team.perThemes.leaderboardTitle"
+  [subtitle]="I18ns.statistics.team.perThemes.leaderboardSubtitle"
+  [data]="tagsLeaderboard"
+  [size]="3" >
   </alto-leaderboard>
+
   <div class="nodata-placeholder" noData>
     <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.title }}</h2>
     <div class="text-center">
@@ -171,15 +165,16 @@
       <p class="mt-3">{{ I18ns.statistics.globalPerformance.perThemePerformance.control.placeholder }}</p>
     </div>
   </div>
+
   <div class="skeleton-panel mb-5" style="height: 334px" loading></div>
 </alto-placeholder-manager>
+
 <hr class="my-7" />
 
 <div class="mb-5">
   <alto-time-picker
     class="float-end"
-    [duration]="duration"
-    (durationSelected)="updateTimePicker($event)"
+    [durationControl]="durationControl"
   ></alto-time-picker>
   <div class="col-6">
     <h2>
@@ -189,10 +184,12 @@
     </h2>
     <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.members.subtitle }}</p>
   </div>
-  <alto-search (searchChange)="getMembersTable(duration, $event)"></alto-search>
+  <div class="d-flex">
+    <alto-input-search class="me-auto" [searchControl]="membersSearchControl"></alto-input-search>
+  </div>
 </div>
 <alto-placeholder-manager [status]="membersTableDataStatus">
-  <div class="table-panel">
+  <div *ngIf="membersTableDataStatus === 'good'" class="table-panel">
     <table class="table">
       <thead>
         <tr>
@@ -206,26 +203,26 @@
       </thead>
       <tbody>
         <tr
-          *ngFor="let member of displayMemberTables"
+          *ngFor="let memberInfos of membersInfos"
           [routerLink]="[
             '/',
             AltoRoutes.lead,
             AltoRoutes.statistics,
             AltoRoutes.statUser,
             AltoRoutes.performance,
-            member.id
+            memberInfos.user.id
           ]"
         >
           <td class="px-4">
-            <alto-profile-card [user]="member.user"></alto-profile-card>
+            <alto-profile-card [user]="memberInfos.user"></alto-profile-card>
           </td>
           <td class="text-center">
             <span
-              *ngIf="member.score; else noScore"
+              *ngIf="memberInfos.userStats.score !== undefined; else noScore"
               class="alto-score"
-              [class]="(member.score || 0) * 100 | pillColor"
+              [class]="(memberInfos.userStats.score) * 100 | pillColor"
             >
-              {{ member.score | percent }}
+              {{ memberInfos.userStats.score | percent }}
             </span>
             <ng-template #noScore
               ><p class="alto-grey text-center">{{ I18ns.shared.noScore }}</p></ng-template
@@ -233,8 +230,8 @@
           </td>
           <td class="text-center">
             <alto-progression-badge
-              *ngIf="getMemberProgression(member) !== 0; else noEvolution"
-              [score]="getMemberProgression(member)"
+              *ngIf="memberInfos.progression !== undefined; else noEvolution"
+              [score]="memberInfos.progression"
             ></alto-progression-badge>
             <ng-template #noEvolution>
               <p class="alto-grey text-center">{{ I18ns.shared.noEvolution }}</p></ng-template
@@ -242,10 +239,10 @@
           </td>
           <td>
             <alto-colored-pill-list
-              *ngIf="member.tags.length > 0; else noTag"
+              *ngIf="memberInfos.userStats.tags; else noTag"
               color="primary"
               [textLimit]="15"
-              [data]="member.tags || [] | sort : 'asc' : 'score' | slice : 0 : 3"
+              [data]="memberInfos.userStats.tags | sort : 'asc' : 'score' | slice : 0 : 3"
             ></alto-colored-pill-list>
             <ng-template #noTag>
               <p class="alto-grey">{{ I18ns.shared.noTag }}</p>
@@ -256,10 +253,9 @@
     </table>
     <alto-pagination
       class="mx-4 d-block"
-      [collectionSize]="membersTable.length"
-      (pageChange)="changeMembersPage($event)"
-      [pageSize]="membersTablePageSize"
-      [page]="membersTablePage"
+      [pageControl]="membersPageControl"
+      [itemsPerPage]="membersTablePageSize"
+      [itemsCount]="membersTotalItems"
     ></alto-pagination>
   </div>
   <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noData>
@@ -276,8 +272,7 @@
 <div class="mb-5">
   <alto-time-picker
     class="float-end"
-    [duration]="duration"
-    (durationSelected)="updateTimePicker($event)"
+    [durationControl]="durationControl"
   ></alto-time-picker>
   <div class="col-6">
     <h2>
@@ -287,14 +282,14 @@
     </h2>
     <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.questions.subtitle }}</p>
   </div>
-  <alto-search
-    [searchItems]="questionsTableSearch"
-    (searchChange)="filterQuestionsTable({ search: $event })"
-  ></alto-search>
-  <alto-score-filter
-    class="float-end"
-    (selectChange)="filterQuestionsTable({ score: $event })"
-  ></alto-score-filter>
+  <div class="d-flex justify-content-between">
+    <alto-input-search [searchControl]="questionsSearchControl"></alto-input-search>
+    <alto-input-single-select-pill
+    [placeholder]="I18ns.shared.level"
+    [control]="questionsScoreControl"
+    [options]="scoreOptions">
+    </alto-input-single-select-pill>
+  </div>
 </div>
 
 <alto-placeholder-manager [status]="questionsTableDataStatus">
@@ -315,17 +310,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let question of displayQuestionsTables">
+        <tr *ngFor="let questionInfos of questionsInfos">
           <td>
-            <p class="alto-grey">{{ question.label }}</p>
+            <p class="alto-grey">{{ questionInfos.question.title }}</p>
           </td>
           <td class="text-center">
             <span
-              *ngIf="question.score; else noScore"
+              *ngIf="questionInfos.questionStats.score !== undefined; else noScore"
               class="alto-score"
-              [class]="(question.score || 0) * 100 | pillColor"
+              [class]="(questionInfos.questionStats.score) * 100 | pillColor"
             >
-              {{ question.score | percent }}
+              {{ questionInfos.questionStats.score | percent }}
             </span>
             <ng-template #noScore
               ><p class="alto-grey text-center">{{ I18ns.shared.noScore }}</p></ng-template
@@ -333,16 +328,16 @@
           </td>
           <td class="text-center">
             <alto-progression-badge
-              *ngIf="getQuestionProgression(question) !== 0; else noEvolution"
-              [score]="getQuestionProgression(question)"
+              *ngIf="questionInfos.progression !== undefined; else noEvolution"
+              [score]="questionInfos.progression"
             ></alto-progression-badge>
             <ng-template #noEvolution>
               <p class="alto-grey text-center">{{ I18ns.shared.noEvolution }}</p></ng-template
             >
           </td>
           <td class="text-center">
-            <p *ngIf="question.usersCount > 0; else noMember">
-              {{ question.usersCount }}
+            <p *ngIf="questionInfos.questionStats.usersCount > 0; else noMember">
+              {{ questionInfos.questionStats.usersCount }}
             </p>
             <ng-template #noMember>
               {{ I18ns.statistics.team.questions.table.noMember }}
@@ -353,11 +348,19 @@
     </table>
     <alto-pagination
       class="mx-4 d-block"
-      [collectionSize]="questionsTable.length"
-      (pageChange)="changeQuestionsPage($event)"
-      [pageSize]="questionsTablePageSize"
-      [page]="questionsTablePage"
+      [pageControl]="questionsPageControl"
+      [itemsPerPage]="questionsTablePageSize"
+      [itemsCount]="questionsTotalItems"
     ></alto-pagination>
+  </div>
+  <div class="nodata-placeholder text-center" noResult>
+    <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+    <p class="mt-3">{{ I18ns.shared.noData }}</p>
+    <span class="mt-3 d-block">{{ I18ns.shared.noDataSubtitle }}</span>
+    <button class="btn btn-primary mt-4" (click)="resetQuestionsFilters()">
+      <i class="bi bi-arrow-clockwise"></i>
+      {{ I18ns.shared.resetFilters }}
+    </button>
   </div>
   <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noData>
     <div class="text-center">

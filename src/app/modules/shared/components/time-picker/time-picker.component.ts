@@ -1,24 +1,26 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { ScoreDuration } from 'src/app/modules/shared/models/score.model';
+import { EScoreDuration } from '../../../../models/score.model';
+
+export type TimePickerOption = EScoreDuration.Year | EScoreDuration.Trimester | EScoreDuration.Month;
 
 @Component({
   selector: 'alto-time-picker',
   templateUrl: './time-picker.component.html',
   styleUrls: ['./time-picker.component.scss'],
 })
-export class TimePickerComponent implements OnInit {
+export class TimePickerComponent {
   I18ns = I18ns;
-  @Input() duration: ScoreDuration = ScoreDuration.Trimester;
-  @Output() durationSelected = new EventEmitter<string>();
-  ID = '';
+  ScoreDuration = EScoreDuration;
+  @Input() durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(
+    EScoreDuration.Year,
+    {
+      nonNullable: true,
+    },
+  );
 
-  ngOnInit(): void {
-    this.ID = 'timePicker' + Math.round(Math.random() * 1000);
-  }
-
-  updateTimePicker(event: any) {
-    this.duration = event.target.value;
-    this.durationSelected.emit(this.duration);
+  changeDuration(duration: EScoreDuration): void {
+    this.durationControl.patchValue(duration);
   }
 }

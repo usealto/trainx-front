@@ -1,18 +1,25 @@
 import { createReducer, on } from '@ngrx/store';
 import { Company, ICompany } from '../../../models/company.model';
+import { Program } from '../../../models/program.model';
 import { Team } from '../../../models/team.model';
 import { IUser, User } from '../../../models/user.model';
 import {
+  addProgram,
   addUser,
+  deleteProgram,
+  patchUser,
   removeUser,
   setCompany,
-  updateCompany,
+  setPrograms,
+  setTags,
   setTeams,
-  setTimestamp,
+  setTeamsStats,
   setUserMe,
   setUsers,
-  patchUser,
+  updateCompany,
+  updatePrograms,
 } from '../root/root.action';
+import { TagDtoApi } from '@usealto/sdk-ts-angular';
 
 export class TimestampedEntity<T> {
   data: T;
@@ -24,7 +31,7 @@ export class TimestampedEntity<T> {
   }
 
   needsUpdate(): boolean {
-    return this.timestamp === null || Date.now() - this.timestamp.getTime() > 60000;
+    return this.timestamp === null || Date.now() - this.timestamp.getTime() > 120000;
   }
 }
 
@@ -32,26 +39,19 @@ export interface RootState {
   me: TimestampedEntity<User>;
   company: TimestampedEntity<Company>;
   usersById: TimestampedEntity<Map<string, User>>;
-  teamsById: TimestampedEntity<Map<string, Team>>;
-  statsTimestamp?: Date;
+  teamsStatsTimestamp?: Date;
+  tags: TimestampedEntity<TagDtoApi[]>; // TODO : create Tag model in our domain
 }
 
 export const initialState: RootState = {
   me: new TimestampedEntity<User>(new User({} as IUser), null),
   company: new TimestampedEntity<Company>(new Company({} as ICompany), null),
   usersById: new TimestampedEntity<Map<string, User>>(new Map(), null),
-  teamsById: new TimestampedEntity<Map<string, Team>>(new Map(), null),
+  tags: new TimestampedEntity<TagDtoApi[]>([], null),
 };
 
 export const rootReducer = createReducer(
   initialState,
-  on(
-    setTimestamp,
-    (state, { date }): RootState => ({
-      ...state,
-      statsTimestamp: date,
-    }),
-  ),
   on(
     setUserMe,
     (state, { user }): RootState => ({
@@ -95,13 +95,14 @@ export const rootReducer = createReducer(
       ),
     }),
   ),
-  on(
-    setTeams,
-    (state, { teams }): RootState => ({
+  on(setTeams, (state, { teams }): RootState => {
+    const company = new Company({ ...state.company.data.rawData, teams: teams.map((team) => team.rawData) });
+
+    return {
       ...state,
-      teamsById: new TimestampedEntity(new Map<string, Team>(teams.map((team) => [team.id, team]))),
-    }),
-  ),
+      company: new TimestampedEntity(company),
+    };
+  }),
   on(
     setCompany,
     (state, { company }): RootState => ({
@@ -113,7 +114,70 @@ export const rootReducer = createReducer(
     updateCompany,
     (state, { company }): RootState => ({
       ...state,
-      company: new TimestampedEntity(company), // Met à jour l'état de l'entreprise
+      company: new TimestampedEntity(company),
+    }),
+  ),
+  on(setTeamsStats, (state, { teamStats }): RootState => {
+    const teams = state.company.data.teams.map((team) => {
+      const stats = teamStats.filter((stat) => stat.teamId === team.id);
+      return new Team({ ...team.rawData, stats });
+    });
+
+    const company = new Company({ ...state.company.data.rawData, teams });
+
+    return {
+      ...state,
+      teamsStatsTimestamp: new Date(),
+      company: new TimestampedEntity(company),
+    };
+  }),
+  on(setPrograms, (state, { programs }): RootState => {
+    const company = new Company({
+      ...state.company.data,
+      programs: programs.map((program) => program.rawData),
+    });
+
+    return {
+      ...state,
+      company: new TimestampedEntity(company),
+    };
+  }),
+  on(updatePrograms, (state, { programs }): RootState => {
+    const programsById: Map<string, Program> = new Map(
+      state.company.data.programs.map((program) => [program.id, program]),
+    );
+    programs.forEach((program) => programsById.set(program.id, program));
+    const company = new Company({ ...state.company.data, programs: [...programsById.values()] });
+
+    return {
+      ...state,
+      company: new TimestampedEntity(company),
+    };
+  }),
+  on(addProgram, (state, { program }): RootState => {
+    const programsById = state.company.data.programById.set(program.id, program);
+    const company = new Company({ ...state.company.data, programs: [...programsById.values()] });
+
+    return {
+      ...state,
+      company: new TimestampedEntity(company),
+    };
+  }),
+  on(deleteProgram, (state, { programId }): RootState => {
+    const updatedProgramsById = new Map(state.company.data.programById);
+    updatedProgramsById.delete(programId);
+    const company = new Company({ ...state.company.data, programs: [...updatedProgramsById.values()] });
+
+    return {
+      ...state,
+      company: new TimestampedEntity(company),
+    };
+  }),
+  on(
+    setTags,
+    (state, { tags }): RootState => ({
+      ...state,
+      tags: new TimestampedEntity(tags),
     }),
   ),
 );

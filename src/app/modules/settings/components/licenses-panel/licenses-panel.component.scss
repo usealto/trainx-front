@@ -12,6 +12,12 @@
     color: var(--error-600);
   }
   border: 1px solid var(--error-200);
+
+  .tooltip-text {
+    p {
+      color: white;
+    }
+  }
 }
 
 .btn {

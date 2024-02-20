@@ -12,6 +12,7 @@ export const reducers: ActionReducerMap<AppState> = {
 export const selectRoot = (state: AppState) => state.root;
 
 export const selectUserMe = createSelector(selectRoot, (state) => state.me);
-export const selectTeams = createSelector(selectRoot, (state) => state.teamsById);
 export const selectUsers = createSelector(selectRoot, (state) => state.usersById);
 export const selectCompany = createSelector(selectRoot, (state) => state.company);
+export const selectTeamsStatsTimestamp = createSelector(selectRoot, (state) => state.teamsStatsTimestamp);
+export const selectTags = createSelector(selectRoot, (state) => state.tags);

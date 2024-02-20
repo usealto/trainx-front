@@ -1,6 +1,6 @@
 import { type Meta, type StoryObj } from '@storybook/angular';
 import { TimePickerComponent } from './time-picker.component';
-import { ScoreDuration } from '../../models/score.model';
+import { EScoreDuration } from '../../models/score.model';
 
 const meta: Meta<TimePickerComponent> = {
   title: 'Shared/TimePicker',
@@ -20,6 +20,6 @@ export const TimePicker: Story = {};
 
 export const TimePickerDuration: Story = {
   args: {
-    duration: ScoreDuration.Year,
+    duration: EScoreDuration.Year,
   },
 };

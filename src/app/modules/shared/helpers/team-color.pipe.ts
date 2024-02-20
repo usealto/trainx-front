@@ -1,11 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { TPillColor } from '../models/select-option.model';
 
 @Pipe({
   name: 'teamColor',
 })
 export class TeamColorPipe implements PipeTransform {
-  colorCodes = [
+  colorCodes: TPillColor[] = [
     { color: '#344054', bg: '#f2f4f7' },
     { color: '#175cd3', bg: '#eff8ff' },
     { color: '#b32318', bg: '#fef3f2' },
@@ -24,7 +25,7 @@ export class TeamColorPipe implements PipeTransform {
 
   @memoize()
   transform(id?: string): string {
-    if(!id) {
+    if (!id) {
       return `background-color: ${this.colorCodes[0].bg}; color: ${this.colorCodes[0].color}`;
     }
     const num = this.extractNumber(id);

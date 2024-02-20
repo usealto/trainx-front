@@ -1,2 +1,4 @@
-<alto-team-performance *ngIf="type === 'team'"></alto-team-performance>
-<alto-user-performance *ngIf="type === 'user'"></alto-user-performance>
+<ng-container [ngSwitch]="activeTab.value.value">
+  <alto-team-performance *ngSwitchCase="EStatisticsDetailsPerformanceTabs.Team"></alto-team-performance>
+  <alto-user-performance *ngSwitchCase="EStatisticsDetailsPerformanceTabs.User"></alto-user-performance>
+</ng-container>

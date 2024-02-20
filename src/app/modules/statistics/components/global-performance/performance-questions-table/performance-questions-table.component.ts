@@ -1,126 +1,136 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { QuestionStatsDtoApi, QuestionStatsTeamDtoApi } from '@usealto/sdk-ts-angular';
-import { switchMap, tap } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import {
+  GetQuestionsStatsRequestParams,
+  QuestionDtoApi,
+  QuestionStatsDtoApi,
+  QuestionStatsTeamDtoApi,
+} from '@usealto/sdk-ts-angular';
+import { Subscription, combineLatest, concat, debounceTime, of, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import { memoize } from 'src/app/core/utils/memoize/memoize';
-import { TeamStore } from 'src/app/modules/lead-team/team.store';
-import { QuestionFilters } from 'src/app/modules/programs/models/question.model';
-import { ProgramsStore } from 'src/app/modules/programs/programs.store';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
+import { PillOption } from 'src/app/modules/shared/models/select-option.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { Score, EScoreFilter, EScoreDuration } from '../../../../../models/score.model';
+import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 
-@UntilDestroy()
+interface IQuestionInfos {
+  question: QuestionDtoApi;
+  currentStats: QuestionStatsDtoApi;
+  previousStats?: QuestionStatsDtoApi;
+  progression?: number;
+}
+
 @Component({
   selector: 'alto-performance-questions-table',
   templateUrl: './performance-questions-table.component.html',
   styleUrls: ['./performance-questions-table.component.scss'],
 })
-export class PerformanceQuestionsTableComponent implements OnInit, OnChanges {
+export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
+  EPlaceholderStatus = EPlaceholderStatus;
+  AltoRoutes = AltoRoutes;
 
-  @Input() duration: ScoreDuration = ScoreDuration.Year;
+  @Input() durationControl: FormControl<EScoreDuration> = new FormControl(EScoreDuration.Year, {
+    nonNullable: true,
+  });
 
-  questionFilters: QuestionFilters = {
-    programs: [],
-    tags: [],
-    teams: [],
-    search: '',
-  };
-
-  questions: QuestionStatsDtoApi[] = [];
-  questionsPreviousPeriod: QuestionStatsDtoApi[] = [];
-  questionsDisplay: QuestionStatsDtoApi[] = [];
-  paginatedQuestions: QuestionStatsDtoApi[] = [];
-  questionsDataStatus: PlaceholderDataStatus = 'loading';
-  questionsPage = 1;
+  questions: IQuestionInfos[] = [];
+  questionsCount = 0;
+  questionsDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
+  questionsPageControl = new FormControl(1, { nonNullable: true });
   questionsPageSize = 5;
 
-  scoreIsLoading = false;
+  scoreOptions: PillOption[] = Score.getFiltersPillOptions();
 
-  constructor(
-    public readonly teamStore: TeamStore,
-    public readonly programsStore: ProgramsStore,
-    private readonly scoreRestService: ScoresRestService,
-    private readonly scoreService: ScoresService,
-  ) {}
+  scoreControl = new FormControl<PillOption | null>(null);
+  questionSearchControl = new FormControl<string | null>(null);
+
+  private readonly performanceQuestionsTableComponentSubscription = new Subscription();
+
+  constructor(private readonly scoreRestService: ScoresRestService) {}
 
   ngOnInit(): void {
-    this.getQuestionsByDuration();
-  }
+    this.performanceQuestionsTableComponentSubscription.add(
+      combineLatest([
+        combineLatest([
+          concat(
+            of(this.questionSearchControl.value),
+            this.questionSearchControl.valueChanges.pipe(debounceTime(300)),
+          ),
+          this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
+          this.scoreControl.valueChanges.pipe(startWith(this.scoreControl.value)),
+        ]).pipe(tap(() => this.questionsPageControl.setValue(1))),
+        this.questionsPageControl.valueChanges.pipe(startWith(this.questionsPageControl.value)),
+      ])
+        .pipe(
+          switchMap(([[searchTerm, duration, score], page]) => {
+            const req: GetQuestionsStatsRequestParams = {
+              search: searchTerm ?? undefined,
+              page,
+              itemsPerPage: this.questionsPageSize,
+            };
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['duration']?.firstChange && changes['duration']?.currentValue) {
-      this.getQuestionsByDuration();
-    }
-  }
+            switch (score?.value) {
+              case EScoreFilter.Under25:
+                req.scoreBelowOrEqual = 0.25;
+                break;
+              case EScoreFilter.Under50:
+                req.scoreBelowOrEqual = 0.5;
+                break;
+              case EScoreFilter.Under75:
+                req.scoreBelowOrEqual = 0.75;
+                break;
+              case EScoreFilter.Over25:
+                req.scoreAboveOrEqual = 0.25;
+                break;
+              case EScoreFilter.Over50:
+                req.scoreAboveOrEqual = 0.5;
+                break;
+              case EScoreFilter.Over75:
+                req.scoreAboveOrEqual = 0.75;
+                break;
+            }
 
-  getQuestionsFiltered(
-    {
-      duration = this.questionFilters.duration,
-      teams = this.questionFilters.teams,
-      score = this.questionFilters.score,
-      search = this.questionFilters.search,
-    }: QuestionFilters = this.questionFilters,
-  ) {
-    this.questionFilters.duration = duration;
-    this.questionFilters.teams = teams;
-    this.questionFilters.score = score;
-    this.questionFilters.search = search;
+            return combineLatest([
+              this.scoreRestService.getPaginatedQuestionsStats(duration, false, req),
+              this.scoreRestService.getPaginatedQuestionsStats(duration, true, req),
+            ]);
+          }),
+        )
+        .subscribe({
+          next: ([
+            { data: questionsStats = [], meta: questionsStatsMeta },
+            { data: prevQuestionsStats = [] },
+          ]) => {
+            this.questions = questionsStats.map((currentStats) => {
+              const prevStats = prevQuestionsStats.find((t) => t.id === currentStats.id);
+              return {
+                question: currentStats.question,
+                currentStats,
+                previousStats: prevStats,
+                progression:
+                  currentStats.score && prevStats?.score ? currentStats.score - prevStats.score : undefined,
+              };
+            });
 
-    let output: QuestionStatsDtoApi[] = this.questions;
+            this.questionsCount = questionsStatsMeta.totalItems;
 
-    if (search) {
-      output = output.filter((t) => t.question.title.toLowerCase().includes(search.toLowerCase()));
-    }
-    if (teams && teams.length > 0) {
-      output = output.filter((q) => q.teams?.some((t) => teams.some((te) => te === t.id)));
-    }
-    if (score) {
-      output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
-    }
-
-    this.questionsDisplay = output;
-
-    this.changeQuestionsPage(1);
-  }
-
-  getQuestionsByDuration() {
-    this.scoreIsLoading = true;
-    this.scoreRestService
-      .getQuestionsStats(this.duration as ScoreDuration)
-      .pipe(
-        tap((t) => {
-          this.questions = t;
-          this.questionsDisplay = t;
-          this.changeQuestionsPage(1);
+            this.questionsDataStatus =
+              questionsStats.length === 0
+                ? !this.scoreControl.value || !this.questionSearchControl.value
+                  ? EPlaceholderStatus.NO_RESULT
+                  : EPlaceholderStatus.NO_DATA
+                : EPlaceholderStatus.GOOD;
+          },
         }),
-        switchMap(() => this.scoreRestService.getQuestionsStats(this.duration, true)),
-        tap((t) => (this.questionsPreviousPeriod = t)),
-        tap(() => (this.scoreIsLoading = false)),
-        tap(() => this.getQuestionsFiltered()),
-        untilDestroyed(this),
-      )
-      .subscribe();
-  }
-
-  changeQuestionsPage(page: number) {
-    this.questionsPage = page;
-    this.paginatedQuestions = this.questionsDisplay.slice(
-      (page - 1) * this.questionsPageSize,
-      page * this.questionsPageSize,
     );
-    this.questionsDataStatus = this.paginatedQuestions.length === 0 ? 'noData' : 'good';
   }
 
-  @memoize()
-  getQuestionPreviousScore(quest: QuestionStatsDtoApi) {
-    const prevScore = this.questionsPreviousPeriod.filter((t) => t.id === quest.id)[0]?.score || 0;
-    return prevScore && quest.score ? quest.score - prevScore : 0;
+  ngOnDestroy(): void {
+    this.performanceQuestionsTableComponentSubscription.unsubscribe();
   }
 
   getBadTeams(teams: QuestionStatsTeamDtoApi[]) {

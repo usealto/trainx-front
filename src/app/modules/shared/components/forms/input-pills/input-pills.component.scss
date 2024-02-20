@@ -1,0 +1,38 @@
+.dropdown {
+  display: block;
+
+  .dropdown-input {
+    min-height: 3.167rem;
+    border-radius: 3.167rem;
+
+    &.form {
+      border-radius: 0.3rem;
+    }
+  }
+
+  .dropdown-menu {
+    max-width: 200%;
+    max-height: 25rem;
+    overflow-y: scroll;
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    z-index: 1;
+    padding: 0;
+    border-radius: 5px;
+
+    &.show {
+      display: block;
+    }
+
+    .dropdown-item {
+      padding: 8px 10px;
+
+      &:active {
+        background-color: var(--gray-50);
+      }
+    }
+  }
+}
+

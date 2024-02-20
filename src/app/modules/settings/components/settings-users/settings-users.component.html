@@ -2,28 +2,25 @@
   [licensesCount]="company.licenseCount"
   [assignedLicensesCount]="usedLicensesCount"
 ></alto-licenses-panel>
-<h2 class="mt-5">
-  <img
+<div class="table-title mt-5">
+  <h2>
+    <img
     class="emoji"
     [src]="EmojiName.BustsInSilhouette | emoji"
     width="16"
     height="16"
-  />
-  <div class="d-inline-block">
-    {{ I18ns.settings.users.admins }}
+    />
+    <div class="d-inline-block">
+      {{ I18ns.settings.users.admins }}
+    </div>
+  </h2>
+  <p class="alto-grey descriptions">
+    {{ I18ns.settings.users.adminsDesc }}
+  </p>
+    <alto-input-search [searchControl]="adminSearchControl"></alto-input-search>
   </div>
-</h2>
-<p class="alto-grey descriptions mt-3">
-  {{ I18ns.settings.users.adminsDesc }}
-</p>
 
-<div class="row">
-  <alto-search
-    data-cy="filterBySearch"
-    class="float-end d-inline-block"
-    (searchChange)="filterAdmins({ search: $event })"
-  >
-  </alto-search>
+  <alto-placeholder-manager [status]="adminsDataStatus">
 
   <div class="col my-5 px-0">
     <div class="table-panel">
@@ -49,21 +46,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of paginatedAdmins" class="align-middle">
+          <tr *ngFor="let userInfo of adminsDisplay.slice((adminsPage - 1) * adminsPageSize, adminsPage * adminsPageSize)" class="align-middle">
             <td class="px-4">
-              <alto-profile-card [user]="user"></alto-profile-card>
+              <alto-profile-card [user]="userInfo.user"></alto-profile-card>
             </td>
             <td
-              title="{{ user.createdAt | date : 'short' }}"
+              title="{{ userInfo.user.createdAt | date : 'short' }}"
               class="fs-7"
             >
-              {{ user.createdAt | date : "shortDate" }}
+              {{ userInfo.user.createdAt | date : "shortDate" }}
             </td>
             <td
-              title="{{ user.updatedAt | date : 'short' }}"
+              title="{{ userInfo.user.updatedAt | date : 'short' }}"
               class="fs-7"
             >
-              {{ user.updatedAt | date : "shortDate" }}
+              {{ userInfo.user.updatedAt | date : "shortDate" }}
             </td>
             <td>
               <div [hidden]="company.isIntegrationEnabled">
@@ -74,13 +71,13 @@
                 class="alto-badge"
                 [ngStyle]="{
                   'background-color': getBadgeBackgroundColor(
-                    getStatus(company, user)
+                    getStatus(company, userInfo.user)
                   ),
-                  color: getBadgeColor(getStatus(company, user))
+                  color: getBadgeColor(getStatus(company, userInfo.user))
                 }"
               >
                 <div
-                  *ngIf="getStatus(company, user) === 'inactive'"
+                  *ngIf="getStatus(company, userInfo.user) === 'inactive'"
                   class="d-flex align-items-center"
                   ngbTooltip="{{ I18ns.settings.users.usersInactiveTooltip }}"
                   tooltipClass="menu-tooltip-class"
@@ -88,7 +85,7 @@
                   <span>{{ I18ns.settings.users.disable }}</span>
                 </div>
                 <div
-                  *ngIf="getStatus(company, user) === 'active'"
+                  *ngIf="getStatus(company, userInfo.user) === 'active'"
                   class="d-flex align-items-center"
                 >
                   <img
@@ -110,7 +107,7 @@
                   <span>{{ I18ns.settings.users.enable }}</span>
                 </div>
                 <div
-                  *ngIf="getStatus(company, user) === 'warning'"
+                  *ngIf="getStatus(company, userInfo.user) === 'warning'"
                   class="d-flex align-items-center p-2"
                   ngbTooltip="{{ I18ns.settings.users.warningTooltip }}"
                   tooltipClass="menu-tooltip-class"
@@ -127,14 +124,7 @@
               </div>
             </td>
             <td>
-              <div class="ms-2 form-check form-switch">
-                <input
-                  type="checkbox"
-                  class="form-check-input"
-                  (click)="toggleUserLicense(user)"
-                  [checked]="user.hasLicense"
-                />
-              </div>
+              <alto-input-toggle [control]="userInfo.hasLicense"></alto-input-toggle>
             </td>
             <td class="px-4 text-end">
               <div
@@ -147,7 +137,7 @@
               </div>
               <i
                 class="cursor-pointer fs-5 bi bi-pen"
-                (click)="openUserEditionForm(user)"
+                (click)="openUserEditionForm(userInfo.user)"
               ></i>
             </td>
           </tr>
@@ -155,14 +145,22 @@
       </table>
       <alto-pagination
         class="mx-4 d-block"
-        [collectionSize]="adminsDisplay.length"
-        [(page)]="adminsPage"
-        (pageChange)="changeAdminsPage($event)"
-        [pageSize]="adminsPageSize"
+        [pageControl]="adminsPageControl"
+        [itemsCount]="adminsDisplay.length"
+        [itemsPerPage]="adminsPageSize"
       ></alto-pagination>
     </div>
   </div>
-</div>
+  <div noResult class="nodata-placeholder text-center">
+    <p class="mt-3">
+      {{ I18ns.settings.users.noUserFilteredPlaceholderTitle }}
+    </p>
+    <span class="m3 d-block">{{
+      I18ns.settings.users.noUserFilteredPlaceholderSubtitle
+    }}</span>
+  </div>
+  <div loading class="skeleton-panel" style="height: 376px"></div>
+</alto-placeholder-manager>
 
 <hr class="my-7" />
 
@@ -191,15 +189,11 @@
     </button>
   </div>
 
-  <alto-search
-    data-cy="filterBySearch"
-    class="w-50 d-inline-block"
-    (searchChange)="filterUsers({ search: $event })"
-    *ngIf="usersDisplay.length || !userFilterEmpty()"
-  ></alto-search>
+  <alto-input-search [searchControl]="userSearchControl"></alto-input-search>
 </div>
 
-<div class="table-panel" *ngIf="usersDisplay.length; else nouser">
+<alto-placeholder-manager [status]="usersDataStatus">
+<div class="table-panel">
   <table class="table">
     <thead>
       <tr>
@@ -222,21 +216,21 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of paginatedUsers" class="align-middle">
+      <tr *ngFor="let userInfos of usersDisplay.slice((usersPage - 1) * usersPageSize, usersPage * usersPageSize)" class="align-middle">
         <td class="px-4">
-          <alto-profile-card [user]="user"></alto-profile-card>
+          <alto-profile-card [user]="userInfos.user"></alto-profile-card>
         </td>
         <td
-          title="{{ user.createdAt | date : 'short' }}"
+          title="{{ userInfos.user.createdAt | date : 'short' }}"
           class="fs-7"
         >
-          {{ user.createdAt | date : "shortDate" }}
+          {{ userInfos.user.createdAt | date : "shortDate" }}
         </td>
         <td
-          title="{{ user.updatedAt | date : 'short' }}"
+          title="{{ userInfos.user.updatedAt | date : 'short' }}"
           class="fs-7"
         >
-          {{ user.updatedAt | date : "shortDate" }}
+          {{ userInfos.user.updatedAt | date : "shortDate" }}
         </td>
         <td>
           <div [hidden]="company.isIntegrationEnabled">
@@ -247,13 +241,13 @@
             class="alto-badge"
             [ngStyle]="{
               'background-color': getBadgeBackgroundColor(
-                getStatus(company, user)
+                getStatus(company, userInfos.user)
               ),
-              color: getBadgeColor(getStatus(company, user))
+              color: getBadgeColor(getStatus(company, userInfos.user))
             }"
           >
             <div
-              *ngIf="getStatus(company, user) === 'inactive'"
+              *ngIf="getStatus(company, userInfos.user) === 'inactive'"
               class="d-flex align-items-center"
               ngbTooltip="{{ I18ns.settings.users.usersInactiveTooltip }}"
               tooltipClass="menu-tooltip-class"
@@ -261,7 +255,7 @@
               <span>{{ I18ns.settings.users.disable }}</span>
             </div>
             <div
-              *ngIf="getStatus(company, user) === 'active'"
+              *ngIf="getStatus(company, userInfos.user) === 'active'"
               class="d-flex align-items-center"
             >
               <img
@@ -283,7 +277,7 @@
               <span>{{ I18ns.settings.users.enable }}</span>
             </div>
             <div
-              *ngIf="getStatus(company, user) === 'warning'"
+              *ngIf="getStatus(company, userInfos.user) === 'warning'"
               class="d-flex align-items-center p-2"
               ngbTooltip="{{ I18ns.settings.users.warningTooltip }}"
               tooltipClass="menu-tooltip-class"
@@ -300,24 +294,17 @@
           </div>
         </td>
         <td>
-          <div class="ms-2 form-check form-switch">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              (click)="toggleUserLicense(user)"
-              [checked]="user.hasLicense"
-            />
-          </div>
+          <alto-input-toggle [control]="userInfos.hasLicense"></alto-input-toggle>
         </td>
         <td class="px-4 text-end">
           <i
             data-cy="btnDelete"
             class="cursor-pointer fs-5 bi bi-trash3 me-4"
-            (click)="deleteUser(user)"
+            (click)="deleteUser(userInfos.user)"
           ></i>
           <i
             class="cursor-pointer fs-5 bi bi-pen"
-            (click)="openUserEditionForm(user)"
+            (click)="openUserEditionForm(userInfos.user)"
           ></i>
         </td>
       </tr>
@@ -326,20 +313,18 @@
 
   <alto-pagination
     class="mx-4 d-block"
-    [collectionSize]="usersDisplay.length"
-    [(page)]="usersPage"
-    (pageChange)="changeUsersPage($event)"
-    [pageSize]="usersPageSize"
+    [pageControl]="usersPageControl"
+    [itemsCount]="usersDisplay.length"
+    [itemsPerPage]="usersPageSize"
   ></alto-pagination>
 </div>
-<ng-template #nouser>
-  <div class="nodata-placeholder text-center" *ngIf="userFilterEmpty()">
+  <div noData class="nodata-placeholder text-center">
     <p class="mt-3">{{ I18ns.settings.users.noUserPlaceholderTitle }}</p>
     <span class="m3 d-block">{{
       I18ns.settings.users.noUserPlaceholderSubtitle
     }}</span>
   </div>
-  <div class="nodata-placeholder text-center" *ngIf="!userFilterEmpty()">
+  <div noResult class="nodata-placeholder text-center">
     <p class="mt-3">
       {{ I18ns.settings.users.noUserFilteredPlaceholderTitle }}
     </p>
@@ -347,4 +332,5 @@
       I18ns.settings.users.noUserFilteredPlaceholderSubtitle
     }}</span>
   </div>
-</ng-template>
+  <div loading class="skeleton-panel" style="height: 656px"></div>
+</alto-placeholder-manager>

@@ -95,7 +95,7 @@
         </td>
         <td>
           <alto-colored-pill-list
-            *ngIf="item.leastMasteredTags.length > 0; else noTag"
+            *ngIf="item.leastMasteredTags && item.leastMasteredTags.length > 0; else noTag"
             [textLimit]="15"
             color="primary"
             [data]="item.leastMasteredTags | slice : 0 : 3"
@@ -111,9 +111,8 @@
   </table>
   <alto-pagination
     class="mx-4 d-block"
-    [collectionSize]="data.length"
-    [pageSize]="pageSize"
-    [page]="page"
-    (pageChange)="paginate($event)"
+    [pageControl]="pageControl"
+    [itemsCount]="data.length"
+    [itemsPerPage]="pageSize"
   ></alto-pagination>
 </div>

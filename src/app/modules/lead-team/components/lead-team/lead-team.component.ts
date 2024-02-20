@@ -1,200 +1,343 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TeamDtoApi, TeamStatsDtoApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { combineLatest, switchMap, tap } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { GetUsersStatsRequestParams, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
+import {
+  Subscription,
+  combineLatest,
+  concat,
+  debounceTime,
+  first,
+  map,
+  of,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { IAppData } from 'src/app/core/resolvers';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { Team } from 'src/app/models/team.model';
 import { User } from 'src/app/models/user.model';
 import { TeamsRestService } from 'src/app/modules/lead-team/services/teams-rest.service';
-import { UserFilters } from 'src/app/modules/profile/models/user.model';
-import { UsersService } from 'src/app/modules/profile/services/users.service';
 import { DeleteModalComponent } from 'src/app/modules/shared/components/delete-modal/delete-modal.component';
-import { PlaceholderDataStatus } from 'src/app/modules/shared/models/placeholder.model';
-import { ScoreDuration, ScoreFilter } from 'src/app/modules/shared/models/score.model';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
+import { patchUser, setCompany, setTeams } from '../../../../core/store/root/root.action';
+import * as FromRoot from '../../../../core/store/store.reducer';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
+import { Company } from '../../../../models/company.model';
+import { Program } from '../../../../models/program.model';
+import { EScoreDuration, EScoreFilter, Score } from '../../../../models/score.model';
+import { ProgramsRestService } from '../../../programs/services/programs-rest.service';
+import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { PillOption, SelectOption } from '../../../shared/models/select-option.model';
+import { GuessesRestService } from '../../../training/services/guesses-rest.service';
 import { TeamFormComponent } from '../team-form/team-form.component';
 import { UserEditFormComponent } from '../user-edit-form/user-edit-form.component';
+import { ToastService } from '../../../../core/toast/toast.service';
+import { ILeadData } from '../../../../core/resolvers/lead.resolver';
+import { BaseStats } from '../../../../models/stats.model';
 
-interface TeamDisplay extends TeamDtoApi {
+interface TeamDisplay {
+  id: string;
+  name: string;
+  createdAt: Date;
   score?: number;
   totalGuessesCount?: number;
   validGuessesCount?: number;
   questionsPushedCount?: number;
 }
 
-@UntilDestroy()
+interface IUserWithStats {
+  user: User;
+  stats: UserStatsDtoApi;
+}
+
 @Component({
   selector: 'alto-lead-team',
   templateUrl: './lead-team.component.html',
   styleUrls: ['./lead-team.component.scss'],
   providers: [ReplaceInTranslationPipe],
 })
-export class LeadTeamComponent implements OnInit {
+export class LeadTeamComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
 
-  // Teams
-  teams: TeamDtoApi[] = [];
-  teamsStats: TeamStatsDtoApi[] = [];
-  paginatedTeams: TeamDisplay[] = [];
-  teamsDataStatus: PlaceholderDataStatus = 'loading';
-  teamsPage = 1;
-  teamsPageSize = 5;
-  teamsScores: TeamDisplay[] = [];
-  // Users
-  absoluteUsersCount = 0;
-  usersCount = 0;
-  usersDataStatus: PlaceholderDataStatus = 'loading';
-  usersMap = new Map<string, string>();
-  users: UserStatsDtoApi[] = [];
-  previousUsersStats: UserStatsDtoApi[] = [];
-  paginatedUsers: UserStatsDtoApi[] = [];
-  usersPage = 1;
-  usersPageSize = 5;
-  filteredUsers: UserStatsDtoApi[] = [];
-  usersTotalQuestions = 0;
-  usersTotalQuestionsProgression: number | null = 0;
-  usersQuestionProgression = new Map<string, number>();
-  userFilters: UserFilters = { teams: [] as TeamDtoApi[], score: '' };
-  isFilteredUsers = false;
-  selectedItems: UserStatsDtoApi[] = [];
+  company: Company = {} as Company;
+  programs: Program[] = [];
 
+  // Teams
+  teamsById: Map<string, Team> = new Map();
+  teamsPageSize = 5;
+
+  teamsPageControl = new FormControl(1, { nonNullable: true });
+
+  teamsDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
+  teamsDisplay: TeamDisplay[] = [];
+  paginatedTeams: TeamDisplay[] = [];
+
+  // Users
   rawUsers: User[] = [];
-  teamNames: string[] = [];
+  totalGuessCount = 0;
+  totalGuessCountProgression: number | null = 0;
+  usersPageSize = 5;
+  usersCount = 0;
+
+  usersStats: UserStatsDtoApi[] = [];
+  previousUsersStats: UserStatsDtoApi[] = [];
+
+  usersPageControl = new FormControl(1, { nonNullable: true });
+  searchControl: FormControl<string | null> = new FormControl();
+
+  teamsOptions: SelectOption[] = [];
+  selectedTeamsControl: FormControl<FormControl<SelectOption>[]> = new FormControl(
+    [] as FormControl<SelectOption>[],
+    { nonNullable: true },
+  );
+
+  scoreOptions: PillOption[] = Score.getFiltersPillOptions();
+  selectedScoreControl: FormControl<PillOption | null> = new FormControl(null);
+
+  usersDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
+  filteredUsersData: IUserWithStats[] = [];
+
+  private readonly leadTeamComponentSubscription = new Subscription();
 
   constructor(
     private readonly offcanvasService: NgbOffcanvas,
     private readonly teamsRestService: TeamsRestService,
-    private readonly usersService: UsersService,
+    private readonly programsRestService: ProgramsRestService,
     private readonly scoreRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
     private modalService: NgbModal,
     private replaceInTranslationPipe: ReplaceInTranslationPipe,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
+    private readonly store: Store<FromRoot.AppState>,
+    private readonly guessesRestService: GuessesRestService,
+    private readonly toastService: ToastService,
   ) {}
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
+    this.company = (data[EResolvers.LeadResolver] as ILeadData).company;
+    this.initFromCompany(this.company);
     this.rawUsers = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
-    this.teamNames = Array.from((data[EResolvers.AppResolver] as IAppData).teamById.values()).map(
-      (teams) => teams.name,
+
+    // users subscription
+    this.leadTeamComponentSubscription.add(
+      combineLatest([
+        this.guessesRestService.getPaginatedGuesses(undefined, EScoreDuration.Month, false),
+        this.guessesRestService.getPaginatedGuesses(undefined, EScoreDuration.Month, true),
+      ])
+        .pipe(
+          map(([totalGuesses, prevTotalGuesses]) => {
+            return [
+              totalGuesses.data ? totalGuesses.data.length : 0,
+              prevTotalGuesses.data ? prevTotalGuesses.data.length : 0,
+            ];
+          }),
+          tap(([guessesCount, prevGuessesCount]) => {
+            this.totalGuessCount = guessesCount;
+            this.totalGuessCountProgression =
+              prevGuessesCount > 0 ? (guessesCount - prevGuessesCount) / prevGuessesCount : 0;
+          }),
+          switchMap(() => {
+            return combineLatest([
+              this.usersPageControl.valueChanges.pipe(startWith(this.usersPageControl.value)),
+              combineLatest([
+                concat(of(this.searchControl.value), this.searchControl.valueChanges.pipe(debounceTime(300))),
+                this.selectedTeamsControl.valueChanges.pipe(startWith(this.selectedTeamsControl.value)),
+                this.selectedScoreControl.valueChanges.pipe(startWith(this.selectedScoreControl.value)),
+              ]).pipe(tap(() => this.usersPageControl.setValue(1))),
+            ]);
+          }),
+          switchMap(([page, [searchTerm, selectedTeamsControls, selectedScore]]) => {
+            let scoreAboveOrEqual: number | undefined;
+            let scoreBelowOrEqual: number | undefined;
+
+            switch (selectedScore?.value) {
+              case EScoreFilter.Under25:
+                scoreBelowOrEqual = 0.25;
+                break;
+              case EScoreFilter.Under50:
+                scoreBelowOrEqual = 0.5;
+                break;
+              case EScoreFilter.Under75:
+                scoreBelowOrEqual = 0.75;
+                break;
+              case EScoreFilter.Over25:
+                scoreAboveOrEqual = 0.25;
+                break;
+              case EScoreFilter.Over50:
+                scoreAboveOrEqual = 0.5;
+                break;
+              case EScoreFilter.Over75:
+                scoreAboveOrEqual = 0.75;
+                break;
+            }
+
+            const req: GetUsersStatsRequestParams = {
+              page,
+              itemsPerPage: this.usersPageSize,
+              teamIds: selectedTeamsControls.map((control) => control.value.value).join(','),
+              search: searchTerm || undefined,
+              scoreAboveOrEqual,
+              scoreBelowOrEqual,
+            };
+
+            return combineLatest([
+              this.scoreRestService.getPaginatedUsersStats(EScoreDuration.Year, false, req),
+              this.scoreRestService.getPaginatedUsersStats(EScoreDuration.Year, true, req),
+            ]);
+          }),
+        )
+        .subscribe(([{ meta, data: paginatedUsersStats = [] }, { data: prevPaginatedUsersStats = [] }]) => {
+          this.usersCount = meta.totalItems;
+          this.usersStats = paginatedUsersStats;
+          this.previousUsersStats = prevPaginatedUsersStats;
+
+          this.filteredUsersData = this.usersStats.map((userStats) => {
+            const matchingUser = this.rawUsers.find((rawUser) => rawUser.id === userStats.user.id);
+            return {
+              user: matchingUser || User.fromDto(userStats.user),
+              stats: userStats,
+            };
+          });
+          this.usersDataStatus =
+            this.usersStats.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_RESULT;
+        }),
     );
-    this.loadData();
+
+    // teams subscription
+    this.leadTeamComponentSubscription.add(
+      this.teamsPageControl.valueChanges.pipe(startWith(this.teamsPageControl.value)).subscribe((page) => {
+        this.changeTeamsPage(page);
+      }),
+    );
   }
 
-  loadData() {
-    combineLatest([
-      this.scoreRestService.getTeamsStats(ScoreDuration.Month),
-      this.scoreRestService.getUsersStats(ScoreDuration.Month),
-      this.scoreRestService.getUsersStats(ScoreDuration.Month, true),
-    ])
-      .pipe(
-        tap(([teamsStats, usersStats, previousUsersStats]) => {
-          this.teams = teamsStats.map((teamStat) => teamStat.team);
-          this.teamsStats = teamsStats;
-          this.teamsScores = this.teamsStats.map((teamStat) => ({
-            ...teamStat.team,
-            score: teamStat.score,
-            totalGuessesCount: teamStat.totalGuessesCount,
-            validGuessesCount: teamStat.validGuessesCount,
-            questionsPushedCount: teamStat.questionsPushedCount,
-          }));
+  ngOnDestroy(): void {
+    this.leadTeamComponentSubscription.unsubscribe();
+  }
 
-          this.users = usersStats;
-          this.usersTotalQuestions = usersStats.reduce(
-            (prev, curr) => prev + (curr.totalGuessesCount || 0),
-            0,
-          );
+  private initFromCompany(company: Company): void {
+    this.programs = [...company.programs];
+    this.teamsById = company.teamById;
+    this.teamsOptions = Array.from(company.teamById.values()).map(
+      (team) => new SelectOption({ label: team.name, value: team.id }),
+    );
+    const teamStats = company.getTeamStatsByPeriod(EScoreDuration.Year, false);
 
-          this.usersTotalQuestionsProgression = this.scoreService.getProgression(
-            this.usersTotalQuestions,
-            previousUsersStats.reduce((prev, curr) => prev + (curr.totalGuessesCount || 0), 0),
-          );
-          this.previousUsersStats = previousUsersStats;
-          this.absoluteUsersCount = this.users.length;
+    this.teamsDisplay = teamStats.sort(BaseStats.baseStatsCmp).map((teamStat) => {
+      const team = this.teamsById.get(teamStat.teamId);
+      return {
+        id: teamStat.teamId,
+        name: team?.name as string,
+        createdAt: team?.createdAt as Date,
+        score: teamStat.score,
+        totalGuessesCount: teamStat.totalGuessesCount,
+        validGuessesCount: teamStat.validGuessesCount,
+        questionsPushedCount:
+          team?.programIds.reduce((acc, programId) => {
+            const program = company.programById.get(programId);
 
-          this.users.forEach((user) => {
-            const member = this.teams.find((team) => team.id === user.teamId);
-            this.usersMap.set(user.id, member ? member.name : '');
-          });
-        }),
-        tap(() => this.changeTeamsPage(1)),
-        tap(() => {
-          this.filteredUsers = this.users;
-          this.changeUsersPage(this.users, 1);
-        }),
-        untilDestroyed(this),
-      )
-      .subscribe();
+            if (!program || !program.isActive) {
+              return acc;
+            }
+            return acc + program.questionsCount;
+          }, 0) ?? 0,
+      };
+    });
+
+    this.teamsDataStatus =
+      this.teamsDisplay.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
+
+    this.changeTeamsPage(this.teamsPageControl.value);
   }
 
   changeTeamsPage(page: number) {
-    this.teamsPage = page;
-    this.paginatedTeams = this.teamsScores.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
-    this.teamsDataStatus = this.paginatedTeams.length === 0 ? 'noData' : 'good';
-  }
-
-  filterUsers(
-    {
-      teams = this.userFilters.teams,
-      score = this.userFilters.score,
-      search = this.userFilters.search,
-    }: UserFilters = this.userFilters,
-  ) {
-    this.userFilters.teams = teams;
-    this.userFilters.score = score;
-    this.userFilters.search = search;
-
-    let output = this.usersService.filterUsers<UserStatsDtoApi[]>(this.users, {
-      teams,
-      search,
-    });
-    if (score) {
-      output = this.scoreService.filterByScore(output, score as ScoreFilter, true);
-    }
-    this.filteredUsers = output;
-    this.isFilteredUsers = true;
-    this.changeUsersPage(output, 1);
+    this.paginatedTeams = this.teamsDisplay.slice((page - 1) * this.teamsPageSize, page * this.teamsPageSize);
   }
 
   resetFilters() {
-    this.filterUsers((this.userFilters = {}));
-    this.selectedItems = [];
-    this.isFilteredUsers = false;
+    this.searchControl.reset(null);
+    this.selectedTeamsControl.reset([] as FormControl<SelectOption>[]);
+    this.selectedScoreControl.reset(null);
+    this.usersPageControl.reset(1);
   }
 
-  changeUsersPage(users: UserStatsDtoApi[], page: number) {
-    this.usersPage = page;
-    this.usersCount = users.length;
-    this.paginatedUsers = this.filteredUsers.slice(
-      (page - 1) * this.usersPageSize,
-      page * this.usersPageSize,
-    );
-    this.usersDataStatus =
-      this.paginatedUsers.length === 0 ? (this.isFilteredUsers ? 'noResult' : 'noData') : 'good';
-  }
-
-  openTeamForm(team?: TeamDtoApi) {
+  openTeamForm(teamId?: string) {
     const canvasRef = this.offcanvasService.open(TeamFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
     });
 
-    canvasRef.componentInstance.team = team;
-    canvasRef.componentInstance.users = this.rawUsers;
-    canvasRef.componentInstance.teamNames = this.teamNames;
-    canvasRef.componentInstance.teamChanged.pipe(tap(() => this.loadData())).subscribe();
+    const instance = canvasRef.componentInstance as TeamFormComponent;
+
+    instance.team = teamId ? this.teamsById.get(teamId) : undefined;
+    instance.users = this.rawUsers;
+    instance.company = this.company;
+
+    instance.newTeam
+      .pipe(
+        switchMap((team) => {
+          return combineLatest([of(team), this.programsRestService.getAllPrograms()]);
+        }),
+        switchMap(([team, programs]) => {
+          const updatedCompany = new Company({
+            ...this.company.rawData,
+            teams: Array.from(this.teamsById.set(team.id, team).values()),
+            programs: programs.map((program) => program.rawData),
+          });
+
+          this.store.dispatch(setCompany({ company: updatedCompany }));
+
+          const teamIndex = this.teamsDisplay.findIndex((t) => t.id === team.id);
+          if (this.teamsDisplay[teamIndex]) {
+            this.teamsDisplay[teamIndex].name = team.name;
+          }
+
+          if (programs.length > 0) {
+            programs.forEach((program) => {
+              const i = this.programs.findIndex((p) => p.id === program.id);
+
+              if (i !== -1) {
+                this.programs[i] = program;
+              }
+            });
+          }
+
+          return this.store.select(FromRoot.selectCompany);
+        }),
+        first(),
+      )
+      .subscribe({
+        next: ({ data: company }) => {
+          this.company = company;
+          this.initFromCompany(company);
+        },
+        complete: () => {
+          this.toastService.show({
+            type: 'success',
+            text: I18ns.leadTeam.teams.form.teamCreated,
+          });
+        },
+        error: () => {
+          this.toastService.show({
+            type: 'danger',
+            text: I18ns.leadTeam.teams.form.teamCreationError,
+          });
+        },
+      });
   }
 
-  deleteTeam(team: TeamDtoApi) {
+  deleteTeam(teamId: string) {
     const modalRef = this.modalService.open(DeleteModalComponent, {
       centered: true,
       size: 'md',
@@ -202,40 +345,71 @@ export class LeadTeamComponent implements OnInit {
 
     const componentInstance = modalRef.componentInstance as DeleteModalComponent;
     componentInstance.data = {
-      title: this.replaceInTranslationPipe.transform(I18ns.leadTeam.teams.deleteModal.title, team.name),
+      title: this.replaceInTranslationPipe.transform(
+        I18ns.leadTeam.teams.deleteModal.title,
+        this.teamsById.get(teamId)?.name,
+      ),
       subtitle: this.replaceInTranslationPipe.transform(
         I18ns.leadTeam.teams.deleteModal.subtitle,
-        this.getTeamUsersCount(team.id),
+        this.getTeamUsersCount(teamId),
       ),
     };
 
     componentInstance.objectDeleted
       .pipe(
-        switchMap(() => this.teamsRestService.deleteTeam(team.id)),
-        tap(() => {
-          this.teamsRestService.resetCache();
-          this.loadData();
-          modalRef.close();
+        switchMap(() => {
+          return this.teamsRestService.deleteTeam(teamId);
         }),
-        untilDestroyed(this),
+        switchMap(() => {
+          return this.teamsRestService.getTeams();
+        }),
+        switchMap((teams) => {
+          this.store.dispatch(setTeams({ teams }));
+
+          return this.store.select(FromRoot.selectCompany);
+        }),
+        first(),
       )
-      .subscribe();
+      .subscribe({
+        next: ({ data: company }) => {
+          this.company = company;
+          this.initFromCompany(company);
+        },
+        complete: () => {
+          modalRef.close();
+          this.toastService.show({
+            type: 'success',
+            text: I18ns.leadTeam.teams.form.teamDeleted,
+          });
+        },
+        error: () => {
+          modalRef.close();
+          this.toastService.show({
+            type: 'danger',
+            text: I18ns.leadTeam.teams.form.teamDeletionError,
+          });
+        },
+      });
   }
 
-  openUserEditionForm(user: UserStatsDtoApi) {
+  openUserEditionForm(user: User) {
     const canvasRef = this.offcanvasService.open(UserEditFormComponent, {
       position: 'end',
       panelClass: 'overflow-auto',
     });
 
-    canvasRef.componentInstance.user = user.user;
-    canvasRef.componentInstance.teams = this.teams;
-    canvasRef.closed.pipe(tap(() => this.loadData())).subscribe();
+    const instance = canvasRef.componentInstance as UserEditFormComponent;
+
+    instance.user = user;
+    instance.teams = Array.from(this.teamsById.values());
+    canvasRef.closed.subscribe((user) => {
+      this.store.dispatch(patchUser({ user: user }));
+    });
   }
 
   @memoize()
   getTeamUsersCount(teamId: string): number {
-    return this.users.filter((user) => user.teamId === teamId).length;
+    return this.rawUsers.filter((user) => user.teamId === teamId).length;
   }
 
   @memoize()

@@ -1,0 +1,325 @@
+<div class="header-panel2">
+  <img class="emoji-title me-4" [src]="EmojiName.Bullseye | emoji" width="28" height="28">
+  <h1>{{program ? I18ns.programs.forms.edit : I18ns.programs.forms.create}}</h1>
+</div>
+
+<div class="form-nav mb-8">
+  <div *ngFor="let tabOption of tabsOptions"
+  class="step cursor-pointer"
+  [class.cursor-pointer]="!!program"
+  [class.highlight-step]="tabsControl.value === tabOption"
+  (click)="switchTab(tabOption)">
+    <i class="fs-5 tab-icon me-3 bi" [class]="tabOption.value === ETab.Informations ? 'bi-file-text' : tabOption.value === ETab.Questions ? 'bi-question-circle' : 'bi-share'"></i>
+    <span>{{ tabOption.label }}</span>
+  </div>
+</div>
+
+<ng-container [ngSwitch]="tabsControl.value.value">
+  <!-- INFORMATIONS TAB -->
+  <div *ngSwitchCase="ETab.Informations">
+    <div class="infos">
+      <i class="me-3 bi bi-info-circle"></i>
+      <span>{{I18ns.programs.forms.step1.subtitle}}</span>
+    </div>
+    <form [formGroup]="programFormGroup">
+      <div class="row">
+        <div class="col-left">
+          <img class="emoji" [src]="EmojiName.PageFacingUp | emoji" width="20" height="20" />
+          <div>
+            <label class="form-label required">{{ I18ns.programs.forms.step1.name }}</label>
+            <p>{{ I18ns.programs.forms.step1.nameSubtitle }}</p>
+          </div>
+        </div>
+        <div class="col-5">
+          <alto-input-text [control]="programFormGroup.controls.nameControl" [placeholder]="I18ns.programs.forms.step1.namePlaceholder"></alto-input-text>
+        </div>
+      </div>
+      <hr>
+      <ng-container *ngIf="!program">
+        <div class="row align-items-center">
+          <div class="col-left">
+            <img class="emoji" [src]="EmojiName.Label | emoji" width="20" height="20"/>
+            <div>
+              <label class="form-label">{{ I18ns.programs.forms.step1.tags }}</label>
+              <p>{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
+            </div>
+          </div>
+          <div class="col-5">
+            <alto-input-pills
+            [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder"
+            [controls]="tagControls"
+            [options]="tagOptions"
+            [hasFormAppearance]="true">
+            </alto-input-pills>
+          </div>
+        </div>
+        <hr>
+      </ng-container>
+      <div class="row align-items-center">
+        <div class="col-left">
+          <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="20" height="20"/>
+          <div>
+            <label class="form-label">{{ I18ns.programs.forms.step1.teams }}</label>
+            <p>{{ I18ns.programs.forms.step1.teamsSubtitle }}</p>
+          </div>
+        </div>
+        <div class="col-5">
+          <alto-input-pills
+          [placeholder]="I18ns.programs.forms.step1.teamsPlaceholder"
+          [controls]="programFormGroup.controls.teamControls"
+          [options]="teamOptions"
+          [hasFormAppearance]="true">
+          </alto-input-pills>
+        </div>
+      </div>
+      <hr>
+      <div class="row align-items-center">
+        <div class="col-left">
+          <img class="emoji" [src]="EmojiName.Warning | emoji" width="20" height="20"/>
+          <div>
+            <label class="form-label required">{{ I18ns.programs.forms.step1.priority }}</label>
+            <p>{{ I18ns.programs.forms.step1.prioritySubtitle }}</p>
+          </div>
+        </div>
+        <div class="col-5">
+          <alto-input-single-select
+          [placeholder]="I18ns.programs.forms.step1.priorityPlaceholder"
+          [control]="programFormGroup.controls.priorityControl"
+          [options]="priorityOptions"
+          [hasFormAppearance]="true">
+          </alto-input-single-select>
+        </div>
+      </div>
+      <hr>
+      <div class="row align-items-center">
+        <div class="col-left">
+          <img class="emoji" [src]="EmojiName.SportsMedal | emoji" width="20" height="20"/>
+          <div>
+            <label class="form-label required">{{ I18ns.programs.forms.step1.expectation }}</label>
+            <p>{{ I18ns.programs.forms.step1.expectationSubtitle }}</p>
+          </div>
+        </div>
+        <div class="col-5">
+          <alto-input-range [control]="programFormGroup.controls.expectationControl"></alto-input-range>
+        </div>
+      </div>
+    </form>
+    <hr class="mt-8 bottom-hr" />
+    <div class="d-flex flex-nowrap justify-content-between">
+        <button class="btn btn-outline-secondary" (click)="cancel()">
+          {{ I18ns.shared.cancel }}
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="!programFormGroup.dirty || programFormGroup.invalid" (click)="submitForm()">
+          {{ program ? I18ns.programs.forms.step1.edit : I18ns.programs.forms.step1.create }}
+        </button>
+    </div>
+  </div>
+
+  <!-- QUESTIONS TAB -->
+  <div *ngSwitchCase="ETab.Questions">
+    <div class="infos">
+      <i class="me-3 bi bi-info-circle"></i>
+      <span class="">{{ I18ns.programs.forms.step2.subtitle }}</span>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <div>
+        <h2>
+          <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" width="16" height="16" />
+          {{ I18ns.programs.forms.step2.associatedQuestions.title }}
+        </h2>
+        <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.associatedQuestions.subtitle }}</p>
+      </div>
+      <button class="btn btn-primary" (click)="openQuestionForm()">
+        <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
+      </button>
+    </div>
+
+    <alto-input-search class="d-flex mb-4" [searchControl]="associatedQuestionsSearchControl"></alto-input-search>
+
+    <alto-placeholder-manager [status]="associatedQuestionsDataStatus">
+      <div class="panel questions-panel">
+        <div *ngFor="let associatedQuestion of associatedQuestions" class="d-flex justify-content-between align-items-center row">
+          <div class="d-flex align-items-center form-check form-switch col-10">
+            <input
+              class="form-check-input cursor-pointer me-8"
+              type="checkbox"
+              [checked]="true"
+              (click)="removeAssociatedQuestion(associatedQuestion)"
+            />
+            <span class="question-overflow fs-7 fw-medium">{{ associatedQuestion.title }}</span>
+          </div>
+
+          <div class="col-2 text-end cursor-pointer" (click)="openQuestionForm(associatedQuestion)">
+            <i class="bi bi-pen"></i>
+          </div>
+        </div>
+      </div>
+      <alto-pagination class="mt-4 px-3"
+      [pageControl]="associatedQuestionsPageControl"
+      [itemsCount]="associatedQuestionsCount"
+      [itemsPerPage]="questionsPageSize">
+      </alto-pagination>
+
+      <div noResult class="nodata-placeholder text-center">
+        <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+        <p class="fw-medium">{{ I18ns.shared.noData }}</p>
+        <p class="fw-medium">{{ I18ns.shared.noDataSubtitle }}</p>
+        <button class="btn btn-primary mt-4" (click)="resetAssociatedQuestionsSearch()">
+          <i class="bi bi-arrow-clockwise"></i>
+          {{ I18ns.shared.resetFilters }}
+        </button>
+      </div>
+
+      <div noData class="text-center">
+        <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.newSubtitle }}</p>
+
+        <button class="btn btn-primary mb-8">
+          <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
+        </button>
+        <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.or }}</p>
+      </div>
+    </alto-placeholder-manager>
+
+    <h2 class="mt-8">
+      <img class="emoji" [src]=" associatedQuestionsDataStatus === EPlaceholderStatus.NO_DATA ? EmojiName.Memo : EmojiName.RedQuestionMark | emoji" width="16" height="16" />
+      {{ associatedQuestionsDataStatus === EPlaceholderStatus.NO_DATA ? I18ns.programs.forms.step2.existing2.title : I18ns.programs.forms.step2.existing.title }}
+    </h2>
+    <p class="subtitle alto-grey mb-4">{{ associatedQuestionsDataStatus === EPlaceholderStatus.NO_DATA ? I18ns.programs.forms.step2.existing2.subtitle : I18ns.programs.forms.step2.existing.subtitle }}</p>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <alto-input-search [searchControl]="questionsSearchControl"></alto-input-search>
+
+      <alto-input-multiple-select
+      [placeholder]="I18ns.programs.questions.filters.tags"
+      [controls]="tagControls"
+      [options]="tagOptions"
+      [enableSearch]="true">
+      </alto-input-multiple-select>
+    </div>
+
+    <alto-placeholder-manager [status]="questionsDataStatus">
+      <div class="panel questions-panel">
+        <div *ngFor="let question of questions" class="d-flex justify-content-between align-items-center row">
+          <div class="d-flex align-items-center form-check form-switch col-10">
+            <input
+              class="form-check-input cursor-pointer me-8"
+              type="checkbox"
+              [checked]="false"
+              (click)="addAssociatedQuestion(question)"
+            />
+            <span class="question-overflow fs-7 fw-medium">{{ question.title }}</span>
+          </div>
+
+          <div class="col-2 text-end cursor-pointer" (click)="openQuestionForm(question)">
+            <i class="bi bi-pen"></i>
+          </div>
+        </div>
+      </div>
+
+      <alto-pagination
+      class="mt-4 px-3"
+      [pageControl]="questionsPageControl"
+      [itemsCount]="questionsCount"
+      [itemsPerPage]="questionsPageSize">
+      </alto-pagination>
+
+      <div class="nodata-placeholder text-center" noResult>
+        <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+        <p class="fw-medium">{{ I18ns.shared.noData }}</p>
+        <p class="fw-medium">{{ I18ns.shared.noDataSubtitle }}</p>
+        <button class="btn btn-primary mt-4" (click)="resetQuestionsSearch()">
+          <i class="bi bi-arrow-clockwise"></i>
+          {{ I18ns.shared.resetFilters }}
+        </button>
+      </div>
+
+      <div noData class="text-center">
+        <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.newSubtitle }}</p>
+
+        <button class="btn btn-primary mb-8">
+          <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
+        </button>
+        <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.or }}</p>
+      </div>
+    </alto-placeholder-manager>
+
+    <div class="d-flex flex-nowrap justify-content-between">
+      <button class="btn btn-outline-secondary" (click)="switchTab(tabsOptions[0])">
+        {{ I18ns.shared.previous }}
+      </button>
+      <button class="btn btn-primary" (click)="switchTab(tabsOptions[2])">
+        {{ I18ns.shared.next }}
+      </button>
+    </div>
+  </div>
+
+  <!-- SUMMARY TAB -->
+  <div *ngSwitchCase="ETab.Summary">
+    <div class="infos">
+      <i class="me-3 bi bi-info-circle"></i>
+      <span>{{I18ns.programs.forms.step3.subtitle}}</span>
+    </div>
+
+    <h2 class="mb-5">
+      <img class="emoji" [src]="EmojiName.PageFacingUp | emoji" width="18" height="18" />
+      {{ I18ns.programs.forms.step3.title2 }}
+    </h2>
+
+    <div class="summary">
+      <div class="title summary-row">
+        <h2>{{ program?.name }}</h2>
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-label">
+          <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="20" height="20" />
+          {{ I18ns.programs.forms.step1.teams }}
+        </div>
+        <span class="alto-badge">
+          {{ programFormGroup.controls.teamControls.value.length }}
+        </span>
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-label">
+          <img class="emoji" [src]="EmojiName.SportsMedal | emoji" width="20" height="20" />
+          {{ I18ns.programs.forms.step1.expectation }}
+        </div>
+        <span class="alto-score pill-green">{{ programFormGroup.controls.expectationControl.value / 100 | percent }}</span>
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-label">
+          <img class="emoji" [src]="EmojiName.RedQuestionMark | emoji" width="20" height="20" />
+          {{ I18ns.programs.forms.questionCount }}
+        </div>
+        <span class="alto-badge">{{ associatedQuestionsCount }}</span>
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-label">
+          <img class="emoji" [src]="EmojiName.Warning | emoji" width="20" height="20" />
+          {{ I18ns.programs.forms.step1.priority }}
+        </div>
+        <span class="alto-badge">{{ programFormGroup.controls.priorityControl.value?.label }}</span>
+      </div>
+    </div>
+
+    <div class="delete-button-row">
+      <a class="btn btn-danger" (click)="deleteProgram()">
+        <i class="bi bi-trash3"></i><span>{{ I18ns.programs.delete.btn }}</span>
+      </a>
+    </div>
+
+    <hr class="mt-8 bottom-hr" />
+    <div class="d-flex flex-nowrap justify-content-between">
+      <button class="btn btn-outline-secondary" (click)="switchTab(tabsOptions[1])">
+        {{ I18ns.shared.previous }}
+      </button>
+      <button class="btn btn-primary" [disabled]="!programFormGroup.dirty || programFormGroup.invalid" (click)="submitForm()">
+        {{ program ? I18ns.programs.forms.step3.validateEdit : I18ns.programs.forms.step3.validate }}
+      </button>
+    </div>
+  </div>
+</ng-container>

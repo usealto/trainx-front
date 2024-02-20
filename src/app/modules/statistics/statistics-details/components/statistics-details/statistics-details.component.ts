@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { IAppData } from '../../../../../core/resolvers';
+import { ITabOption } from '../../../../shared/components/tabs/tabs.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'alto-statistics-details',
@@ -25,22 +28,27 @@ export class StatisticsDetailsComponent implements OnInit {
   id!: string;
   name!: string;
 
-  tabs = [
+  readonly tabsOptions: ITabOption[] = [
     { label: I18ns.statistics.globalPerformance.navbarTitle, value: AltoRoutes.performance },
     { label: I18ns.statistics.globalEngagement.title, value: AltoRoutes.engagement },
   ];
 
-  selectedTab = '';
+  tabControl = new FormControl<ITabOption>(this.tabsOptions[0], { nonNullable: true });
   emptyTeam = false;
+  private readonly statisticsDetailsComponentSubscription = new Subscription();
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     const users = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
-    const teams = Array.from((data[EResolvers.AppResolver] as IAppData).teamById.values());
+    const teams = (data[EResolvers.AppResolver] as IAppData).company.teams;
 
     this.type = this.router.url.split('/')[3] === 'team' ? 'team' : 'user';
     this.id = this.router.url.split('/').pop() || '';
-    this.selectedTab = this.router.url.split('/')[4] || '';
+    const selectedTab = this.tabsOptions.find((t) => t.value === this.router.url.split('/')[4]);
+
+    if (selectedTab) {
+      this.tabControl.patchValue(selectedTab, { emitEvent: false });
+    }
 
     if (this.type === 'user') {
       const user = users.find((u) => u.id === this.id);
@@ -58,10 +66,11 @@ export class StatisticsDetailsComponent implements OnInit {
         this.emptyTeam = users.every(({ teamId }) => teamId !== team.id);
       }
     }
-  }
 
-  tabChange(val: string) {
-    const selectedTab = this.tabs.find((t) => t.value === val)?.value || this.tabs[0].value;
-    this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, this.type, selectedTab, this.id]);
+    this.statisticsDetailsComponentSubscription.add(
+      this.tabControl.valueChanges.subscribe((tab) => {
+        this.router.navigate(['/', AltoRoutes.lead, AltoRoutes.statistics, this.type, tab.value, this.id]);
+      }),
+    );
   }
 }

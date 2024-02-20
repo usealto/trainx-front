@@ -27,6 +27,7 @@
           </p>
         </div>
       </div>
+
       <div [class]="'success-panel'" noData>
         <alto-icon-badge [size]="5" icon="bi-chat" [color]="'badge-double-success'"></alto-icon-badge>
 
@@ -159,7 +160,7 @@
     <div class="nodata-placeholder text-center" noData>
       <img [src]="Emoji.CowboyHatFace | emoji" height="24" width="24" />
       <p class="mt-3">{{ I18ns.leadHome.statistics.placeholder }}</p>
-      <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
+      <a type="button" class="btn btn-primary mt-4" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, AltoRoutes.programsNew]">
         <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
       </a>
     </div>
@@ -181,7 +182,7 @@
       <div class="text-center">
         <img [src]="Emoji.Rocket | emoji" height="24" width="24"/>
         <p class="mt-3">{{ I18ns.leadHome.graph.placeholder }}</p>
-        <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
+        <a type="button" class="btn btn-primary mt-4" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, AltoRoutes.programsNew]">
           <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
         </a>
       </div>
@@ -205,7 +206,7 @@
           <div class="text-center">
             <img [src]="Emoji.BustsInSilhouette | emoji" height="24" width="24" />
             <p class="mt-3">{{ I18ns.leadHome.leaderboard.teams.placeholder }}</p>
-            <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new">
+            <a type="button" class="btn btn-primary mt-4" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, AltoRoutes.programsNew]">
               <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
             </a>
           </div>
@@ -241,139 +242,4 @@
       </alto-placeholder-manager>
     </div>
   </div>
-  <!-- CHALLENGES -->
-  <!--
-  <div class="row mt-6 mb-4" hidden>
-    <div class="col-5">
-      <h2 class="title">{{ I18ns.leadHome.ongoingChallenges.title }}</h2>
-    </div>
-    <div class="col-7 text-end">
-      <button [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]" class="btn btn-outline-secondary">
-        {{ I18ns.shared.showAll }} <i class="ms-2 bi bi-arrow-right"></i>
-      </button>
-    </div>
-  </div>
-  <div class="row" hidden>
-    <div class="col-6">
-      <div class="table-panel">
-        <h2>{{ I18ns.leadHome.ongoingChallenges.byTeam }}</h2>
-        <hr class="m-0" />
-
-        <ng-container *ngIf="challengesByTeam.length > 0; else noChallenges">
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
-                <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
-                <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
-                <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="let chal of challengesByTeam"
-                [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
-                class="cursor-pointer"
-              >
-                <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
-                <td>
-                  <span
-                    *ngIf="chal.leadTeam"
-                    class="alto-badge"
-                    [style.backgroundColor]="chal.leadTeam.id | uuid2color"
-                    [style.color]="'white'"
-                  >
-                    {{ chal.leadTeam.name }}
-                  </span>
-                </td>
-                <td>
-                  <alto-colored-pill-list
-                    [hasDynamicColor]="true"
-                    [data]="chal.teams || []"
-                    [limit]="2"
-                  ></alto-colored-pill-list>
-                </td>
-                <td>{{ chal.endDate | date : 'shortDate' }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </ng-container>
-        <ng-template #noChallenges>
-          <div class="panel text-center">
-            <i class="bi bi-controller fs-5"></i>
-            <h2>{{ I18ns.leadHome.ongoingChallenges.noTeamChallenges }}</h2>
-            <p>{{ I18ns.leadHome.ongoingChallenges.noTeamChallengesSubtitle }}</p>
-          </div>
-        </ng-template>
-
-        <p class="text-end">
-          <a
-            [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
-            [fragment]="'byTeamAnchor'"
-            class="fw-medium mb-4 me-4 d-block"
-          >
-            {{ I18ns.shared.showMore }}
-          </a>
-        </p>
-      </div>
-    </div>
-
-    <div class="col-6">
-      <div class="table-panel">
-        <h2>{{ I18ns.leadHome.ongoingChallenges.individual }}</h2>
-        <hr class="m-0" />
-
-        <ng-container *ngIf="challengesByUser.length > 0; else noChallenges">
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col" class="w-35">{{ I18ns.leadHome.ongoingChallenges.table.name }}</th>
-                <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.leader }}</th>
-                <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.teams }}</th>
-                <th scope="col">{{ I18ns.leadHome.ongoingChallenges.table.end }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="let chal of challengesByUser"
-                [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
-                class="cursor-pointer"
-              >
-                <td class="fw-medium alto-blue fs-6">{{ chal.name }}</td>
-                <td>
-                  <alto-img-badge [user]="getUser(chal.createdBy) | async"></alto-img-badge>
-                </td>
-                <td>
-                  <alto-colored-pill-list
-                    [hasDynamicColor]="true"
-                    [data]="chal.teams || []"
-                    [limit]="2"
-                  ></alto-colored-pill-list>
-                </td>
-                <td>{{ chal.endDate | date : 'shortDate' }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </ng-container>
-        <ng-template #noChallenges>
-          <div class="panel text-center">
-            <i class="bi bi-controller fs-5"></i>
-            <h2>{{ I18ns.leadHome.ongoingChallenges.noTeamChallenges }}</h2>
-            <p>{{ I18ns.leadHome.ongoingChallenges.noTeamChallengesSubtitle }}</p>
-          </div>
-        </ng-template>
-
-        <p class="text-end">
-          <a
-            [routerLink]="['/', AltoRoutes.lead, AltoRoutes.challenges]"
-            [fragment]="'byUserAnchor'"
-            class="fw-medium mb-4 me-4 d-block"
-          >
-            {{ I18ns.shared.showMore }}
-          </a>
-        </p>
-      </div>
-    </div>
-  </div>
-   -->
 </div>
