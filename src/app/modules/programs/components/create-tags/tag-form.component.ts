@@ -7,7 +7,6 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import {
   PatchTagDtoApi,
   PatchTagRequestParams,
-  ProgramDtoApi,
   QuestionDtoApi,
   TagDtoApi,
 } from '@usealto/sdk-ts-angular';
@@ -67,9 +66,6 @@ export class TagsFormComponent implements OnInit {
             this.programs = company.programs ?? [];
             this.tagForm.patchValue({
               name,
-              // programs: programs?.filter((program) => program.tags?.some((t) => this.tag?.id))
-              //   .map((p) => p.id),
-              // questions: questions?.map((p) => p.id),
               description,
             });
           }
@@ -80,7 +76,7 @@ export class TagsFormComponent implements OnInit {
 
   createTag() {
     if (!this.tagForm.value) return;
-    const { name, programs, questions, description } = this.tagForm.value;
+    const { name, description } = this.tagForm.value;
 
     if (!this.isEdit && !this.tag) {
       this.tagService

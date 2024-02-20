@@ -126,9 +126,6 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
 
             return this.durationControl.valueChanges.pipe(startWith(this.durationControl.value));
           }),
-          // tap((duration) => {
-          //   this.setTeamsAndStats(duration);
-          // }),
           switchMap((duration) => {
             return combineLatest([
               this.createChart(duration),
