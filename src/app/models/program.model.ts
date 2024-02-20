@@ -79,7 +79,7 @@ export class Program extends BaseModel implements IProgram {
     }
   }
 
-   override get rawData(): IProgram {
+  override get rawData(): IProgram {
     return {
       ...super.rawData,
       name: this.name,
@@ -99,7 +99,6 @@ export class Program extends BaseModel implements IProgram {
     return this.stats.filter(({ scoreById }) => scoreById === id);
   }
 }
-
 
 export interface IProgramStats extends IBaseStats {
   participation: number;

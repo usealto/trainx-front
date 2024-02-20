@@ -1,23 +1,17 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { NgbActiveOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { Store } from '@ngrx/store';
+import { PatchTagDtoApi, PatchTagRequestParams, QuestionDtoApi, TagDtoApi } from '@usealto/sdk-ts-angular';
 import { filter, tap } from 'rxjs';
 import { IFormBuilder, IFormGroup } from 'src/app/core/form-types';
+import { ToastService } from 'src/app/core/toast/toast.service';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
-import {
-  PatchTagDtoApi,
-  PatchTagRequestParams,
-  ProgramDtoApi,
-  QuestionDtoApi,
-  TagDtoApi,
-} from '@usealto/sdk-ts-angular';
+import * as FromRoot from '../../../../core/store/store.reducer';
+import { Program } from '../../../../models/program.model';
 import { TagForm } from '../../models/tag.form';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
-import { ToastService } from 'src/app/core/toast/toast.service';
-import { Store } from '@ngrx/store';
-import * as FromRoot from '../../../../core/store/store.reducer';
-import { Program } from '../../../../models/program.model';
 
 @Component({
   selector: 'alto-tags-form',
@@ -44,7 +38,6 @@ export class TagsFormComponent implements OnInit {
 
   constructor(
     public activeOffcanvas: NgbActiveOffcanvas,
-    private readonly programService: ProgramsRestService,
     private readonly tagService: TagsRestService,
     readonly fob: UntypedFormBuilder,
     private readonly toastService: ToastService,
@@ -67,9 +60,6 @@ export class TagsFormComponent implements OnInit {
             this.programs = company.programs ?? [];
             this.tagForm.patchValue({
               name,
-              // programs: programs?.filter((program) => program.tags?.some((t) => this.tag?.id))
-              //   .map((p) => p.id),
-              // questions: questions?.map((p) => p.id),
               description,
             });
           }
@@ -80,7 +70,7 @@ export class TagsFormComponent implements OnInit {
 
   createTag() {
     if (!this.tagForm.value) return;
-    const { name, programs, questions, description } = this.tagForm.value;
+    const { name, description } = this.tagForm.value;
 
     if (!this.isEdit && !this.tag) {
       this.tagService
