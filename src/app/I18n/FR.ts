@@ -348,6 +348,7 @@ export const FR = {
         createdToast: 'Votre programme a bien été créé',
         validatedToast: 'Vous avez bien finalisé la création de votre programme',
         validate: 'Finaliser la création du programme',
+        validateEdit: "Finaliser l'édition du programme",
       },
     },
     delete: {
@@ -993,7 +994,7 @@ export const FR = {
       },
       licences: ['{{}} licence', '{{}} licences'],
       licencesTitle: 'Nombre de licences attribuées',
-      contactTooltip: 'Contacter romain@getcockpit.io pour ajuster votre nombre de licences.',
+      contactTooltip: 'Contactez romain@getcockpit.io pour ajuster votre nombre de licences.',
     },
     continuousSession: {
       title: 'Diffusion',
