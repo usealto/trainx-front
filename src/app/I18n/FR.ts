@@ -852,6 +852,8 @@ export const FR = {
         programsPlaceholder: 'Sélectionner les programmes assignés à cette équipe',
         teamCreated: 'L’équipe a bien été créée',
         teamCreationError: 'Une erreur est survenue lors de la création de l’équipe',
+        teamDeleted: 'L’équipe a bien été supprimée',
+        teamDeletionError: 'Une erreur est survenue lors de la suppression de l’équipe',
       },
       deleteModal: {
         title: 'Supprimer l\'équipe "{{}}"',
