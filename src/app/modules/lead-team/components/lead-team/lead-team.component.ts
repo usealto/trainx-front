@@ -243,7 +243,14 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
         score: teamStat.score,
         totalGuessesCount: teamStat.totalGuessesCount,
         validGuessesCount: teamStat.validGuessesCount,
-        questionsPushedCount: teamStat.questionsPushedCount,
+        questionsPushedCount: team?.programIds.reduce((acc, programId) => {
+          const program = company.programById.get(programId);
+
+          if (!program || !program.isActive) {
+            return acc;
+          }
+          return acc + program.questionsCount;
+        }, 0),
       } as TeamDisplay;
     });
 
