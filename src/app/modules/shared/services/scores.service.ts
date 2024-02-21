@@ -140,7 +140,7 @@ export class ScoresService {
       return [];
     }
 
-    const filteredScores = scores.map((ts) => this.filterTimeSeries(ts));
+    const filteredScores = scores.filter((x) => !!x).map((ts) => this.filterTimeSeries(ts));
 
     const longestDates = filteredScores.reduce((dates, score) => {
       if (score.dates.length > dates.length) {

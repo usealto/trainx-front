@@ -197,9 +197,6 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             : ScoreTimeframeEnumApi.Day,
       }),
     ]).pipe(
-      map(([commentsScores, questionsSubmittedScores]) => {
-        return [commentsScores, questionsSubmittedScores];
-      }),
       tap(([commentsScores, questionsSubmittedScores]) => {
         this.collaborationDataStatus =
           commentsScores.length === 0 && questionsSubmittedScores.length === 0
@@ -214,11 +211,11 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
         const formattedCommentsScores = this.scoresService.formatScores(commentsScores);
         const formattedQuestionsSubmittedScores = this.scoresService.formatScores(questionsSubmittedScores);
 
-        const [aggregaedFormattedCommentsScores, aggregatedFormattedQuestionsSubmittedScores] =
+        const [aggregatedFormattedCommentsScores, aggregatedFormattedQuestionsSubmittedScores] =
           this.scoresService.formatScores([formattedCommentsScores[0], formattedQuestionsSubmittedScores[0]]);
 
         const aggregatedComments = this.statisticsServices.transformDataToPointByCounts(
-          aggregaedFormattedCommentsScores,
+          aggregatedFormattedCommentsScores,
         );
         const aggregatedQuestionsSubmitted = this.statisticsServices.transformDataToPointByCounts(
           aggregatedFormattedQuestionsSubmittedScores,
