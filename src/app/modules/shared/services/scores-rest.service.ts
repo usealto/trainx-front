@@ -264,15 +264,15 @@ export class ScoresRestService {
     });
   }
 
-  getAllTagsStats(): Observable<TagStatsDtoApi[]> {
-    return this.statsApi.getTagsStats({ page: 1, itemsPerPage: 1000 }).pipe(
+  getAllTagsStats(req: GetTagsStatsRequestParams = {}): Observable<TagStatsDtoApi[]> {
+    return this.statsApi.getTagsStats({ page: 1, itemsPerPage: 1000, ...req }).pipe(
       switchMap(({ data, meta }) => {
         const reqs: Observable<TagStatsDtoApi[]>[] = [of(data ? data : [])];
         let totalPages = meta.totalPage ?? 1;
 
         for (let i = 2; i <= totalPages; i++) {
           reqs.push(
-            this.statsApi.getTagsStats({ page: i, sortBy: 'createdAt:asc', itemsPerPage: 1000 }).pipe(
+            this.statsApi.getTagsStats({ page: i, itemsPerPage: 1000, ...req }).pipe(
               tap(({ meta }) => {
                 if (meta.totalPage !== totalPages) {
                   totalPages = meta.totalPage;
