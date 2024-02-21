@@ -81,15 +81,11 @@
   </div>
 
   <alto-placeholder-manager [status]="spiderChartStatus">
-    <div good>
-      <alto-placeholder-manager>
-        <alto-chart-radar [chartOption]="spiderChartOptions"></alto-chart-radar>
-        <div noResult>
-          <!-- placeholder moins de 3 ou plus de 6 tags -->
-        </div>
-      </alto-placeholder-manager>
-    </div>
-      <div class="nodata-placeholder" noData>
+    <alto-placeholder-manager>
+      <alto-chart-radar [chartOption]="spiderChartOptions"></alto-chart-radar>
+    </alto-placeholder-manager>
+    <div class="nodata-placeholder" noData>
+      <ng-container *ngIf="tagsOptions.length < 3; else selectTags">
         <h3 class="mb-5 fs-6">
           {{ I18ns.statistics.user.performance.themeMastering.spiderChart.title }}
         </h3>
@@ -98,8 +94,36 @@
           <p class="mt-3">
             {{ I18ns.statistics.user.performance.themeMastering.spiderChart.placeholder.empty }}
           </p>
-       </div>
+        </div>
+      </ng-container>
+
+      <ng-template #selectTags>
+        <div class="text-center">
+          <img [src]="EmojiName.FaceWithMonocle | emoji" height="24" width="24" />
+          <p class="mt-3">
+            {{
+              tagsControl.value.length < 3
+                ? I18ns.statistics.user.performance.themeMastering.spiderChart.placeholder.lessThan3Tags
+                : I18ns.statistics.user.performance.themeMastering.spiderChart.placeholder.MoreThan6Tags
+            }}
+          </p>
+        </div>
+      </ng-template>
+    </div>
+    <div class="nodata-placeholder" noResult>
+      <h3 class="mb-5 fs-6">
+        {{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}
+      </h3>
+      <div class="text-center">
+        <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+        <p class="mt-3">
+          {{ I18ns.shared.placeholders.noResultInTimeframe.title }}
+        </p>
+        <span class="d-inline-block mt-3">
+          {{ I18ns.shared.placeholders.noResultInTimeframe.subtitle }}
+        </span>
       </div>
-      <div class="skeleton-panel" style="height: 500px" loading></div>
+    </div>
+    <div class="skeleton-panel" style="height: 500px" loading></div>
   </alto-placeholder-manager>
 </div>

@@ -1,14 +1,14 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TagDtoApi, TagStatsDtoApi } from '@usealto/sdk-ts-angular';
-import { Subscription, filter, map, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, filter, map, of, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
-import { EScoreDuration } from '../../../../../models/score.model';
+import { ILeaderboardData } from '../../../../shared/components/leaderboard/leaderboard.component';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
-import { SelectOption } from '../../../../shared/models/select-option.model';
 import { AltoRoutes } from '../../../../shared/constants/routes';
+import { SelectOption } from '../../../../shared/models/select-option.model';
 
 @Component({
   selector: 'alto-performance-by-themes',
@@ -22,16 +22,14 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
   EPlaceholderStatus = EPlaceholderStatus;
 
   @Input() tags: TagDtoApi[] = [];
-  selectedTags: TagDtoApi[] = [];
   tagsControl: FormControl<FormControl<SelectOption>[]> = new FormControl([], {
     nonNullable: true,
   });
   tagsOptions: SelectOption[] = [];
   spiderChartDataStatus = EPlaceholderStatus.LOADING;
-  spiderChartFilterStatus = EPlaceholderStatus.GOOD;
   spiderChartOptions: any = {};
 
-  tagsLeaderboard: { name: string; score: number }[] = [];
+  tagsLeaderboard: ILeaderboardData[] = [];
   tagsDataStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
   tagStatsSubscription: Subscription = new Subscription();
@@ -46,36 +44,49 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
     );
 
     this.tagStatsSubscription.add(
-      this.tagsControl.valueChanges
+      this.scoresRestService
+        .getAllTagsStats()
         .pipe(
-          filter(() => {
-            return this.tagsOptions.length > 0;
+          filter((tagStats) => {
+            if (tagStats.length === 0) {
+              this.tagsDataStatus = EPlaceholderStatus.NO_DATA;
+              this.spiderChartDataStatus = EPlaceholderStatus.NO_DATA;
+              return false;
+            }
+            return true;
           }),
-          startWith(this.tagsControl.value),
-          map((tagsControls) => tagsControls.map((t) => t.value)),
-          tap((selectedTags) => {
-            this.spiderChartFilterStatus =
-              selectedTags.length < 3 || selectedTags.length > 6
-                ? EPlaceholderStatus.NO_DATA
-                : EPlaceholderStatus.GOOD;
+          tap((tagStats) => {
+            this.tagsLeaderboard = tagStats
+              .filter(({ score }) => typeof score === 'number')
+              .map((t) => ({ name: t.tag.name, score: t.score as number }));
+            this.tagsDataStatus = EPlaceholderStatus.GOOD;
           }),
-          switchMap((selectedTags) => {
-            return this.scoresRestService.getPaginatedTagsStats(EScoreDuration.Year, false, {
-              ids: selectedTags.map((t) => t.value).join(','),
-            });
-          }),
-          map(({ data: tagStats = [] }) => {
-            tagStats.filter((t) => t.score && t.score >= 0);
-            this.spiderChartDataStatus =
-              tagStats.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
-            this.tagsLeaderboard = tagStats.map((t) => ({ name: t.tag.name, score: t.score ?? 0 }));
-            this.tagsDataStatus =
-              this.tagsLeaderboard.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
-            return tagStats.splice(0, 6).sort((a, b) => a.tag.name.localeCompare(b.tag.name));
+          switchMap((tagStats) =>
+            combineLatest([
+              of(tagStats),
+              this.tagsControl.valueChanges.pipe(
+                startWith(this.tagsControl.value),
+                map((tagsControls) => tagsControls.map((t) => t.value)),
+              ),
+            ]),
+          ),
+          filter(([, selectedTags]) => {
+            if (selectedTags.length < 3 || selectedTags.length > 6) {
+              this.spiderChartDataStatus = EPlaceholderStatus.NO_DATA;
+              return false;
+            }
+            return true;
           }),
         )
-        .subscribe((tagStats) => {
-          this.setSpiderChartOptions(tagStats);
+        .subscribe({
+          next: ([tagStats, selectedTags]) => {
+            this.setSpiderChartOptions(
+              tagStats
+                .filter(({ score }) => typeof score === 'number')
+                .filter((t) => selectedTags.some(({ value }) => value === t.tag.id)),
+            );
+            this.spiderChartDataStatus = EPlaceholderStatus.GOOD;
+          },
         }),
     );
   }
