@@ -10,8 +10,6 @@ import { EResolvers, ResolversService } from '../../../../core/resolvers/resolve
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { Company } from '../../../../models/company.model';
 import { ITabOption } from '../../../shared/components/tabs/tabs.component';
-import { User } from '../../../../models/user.model';
-import { IAppData } from '../../../../core/resolvers';
 
 enum EProgramsTabs {
   Programs = 'programs',
