@@ -27,7 +27,7 @@ const routes: Routes = [
   {
     path: '',
     component: AppLayoutComponent,
-    canActivate: [AppGuard, AuthGuard, PreventSmallScreenGuard],
+    canActivate: [AuthGuard, AppGuard, PreventSmallScreenGuard],
     canActivateChild: [AuthGuard],
     resolve: {
       [EResolvers.AppResolver]: appResolver,
