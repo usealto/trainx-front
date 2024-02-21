@@ -23,7 +23,6 @@ export class InputSingleSelectComponent implements OnInit {
 
   ngOnInit(): void {
     this.mandatoryField = this.control.hasValidator(Validators.required);
-    console.log('mandatoryField', this.mandatoryField);
   }
 
   @HostListener('document:click', ['$event'])
