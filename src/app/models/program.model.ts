@@ -12,7 +12,6 @@ export interface IProgram extends IBaseModel {
   showTimer: boolean;
   teamIds: string[];
   questionsCount: number;
-  ownerId: string;
   stats: IProgramStats[];
 }
 
@@ -25,7 +24,6 @@ export class Program extends BaseModel implements IProgram {
   showTimer: boolean;
   teamIds: string[];
   questionsCount: number;
-  ownerId: string;
   stats: ProgramStats[];
 
   constructor(data: IProgram) {
@@ -39,7 +37,6 @@ export class Program extends BaseModel implements IProgram {
     this.showTimer = data.showTimer;
     this.teamIds = data.teamIds;
     this.questionsCount = data.questionsCount;
-    this.ownerId = data.ownerId;
     this.createdAt = data.createdAt;
     this.updatedAt = data.updatedAt;
     this.deletedAt = data.deletedAt;
@@ -57,7 +54,6 @@ export class Program extends BaseModel implements IProgram {
       showTimer: data.showTimer,
       teamIds: data.teams?.map(({ id }) => id) ?? [],
       questionsCount: data.questionsCount,
-      ownerId: data.owner.id,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       deletedAt: data.deletedAt,
@@ -90,7 +86,6 @@ export class Program extends BaseModel implements IProgram {
       showTimer: this.showTimer,
       teamIds: this.teamIds,
       questionsCount: this.questionsCount,
-      ownerId: this.ownerId,
       stats: this.stats.map((s) => s.rawData),
     };
   }
