@@ -56,10 +56,10 @@ export class ScoresRestService {
       dateBefore = new Date();
       dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
+    reqParams.from = dateAfter;
+    reqParams.to = dateBefore;
 
     return this.statsApi.getUsersStats({
-      from: dateAfter,
-      to: dateBefore,
       respondsRegularlyThreshold: 0.42,
       itemsPerPage: 1000,
       ...reqParams,
@@ -136,11 +136,12 @@ export class ScoresRestService {
       dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
 
+    reqParams.from = dateAfter;
+    reqParams.to = dateBefore;
+
     return this.statsApi.getQuestionsStats({
       page: 1,
       itemsPerPage: 400,
-      from: dateAfter,
-      to: dateBefore,
       respondsRegularlyThreshold: 0.42,
       teamIds: '',
       ...reqParams,
@@ -166,12 +167,13 @@ export class ScoresRestService {
       dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
 
+    req.from = dateAfter;
+    req.to = dateBefore;
+
     return this.statsApi
       .getTeamsStats({
         page: 1,
         itemsPerPage: 400,
-        from: dateAfter,
-        to: dateBefore,
         ...req,
       } as GetTeamsStatsRequestParams)
       .pipe(
@@ -204,10 +206,11 @@ export class ScoresRestService {
       dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
 
+    reqParams.from = dateAfter;
+    reqParams.to = dateBefore;
+
     return this.statsApi.getProgramsStats({
       itemsPerPage: 400,
-      from: dateAfter,
-      to: dateBefore,
       ...reqParams,
     });
   }
@@ -215,7 +218,7 @@ export class ScoresRestService {
   getPaginatedTagsStats(
     duration: EScoreDuration,
     isProgression = false,
-    reqParams?: GetTagsStatsRequestParams,
+    reqParams: GetTagsStatsRequestParams = {},
   ): Observable<TagStatsDtoPaginatedResponseApi> {
     let dateAfter: Date;
     let dateBefore: Date;
@@ -231,10 +234,11 @@ export class ScoresRestService {
       dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
     }
 
+    reqParams.from = dateAfter;
+    reqParams.to = dateBefore;
+
     return this.statsApi.getTagsStats({
       itemsPerPage: 400,
-      from: dateAfter,
-      to: dateBefore,
       ...reqParams,
     });
   }
@@ -286,6 +290,49 @@ export class ScoresRestService {
       }),
       map((tagsStatsDtos) => {
         return tagsStatsDtos.flat();
+      }),
+    );
+  }
+
+  getAllUsersStats(duration?: EScoreDuration, isProgression = false, req: GetUsersStatsRequestParams = {}): Observable<UserStatsDtoApi[]> {
+    let dateAfter: Date;
+    let dateBefore: Date;
+
+    if (isProgression) {
+      const [start, end] = this.service.getPreviousPeriod(duration ?? EScoreDuration.Year);
+
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration ?? EScoreDuration.Year);
+      dateBefore = new Date();
+      dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
+    }
+
+    req.from = dateAfter;
+    req.to = dateBefore;
+
+    return this.statsApi.getUsersStats({ page: 1, itemsPerPage: 1000, ...req }).pipe(
+      switchMap(({ data, meta }) => {
+        const reqs: Observable<UserStatsDtoApi[]>[] = [of(data ? data : [])];
+        let totalPages = meta.totalPage ?? 1;
+
+        for (let i = 2; i <= totalPages; i++) {
+          reqs.push(
+            this.statsApi.getUsersStats({ from: dateAfter, to: dateBefore, page: i, itemsPerPage: 1000, ...req }).pipe(
+              tap(({ meta }) => {
+                if (meta.totalPage !== totalPages) {
+                  totalPages = meta.totalPage;
+                }
+              }),
+              map(({ data }) => (data ? data : [])),
+            ),
+          );
+        }
+        return combineLatest(reqs);
+      }),
+      map((usersStatsDtos) => {
+        return usersStatsDtos.flat();
       }),
     );
   }

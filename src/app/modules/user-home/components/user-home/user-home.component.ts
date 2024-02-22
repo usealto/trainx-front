@@ -110,19 +110,20 @@ export class UserHomeComponent implements OnInit, OnDestroy {
           startWith(this.durationControl.value),
           switchMap((duration) => {
             return combineLatest([
-              this.scoreRestService.getPaginatedUsersStats(duration),
-              this.scoreRestService.getPaginatedUsersStats(duration, true),
-            ]);
+              this.scoreRestService.getAllUsersStats(duration),
+              this.scoreRestService.getAllUsersStats(duration, true),
+            ])
           }),
         )
         .subscribe({
-          next: ([{ data: usersStats = [] }, { data: previousUsersStats = [] }]) => {
+          next: ([usersStats, previousUsersStats]) => {
             const filteredUsersStats = usersStats.filter((user) => user.teamId === this.user.teamId);
             const filteredPreviousScoredUsers = previousUsersStats.filter(
               (user) => user.teamId === this.user.teamId,
             );
 
             this.leaderboardUsers = filteredUsersStats
+              .filter(({score}) => typeof score === 'number')
               .map((scoredUser) => {
                 const user = this.users.find((user) => user.id === scoredUser.id);
                 const previousScoredUser = filteredPreviousScoredUsers.find(
@@ -134,11 +135,10 @@ export class UserHomeComponent implements OnInit, OnDestroy {
                     : 0;
                 return {
                   name: user?.fullname as string,
-                  score: scoredUser.score ?? 0,
+                  score: scoredUser.score as number,
                   progression: progression,
                 };
               })
-              .slice(0, 5);
 
             this.leaderboardDataStatus =
               this.leaderboardUsers.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
