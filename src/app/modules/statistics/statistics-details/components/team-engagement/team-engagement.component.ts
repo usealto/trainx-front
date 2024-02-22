@@ -90,6 +90,7 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
             return combineLatest([
               of(duration),
               this.scoreRestService.getAllUsersStats(duration, false, {teamIds: this.team.id}),
+              this.scoreRestService.getAllUsersStats(duration, true, {teamIds: this.team.id}),
               this.scoreRestService.getScores(this.getScoreParams('answers', duration)),
               this.scoreRestService.getScores(this.getScoreParams('comments', duration)),
               this.scoreRestService.getScores(this.getScoreParams('submitedQuestions', duration)),
@@ -100,6 +101,7 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
           next: ([
             duration,
             usersStats,
+            prevUsersStats,
             anwsersScores,
             commentsScores,
             submittedQuestionsScores,
@@ -108,13 +110,17 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
             this.createContributionsChart(commentsScores, submittedQuestionsScores, duration);
 
             this.membersLeaderboard = usersStats
-              .map((userStats) => (
-                {
+              .map((userStats) => {
+                const previousGuessesCount = prevUsersStats.find((u) => u.user.id === userStats.user.id)?.totalGuessesCount;
+                const progression = this.scoreService.getProgression(userStats.totalGuessesCount, previousGuessesCount);
+
+                return {
                   name: this.usersById.get(userStats.user.id)?.fullname ?? '',
                   score: userStats.totalGuessesCount ?? 0,
-                  progression: 0,
+                  progression: progression ?? 0,
                 }
-              ))
+              }
+              )
 
             this.membersLeaderboardStatus =
               this.membersLeaderboard.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
