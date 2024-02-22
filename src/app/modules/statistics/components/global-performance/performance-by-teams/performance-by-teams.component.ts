@@ -3,7 +3,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, of, startWith, switchMap, tap } from 'rxjs';
+import { Subscription, combineLatest, of, startWith, switchMap } from 'rxjs';
 import { IAppData } from 'src/app/core/resolvers';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -17,9 +17,9 @@ import { Company } from '../../../../../models/company.model';
 import { EScoreDuration, Score } from '../../../../../models/score.model';
 import { TeamStats } from '../../../../../models/team.model';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { AltoRoutes } from '../../../../shared/constants/routes';
 import { SelectOption } from '../../../../shared/models/select-option.model';
 import { StatisticsService } from '../../../services/statistics.service';
-import { AltoRoutes } from '../../../../shared/constants/routes';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -67,6 +67,7 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.programsCount = (data[EResolvers.AppResolver] as IAppData).company.programs.length;
+
     this.performanceByTeamsComponentSubscription.add(
       combineLatest([
         this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
