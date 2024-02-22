@@ -350,12 +350,16 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: ([tagStats, selectedTags]) => {
-            this.createSpiderChart(
-              tagStats
-                .filter(({ score }) => typeof score === 'number')
-                .filter((t) => selectedTags.some(({ value }) => value === t.tag.id)),
-            );
-            this.spiderChartDataStatus = EPlaceholderStatus.GOOD;
+            if (tagStats.length) {
+              this.createSpiderChart(
+                tagStats
+                  .filter(({ score }) => typeof score === 'number')
+                  .filter((t) => selectedTags.some(({ value }) => value === t.tag.id)),
+              );
+              this.spiderChartDataStatus = EPlaceholderStatus.GOOD;
+            } else {
+              this.spiderChartDataStatus = EPlaceholderStatus.NO_RESULT;
+            }
           },
         }),
     );
