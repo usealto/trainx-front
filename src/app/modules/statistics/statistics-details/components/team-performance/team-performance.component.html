@@ -117,33 +117,39 @@
       <alto-chart-radar [chartOption]="spiderChartOptions"></alto-chart-radar>
     </div>
 
-    <div class="nodata-placeholder" noData>
-      <div
-      *ngIf="tagsControl.value.length < 3 || tagsControl.value.length > 6; else noDataPlaceholder"
-      class="nodata-placeholder d-flex align-items-center justify-content-center"
-      style="height: 366px"
-      >
-        <div class="text-center">
-          <img [src]="EmojiName.FaceWithMonocle | emoji" height="24" width="24" />
-          <p class="mt-3">
-            {{ tagsControl.value.length < 3 ? I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.lessThan3Tags : I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.moreThan6Tags}}
-          </p>
-        </div>
-      </div>
-
-      <ng-template #noDataPlaceholder>
-        <h2 class="mb-5 fs-6">
-          {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.title }}
-        </h2>
+    <div class="d-flex justify-content-center align-items-center nodata-placeholder" style="height: 400px" noData>
+      <ng-container *ngIf="tagsOptions.length < 3; else selectSpiderTags">
         <div class="text-center">
           <img [src]="EmojiName.FourOclock | emoji" height="24" width="24" />
           <p class="mt-3">
-            {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.noData }}
+            {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.notEnoughTags }}
+          </p>
+        </div>
+      </ng-container>
+
+      <ng-template #selectSpiderTags>
+        <div class="text-center">
+          <img [src]="EmojiName.FaceWithMonocle | emoji" height="24" width="24" />
+          <p class="mt-3">
+            {{
+              tagsControl.value.length < 3
+                ? I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.lessThan3Tags
+                : I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.moreThan6Tags
+            }}
           </p>
         </div>
       </ng-template>
-
     </div>
+
+    <div class="d-flex justify-content-center align-items-center nodata-placeholder" style="height: 400px" noResult>
+      <div class="text-center">
+        <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+        <p class="mt-3">
+          {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.noData }}
+        </p>
+      </div>
+    </div>
+
     <div class="skeleton-panel mb-5" style="height: 500px" loading></div>
   </alto-placeholder-manager>
 </div>
