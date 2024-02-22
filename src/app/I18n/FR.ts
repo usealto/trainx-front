@@ -435,7 +435,7 @@ export const FR = {
       perThemePerformance: {
         title: 'Niveau de maîtrise par thématiques',
         subtitle:
-          "Retrouvez une vue d'ensemble sur fle niveau de maîtrise de vos équipes selon leurs thématiques.",
+          "Retrouvez une vue d'ensemble sur le niveau de maîtrise de vos équipes selon leurs thématiques.",
         spiderChart: {
           title: 'Aperçu des thématiques',
           subtitle: "Évaluation du niveau moyen de l'entreprise sur les 12 derniers mois.",
