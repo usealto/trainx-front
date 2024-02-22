@@ -77,10 +77,10 @@ export class Team extends BaseModel implements ITeam {
 export interface ITeamStats extends IBaseStats {
   programStats: ITeamProgramStats[];
   teamId: string;
-  questionsPushedCount: number;
-  commentsCount: number;
-  questionsSubmittedCount: number;
-  validGuessesCount: number;
+  questionsPushedCount?: number;
+  commentsCount?: number;
+  questionsSubmittedCount?: number;
+  validGuessesCount?: number;
   tagStats: ITeamTagStats[];
   scoreDuration: EScoreDuration;
   isPrev: boolean;
@@ -89,10 +89,10 @@ export interface ITeamStats extends IBaseStats {
 export class TeamStats extends BaseStats implements ITeamStats {
   programStats: TeamProgramStats[];
   teamId: string;
-  questionsPushedCount: number;
-  commentsCount: number;
-  questionsSubmittedCount: number;
-  validGuessesCount: number;
+  questionsPushedCount?: number;
+  commentsCount?: number;
+  questionsSubmittedCount?: number;
+  validGuessesCount?: number;
   tagStats: TeamTagStats[];
   scoreDuration: EScoreDuration;
   isPrev: boolean;
@@ -121,10 +121,10 @@ export class TeamStats extends BaseStats implements ITeamStats {
       teamId: data.team.id,
       from,
       to,
-      questionsPushedCount: data.questionsPushedCount || 0,
-      commentsCount: data.commentsCount || 0,
-      questionsSubmittedCount: data.questionsSubmittedCount || 0,
-      validGuessesCount: data.validGuessesCount || 0,
+      questionsPushedCount: data.questionsPushedCount,
+      commentsCount: data.commentsCount,
+      questionsSubmittedCount: data.questionsSubmittedCount,
+      validGuessesCount: data.validGuessesCount,
       score: data.score,
       totalGuessesCount: data.totalGuessesCount,
       tagStats: data.tags?.map((tag) => TeamTagStats.fromDto(tag)) || [],
