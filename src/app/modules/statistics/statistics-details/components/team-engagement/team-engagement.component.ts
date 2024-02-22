@@ -89,16 +89,8 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
           switchMap((duration) => {
             return combineLatest([
               of(duration),
-              this.scoreRestService.getPaginatedUsersStats(duration, false, {
-                teamIds: this.team.id,
-                sortBy: 'score:asc',
-                itemsPerPage: 3,
-              }),
-              this.scoreRestService.getPaginatedUsersStats(duration, false, {
-                teamIds: this.team.id,
-                sortBy: 'score:desc',
-                itemsPerPage: 3,
-              }),
+              this.scoreRestService.getAllUsersStats(duration, false, {teamIds: this.team.id}),
+              this.scoreRestService.getAllUsersStats(duration, true, {teamIds: this.team.id}),
               this.scoreRestService.getScores(this.getScoreParams('answers', duration)),
               this.scoreRestService.getScores(this.getScoreParams('comments', duration)),
               this.scoreRestService.getScores(this.getScoreParams('submitedQuestions', duration)),
@@ -108,8 +100,8 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
         .subscribe({
           next: ([
             duration,
-            { data: flopUsersStats = [] },
-            { data: topUsersStats = [] },
+            usersStats,
+            prevUsersStats,
             anwsersScores,
             commentsScores,
             submittedQuestionsScores,
@@ -117,20 +109,18 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
             this.createAnswersChart(anwsersScores, duration);
             this.createContributionsChart(commentsScores, submittedQuestionsScores, duration);
 
-            const userIds = Array.from(new Set([...flopUsersStats, ...topUsersStats].map((u) => u.user.id)));
-            const statsByUserId: Map<string, UserStatsDtoApi> = new Map(
-              [...flopUsersStats, ...topUsersStats].map((u) => [u.user.id, u]),
-            );
+            this.membersLeaderboard = usersStats
+              .map((userStats) => {
+                const previousGuessesCount = prevUsersStats.find((u) => u.user.id === userStats.user.id)?.totalGuessesCount;
+                const progression = this.scoreService.getProgression(userStats.totalGuessesCount, previousGuessesCount);
 
-            this.membersLeaderboard = userIds.map((id) => {
-              const user = this.usersById.get(id) ?? ({} as User);
-              const userStats = statsByUserId.get(id) ?? ({} as UserStatsDtoApi);
-              return {
-                name: user.fullname,
-                score: userStats.totalGuessesCount ?? 0,
-                progression: 0,
-              };
-            });
+                return {
+                  name: this.usersById.get(userStats.user.id)?.fullname ?? '',
+                  score: userStats.totalGuessesCount ?? 0,
+                  progression: progression ?? 0,
+                }
+              }
+              )
 
             this.membersLeaderboardStatus =
               this.membersLeaderboard.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;

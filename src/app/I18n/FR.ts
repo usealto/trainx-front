@@ -443,6 +443,7 @@ export const FR = {
           placeholders: {
             noData: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
             notEnoughTags: 'Vous devez avoir créé au moins 3 tags.',
+            noTag: 'Vous devez avoir créé des tags pour pouvoir visualiser cette donnée.',
             lessThan3Tags: 'Vous devez sélectionner au moins 3 tags.',
             moreThan6Tags: 'Vous devez sélectionner au maximum 6 tags.',
           },

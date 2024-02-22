@@ -31,16 +31,16 @@ export class Ranking implements IRanking {
 export interface IBaseStats {
   from: Date;
   to: Date;
-  score: number;
-  totalGuessesCount: number;
+  score?: number;
+  totalGuessesCount?: number;
   scoreById?: string;
 }
 
 export class BaseStats implements IBaseStats {
   from: Date;
   to: Date;
-  score: number;
-  totalGuessesCount: number;
+  score?: number;
+  totalGuessesCount?: number;
   scoreById?: string;
 
   constructor(data: IBaseStats) {
@@ -52,7 +52,7 @@ export class BaseStats implements IBaseStats {
   }
 
   static baseStatsCmp(a: BaseStats, b: BaseStats): number {
-    return b.score - a.score;
+    return (b.score ?? 0) - (a.score ?? 0);
   }
 
   get rawData(): IBaseStats {

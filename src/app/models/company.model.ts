@@ -167,7 +167,7 @@ export class Company extends BaseModel implements ICompany {
 export interface ICompanyStats extends IBaseStats {
   commentsCreatedCount: number;
   questionsSubmittedCount: number;
-  score: number;
+  score?: number;
   rankedTags: IRanking[];
   rankedUsers: IRanking[];
   rankedTeams: IRanking[];
@@ -176,6 +176,7 @@ export interface ICompanyStats extends IBaseStats {
 export class CompanyStats extends BaseStats {
   commentsCreatedCount: number;
   questionsSubmittedCount: number;
+  // TODO: to implement when storing data in store
   rankedTags: Ranking[];
   rankedUsers: Ranking[];
   rankedTeams: Ranking[];

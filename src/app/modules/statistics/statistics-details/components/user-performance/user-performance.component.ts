@@ -131,76 +131,95 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
     );
 
     // Spider chart subscription
-    this.userPerformanceComponentSubscription.add(
-      this.scoresRestService
-        .getPaginatedTagsStats(EScoreDuration.Year, false, {
-          sortBy: 'score:desc',
-          itemsPerPage: 6,
-        })
-        .pipe(
-          tap(({ data: bestTagsStats = [] }) => {
-            this.tagsControl.setValue(
-              bestTagsStats.map((tagStats) => {
-                return new FormControl(
-                  this.tagsOptions.find((tagOption) => tagOption.value === tagStats.tag.id) as SelectOption,
-                  { nonNullable: true },
-                );
-              }),
-            );
+    if (this.tagsOptions.length > 2) {
+      this.userPerformanceComponentSubscription.add(
+        this.scoresRestService
+          .getPaginatedTagsStats(EScoreDuration.Year, false, {
+            sortBy: 'score:desc',
+            itemsPerPage: 6,
+          })
+          .pipe(
+            tap(({ data: bestTagsStats = [] }) => {
+              this.tagsControl.setValue(
+                bestTagsStats.map((tagStats) => {
+                  return new FormControl(
+                    this.tagsOptions.find((tagOption) => tagOption.value === tagStats.tag.id) as SelectOption,
+                    { nonNullable: true },
+                  );
+                }),
+              );
+            }),
+            switchMap(() => {
+              return this.tagsControl.valueChanges.pipe(
+                startWith(this.tagsControl.value),
+                map((tags) => tags.map((tag) => tag.value)),
+              );
+            }),
+            filter((selectedTags) => {
+              if (selectedTags.length < 3 || selectedTags.length > 6) {
+                this.spiderChartStatus = EPlaceholderStatus.NO_DATA;
+                return false;
+              }
+              return true;
+            }),
+            switchMap((selectedTagsOptions) => {
+              return combineLatest([
+                this.scoresRestService.getScores({
+                  duration: EScoreDuration.Year,
+                  type: ScoreTypeEnumApi.Tag,
+                  team: this.user.teamId,
+                  timeframe: ScoreTimeframeEnumApi.Year,
+                  ids: selectedTagsOptions.map(({ value }) => value),
+                }),
+                this.scoresRestService.getScores({
+                  duration: EScoreDuration.Year,
+                  type: ScoreTypeEnumApi.Tag,
+                  scoredBy: ScoreByTypeEnumApi.User,
+                  scoredById: this.user.id,
+                  timeframe: ScoreTimeframeEnumApi.Year,
+                  ids: selectedTagsOptions.map(({ value }) => value),
+                }),
+              ]).pipe(
+                tap(([teamScores, userScores]) => {
+                  if (userScores.length > 0) {
+                    const filteredTeamScores = selectedTagsOptions.map(({ value }) => {
+                      return teamScores.find(({ id }) => id === value);
+                    });
+
+                    const filteredUserScores = selectedTagsOptions.map(({ value }) => {
+                      return userScores.find(({ id }) => id === value);
+                    });
+
+                    const optionsLabels = selectedTagsOptions.map(({ label }) => label);
+
+                    this.createSpiderChart(
+                      optionsLabels,
+                      filteredTeamScores.map((teamScore) => {
+                        return typeof teamScore?.averages[0] === 'number'
+                          ? Math.round((teamScore.averages[0] * 10000) / 100)
+                          : null;
+                      }),
+                      filteredUserScores.map((userScore) => {
+                        return typeof userScore?.averages[0] === 'number'
+                          ? Math.round((userScore.averages[0] * 10000) / 100)
+                          : null;
+                      }),
+                    );
+                  }
+                }),
+              );
+            }),
+          )
+          .subscribe({
+            next: ([, userScores]) => {
+              this.spiderChartStatus =
+                userScores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_RESULT;
+            },
           }),
-          switchMap(() => {
-            return this.tagsControl.valueChanges.pipe(
-              startWith(this.tagsControl.value),
-              map((tags) => tags.map((tag) => tag.value)),
-            );
-          }),
-          filter((selectedTags) => {
-            if (selectedTags.length < 3 || selectedTags.length > 6) {
-              this.spiderChartStatus = EPlaceholderStatus.NO_DATA;
-              return false;
-            }
-            return true;
-          }),
-          switchMap((selectedTagsOptions) => {
-            return combineLatest([
-              this.scoresRestService.getScores({
-                duration: EScoreDuration.Year,
-                type: ScoreTypeEnumApi.Tag,
-                team: this.user.teamId,
-                timeframe: ScoreTimeframeEnumApi.Year,
-                ids: selectedTagsOptions.map(({ value }) => value),
-              }),
-              this.scoresRestService.getScores({
-                duration: EScoreDuration.Year,
-                type: ScoreTypeEnumApi.Tag,
-                scoredBy: ScoreByTypeEnumApi.User,
-                scoredById: this.user.id,
-                timeframe: ScoreTimeframeEnumApi.Year,
-                ids: selectedTagsOptions.map(({ value }) => value),
-              }),
-            ]).pipe(
-              tap(([teamScores, userScores]) => {
-                this.createSpiderChart(
-                  selectedTagsOptions.map(({ label }) => label),
-                  teamScores.map((teamScore) => {
-                    return teamScore.averages[0] ? Math.round((teamScore.averages[0] * 10000) / 100) : null;
-                  }),
-                  userScores.map((userScore) => {
-                    return userScore.averages[0] ? Math.round((userScore.averages[0] * 10000) / 100) : null;
-                  }),
-                );
-              }),
-            );
-          }),
-        )
-        .subscribe({
-          next: ([teamScores, userScores]) => {
-            if (teamScores.length > 0 || userScores.length > 0) {
-              this.spiderChartStatus = EPlaceholderStatus.GOOD;
-            }
-          },
-        }),
-    );
+      );
+    } else {
+      this.spiderChartStatus = EPlaceholderStatus.NO_DATA;
+    }
   }
 
   ngOnDestroy(): void {
@@ -247,8 +266,9 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
               },
               label: {
                 show: true,
+                // TODO : is not working
                 formatter: function (params: any) {
-                  if (params.value !== null && params.value !== undefined) {
+                  if (typeof params.value === 'number') {
                     return (params.value as string) + ' %';
                   }
                   return undefined;
