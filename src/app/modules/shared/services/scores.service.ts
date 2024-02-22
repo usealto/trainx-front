@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ScoreDtoApi, ScoreTimeframeEnumApi } from '@usealto/sdk-ts-angular';
-import { addDays, addHours, startOfDay } from 'date-fns';
+import { addDays, addHours } from 'date-fns';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
 import { EScoreDuration, EScoreFilter, Score } from '../../../models/score.model';
-import { TopFlopDisplay } from '../models/score.model';
 
 @Injectable({
   providedIn: 'root',
