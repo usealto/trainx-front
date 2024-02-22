@@ -111,12 +111,11 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
 
           const teamStats = this.company.getStatsByPeriod(this.durationControl.value, false);
           const previousTeamStats = this.company.getStatsByPeriod(this.durationControl.value, true);
-
           this.teamsLeaderboard = teamStats
-            .filter((t) => t.score && t.score >= 0)
+            .filter(({score}) => typeof score === 'number')
             .map((t) => ({
               name: this.company.teamById.get(t.teamId)?.name ?? '',
-              score: t.score ?? 0,
+              score: t.score as number,
             }));
 
           this.teamsLeaderboardDataStatus =

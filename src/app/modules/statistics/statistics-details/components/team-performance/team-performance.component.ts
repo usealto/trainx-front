@@ -369,37 +369,18 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
         .pipe(
           startWith(this.durationControl.value),
           switchMap((duration) => {
-            return combineLatest([
-              this.scoresRestService.getPaginatedUsersStats(duration, false, {
-                page: 1,
-                itemsPerPage: 3,
-                sortBy: 'score:asc',
-                teamIds: this.teamId ? this.teamId : undefined,
-              }),
-              this.scoresRestService.getPaginatedUsersStats(duration, false, {
-                page: 1,
-                itemsPerPage: 3,
-                sortBy: 'score:desc',
-                teamIds: this.teamId ? this.teamId : undefined,
-              }),
-            ]);
+            return this.scoresRestService.getAllUsersStats(duration, false, {
+              teamIds: this.teamId ? this.teamId : undefined,
+              sortBy: 'socre:asc',
+            });
           }),
         )
         .subscribe({
-          next: ([{ data: flopUsersStats = [] }, { data: topUsersStats = [] }]) => {
-            const userIds = Array.from(new Set([...flopUsersStats, ...topUsersStats].map((u) => u.user.id)));
-            const statsByUserId: Map<string, UserStatsDtoApi> = new Map(
-              [...flopUsersStats, ...topUsersStats].map((u) => [u.user.id, u]),
-            );
+          next: (usersStats) => {
 
-            this.membersLeaderboard = userIds.map((userId) => {
-              const userStats = statsByUserId.get(userId);
-              return {
-                name: this.usersById.get(userId)?.fullname ?? '',
-                score: userStats?.score ?? 0,
-              };
-            });
-
+            this.membersLeaderboard = usersStats
+              .filter(({ score }) => typeof score === 'number')
+              .map((u) => ({ name: u.user.firstname + ' ' + u.user.lastname, score: u.score as number }));
             this.membersLeaderboardStatus =
               this.membersLeaderboard.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
           },

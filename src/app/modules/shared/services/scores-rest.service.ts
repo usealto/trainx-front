@@ -290,6 +290,46 @@ export class ScoresRestService {
     );
   }
 
+  getAllUsersStats(duration?: EScoreDuration, isProgression = false, req: GetUsersStatsRequestParams = {}): Observable<UserStatsDtoApi[]> {
+    let dateAfter: Date;
+    let dateBefore: Date;
+
+    if (isProgression) {
+      const [start, end] = this.service.getPreviousPeriod(duration ?? EScoreDuration.Year);
+
+      dateAfter = start;
+      dateBefore = end;
+    } else {
+      dateAfter = this.service.getStartDate(duration ?? EScoreDuration.Year);
+      dateBefore = new Date();
+      dateBefore = addDays(dateBefore, 1); //! TEMPORARY FIX to get data from actual day
+    }
+
+    return this.statsApi.getUsersStats({ from: dateAfter, to: dateBefore, page: 1, itemsPerPage: 1000, ...req }).pipe(
+      switchMap(({ data, meta }) => {
+        const reqs: Observable<UserStatsDtoApi[]>[] = [of(data ? data : [])];
+        let totalPages = meta.totalPage ?? 1;
+
+        for (let i = 2; i <= totalPages; i++) {
+          reqs.push(
+            this.statsApi.getUsersStats({ from: dateAfter, to: dateBefore, page: i, itemsPerPage: 1000, ...req }).pipe(
+              tap(({ meta }) => {
+                if (meta.totalPage !== totalPages) {
+                  totalPages = meta.totalPage;
+                }
+              }),
+              map(({ data }) => (data ? data : [])),
+            ),
+          );
+        }
+        return combineLatest(reqs);
+      }),
+      map((usersStatsDtos) => {
+        return usersStatsDtos.flat();
+      }),
+    );
+  }
+
   // TODO : clean
   getScores(
     { duration, type, team, timeframe, sortBy, user, ids, scoredBy, scoredById }: ChartFilters,

@@ -9,7 +9,7 @@ import {
   QuestionSubmittedStatusEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
-  UserStatsDtoPaginatedResponseApi,
+  UserStatsDtoApi,
 } from '@usealto/sdk-ts-angular';
 import { EChartsOption } from 'echarts';
 import { Observable, Subscription, combineLatest, map, startWith, switchMap, tap } from 'rxjs';
@@ -195,11 +195,11 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
     );
   }
 
-  getTopFlop(duration: EScoreDuration): Observable<UserStatsDtoPaginatedResponseApi> {
+  getTopFlop(duration: EScoreDuration): Observable<UserStatsDtoApi[]> {
     let teamStats = this.company.getStatsByPeriod(duration, false);
     const teams = this.company.teams;
 
-    teamStats = teamStats.filter((t) => t.score && t.score >= 0);
+    teamStats = teamStats.filter(({score}) => typeof score === 'number');
 
     this.teamsLeaderboard = teamStats.map((t) => {
       // Find the corresponding team based on teamId
@@ -208,26 +208,26 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
       // Return the mapping with team name and score
       return {
         name: matchingTeam ? matchingTeam.name : 'Unknown Team', // Fallback in case no matching team is found
-        score: t.score,
+        score: t.score as number,
       };
     });
 
     this.teamsLeaderboardDataStatus =
       this.teamsLeaderboard.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
 
-    return this.scoresRestService.getPaginatedUsersStats(duration).pipe(
-      tap(({ data: rawUsersStats = [] }) => {
-        const filteredUsers = rawUsersStats.filter((u) => u.score && u.score >= 0) ?? [];
-        this.usersLeaderboard = filteredUsers.map((u) => ({
-          name: u.user.firstname + ' ' + u.user.lastname,
-          score: u.score ?? 0,
-        }));
-
+    return this.scoresRestService.getAllUsersStats().pipe(
+      tap((usersStats) => {
+        this.usersLeaderboard = usersStats
+          .filter(({ score }) => typeof score === 'number')
+          .map((u) => ({
+            name: u.user.firstname + ' ' + u.user.lastname,
+            score: u.score as number,
+          }));
         this.usersLeaderboardDataStatus =
           this.usersLeaderboard.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
         this.topflopLoaded = true;
       }),
-    );
+    )
   }
 
   setAverageScore(
