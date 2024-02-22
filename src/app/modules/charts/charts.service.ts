@@ -194,7 +194,9 @@ export class ChartsService {
       listString += `
       <div style="padding : 4px 10px 8px 10px; display: flex; align-items: center; gap: 10px;">
       ${bulletPointString}
-      <span>${labels[i].name}</span> : <b style="color: ${params.color};">${params.value[i] || '- '}%</b>
+      <span>${labels[i].name}</span> : <b style="color: ${params.color};">${
+        typeof params.value[i] === 'number' ? params.value[i] : '- '
+      }%</b>
       </div>`;
     }
 

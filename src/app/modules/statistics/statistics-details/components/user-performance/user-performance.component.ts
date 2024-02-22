@@ -66,7 +66,7 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
     const teamsById = (data[EResolvers.AppResolver] as IAppData).company.teamById;
     const tagsDtos = (data[EResolvers.LeadResolver] as ILeadData).tags;
 
-    // this.tagsOptions = tagsDtos.map((tagDto) => new SelectOption({ label: tagDto.name, value: tagDto.id }));
+    this.tagsOptions = tagsDtos.map((tagDto) => new SelectOption({ label: tagDto.name, value: tagDto.id }));
 
     // TODO : move logic into a guard or resolver
     const userId = this.router.url.split('/').pop() || '';
@@ -182,23 +182,25 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
               ]).pipe(
                 tap(([teamScores, userScores]) => {
                   if (userScores.length > 0) {
+                    const filteredTeamScores = selectedTagsOptions.map(({ value }) => {
+                      return teamScores.find(({ id }) => id === value);
+                    });
+
+                    const filteredUserScores = selectedTagsOptions.map(({ value }) => {
+                      return userScores.find(({ id }) => id === value);
+                    });
+
+                    const optionsLabels = selectedTagsOptions.map(({ label }) => label);
+
                     this.createSpiderChart(
-                      selectedTagsOptions.map(({ label }) => label),
-                      (
-                        selectedTagsOptions.map(({ value }) => {
-                          return teamScores.find(({ id }) => id === value);
-                        }) as Score[]
-                      ).map((teamScore) => {
-                        return teamScore.averages[0]
+                      optionsLabels,
+                      filteredTeamScores.map((teamScore) => {
+                        return typeof teamScore?.averages[0] === 'number'
                           ? Math.round((teamScore.averages[0] * 10000) / 100)
                           : null;
                       }),
-                      (
-                        selectedTagsOptions.map(({ value }) => {
-                          return userScores.find(({ id }) => id === value);
-                        }) as Score[]
-                      ).map((userScore) => {
-                        return userScore.averages[0]
+                      filteredUserScores.map((userScore) => {
+                        return typeof userScore?.averages[0] === 'number'
                           ? Math.round((userScore.averages[0] * 10000) / 100)
                           : null;
                       }),
@@ -264,8 +266,9 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
               },
               label: {
                 show: true,
+                // TODO : is not working
                 formatter: function (params: any) {
-                  if (params.value !== null && params.value !== undefined) {
+                  if (typeof params.value === 'number') {
                     return (params.value as string) + ' %';
                   }
                   return undefined;
