@@ -65,13 +65,7 @@
               </ng-template>
             </td>
             <td class="w-20 text-start">
-              <div *ngIf="team.usersCount !== 0">
-                {{ I18ns.leadTeam.teams.table.users | plural : team.usersCount }}
-                {{ I18ns.shared.members }}
-              </div>
-              <div *ngIf="team.usersCount === 0">
-                {{ I18ns.leadTeam.teams.table.noUsers }}
-              </div>
+              {{ I18ns.leadTeam.teams.table.users | plural : team.usersCount }}
             </td>
             <td>
               <div *ngIf="team.totalGuessesCount && team.questionsPushedCount" class="text-center">
