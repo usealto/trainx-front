@@ -822,8 +822,7 @@ export const FR = {
         name: "Nom de l'équipe",
         initials: '',
         usersCount: 'Nombre de membres',
-        noUsers: 'Aucun membre',
-        users: ['Aucun', '{{}}', '{{}}'],
+        users: ['Aucun membre', '{{}} membre', '{{}} membres'],
         globalScore: 'Score global',
         assignatedQuestions: 'Nombre de questions assignées',
         notEnoughQuestions:

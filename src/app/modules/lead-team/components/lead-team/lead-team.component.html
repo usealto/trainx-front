@@ -65,13 +65,7 @@
               </ng-template>
             </td>
             <td class="w-20 text-start">
-              <div *ngIf="getTeamUsersCount(team.id) !== 0">
-                {{ I18ns.leadTeam.teams.table.users | plural : getTeamUsersCount(team.id) }}
-                {{ I18ns.shared.members }}
-              </div>
-              <div *ngIf="getTeamUsersCount(team.id) === 0">
-                {{ I18ns.leadTeam.teams.table.noUsers }}
-              </div>
+              {{ I18ns.leadTeam.teams.table.users | plural : team.usersCount }}
             </td>
             <td>
               <div *ngIf="team.totalGuessesCount && team.questionsPushedCount" class="text-center">
@@ -84,7 +78,7 @@
             <td class="text-start">
               {{ team.createdAt | date : 'shortDate' }}
             </td>
-            <td class="cursor-pointer px-3" (click)="deleteTeam(team.id)">
+            <td class="cursor-pointer px-3" (click)="deleteTeam(team)">
               <i [attr.data-cy]="'deleteTeam' + team.name" class="fs-5 bi bi-trash3 float-end"></i>
             </td>
             <td class="cursor-pointer px-3" (click)="openTeamForm(team.id)">
