@@ -414,13 +414,12 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
           this.filteredUsersData[userIndex].user = editedUser;
         }
 
-        return combineLatest([this.store.select(FromRoot.selectUsers), this.store.select(FromRoot.selectCompany)]);
+        return this.store.select(FromRoot.selectUsers);
       })
     ).subscribe({
-      next: ([{data: usersById}, {data: company}]) => {
+      next: ({data: usersById}) => {
         this.rawUsers = Array.from(usersById.values());
-        this.company = company;
-        this.initFromCompany(company);
+        this.initFromCompany(this.company);
       }
     });
   }
