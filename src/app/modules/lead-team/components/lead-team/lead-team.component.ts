@@ -51,6 +51,7 @@ interface TeamDisplay {
   totalGuessesCount?: number;
   validGuessesCount?: number;
   questionsPushedCount?: number;
+  usersCount: number;
 }
 
 interface IUserWithStats {
@@ -126,8 +127,8 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.company = (data[EResolvers.LeadResolver] as ILeadData).company;
-    this.initFromCompany(this.company);
     this.rawUsers = Array.from((data[EResolvers.AppResolver] as IAppData).userById.values());
+    this.initFromCompany(this.company);
 
     // users subscription
     this.leadTeamComponentSubscription.add(
@@ -252,6 +253,7 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
             }
             return acc + program.questionsCount;
           }, 0) ?? 0,
+        usersCount: this.rawUsers.filter((user) => user.teamId === team?.id).length,
       };
     });
 
@@ -337,7 +339,7 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
       });
   }
 
-  deleteTeam(teamId: string) {
+  deleteTeam(team: TeamDisplay) {
     const modalRef = this.modalService.open(DeleteModalComponent, {
       centered: true,
       size: 'md',
@@ -347,18 +349,18 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     componentInstance.data = {
       title: this.replaceInTranslationPipe.transform(
         I18ns.leadTeam.teams.deleteModal.title,
-        this.teamsById.get(teamId)?.name,
+        this.teamsById.get(team.id)?.name,
       ),
       subtitle: this.replaceInTranslationPipe.transform(
         I18ns.leadTeam.teams.deleteModal.subtitle,
-        this.getTeamUsersCount(teamId),
+        team.usersCount,
       ),
     };
 
     componentInstance.objectDeleted
       .pipe(
         switchMap(() => {
-          return this.teamsRestService.deleteTeam(teamId);
+          return this.teamsRestService.deleteTeam(team.id);
         }),
         switchMap(() => {
           return this.teamsRestService.getTeams();
@@ -402,14 +404,24 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
 
     instance.user = user;
     instance.teams = Array.from(this.teamsById.values());
-    canvasRef.closed.subscribe((user) => {
-      this.store.dispatch(patchUser({ user: user }));
-    });
-  }
 
-  @memoize()
-  getTeamUsersCount(teamId: string): number {
-    return this.rawUsers.filter((user) => user.teamId === teamId).length;
+    instance.editedUser.pipe(
+      switchMap((editedUser) => {
+        this.store.dispatch(patchUser({ user: editedUser }));
+
+        const userIndex = this.filteredUsersData.findIndex((u) => u.user.id === editedUser.id);
+        if(this.filteredUsersData[userIndex]) {
+          this.filteredUsersData[userIndex].user = editedUser;
+        }
+
+        return this.store.select(FromRoot.selectUsers);
+      })
+    ).subscribe({
+      next: ({data: usersById}) => {
+        this.rawUsers = Array.from(usersById.values());
+        this.initFromCompany(this.company);
+      }
+    });
   }
 
   @memoize()
