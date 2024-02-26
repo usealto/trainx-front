@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { SelectOption } from '../../../models/select-option.model';
