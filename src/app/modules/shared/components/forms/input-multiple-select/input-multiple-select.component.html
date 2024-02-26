@@ -22,12 +22,15 @@
     (click)="$event.stopPropagation()"
     [style]="isForm ? 'max-width: 100%' : ''"
   >
-
-    <input *ngIf="enableSearch && options.length > 0" type="text" [formControl]="searchControl" class="dropdown-item dropdown-search border-bottom" [placeholder]="I18ns.shared.search">
+    <div *ngIf="enableSearch && options.length > 0" class="dropdown-item border-bottom">
+      <span class="search-icon"><i class="bi bi-search"></i></span>
+      <input *ngIf="enableSearch && options.length > 0" type="text" [formControl]="searchControl" class="dropdown-item dropdown-search" [placeholder]="I18ns.shared.search">
+      <i *ngIf="searchControl.value" class="delete-icon cursor-pointer bi-x-lg hover-red" (click)="searchControl.patchValue(null)"></i>
+    </div>
 
     <ng-container *ngIf="filteredOptions.length > 0; else noOption">
       <div *ngIf="!searchControl.value" class="dropdown-item border-bottom cursor-pointer" (click)="toggleAllOptions()">
-        <p class="alto-grey">{{ I18ns.shared.selectAll }}</p>
+        <p class="alto-grey">{{ controls.value.length === options.length ? I18ns.shared.selectNone : I18ns.shared.selectAll }}</p>
       </div>
 
       <div
