@@ -8,7 +8,7 @@
     <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.teamActivity.subtitle }}</p>
   </div>
 
-  <alto-time-picker [durationControl]="durationControl"></alto-time-picker>
+  <alto-time-picker [options]="durationOptions" [durationControl]="durationControl"></alto-time-picker>
 </div>
 
 <alto-placeholder-manager [status]="answersChartStatus">
@@ -31,11 +31,12 @@
 
 <alto-placeholder-manager [status]="membersLeaderboardStatus">
   <alto-leaderboard
-  *ngIf="membersLeaderboardStatus === EPlaceholderStatus.GOOD"
-  [config]="['count', 'progress']"
-  [data]="membersLeaderboard"
-  [title]="I18ns.statistics.team.teamActivity.leaderboardTitle"
-  [subtitle]="I18ns.statistics.team.teamActivity.leaderboardSubtitle">
+    *ngIf="membersLeaderboardStatus === EPlaceholderStatus.GOOD"
+    [config]="['count', 'progress']"
+    [data]="membersLeaderboard"
+    [title]="I18ns.statistics.team.teamActivity.leaderboardTitle"
+    [subtitle]="I18ns.statistics.team.teamActivity.leaderboardSubtitle"
+  >
   </alto-leaderboard>
 
   <div class="nodata-placeholder text-center" noData>
@@ -58,7 +59,7 @@
     <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.team.membersEngagement.subtitle }}</p>
   </div>
 
-  <alto-time-picker [durationControl]="durationControl"></alto-time-picker>
+  <alto-time-picker [options]="durationOptions" [durationControl]="durationControl"></alto-time-picker>
 </div>
 <alto-placeholder-manager [status]="contributionChartStatus">
   <div class="panel mb-4">
@@ -82,8 +83,9 @@
 
 <div class="mb-5">
   <alto-time-picker
-  class="float-end"
-  [durationControl]="durationControl"
+    class="float-end"
+    [options]="durationOptions"
+    [durationControl]="durationControl"
   ></alto-time-picker>
   <div class="col-6">
     <h2>
