@@ -1,7 +1,7 @@
 <div class="dropdown">
   <div
-    class="form-control"
-    [class]="!isForm ? 'dropdown-input' : 'dropdown-input-form'"
+    class="form-control dropdown-input"
+    [class.form]="isForm"
     (click)="toggleDropdown()"
   >
 
@@ -20,11 +20,12 @@
     class="dropdown-menu"
     [ngClass]="{ show: isDropdownOpen }"
     (click)="$event.stopPropagation()"
+    [class.medium-w]="enableSearch"
     [style]="isForm ? 'max-width: 100%' : ''"
   >
-    <div *ngIf="enableSearch && options.length > 0" class="dropdown-item border-bottom">
+    <div *ngIf="enableSearch && options.length > 0" class="dropdown-search border-bottom">
       <span class="search-icon"><i class="bi bi-search"></i></span>
-      <input *ngIf="enableSearch && options.length > 0" type="text" [formControl]="searchControl" class="dropdown-item dropdown-search" [placeholder]="I18ns.shared.search">
+      <input *ngIf="enableSearch && options.length > 0" type="text" [formControl]="searchControl" class="search-field" [placeholder]="I18ns.shared.search">
       <i *ngIf="searchControl.value" class="delete-icon cursor-pointer bi-x-lg hover-red" (click)="searchControl.patchValue(null)"></i>
     </div>
 
@@ -46,7 +47,7 @@
     </ng-container>
 
     <ng-template #noOption>
-      <div class="noOption">
+      <div class="dropdown-item">
         <p class="fst-italic alto-grey">{{ I18ns.shared.noOption }}</p>
       </div>
     </ng-template>

@@ -8,7 +8,7 @@ import { I18ns } from '../../../../../core/utils/i18n/I18n';
 @Component({
   selector: 'alto-input-pills',
   templateUrl: './input-pills.component.html',
-  styleUrls: ['input-pills.component.scss'],
+  styleUrls: ['../input-dropdowns.component.scss'],
 })
 export class InputPillsComponent implements OnInit, OnDestroy {
   I18ns = I18ns;

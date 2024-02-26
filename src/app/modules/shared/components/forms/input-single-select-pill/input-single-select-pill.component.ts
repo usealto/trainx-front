@@ -6,7 +6,7 @@ import { PillOption } from '../../../models/select-option.model';
 @Component({
   selector: 'alto-input-single-select-pill',
   templateUrl: './input-single-select-pill.component.html',
-  styleUrls: ['./input-single-select-pill.component.scss'],
+  styleUrls: ['../input-dropdowns.component.scss'],
 })
 export class InputSingleSelectPillComponent implements OnInit {
   I18ns = I18ns;
