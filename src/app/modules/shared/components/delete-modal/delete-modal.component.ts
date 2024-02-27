@@ -27,5 +27,6 @@ export class DeleteModalComponent {
 
   deleteObject() {
     this.objectDeleted.emit();
+    this.activeModal.close();
   }
 }
