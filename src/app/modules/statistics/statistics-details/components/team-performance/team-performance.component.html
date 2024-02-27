@@ -9,9 +9,7 @@
   </div>
 
   <div class="d-flex align-items-center">
-    <alto-time-picker
-      [durationControl]="durationControl"
-    ></alto-time-picker>
+    <alto-time-picker [options]="durationOptions" [durationControl]="durationControl"></alto-time-picker>
   </div>
 </div>
 
@@ -24,17 +22,15 @@
       </p>
     </div>
 
-
     <alto-input-multiple-select
-    class="me-4"
-    [placeholder]="I18ns.statistics.team.masteryLevel.teamFilter"
-    [controls]="membersFilterControl"
-    [options]="membersOptions"
-    [enableSearch]="true"
+      class="me-4"
+      [placeholder]="I18ns.statistics.team.masteryLevel.teamFilter"
+      [controls]="membersFilterControl"
+      [options]="membersOptions"
+      [enableSearch]="true"
     >
     </alto-input-multiple-select>
   </div>
-
 
   <alto-placeholder-manager [status]="teamChartStatus">
     <div class="chart-container">
@@ -60,15 +56,15 @@
   </alto-placeholder-manager>
 </div>
 
-
 <alto-placeholder-manager [status]="membersLeaderboardStatus">
   <alto-leaderboard
-  *ngIf="membersLeaderboardStatus === EPlaceholderStatus.GOOD"
-  [config]="['score']"
-  [title]="I18ns.statistics.team.masteryLevel.leaderboard"
-  [subtitle]="I18ns.statistics.team.masteryLevel.leaderboardSubtitle"
-  [data]="membersLeaderboard"
-  [size]="3">
+    *ngIf="membersLeaderboardStatus === EPlaceholderStatus.GOOD"
+    [config]="['score']"
+    [title]="I18ns.statistics.team.masteryLevel.leaderboard"
+    [subtitle]="I18ns.statistics.team.masteryLevel.leaderboardSubtitle"
+    [data]="membersLeaderboard"
+    [size]="3"
+  >
   </alto-leaderboard>
   <div class="nodata-placeholder" noData>
     <h2 class="mb-5 fs-6">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title }}</h2>
@@ -103,11 +99,11 @@
     </div>
 
     <alto-input-multiple-select
-    class="me-4"
-    [placeholder]="I18ns.statistics.team.perThemes.tagFilter"
-    [controls]="tagsControl"
-    [options]="tagsOptions"
-    [enableSearch]="true"
+      class="me-4"
+      [placeholder]="I18ns.statistics.team.perThemes.tagFilter"
+      [controls]="tagsControl"
+      [options]="tagsOptions"
+      [enableSearch]="true"
     >
     </alto-input-multiple-select>
   </div>
@@ -117,12 +113,18 @@
       <alto-chart-radar [chartOption]="spiderChartOptions"></alto-chart-radar>
     </div>
 
-    <div class="d-flex justify-content-center align-items-center nodata-placeholder" style="height: 400px" noData>
+    <div
+      class="d-flex justify-content-center align-items-center nodata-placeholder"
+      style="height: 400px"
+      noData
+    >
       <ng-container *ngIf="tagsOptions.length < 3; else selectSpiderTags">
         <div class="text-center">
           <img [src]="EmojiName.FourOclock | emoji" height="24" width="24" />
           <p class="mt-3">
-            {{ I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.notEnoughTags }}
+            {{
+              I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.notEnoughTags
+            }}
           </p>
         </div>
       </ng-container>
@@ -133,15 +135,21 @@
           <p class="mt-3">
             {{
               tagsControl.value.length < 3
-                ? I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.lessThan3Tags
-                : I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders.moreThan6Tags
+                ? I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders
+                    .lessThan3Tags
+                : I18ns.statistics.globalPerformance.perThemePerformance.spiderChart.placeholders
+                    .moreThan6Tags
             }}
           </p>
         </div>
       </ng-template>
     </div>
 
-    <div class="d-flex justify-content-center align-items-center nodata-placeholder" style="height: 400px" noResult>
+    <div
+      class="d-flex justify-content-center align-items-center nodata-placeholder"
+      style="height: 400px"
+      noResult
+    >
       <div class="text-center">
         <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
         <p class="mt-3">
@@ -156,12 +164,13 @@
 
 <alto-placeholder-manager [status]="tagsDataStatus">
   <alto-leaderboard
-  *ngIf="tagsDataStatus === EPlaceholderStatus.GOOD"
-  [config]="['score']"
-  [title]="I18ns.statistics.team.perThemes.leaderboardTitle"
-  [subtitle]="I18ns.statistics.team.perThemes.leaderboardSubtitle"
-  [data]="tagsLeaderboard"
-  [size]="3" >
+    *ngIf="tagsDataStatus === EPlaceholderStatus.GOOD"
+    [config]="['score']"
+    [title]="I18ns.statistics.team.perThemes.leaderboardTitle"
+    [subtitle]="I18ns.statistics.team.perThemes.leaderboardSubtitle"
+    [data]="tagsLeaderboard"
+    [size]="3"
+  >
   </alto-leaderboard>
 
   <div class="nodata-placeholder" noData>
@@ -180,6 +189,7 @@
 <div class="mb-5">
   <alto-time-picker
     class="float-end"
+    [options]="durationOptions"
     [durationControl]="durationControl"
   ></alto-time-picker>
   <div class="col-6">
@@ -226,7 +236,7 @@
             <span
               *ngIf="memberInfos.userStats.score !== undefined; else noScore"
               class="alto-score"
-              [class]="(memberInfos.userStats.score) * 100 | pillColor"
+              [class]="memberInfos.userStats.score * 100 | pillColor"
             >
               {{ memberInfos.userStats.score | percent }}
             </span>
@@ -278,6 +288,7 @@
 <div class="mb-5">
   <alto-time-picker
     class="float-end"
+    [options]="durationOptions"
     [durationControl]="durationControl"
   ></alto-time-picker>
   <div class="col-6">
@@ -291,9 +302,10 @@
   <div class="d-flex justify-content-between">
     <alto-input-search [searchControl]="questionsSearchControl"></alto-input-search>
     <alto-input-single-select-pill
-    [placeholder]="I18ns.shared.level"
-    [control]="questionsScoreControl"
-    [options]="scoreOptions">
+      [placeholder]="I18ns.shared.level"
+      [control]="questionsScoreControl"
+      [options]="scoreOptions"
+    >
     </alto-input-single-select-pill>
   </div>
 </div>
@@ -324,7 +336,7 @@
             <span
               *ngIf="questionInfos.questionStats.score !== undefined; else noScore"
               class="alto-score"
-              [class]="(questionInfos.questionStats.score) * 100 | pillColor"
+              [class]="questionInfos.questionStats.score * 100 | pillColor"
             >
               {{ questionInfos.questionStats.score | percent }}
             </span>

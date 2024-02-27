@@ -3,7 +3,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  CompanyDtoApi,
   ScoreByTypeEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
@@ -43,6 +42,7 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
   company!: Company;
   usersById: Map<string, User> = new Map();
 
+  durationOptions = Score.getTimepickerOptions();
   durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
   });

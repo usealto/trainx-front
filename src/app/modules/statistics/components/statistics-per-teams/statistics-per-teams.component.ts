@@ -16,7 +16,7 @@ import { User } from '../../../../models/user.model';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { DataForTable } from '../../models/statistics.model';
 import { ILeadData } from '../../../../core/resolvers/lead.resolver';
-import { EScoreDuration } from '../../../../models/score.model';
+import { EScoreDuration, Score } from '../../../../models/score.model';
 import { BaseStats } from '../../../../models/stats.model';
 
 @Component({
@@ -29,6 +29,7 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   EPlaceholderStatus = EPlaceholderStatus;
 
+  durationOptions = Score.getTimepickerOptions();
   durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
   });
