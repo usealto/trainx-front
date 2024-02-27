@@ -13,7 +13,7 @@ interface ICheckedOption {
 @Component({
   selector: 'alto-input-multiple-select',
   templateUrl: './input-multiple-select.component.html',
-  styleUrls: ['./input-multiple-select.component.scss'],
+  styleUrls: ['../input-dropdowns.component.scss'],
 })
 export class InputMultipleSelectComponent implements OnInit, OnChanges, OnDestroy {
   @Input() placeholder?: string;
