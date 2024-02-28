@@ -2,7 +2,7 @@ import { Location, TitleCasePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ScoreByTypeEnumApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
+import { ScoreTimeframeEnumApi, ScoreTypeEnumApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { Subscription, combineLatest, filter, map, startWith, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -164,46 +164,33 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
             }),
             switchMap((selectedTagsOptions) => {
               return combineLatest([
-                this.scoresRestService.getScores({
-                  duration: EScoreDuration.Year,
-                  type: ScoreTypeEnumApi.Tag,
-                  team: this.user.teamId,
-                  timeframe: ScoreTimeframeEnumApi.Year,
-                  ids: selectedTagsOptions.map(({ value }) => value),
+                this.scoresRestService.getPaginatedTeamsStats(EScoreDuration.Year, false, {
+                  ids: this.user.teamId,
                 }),
-                this.scoresRestService.getScores({
-                  duration: EScoreDuration.Year,
-                  type: ScoreTypeEnumApi.Tag,
-                  scoredBy: ScoreByTypeEnumApi.User,
-                  scoredById: this.user.id,
-                  timeframe: ScoreTimeframeEnumApi.Year,
-                  ids: selectedTagsOptions.map(({ value }) => value),
+                this.scoresRestService.getPaginatedUsersStats(EScoreDuration.Year, false, {
+                  ids: this.user.id,
                 }),
               ]).pipe(
                 tap(([teamScores, userScores]) => {
-                  if (userScores.length > 0) {
+                  if (userScores.data && userScores.data.length > 0) {
                     const filteredTeamScores = selectedTagsOptions.map(({ value }) => {
-                      return teamScores.find(({ id }) => id === value);
+                      return teamScores[0].tagStats.find((tag) => tag.tagId === value);
                     });
 
                     const filteredUserScores = selectedTagsOptions.map(({ value }) => {
-                      return userScores.find(({ id }) => id === value);
+                      return (userScores.data as UserStatsDtoApi[])[0].tags.find((tag) => tag.id === value);
                     });
 
                     const optionsLabels = selectedTagsOptions.map(({ label }) => label);
 
                     this.createSpiderChart(
                       optionsLabels,
-                      filteredTeamScores.map((teamScore) => {
-                        return typeof teamScore?.averages[0] === 'number'
-                          ? Math.round((teamScore.averages[0] * 10000) / 100)
-                          : null;
-                      }),
-                      filteredUserScores.map((userScore) => {
-                        return typeof userScore?.averages[0] === 'number'
-                          ? Math.round((userScore.averages[0] * 10000) / 100)
-                          : null;
-                      }),
+                      filteredTeamScores.map((teamScore) =>
+                        teamScore ? Math.round((teamScore.score * 10000) / 100) : null,
+                      ),
+                      filteredUserScores.map((userScore) =>
+                        userScore && userScore.score ? Math.round((userScore.score * 10000) / 100) : null,
+                      ),
                     );
                   }
                 }),
@@ -211,9 +198,11 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
             }),
           )
           .subscribe({
-            next: ([, userScores]) => {
+            next: ([, { data: userScores }]) => {
               this.spiderChartStatus =
-                userScores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_RESULT;
+                userScores && userScores[0].tags.length > 0
+                  ? EPlaceholderStatus.GOOD
+                  : EPlaceholderStatus.NO_RESULT;
             },
           }),
       );
