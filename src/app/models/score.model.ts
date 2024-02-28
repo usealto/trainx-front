@@ -94,9 +94,9 @@ export class Score implements IScore {
 
   static getTimepickerOptions(): SelectOption[] {
     return [
-      new SelectOption({ label: I18ns.shared.rollingDateFilter.month, value: EScoreDuration.Month }),
-      new SelectOption({ label: I18ns.shared.rollingDateFilter.trimester, value: EScoreDuration.Trimester }),
       new SelectOption({ label: I18ns.shared.rollingDateFilter.year, value: EScoreDuration.Year }),
+      new SelectOption({ label: I18ns.shared.rollingDateFilter.trimester, value: EScoreDuration.Trimester }),
+      new SelectOption({ label: I18ns.shared.rollingDateFilter.month, value: EScoreDuration.Month }),
     ];
   }
 

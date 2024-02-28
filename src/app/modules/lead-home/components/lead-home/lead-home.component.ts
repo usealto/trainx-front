@@ -30,7 +30,7 @@ import { IAppData } from '../../../../core/resolvers';
 import { ILeadData } from '../../../../core/resolvers/lead.resolver';
 import { Company } from '../../../../models/company.model';
 import { EScoreDuration, Score } from '../../../../models/score.model';
-import { Team, TeamStats } from '../../../../models/team.model';
+import { Team } from '../../../../models/team.model';
 import { CommentsRestService } from '../../../programs/services/comments-rest.service';
 import { QuestionsSubmittedRestService } from '../../../programs/services/questions-submitted-rest.service';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
@@ -199,7 +199,7 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
     let teamStats = this.company.getStatsByPeriod(duration, false);
     const teams = this.company.teams;
 
-    teamStats = teamStats.filter(({score}) => typeof score === 'number');
+    teamStats = teamStats.filter(({ score }) => typeof score === 'number');
 
     this.teamsLeaderboard = teamStats.map((t) => {
       // Find the corresponding team based on teamId
@@ -227,7 +227,7 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
           this.usersLeaderboard.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
         this.topflopLoaded = true;
       }),
-    )
+    );
   }
 
   setAverageScore(
