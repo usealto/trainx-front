@@ -164,21 +164,21 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
             }),
             switchMap((selectedTagsOptions) => {
               return combineLatest([
-                this.scoresRestService.getPaginatedTeamsStats(EScoreDuration.Year, false, {
+                this.scoresRestService.getAllTeamsStats(EScoreDuration.Year, {
                   ids: this.user.teamId,
                 }),
-                this.scoresRestService.getPaginatedUsersStats(EScoreDuration.Year, false, {
+                this.scoresRestService.getAllUsersStats(EScoreDuration.Year, false, {
                   ids: this.user.id,
                 }),
               ]).pipe(
                 tap(([teamScores, userScores]) => {
-                  if (userScores.data && userScores.data.length > 0) {
+                  if (userScores && userScores.length > 0) {
                     const filteredTeamScores = selectedTagsOptions.map(({ value }) => {
                       return teamScores[0].tagStats.find((tag) => tag.tagId === value);
                     });
 
                     const filteredUserScores = selectedTagsOptions.map(({ value }) => {
-                      return (userScores.data as UserStatsDtoApi[])[0].tags.find((tag) => tag.id === value);
+                      return (userScores as UserStatsDtoApi[])[0].tags.find((tag) => tag.id === value);
                     });
 
                     const optionsLabels = selectedTagsOptions.map(({ label }) => label);
@@ -198,7 +198,7 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
             }),
           )
           .subscribe({
-            next: ([, { data: userScores }]) => {
+            next: ([, userScores]) => {
               this.spiderChartStatus =
                 userScores && userScores[0].tags.length > 0
                   ? EPlaceholderStatus.GOOD
