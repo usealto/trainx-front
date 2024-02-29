@@ -10,7 +10,6 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { Program } from '../../../../models/program.model';
 import { TagForm } from '../../models/tag.form';
-import { ProgramsRestService } from '../../services/programs-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 
 @Component({
