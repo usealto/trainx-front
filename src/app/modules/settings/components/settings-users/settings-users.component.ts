@@ -114,8 +114,8 @@ export class SettingsUsersComponent implements OnInit, OnDestroy {
 
     this.settingsUsersComponentSubscription.add(
       combineLatest([
-        this.adminSearchControl.valueChanges.pipe(startWith(this.adminSearchControl.value)),
-        this.userSearchControl.valueChanges.pipe(startWith(this.userSearchControl.value)),
+        this.adminSearchControl.valueChanges.pipe(startWith(this.adminSearchControl.value), tap(() => this.adminsPageControl.patchValue(1))),
+        this.userSearchControl.valueChanges.pipe(startWith(this.userSearchControl.value), tap(() => this.usersPageControl.patchValue(1))),
       ]).subscribe(([adminSearchTerm, userSearchTerm]) => {
         const userRegex = userSearchTerm ? new RegExp(userSearchTerm, 'i') : null;
         const adminRegex = adminSearchTerm ? new RegExp(adminSearchTerm, 'i') : null;
