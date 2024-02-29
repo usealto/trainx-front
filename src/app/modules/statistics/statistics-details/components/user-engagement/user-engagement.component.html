@@ -28,7 +28,7 @@
       {{ I18ns.statistics.user.engagement.userActivity.chartSubtitle }}
     </p>
     <div class="chart-container">
-      <alto-chart-basicline [chartOption]="answersChartOptions"></alto-chart-basicline>
+      <alto-chart-basicline [chartOption]="answersChartOptions" [tooltipTitleFormatter]="tooltipTitleFormatter"></alto-chart-basicline>
     </div>
   </div>
   <div class="nodata-placeholder" noData>
@@ -79,7 +79,7 @@
       {{ I18ns.statistics.user.engagement.userEngagement.chartSubtitle }}
     </p>
     <div class="chart-container">
-      <alto-chart-basicline [chartOption]="contributionChartOptions"></alto-chart-basicline>
+      <alto-chart-basicline [chartOption]="contributionChartOptions" [tooltipTitleFormatter]="tooltipTitleFormatter"></alto-chart-basicline>
     </div>
   </div>
   <div class="nodata-placeholder" noData>
