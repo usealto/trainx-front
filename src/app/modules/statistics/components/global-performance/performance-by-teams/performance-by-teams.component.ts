@@ -193,12 +193,6 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
           valueFormatter: (value: any) => {
             return (value as number) + '%';
           },
-          titleFormatter:
-            this.durationControl.value === EScoreDuration.Trimester
-              ? (name: string) => {
-                  return I18ns.shared.weekOf + ' ' + name;
-                }
-              : undefined,
         },
         lineStyle: {},
       };
@@ -212,12 +206,6 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
         valueFormatter: (value: any) => {
           return (value as number) + ' %';
         },
-        titleFormatter:
-          this.durationControl.value === EScoreDuration.Trimester
-            ? (name: string) => {
-                return I18ns.shared.weekOf + ' ' + name;
-              }
-            : undefined,
       },
       lineStyle: {},
     });
