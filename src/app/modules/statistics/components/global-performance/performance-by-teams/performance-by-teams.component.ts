@@ -187,11 +187,15 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
           valueFormatter: (value: any) => {
             return (value as number) + '%';
           },
+          titleFormatter : this.durationControl.value === EScoreDuration.Trimester
+            ? (name: string) => {
+              return I18ns.shared.weekOf + ' ' + name;
+            }
+            : undefined,
         },
         lineStyle: {},
       };
     });
-
     series.push({
       name: I18ns.shared.global,
       data: globalPoints.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
@@ -201,6 +205,11 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
         valueFormatter: (value: any) => {
           return (value as number) + ' %';
         },
+        titleFormatter : this.durationControl.value === EScoreDuration.Trimester
+            ? (name: string) => {
+              return I18ns.shared.weekOf + ' ' + name;
+            }
+            : undefined,
       },
       lineStyle: {},
     });
