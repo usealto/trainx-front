@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
 import { EChartsOption, SeriesOption } from 'echarts';
-import { Subscription, combineLatest, of, startWith, switchMap } from 'rxjs';
+import { Subscription, combineLatest, of, startWith, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -19,6 +19,7 @@ import { GuessesRestService } from 'src/app/modules/training/services/guesses-re
 import { IAppData } from '../../../../core/resolvers';
 import { EScoreDuration, Score } from '../../../../models/score.model';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { ChartsService } from 'src/app/modules/charts/charts.service';
 
 @Component({
   selector: 'alto-user-home-statistics',
@@ -47,6 +48,9 @@ export class UserHomeStatisticsComponent implements OnInit, OnDestroy {
   userChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
   userChartOptions!: EChartsOption;
 
+  // TODO : clean chartsService
+  tooltipTitleFormatter = (title: string) => title;
+
   private readonly userHomeStatisticsComponentSubscription = new Subscription();
 
   constructor(
@@ -58,6 +62,7 @@ export class UserHomeStatisticsComponent implements OnInit, OnDestroy {
     private readonly statisticsService: StatisticsService,
     private readonly resolversService: ResolversService,
     private readonly activatedRoute: ActivatedRoute,
+    public chartsService: ChartsService,
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +75,9 @@ export class UserHomeStatisticsComponent implements OnInit, OnDestroy {
       this.durationControl.valueChanges
         .pipe(
           startWith(this.durationControl.value),
+          tap((duration) => {
+            this.tooltipTitleFormatter = this.chartsService.tooltipDurationTitleFormatter(duration);
+          }),
           switchMap((duration) => {
             const timeframe =
               duration === EScoreDuration.Year

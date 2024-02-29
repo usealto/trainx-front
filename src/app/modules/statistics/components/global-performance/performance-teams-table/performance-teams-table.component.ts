@@ -26,7 +26,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
   AltoRoutes = AltoRoutes;
   EPlaceholderStatus = EPlaceholderStatus;
 
-  @Input() durationControl: FormControl<EScoreDuration> = new FormControl(EScoreDuration.Year, {
+  @Input() durationControl: FormControl<EScoreDuration> = new FormControl(EScoreDuration.Trimester, {
     nonNullable: true,
   });
   @Input() company: Company = {} as Company;
@@ -119,7 +119,9 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
           );
           this.teamsDataStatus =
             this.teamsDisplay.length === 0
-              ? this.tagsControl.value.length > 0 || this.searchControl.value || this.programsControl.value.length > 0
+              ? this.tagsControl.value.length > 0 ||
+                this.searchControl.value ||
+                this.programsControl.value.length > 0
                 ? EPlaceholderStatus.NO_RESULT
                 : EPlaceholderStatus.NO_DATA
               : EPlaceholderStatus.GOOD;

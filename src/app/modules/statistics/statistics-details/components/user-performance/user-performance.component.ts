@@ -20,6 +20,7 @@ import { EPlaceholderStatus } from '../../../../shared/components/placeholder-ma
 import { AltoRoutes } from '../../../../shared/constants/routes';
 import { SelectOption } from '../../../../shared/models/select-option.model';
 import { StatisticsService } from '../../../services/statistics.service';
+import { ChartsService } from '../../../../charts/charts.service';
 
 @Component({
   selector: 'alto-user-performance',
@@ -34,11 +35,14 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
   user!: User;
   team!: Team;
 
-  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
   });
   userChartOptions!: any;
   userChartStatus = EPlaceholderStatus.LOADING;
+
+  // TODO : clean chartsService
+  tooltipTitleFormatter = (title: string) => title;
 
   spiderChartOptions!: any;
   spiderChartStatus = EPlaceholderStatus.LOADING;
@@ -57,6 +61,7 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
     private readonly resolversService: ResolversService,
     private readonly location: Location,
     private readonly toastService: ToastService,
+    private readonly chartsService: ChartsService,
   ) {}
 
   ngOnInit(): void {
@@ -83,6 +88,9 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
       this.durationControl.valueChanges
         .pipe(
           startWith(this.durationControl.value),
+          tap((duration) => {
+            this.tooltipTitleFormatter = this.chartsService.tooltipDurationTitleFormatter(duration);
+          }),
           switchMap((duration) => {
             let timeframe: ScoreTimeframeEnumApi;
 

@@ -1,9 +1,7 @@
-import { TitleCasePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  CompanyDtoApi,
   ScoreByTypeEnumApi,
   ScoreTimeframeEnumApi,
   ScoreTypeEnumApi,
@@ -19,14 +17,15 @@ import { Team } from 'src/app/models/team.model';
 import { legendOptions, xAxisDatesOptions, yAxisScoreOptions } from 'src/app/modules/shared/constants/config';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { ChartFilters } from 'src/app/modules/shared/models/chart.model';
-import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { ScoresRestService } from 'src/app/modules/shared/services/scores-rest.service';
 import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
 import { User } from '../../../../../models/user.model';
+import { ILeaderboardData } from '../../../../shared/components/leaderboard/leaderboard.component';
+import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { DataForTable } from '../../../models/statistics.model';
 import { StatisticsService } from '../../../services/statistics.service';
-import { ILeaderboardData } from '../../../../shared/components/leaderboard/leaderboard.component';
+import { ChartsService } from '../../../../charts/charts.service';
 
 @Component({
   selector: 'alto-team-engagement',
@@ -50,6 +49,9 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
   answersChart: any;
   answersChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
+  // TODO : clean chartsService
+  tooltipTitleFormatter = (title: string) => title;
+
   membersLeaderboard: ILeaderboardData[] = [];
   membersLeaderboardStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
@@ -69,10 +71,10 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     private readonly scoreRestService: ScoresRestService,
     private readonly statisticsService: StatisticsService,
-    private readonly titleCasePipe: TitleCasePipe,
     private readonly scoreService: ScoresService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
+    private readonly chartsService: ChartsService,
   ) {}
 
   ngOnInit(): void {
@@ -86,11 +88,14 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
       this.durationControl.valueChanges
         .pipe(startWith(this.durationControl.value))
         .pipe(
+          tap((duration) => {
+            this.tooltipTitleFormatter = this.chartsService.tooltipDurationTitleFormatter(duration);
+          }),
           switchMap((duration) => {
             return combineLatest([
               of(duration),
-              this.scoreRestService.getAllUsersStats(duration, false, {teamIds: this.team.id}),
-              this.scoreRestService.getAllUsersStats(duration, true, {teamIds: this.team.id}),
+              this.scoreRestService.getAllUsersStats(duration, false, { teamIds: this.team.id }),
+              this.scoreRestService.getAllUsersStats(duration, true, { teamIds: this.team.id }),
               this.scoreRestService.getScores(this.getScoreParams('answers', duration)),
               this.scoreRestService.getScores(this.getScoreParams('comments', duration)),
               this.scoreRestService.getScores(this.getScoreParams('submitedQuestions', duration)),
@@ -109,18 +114,21 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
             this.createAnswersChart(anwsersScores, duration);
             this.createContributionsChart(commentsScores, submittedQuestionsScores, duration);
 
-            this.membersLeaderboard = usersStats
-              .map((userStats) => {
-                const previousGuessesCount = prevUsersStats.find((u) => u.user.id === userStats.user.id)?.totalGuessesCount;
-                const progression = this.scoreService.getProgression(userStats.totalGuessesCount, previousGuessesCount);
+            this.membersLeaderboard = usersStats.map((userStats) => {
+              const previousGuessesCount = prevUsersStats.find(
+                (u) => u.user.id === userStats.user.id,
+              )?.totalGuessesCount;
+              const progression = this.scoreService.getProgression(
+                userStats.totalGuessesCount,
+                previousGuessesCount,
+              );
 
-                return {
-                  name: this.usersById.get(userStats.user.id)?.fullname ?? '',
-                  score: userStats.totalGuessesCount ?? 0,
-                  progression: progression ?? 0,
-                }
-              }
-              )
+              return {
+                name: this.usersById.get(userStats.user.id)?.fullname ?? '',
+                score: userStats.totalGuessesCount ?? 0,
+                progression: progression ?? 0,
+              };
+            });
 
             this.membersLeaderboardStatus =
               this.membersLeaderboard.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
@@ -197,11 +205,10 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
     const aggregatedQuestionsSubmitted = this.statisticsService.transformDataToPointByCounts(
       aggregatedFormattedSubmittedQuestionsScores,
     );
-    const labels = this.statisticsService
-      .formatLabel(
-        aggregatedComments.map((d) => d.x),
-        duration,
-      )
+    const labels = this.statisticsService.formatLabel(
+      aggregatedComments.map((d) => d.x),
+      duration,
+    );
 
     const dataset = [
       {
@@ -288,11 +295,10 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
   createAnswersChart(scores: Score[], duration: EScoreDuration): void {
     const formatedScores = this.scoreService.formatScores(scores);
     const aggregatedData = this.statisticsService.transformDataToPointByCounts(formatedScores[0]);
-    const labels = this.statisticsService
-      .formatLabel(
-        aggregatedData.map((d) => d.x),
-        duration,
-      )
+    const labels = this.statisticsService.formatLabel(
+      aggregatedData.map((d) => d.x),
+      duration,
+    );
 
     const dataset = formatedScores.map((s) => {
       const d = this.statisticsService.transformDataToPointByCounts(s);
