@@ -148,7 +148,6 @@ export class UserEngagementComponent implements OnInit, OnDestroy {
           : aggregatedQuestionsSubmitted.map((d) => d.x),
         duration,
       )
-      .map((s) => this.titleCasePipe.transform(s));
 
     const dataset = [
       {

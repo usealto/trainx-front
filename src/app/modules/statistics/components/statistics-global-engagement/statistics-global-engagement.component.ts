@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
-import { Observable, Subscription, combineLatest, filter, map, startWith, switchMap, tap } from 'rxjs';
+import { Observable, Subscription, combineLatest, filter, startWith, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -18,6 +18,7 @@ import { Team, TeamStats } from '../../../../models/team.model';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { DataForTable } from '../../models/statistics.model';
 import { StatisticsService } from '../../services/statistics.service';
+import { ChartsService } from '../../../charts/charts.service';
 
 @Component({
   selector: 'alto-statistics-global-engagement',
@@ -29,6 +30,9 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   EmojiName = EmojiName;
   AltoRoutes = AltoRoutes;
   EPlaceholderStatus = EPlaceholderStatus;
+
+  // TODO : clean chartsService
+  tooltipTitleFormatter = (title: string) => title;
 
   company!: Company;
 
@@ -65,6 +69,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
     private readonly statisticsServices: StatisticsService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
+    public chartsService: ChartsService,
   ) {}
 
   ngOnInit(): void {
@@ -80,6 +85,9 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
         this.pageControl.valueChanges.pipe(startWith(this.pageControl.value)),
       ])
         .pipe(
+          tap(([duration]) => {
+            this.tooltipTitleFormatter = this.chartsService.tooltipDurationTitleFormatter(duration);
+          }),
           tap(([duration, page]) => {
             this.teamsStats = this.company.getStatsByPeriod(duration, false);
             this.teamsStatsPrev = this.company.getStatsByPeriod(duration, true);
@@ -128,12 +136,10 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
         tap((scores) => {
           const formattedScores = this.scoresService.formatScores(scores);
           const aggregatedData = this.statisticsServices.transformDataToPointByCounts(formattedScores[0]);
-          const labels = this.statisticsServices
-            .formatLabel(
-              aggregatedData.map((d) => d.x),
-              duration,
-            )
-            .map((s) => this.titleCasePipe.transform(s));
+          const labels = this.statisticsServices.formatLabel(
+            aggregatedData.map((d) => d.x),
+            duration,
+          );
           const dataset = formattedScores.map((s) => {
             const d = this.statisticsServices.transformDataToPointByCounts(s);
             return {
@@ -220,12 +226,10 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
         const aggregatedQuestionsSubmitted = this.statisticsServices.transformDataToPointByCounts(
           aggregatedFormattedQuestionsSubmittedScores,
         );
-        const labels = this.statisticsServices
-          .formatLabel(
-            aggregatedComments.map((d) => d.x),
-            duration,
-          )
-          .map((s) => this.titleCasePipe.transform(s));
+        const labels = this.statisticsServices.formatLabel(
+          aggregatedComments.map((d) => d.x),
+          duration,
+        );
 
         const dataset = [
           {

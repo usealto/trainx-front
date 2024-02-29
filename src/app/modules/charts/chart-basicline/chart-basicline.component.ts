@@ -9,7 +9,8 @@ import { ChartsService, initOptions } from '../charts.service';
 })
 export class ChartBasiclineComponent implements OnChanges, AfterViewInit {
   @Input() chartOption?: EChartsOption;
-  @Input() initOptions: initOptions = {}
+  @Input() tooltipTitleFormatter?: (title: string) => string;
+  @Input() initOptions: initOptions = {};
 
   isLoaded = false;
   lineOptions?: EChartsOption;
@@ -18,7 +19,10 @@ export class ChartBasiclineComponent implements OnChanges, AfterViewInit {
 
   ngOnChanges(): void {
     if (this.chartOption && this.isLoaded) {
-      this.lineOptions = this.chartsService.altoFormattingMultiline(this.chartOption);
+      this.lineOptions = this.chartsService.altoFormattingMultiline(
+        this.chartOption,
+        this.tooltipTitleFormatter,
+      );
     }
   }
 
@@ -29,7 +33,10 @@ export class ChartBasiclineComponent implements OnChanges, AfterViewInit {
     if (this.chartOption) {
       setTimeout(() => {
         if (this.chartOption) {
-          this.lineOptions = this.chartsService.altoFormattingMultiline(this.chartOption);
+          this.lineOptions = this.chartsService.altoFormattingMultiline(
+            this.chartOption,
+            this.tooltipTitleFormatter,
+          );
         }
       }, 1000);
     }

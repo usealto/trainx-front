@@ -35,7 +35,7 @@ Files will be placed in _dist/alto_
 
 ### Components
 
-If you need to contribute, or simply check out some of our component, please refer to our Storybook. Follow this [link to our storybook](https://trainx-doc.getcockpit.io/)  
+If you need to contribute, or simply check out some of our component, please refer to our Storybook. Follow this [link to our storybook](https://trainx-doc.getcockpit.io/)
 Another way is to check out our (old) component demo page is here (http://localhost:4200/test)
 
 ### Packages
@@ -99,7 +99,7 @@ Using Cypress
 - Make a 'git cherry pick' to bring the hot fix on `develop`
 
 ### Storybook
-If you want to run our documentaion locally, you can run  
+If you want to run our documentaion locally, you can run
 
 ```
 npm run storybook
@@ -124,9 +124,3 @@ You then, have to set the height and width with CSS
 ```
   <img [src]="EmojiName.Gear | emoji" loading="lazy" />
 ```
-
-### Service workers
-
-They are used to cache some data in the browser. The config file is located at the root of the project `ngsw-config.json`.
-
-They only work in production config.
