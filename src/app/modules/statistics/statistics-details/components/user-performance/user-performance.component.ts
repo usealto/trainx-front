@@ -2,7 +2,7 @@ import { Location, TitleCasePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ScoreByTypeEnumApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
+import { ScoreTimeframeEnumApi, ScoreTypeEnumApi, UserStatsDtoApi } from '@usealto/sdk-ts-angular';
 import { Subscription, combineLatest, filter, map, startWith, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -20,6 +20,7 @@ import { EPlaceholderStatus } from '../../../../shared/components/placeholder-ma
 import { AltoRoutes } from '../../../../shared/constants/routes';
 import { SelectOption } from '../../../../shared/models/select-option.model';
 import { StatisticsService } from '../../../services/statistics.service';
+import { ChartsService } from '../../../../charts/charts.service';
 
 @Component({
   selector: 'alto-user-performance',
@@ -34,11 +35,14 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
   user!: User;
   team!: Team;
 
-  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
   });
   userChartOptions!: any;
   userChartStatus = EPlaceholderStatus.LOADING;
+
+  // TODO : clean chartsService
+  tooltipTitleFormatter = (title: string) => title;
 
   spiderChartOptions!: any;
   spiderChartStatus = EPlaceholderStatus.LOADING;
@@ -57,6 +61,7 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
     private readonly resolversService: ResolversService,
     private readonly location: Location,
     private readonly toastService: ToastService,
+    private readonly chartsService: ChartsService,
   ) {}
 
   ngOnInit(): void {
@@ -83,6 +88,9 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
       this.durationControl.valueChanges
         .pipe(
           startWith(this.durationControl.value),
+          tap((duration) => {
+            this.tooltipTitleFormatter = this.chartsService.tooltipDurationTitleFormatter(duration);
+          }),
           switchMap((duration) => {
             let timeframe: ScoreTimeframeEnumApi;
 
@@ -123,9 +131,13 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: ([userScores, teamScores]) => {
-            this.createUserChart(userScores[0], teamScores[0], this.durationControl.value);
-            this.userChartStatus =
-              userScores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
+            if (userScores[0] || teamScores[0]) {
+              this.createUserChart(userScores[0], teamScores[0], this.durationControl.value);
+              this.userChartStatus =
+                userScores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
+            } else {
+              this.userChartStatus = EPlaceholderStatus.NO_DATA;
+            }
           },
         }),
     );
@@ -164,46 +176,33 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
             }),
             switchMap((selectedTagsOptions) => {
               return combineLatest([
-                this.scoresRestService.getScores({
-                  duration: EScoreDuration.Year,
-                  type: ScoreTypeEnumApi.Tag,
-                  team: this.user.teamId,
-                  timeframe: ScoreTimeframeEnumApi.Year,
-                  ids: selectedTagsOptions.map(({ value }) => value),
+                this.scoresRestService.getAllTeamsStats(EScoreDuration.Year, {
+                  ids: this.user.teamId,
                 }),
-                this.scoresRestService.getScores({
-                  duration: EScoreDuration.Year,
-                  type: ScoreTypeEnumApi.Tag,
-                  scoredBy: ScoreByTypeEnumApi.User,
-                  scoredById: this.user.id,
-                  timeframe: ScoreTimeframeEnumApi.Year,
-                  ids: selectedTagsOptions.map(({ value }) => value),
+                this.scoresRestService.getAllUsersStats(EScoreDuration.Year, false, {
+                  ids: this.user.id,
                 }),
               ]).pipe(
                 tap(([teamScores, userScores]) => {
-                  if (userScores.length > 0) {
+                  if (userScores && userScores.length > 0) {
                     const filteredTeamScores = selectedTagsOptions.map(({ value }) => {
-                      return teamScores.find(({ id }) => id === value);
+                      return teamScores[0].tagStats.find((tag) => tag.tagId === value);
                     });
 
                     const filteredUserScores = selectedTagsOptions.map(({ value }) => {
-                      return userScores.find(({ id }) => id === value);
+                      return (userScores as UserStatsDtoApi[])[0].tags.find((tag) => tag.id === value);
                     });
 
                     const optionsLabels = selectedTagsOptions.map(({ label }) => label);
 
                     this.createSpiderChart(
                       optionsLabels,
-                      filteredTeamScores.map((teamScore) => {
-                        return typeof teamScore?.averages[0] === 'number'
-                          ? Math.round((teamScore.averages[0] * 10000) / 100)
-                          : null;
-                      }),
-                      filteredUserScores.map((userScore) => {
-                        return typeof userScore?.averages[0] === 'number'
-                          ? Math.round((userScore.averages[0] * 10000) / 100)
-                          : null;
-                      }),
+                      filteredTeamScores.map((teamScore) =>
+                        teamScore ? Math.round((teamScore.score * 10000) / 100) : null,
+                      ),
+                      filteredUserScores.map((userScore) =>
+                        userScore && userScore.score ? Math.round((userScore.score * 10000) / 100) : null,
+                      ),
                     );
                   }
                 }),
@@ -213,7 +212,9 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
           .subscribe({
             next: ([, userScores]) => {
               this.spiderChartStatus =
-                userScores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_RESULT;
+                userScores && userScores[0].tags.length > 0
+                  ? EPlaceholderStatus.GOOD
+                  : EPlaceholderStatus.NO_RESULT;
             },
           }),
       );
@@ -281,32 +282,40 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
     };
   }
 
-  createUserChart(userScores: Score, teamScores: Score, duration: EScoreDuration): void {
-    const [formattedUserScores, formattedTeamScores] = this.scoresService.formatScores([
-      userScores,
-      teamScores,
-    ]);
+  createUserChart(
+    userScores: Score | undefined,
+    teamScores: Score | undefined,
+    duration: EScoreDuration,
+  ): void {
+    // At least one of the two scores is defined
+    const [formattedUserScores, formattedTeamScores] = this.scoresService.formatScores(
+      [userScores, teamScores].filter((x) => !!x) as Score[],
+    );
 
-    const teamPoints = this.statisticsService.transformDataToPoint(formattedTeamScores);
+    const points = this.statisticsService.transformDataToPoint(
+      formattedUserScores ? formattedUserScores : formattedTeamScores,
+    );
 
     let labels: string[] = [];
 
-    if (teamPoints.length === 0) {
+    if (points.length === 0) {
       labels = [];
     } else {
       labels = this.statisticsService.formatLabel(
-        teamPoints.map((d) => d.x),
+        points.map((d) => d.x),
         duration,
       );
     }
 
-    const dataSets = [formattedUserScores, formattedTeamScores].map((scores) => {
-      const d = this.statisticsService.transformDataToPoint(scores);
-      return {
-        label: scores.label,
-        data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
-      };
-    });
+    const dataSets = [formattedUserScores, formattedTeamScores]
+      .filter((x) => !!x)
+      .map((scores) => {
+        const d = this.statisticsService.transformDataToPoint(scores);
+        return {
+          label: scores.label,
+          data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
+        };
+      });
 
     const series = dataSets.map((d) => {
       return {

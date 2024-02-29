@@ -294,7 +294,11 @@ export class ScoresRestService {
     );
   }
 
-  getAllUsersStats(duration?: EScoreDuration, isProgression = false, req: GetUsersStatsRequestParams = {}): Observable<UserStatsDtoApi[]> {
+  getAllUsersStats(
+    duration?: EScoreDuration,
+    isProgression = false,
+    req: GetUsersStatsRequestParams = {},
+  ): Observable<UserStatsDtoApi[]> {
     let dateAfter: Date;
     let dateBefore: Date;
 
@@ -319,14 +323,16 @@ export class ScoresRestService {
 
         for (let i = 2; i <= totalPages; i++) {
           reqs.push(
-            this.statsApi.getUsersStats({ from: dateAfter, to: dateBefore, page: i, itemsPerPage: 1000, ...req }).pipe(
-              tap(({ meta }) => {
-                if (meta.totalPage !== totalPages) {
-                  totalPages = meta.totalPage;
-                }
-              }),
-              map(({ data }) => (data ? data : [])),
-            ),
+            this.statsApi
+              .getUsersStats({ from: dateAfter, to: dateBefore, page: i, itemsPerPage: 1000, ...req })
+              .pipe(
+                tap(({ meta }) => {
+                  if (meta.totalPage !== totalPages) {
+                    totalPages = meta.totalPage;
+                  }
+                }),
+                map(({ data }) => (data ? data : [])),
+              ),
           );
         }
         return combineLatest(reqs);
@@ -335,6 +341,26 @@ export class ScoresRestService {
         return usersStatsDtos.flat();
       }),
     );
+  }
+
+  getAllTeamsStats(duration?: EScoreDuration, req: GetTeamsStatsRequestParams = {}): Observable<TeamStats[]> {
+    const dateAfter = this.service.getStartDate(duration ?? EScoreDuration.Year);
+    const dateBefore = addDays(new Date(), 1); //! TEMPORARY FIX to get data from actual day
+
+    req.from = dateAfter;
+    req.to = dateBefore;
+
+    return this.statsApi
+      .getTeamsStats({ page: 1, itemsPerPage: 1000, ...req })
+      .pipe(
+        map((response) =>
+          response.data
+            ? response.data.map((dto) =>
+                TeamStats.fromDto(dto, dateAfter, dateBefore, duration ?? EScoreDuration.Year, false),
+              )
+            : [],
+        ),
+      );
   }
 
   // TODO : clean

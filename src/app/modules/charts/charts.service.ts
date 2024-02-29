@@ -1,6 +1,8 @@
 import { EChartsOption, RadarComponentOption } from 'echarts';
 import { Injectable } from '@angular/core';
 import { memoize } from 'src/app/core/utils/memoize/memoize';
+import { EScoreDuration } from '../../models/score.model';
+import { I18ns } from '../../core/utils/i18n/I18n';
 
 // Tooltip params interface used to override default typing
 export interface ITooltipParams {
@@ -44,7 +46,20 @@ export class ChartsService {
     return this.defaultThemeColors[index % this.defaultThemeColors.length];
   }
 
-  altoFormattingMultiline(eChartsOption: EChartsOption): EChartsOption {
+  // TODO : clean
+  tooltipDurationTitleFormatter(duration: EScoreDuration): (title: string) => string {
+    switch (duration) {
+      case EScoreDuration.Trimester:
+        return (tooltipTitle: string) => `${I18ns.shared.weekOf} ${tooltipTitle}`;
+      default:
+        return (title) => title;
+    }
+  }
+
+  altoFormattingMultiline(
+    eChartsOption: EChartsOption,
+    tooltipTitleFormatter?: (title: string) => string,
+  ): EChartsOption {
     // replace null or 'n' values with 0 for every series begining with null or 'n'
     if (eChartsOption.series && Array.isArray(eChartsOption.series)) {
       eChartsOption.series.forEach((serie) => {
@@ -80,10 +95,11 @@ export class ChartsService {
       padding: 0,
       borderColor: '#EAECF0',
       formatter: (params) => {
-        return this.tooltipFormatter(params as ITooltipParams, eChartsOption);
+        return this.tooltipFormatter(params as ITooltipParams, eChartsOption, tooltipTitleFormatter);
       },
       ...eChartsOption.tooltip,
     };
+
     eChartsOption.legend = {
       bottom: 0,
       icon: 'circle',
@@ -156,16 +172,21 @@ export class ChartsService {
     return eChartsOption;
   }
 
-  private tooltipFormatter(params: ITooltipParams, eChartsOption: EChartsOption) {
+  private tooltipFormatter(
+    params: ITooltipParams,
+    eChartsOption: EChartsOption,
+    tooltipTitleFormatter?: (title: string) => string,
+  ) {
     const valueFormatter = Array.isArray(eChartsOption.series)
       ? eChartsOption.series[params.seriesIndex].tooltip?.valueFormatter
       : eChartsOption.series?.tooltip?.valueFormatter;
     const formattedData = valueFormatter ? valueFormatter(params.data) : params.data;
+    const formattedTitle = tooltipTitleFormatter ? tooltipTitleFormatter(params.name) : params.name;
 
     return `
     <div style="box-shadow: 0px 2px 4px -2px rgba(16, 24, 40, 0.06), 0px 4px 8px -2px rgba(16, 24, 40, 0.10); border-radius: 4px;">
       <div style="color: #667085; background-color: #F9FAFB; padding : 8px 10px 4px 10px; font-weight: 600;">
-        ${params.name}
+        ${formattedTitle}
       </div>
       <div style="padding : 4px 10px 8px 10px; display: flex; align-items: center; gap: 10px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="11" viewBox="0 0 10 11" fill="none">

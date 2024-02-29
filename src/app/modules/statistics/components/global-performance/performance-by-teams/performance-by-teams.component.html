@@ -1,19 +1,27 @@
 <alto-placeholder-manager [status]="scoreDataStatus">
   <div *ngIf="scoreDataStatus === EPlaceholderStatus.GOOD" class="panel mb-5">
     <alto-input-multiple-select
-    class="float-end mx-2"
-    [placeholder]="I18ns.statistics.globalPerformance.perTeamPerformance.teamFilter"
-    [controls]="selectedScoresControl"
-    [options]="scoresOptions"
-    [enableSearch]="true">
+      class="float-end mx-2"
+      [placeholder]="I18ns.statistics.globalPerformance.perTeamPerformance.teamFilter"
+      [controls]="selectedScoresControl"
+      [options]="scoresOptions"
+      [enableSearch]="true"
+    >
     </alto-input-multiple-select>
 
     <h3>{{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.title }}</h3>
     <p class="alto-grey mb-4">
-      {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.subtitle }}
+      {{
+        I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.subtitle +
+          (durationControl.value === EScoreDuration.Year
+            ? I18ns.shared.chartTimeframeSubtitles.Year
+            : durationControl.value === EScoreDuration.Trimester
+            ? I18ns.shared.chartTimeframeSubtitles.Trimester
+            : I18ns.shared.chartTimeframeSubtitles.Month)
+      }}
     </p>
     <div class="chart-container">
-      <alto-chart-basicline data-cy="chartBasicline" [chartOption]="chartOption"></alto-chart-basicline>
+      <alto-chart-basicline data-cy="chartBasicline" [chartOption]="chartOption" [tooltipTitleFormatter]="tooltipTitleFormatter"></alto-chart-basicline>
     </div>
   </div>
 
@@ -29,7 +37,17 @@
       <span class="d-inline-block mt-3">
         {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderSubtitle }}
       </span>
-      <a type="button" class="d-block btn btn-outline-secondary mt-4" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, AltoRoutes.programsNew]">
+      <a
+        type="button"
+        class="d-block btn btn-outline-secondary mt-4"
+        [routerLink]="[
+          '/',
+          AltoRoutes.lead,
+          AltoRoutes.programs,
+          AltoRoutes.programsEdit,
+          AltoRoutes.programsNew
+        ]"
+      >
         <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
       </a>
     </div>
@@ -53,12 +71,13 @@
 
 <alto-placeholder-manager [status]="teamsLeaderboardDataStatus">
   <alto-leaderboard
-  *ngIf="teamsLeaderboardDataStatus === EPlaceholderStatus.GOOD"
-  [config]="['score']"
-  [title]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title"
-  [subtitle]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.subtitle"
-  [data]="teamsLeaderboard"
-  [size]="3">
+    *ngIf="teamsLeaderboardDataStatus === EPlaceholderStatus.GOOD"
+    [config]="['score']"
+    [title]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.title"
+    [subtitle]="I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.subtitle"
+    [data]="teamsLeaderboard"
+    [size]="3"
+  >
   </alto-leaderboard>
 
   <div class="nodata-placeholder" noData>
@@ -66,7 +85,17 @@
     <div class="text-center">
       <img [src]="Emoji.Rocket | emoji" height="24" width="24" />
       <p class="mt-3">{{ I18ns.statistics.globalPerformance.perTeamPerformance.leaderboard.placeholder }}</p>
-      <a type="button" class="d-block btn btn-outline-secondary mt-4" [routerLink]="['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, AltoRoutes.programsNew]">
+      <a
+        type="button"
+        class="d-block btn btn-outline-secondary mt-4"
+        [routerLink]="[
+          '/',
+          AltoRoutes.lead,
+          AltoRoutes.programs,
+          AltoRoutes.programsEdit,
+          AltoRoutes.programsNew
+        ]"
+      >
         <i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
       </a>
     </div>
@@ -86,5 +115,5 @@
     </div>
   </div>
 
-  <div class="skeleton-panel my-5" style="height:334px" loading></div>
+  <div class="skeleton-panel my-5" style="height: 334px" loading></div>
 </alto-placeholder-manager>
