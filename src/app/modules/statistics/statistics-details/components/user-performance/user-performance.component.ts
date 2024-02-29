@@ -123,9 +123,13 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: ([userScores, teamScores]) => {
-            this.createUserChart(userScores[0], teamScores[0], this.durationControl.value);
-            this.userChartStatus =
-              userScores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
+            if (userScores[0] || teamScores[0]) {
+              this.createUserChart(userScores[0], teamScores[0], this.durationControl.value);
+              this.userChartStatus =
+                userScores.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;
+            } else {
+              this.userChartStatus = EPlaceholderStatus.NO_DATA;
+            }
           },
         }),
     );
@@ -270,32 +274,40 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
     };
   }
 
-  createUserChart(userScores: Score, teamScores: Score, duration: EScoreDuration): void {
-    const [formattedUserScores, formattedTeamScores] = this.scoresService.formatScores([
-      userScores,
-      teamScores,
-    ]);
+  createUserChart(
+    userScores: Score | undefined,
+    teamScores: Score | undefined,
+    duration: EScoreDuration,
+  ): void {
+    // At least one of the two scores is defined
+    const [formattedUserScores, formattedTeamScores] = this.scoresService.formatScores(
+      [userScores, teamScores].filter((x) => !!x) as Score[],
+    );
 
-    const teamPoints = this.statisticsService.transformDataToPoint(formattedTeamScores);
+    const points = this.statisticsService.transformDataToPoint(
+      formattedUserScores ? formattedUserScores : formattedTeamScores,
+    );
 
     let labels: string[] = [];
 
-    if (teamPoints.length === 0) {
+    if (points.length === 0) {
       labels = [];
     } else {
       labels = this.statisticsService.formatLabel(
-        teamPoints.map((d) => d.x),
+        points.map((d) => d.x),
         duration,
       );
     }
 
-    const dataSets = [formattedUserScores, formattedTeamScores].map((scores) => {
-      const d = this.statisticsService.transformDataToPoint(scores);
-      return {
-        label: scores.label,
-        data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
-      };
-    });
+    const dataSets = [formattedUserScores, formattedTeamScores]
+      .filter((x) => !!x)
+      .map((scores) => {
+        const d = this.statisticsService.transformDataToPoint(scores);
+        return {
+          label: scores.label,
+          data: d.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
+        };
+      });
 
     const series = dataSets.map((d) => {
       return {
