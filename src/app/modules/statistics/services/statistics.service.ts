@@ -17,7 +17,10 @@ export class StatisticsService {
   formatLabel(dates: Date[], duration: EScoreDuration): string[] {
     switch (duration) {
       case EScoreDuration.Year:
-        return dates.map((date) => date.toLocaleDateString(this.locale, { month: 'short' }));
+        return dates.map((date) => {
+          const month = date.toLocaleDateString(this.locale, { month: 'short' });
+          return month.charAt(0).toUpperCase() + month.slice(1);
+        });
       default:
         return dates.map((date) =>
           date.toLocaleDateString(this.locale, { month: '2-digit', day: '2-digit' }),

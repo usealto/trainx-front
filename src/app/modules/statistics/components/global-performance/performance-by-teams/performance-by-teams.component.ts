@@ -37,6 +37,7 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   init = true;
   EPlaceholderStatus = EPlaceholderStatus;
+  EScoreDuration = EScoreDuration;
 
   programsCount = 0;
 
@@ -168,7 +169,6 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
         aggregatedData.map((d) => d.x),
         duration,
       )
-      .map((s) => this.titleCasePipe.transform(s));
     const dataSet = formattedScores.map((s) => {
       const d = this.statisticsServices.transformDataToPoint(s);
       return {
@@ -204,7 +204,6 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
       },
       lineStyle: {},
     });
-
     this.chartOption = {
       xAxis: [{ ...xAxisDatesOptions, data: labels }],
       yAxis: [{ ...yAxisScoreOptions }],

@@ -457,7 +457,6 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
         aggregatedData.map((d) => d.x),
         duration,
       )
-      .map((s) => this.titleCasePipe.transform(s));
 
     const dataSet = scores.length
       ? formattedScores.map((s) => {

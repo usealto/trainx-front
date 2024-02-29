@@ -202,7 +202,6 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
         aggregatedComments.map((d) => d.x),
         duration,
       )
-      .map((s) => this.titleCasePipe.transform(s));
 
     const dataset = [
       {
@@ -294,7 +293,6 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
         aggregatedData.map((d) => d.x),
         duration,
       )
-      .map((s) => this.titleCasePipe.transform(s));
 
     const dataset = formatedScores.map((s) => {
       const d = this.statisticsService.transformDataToPointByCounts(s);

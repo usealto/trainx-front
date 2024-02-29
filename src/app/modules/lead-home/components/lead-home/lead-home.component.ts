@@ -170,7 +170,6 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
             points.map((p) => p.x),
             duration,
           )
-          .map((s) => this.titleCasePipe.transform(s));
 
         this.chartOption = {
           xAxis: [{ ...xAxisDatesOptions, data: labels }],

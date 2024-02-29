@@ -133,7 +133,6 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
               aggregatedData.map((d) => d.x),
               duration,
             )
-            .map((s) => this.titleCasePipe.transform(s));
           const dataset = formattedScores.map((s) => {
             const d = this.statisticsServices.transformDataToPointByCounts(s);
             return {
@@ -225,7 +224,6 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
             aggregatedComments.map((d) => d.x),
             duration,
           )
-          .map((s) => this.titleCasePipe.transform(s));
 
         const dataset = [
           {
