@@ -28,7 +28,7 @@ export const editProgramResolver: ResolveFn<IEditProgramData> = (activatedRoute)
   return store.select(FromRoot.selectCompany).pipe(
     map(({ data: company }) => {
       const program = programId ? company.programById.get(programId) : undefined;
-      if (programId !== "new" && !program) {
+      if (programId !== 'new' && !program) {
         router.navigate(['/', AltoRoutes.lead, AltoRoutes.programs]);
       }
       return { program, tab: program ? tab : ETab.Informations };
