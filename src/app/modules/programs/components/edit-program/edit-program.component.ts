@@ -132,7 +132,14 @@ export class EditProgramsComponent implements OnInit {
 
     this.editProgramComponentSubscription.add(
       this.tabsControl.valueChanges.pipe(startWith(this.tabsControl.value)).subscribe((tab) => {
-        this.router.navigate([], { relativeTo: this.activatedRoute, queryParams: { tab: tab.value } });
+        this.location.replaceState(
+          this.router
+            .createUrlTree([], {
+              relativeTo: this.activatedRoute,
+              queryParams: { tab: tab.value },
+            })
+            .toString(),
+        );
       }),
     );
 

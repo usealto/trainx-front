@@ -25,19 +25,13 @@ export const editProgramResolver: ResolveFn<IEditProgramData> = (activatedRoute)
     ? (activatedRoute.queryParamMap.get('tab') as ETab)
     : ETab.Informations;
 
-  if (!programId || programId === 'new') {
-    return of({ program: undefined, tab: tab });
-  } else {
-    return store.select(FromRoot.selectCompany).pipe(
-      map(({ data: company }) => {
-        const program = company.programs.find((program) => program.id === programId);
-        if (program) {
-          return { program: program, tab: tab };
-        } else {
-          router.navigate(['/', AltoRoutes.lead, AltoRoutes.programs]);
-          return { program: undefined, tab: tab };
-        }
-      }),
-    );
-  }
+  return store.select(FromRoot.selectCompany).pipe(
+    map(({ data: company }) => {
+      const program = programId ? company.programById.get(programId) : undefined;
+      if (programId !== "new" && !program) {
+        router.navigate(['/', AltoRoutes.lead, AltoRoutes.programs]);
+      }
+      return { program, tab: program ? tab : ETab.Informations };
+    }),
+  );
 };
