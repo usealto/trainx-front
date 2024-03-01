@@ -8,11 +8,11 @@ import { environment } from './environments/environment';
 if (environment.production) {
   Sentry.init({
     dsn: environment.sentryDsn,
-    environment: environment.sentryEnvironment === 'production' ? 'production' : 'development',
+    environment: environment.sentryEnvironment,
     integrations: [
       new Sentry.BrowserTracing({
         // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
-        tracePropagationTargets: ['localhost', /^https:\/\/getcockpit\.io/],
+        tracePropagationTargets: [/^https:\/\/getcockpit\.io/],
       }),
       new Sentry.Replay({
         maskAllText: false,
