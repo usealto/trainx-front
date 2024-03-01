@@ -47,7 +47,8 @@
     [class.disabled]="!programCard.isActiveControl.value"
     [routerLink]=" programCard.isActiveControl.value
     ? ['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]
-    : null">
+    : null"
+    >
       <div class="title-section mb-2">
         <p class="title-overflow subtitle">
           {{ programCard.program.name }}

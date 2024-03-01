@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
 import { PriorityEnumApi, ProgramDtoApiPriorityEnumApi, QuestionDtoApi } from '@usealto/sdk-ts-angular';
@@ -19,7 +19,7 @@ import {
   tap,
 } from 'rxjs';
 import { IAppData } from '../../../../core/resolvers';
-import { IEditProgramData } from '../../../../core/resolvers/edit-program.resolver';
+import { ETab, IEditProgramData } from '../../../../core/resolvers/edit-program.resolver';
 import { ILeadData } from '../../../../core/resolvers/lead.resolver';
 import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
 import { addProgram, deleteProgram } from '../../../../core/store/root/root.action';
@@ -39,12 +39,6 @@ import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../create-questions/question-form.component';
 
-enum Etab {
-  Informations = 'informations',
-  Questions = 'questions',
-  Summary = 'summary',
-}
-
 @Component({
   selector: 'alto-edit-program',
   templateUrl: './edit-program.component.html',
@@ -54,16 +48,15 @@ enum Etab {
 export class EditProgramsComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
-  ETab = Etab;
+  ETab = ETab;
   EPlaceholderStatus = EPlaceholderStatus;
 
   company!: Company;
   program?: Program;
-
   tabsOptions: ITabOption[] = [
-    { value: Etab.Informations, label: I18ns.programs.forms.step1.title },
-    { value: Etab.Questions, label: I18ns.programs.forms.step2.title },
-    { value: Etab.Summary, label: I18ns.programs.forms.step3.title },
+    { value: ETab.Informations, label: I18ns.programs.forms.step1.title },
+    { value: ETab.Questions, label: I18ns.programs.forms.step2.title },
+    { value: ETab.Summary, label: I18ns.programs.forms.step3.title },
   ];
   tabsControl = new FormControl<ITabOption>(this.tabsOptions[0], { nonNullable: true });
 
@@ -123,13 +116,32 @@ export class EditProgramsComponent implements OnInit {
     private readonly modalService: NgbModal,
     private readonly toastService: ToastService,
     private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     const tags = (data[EResolvers.LeadResolver] as ILeadData).tags;
     this.company = (data[EResolvers.AppResolver] as IAppData).company;
-    this.program = (data[EResolvers.EditProgramResolver] as IEditProgramData).program;
+    const editProgramData = data[EResolvers.EditProgramResolver] as IEditProgramData;
+    this.program = editProgramData.program;
+
+    this.tabsControl.setValue(
+      this.tabsOptions.find((tab) => tab.value === editProgramData.tab) ?? this.tabsOptions[0],
+    );
+
+    this.editProgramComponentSubscription.add(
+      this.tabsControl.valueChanges.pipe(startWith(this.tabsControl.value)).subscribe((tab) => {
+        this.location.replaceState(
+          this.router
+            .createUrlTree([], {
+              relativeTo: this.activatedRoute,
+              queryParams: { tab: tab.value },
+            })
+            .toString(),
+        );
+      }),
+    );
 
     this.tagOptions = tags.map(
       (tag) =>

@@ -4,6 +4,7 @@ import { AltoRoutes } from '../shared/constants/routes';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { editProgramResolver } from '../../core/resolvers/edit-program.resolver';
 import { EditProgramsComponent } from './components/edit-program/edit-program.component';
+import { EResolvers } from '../../core/resolvers/resolvers.service';
 
 const routes: Routes = [
   {
@@ -13,7 +14,7 @@ const routes: Routes = [
   {
     path: AltoRoutes.programsEdit + '/:id',
     resolve: {
-      editProgramResolver: editProgramResolver,
+      [EResolvers.EditProgramResolver]: editProgramResolver,
     },
     component: EditProgramsComponent,
   },
