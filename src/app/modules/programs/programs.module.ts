@@ -9,6 +9,7 @@ import { ProgramsQuestionsComponent } from './components/programs/programs-quest
 import { ProgramsTagsComponent } from './components/programs/programs-tags/programs-tags.component';
 import { ProgramsComponent } from './components/programs/programs.component';
 import { ProgramsRoutingModule } from './programs-routing.module';
+import { CreateProgramBtnComponent } from './components/create-program-btn/create-program-btn.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ProgramsRoutingModule } from './programs-routing.module';
     ProgramsQuestionsComponent,
     ProgramsTagsComponent,
     EditProgramsComponent,
+    CreateProgramBtnComponent,
   ],
   imports: [CommonModule, ProgramsRoutingModule, SharedModule],
 })

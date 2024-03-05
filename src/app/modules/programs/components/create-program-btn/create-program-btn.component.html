@@ -1,0 +1,31 @@
+<a type="button" class="btn btn-primary" (click)="toggleDropdown()">
+  <div>
+    {{ I18ns.programs.programs.createProgram }}
+  </div>
+  <i class="ms-2 bi" [class]="isDropdownOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+</a>
+<div
+  #dropdownMenu
+  class="dropdown-menu mt-2"
+  [ngClass]="{ show: isDropdownOpen }"
+  (click)="$event.stopPropagation()"
+>
+  <div class="dropdown-item classic" [routerLink]="AltoRoutes.programsCreate">
+    <div class="icon">
+      <i class="bi bi-bullseye fs-2"></i>
+    </div>
+    <div class="ms-4 mt-3">
+      <h3>{{ I18ns.programs.programs.classicProgram.title}}</h3>
+      <p>{{ I18ns.programs.programs.classicProgram.subtitle }}</p>
+    </div>
+  </div>
+  <div class="dropdown-item accelerated">
+    <div class="icon">
+      <i class="bi bi-rocket-takeoff fs-2"></i>
+    </div>
+    <div class="ms-4 mt-3">
+      <h3>{{ I18ns.programs.programs.acceleratedprogram.title }}</h3>
+      <p>{{ I18ns.programs.programs.acceleratedprogram.subtitle }}</p>
+    </div>
+  </div>
+</div>

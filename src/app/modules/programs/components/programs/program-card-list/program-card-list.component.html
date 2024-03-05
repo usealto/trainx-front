@@ -6,15 +6,7 @@
     </h2>
     <p class="mt-2 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
   </div>
-
-  <a type="button"
-  class="btn btn-primary"
-  [routerLink]="AltoRoutes.programsCreate">
-    <i class="bi bi-plus-lg"></i>
-    <div>
-      {{ I18ns.programs.programs.createProgram }}
-    </div>
-  </a>
+  <alto-create-program-btn></alto-create-program-btn>
 </div>
 
 <div class="buttons-row">

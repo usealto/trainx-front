@@ -212,6 +212,14 @@ export const FR = {
       title: 'Programmes de vos équipes',
       subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
       createProgram: 'Créer un programme',
+      classicProgram: {
+        title: 'Programme continu',
+        subtitle: 'Des questions envoyées petit à petit, plusieurs fois par semaine.',
+      },
+      acceleratedprogram: {
+        title: 'Programme accéléré',
+        subtitle: 'Toutes les questions du programme en peu de temps, sans limitation.',
+      },
       involvement: 'Taux de participation',
       involvementToolTip: 'Nombre de membres ayant commencé le programme sur le nombre de membres assignés',
       progress: 'Avancement',
