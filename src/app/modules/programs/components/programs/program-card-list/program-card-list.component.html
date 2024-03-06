@@ -7,35 +7,34 @@
     <p class="mt-2 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
   </div>
 
-  <div class="create-programs-btn">
+  <div class="program-btn">
     <a type="button" class="btn btn-primary" (click)="toggleDropdown()">
       <div>
         {{ I18ns.programs.programs.createProgram }}
       </div>
-      <i class="ms-2 bi" [class]="isCreateProgramBtnDropdownOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+      <i class="ms-2 bi" [class]="isCreateProgramBtnOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
     </a>
     <div
-      #createProgramDropdown
-      class="program-menu"
-      [ngClass]="{ show: isCreateProgramBtnDropdownOpen }"
+      class="program-btn-menu mt-2"
+      [ngClass]="{ show: isCreateProgramBtnOpen }"
       (click)="$event.stopPropagation()"
     >
-      <div class="program-item classic">
-        <div class="icon">
-          <i class="bi bi-bullseye fs-2"></i>
+      <div class="program-btn-item classic" [routerLink]="AltoRoutes.programsCreate">
+        <div class="icon d-flex align-items-center justify-content-center">
+          <i class="bi bi-bullseye fs-1"></i>
         </div>
-        <div>
-          <h3>{{ I18ns.programs.programs.classicProgram.title}}</h3>
-          <p>{{ I18ns.programs.programs.classicProgram.subtitle }}</p>
+        <div class="ms-4 mt-3">
+          <h3 class="fs-5">{{ I18ns.programs.programs.classicProgram.title }}</h3>
+          <p class="fs-6">{{ I18ns.programs.programs.classicProgram.subtitle }}</p>
         </div>
       </div>
-      <div class="program-item accelerated">
-        <div class="icon">
-          <i class="bi bi-rocket-takeoff fs-2"></i>
+      <div class="program-btn-item accelerated">
+        <div class="icon d-flex align-items-center justify-content-center">
+          <i class="bi bi-rocket-takeoff fs-1"></i>
         </div>
-        <div>
-          <h3>{{ I18ns.programs.programs.acceleratedProgram.title }}</h3>
-          <p>{{ I18ns.programs.programs.acceleratedProgram.subtitle }}</p>
+        <div class="ms-4 mt-3">
+          <h3 class="fs-5">{{ I18ns.programs.programs.acceleratedProgram.title }}</h3>
+          <p class="fs-6">{{ I18ns.programs.programs.acceleratedProgram.subtitle }}</p>
         </div>
       </div>
     </div>
@@ -47,32 +46,38 @@
 
   <div class="buttons-section">
     <alto-input-multiple-select
-    [placeholder]="I18ns.leadTeam.members.filters.teams"
-    [controls]="teamsControls"
-    [options]="teamsOptions"
-    [enableSearch]="true">
+      [placeholder]="I18ns.leadTeam.members.filters.teams"
+      [controls]="teamsControls"
+      [options]="teamsOptions"
+      [enableSearch]="true"
+    >
     </alto-input-multiple-select>
 
     <alto-input-single-select-pill
-    [placeholder]="I18ns.leadTeam.members.filters.score"
-    [control]="scoreControl"
-    [options]="scoreOptions">
+      [placeholder]="I18ns.leadTeam.members.filters.score"
+      [control]="scoreControl"
+      [options]="scoreOptions"
+    >
     </alto-input-single-select-pill>
   </div>
 </div>
 
 <alto-placeholder-manager [status]="dataStatus">
   <div
-  *ngFor="let programCards of programCardsRows"
-  class="programs-row mb-5"
-  [class.full-row]="programCards.length === 3"
-  [class.partial-row]="programCards.length < 3">
-    <div *ngFor="let programCard of programCards"
-    class="program-card"
-    [class.disabled]="!programCard.isActiveControl.value"
-    [routerLink]=" programCard.isActiveControl.value
-    ? ['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]
-    : null"
+    *ngFor="let programCards of programCardsRows"
+    class="programs-row mb-5"
+    [class.full-row]="programCards.length === 3"
+    [class.partial-row]="programCards.length < 3"
+  >
+    <div
+      *ngFor="let programCard of programCards"
+      class="program-card"
+      [class.disabled]="!programCard.isActiveControl.value"
+      [routerLink]="
+        programCard.isActiveControl.value
+          ? ['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]
+          : null
+      "
     >
       <div class="title-section mb-2">
         <p class="title-overflow subtitle">
@@ -86,9 +91,7 @@
       <ng-container *ngIf="programCard.program.teamIds.length > 0; else noTeam">
         <div class="teams-section">
           <img [src]="Emoji.BustsInSilhouette | emoji" height="16" width="16" />
-          <p class="teams-title">
-            {{ I18ns.shared.assignedTeams }} :
-          </p>
+          <p class="teams-title">{{ I18ns.shared.assignedTeams }} :</p>
           <div class="tooltip-container">
             <span class="alto-badge teams">{{ programCard.program.teamIds.length }}</span>
 
@@ -111,7 +114,10 @@
               <img class="pe-1 mb-2" [src]="Emoji.PlayButton | emoji" height="14" width="14" />
               {{ I18ns.programs.programs.involvement }}
             </span>
-            <span class="alto-score" [class]="(programCard.participation ? programCard.participation * 100 : '') | pillColor">
+            <span
+              class="alto-score"
+              [class]="(programCard.participation ? programCard.participation * 100 : '') | pillColor"
+            >
               {{ programCard.participation ? (programCard.participation | percent) : '-' }}
             </span>
           </p>
@@ -130,8 +136,12 @@
               {{ I18ns.programs.programs.membersHaveValidated }}
             </span>
             <span
-            class="alto-score"
-            [class]="(programCard.userValidatedProgramCount ? programCard.userValidatedProgramCount * 100 : '') | pillColor">
+              class="alto-score"
+              [class]="
+                (programCard.userValidatedProgramCount ? programCard.userValidatedProgramCount * 100 : '')
+                  | pillColor
+              "
+            >
               {{ programCard.userValidatedProgramCount }} / {{ programCard.totalUsersCount }}
             </span>
           </p>
@@ -141,10 +151,7 @@
     </div>
   </div>
 
-  <alto-pagination
-  [pageControl]="pageControl"
-  [itemsCount]="itemsCount"
-  [itemsPerPage]="pageSize">
+  <alto-pagination [pageControl]="pageControl" [itemsCount]="itemsCount" [itemsPerPage]="pageSize">
   </alto-pagination>
 
   <div class="row mb-4" loading>
