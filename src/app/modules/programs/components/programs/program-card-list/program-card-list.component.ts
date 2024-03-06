@@ -36,6 +36,8 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
 
+  isCreateProgramBtnDropdownOpen = false;
+
   @Input() company!: Company;
 
   private programCards: IProgramCard[] = [];
@@ -186,5 +188,9 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
     this.teamsControls.patchValue([]);
     this.scoreControl.patchValue(null);
     this.pageControl.patchValue(1);
+  }
+
+  toggleDropdown(): void {
+    this.isCreateProgramBtnDropdownOpen = !this.isCreateProgramBtnDropdownOpen;
   }
 }

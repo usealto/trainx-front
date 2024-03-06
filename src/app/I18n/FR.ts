@@ -216,7 +216,7 @@ export const FR = {
         title: 'Programme continu',
         subtitle: 'Des questions envoyées petit à petit, plusieurs fois par semaine.',
       },
-      acceleratedprogram: {
+      acceleratedProgram: {
         title: 'Programme accéléré',
         subtitle: 'Toutes les questions du programme en peu de temps, sans limitation.',
       },

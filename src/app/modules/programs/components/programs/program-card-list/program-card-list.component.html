@@ -6,7 +6,40 @@
     </h2>
     <p class="mt-2 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
   </div>
-  <alto-create-program-btn></alto-create-program-btn>
+
+  <div class="create-programs-btn">
+    <a type="button" class="btn btn-primary" (click)="toggleDropdown()">
+      <div>
+        {{ I18ns.programs.programs.createProgram }}
+      </div>
+      <i class="ms-2 bi" [class]="isCreateProgramBtnDropdownOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+    </a>
+    <div
+      #createProgramDropdown
+      class="program-menu"
+      [ngClass]="{ show: isCreateProgramBtnDropdownOpen }"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="program-item classic">
+        <div class="icon">
+          <i class="bi bi-bullseye fs-2"></i>
+        </div>
+        <div>
+          <h3>{{ I18ns.programs.programs.classicProgram.title}}</h3>
+          <p>{{ I18ns.programs.programs.classicProgram.subtitle }}</p>
+        </div>
+      </div>
+      <div class="program-item accelerated">
+        <div class="icon">
+          <i class="bi bi-rocket-takeoff fs-2"></i>
+        </div>
+        <div>
+          <h3>{{ I18ns.programs.programs.acceleratedProgram.title }}</h3>
+          <p>{{ I18ns.programs.programs.acceleratedProgram.subtitle }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="buttons-row">
