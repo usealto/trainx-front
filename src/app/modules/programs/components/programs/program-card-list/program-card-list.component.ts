@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { GetProgramsStatsRequestParams } from '@usealto/sdk-ts-angular';
@@ -36,6 +36,8 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
 
+  isCreateProgramBtnDropdownOpen = false;
+
   @Input() company!: Company;
 
   private programCards: IProgramCard[] = [];
@@ -54,6 +56,9 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
   scoreOptions = Score.getFiltersPillOptions();
 
   dataStatus = EPlaceholderStatus.LOADING;
+
+  isCreateProgramBtnOpen = false;
+
   private readonly programCardListComponent = new Subscription();
   private readonly activeProgramsSubscription = new Subscription();
 
@@ -61,6 +66,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
     private readonly scoresRestService: ScoresRestService,
     private readonly programsRestService: ProgramsRestService,
     private readonly store: Store<FromRoot.AppState>,
+    private el: ElementRef,
   ) {}
 
   ngOnInit(): void {
@@ -186,5 +192,16 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
     this.teamsControls.patchValue([]);
     this.scoreControl.patchValue(null);
     this.pageControl.patchValue(1);
+  }
+
+  toggleDropdown(): void {
+    this.isCreateProgramBtnOpen = !this.isCreateProgramBtnOpen;
+  }
+
+  @HostListener('document:click', ['$event'])
+  handleDocumentClick(event: Event) {
+    if (!this.el.nativeElement.contains(event.target)) {
+      this.isCreateProgramBtnOpen = false;
+    }
   }
 }
