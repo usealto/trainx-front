@@ -58,9 +58,14 @@
             {{ questionInfos.question.title }}
           </td>
           <td class="w-10 text-center">
-            <span class="alto-score" [class]="(questionInfos.score) * 100 | pillColor">
-              {{ questionInfos.score | percent }}
-            </span>
+            <ng-container *ngIf="questionInfos.score !== undefined; else noScore">
+              <span class="alto-score" [class]="(questionInfos.score) * 100 | pillColor">
+                {{ questionInfos.score | percent }}
+              </span>
+            </ng-container>
+            <ng-template #noScore>
+              <span>-</span>
+            </ng-template>
           </td>
           <ng-container *ngIf="questionInfos.tags && questionInfos.tags.length > 0; else elseQuestionTag">
             <td>
