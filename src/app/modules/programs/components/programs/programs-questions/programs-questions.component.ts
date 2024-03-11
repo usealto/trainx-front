@@ -26,7 +26,7 @@ interface IQuestionInfos {
   question: QuestionDtoApi;
   programs: Program[];
   tags: TagLightDtoApi[];
-  score: number;
+  score?: number;
 }
 
 @Component({
@@ -140,7 +140,7 @@ export class ProgramsQuestionsComponent implements OnInit, OnDestroy {
                   })
                   .filter((p) => !!p) ?? []) as Program[],
                 tags: questionStats.tags ?? [],
-                score: questionStats.score ?? 0,
+                score: questionStats.score,
               };
             });
             this.questionsDataStatus =
