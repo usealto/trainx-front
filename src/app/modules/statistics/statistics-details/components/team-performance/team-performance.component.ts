@@ -358,9 +358,7 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
           next: ([tagStats, selectedTags]) => {
             if (tagStats.length) {
               this.createSpiderChart(
-                tagStats
-                  .filter(({ score }) => typeof score === 'number')
-                  .filter((t) => selectedTags.some(({ value }) => value === t.tag.id)),
+                tagStats.filter((t) => selectedTags.some(({ value }) => value === t.tag.id)),
               );
               this.spiderChartDataStatus = EPlaceholderStatus.GOOD;
             } else {
