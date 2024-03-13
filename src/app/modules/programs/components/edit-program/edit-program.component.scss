@@ -34,12 +34,18 @@ h1 {
     margin-right: 3rem;
   }
   .highlight-step {
-    background-color: var(--bs-primary);
     color: white;
     font-weight: 600;
 
     .tab-icon {
       color: white;
+    }
+
+    &.classic {
+      background-color: var(--bs-primary);
+    }
+    &.accelerated {
+      background-color: var(--orange-600);
     }
   }
 }

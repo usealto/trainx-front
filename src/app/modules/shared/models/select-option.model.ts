@@ -36,19 +36,22 @@ const colorCodes: TPillColor[] = [
 export interface ISelectOption {
   label: string; // The label to display in the select
   value: string; // The ID of the option (could be same as label)
+  icon?: string; // The icon to display in the option
 }
 
 export class SelectOption implements ISelectOption {
   label: string;
   value: string;
+  icon?: string;
 
   constructor(data: ISelectOption) {
     this.label = data.label;
     this.value = data.value;
+    this.icon = data.icon;
   }
 
   get rawData(): ISelectOption {
-    return { label: this.label, value: this.value };
+    return { label: this.label, value: this.value, icon: this.icon };
   }
 }
 
@@ -65,7 +68,7 @@ export class PillOption extends SelectOption implements IPillOption {
   }
 
   override get rawData(): IPillOption {
-    return { label: this.label, value: this.value, pillColor: this.pillColor };
+    return { label: this.label, value: this.value, icon: this.icon, pillColor: this.pillColor };
   }
 
   // Same as team color pipe

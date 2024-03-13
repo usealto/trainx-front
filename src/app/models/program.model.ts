@@ -13,6 +13,7 @@ export interface IProgram extends IBaseModel {
   teamIds: string[];
   questionsCount: number;
   stats: IProgramStats[];
+  isAccelerated: boolean;
 }
 
 export class Program extends BaseModel implements IProgram {
@@ -25,6 +26,7 @@ export class Program extends BaseModel implements IProgram {
   teamIds: string[];
   questionsCount: number;
   stats: ProgramStats[];
+  isAccelerated: boolean;
 
   constructor(data: IProgram) {
     super(data);
@@ -41,6 +43,7 @@ export class Program extends BaseModel implements IProgram {
     this.updatedAt = data.updatedAt;
     this.deletedAt = data.deletedAt;
     this.stats = data.stats.map((s) => new ProgramStats(s));
+    this.isAccelerated = data.isAccelerated;
   }
 
   static fromDto(data: ProgramDtoApi): Program {
@@ -58,6 +61,7 @@ export class Program extends BaseModel implements IProgram {
       updatedAt: data.updatedAt,
       deletedAt: data.deletedAt,
       stats: [],
+      isAccelerated: data.isAccelerated,
     });
   }
 
@@ -87,6 +91,7 @@ export class Program extends BaseModel implements IProgram {
       teamIds: this.teamIds,
       questionsCount: this.questionsCount,
       stats: this.stats.map((s) => s.rawData),
+      isAccelerated: this.isAccelerated,
     };
   }
 

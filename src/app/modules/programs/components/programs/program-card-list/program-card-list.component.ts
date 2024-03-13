@@ -15,6 +15,7 @@ import { AltoRoutes } from '../../../../shared/constants/routes';
 import { PillOption, SelectOption } from '../../../../shared/models/select-option.model';
 import { ScoresRestService } from '../../../../shared/services/scores-rest.service';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
+import { ETab } from '../../../../../core/resolvers/edit-program.resolver';
 
 interface IProgramCard {
   program: Program;
@@ -35,6 +36,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+  ETab = ETab;
 
   isCreateProgramBtnDropdownOpen = false;
 
@@ -54,6 +56,22 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
 
   scoreControl: FormControl<PillOption | null> = new FormControl(null);
   scoreOptions = Score.getFiltersPillOptions();
+
+  programTypeOptions = [
+    new SelectOption({ label: I18ns.programs.programs.allPrograms, value: 'all' }),
+    new SelectOption({
+      label: I18ns.programs.programs.classic.plural,
+      value: 'classic',
+      icon: 'bi-bullseye',
+    }),
+    new SelectOption({
+      label: I18ns.programs.programs.accelerated.plural,
+      value: 'accelerated',
+      icon: 'bi-rocket-takeoff',
+    }),
+  ];
+
+  programTypeControl = new FormControl<SelectOption>(this.programTypeOptions[0], { nonNullable: true });
 
   dataStatus = EPlaceholderStatus.LOADING;
 
@@ -84,10 +102,11 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
             map((teamsControls) => teamsControls.map((x) => x.value)),
           ),
           this.scoreControl.valueChanges.pipe(startWith(this.scoreControl.value)),
+          this.programTypeControl.valueChanges.pipe(startWith(this.programTypeControl.value)),
         ]).pipe(tap(() => this.pageControl.setValue(1))),
       ])
         .pipe(
-          switchMap(([page, [search, selectedTeamsOptions, selectedScoreOption]]) => {
+          switchMap(([page, [search, selectedTeamsOptions, selectedScoreOption, programType]]) => {
             const req: GetProgramsStatsRequestParams = {
               page,
               sortBy: 'program.isActive:desc',
@@ -96,6 +115,12 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
               teamIds: selectedTeamsOptions.length
                 ? selectedTeamsOptions.map((x) => x.value).join(',')
                 : undefined,
+              isAccelerated:
+                programType.value === 'accelerated'
+                  ? true
+                  : programType.value === 'classic'
+                  ? false
+                  : undefined,
             };
 
             switch (selectedScoreOption?.value) {
@@ -127,7 +152,10 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
 
           this.dataStatus =
             stats.length === 0
-              ? this.teamsControls.value.length || this.searchControl.value || this.scoreControl.value
+              ? this.teamsControls.value.length ||
+                this.searchControl.value ||
+                this.scoreControl.value ||
+                this.programTypeControl.value.value !== 'all'
                 ? EPlaceholderStatus.NO_RESULT
                 : EPlaceholderStatus.NO_DATA
               : EPlaceholderStatus.GOOD;
@@ -191,6 +219,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
     this.searchControl.patchValue(null);
     this.teamsControls.patchValue([]);
     this.scoreControl.patchValue(null);
+    this.programTypeControl.patchValue(this.programTypeOptions[0]);
     this.pageControl.patchValue(1);
   }
 

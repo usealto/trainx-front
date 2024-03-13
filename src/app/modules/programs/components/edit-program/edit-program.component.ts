@@ -4,7 +4,12 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
-import { PriorityEnumApi, ProgramDtoApiPriorityEnumApi, QuestionDtoApi } from '@usealto/sdk-ts-angular';
+import {
+  PriorityEnumApi,
+  ProgramDtoApiPriorityEnumApi,
+  ProgramStatsDtoApi,
+  QuestionDtoApi,
+} from '@usealto/sdk-ts-angular';
 import {
   Subscription,
   combineLatest,
@@ -38,6 +43,8 @@ import { ValidationService } from '../../../shared/services/validation.service';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../create-questions/question-form.component';
+import { ScoresRestService } from '../../../shared/services/scores-rest.service';
+import { EScoreDuration } from '../../../../models/score.model';
 
 @Component({
   selector: 'alto-edit-program',
@@ -53,6 +60,9 @@ export class EditProgramsComponent implements OnInit {
 
   company!: Company;
   program?: Program;
+  isAccelerated = false;
+  programStat?: ProgramStatsDtoApi;
+
   tabsOptions: ITabOption[] = [
     { value: ETab.Informations, label: I18ns.programs.forms.step1.title },
     { value: ETab.Questions, label: I18ns.programs.forms.step2.title },
@@ -117,6 +127,7 @@ export class EditProgramsComponent implements OnInit {
     private readonly toastService: ToastService,
     private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
     private readonly router: Router,
+    private readonly scoreRestService: ScoresRestService,
   ) {}
 
   ngOnInit(): void {
@@ -125,6 +136,7 @@ export class EditProgramsComponent implements OnInit {
     this.company = (data[EResolvers.AppResolver] as IAppData).company;
     const editProgramData = data[EResolvers.EditProgramResolver] as IEditProgramData;
     this.program = editProgramData.program;
+    this.isAccelerated = editProgramData.isAccelerated;
 
     this.tabsControl.setValue(
       this.tabsOptions.find((tab) => tab.value === editProgramData.tab) ?? this.tabsOptions[0],
@@ -272,6 +284,16 @@ export class EditProgramsComponent implements OnInit {
             : EPlaceholderStatus.NO_DATA;
         }),
     );
+
+    if (this.program) {
+      this.editProgramComponentSubscription.add(
+        this.scoreRestService
+          .getPaginatedProgramsStats(EScoreDuration.All, false, { ids: this.program?.id })
+          .subscribe(({ data }) => {
+            this.programStat = data ? data[0] : undefined;
+          }),
+      );
+    }
   }
 
   cancel(): void {
@@ -297,6 +319,7 @@ export class EditProgramsComponent implements OnInit {
       priority: priorityControl.value?.value as PriorityEnumApi,
       teamIds: teamControls.value.map((teamControl) => teamControl.value.value).map((id) => ({ id })),
       expectation: expectationControl.value,
+      isAccelerated: this.isAccelerated,
     };
 
     (this.program

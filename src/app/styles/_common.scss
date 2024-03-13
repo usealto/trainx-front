@@ -192,6 +192,10 @@
     line-height: 5.33rem;
     font-weight: 600;
   }
+
+  &.accelerated {
+    background-color: var(--orange-50);
+  }
 }
 
 h2 {

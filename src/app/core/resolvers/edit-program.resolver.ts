@@ -11,10 +11,10 @@ export enum ETab {
   Questions = 'questions',
   Summary = 'summary',
 }
-
 export interface IEditProgramData {
   program?: Program;
   tab: ETab;
+  isAccelerated: boolean;
 }
 
 export const editProgramResolver: ResolveFn<IEditProgramData> = (activatedRoute) => {
@@ -28,10 +28,13 @@ export const editProgramResolver: ResolveFn<IEditProgramData> = (activatedRoute)
   return store.select(FromRoot.selectCompany).pipe(
     map(({ data: company }) => {
       const program = programId ? company.programById.get(programId) : undefined;
+      const isAccelerated =
+        program?.isAccelerated ?? activatedRoute.queryParamMap.get('isAccelerated') === 'true';
+
       if (programId !== 'new' && !program) {
         router.navigate(['/', AltoRoutes.lead, AltoRoutes.programs]);
       }
-      return { program, tab: program ? tab : ETab.Informations };
+      return { program, tab: program ? tab : ETab.Informations, isAccelerated };
     }),
   );
 };

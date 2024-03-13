@@ -1,7 +1,7 @@
 export const FR = {
   shared: {
     smiley: '👍',
-    edit: 'Modifier',
+    edit: 'Éditer',
     save: 'Enregistrer',
     submit: 'Valider',
     next: 'Suivant',
@@ -212,6 +212,15 @@ export const FR = {
       title: 'Programmes de vos équipes',
       subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
       createProgram: 'Créer un programme',
+      allPrograms: 'Tous les programmes',
+      classic: {
+        singular: 'Continu',
+        plural: 'Continus',
+      },
+      accelerated: {
+        singular: 'Accéléré',
+        plural: 'Accélérés',
+      },
       classicProgram: {
         title: 'Programme continu',
         subtitle: 'Des questions envoyées petit à petit, plusieurs fois par semaine.',
@@ -347,12 +356,14 @@ export const FR = {
         },
       },
       step3: {
-        title: 'Récapitulatif',
-        title2: 'Récapitulatif du programme',
-        subtitle:
-          'Récapitulatif des informations essentielles du programme avant de le partager à vos équipes.',
-        summary: 'Récapitulatif',
-        summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
+        title: 'Résultats',
+        summary: {
+          title: 'Récapitulatif',
+          averageScore: 'Moyenne de score des utilisateurs',
+          usersWhoCompleted: 'Participants ayant terminés le programme',
+        },
+
+
         createdToast: 'Votre programme a bien été créé',
         validatedToast: 'Vous avez bien finalisé la création de votre programme',
         validate: 'Finaliser la création du programme',
