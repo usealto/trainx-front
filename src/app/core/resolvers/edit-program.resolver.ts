@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ResolveFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { map, of } from 'rxjs';
+import { map } from 'rxjs';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { Program } from '../../models/program.model';
 import * as FromRoot from '../store/store.reducer';

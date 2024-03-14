@@ -65,6 +65,7 @@ export class Program extends BaseModel implements IProgram {
       deletedAt: data.deletedAt,
       stats: [],
       isAccelerated: data.isAccelerated,
+      startDate: data.startDate,
     });
   }
 
@@ -95,6 +96,7 @@ export class Program extends BaseModel implements IProgram {
       questionsCount: this.questionsCount,
       stats: this.stats.map((s) => s.rawData),
       isAccelerated: this.isAccelerated,
+      startDate: this.startDate,
     };
   }
 

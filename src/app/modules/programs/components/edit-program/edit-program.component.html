@@ -450,11 +450,7 @@
               </td>
               <td class="text-center">
                 <span
-                  *ngIf="
-                    user.answeredQuestionsCount < (program?.questionsCount ?? 0) ||
-                      program?.questionsCount === 0;
-                    else programCompleted
-                  "
+                  *ngIf="!user.completedAt; else programCompleted"
                   class="alto-score"
                   [class]="(user.answeredQuestionsCount / (program?.questionsCount ?? 1)) * 100 | pillColor"
                   >{{ user.answeredQuestionsCount + ' / ' + program?.questionsCount }}</span
@@ -509,7 +505,9 @@
         <i class="bi bi-trash3"></i><span>{{ I18ns.programs.delete.btn }}</span>
       </button>
       <button *ngIf="isAccelerated" class="btn launch-btn" (click)="launchAcceleratedProgram()">
-        <i class="bi bi-send"></i><span>{{ I18ns.programs.forms.step3.members.sendReminder }}</span>
+        <i class="bi bi-send"></i><span>
+          {{ program?.hasAlreadyStarted ? I18ns.programs.forms.step3.members.sendReminder : I18ns.programs.forms.step3.members.launchProgram }}
+        </span>
       </button>
     </div>
 

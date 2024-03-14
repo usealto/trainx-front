@@ -27,7 +27,7 @@ import { IAppData } from '../../../../core/resolvers';
 import { ETab, IEditProgramData } from '../../../../core/resolvers/edit-program.resolver';
 import { ILeadData } from '../../../../core/resolvers/lead.resolver';
 import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
-import { addProgram, deleteProgram } from '../../../../core/store/root/root.action';
+import { addProgram, deleteProgram, launchAcceleratedProgram } from '../../../../core/store/root/root.action';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { EmojiName } from '../../../../core/utils/emoji/data';
@@ -526,10 +526,21 @@ export class EditProgramsComponent implements OnInit {
     this.userStatsSearchControl.patchValue(null);
   }
 
-  launchAcceleratedProgram() {
+  launchAcceleratedProgram(): void {
     if (this.program) {
+      const hasAlreadyStarted = this.program.hasAlreadyStarted;
       this.triggersService
         .launchAcceleratedProgram({ acceleratedProgramId: this.program.id, companyId: this.company.id })
+        .pipe(
+          switchMap(() => {
+            this.store.dispatch(launchAcceleratedProgram({ programId: this.program?.id as string }));
+            return this.store.select(FromRoot.selectCompany);
+          }),
+          tap(({ data: company }) => {
+            this.program = company.programById.get(this.program?.id as string) as Program;
+          }),
+          first(),
+        )
         .subscribe({
           error: () => {
             this.toastService.show({
@@ -540,7 +551,9 @@ export class EditProgramsComponent implements OnInit {
           complete: () => {
             this.toastService.show({
               type: 'success',
-              text: I18ns.programs.forms.step3.members.reminderToast,
+              text: hasAlreadyStarted
+                ? I18ns.programs.forms.step3.members.reminderToast
+                : I18ns.programs.forms.step3.members.launchSuccess,
             });
           },
         });

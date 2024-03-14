@@ -366,8 +366,10 @@ export const FR = {
           title: 'Participants : {{}}',
           subtitle: 'Retrouvez les participants dont le programme n’est pas terminé.',
           teamFilter: 'Équipes',
+          launchProgram: 'Lancer le programme',
           sendReminder: 'Envoyer une relance',
-          reminderToast: 'Un message de rappel à été envoyé aux participants sur leur connecteur.',
+          launchSuccess: 'Le programme a bien été lancé',
+          reminderToast: 'Un notification de rappel a été envoyé aux participants sur leurs connecteurs.',
           reminderErrorToast: "Une erreur est survenue lors de l'envoi du rappel.",
           table: {
             name: 'Nom / Prénom',
