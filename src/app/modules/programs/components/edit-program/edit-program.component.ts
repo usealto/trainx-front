@@ -10,6 +10,7 @@ import {
   ProgramStatsDtoApi,
   QuestionDtoApi,
 } from '@usealto/sdk-ts-angular';
+import { format } from 'date-fns';
 import {
   Subscription,
   combineLatest,
@@ -35,19 +36,17 @@ import { I18ns, getTranslation } from '../../../../core/utils/i18n/I18n';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { Company } from '../../../../models/company.model';
 import { Program } from '../../../../models/program.model';
+import { EScoreDuration } from '../../../../models/score.model';
+import { TriggersService } from '../../../settings/services/triggers.service';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { ITabOption } from '../../../shared/components/tabs/tabs.component';
 import { PillOption, SelectOption } from '../../../shared/models/select-option.model';
+import { ScoresRestService } from '../../../shared/services/scores-rest.service';
 import { ValidationService } from '../../../shared/services/validation.service';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../create-questions/question-form.component';
-import { ScoresRestService } from '../../../shared/services/scores-rest.service';
-import { EScoreDuration } from '../../../../models/score.model';
-import { format } from 'date-fns';
-import { debounce } from 'cypress/types/lodash';
-import { TriggersService } from '../../../settings/services/triggers.service';
 
 interface IUserStatsDisplay {
   user: {
