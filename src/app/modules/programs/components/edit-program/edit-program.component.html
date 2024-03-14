@@ -1,15 +1,35 @@
-<div class="header-panel2">
-  <img class="emoji-title me-4" [src]="EmojiName.Bullseye | emoji" width="28" height="28">
-  <h1>{{program ? I18ns.programs.forms.edit : I18ns.programs.forms.create}}</h1>
+<div class="header-panel2" [class.accelerated]="isAccelerated">
+  <i class="bi fs-2" [class]="isAccelerated ? 'bi-rocket-takeoff' : 'bi-bullseye'"></i>
+  <h1>
+    {{
+      (program ? I18ns.programs.forms.edit : I18ns.programs.forms.create)
+        | replaceInTranslation
+          : (isAccelerated
+              ? (I18ns.programs.programs.accelerated | plural : 1)
+              : (I18ns.programs.programs.classic | plural : 1 | lowercase))
+    }}
+  </h1>
 </div>
 
 <div class="form-nav mb-8">
-  <div *ngFor="let tabOption of tabsOptions"
-  class="step cursor-pointer"
-  [class.cursor-pointer]="!!program"
-  [class.highlight-step]="tabsControl.value === tabOption"
-  (click)="switchTab(tabOption)">
-    <i class="fs-5 tab-icon me-3 bi" [class]="tabOption.value === ETab.Informations ? 'bi-file-text' : tabOption.value === ETab.Questions ? 'bi-question-circle' : 'bi-share'"></i>
+  <div
+    *ngFor="let tabOption of tabsOptions"
+    class="step cursor-pointer"
+    [class.cursor-pointer]="!!program"
+    [class.highlight-step]="tabsControl.value === tabOption"
+    [class]="isAccelerated ? 'accelerated' : 'classic'"
+    (click)="switchTab(tabOption)"
+  >
+    <i
+      class="fs-5 tab-icon me-3 bi"
+      [class]="
+        tabOption.value === ETab.Informations
+          ? 'bi-file-text'
+          : tabOption.value === ETab.Questions
+          ? 'bi-question-circle'
+          : 'bi-list-task'
+      "
+    ></i>
     <span>{{ tabOption.label }}</span>
   </div>
 </div>
@@ -19,7 +39,7 @@
   <div *ngSwitchCase="ETab.Informations">
     <div class="infos">
       <i class="me-3 bi bi-info-circle"></i>
-      <span>{{I18ns.programs.forms.step1.subtitle}}</span>
+      <span>{{ I18ns.programs.forms.step1.subtitle }}</span>
     </div>
     <form [formGroup]="programFormGroup">
       <div class="row">
@@ -31,14 +51,17 @@
           </div>
         </div>
         <div class="col-5">
-          <alto-input-text [control]="programFormGroup.controls.nameControl" [placeholder]="I18ns.programs.forms.step1.namePlaceholder"></alto-input-text>
+          <alto-input-text
+            [control]="programFormGroup.controls.nameControl"
+            [placeholder]="I18ns.programs.forms.step1.namePlaceholder"
+          ></alto-input-text>
         </div>
       </div>
-      <hr>
+      <hr />
       <ng-container *ngIf="!program">
         <div class="row align-items-center">
           <div class="col-left">
-            <img class="emoji" [src]="EmojiName.Label | emoji" width="20" height="20"/>
+            <img class="emoji" [src]="EmojiName.Label | emoji" width="20" height="20" />
             <div>
               <label class="form-label">{{ I18ns.programs.forms.step1.tags }}</label>
               <p>{{ I18ns.programs.forms.step1.tagsSubtitle }}</p>
@@ -46,18 +69,19 @@
           </div>
           <div class="col-5">
             <alto-input-pills
-            [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder"
-            [controls]="tagControls"
-            [options]="tagOptions"
-            [hasFormAppearance]="true">
+              [placeholder]="I18ns.programs.forms.step1.tagsPlaceholder"
+              [controls]="tagControls"
+              [options]="tagOptions"
+              [hasFormAppearance]="true"
+            >
             </alto-input-pills>
           </div>
         </div>
-        <hr>
+        <hr />
       </ng-container>
       <div class="row align-items-center">
         <div class="col-left">
-          <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="20" height="20"/>
+          <img class="emoji" [src]="EmojiName.BustsInSilhouette | emoji" width="20" height="20" />
           <div>
             <label class="form-label">{{ I18ns.programs.forms.step1.teams }}</label>
             <p>{{ I18ns.programs.forms.step1.teamsSubtitle }}</p>
@@ -65,17 +89,18 @@
         </div>
         <div class="col-5">
           <alto-input-pills
-          [placeholder]="I18ns.programs.forms.step1.teamsPlaceholder"
-          [controls]="programFormGroup.controls.teamControls"
-          [options]="teamOptions"
-          [hasFormAppearance]="true">
+            [placeholder]="I18ns.programs.forms.step1.teamsPlaceholder"
+            [controls]="programFormGroup.controls.teamControls"
+            [options]="teamOptions"
+            [hasFormAppearance]="true"
+          >
           </alto-input-pills>
         </div>
       </div>
-      <hr>
+      <hr />
       <div class="row align-items-center">
         <div class="col-left">
-          <img class="emoji" [src]="EmojiName.Warning | emoji" width="20" height="20"/>
+          <img class="emoji" [src]="EmojiName.Warning | emoji" width="20" height="20" />
           <div>
             <label class="form-label required">{{ I18ns.programs.forms.step1.priority }}</label>
             <p>{{ I18ns.programs.forms.step1.prioritySubtitle }}</p>
@@ -83,17 +108,18 @@
         </div>
         <div class="col-5">
           <alto-input-single-select
-          [placeholder]="I18ns.programs.forms.step1.priorityPlaceholder"
-          [control]="programFormGroup.controls.priorityControl"
-          [options]="priorityOptions"
-          [hasFormAppearance]="true">
+            [placeholder]="I18ns.programs.forms.step1.priorityPlaceholder"
+            [control]="programFormGroup.controls.priorityControl"
+            [options]="priorityOptions"
+            [hasFormAppearance]="true"
+          >
           </alto-input-single-select>
         </div>
       </div>
-      <hr>
+      <hr />
       <div class="row align-items-center">
         <div class="col-left">
-          <img class="emoji" [src]="EmojiName.SportsMedal | emoji" width="20" height="20"/>
+          <img class="emoji" [src]="EmojiName.SportsMedal | emoji" width="20" height="20" />
           <div>
             <label class="form-label required">{{ I18ns.programs.forms.step1.expectation }}</label>
             <p>{{ I18ns.programs.forms.step1.expectationSubtitle }}</p>
@@ -106,12 +132,17 @@
     </form>
     <hr class="mt-8 bottom-hr" />
     <div class="d-flex flex-nowrap justify-content-between">
-        <button class="btn btn-outline-secondary" (click)="cancel()">
-          {{ I18ns.shared.cancel }}
-        </button>
-        <button type="submit" class="btn btn-primary" [disabled]="!programFormGroup.dirty || programFormGroup.invalid" (click)="submitForm()">
-          {{ program ? I18ns.programs.forms.step1.edit : I18ns.programs.forms.step1.create }}
-        </button>
+      <button class="btn btn-outline-secondary" (click)="cancel()">
+        {{ I18ns.shared.cancel }}
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="!programFormGroup.dirty || programFormGroup.invalid"
+        (click)="submitForm()"
+      >
+        {{ program ? I18ns.programs.forms.step1.edit : I18ns.programs.forms.step1.create }}
+      </button>
     </div>
   </div>
 
@@ -130,18 +161,25 @@
         </h2>
         <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.associatedQuestions.subtitle }}</p>
       </div>
-      <button class="btn btn-primary" (click)="openQuestionForm()">
+      <button *ngIf="!(program && isAccelerated)" class="btn btn-primary" (click)="openQuestionForm()">
         <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
       </button>
     </div>
 
-    <alto-input-search class="d-flex mb-4" [searchControl]="associatedQuestionsSearchControl"></alto-input-search>
+    <alto-input-search
+      class="d-flex mb-4"
+      [searchControl]="associatedQuestionsSearchControl"
+    ></alto-input-search>
 
     <alto-placeholder-manager [status]="associatedQuestionsDataStatus">
       <div class="panel questions-panel">
-        <div *ngFor="let associatedQuestion of associatedQuestions" class="d-flex justify-content-between align-items-center row">
+        <div
+          *ngFor="let associatedQuestion of associatedQuestions"
+          class="d-flex justify-content-between align-items-center row"
+        >
           <div class="d-flex align-items-center form-check form-switch col-10">
             <input
+              *ngIf="!(program && isAccelerated)"
               class="form-check-input cursor-pointer me-8"
               type="checkbox"
               [checked]="true"
@@ -150,15 +188,21 @@
             <span class="question-overflow fs-7 fw-medium">{{ associatedQuestion.title }}</span>
           </div>
 
-          <div class="col-2 text-end cursor-pointer" (click)="openQuestionForm(associatedQuestion)">
+          <div
+            *ngIf="program && isAccelerated ? false : true"
+            class="col-2 text-end cursor-pointer"
+            (click)="openQuestionForm(associatedQuestion)"
+          >
             <i class="bi bi-pen"></i>
           </div>
         </div>
       </div>
-      <alto-pagination class="mt-4 px-3"
-      [pageControl]="associatedQuestionsPageControl"
-      [itemsCount]="associatedQuestionsCount"
-      [itemsPerPage]="questionsPageSize">
+      <alto-pagination
+        class="mt-4 px-3"
+        [pageControl]="associatedQuestionsPageControl"
+        [itemsCount]="associatedQuestionsCount"
+        [itemsPerPage]="questionsPageSize"
+      >
       </alto-pagination>
 
       <div noResult class="nodata-placeholder text-center">
@@ -181,68 +225,94 @@
       </div>
     </alto-placeholder-manager>
 
-    <h2 class="mt-8">
-      <img class="emoji" [src]=" associatedQuestionsDataStatus === EPlaceholderStatus.NO_DATA ? EmojiName.Memo : EmojiName.RedQuestionMark | emoji" width="16" height="16" />
-      {{ associatedQuestionsDataStatus === EPlaceholderStatus.NO_DATA ? I18ns.programs.forms.step2.existing2.title : I18ns.programs.forms.step2.existing.title }}
-    </h2>
-    <p class="subtitle alto-grey mb-4">{{ associatedQuestionsDataStatus === EPlaceholderStatus.NO_DATA ? I18ns.programs.forms.step2.existing2.subtitle : I18ns.programs.forms.step2.existing.subtitle }}</p>
+    <ng-container *ngIf="!(program && isAccelerated)">
+      <h2 class="mt-8">
+        <img
+          class="emoji"
+          [src]="
+            associatedQuestionsDataStatus === EPlaceholderStatus.NO_DATA
+              ? EmojiName.Memo
+              : (EmojiName.RedQuestionMark | emoji)
+          "
+          width="16"
+          height="16"
+        />
+        {{
+          associatedQuestionsDataStatus === EPlaceholderStatus.NO_DATA
+            ? I18ns.programs.forms.step2.existing2.title
+            : I18ns.programs.forms.step2.existing.title
+        }}
+      </h2>
+      <p class="subtitle alto-grey mb-4">
+        {{
+          associatedQuestionsDataStatus === EPlaceholderStatus.NO_DATA
+            ? I18ns.programs.forms.step2.existing2.subtitle
+            : I18ns.programs.forms.step2.existing.subtitle
+        }}
+      </p>
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <alto-input-search [searchControl]="questionsSearchControl"></alto-input-search>
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <alto-input-search [searchControl]="questionsSearchControl"></alto-input-search>
 
-      <alto-input-multiple-select
-      [placeholder]="I18ns.programs.questions.filters.tags"
-      [controls]="tagControls"
-      [options]="tagOptions"
-      [enableSearch]="true">
-      </alto-input-multiple-select>
-    </div>
+        <alto-input-multiple-select
+          [placeholder]="I18ns.programs.questions.filters.tags"
+          [controls]="tagControls"
+          [options]="tagOptions"
+          [enableSearch]="true"
+        >
+        </alto-input-multiple-select>
+      </div>
 
-    <alto-placeholder-manager [status]="questionsDataStatus">
-      <div class="panel questions-panel">
-        <div *ngFor="let question of questions" class="d-flex justify-content-between align-items-center row">
-          <div class="d-flex align-items-center form-check form-switch col-10">
-            <input
-              class="form-check-input cursor-pointer me-8"
-              type="checkbox"
-              [checked]="false"
-              (click)="addAssociatedQuestion(question)"
-            />
-            <span class="question-overflow fs-7 fw-medium">{{ question.title }}</span>
-          </div>
+      <alto-placeholder-manager [status]="questionsDataStatus">
+        <div class="panel questions-panel">
+          <div
+            *ngFor="let question of questions"
+            class="d-flex justify-content-between align-items-center row"
+          >
+            <div class="d-flex align-items-center form-check form-switch col-10">
+              <input
+                class="form-check-input cursor-pointer me-8"
+                type="checkbox"
+                [checked]="false"
+                (click)="addAssociatedQuestion(question)"
+              />
+              <span class="question-overflow fs-7 fw-medium">{{ question.title }}</span>
+            </div>
 
-          <div class="col-2 text-end cursor-pointer" (click)="openQuestionForm(question)">
-            <i class="bi bi-pen"></i>
+            <div class="col-2 text-end cursor-pointer" (click)="openQuestionForm(question)">
+              <i class="bi bi-pen"></i>
+            </div>
           </div>
         </div>
-      </div>
 
-      <alto-pagination
-      class="mt-4 px-3"
-      [pageControl]="questionsPageControl"
-      [itemsCount]="questionsCount"
-      [itemsPerPage]="questionsPageSize">
-      </alto-pagination>
+        <alto-pagination
+          class="mt-4 px-3"
+          [pageControl]="questionsPageControl"
+          [itemsCount]="questionsCount"
+          [itemsPerPage]="questionsPageSize"
+        >
+        </alto-pagination>
 
-      <div class="nodata-placeholder text-center" noResult>
-        <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
-        <p class="fw-medium">{{ I18ns.shared.noData }}</p>
-        <p class="fw-medium">{{ I18ns.shared.noDataSubtitle }}</p>
-        <button class="btn btn-primary mt-4" (click)="resetQuestionsSearch()">
-          <i class="bi bi-arrow-clockwise"></i>
-          {{ I18ns.shared.resetFilters }}
-        </button>
-      </div>
+        <div class="nodata-placeholder text-center" noResult>
+          <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+          <p class="fw-medium">{{ I18ns.shared.noData }}</p>
+          <p class="fw-medium">{{ I18ns.shared.noDataSubtitle }}</p>
+          <button class="btn btn-primary mt-4" (click)="resetQuestionsSearch()">
+            <i class="bi bi-arrow-clockwise"></i>
+            {{ I18ns.shared.resetFilters }}
+          </button>
+        </div>
 
-      <div noData class="text-center">
-        <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.newSubtitle }}</p>
+        <div noData class="text-center">
+          <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.newSubtitle }}</p>
 
-        <button class="btn btn-primary mb-8">
-          <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
-        </button>
-        <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.or }}</p>
-      </div>
-    </alto-placeholder-manager>
+          <button class="btn btn-primary mb-8">
+            <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
+          </button>
+          <p class="fw-medium mb-8">{{ I18ns.programs.forms.step2.or }}</p>
+        </div>
+      </alto-placeholder-manager>
+    </ng-container>
 
     <div class="d-flex flex-nowrap justify-content-between">
       <button class="btn btn-outline-secondary" (click)="switchTab(tabsOptions[0])">
@@ -256,19 +326,32 @@
 
   <!-- SUMMARY TAB -->
   <div *ngSwitchCase="ETab.Summary">
-    <div class="infos">
-      <i class="me-3 bi bi-info-circle"></i>
-      <span>{{I18ns.programs.forms.step3.subtitle}}</span>
-    </div>
-
-    <h2 class="mb-5">
-      <img class="emoji" [src]="EmojiName.PageFacingUp | emoji" width="18" height="18" />
-      {{ I18ns.programs.forms.step3.title2 }}
-    </h2>
-
     <div class="summary">
       <div class="title summary-row">
-        <h2>{{ program?.name }}</h2>
+        <h2>
+          <i class="bi bi-pie-chart me-2"></i>
+          {{ I18ns.programs.forms.step3.summary.title }}
+        </h2>
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-label">
+          <i class="fs-3 bi bi-trophy"></i>
+          {{ I18ns.programs.forms.step3.summary.averageScore }}
+        </div>
+        <span class="alto-score" [class]="programStat?.score ?? 0 | pillColor">{{
+          programStat && programStat.score ? (programStat.score | percent) : '-'
+        }}</span>
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-label">
+          <i class="fs-3 bi bi-check2-square"></i>
+          {{ I18ns.programs.forms.step3.summary.usersWhoCompleted }}
+        </div>
+        <span class="alto-badge">{{
+          programStat?.userCompletedProgramCount + ' / ' + programStat?.totalUsersCount
+        }}</span>
       </div>
 
       <div class="summary-row">
@@ -286,7 +369,9 @@
           <img class="emoji" [src]="EmojiName.SportsMedal | emoji" width="20" height="20" />
           {{ I18ns.programs.forms.step1.expectation }}
         </div>
-        <span class="alto-score pill-green">{{ programFormGroup.controls.expectationControl.value / 100 | percent }}</span>
+        <span class="alto-score pill-green">{{
+          programFormGroup.controls.expectationControl.value / 100 | percent
+        }}</span>
       </div>
 
       <div class="summary-row">
@@ -306,10 +391,121 @@
       </div>
     </div>
 
-    <div class="delete-button-row">
-      <a class="btn btn-danger" (click)="deleteProgram()">
+    <div class="mb-4">
+      <h2>
+        <i class="fs-3 bi bi-people"></i>
+        {{ I18ns.programs.forms.step3.members.title | replaceInTranslation : programStat?.totalUsersCount }}
+      </h2>
+      <p class="mt-2 alto-grey">{{ I18ns.programs.forms.step3.members.subtitle }}</p>
+    </div>
+
+    <div class="mb-4 d-flex justify-content-between">
+      <alto-input-search [searchControl]="userStatsSearchControl"></alto-input-search>
+      <alto-input-multiple-select
+        [placeholder]="I18ns.programs.forms.step3.members.teamFilter"
+        [controls]="usersStatsTeamsControl"
+        [options]="teamOptions"
+      ></alto-input-multiple-select>
+    </div>
+    <alto-placeholder-manager [status]="userStatsDataStatus">
+      <div class="table-panel">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">{{ I18ns.programs.forms.step3.members.table.name }}</th>
+              <th scope="col" class="text-center">{{ I18ns.programs.forms.step3.members.table.level }}</th>
+              <th scope="col">{{ I18ns.programs.forms.step3.members.table.team }}</th>
+              <th scope="col" class="text-center">
+                {{ I18ns.programs.forms.step3.members.table.programState }}
+              </th>
+              <th *ngIf="isAccelerated" scope="col">
+                {{ I18ns.programs.forms.step3.members.table.lastReminder }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of userStatsDisplay" style="height: 60px">
+              <td class="px-4">
+                <alto-profile-card [user]="user.user"></alto-profile-card>
+              </td>
+              <td class="text-center">
+                <span
+                  *ngIf="user.score !== undefined; else noScore"
+                  class="alto-score"
+                  [class]="user.score * 100 | pillColor"
+                >
+                  {{ user.score | percent }}
+                </span>
+                <ng-template #noScore
+                  ><p class="alto-grey text-center">{{ I18ns.shared.noScore }}</p></ng-template
+                >
+              </td>
+              <td>
+                <span class="alto-badge" [style]="user.team.id | teamColor">{{ user.team.name }}</span>
+              </td>
+              <td class="text-center">
+                <span
+                  *ngIf="
+                    user.answeredQuestionsCount < (program?.questionsCount ?? 0) ||
+                      program?.questionsCount === 0;
+                    else programCompleted
+                  "
+                  class="alto-score"
+                  [class]="(user.answeredQuestionsCount / (program?.questionsCount ?? 1)) * 100 | pillColor"
+                  >{{ user.answeredQuestionsCount + ' / ' + program?.questionsCount }}</span
+                >
+                <ng-template #programCompleted>
+                  <p class="alto-grey">
+                    {{
+                      I18ns.programs.forms.step3.members.table.completedAt
+                        | replaceInTranslation : user.completedAt
+                    }}
+                  </p>
+                </ng-template>
+              </td>
+              <td *ngIf="isAccelerated">
+                <p class="alto-grey">
+                  {{
+                    user.lastLaunchedAt ? user.lastLaunchedAt : I18ns.programs.forms.step3.members.table.none
+                  }}
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <alto-pagination
+          class="mx-4 d-block"
+          [pageControl]="userStatsPageControl"
+          [itemsPerPage]="userStatsPageSize"
+          [itemsCount]="userStatsTotalCount"
+        ></alto-pagination>
+      </div>
+      <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noData>
+        <div class="text-center">
+          <img [src]="EmojiName.Eyes | emoji" height="24" width="24" />
+          <p class="mt-3">{{ I18ns.programs.forms.step3.members.table.placeholder.noData }}</p>
+        </div>
+      </div>
+      <div class="col nodata-placeholder d-flex justify-content-center align-items-center" noResult>
+        <div class="text-center">
+          <img [src]="EmojiName.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+          <p class="mt-3">{{ I18ns.programs.forms.step3.members.table.placeholder.noResult }}</p>
+          <button class="btn btn-primary mt-4" (click)="resetFilters()">
+            <i class="bi bi-arrow-clockwise"></i>
+            {{ I18ns.shared.resetFilters }}
+          </button>
+        </div>
+      </div>
+      <div class="skeleton-panel" style="height: 377px" loading></div>
+    </alto-placeholder-manager>
+
+    <div class="mt-4 d-flex justify-content-between">
+      <button class="btn btn-danger" (click)="deleteProgram()">
         <i class="bi bi-trash3"></i><span>{{ I18ns.programs.delete.btn }}</span>
-      </a>
+      </button>
+      <button *ngIf="isAccelerated" class="btn launch-btn" (click)="launchAcceleratedProgram()">
+        <i class="bi bi-send"></i><span>{{ I18ns.programs.forms.step3.members.sendReminder }}</span>
+      </button>
     </div>
 
     <hr class="mt-8 bottom-hr" />
@@ -317,7 +513,11 @@
       <button class="btn btn-outline-secondary" (click)="switchTab(tabsOptions[1])">
         {{ I18ns.shared.previous }}
       </button>
-      <button class="btn btn-primary" [disabled]="!programFormGroup.dirty || programFormGroup.invalid" (click)="submitForm()">
+      <button
+        class="btn btn-primary"
+        [disabled]="!programFormGroup.dirty || programFormGroup.invalid"
+        (click)="submitForm()"
+      >
         {{ program ? I18ns.programs.forms.step3.validateEdit : I18ns.programs.forms.step3.validate }}
       </button>
     </div>

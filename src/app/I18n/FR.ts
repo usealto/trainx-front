@@ -1,7 +1,7 @@
 export const FR = {
   shared: {
     smiley: '👍',
-    edit: 'Modifier',
+    edit: 'Éditer',
     save: 'Enregistrer',
     submit: 'Valider',
     next: 'Suivant',
@@ -98,7 +98,7 @@ export const FR = {
     },
     global: 'Global',
     deletedUsername: 'Utilisateur supprimé',
-    noScore: 'Aucune réponse',
+    noScore: 'Aucun niveau',
     noEvolution: 'Aucune évolution',
     noTag: 'Aucun tag',
     error: 'Une erreur est survenue',
@@ -212,6 +212,9 @@ export const FR = {
       title: 'Programmes de vos équipes',
       subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
       createProgram: 'Créer un programme',
+      allPrograms: 'Tous les programmes',
+      classic: ['continu', 'continus'],
+      accelerated: ['accéléré', 'accélérés'],
       classicProgram: {
         title: 'Programme continu',
         subtitle: 'Des questions envoyées petit à petit, plusieurs fois par semaine.',
@@ -295,8 +298,8 @@ export const FR = {
       },
     },
     forms: {
-      create: 'Créer un programme',
-      edit: 'Éditer un programme',
+      create: 'Créer un programme {{}}',
+      edit: 'Éditer un programme {{}}',
       questionCount: 'Nombre de questions',
       abortWarning: 'Si vous quittez ce formulaire vous perdrez tout vos changements.',
       step1: {
@@ -347,12 +350,34 @@ export const FR = {
         },
       },
       step3: {
-        title: 'Récapitulatif',
-        title2: 'Récapitulatif du programme',
-        subtitle:
-          'Récapitulatif des informations essentielles du programme avant de le partager à vos équipes.',
-        summary: 'Récapitulatif',
-        summarySubtitle: 'Les informations que vous avez remplies à propos de ce programme.',
+        title: 'Résultats',
+        summary: {
+          title: 'Récapitulatif',
+          averageScore: 'Moyenne de score des utilisateurs',
+          usersWhoCompleted: 'Participants ayant terminés le programme',
+        },
+        members: {
+          title: 'Participants : {{}}',
+          subtitle: 'Retrouvez les participants dont le programme n’est pas terminé.',
+          teamFilter: 'Équipes',
+          sendReminder: 'Envoyer une relance',
+          reminderToast: 'Un message de rappel à été envoyé aux participants sur leur connecteur.',
+          reminderErrorToast: "Une erreur est survenue lors de l'envoi du rappel.",
+          table: {
+            name: 'Nom / Prénom',
+            level: 'Niveau global',
+            team: 'Équipe',
+            programState: 'État du programme',
+            completedAt: 'Terminé le {{}}',
+            lastReminder: 'Dernière relance',
+            none: 'Aucune',
+            placeholder: {
+              noData: 'Aucun utilisateur n’a encore été assignée à ce programme',
+              noResult: 'Aucun résultat ne correspond à votre recherche.',
+            },
+          },
+        },
+
         createdToast: 'Votre programme a bien été créé',
         validatedToast: 'Vous avez bien finalisé la création de votre programme',
         validate: 'Finaliser la création du programme',

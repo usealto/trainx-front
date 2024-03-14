@@ -28,7 +28,11 @@
           <p class="fs-6">{{ I18ns.programs.programs.classicProgram.subtitle }}</p>
         </div>
       </div>
-      <div class="program-btn-item accelerated">
+      <div
+        class="program-btn-item accelerated"
+        [routerLink]="AltoRoutes.programsCreate"
+        [queryParams]="{ isAccelerated: true }"
+      >
         <div class="icon d-flex align-items-center justify-content-center">
           <i class="bi bi-rocket-takeoff fs-1"></i>
         </div>
@@ -40,10 +44,14 @@
     </div>
   </div>
 </div>
-
-<div class="buttons-row">
-  <alto-input-search [searchControl]="searchControl"></alto-input-search>
-
+<alto-input-button-group
+  [options]="programTypeOptions"
+  [control]="programTypeControl"
+></alto-input-button-group>
+<div class="buttons-row mt-3">
+  <div class="buttons-section">
+    <alto-input-search [searchControl]="searchControl"></alto-input-search>
+  </div>
   <div class="buttons-section">
     <alto-input-multiple-select
       [placeholder]="I18ns.leadTeam.members.filters.teams"
@@ -78,16 +86,46 @@
           ? ['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]
           : null
       "
+      [queryParams]="programCard.isActiveControl.value ? { tab: ETab.Summary } : null"
     >
-      <div class="title-section mb-2">
-        <p class="title-overflow subtitle">
-          {{ programCard.program.name }}
-        </p>
-
-        <div (click)="$event.stopPropagation()">
+      <div class="title-section mb-3">
+        <span
+          class="fs-6 alto-badge d-flex flex-nowrap"
+          [class]="programCard.program.isAccelerated ? 'orange' : 'primary'"
+        >
+          <i
+            class="bi me-2"
+            [class]="programCard.program.isAccelerated ? 'bi-rocket-takeoff' : 'bi-bullseye'"
+          ></i>
+          <p>
+            {{
+              programCard.program.isAccelerated
+                ? (I18ns.programs.programs.accelerated | plural : 1)
+                : (I18ns.programs.programs.classic | plural : 1)
+            }}
+          </p>
+        </span>
+        <div class="d-flex flex-nowrap" (click)="$event.stopPropagation()">
+          <button
+            *ngIf="programCard.isActiveControl.value"
+            type="button"
+            class="edit-btn me-3"
+            [routerLink]="
+              programCard.isActiveControl.value
+                ? ['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]
+                : null
+            "
+            [queryParams]="programCard.isActiveControl.value ? { tab: ETab.Informations } : null"
+          >
+            {{ I18ns.shared.edit }}
+            <i class="ms-1 bi bi-pencil-square"></i>
+          </button>
           <alto-input-toggle [control]="programCard.isActiveControl"></alto-input-toggle>
         </div>
       </div>
+      <p class="title-overflow title mb-3">
+        {{ programCard.program.name }}
+      </p>
       <ng-container *ngIf="programCard.program.teamIds.length > 0; else noTeam">
         <div class="teams-section">
           <img [src]="Emoji.BustsInSilhouette | emoji" height="16" width="16" />

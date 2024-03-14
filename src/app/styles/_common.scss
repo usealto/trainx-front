@@ -186,11 +186,17 @@
   background-color: var(--primary-25);
   height: 5.333rem;
   padding: 0 1.7rem;
+  color: var(--alto-text-blue);
 
   h1 {
     display: inline-block;
     line-height: 5.33rem;
     font-weight: 600;
+  }
+
+  &.accelerated {
+    color: var(--orange-600);
+    background-color: var(--orange-50);
   }
 }
 
