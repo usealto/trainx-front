@@ -113,7 +113,7 @@ export const FR = {
       Year: ' par mois sur l’année.',
       Trimester: ' par semaine sur les 3 derniers mois.',
       Month: ' par semaine sur le mois.',
-    }
+    },
   },
   leadHome: {
     title: 'Bonjour ',
@@ -219,8 +219,8 @@ export const FR = {
       subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
       createProgram: 'Créer un programme',
       allPrograms: 'Tous les programmes',
-      classic: ['continu', 'continus'],
-      accelerated: ['accéléré', 'accélérés'],
+      classic: ['Continu', 'Continus'],
+      accelerated: ['Accéléré', 'Accélérés'],
       classicProgram: {
         title: 'Programme continu',
         subtitle: 'Des questions envoyées petit à petit, plusieurs fois par semaine.',

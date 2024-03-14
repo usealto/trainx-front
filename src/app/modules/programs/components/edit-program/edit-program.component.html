@@ -5,7 +5,7 @@
       (program ? I18ns.programs.forms.edit : I18ns.programs.forms.create)
         | replaceInTranslation
           : (isAccelerated
-              ? (I18ns.programs.programs.accelerated | plural : 1)
+              ? (I18ns.programs.programs.accelerated | plural : 1 | lowercase)
               : (I18ns.programs.programs.classic | plural : 1 | lowercase))
     }}
   </h1>
@@ -339,9 +339,14 @@
           <i class="fs-3 bi bi-trophy"></i>
           {{ I18ns.programs.forms.step3.summary.averageScore }}
         </div>
-        <span class="alto-score" [class]="programStat?.score ?? 0 | pillColor">{{
-          programStat && programStat.score ? (programStat.score | percent) : '-'
-        }}</span>
+        <ng-container *ngIf="programStat && (programStat.score !== null && programStat.score !== undefined); else noAverage">
+          <span class="alto-score" [class]="programStat.score | pillColor">{{
+            programStat.score | percent
+          }}</span>
+        </ng-container>
+        <ng-template #noAverage>
+          <span>-</span>
+        </ng-template>
       </div>
 
       <div class="summary-row">
