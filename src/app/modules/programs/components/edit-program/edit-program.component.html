@@ -2,12 +2,11 @@
   <i class="bi fs-2" [class]="isAccelerated ? 'bi-rocket-takeoff' : 'bi-bullseye'"></i>
   <h1>
     {{
-      (program ? I18ns.programs.forms.edit : I18ns.programs.forms.create) +
-        ' ' +
-        ((isAccelerated
-          ? I18ns.programs.programs.accelerated.singular
-          : I18ns.programs.programs.classic.singular
-        ) | lowercase)
+      (program ? I18ns.programs.forms.edit : I18ns.programs.forms.create)
+        | replaceInTranslation
+          : (isAccelerated
+              ? (I18ns.programs.programs.accelerated | plural : 1)
+              : (I18ns.programs.programs.classic | plural : 1 | lowercase))
     }}
   </h1>
 </div>
@@ -162,11 +161,7 @@
         </h2>
         <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.associatedQuestions.subtitle }}</p>
       </div>
-      <button
-        *ngIf="program && isAccelerated ? false : true"
-        class="btn btn-primary"
-        (click)="openQuestionForm()"
-      >
+      <button *ngIf="!(program && isAccelerated)" class="btn btn-primary" (click)="openQuestionForm()">
         <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
       </button>
     </div>
@@ -184,7 +179,7 @@
         >
           <div class="d-flex align-items-center form-check form-switch col-10">
             <input
-              *ngIf="program && isAccelerated ? false : true"
+              *ngIf="!(program && isAccelerated)"
               class="form-check-input cursor-pointer me-8"
               type="checkbox"
               [checked]="true"
@@ -230,7 +225,7 @@
       </div>
     </alto-placeholder-manager>
 
-    <ng-container *ngIf="program && isAccelerated ? false : true">
+    <ng-container *ngIf="!(program && isAccelerated)">
       <h2 class="mt-8">
         <img
           class="emoji"
@@ -344,7 +339,9 @@
           <i class="fs-3 bi bi-trophy"></i>
           {{ I18ns.programs.forms.step3.summary.averageScore }}
         </div>
-        <span class="alto-score pill-green">{{ programStat?.score ?? 0 | percent }}</span>
+        <span class="alto-score" [class]="programStat?.score ?? 0 | pillColor">{{
+          programStat && programStat.score ? (programStat.score | percent) : '-'
+        }}</span>
       </div>
 
       <div class="summary-row">
@@ -397,7 +394,7 @@
     <div class="mb-4">
       <h2>
         <i class="fs-3 bi bi-people"></i>
-        {{ I18ns.programs.forms.step3.members.title + ' : ' + programStat?.totalUsersCount }}
+        {{ I18ns.programs.forms.step3.members.title | replaceInTranslation : programStat?.totalUsersCount }}
       </h2>
       <p class="mt-2 alto-grey">{{ I18ns.programs.forms.step3.members.subtitle }}</p>
     </div>
@@ -459,7 +456,10 @@
                 >
                 <ng-template #programCompleted>
                   <p class="alto-grey">
-                    {{ I18ns.programs.forms.step3.members.table.completedAt + ' ' + user.completedAt }}
+                    {{
+                      I18ns.programs.forms.step3.members.table.completedAt
+                        | replaceInTranslation : user.completedAt
+                    }}
                   </p>
                 </ng-template>
               </td>

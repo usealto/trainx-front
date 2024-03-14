@@ -16,6 +16,7 @@ import { PillOption, SelectOption } from '../../../../shared/models/select-optio
 import { ScoresRestService } from '../../../../shared/services/scores-rest.service';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
 import { ETab } from '../../../../../core/resolvers/edit-program.resolver';
+import { PluralPipe } from '../../../../../core/utils/i18n/plural.pipe';
 
 interface IProgramCard {
   program: Program;
@@ -25,6 +26,12 @@ interface IProgramCard {
   totalUsersCount?: number;
   teamsTooltip?: string;
   isActiveControl: FormControl<boolean>;
+}
+
+enum EProgramType {
+  Classic = 'classic',
+  Accelerated = 'accelerated',
+  All = 'all',
 }
 
 @Component({
@@ -37,6 +44,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   ETab = ETab;
+  pluralPipe = new PluralPipe();
 
   isCreateProgramBtnDropdownOpen = false;
 
@@ -58,15 +66,15 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
   scoreOptions = Score.getFiltersPillOptions();
 
   programTypeOptions = [
-    new SelectOption({ label: I18ns.programs.programs.allPrograms, value: 'all' }),
+    new SelectOption({ label: I18ns.programs.programs.allPrograms, value: EProgramType.All }),
     new SelectOption({
-      label: I18ns.programs.programs.classic.plural,
-      value: 'classic',
+      label: this.pluralPipe.transform(I18ns.programs.programs.classic, 2),
+      value: EProgramType.Classic,
       icon: 'bi-bullseye',
     }),
     new SelectOption({
-      label: I18ns.programs.programs.accelerated.plural,
-      value: 'accelerated',
+      label: this.pluralPipe.transform(I18ns.programs.programs.accelerated, 2),
+      value: EProgramType.Accelerated,
       icon: 'bi-rocket-takeoff',
     }),
   ];
@@ -116,9 +124,9 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
                 ? selectedTeamsOptions.map((x) => x.value).join(',')
                 : undefined,
               isAccelerated:
-                programType.value === 'accelerated'
+                programType.value === EProgramType.Accelerated
                   ? true
-                  : programType.value === 'classic'
+                  : programType.value === EProgramType.Classic
                   ? false
                   : undefined,
             };
@@ -155,7 +163,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
               ? this.teamsControls.value.length ||
                 this.searchControl.value ||
                 this.scoreControl.value ||
-                this.programTypeControl.value.value !== 'all'
+                this.programTypeControl.value.value !== EProgramType.All
                 ? EPlaceholderStatus.NO_RESULT
                 : EPlaceholderStatus.NO_DATA
               : EPlaceholderStatus.GOOD;

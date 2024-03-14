@@ -100,8 +100,8 @@
           <p>
             {{
               programCard.program.isAccelerated
-                ? I18ns.programs.programs.accelerated.singular
-                : I18ns.programs.programs.classic.singular
+                ? (I18ns.programs.programs.accelerated | plural : 1)
+                : (I18ns.programs.programs.classic | plural : 1)
             }}
           </p>
         </span>

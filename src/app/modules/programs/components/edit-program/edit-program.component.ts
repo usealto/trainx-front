@@ -46,6 +46,7 @@ import { QuestionFormComponent } from '../create-questions/question-form.compone
 import { ScoresRestService } from '../../../shared/services/scores-rest.service';
 import { EScoreDuration } from '../../../../models/score.model';
 import { format } from 'date-fns';
+import { debounce } from 'cypress/types/lodash';
 
 interface IUserStatsDisplay {
   user: {
@@ -55,7 +56,6 @@ interface IUserStatsDisplay {
     email: string;
   };
   score?: number;
-  lessMasteredTags: string[];
   team: {
     id: string;
     name: string;
@@ -324,27 +324,36 @@ export class EditProgramsComponent implements OnInit {
           ids: this.program?.id,
         })
         .pipe(
-          switchMap(({ data }) => {
+          switchMap(({ data: programStats = [] }) => {
             return combineLatest([
               this.usersStatsTeamsControl.valueChanges.pipe(
                 startWith(this.usersStatsTeamsControl.value),
                 tap(() => this.userStatsPageControl.patchValue(1)),
               ),
-              this.userStatsSearchControl.valueChanges.pipe(
-                debounceTime(200),
-                startWith(this.userStatsSearchControl.value),
-                tap(() => this.userStatsPageControl.patchValue(1)),
+              concat(
+                of(this.userStatsSearchControl.value),
+                this.userStatsSearchControl.valueChanges.pipe(
+                  debounceTime(200),
+                  tap(() => this.userStatsPageControl.patchValue(1)),
+                ),
               ),
               this.userStatsPageControl.valueChanges.pipe(startWith(this.userStatsPageControl.value)),
-              of(data),
+              of(programStats),
             ]);
           }),
+          filter(([, , , programStats]) => {
+            if (programStats.length === 0) {
+              this.userStatsDataStatus = EPlaceholderStatus.NO_DATA;
+              return false;
+            }
+            return true;
+          }),
         )
-        .subscribe(([teamsFilter, search, page, data]) => {
-          this.programStat = data ? data[0] : undefined;
+        .subscribe(([teamsFilter, search, page, programStats]) => {
+          this.programStat = programStats[0];
 
-          if (data) {
-            let teams = data[0].teams;
+          if (programStats.length > 0) {
+            let teams = programStats[0].teams;
 
             if (teamsFilter.length > 0) {
               teams = teams.filter((t) => teamsFilter.map((team) => team.value.value).includes(t.team.id));
@@ -375,7 +384,6 @@ export class EditProgramsComponent implements OnInit {
                       id: u.user.id,
                     },
                     score: u.score !== null ? u.score : undefined,
-                    lessMasteredTags: [],
                     team: {
                       id: team.team.id,
                       name: team.team.name,
@@ -387,6 +395,8 @@ export class EditProgramsComponent implements OnInit {
                 });
               })
               .flat()
+              .sort((a, b) => b.answeredQuestionsCount - a.answeredQuestionsCount)
+              .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
               .slice((page - 1) * this.userStatsPageSize, page * this.userStatsPageSize);
 
             this.userStatsDataStatus =

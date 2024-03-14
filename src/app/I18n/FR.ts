@@ -213,14 +213,14 @@ export const FR = {
       subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
       createProgram: 'Créer un programme',
       allPrograms: 'Tous les programmes',
-      classic: {
-        singular: 'Continu',
-        plural: 'Continus',
-      },
-      accelerated: {
-        singular: 'Accéléré',
-        plural: 'Accélérés',
-      },
+      classic: [
+        'continu',
+        'continus'
+      ],
+      accelerated: [
+        'accéléré',
+        'accélérés'
+      ],
       classicProgram: {
         title: 'Programme continu',
         subtitle: 'Des questions envoyées petit à petit, plusieurs fois par semaine.',
@@ -304,8 +304,8 @@ export const FR = {
       },
     },
     forms: {
-      create: 'Créer un programme',
-      edit: 'Éditer un programme',
+      create: 'Créer un programme {{}}',
+      edit: 'Éditer un programme {{}}',
       questionCount: 'Nombre de questions',
       abortWarning: 'Si vous quittez ce formulaire vous perdrez tout vos changements.',
       step1: {
@@ -363,7 +363,7 @@ export const FR = {
           usersWhoCompleted: 'Participants ayant terminés le programme',
         },
         members: {
-          title: 'Participants',
+          title: 'Participants : {{}}',
           subtitle: 'Retrouvez les participants dont le programme n’est pas terminé.',
           teamFilter: 'Équipes',
           sendReminder: 'Envoyer une relance',
@@ -372,7 +372,7 @@ export const FR = {
             level: 'Niveau global',
             team: 'Équipe',
             programState: 'État du programme',
-            completedAt: 'Terminé le ',
+            completedAt: 'Terminé le {{}}',
             lastReminder: 'Dernière relance',
             none: 'Aucune',
             placeholder: {
@@ -380,7 +380,6 @@ export const FR = {
               noResult: 'Aucun résultat ne correspond à votre recherche.',
             }
           },
-          SendReminder: 'Envoyer une relance',
         },
 
         createdToast: 'Votre programme a bien été créé',
