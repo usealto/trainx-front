@@ -1,5 +1,6 @@
 import { ScoreDtoApi } from '@usealto/sdk-ts-angular';
-import { PillOption } from '../modules/shared/models/select-option.model';
+import { PillOption, SelectOption } from '../modules/shared/models/select-option.model';
+import { I18ns } from '../core/utils/i18n/I18n';
 
 export enum EScoreDuration {
   Day = 'day',
@@ -88,6 +89,14 @@ export class Score implements IScore {
         label: EScoreFilter.Over75,
         pillColor: PillOption.getSuccessPillColor(),
       }),
+    ];
+  }
+
+  static getTimepickerOptions(): SelectOption[] {
+    return [
+      new SelectOption({ label: I18ns.shared.rollingDateFilter.year, value: EScoreDuration.Year }),
+      new SelectOption({ label: I18ns.shared.rollingDateFilter.trimester, value: EScoreDuration.Trimester }),
+      new SelectOption({ label: I18ns.shared.rollingDateFilter.month, value: EScoreDuration.Month }),
     ];
   }
 

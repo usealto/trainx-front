@@ -1,10 +1,16 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngrx/store';
-import { PriorityEnumApi, ProgramDtoApiPriorityEnumApi, QuestionDtoApi } from '@usealto/sdk-ts-angular';
+import {
+  PriorityEnumApi,
+  ProgramDtoApiPriorityEnumApi,
+  ProgramStatsDtoApi,
+  QuestionDtoApi,
+} from '@usealto/sdk-ts-angular';
+import { format } from 'date-fns';
 import {
   Subscription,
   combineLatest,
@@ -19,10 +25,10 @@ import {
   tap,
 } from 'rxjs';
 import { IAppData } from '../../../../core/resolvers';
-import { IEditProgramData } from '../../../../core/resolvers/edit-program.resolver';
+import { ETab, IEditProgramData } from '../../../../core/resolvers/edit-program.resolver';
 import { ILeadData } from '../../../../core/resolvers/lead.resolver';
 import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
-import { addProgram, deleteProgram } from '../../../../core/store/root/root.action';
+import { addProgram, deleteProgram, launchAcceleratedProgram } from '../../../../core/store/root/root.action';
 import * as FromRoot from '../../../../core/store/store.reducer';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { EmojiName } from '../../../../core/utils/emoji/data';
@@ -30,19 +36,33 @@ import { I18ns, getTranslation } from '../../../../core/utils/i18n/I18n';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { Company } from '../../../../models/company.model';
 import { Program } from '../../../../models/program.model';
+import { EScoreDuration } from '../../../../models/score.model';
+import { TriggersService } from '../../../settings/services/triggers.service';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { ITabOption } from '../../../shared/components/tabs/tabs.component';
 import { PillOption, SelectOption } from '../../../shared/models/select-option.model';
+import { ScoresRestService } from '../../../shared/services/scores-rest.service';
 import { ValidationService } from '../../../shared/services/validation.service';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../create-questions/question-form.component';
 
-enum Etab {
-  Informations = 'informations',
-  Questions = 'questions',
-  Summary = 'summary',
+interface IUserStatsDisplay {
+  user: {
+    id: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+  };
+  score?: number;
+  team: {
+    id: string;
+    name: string;
+  };
+  answeredQuestionsCount: number;
+  completedAt?: string;
+  lastLaunchedAt?: string;
 }
 
 @Component({
@@ -54,16 +74,17 @@ enum Etab {
 export class EditProgramsComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
-  ETab = Etab;
+  ETab = ETab;
   EPlaceholderStatus = EPlaceholderStatus;
 
   company!: Company;
   program?: Program;
+  isAccelerated = false;
 
   tabsOptions: ITabOption[] = [
-    { value: Etab.Informations, label: I18ns.programs.forms.step1.title },
-    { value: Etab.Questions, label: I18ns.programs.forms.step2.title },
-    { value: Etab.Summary, label: I18ns.programs.forms.step3.title },
+    { value: ETab.Informations, label: I18ns.programs.forms.step1.title },
+    { value: ETab.Questions, label: I18ns.programs.forms.step2.title },
+    { value: ETab.Summary, label: I18ns.programs.forms.step3.title },
   ];
   tabsControl = new FormControl<ITabOption>(this.tabsOptions[0], { nonNullable: true });
 
@@ -109,6 +130,21 @@ export class EditProgramsComponent implements OnInit {
   tagOptions: PillOption[] = [];
   tagControls: FormControl<FormControl<PillOption>[]> = new FormControl([], { nonNullable: true });
 
+  //Summary tab
+  programStat?: ProgramStatsDtoApi;
+  userStatsPageControl = new FormControl(1, { nonNullable: true });
+  userStatsPageSize = 5;
+  userStatsDisplay: IUserStatsDisplay[] = [];
+  userStatsTotalCount = 0;
+
+  usersStatsTeamsControl = new FormControl([] as FormControl<SelectOption>[], {
+    nonNullable: true,
+  });
+
+  userStatsSearchControl = new FormControl<string | null>(null);
+
+  userStatsDataStatus = EPlaceholderStatus.LOADING;
+
   private readonly editProgramComponentSubscription = new Subscription();
 
   constructor(
@@ -123,13 +159,35 @@ export class EditProgramsComponent implements OnInit {
     private readonly modalService: NgbModal,
     private readonly toastService: ToastService,
     private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
+    private readonly router: Router,
+    private readonly scoreRestService: ScoresRestService,
+    private readonly triggersService: TriggersService,
   ) {}
 
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     const tags = (data[EResolvers.LeadResolver] as ILeadData).tags;
     this.company = (data[EResolvers.AppResolver] as IAppData).company;
-    this.program = (data[EResolvers.EditProgramResolver] as IEditProgramData).program;
+    const editProgramData = data[EResolvers.EditProgramResolver] as IEditProgramData;
+    this.program = editProgramData.program;
+    this.isAccelerated = editProgramData.isAccelerated;
+
+    this.tabsControl.setValue(
+      this.tabsOptions.find((tab) => tab.value === editProgramData.tab) ?? this.tabsOptions[0],
+    );
+
+    this.editProgramComponentSubscription.add(
+      this.tabsControl.valueChanges.pipe(startWith(this.tabsControl.value)).subscribe((tab) => {
+        this.location.replaceState(
+          this.router
+            .createUrlTree([], {
+              relativeTo: this.activatedRoute,
+              queryParams: { tab: tab.value },
+            })
+            .toString(),
+        );
+      }),
+    );
 
     this.tagOptions = tags.map(
       (tag) =>
@@ -260,6 +318,104 @@ export class EditProgramsComponent implements OnInit {
             : EPlaceholderStatus.NO_DATA;
         }),
     );
+
+    this.editProgramComponentSubscription.add(
+      this.tabsControl.valueChanges
+        .pipe(
+          startWith(this.tabsControl.value),
+          filter(({ value }) => {
+            return value === this.tabsOptions[2].value;
+          }),
+          switchMap(() => {
+            return this.scoreRestService.getPaginatedProgramsStats(EScoreDuration.Year, false, {
+              ids: this.program?.id,
+            });
+          }),
+          switchMap(({ data: programStats = [] }) => {
+            return combineLatest([
+              this.usersStatsTeamsControl.valueChanges.pipe(
+                startWith(this.usersStatsTeamsControl.value),
+                tap(() => this.userStatsPageControl.patchValue(1)),
+              ),
+              concat(
+                of(this.userStatsSearchControl.value),
+                this.userStatsSearchControl.valueChanges.pipe(
+                  debounceTime(200),
+                  tap(() => this.userStatsPageControl.patchValue(1)),
+                ),
+              ),
+              this.userStatsPageControl.valueChanges.pipe(startWith(this.userStatsPageControl.value)),
+              of(programStats),
+            ]);
+          }),
+          filter(([, , , programStats]) => {
+            if (programStats.length === 0) {
+              this.userStatsDataStatus = EPlaceholderStatus.NO_DATA;
+              return false;
+            }
+            return true;
+          }),
+        )
+        .subscribe(([teamsFilter, search, page, programStats]) => {
+          this.programStat = programStats[0];
+
+          if (programStats.length > 0) {
+            let teams = programStats[0].teams;
+
+            if (teamsFilter.length > 0) {
+              teams = teams.filter((t) => teamsFilter.map((team) => team.value.value).includes(t.team.id));
+            }
+
+            if (search) {
+              const regex = new RegExp(search, 'i');
+              teams = teams.map((team) => {
+                return {
+                  ...team,
+                  users: team.users.filter((u) => {
+                    return (
+                      regex.test(u.user.firstname) || regex.test(u.user.lastname) || regex.test(u.user.email)
+                    );
+                  }),
+                };
+              });
+            }
+
+            this.userStatsDisplay = teams
+              .map((team) => {
+                return team.users.map((u) => {
+                  return {
+                    user: {
+                      firstname: u.user.firstname,
+                      lastname: u.user.lastname,
+                      email: u.user.email,
+                      id: u.user.id,
+                    },
+                    score: u.score !== null ? u.score : undefined,
+                    team: {
+                      id: team.team.id,
+                      name: team.team.name,
+                    },
+                    answeredQuestionsCount: u.answeredQuestionsCount,
+                    completedAt: u.completedAt ? format(u.completedAt, 'dd/MM/yyyy') : undefined,
+                    lastLaunchedAt: u.lastLaunchedAt ? format(u.lastLaunchedAt, 'dd/MM/yyyy') : undefined,
+                  };
+                });
+              })
+              .flat()
+              .sort((a, b) => b.answeredQuestionsCount - a.answeredQuestionsCount)
+              .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
+              .slice((page - 1) * this.userStatsPageSize, page * this.userStatsPageSize);
+
+            this.userStatsDataStatus =
+              this.userStatsDisplay.length === 0
+                ? search || teamsFilter.length > 0
+                  ? EPlaceholderStatus.NO_RESULT
+                  : EPlaceholderStatus.NO_DATA
+                : EPlaceholderStatus.GOOD;
+            this.userStatsTotalCount = teams.reduce((acc, team) => acc + team.users.length, 0);
+          }
+        }),
+    );
   }
 
   cancel(): void {
@@ -285,6 +441,7 @@ export class EditProgramsComponent implements OnInit {
       priority: priorityControl.value?.value as PriorityEnumApi,
       teamIds: teamControls.value.map((teamControl) => teamControl.value.value).map((id) => ({ id })),
       expectation: expectationControl.value,
+      isAccelerated: this.program ? undefined : this.isAccelerated,
     };
 
     (this.program
@@ -362,6 +519,45 @@ export class EditProgramsComponent implements OnInit {
   }
 
   // SUMMARY TAB
+
+  resetFilters(): void {
+    this.usersStatsTeamsControl.patchValue([]);
+    this.userStatsSearchControl.patchValue(null);
+  }
+
+  launchAcceleratedProgram(): void {
+    if (this.program) {
+      const hasAlreadyStarted = this.program.hasAlreadyStarted;
+      this.triggersService
+        .launchAcceleratedProgram({ acceleratedProgramId: this.program.id, companyId: this.company.id })
+        .pipe(
+          switchMap(() => {
+            this.store.dispatch(launchAcceleratedProgram({ programId: this.program?.id as string }));
+            return this.store.select(FromRoot.selectCompany);
+          }),
+          tap(({ data: company }) => {
+            this.program = company.programById.get(this.program?.id as string) as Program;
+          }),
+          first(),
+        )
+        .subscribe({
+          error: () => {
+            this.toastService.show({
+              type: 'danger',
+              text: I18ns.programs.forms.step3.members.reminderErrorToast,
+            });
+          },
+          complete: () => {
+            this.toastService.show({
+              type: 'success',
+              text: hasAlreadyStarted
+                ? I18ns.programs.forms.step3.members.reminderToast
+                : I18ns.programs.forms.step3.members.launchSuccess,
+            });
+          },
+        });
+    }
+  }
   deleteProgram(): void {
     const modalRef = this.modalService.open(DeleteModalComponent, {
       centered: true,

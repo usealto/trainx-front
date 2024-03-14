@@ -371,7 +371,7 @@ export class ScoresRestService {
     const par: GetScoresRequestParams = {
       type: type ?? ScoreTypeEnumApi.Guess,
       timeframe: timeframe ?? ScoreTimeframeEnumApi.Day,
-      dateAfter: this.service.getStartDate(duration as EScoreDuration),
+      dateAfter: addDays(this.service.getStartDate(duration as EScoreDuration), 1),
       dateBefore: addDays(new Date(), 1), //! TEMPORARY FIX to get data from actual day
       fillValues: ScoreFillValuesEnumApi.Null,
       sortBy,

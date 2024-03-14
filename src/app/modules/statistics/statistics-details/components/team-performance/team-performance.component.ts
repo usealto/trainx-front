@@ -103,6 +103,7 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
 
   readonly scoreOptions: PillOption[] = Score.getFiltersPillOptions();
 
+  durationOptions = Score.getTimepickerOptions();
   durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
   });

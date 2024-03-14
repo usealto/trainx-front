@@ -35,11 +35,16 @@
     width: 32%;
     padding: 1.5rem;
 
-    .subtitle {
+    .title {
       font-size: 1rem;
       font-style: normal;
       font-weight: 600;
       line-height: 1.33333rem;
+      color: var(--gray-900);
+    }
+
+    .subtitle {
+      @extend .title;
       color: var(--gray-500);
     }
 
@@ -52,8 +57,28 @@
       flex-direction: row;
       justify-content: space-between;
 
+      .alto-badge {
+        line-height: 2.1rem;
+      }
+
+      .edit-btn {
+        padding: 5px 12px 5px 12px;
+        border: 1px solid var(--gray-200);
+        border-radius: 8.3333rem;
+        font-size: 0.8333rem;
+        background-color: white;
+        color: var(--alto-text-color2);
+        font-weight: 600;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--gray-500);
+          color: white;
+        }
+      }
+
       .title-overflow {
-        padding-right: 1rem;
+        padding-right: 5rem;
         max-width: 100%;
         white-space: nowrap;
         overflow: hidden;
@@ -81,13 +106,13 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 2rem;
+      gap: 0.3rem;
 
       .score-details {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        gap: .2rem;
+        gap: 0.2rem;
 
         .score-row {
           display: flex;
