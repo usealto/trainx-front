@@ -46,8 +46,6 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
   ETab = ETab;
   pluralPipe = new PluralPipe();
 
-  isCreateProgramBtnDropdownOpen = false;
-
   @Input() company!: Company;
 
   private programCards: IProgramCard[] = [];
@@ -92,7 +90,6 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
     private readonly scoresRestService: ScoresRestService,
     private readonly programsRestService: ProgramsRestService,
     private readonly store: Store<FromRoot.AppState>,
-    private el: ElementRef,
   ) {}
 
   ngOnInit(): void {
@@ -229,16 +226,5 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
     this.scoreControl.patchValue(null);
     this.programTypeControl.patchValue(this.programTypeOptions[0]);
     this.pageControl.patchValue(1);
-  }
-
-  toggleDropdown(): void {
-    this.isCreateProgramBtnOpen = !this.isCreateProgramBtnOpen;
-  }
-
-  @HostListener('document:click', ['$event'])
-  handleDocumentClick(event: Event) {
-    if (!this.el.nativeElement.contains(event.target)) {
-      this.isCreateProgramBtnOpen = false;
-    }
   }
 }

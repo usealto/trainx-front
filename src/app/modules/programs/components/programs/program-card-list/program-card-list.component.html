@@ -7,43 +7,9 @@
     <p class="mt-2 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
   </div>
 
-  <div class="program-btn">
-    <a type="button" class="btn btn-primary" (click)="toggleDropdown()">
-      <div>
-        {{ I18ns.programs.programs.createProgram }}
-      </div>
-      <i class="ms-2 bi" [class]="isCreateProgramBtnOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
-    </a>
-    <div
-      class="program-btn-menu mt-2"
-      [ngClass]="{ show: isCreateProgramBtnOpen }"
-      (click)="$event.stopPropagation()"
-    >
-      <div class="program-btn-item classic" [routerLink]="AltoRoutes.programsCreate">
-        <div class="icon d-flex align-items-center justify-content-center">
-          <i class="bi bi-bullseye fs-1"></i>
-        </div>
-        <div class="ms-4 mt-3">
-          <h3 class="fs-5">{{ I18ns.programs.programs.classicProgram.title }}</h3>
-          <p class="fs-6">{{ I18ns.programs.programs.classicProgram.subtitle }}</p>
-        </div>
-      </div>
-      <div
-        class="program-btn-item accelerated"
-        [routerLink]="AltoRoutes.programsCreate"
-        [queryParams]="{ isAccelerated: true }"
-      >
-        <div class="icon d-flex align-items-center justify-content-center">
-          <i class="bi bi-rocket-takeoff fs-1"></i>
-        </div>
-        <div class="ms-4 mt-3">
-          <h3 class="fs-5">{{ I18ns.programs.programs.acceleratedProgram.title }}</h3>
-          <p class="fs-6">{{ I18ns.programs.programs.acceleratedProgram.subtitle }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <alto-create-programs-button></alto-create-programs-button>
 </div>
+
 <alto-input-button-group
   [options]="programTypeOptions"
   [control]="programTypeControl"
