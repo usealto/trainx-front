@@ -14,6 +14,7 @@ export interface IProgram extends IBaseModel {
   questionsCount: number;
   stats: IProgramStats[];
   isAccelerated: boolean;
+  startDate?: Date;
 }
 
 export class Program extends BaseModel implements IProgram {
@@ -27,6 +28,7 @@ export class Program extends BaseModel implements IProgram {
   questionsCount: number;
   stats: ProgramStats[];
   isAccelerated: boolean;
+  startDate?: Date;
 
   constructor(data: IProgram) {
     super(data);
@@ -44,6 +46,7 @@ export class Program extends BaseModel implements IProgram {
     this.deletedAt = data.deletedAt;
     this.stats = data.stats.map((s) => new ProgramStats(s));
     this.isAccelerated = data.isAccelerated;
+    this.startDate = data.startDate;
   }
 
   static fromDto(data: ProgramDtoApi): Program {
@@ -93,6 +96,10 @@ export class Program extends BaseModel implements IProgram {
       stats: this.stats.map((s) => s.rawData),
       isAccelerated: this.isAccelerated,
     };
+  }
+
+  get hasAlreadyStarted(): boolean {
+    return this.startDate ? compareAsc(new Date(), this.startDate) >= 0 : false;
   }
 
   getStatsByScoreById(id: string): ProgramStats[] {

@@ -321,11 +321,17 @@ export class EditProgramsComponent implements OnInit {
     );
 
     this.editProgramComponentSubscription.add(
-      this.scoreRestService
-        .getPaginatedProgramsStats(EScoreDuration.Year, false, {
-          ids: this.program?.id,
-        })
+      this.tabsControl.valueChanges
         .pipe(
+          startWith(this.tabsControl.value),
+          filter(({ value }) => {
+            return value === this.tabsOptions[2].value;
+          }),
+          switchMap(() => {
+            return this.scoreRestService.getPaginatedProgramsStats(EScoreDuration.Year, false, {
+              ids: this.program?.id,
+            });
+          }),
           switchMap(({ data: programStats = [] }) => {
             return combineLatest([
               this.usersStatsTeamsControl.valueChanges.pipe(
@@ -436,7 +442,7 @@ export class EditProgramsComponent implements OnInit {
       priority: priorityControl.value?.value as PriorityEnumApi,
       teamIds: teamControls.value.map((teamControl) => teamControl.value.value).map((id) => ({ id })),
       expectation: expectationControl.value,
-      isAccelerated: this.isAccelerated,
+      isAccelerated: this.program ? undefined : this.isAccelerated,
     };
 
     (this.program

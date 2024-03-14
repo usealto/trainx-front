@@ -161,7 +161,7 @@
         </h2>
         <p class="subtitle alto-grey mb-4">{{ I18ns.programs.forms.step2.associatedQuestions.subtitle }}</p>
       </div>
-      <button *ngIf="!(program && isAccelerated)" class="btn btn-primary" (click)="openQuestionForm()">
+      <button *ngIf="!(program && (program.isAccelerated && program.hasAlreadyStarted))" class="btn btn-primary" (click)="openQuestionForm()">
         <i class="bi bi-plus-lg"></i> <span>{{ I18ns.programs.forms.step2.new }}</span>
       </button>
     </div>
@@ -179,7 +179,7 @@
         >
           <div class="d-flex align-items-center form-check form-switch col-10">
             <input
-              *ngIf="!(program && isAccelerated)"
+              *ngIf="!(program && (program.isAccelerated && program.hasAlreadyStarted))"
               class="form-check-input cursor-pointer me-8"
               type="checkbox"
               [checked]="true"
@@ -189,7 +189,7 @@
           </div>
 
           <div
-            *ngIf="program && isAccelerated ? false : true"
+            *ngIf="!(program && (program.isAccelerated && program.hasAlreadyStarted))"
             class="col-2 text-end cursor-pointer"
             (click)="openQuestionForm(associatedQuestion)"
           >
@@ -225,7 +225,7 @@
       </div>
     </alto-placeholder-manager>
 
-    <ng-container *ngIf="!(program && isAccelerated)">
+    <ng-container *ngIf="!(program && (program.isAccelerated && program.hasAlreadyStarted))">
       <h2 class="mt-8">
         <img
           class="emoji"
