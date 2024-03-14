@@ -98,7 +98,7 @@ export const FR = {
     },
     global: 'Global',
     deletedUsername: 'Utilisateur supprimé',
-    noScore: 'Aucune réponse',
+    noScore: 'Aucun niveau',
     noEvolution: 'Aucune évolution',
     noTag: 'Aucun tag',
     error: 'Une erreur est survenue',
@@ -362,7 +362,26 @@ export const FR = {
           averageScore: 'Moyenne de score des utilisateurs',
           usersWhoCompleted: 'Participants ayant terminés le programme',
         },
-
+        members: {
+          title: 'Participants',
+          subtitle: 'Retrouvez les participants dont le programme n’est pas terminé.',
+          teamFilter: 'Équipes',
+          sendReminder: 'Envoyer une relance',
+          table: {
+            name: 'Nom / Prénom',
+            level: 'Niveau global',
+            team: 'Équipe',
+            programState: 'État du programme',
+            completedAt: 'Terminé le ',
+            lastReminder: 'Dernière relance',
+            none: 'Aucune',
+            placeholder: {
+              noData: 'Aucun utilisateur n’a encore été assignée à ce programme',
+              noResult: 'Aucun résultat ne correspond à votre recherche.',
+            }
+          },
+          SendReminder: 'Envoyer une relance',
+        },
 
         createdToast: 'Votre programme a bien été créé',
         validatedToast: 'Vous avez bien finalisé la création de votre programme',

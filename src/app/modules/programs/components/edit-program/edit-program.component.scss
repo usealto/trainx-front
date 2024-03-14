@@ -144,11 +144,8 @@ form {
     }
   }
 }
+.launch-btn {
+  background-color: var(--orange-600);
 
-.delete-button-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  color: white;
 }

@@ -45,6 +45,25 @@ import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../create-questions/question-form.component';
 import { ScoresRestService } from '../../../shared/services/scores-rest.service';
 import { EScoreDuration } from '../../../../models/score.model';
+import { format } from 'date-fns';
+
+interface IUserStatsDisplay {
+  user: {
+    id: string;
+    firstname: string;
+    lastname: string;
+    email: string;
+  };
+  score?: number;
+  lessMasteredTags: string[];
+  team: {
+    id: string;
+    name: string;
+  };
+  answeredQuestionsCount: number;
+  completedAt?: string;
+  lastLaunchedAt?: string;
+}
 
 @Component({
   selector: 'alto-edit-program',
@@ -61,7 +80,6 @@ export class EditProgramsComponent implements OnInit {
   company!: Company;
   program?: Program;
   isAccelerated = false;
-  programStat?: ProgramStatsDtoApi;
 
   tabsOptions: ITabOption[] = [
     { value: ETab.Informations, label: I18ns.programs.forms.step1.title },
@@ -111,6 +129,21 @@ export class EditProgramsComponent implements OnInit {
 
   tagOptions: PillOption[] = [];
   tagControls: FormControl<FormControl<PillOption>[]> = new FormControl([], { nonNullable: true });
+
+  //Summary tab
+  programStat?: ProgramStatsDtoApi;
+  userStatsPageControl = new FormControl(1, { nonNullable: true });
+  userStatsPageSize = 5;
+  userStatsDisplay: IUserStatsDisplay[] = [];
+  userStatsTotalCount = 0;
+
+  usersStatsTeamsControl = new FormControl([] as FormControl<SelectOption>[], {
+    nonNullable: true,
+  });
+
+  userStatsSearchControl = new FormControl<string | null>(null);
+
+  userStatsDataStatus = EPlaceholderStatus.LOADING;
 
   private readonly editProgramComponentSubscription = new Subscription();
 
@@ -285,15 +318,87 @@ export class EditProgramsComponent implements OnInit {
         }),
     );
 
-    if (this.program) {
-      this.editProgramComponentSubscription.add(
-        this.scoreRestService
-          .getPaginatedProgramsStats(EScoreDuration.All, false, { ids: this.program?.id })
-          .subscribe(({ data }) => {
-            this.programStat = data ? data[0] : undefined;
+    this.editProgramComponentSubscription.add(
+      this.scoreRestService
+        .getPaginatedProgramsStats(EScoreDuration.Year, false, {
+          ids: this.program?.id,
+        })
+        .pipe(
+          switchMap(({ data }) => {
+            return combineLatest([
+              this.usersStatsTeamsControl.valueChanges.pipe(
+                startWith(this.usersStatsTeamsControl.value),
+                tap(() => this.userStatsPageControl.patchValue(1)),
+              ),
+              this.userStatsSearchControl.valueChanges.pipe(
+                debounceTime(200),
+                startWith(this.userStatsSearchControl.value),
+                tap(() => this.userStatsPageControl.patchValue(1)),
+              ),
+              this.userStatsPageControl.valueChanges.pipe(startWith(this.userStatsPageControl.value)),
+              of(data),
+            ]);
           }),
-      );
-    }
+        )
+        .subscribe(([teamsFilter, search, page, data]) => {
+          this.programStat = data ? data[0] : undefined;
+
+          if (data) {
+            let teams = data[0].teams;
+
+            if (teamsFilter.length > 0) {
+              teams = teams.filter((t) => teamsFilter.map((team) => team.value.value).includes(t.team.id));
+            }
+
+            if (search) {
+              const regex = new RegExp(search, 'i');
+              teams = teams.map((team) => {
+                return {
+                  ...team,
+                  users: team.users.filter((u) => {
+                    return (
+                      regex.test(u.user.firstname) || regex.test(u.user.lastname) || regex.test(u.user.email)
+                    );
+                  }),
+                };
+              });
+            }
+
+            this.userStatsDisplay = teams
+              .map((team) => {
+                return team.users.map((u) => {
+                  return {
+                    user: {
+                      firstname: u.user.firstname,
+                      lastname: u.user.lastname,
+                      email: u.user.email,
+                      id: u.user.id,
+                    },
+                    score: u.score !== null ? u.score : undefined,
+                    lessMasteredTags: [],
+                    team: {
+                      id: team.team.id,
+                      name: team.team.name,
+                    },
+                    answeredQuestionsCount: u.answeredQuestionsCount,
+                    completedAt: u.completedAt ? format(u.completedAt, 'dd/MM/yyyy') : undefined,
+                    lastLaunchedAt: u.lastLaunchedAt ? format(u.lastLaunchedAt, 'dd/MM/yyyy') : undefined,
+                  };
+                });
+              })
+              .flat()
+              .slice((page - 1) * this.userStatsPageSize, page * this.userStatsPageSize);
+
+            this.userStatsDataStatus =
+              this.userStatsDisplay.length === 0
+                ? search || teamsFilter.length > 0
+                  ? EPlaceholderStatus.NO_RESULT
+                  : EPlaceholderStatus.NO_DATA
+                : EPlaceholderStatus.GOOD;
+            this.userStatsTotalCount = teams.reduce((acc, team) => acc + team.users.length, 0);
+          }
+        }),
+    );
   }
 
   cancel(): void {
@@ -397,6 +502,11 @@ export class EditProgramsComponent implements OnInit {
   }
 
   // SUMMARY TAB
+
+  resetFilters(): void {
+    this.usersStatsTeamsControl.patchValue([]);
+    this.userStatsSearchControl.patchValue(null);
+  }
   deleteProgram(): void {
     const modalRef = this.modalService.open(DeleteModalComponent, {
       centered: true,
