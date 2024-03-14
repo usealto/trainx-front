@@ -47,6 +47,7 @@ import { ScoresRestService } from '../../../shared/services/scores-rest.service'
 import { EScoreDuration } from '../../../../models/score.model';
 import { format } from 'date-fns';
 import { debounce } from 'cypress/types/lodash';
+import { TriggersService } from '../../../settings/services/triggers.service';
 
 interface IUserStatsDisplay {
   user: {
@@ -161,6 +162,7 @@ export class EditProgramsComponent implements OnInit {
     private readonly replaceInTranslationPipe: ReplaceInTranslationPipe,
     private readonly router: Router,
     private readonly scoreRestService: ScoresRestService,
+    private readonly triggersService: TriggersService,
   ) {}
 
   ngOnInit(): void {
@@ -516,6 +518,27 @@ export class EditProgramsComponent implements OnInit {
   resetFilters(): void {
     this.usersStatsTeamsControl.patchValue([]);
     this.userStatsSearchControl.patchValue(null);
+  }
+
+  launchAcceleratedProgram() {
+    if (this.program) {
+      this.triggersService
+        .launchAcceleratedProgram({ acceleratedProgramId: this.program.id, companyId: this.company.id })
+        .subscribe({
+          error: () => {
+            this.toastService.show({
+              type: 'danger',
+              text: I18ns.programs.forms.step3.members.reminderErrorToast,
+            });
+          },
+          complete: () => {
+            this.toastService.show({
+              type: 'success',
+              text: I18ns.programs.forms.step3.members.reminderToast,
+            });
+          },
+        });
+    }
   }
   deleteProgram(): void {
     const modalRef = this.modalService.open(DeleteModalComponent, {

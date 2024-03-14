@@ -213,14 +213,8 @@ export const FR = {
       subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
       createProgram: 'Créer un programme',
       allPrograms: 'Tous les programmes',
-      classic: [
-        'continu',
-        'continus'
-      ],
-      accelerated: [
-        'accéléré',
-        'accélérés'
-      ],
+      classic: ['continu', 'continus'],
+      accelerated: ['accéléré', 'accélérés'],
       classicProgram: {
         title: 'Programme continu',
         subtitle: 'Des questions envoyées petit à petit, plusieurs fois par semaine.',
@@ -367,6 +361,8 @@ export const FR = {
           subtitle: 'Retrouvez les participants dont le programme n’est pas terminé.',
           teamFilter: 'Équipes',
           sendReminder: 'Envoyer une relance',
+          reminderToast: 'Un message de rappel à été envoyé aux participants sur leur connecteur.',
+          reminderErrorToast: "Une erreur est survenue lors de l'envoi du rappel.",
           table: {
             name: 'Nom / Prénom',
             level: 'Niveau global',
@@ -378,7 +374,7 @@ export const FR = {
             placeholder: {
               noData: 'Aucun utilisateur n’a encore été assignée à ce programme',
               noResult: 'Aucun résultat ne correspond à votre recherche.',
-            }
+            },
           },
         },
 
