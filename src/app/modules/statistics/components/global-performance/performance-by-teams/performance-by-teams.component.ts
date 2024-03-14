@@ -3,7 +3,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, of, startWith, switchMap } from 'rxjs';
+import { Subscription, combineLatest, of, startWith, switchMap, tap } from 'rxjs';
 import { IAppData } from 'src/app/core/resolvers';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
@@ -20,6 +20,7 @@ import { EPlaceholderStatus } from '../../../../shared/components/placeholder-ma
 import { AltoRoutes } from '../../../../shared/constants/routes';
 import { SelectOption } from '../../../../shared/models/select-option.model';
 import { StatisticsService } from '../../../services/statistics.service';
+import { ChartsService } from '../../../../charts/charts.service';
 
 @Component({
   selector: 'alto-performance-by-teams',
@@ -27,7 +28,7 @@ import { StatisticsService } from '../../../services/statistics.service';
   styleUrls: ['./performance-by-teams.component.scss'],
 })
 export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
-  @Input() durationControl: FormControl<EScoreDuration> = new FormControl(EScoreDuration.Year, {
+  @Input() durationControl: FormControl<EScoreDuration> = new FormControl(EScoreDuration.Trimester, {
     nonNullable: true,
   });
   @Input() company!: Company;
@@ -37,8 +38,12 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   init = true;
   EPlaceholderStatus = EPlaceholderStatus;
+  EScoreDuration = EScoreDuration;
 
   programsCount = 0;
+
+  // TODO : clean chartsService
+  tooltipTitleFormatter = (title: string) => title;
 
   teamsScore: Score[] = [];
   selectedTeamsScores: Score[] = [];
@@ -56,12 +61,12 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
   private performanceByTeamsComponentSubscription = new Subscription();
 
   constructor(
-    private titleCasePipe: TitleCasePipe,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresServices: ScoresService,
     private readonly statisticsServices: StatisticsService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
+    private readonly chartsService: ChartsService,
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +79,9 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
         this.selectedScoresControl.valueChanges.pipe(startWith(this.selectedScoresControl.value)),
       ])
         .pipe(
+          tap(([duration]) => {
+            this.tooltipTitleFormatter = this.chartsService.tooltipDurationTitleFormatter(duration);
+          }),
           switchMap(([duration, selectedTeamsControls]) => {
             return combineLatest([
               this.scoresRestService.getScores(this.getScoreParams(duration, false)),
@@ -112,7 +120,7 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
           const teamStats = this.company.getStatsByPeriod(this.durationControl.value, false);
           const previousTeamStats = this.company.getStatsByPeriod(this.durationControl.value, true);
           this.teamsLeaderboard = teamStats
-            .filter(({score}) => typeof score === 'number')
+            .filter(({ score }) => typeof score === 'number')
             .map((t) => ({
               name: this.company.teamById.get(t.teamId)?.name ?? '',
               score: t.score as number,
@@ -163,12 +171,10 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
       .slice(-formattedScores[0]?.averages?.length);
 
     const aggregatedData = this.statisticsServices.transformDataToPoint(formattedScores[0]);
-    const labels = this.statisticsServices
-      .formatLabel(
-        aggregatedData.map((d) => d.x),
-        duration,
-      )
-      .map((s) => this.titleCasePipe.transform(s));
+    const labels = this.statisticsServices.formatLabel(
+      aggregatedData.map((d) => d.x),
+      duration,
+    );
     const dataSet = formattedScores.map((s) => {
       const d = this.statisticsServices.transformDataToPoint(s);
       return {
@@ -191,7 +197,6 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
         lineStyle: {},
       };
     });
-
     series.push({
       name: I18ns.shared.global,
       data: globalPoints.map((d) => (d.y ? Math.round((d.y * 10000) / 100) : d.y)),
@@ -204,7 +209,6 @@ export class PerformanceByTeamsComponent implements OnInit, OnDestroy {
       },
       lineStyle: {},
     });
-
     this.chartOption = {
       xAxis: [{ ...xAxisDatesOptions, data: labels }],
       yAxis: [{ ...yAxisScoreOptions }],

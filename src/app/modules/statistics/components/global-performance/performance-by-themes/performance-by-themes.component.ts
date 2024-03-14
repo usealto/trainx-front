@@ -59,7 +59,12 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
             this.tagsLeaderboard = tagStats
               .filter(({ score }) => typeof score === 'number')
               .map((t) => ({ name: t.tag.name, score: t.score as number }));
-            this.tagsDataStatus = EPlaceholderStatus.GOOD;
+
+            if (this.tagsLeaderboard.length > 0) {
+              this.tagsDataStatus = EPlaceholderStatus.GOOD;
+            } else {
+              this.tagsDataStatus = EPlaceholderStatus.NO_DATA;
+            }
           }),
           switchMap((tagStats) =>
             combineLatest([
@@ -80,12 +85,16 @@ export class PerformanceByThemesComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: ([tagStats, selectedTags]) => {
-            this.setSpiderChartOptions(
-              tagStats
-                .filter(({ score }) => typeof score === 'number')
-                .filter((t) => selectedTags.some(({ value }) => value === t.tag.id)),
-            );
-            this.spiderChartDataStatus = EPlaceholderStatus.GOOD;
+            const filteredTagStats = tagStats
+              .filter(({ score }) => typeof score === 'number')
+              .filter((t) => selectedTags.some(({ value }) => value === t.tag.id));
+
+            if (filteredTagStats.length > 2 && filteredTagStats.length < 7) {
+              this.setSpiderChartOptions(filteredTagStats);
+              this.spiderChartDataStatus = EPlaceholderStatus.GOOD;
+            } else {
+              this.spiderChartDataStatus = EPlaceholderStatus.NO_RESULT;
+            }
           },
         }),
     );

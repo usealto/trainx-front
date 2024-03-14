@@ -79,7 +79,7 @@
     <div class="panel h-100">
       <h2>{{ I18ns.userHome.statistics.progression.title }}</h2>
       <div class="chart-container">
-        <alto-chart-basicline [chartOption]="userChartOptions" [initOptions]="{height: '280px'}"></alto-chart-basicline>
+        <alto-chart-basicline [chartOption]="userChartOptions" [initOptions]="{height: '280px'}" [tooltipTitleFormatter]="tooltipTitleFormatter"></alto-chart-basicline>
       </div>
     </div>
     <div class="nodata-placeholder chart-container" noData>

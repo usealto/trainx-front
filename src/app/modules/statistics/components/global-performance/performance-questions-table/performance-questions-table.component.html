@@ -36,7 +36,7 @@
             {{ questionInfos.question.title | sliceWithDots : 150 }}
           </td>
           <td class="text-center">
-            <ng-container *ngIf="questionInfos.currentStats.score; else elseTemplate">
+            <ng-container *ngIf="questionInfos.currentStats.score !== undefined; else elseTemplate">
               <span class="alto-score" [class]="(questionInfos.currentStats.score || 0) * 100 | pillColor">{{
                 questionInfos.currentStats.score | percent
               }}</span>

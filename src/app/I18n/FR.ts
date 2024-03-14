@@ -108,6 +108,12 @@ export const FR = {
         subtitle: 'Sélectionnez une autre période',
       },
     },
+    weekOf: 'Semaine du',
+    chartTimeframeSubtitles: {
+      Year: ' par mois sur l’année.',
+      Trimester: ' par semaine sur les 3 derniers mois.',
+      Month: ' par semaine sur le mois.',
+    }
   },
   leadHome: {
     title: 'Bonjour ',
@@ -453,7 +459,7 @@ export const FR = {
         teamFilter: 'Équipes',
         scoreEvolution: {
           title: 'Évolution du niveau de vos équipes',
-          subtitle: 'Évolution du niveau moyen de vos équipes dans le temps.',
+          subtitle: 'Évolution du niveau moyen de vos équipes',
           placeholderTitle: 'Aucune donnée à afficher pour le moment',
           placeholderSubtitle: 'Les équipes s’activent pour fournir les premiers résultats !',
         },

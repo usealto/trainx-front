@@ -92,7 +92,6 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
   private leadHomeComponentSubscription = new Subscription();
 
   constructor(
-    private readonly titleCasePipe: TitleCasePipe,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoreService: ScoresService,
     private readonly statisticsServices: StatisticsService,
@@ -165,12 +164,10 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
         this.chartDataStatus = this.scoreCount === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
         const formattedScores = this.scoreService.formatScores(scores);
         const points = this.statisticsServices.transformDataToPoint(formattedScores[0]);
-        const labels = this.statisticsServices
-          .formatLabel(
-            points.map((p) => p.x),
-            duration,
-          )
-          .map((s) => this.titleCasePipe.transform(s));
+        const labels = this.statisticsServices.formatLabel(
+          points.map((p) => p.x),
+          duration,
+        );
 
         this.chartOption = {
           xAxis: [{ ...xAxisDatesOptions, data: labels }],
@@ -259,18 +256,19 @@ export class LeadHomeComponent implements OnInit, OnDestroy {
       this.scoresRestService.getPaginatedProgramsStats(duration),
       this.scoresRestService.getPaginatedProgramsStats(duration, true),
     ]).pipe(
-      map(([paginatedProgramsStats, previousPaginatedProgramsStats]) => {
-        const programsStats = paginatedProgramsStats.data ?? [];
-        const lastProgramsStats = previousPaginatedProgramsStats.data ?? [];
-
+      map(([{ data: programsStats = [] }, { data: lastProgramsStats = [] }]) => {
         this.programsCount = programsStats.length;
-        this.finishedProgramsCount = programsStats.filter((p) => p.participation === 1).length;
+        this.finishedProgramsCount = programsStats.filter(
+          (p) => p.userCompletedProgramCount / p.totalUsersCount === 1,
+        ).length;
         this.averageFinishedPrograms =
           this.finishedProgramsCount && this.programsCount
             ? this.finishedProgramsCount / this.programsCount
             : 0;
         const lastProgramsCount = lastProgramsStats.length;
-        const lastFinishedProgramsCount = lastProgramsStats.filter((p) => p.participation === 1).length;
+        const lastFinishedProgramsCount = lastProgramsStats.filter(
+          (p) => p.userCompletedProgramCount / p.totalUsersCount,
+        ).length;
         const lastAverageFinishedPrograms =
           lastFinishedProgramsCount && lastProgramsCount ? lastFinishedProgramsCount / lastProgramsCount : 0;
         this.averageFinishedProgramsProgression = this.averageFinishedPrograms - lastAverageFinishedPrograms;

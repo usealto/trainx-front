@@ -1,4 +1,3 @@
-import { TitleCasePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,6 +29,7 @@ import { ILeaderboardData } from '../../../../shared/components/leaderboard/lead
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { PillOption, SelectOption } from '../../../../shared/models/select-option.model';
 import { Point, StatisticsService } from '../../../services/statistics.service';
+import { ChartsService } from '../../../../charts/charts.service';
 
 interface IMemberInfos {
   user: User;
@@ -60,6 +60,9 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
 
   teamChartOption: any = {};
   teamChartStatus = EPlaceholderStatus.LOADING;
+
+  // TODO : clean chartsService
+  tooltipTitleFormatter = (title: string) => title;
 
   membersLeaderboard: ILeaderboardData[] = [];
   membersLeaderboardStatus = EPlaceholderStatus.LOADING;
@@ -107,13 +110,13 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
   private readonly performanceByTeamsSubscription: Subscription = new Subscription();
 
   constructor(
-    private titleCasePipe: TitleCasePipe,
     private readonly router: Router,
     private readonly scoresRestService: ScoresRestService,
     private readonly scoresService: ScoresService,
     private readonly statisticService: StatisticsService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
+    private readonly chartsService: ChartsService,
   ) {}
 
   ngOnInit(): void {
@@ -148,6 +151,9 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
         this.durationControl.valueChanges.pipe(startWith(this.durationControl.value)),
       ])
         .pipe(
+          tap(([, duration]) => {
+            this.tooltipTitleFormatter = this.chartsService.tooltipDurationTitleFormatter(duration);
+          }),
           switchMap(([selectedMembers, duration]) => {
             return combineLatest([
               of(selectedMembers),
@@ -353,9 +359,7 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
           next: ([tagStats, selectedTags]) => {
             if (tagStats.length) {
               this.createSpiderChart(
-                tagStats
-                  .filter(({ score }) => typeof score === 'number')
-                  .filter((t) => selectedTags.some(({ value }) => value === t.tag.id)),
+                tagStats.filter((t) => selectedTags.some(({ value }) => value === t.tag.id)),
               );
               this.spiderChartDataStatus = EPlaceholderStatus.GOOD;
             } else {
@@ -378,7 +382,6 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
         )
         .subscribe({
           next: (usersStats) => {
-
             this.membersLeaderboard = usersStats
               .filter(({ score }) => typeof score === 'number')
               .map((u) => ({ name: u.user.firstname + ' ' + u.user.lastname, score: u.score as number }));
@@ -453,12 +456,10 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
           .slice(-formattedScores[0]?.averages?.length)
       : this.statisticService.transformDataToPoint(aggregatedFormattedGlobalScores);
 
-    const labels = this.statisticService
-      .formatLabel(
-        aggregatedData.map((d) => d.x),
-        duration,
-      )
-      .map((s) => this.titleCasePipe.transform(s));
+    const labels = this.statisticService.formatLabel(
+      aggregatedData.map((d) => d.x),
+      duration,
+    );
 
     const dataSet = scores.length
       ? formattedScores.map((s) => {

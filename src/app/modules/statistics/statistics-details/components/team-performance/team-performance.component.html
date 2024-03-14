@@ -34,7 +34,7 @@
 
   <alto-placeholder-manager [status]="teamChartStatus">
     <div class="chart-container">
-      <alto-chart-basicline [chartOption]="teamChartOption"></alto-chart-basicline>
+      <alto-chart-basicline [chartOption]="teamChartOption" [tooltipTitleFormatter]="tooltipTitleFormatter"></alto-chart-basicline>
     </div>
 
     <div class="nodata-placeholder" noData>

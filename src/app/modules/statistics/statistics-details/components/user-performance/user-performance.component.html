@@ -28,7 +28,7 @@
       {{ I18ns.statistics.user.performance.masteringLevel.chartSubtitle }}
     </p>
     <div class="chart-container">
-      <alto-chart-basicline [chartOption]="userChartOptions"></alto-chart-basicline>
+      <alto-chart-basicline [chartOption]="userChartOptions" [tooltipTitleFormatter]="tooltipTitleFormatter"></alto-chart-basicline>
     </div>
   </div>
   <div class="nodata-placeholder" noData>

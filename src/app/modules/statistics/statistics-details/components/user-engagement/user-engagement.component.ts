@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ScoreByTypeEnumApi, ScoreTimeframeEnumApi, ScoreTypeEnumApi } from '@usealto/sdk-ts-angular';
-import { Subscription, combineLatest, startWith, switchMap } from 'rxjs';
+import { Subscription, combineLatest, startWith, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
@@ -16,6 +16,7 @@ import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../../core/resolvers';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { StatisticsService } from '../../../services/statistics.service';
+import { ChartsService } from '../../../../charts/charts.service';
 
 @Component({
   selector: 'alto-user-engagement',
@@ -34,6 +35,9 @@ export class UserEngagementComponent implements OnInit, OnDestroy {
     nonNullable: true,
   });
 
+  // TODO : clean chartsService
+  tooltipTitleFormatter = (title: string) => title;
+
   answersChartOptions!: any;
   answersChartStatus: EPlaceholderStatus = EPlaceholderStatus.LOADING;
 
@@ -50,6 +54,7 @@ export class UserEngagementComponent implements OnInit, OnDestroy {
     private readonly titleCasePipe: TitleCasePipe,
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
+    private readonly chartsService: ChartsService,
   ) {}
 
   ngOnInit(): void {
@@ -66,6 +71,9 @@ export class UserEngagementComponent implements OnInit, OnDestroy {
       this.durationControl.valueChanges
         .pipe(
           startWith(this.durationControl.value),
+          tap((duration) => {
+            this.tooltipTitleFormatter = this.chartsService.tooltipDurationTitleFormatter(duration);
+          }),
           switchMap((duration) => {
             let timeframe: ScoreTimeframeEnumApi;
 
@@ -143,14 +151,12 @@ export class UserEngagementComponent implements OnInit, OnDestroy {
     const aggregatedQuestionsSubmitted = this.statisticsService.transformDataToPointByCounts(
       formatedQuestionsSubmitted[0],
     );
-    const labels = this.statisticsService
-      .formatLabel(
-        formatedComments.length > 0
-          ? aggregatedComments.map((d) => d.x)
-          : aggregatedQuestionsSubmitted.map((d) => d.x),
-        duration,
-      )
-      .map((s) => this.titleCasePipe.transform(s));
+    const labels = this.statisticsService.formatLabel(
+      formatedComments.length > 0
+        ? aggregatedComments.map((d) => d.x)
+        : aggregatedQuestionsSubmitted.map((d) => d.x),
+      duration,
+    );
 
     const dataset = [
       {
