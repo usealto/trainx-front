@@ -6,7 +6,7 @@ import { SelectOption } from '../../../models/select-option.model';
 @Component({
   selector: 'alto-input-single-select',
   templateUrl: './input-single-select.component.html',
-  styleUrls: ['./input-single-select.component.scss'],
+  styleUrls: ['../input-dropdowns.component.scss'],
 })
 export class InputSingleSelectComponent implements OnInit {
   I18ns = I18ns;

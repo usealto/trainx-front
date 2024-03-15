@@ -13,6 +13,8 @@ export interface IProgram extends IBaseModel {
   teamIds: string[];
   questionsCount: number;
   stats: IProgramStats[];
+  isAccelerated: boolean;
+  startDate?: Date;
 }
 
 export class Program extends BaseModel implements IProgram {
@@ -25,6 +27,8 @@ export class Program extends BaseModel implements IProgram {
   teamIds: string[];
   questionsCount: number;
   stats: ProgramStats[];
+  isAccelerated: boolean;
+  startDate?: Date;
 
   constructor(data: IProgram) {
     super(data);
@@ -41,6 +45,8 @@ export class Program extends BaseModel implements IProgram {
     this.updatedAt = data.updatedAt;
     this.deletedAt = data.deletedAt;
     this.stats = data.stats.map((s) => new ProgramStats(s));
+    this.isAccelerated = data.isAccelerated;
+    this.startDate = data.startDate;
   }
 
   static fromDto(data: ProgramDtoApi): Program {
@@ -58,6 +64,8 @@ export class Program extends BaseModel implements IProgram {
       updatedAt: data.updatedAt,
       deletedAt: data.deletedAt,
       stats: [],
+      isAccelerated: data.isAccelerated,
+      startDate: data.startDate,
     });
   }
 
@@ -87,7 +95,13 @@ export class Program extends BaseModel implements IProgram {
       teamIds: this.teamIds,
       questionsCount: this.questionsCount,
       stats: this.stats.map((s) => s.rawData),
+      isAccelerated: this.isAccelerated,
+      startDate: this.startDate,
     };
+  }
+
+  get hasAlreadyStarted(): boolean {
+    return this.startDate ? compareAsc(new Date(), this.startDate) >= 0 : false;
   }
 
   getStatsByScoreById(id: string): ProgramStats[] {

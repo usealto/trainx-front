@@ -1,10 +1,13 @@
 <div class="button-group-container">
-  <div *ngFor="let option of options; let first = first; let last = last"
-  (click)="toggleOption(option)"
-  class="option"
-  [class.checked]="control.value === option"
-  [class.left]="first"
-  [class.right]="last">
-    <p>{{ option.label }}</p>
+  <div
+    *ngFor="let option of options; let first = first; let last = last"
+    (click)="toggleOption(option)"
+    class="option"
+    [class.checked]="control.value === option"
+    [class.left]="first"
+    [class.right]="last"
+  >
+    <i *ngIf="option.icon" class="me-2 bi" [class]="option.icon" [class.lighter]="isFontWeightLighter"></i>
+    <p [class.lighter]="isFontWeightLighter">{{ option.label }}</p>
   </div>
 </div>

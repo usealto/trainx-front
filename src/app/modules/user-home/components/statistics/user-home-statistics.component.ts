@@ -30,6 +30,7 @@ export class UserHomeStatisticsComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
 
   @Input() durationControl!: FormControl<EScoreDuration>;
+  durationOptions = Score.getTimepickerOptions();
 
   user!: User;
   userTeam!: Team;

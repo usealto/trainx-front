@@ -1,17 +1,22 @@
 <div class="dropdown">
   <div
-    class="form-control"
-    [class]="!isForm ? 'dropdown-input' : 'dropdown-input-form'"
+    class="form-control dropdown-input"
+    [class.form]="isForm"
     (click)="toggleDropdown()"
   >
-
     <div class="title-container">
       <p class="title">{{ placeholder }}</p>
-      <span [class.invisible]="!controls.value.length" class="alto-badge ms-1">{{ controls.value.length }}</span>
+      <span [class.invisible]="!controls.value.length" class="alto-badge ms-1">{{
+        controls.value.length
+      }}</span>
     </div>
 
     <div class="d-flex gap-2">
-      <i [class.invisible]="!controls.value.length" class="bi bi-x-lg hover-red" (click)="$event.stopPropagation(); toggleAllOptions(false)"></i>
+      <i
+        [class.invisible]="!controls.value.length"
+        class="bi bi-x-lg hover-red"
+        (click)="$event.stopPropagation(); toggleAllOptions(false)"
+      ></i>
       <i class="bi" [ngClass]="isDropdownOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
     </div>
   </div>
@@ -20,14 +25,24 @@
     class="dropdown-menu"
     [ngClass]="{ show: isDropdownOpen }"
     (click)="$event.stopPropagation()"
+    [class.medium-w]="enableSearch"
     [style]="isForm ? 'max-width: 100%' : ''"
   >
-
-    <input *ngIf="enableSearch && options.length > 0" type="text" [formControl]="searchControl" class="dropdown-item dropdown-search border-bottom" [placeholder]="I18ns.shared.search">
+    <div *ngIf="enableSearch && options.length > 0" class="dropdown-search border-bottom">
+      <span class="search-icon"><i class="bi bi-search"></i></span>
+      <input *ngIf="enableSearch && options.length > 0" type="text" [formControl]="searchControl" class="search-field" [placeholder]="I18ns.shared.search">
+      <i *ngIf="searchControl.value" class="delete-icon cursor-pointer bi-x-lg hover-red" (click)="searchControl.patchValue(null)"></i>
+    </div>
 
     <ng-container *ngIf="filteredOptions.length > 0; else noOption">
-      <div *ngIf="!searchControl.value" class="dropdown-item border-bottom cursor-pointer" (click)="toggleAllOptions()">
-        <p class="alto-grey">{{ I18ns.shared.selectAll }}</p>
+      <div
+        *ngIf="!searchControl.value"
+        class="dropdown-item border-bottom cursor-pointer"
+        (click)="toggleAllOptions()"
+      >
+        <p class="alto-grey">
+          {{ controls.value.length === options.length ? I18ns.shared.selectNone : I18ns.shared.selectAll }}
+        </p>
       </div>
 
       <div
@@ -36,14 +51,13 @@
         [class.border-bottom]="!last"
         (click)="toggleOption(checkedOption)"
       >
+        <i class="bi" [class]="checkedOption.isChecked ? 'bi-check-circle-fill alto-primary' : 'bi-circle alto-grey'"></i>
         <span class="text-truncate">{{ checkedOption.option.label }}</span>
-
-        <i *ngIf="checkedOption.isChecked" class="bi bi-check-circle-fill alto-grey"></i>
       </div>
     </ng-container>
 
     <ng-template #noOption>
-      <div class="noOption">
+      <div class="dropdown-item">
         <p class="fst-italic alto-grey">{{ I18ns.shared.noOption }}</p>
       </div>
     </ng-template>

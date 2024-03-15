@@ -7,7 +7,7 @@ import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { ILeadData } from '../../../../../core/resolvers/lead.resolver';
 import { EResolvers, ResolversService } from '../../../../../core/resolvers/resolvers.service';
 import { Company } from '../../../../../models/company.model';
-import { EScoreDuration } from '../../../../../models/score.model';
+import { EScoreDuration, Score } from '../../../../../models/score.model';
 
 @Component({
   selector: 'alto-statistics-global-performance',
@@ -17,6 +17,8 @@ import { EScoreDuration } from '../../../../../models/score.model';
 export class StatisticsGlobalPerformanceComponent implements OnInit {
   I18ns = I18ns;
   EmojiName = EmojiName;
+
+  durationOptions = Score.getTimepickerOptions();
   durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
     nonNullable: true,
   });

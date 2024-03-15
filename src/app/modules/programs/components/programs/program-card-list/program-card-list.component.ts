@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { GetProgramsStatsRequestParams } from '@usealto/sdk-ts-angular';
@@ -15,6 +15,9 @@ import { AltoRoutes } from '../../../../shared/constants/routes';
 import { PillOption, SelectOption } from '../../../../shared/models/select-option.model';
 import { ScoresRestService } from '../../../../shared/services/scores-rest.service';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
+import { ETab } from '../../../../../core/resolvers/edit-program.resolver';
+import { PluralPipe } from '../../../../../core/utils/i18n/plural.pipe';
+import { EInputToggleColor } from '../../../../shared/components/forms/input-toggle/input-toggle.component';
 
 interface IProgramCard {
   program: Program;
@@ -26,6 +29,12 @@ interface IProgramCard {
   isActiveControl: FormControl<boolean>;
 }
 
+enum EProgramType {
+  Classic = 'classic',
+  Accelerated = 'accelerated',
+  All = 'all',
+}
+
 @Component({
   selector: 'alto-program-card-list',
   templateUrl: './program-card-list.component.html',
@@ -35,6 +44,9 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
   Emoji = EmojiName;
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
+  ETab = ETab;
+  EInputToggleColor = EInputToggleColor;
+  pluralPipe = new PluralPipe();
 
   @Input() company!: Company;
 
@@ -53,7 +65,26 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
   scoreControl: FormControl<PillOption | null> = new FormControl(null);
   scoreOptions = Score.getFiltersPillOptions();
 
+  programTypeOptions = [
+    new SelectOption({ label: I18ns.programs.programs.allPrograms, value: EProgramType.All }),
+    new SelectOption({
+      label: this.pluralPipe.transform(I18ns.programs.programs.classic, 2),
+      value: EProgramType.Classic,
+      icon: 'bi-bullseye',
+    }),
+    new SelectOption({
+      label: this.pluralPipe.transform(I18ns.programs.programs.accelerated, 2),
+      value: EProgramType.Accelerated,
+      icon: 'bi-rocket-takeoff',
+    }),
+  ];
+
+  programTypeControl = new FormControl<SelectOption>(this.programTypeOptions[0], { nonNullable: true });
+
   dataStatus = EPlaceholderStatus.LOADING;
+
+  isCreateProgramBtnOpen = false;
+
   private readonly programCardListComponent = new Subscription();
   private readonly activeProgramsSubscription = new Subscription();
 
@@ -78,10 +109,11 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
             map((teamsControls) => teamsControls.map((x) => x.value)),
           ),
           this.scoreControl.valueChanges.pipe(startWith(this.scoreControl.value)),
+          this.programTypeControl.valueChanges.pipe(startWith(this.programTypeControl.value)),
         ]).pipe(tap(() => this.pageControl.setValue(1))),
       ])
         .pipe(
-          switchMap(([page, [search, selectedTeamsOptions, selectedScoreOption]]) => {
+          switchMap(([page, [search, selectedTeamsOptions, selectedScoreOption, programType]]) => {
             const req: GetProgramsStatsRequestParams = {
               page,
               sortBy: 'program.isActive:desc',
@@ -90,6 +122,12 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
               teamIds: selectedTeamsOptions.length
                 ? selectedTeamsOptions.map((x) => x.value).join(',')
                 : undefined,
+              isAccelerated:
+                programType.value === EProgramType.Accelerated
+                  ? true
+                  : programType.value === EProgramType.Classic
+                  ? false
+                  : undefined,
             };
 
             switch (selectedScoreOption?.value) {
@@ -121,7 +159,10 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
 
           this.dataStatus =
             stats.length === 0
-              ? this.teamsControls.value.length || this.searchControl.value || this.scoreControl.value
+              ? this.teamsControls.value.length ||
+                this.searchControl.value ||
+                this.scoreControl.value ||
+                this.programTypeControl.value.value !== EProgramType.All
                 ? EPlaceholderStatus.NO_RESULT
                 : EPlaceholderStatus.NO_DATA
               : EPlaceholderStatus.GOOD;
@@ -185,6 +226,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
     this.searchControl.patchValue(null);
     this.teamsControls.patchValue([]);
     this.scoreControl.patchValue(null);
+    this.programTypeControl.patchValue(this.programTypeOptions[0]);
     this.pageControl.patchValue(1);
   }
 }

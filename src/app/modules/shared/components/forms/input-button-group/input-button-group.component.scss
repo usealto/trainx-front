@@ -7,11 +7,17 @@
   border: 1px solid var(--gray-200);
 
   .option {
+    display: flex;
+    flex-wrap: nowrap;
     cursor: pointer;
     padding: 0 1.333rem;
 
     &.checked {
       background-color: var(--alto-medium-grey);
+
+      p {
+        font-weight: 700;
+      }
     }
 
     &.left {
@@ -26,8 +32,22 @@
 
     p {
       line-height: 34px;
-      font-size: 1rem;
+      font-size: 10px;
       font-weight: 600;
+
+      &.lighter {
+        font-weight: 400;
+      }
+    }
+
+    i {
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 30px;
+
+      &.lighter {
+        font-weight: 400;
+      }
     }
   }
 }

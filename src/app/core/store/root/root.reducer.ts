@@ -7,6 +7,7 @@ import {
   addProgram,
   addUser,
   deleteProgram,
+  launchAcceleratedProgram,
   patchUser,
   removeUser,
   setCompany,
@@ -167,6 +168,24 @@ export const rootReducer = createReducer(
     const updatedProgramsById = new Map(state.company.data.programById);
     updatedProgramsById.delete(programId);
     const company = new Company({ ...state.company.data, programs: [...updatedProgramsById.values()] });
+
+    return {
+      ...state,
+      company: new TimestampedEntity(company),
+    };
+  }),
+  on(launchAcceleratedProgram, (state, { programId }): RootState => {
+    const programsById: Map<string, Program> = new Map(
+      state.company.data.programs.map((program) => [program.id, program]),
+    );
+
+    const programToUpdate = programsById.get(programId);
+
+    if (programToUpdate) {
+      programsById.set(programId, new Program({ ...programToUpdate.rawData, startDate: new Date() }));
+    }
+
+    const company = new Company({ ...state.company.data, programs: [...programsById.values()] });
 
     return {
       ...state,

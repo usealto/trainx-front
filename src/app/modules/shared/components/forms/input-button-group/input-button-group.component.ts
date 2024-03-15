@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
 import { SelectOption } from '../../../models/select-option.model';
@@ -13,6 +13,7 @@ export class InputButtonGroupComponent {
 
   @Input() options: SelectOption[] = [];
   @Input() control: FormControl<SelectOption | null> = new FormControl();
+  @Input() isFontWeightLighter = false;
 
   toggleOption(option: SelectOption): void {
     this.control.patchValue(option);

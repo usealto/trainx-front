@@ -86,7 +86,8 @@
             <alto-colored-pill-list
               [textLimit]="30"
               [data]="questionInfos.programs"
-              [limit]="2">
+              [limit]="2"
+              [tooltipOnLimit]="true">
             ></alto-colored-pill-list>
           </td>
           <td *ngIf="questionInfos.programs.length < 1">-</td>

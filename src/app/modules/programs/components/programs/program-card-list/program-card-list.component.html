@@ -7,62 +7,103 @@
     <p class="mt-2 alto-grey">{{ I18ns.programs.programs.subtitle }}</p>
   </div>
 
-  <a type="button"
-  class="btn btn-primary"
-  [routerLink]="AltoRoutes.programsCreate">
-    <i class="bi bi-plus-lg"></i>
-    <div>
-      {{ I18ns.programs.programs.createProgram }}
-    </div>
-  </a>
+  <alto-create-programs-button></alto-create-programs-button>
 </div>
 
+<alto-input-button-group
+  [options]="programTypeOptions"
+  [control]="programTypeControl"
+></alto-input-button-group>
 <div class="buttons-row">
-  <alto-input-search [searchControl]="searchControl"></alto-input-search>
-
+  <div class="buttons-section">
+    <alto-input-search [searchControl]="searchControl"></alto-input-search>
+  </div>
   <div class="buttons-section">
     <alto-input-multiple-select
-    [placeholder]="I18ns.leadTeam.members.filters.teams"
-    [controls]="teamsControls"
-    [options]="teamsOptions"
-    [enableSearch]="true">
+      [placeholder]="I18ns.leadTeam.members.filters.teams"
+      [controls]="teamsControls"
+      [options]="teamsOptions"
+      [enableSearch]="true"
+    >
     </alto-input-multiple-select>
 
     <alto-input-single-select-pill
-    [placeholder]="I18ns.leadTeam.members.filters.score"
-    [control]="scoreControl"
-    [options]="scoreOptions">
+      [placeholder]="I18ns.leadTeam.members.filters.score"
+      [control]="scoreControl"
+      [options]="scoreOptions"
+    >
     </alto-input-single-select-pill>
   </div>
 </div>
 
 <alto-placeholder-manager [status]="dataStatus">
   <div
-  *ngFor="let programCards of programCardsRows"
-  class="programs-row mb-5"
-  [class.full-row]="programCards.length === 3"
-  [class.partial-row]="programCards.length < 3">
-    <div *ngFor="let programCard of programCards"
-    class="program-card"
-    [class.disabled]="!programCard.isActiveControl.value"
-    [routerLink]=" programCard.isActiveControl.value
-    ? ['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]
-    : null">
-      <div class="title-section mb-2">
-        <p class="title-overflow subtitle">
+    *ngFor="let programCards of programCardsRows"
+    class="programs-row mb-5"
+    [class.full-row]="programCards.length === 3"
+    [class.partial-row]="programCards.length < 3"
+  >
+    <div
+      *ngFor="let programCard of programCards"
+      class="program-card"
+      [class.disabled]="!programCard.isActiveControl.value"
+      [class.accelerated]="programCard.program.isAccelerated"
+      [routerLink]="
+        programCard.isActiveControl.value
+          ? ['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]
+          : null
+      "
+      [queryParams]="programCard.isActiveControl.value ? { tab: ETab.Summary } : null"
+    >
+      <div class="title-section">
+        <div class="badges-section">
+          <span
+            class="fs-6 alto-badge pill d-flex flex-nowrap"
+            [class]="programCard.program.isAccelerated ? 'orange' : 'primary'"
+          >
+            <i
+              class="bi me-2"
+              [class]="programCard.program.isAccelerated ? 'bi-rocket-takeoff' : 'bi-bullseye'"
+            ></i>
+            <p>
+              {{
+                programCard.program.isAccelerated
+                  ? (I18ns.programs.programs.accelerated | plural : 1)
+                  : (I18ns.programs.programs.classic | plural : 1)
+              }}
+            </p>
+          </span>
+          <div class="d-flex flex-nowrap" (click)="$event.stopPropagation()">
+            <button
+              *ngIf="programCard.isActiveControl.value"
+              type="button"
+              class="edit-btn me-3"
+              [routerLink]="
+                programCard.isActiveControl.value
+                  ? [
+                      '/',
+                      AltoRoutes.lead,
+                      AltoRoutes.programs,
+                      AltoRoutes.programsEdit,
+                      programCard.program.id
+                    ]
+                  : null
+              "
+              [queryParams]="programCard.isActiveControl.value ? { tab: ETab.Informations } : null"
+            >
+              {{ I18ns.shared.edit }}
+            </button>
+            <alto-input-toggle [control]="programCard.isActiveControl" [color]="programCard.program.isAccelerated ? EInputToggleColor.ORANGE : EInputToggleColor.DEFAULT"></alto-input-toggle>
+          </div>
+        </div>
+        <p class="title-overflow title">
           {{ programCard.program.name }}
         </p>
-
-        <div (click)="$event.stopPropagation()">
-          <alto-input-toggle [control]="programCard.isActiveControl"></alto-input-toggle>
-        </div>
       </div>
       <ng-container *ngIf="programCard.program.teamIds.length > 0; else noTeam">
         <div class="teams-section">
           <img [src]="Emoji.BustsInSilhouette | emoji" height="16" width="16" />
-          <p class="teams-title">
-            {{ I18ns.shared.assignedTeams }} :
-          </p>
+          <p class="teams-title">{{ I18ns.shared.assignedTeams }} :</p>
           <div class="tooltip-container">
             <span class="alto-badge teams">{{ programCard.program.teamIds.length }}</span>
 
@@ -71,10 +112,12 @@
             </div>
           </div>
         </div>
-      </ng-container>
-      <ng-template #noTeam>
-        <div class="alto-badge">{{ I18ns.shared.noTeam }}</div>
-      </ng-template>
+        </ng-container>
+        <ng-template #noTeam>
+          <div>
+            <span class="alto-badge">{{ I18ns.shared.noTeam }}</span>
+          </div>
+        </ng-template>
 
       <hr />
 
@@ -85,7 +128,10 @@
               <img class="pe-1 mb-2" [src]="Emoji.PlayButton | emoji" height="14" width="14" />
               {{ I18ns.programs.programs.involvement }}
             </span>
-            <span class="alto-score" [class]="(programCard.participation ? programCard.participation * 100 : '') | pillColor">
+            <span
+              class="alto-score"
+              [class]="(programCard.participation ? programCard.participation * 100 : '') | pillColor"
+            >
               {{ programCard.participation ? (programCard.participation | percent) : '-' }}
             </span>
           </p>
@@ -104,8 +150,12 @@
               {{ I18ns.programs.programs.membersHaveValidated }}
             </span>
             <span
-            class="alto-score"
-            [class]="(programCard.userValidatedProgramCount ? programCard.userValidatedProgramCount * 100 : '') | pillColor">
+              class="alto-score"
+              [class]="
+                (programCard.userValidatedProgramCount ? programCard.userValidatedProgramCount * 100 : '')
+                  | pillColor
+              "
+            >
               {{ programCard.userValidatedProgramCount }} / {{ programCard.totalUsersCount }}
             </span>
           </p>
@@ -115,10 +165,7 @@
     </div>
   </div>
 
-  <alto-pagination
-  [pageControl]="pageControl"
-  [itemsCount]="itemsCount"
-  [itemsPerPage]="pageSize">
+  <alto-pagination [pageControl]="pageControl" [itemsCount]="itemsCount" [itemsPerPage]="pageSize">
   </alto-pagination>
 
   <div class="row mb-4" loading>
