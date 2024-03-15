@@ -134,6 +134,10 @@ textarea.form-control:focus {
     cursor: pointer;
     height: 1.429rem;
     width: 2.571rem;
+
+    &.orange {
+      background-color: var(--bs-orange);
+    }
   }
   label {
     vertical-align: text-top;

@@ -93,7 +93,7 @@
             >
               {{ I18ns.shared.edit }}
             </button>
-            <alto-input-toggle [control]="programCard.isActiveControl"></alto-input-toggle>
+            <alto-input-toggle [control]="programCard.isActiveControl" [color]="programCard.program.isAccelerated ? EInputToggleColor.ORANGE : EInputToggleColor.DEFAULT"></alto-input-toggle>
           </div>
         </div>
           <p class="title-overflow title">

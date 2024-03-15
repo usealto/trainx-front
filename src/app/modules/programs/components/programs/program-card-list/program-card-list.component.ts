@@ -17,6 +17,7 @@ import { ScoresRestService } from '../../../../shared/services/scores-rest.servi
 import { ProgramsRestService } from '../../../services/programs-rest.service';
 import { ETab } from '../../../../../core/resolvers/edit-program.resolver';
 import { PluralPipe } from '../../../../../core/utils/i18n/plural.pipe';
+import { EInputToggleColor } from '../../../../shared/components/forms/input-toggle/input-toggle.component';
 
 interface IProgramCard {
   program: Program;
@@ -44,6 +45,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
   I18ns = I18ns;
   AltoRoutes = AltoRoutes;
   ETab = ETab;
+  EInputToggleColor = EInputToggleColor;
   pluralPipe = new PluralPipe();
 
   @Input() company!: Company;
