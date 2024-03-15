@@ -405,23 +405,26 @@ export class LeadTeamComponent implements OnInit, OnDestroy {
     instance.user = user;
     instance.teams = Array.from(this.teamsById.values());
 
-    instance.editedUser.pipe(
-      switchMap((editedUser) => {
-        this.store.dispatch(patchUser({ user: editedUser }));
+    instance.editedUser
+      .pipe(
+        switchMap((editedUser) => {
+          this.store.dispatch(patchUser({ user: editedUser }));
 
-        const userIndex = this.filteredUsersData.findIndex((u) => u.user.id === editedUser.id);
-        if(this.filteredUsersData[userIndex]) {
-          this.filteredUsersData[userIndex].user = editedUser;
-        }
+          const userIndex = this.filteredUsersData.findIndex((u) => u.user.id === editedUser.id);
+          if (this.filteredUsersData[userIndex]) {
+            this.filteredUsersData[userIndex].user = editedUser;
+          }
 
-        return this.store.select(FromRoot.selectUsers);
-      })
-    ).subscribe({
-      next: ({data: usersById}) => {
-        this.rawUsers = Array.from(usersById.values());
-        this.initFromCompany(this.company);
-      }
-    });
+          return this.store.select(FromRoot.selectUsers);
+        }),
+        first(),
+      )
+      .subscribe({
+        next: ({ data: usersById }) => {
+          this.rawUsers = Array.from(usersById.values());
+          this.initFromCompany(this.company);
+        },
+      });
   }
 
   @memoize()
