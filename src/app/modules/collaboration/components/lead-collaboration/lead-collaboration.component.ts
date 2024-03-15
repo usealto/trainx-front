@@ -61,6 +61,7 @@ interface IContribution {
 })
 export class LeadCollaborationComponent implements OnInit, OnDestroy {
   itemsPerPage = 10;
+  ETabValue = ETabValue;
 
   Emoji = EmojiName;
   I18ns = I18ns;
@@ -336,7 +337,17 @@ export class LeadCollaborationComponent implements OnInit, OnDestroy {
 
     this.showMoreButton = data.length > this.itemsPerPage;
 
-    this.contributionDataStatus = data.length === 0 ? EPlaceholderStatus.NO_DATA : EPlaceholderStatus.GOOD;
+    this.contributionDataStatus =
+      data.length === 0
+        ? (this.selectedTypesFilters.length !== 0 &&
+            this.selectedTypesFilters.length !== this.typesOptions.length) ||
+          (this.selectedContributorsFilters.length !== 0 &&
+            this.selectedContributorsFilters.length !== this.contributorsOptions.length) ||
+          (this.selectedPeriodsFilters.length !== 0 &&
+            this.selectedPeriodsFilters.length !== this.periodsOptions.length)
+          ? EPlaceholderStatus.NO_RESULT
+          : EPlaceholderStatus.NO_DATA
+        : EPlaceholderStatus.GOOD;
     if (data.length === 0) {
       if (this.comments.length > 0 || this.submittedQuestions.length > 0) {
         this.emptyPlaceholderData = {

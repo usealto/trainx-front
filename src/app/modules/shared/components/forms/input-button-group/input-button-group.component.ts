@@ -13,6 +13,7 @@ export class InputButtonGroupComponent {
 
   @Input() options: SelectOption[] = [];
   @Input() control: FormControl<SelectOption | null> = new FormControl();
+  @Input() isFontWeightLighter = false;
 
   toggleOption(option: SelectOption): void {
     this.control.patchValue(option);

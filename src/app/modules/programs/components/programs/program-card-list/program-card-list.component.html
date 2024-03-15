@@ -14,7 +14,7 @@
   [options]="programTypeOptions"
   [control]="programTypeControl"
 ></alto-input-button-group>
-<div class="buttons-row mt-3">
+<div class="buttons-row">
   <div class="buttons-section">
     <alto-input-search [searchControl]="searchControl"></alto-input-search>
   </div>
@@ -47,6 +47,7 @@
       *ngFor="let programCard of programCards"
       class="program-card"
       [class.disabled]="!programCard.isActiveControl.value"
+      [class.accelerated]="programCard.program.isAccelerated"
       [routerLink]="
         programCard.isActiveControl.value
           ? ['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]
@@ -54,44 +55,51 @@
       "
       [queryParams]="programCard.isActiveControl.value ? { tab: ETab.Summary } : null"
     >
-      <div class="title-section mb-3">
-        <span
-          class="fs-6 alto-badge d-flex flex-nowrap"
-          [class]="programCard.program.isAccelerated ? 'orange' : 'primary'"
-        >
-          <i
-            class="bi me-2"
-            [class]="programCard.program.isAccelerated ? 'bi-rocket-takeoff' : 'bi-bullseye'"
-          ></i>
-          <p>
-            {{
-              programCard.program.isAccelerated
-                ? (I18ns.programs.programs.accelerated | plural : 1)
-                : (I18ns.programs.programs.classic | plural : 1)
-            }}
-          </p>
-        </span>
-        <div class="d-flex flex-nowrap" (click)="$event.stopPropagation()">
-          <button
-            *ngIf="programCard.isActiveControl.value"
-            type="button"
-            class="edit-btn me-3"
-            [routerLink]="
-              programCard.isActiveControl.value
-                ? ['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]
-                : null
-            "
-            [queryParams]="programCard.isActiveControl.value ? { tab: ETab.Informations } : null"
+      <div class="title-section">
+        <div class="badges-section ">
+          <span
+            class="fs-6 alto-badge d-flex flex-nowrap"
+            [class]="programCard.program.isAccelerated ? 'orange' : 'primary'"
           >
-            {{ I18ns.shared.edit }}
-            <i class="ms-1 bi bi-pencil-square"></i>
-          </button>
-          <alto-input-toggle [control]="programCard.isActiveControl"></alto-input-toggle>
+            <i
+              class="bi me-2"
+              [class]="programCard.program.isAccelerated ? 'bi-rocket-takeoff' : 'bi-bullseye'"
+            ></i>
+            <p>
+              {{
+                programCard.program.isAccelerated
+                  ? (I18ns.programs.programs.accelerated | plural : 1)
+                  : (I18ns.programs.programs.classic | plural : 1)
+              }}
+            </p>
+          </span>
+          <div class="d-flex flex-nowrap" (click)="$event.stopPropagation()">
+            <button
+              *ngIf="programCard.isActiveControl.value"
+              type="button"
+              class="edit-btn me-3"
+              [routerLink]="
+                programCard.isActiveControl.value
+                  ? [
+                      '/',
+                      AltoRoutes.lead,
+                      AltoRoutes.programs,
+                      AltoRoutes.programsEdit,
+                      programCard.program.id
+                    ]
+                  : null
+              "
+              [queryParams]="programCard.isActiveControl.value ? { tab: ETab.Informations } : null"
+            >
+              {{ I18ns.shared.edit }}
+            </button>
+            <alto-input-toggle [control]="programCard.isActiveControl" [color]="programCard.program.isAccelerated ? EInputToggleColor.ORANGE : EInputToggleColor.DEFAULT"></alto-input-toggle>
+          </div>
         </div>
+          <p class="title-overflow title">
+            {{ programCard.program.name }}
+          </p>
       </div>
-      <p class="title-overflow title mb-3">
-        {{ programCard.program.name }}
-      </p>
       <ng-container *ngIf="programCard.program.teamIds.length > 0; else noTeam">
         <div class="teams-section">
           <img [src]="Emoji.BustsInSilhouette | emoji" height="16" width="16" />
@@ -104,10 +112,12 @@
             </div>
           </div>
         </div>
-      </ng-container>
-      <ng-template #noTeam>
-        <div class="alto-badge">{{ I18ns.shared.noTeam }}</div>
-      </ng-template>
+        </ng-container>
+        <ng-template #noTeam>
+          <div>
+            <span class="alto-badge">{{ I18ns.shared.noTeam }}</span>
+          </div>
+        </ng-template>
 
       <hr />
 
