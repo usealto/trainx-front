@@ -56,9 +56,9 @@
       [queryParams]="programCard.isActiveControl.value ? { tab: ETab.Summary } : null"
     >
       <div class="title-section">
-        <div class="badges-section ">
+        <div class="badges-section">
           <span
-            class="fs-6 alto-badge d-flex flex-nowrap"
+            class="fs-6 alto-badge pill d-flex flex-nowrap"
             [class]="programCard.program.isAccelerated ? 'orange' : 'primary'"
           >
             <i
@@ -96,9 +96,9 @@
             <alto-input-toggle [control]="programCard.isActiveControl" [color]="programCard.program.isAccelerated ? EInputToggleColor.ORANGE : EInputToggleColor.DEFAULT"></alto-input-toggle>
           </div>
         </div>
-          <p class="title-overflow title">
-            {{ programCard.program.name }}
-          </p>
+        <p class="title-overflow title">
+          {{ programCard.program.name }}
+        </p>
       </div>
       <ng-container *ngIf="programCard.program.teamIds.length > 0; else noTeam">
         <div class="teams-section">

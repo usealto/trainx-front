@@ -171,6 +171,11 @@
         flex-direction: row;
         justify-content: space-between;
         margin-bottom: 8px;
+
+        .pill {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
       }
 
       .alto-badge {
