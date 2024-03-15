@@ -406,7 +406,7 @@
     <div class="mb-4">
       <h2>
         <i class="fs-3 bi bi-people"></i>
-        {{ I18ns.programs.forms.step3.members.title | replaceInTranslation : programStat?.totalUsersCount }}
+        {{ I18ns.programs.forms.step3.members.title | replaceInTranslation : programStat?.totalUsersCount ?? 0 }}
       </h2>
       <p class="mt-2 alto-grey">{{ I18ns.programs.forms.step3.members.subtitle }}</p>
     </div>
