@@ -90,7 +90,7 @@
         </ng-container>
       </ng-container>
 
-      <div noData>
+      <div noResult>
         <div class="nodata-placeholder text-center">
           <img [src]="emptyPlaceholderData?.emojiSrc" height="24" />
           <p class="mt-3">{{ emptyPlaceholderData?.title }}</p>
@@ -100,6 +100,27 @@
             {{ I18ns.shared.resetFilters }}
           </button>
         </div>
+      </div>
+      <div class="nodata-placeholder text-center" noData>
+        <img [src]="Emoji.SleepingFace | emoji" height="24" width="24" />
+        <p class="mt-3">
+          {{
+            selectedTab.value === ETabValue.PENDING
+              ? I18ns.collaboration.placeholder.pendingTitle
+              : selectedTab.value === ETabValue.ARCHIVED
+                ? I18ns.collaboration.placeholder.archivedTitle
+                : I18ns.collaboration.placeholder.allTitle
+          }}
+        </p>
+        <span class="d-inline-block mt-3">
+          {{
+            selectedTab.value === ETabValue.PENDING
+              ? I18ns.collaboration.placeholder.pendingSubtitle
+              : selectedTab.value === ETabValue.ARCHIVED
+                ? I18ns.collaboration.placeholder.archivedSubtitle
+                : I18ns.collaboration.placeholder.allSubtitle
+          }}
+        </span>
       </div>
       <div class="mt-5" loading>
         <div class="skeleton-panel my-5" style="height: 233px"></div>

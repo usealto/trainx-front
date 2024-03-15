@@ -1454,7 +1454,7 @@ export const FR = {
     placeholder: {
       pendingTitle: 'Aucune question ou commentaire en attente',
       pendingSubtitle: `Vous avez traité l'ensemble des retours de vos utilisateurs !`,
-      archivedTitle: 'Aucune question ou commentaire archivé(e)',
+      archivedTitle: 'Aucune question ou commentaire archivé',
       archivedSubtitle: `Vous n'avez archivé aucun retour de vos utilisateurs`,
       allTitle: `Aucune question ou commentaire`,
       allSubtitle: `Vos utilisateurs n'ont fait aucun retour pour l'instant`,
