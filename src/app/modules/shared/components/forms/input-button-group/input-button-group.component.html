@@ -7,7 +7,7 @@
     [class.left]="first"
     [class.right]="last"
   >
-    <i *ngIf="option.icon" class="me-2 bi" [class]="option.icon"></i>
-    <p>{{ option.label }}</p>
+    <i *ngIf="option.icon" class="me-2 bi" [class]="option.icon" [class.lighter]="isFontWeightLighter"></i>
+    <p [class.lighter]="isFontWeightLighter">{{ option.label }}</p>
   </div>
 </div>
