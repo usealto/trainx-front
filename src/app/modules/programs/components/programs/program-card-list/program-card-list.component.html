@@ -47,6 +47,7 @@
       *ngFor="let programCard of programCards"
       class="program-card"
       [class.disabled]="!programCard.isActiveControl.value"
+      [class.accelerated]="programCard.program.isAccelerated"
       [routerLink]="
         programCard.isActiveControl.value
           ? ['/', AltoRoutes.lead, AltoRoutes.programs, AltoRoutes.programsEdit, programCard.program.id]

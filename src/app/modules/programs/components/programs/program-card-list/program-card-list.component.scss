@@ -155,6 +155,12 @@
       border-color: var(--primary-300);
     }
 
+    &.accelerated {
+      &:hover {
+        border-color: var(--orange-300);
+      }
+    }
+
     .title-section {
       display: flex;
       flex-direction: column;
