@@ -541,6 +541,9 @@ export class EditProgramsComponent implements OnInit {
           first(),
         )
         .subscribe({
+          next: () => {
+            this.tabsControl.patchValue(this.tabsOptions[2]);
+          },
           error: () => {
             this.toastService.show({
               type: 'danger',
