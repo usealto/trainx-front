@@ -129,14 +129,12 @@
           <alto-input-range [control]="programFormGroup.controls.expectationControl"></alto-input-range>
         </div>
       </div>
-      <div *ngIf="program" class="row align-items-center mt-8">
-        <div>
-          <button class="btn btn-danger" (click)="deleteProgram()">
-            <i class="bi bi-trash3"></i><span>{{ I18ns.programs.delete.btn }}</span>
-          </button>
-        </div>
-      </div>
     </form>
+    <div *ngIf="program" class="d-flex row align-items-center justify-content-center mt-8 w-100">
+      <button class="btn btn-danger" [style]="'width: fit-content;'" (click)="deleteProgram()">
+        <i class="bi bi-trash3"></i><span>{{ I18ns.programs.delete.btn }}</span>
+      </button>
+    </div>
     <hr class="mt-8 bottom-hr" />
     <div class="d-flex flex-nowrap justify-content-between">
       <button class="btn btn-outline-secondary" (click)="cancel()">
