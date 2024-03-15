@@ -129,6 +129,13 @@
           <alto-input-range [control]="programFormGroup.controls.expectationControl"></alto-input-range>
         </div>
       </div>
+      <div *ngIf="program" class="row align-items-center mt-8">
+        <div>
+          <button class="btn btn-danger" (click)="deleteProgram()">
+            <i class="bi bi-trash3"></i><span>{{ I18ns.programs.delete.btn }}</span>
+          </button>
+        </div>
+      </div>
     </form>
     <hr class="mt-8 bottom-hr" />
     <div class="d-flex flex-nowrap justify-content-between">
@@ -500,28 +507,17 @@
       <div class="skeleton-panel" style="height: 377px" loading></div>
     </alto-placeholder-manager>
 
-    <div class="mt-4 d-flex justify-content-between">
-      <button class="btn btn-danger" (click)="deleteProgram()">
-        <i class="bi bi-trash3"></i><span>{{ I18ns.programs.delete.btn }}</span>
-      </button>
-      <button *ngIf="isAccelerated" class="btn launch-btn" (click)="launchAcceleratedProgram()">
-        <i class="bi bi-send"></i><span>
-          {{ program?.hasAlreadyStarted ? I18ns.programs.forms.step3.members.sendReminder : I18ns.programs.forms.step3.members.launchProgram }}
-        </span>
-      </button>
-    </div>
 
     <hr class="mt-8 bottom-hr" />
     <div class="d-flex flex-nowrap justify-content-between">
       <button class="btn btn-outline-secondary" (click)="switchTab(tabsOptions[1])">
         {{ I18ns.shared.previous }}
       </button>
-      <button
-        class="btn btn-primary"
-        [disabled]="!programFormGroup.dirty || programFormGroup.invalid"
-        (click)="submitForm()"
-      >
-        {{ program ? I18ns.programs.forms.step3.validateEdit : I18ns.programs.forms.step3.validate }}
+
+      <button *ngIf="isAccelerated" class="btn launch-btn" (click)="launchAcceleratedProgram()">
+        <i class="bi bi-send"></i><span>
+          {{ program?.hasAlreadyStarted ? I18ns.programs.forms.step3.members.sendReminder : I18ns.programs.forms.step3.members.launchProgram }}
+        </span>
       </button>
     </div>
   </div>
