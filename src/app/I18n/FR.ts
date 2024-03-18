@@ -218,6 +218,7 @@ export const FR = {
       title: 'Programmes de vos équipes',
       subtitle: 'Retrouvez l’ensemble des programmes assignés à vos équipes.',
       createProgram: 'Créer un programme',
+      createAcceleratedProgram: 'Créer un programme accéléré',
       allPrograms: 'Tous les programmes',
       classic: ['Continu', 'Continus'],
       accelerated: ['Accéléré', 'Accélérés'],

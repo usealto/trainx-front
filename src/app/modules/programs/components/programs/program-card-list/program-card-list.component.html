@@ -187,8 +187,16 @@
   <div class="nodata-placeholder text-center" noData>
     <img [src]="Emoji.BuildingConstruction | emoji" height="24" width="24" />
     <p class="mt-3">{{ I18ns.leadHome.ongoingPrograms.placeholder }}</p>
-    <a type="button" class="btn btn-primary mt-4" href="/l/programs/e/new"
-      ><i class="bi bi-plus-lg"></i>{{ I18ns.programs.programs.createProgram }}
-    </a>
+    <div type="button"
+    class="btn btn-primary mt-4"
+    [routerLink]="[AltoRoutes.programsCreate]"
+    [queryParams]="programTypeControl.value.value === EProgramType.Accelerated ? { isAccelerated: true } : null"
+      ><i class="bi bi-plus-lg"></i>
+      {{
+        programTypeControl.value.value === EProgramType.Accelerated
+          ? I18ns.programs.programs.createAcceleratedProgram
+          : I18ns.programs.programs.createProgram
+      }}
+    </div>
   </div>
 </alto-placeholder-manager>
