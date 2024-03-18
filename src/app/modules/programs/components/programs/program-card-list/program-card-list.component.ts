@@ -1,23 +1,23 @@
-import { Component, ElementRef, HostListener, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { GetProgramsStatsRequestParams } from '@usealto/sdk-ts-angular';
 import { Subscription, combineLatest, concat, debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
 import { EmojiName } from 'src/app/core/utils/emoji/data';
 import { I18ns } from 'src/app/core/utils/i18n/I18n';
+import { ETab } from '../../../../../core/resolvers/edit-program.resolver';
 import { updatePrograms } from '../../../../../core/store/root/root.action';
 import * as FromRoot from '../../../../../core/store/store.reducer';
+import { PluralPipe } from '../../../../../core/utils/i18n/plural.pipe';
 import { Company } from '../../../../../models/company.model';
 import { Program } from '../../../../../models/program.model';
 import { EScoreDuration, EScoreFilter, Score } from '../../../../../models/score.model';
+import { EInputToggleColor } from '../../../../shared/components/forms/input-toggle/input-toggle.component';
 import { EPlaceholderStatus } from '../../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { AltoRoutes } from '../../../../shared/constants/routes';
 import { PillOption, SelectOption } from '../../../../shared/models/select-option.model';
 import { ScoresRestService } from '../../../../shared/services/scores-rest.service';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
-import { ETab } from '../../../../../core/resolvers/edit-program.resolver';
-import { PluralPipe } from '../../../../../core/utils/i18n/plural.pipe';
-import { EInputToggleColor } from '../../../../shared/components/forms/input-toggle/input-toggle.component';
 
 interface IProgramCard {
   program: Program;
@@ -47,6 +47,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
   ETab = ETab;
   EInputToggleColor = EInputToggleColor;
   pluralPipe = new PluralPipe();
+  EProgramType = EProgramType;
 
   @Input() company!: Company;
 
@@ -82,7 +83,6 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
   programTypeControl = new FormControl<SelectOption>(this.programTypeOptions[0], { nonNullable: true });
 
   dataStatus = EPlaceholderStatus.LOADING;
-
   isCreateProgramBtnOpen = false;
 
   private readonly programCardListComponent = new Subscription();
@@ -159,10 +159,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
 
           this.dataStatus =
             stats.length === 0
-              ? this.teamsControls.value.length ||
-                this.searchControl.value ||
-                this.scoreControl.value ||
-                this.programTypeControl.value.value !== EProgramType.All
+              ? this.teamsControls.value.length || this.searchControl.value || this.scoreControl.value
                 ? EPlaceholderStatus.NO_RESULT
                 : EPlaceholderStatus.NO_DATA
               : EPlaceholderStatus.GOOD;
