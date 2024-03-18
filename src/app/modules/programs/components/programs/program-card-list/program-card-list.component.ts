@@ -159,10 +159,7 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
 
           this.dataStatus =
             stats.length === 0
-              ? this.teamsControls.value.length ||
-                this.searchControl.value ||
-                this.scoreControl.value ||
-                this.programTypeControl.value.value !== EProgramType.All
+              ? this.teamsControls.value.length || this.searchControl.value || this.scoreControl.value
                 ? EPlaceholderStatus.NO_RESULT
                 : EPlaceholderStatus.NO_DATA
               : EPlaceholderStatus.GOOD;
