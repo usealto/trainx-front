@@ -53,6 +53,8 @@ import { ProgressionPillArrowPipe } from './helpers/progression-pill-arrow.pipe'
 import { ProgressionPillPipe } from './helpers/progression-pill.pipe';
 import { TeamColorPipe } from './helpers/team-color.pipe';
 import { InputButtonGroupComponent } from './components/forms/input-button-group/input-button-group.component';
+import { LoadSpinnerComponent } from './components/load-spinner/load-spinner.component';
+import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 @NgModule({
   declarations: [
     ProgressionPillPipe,
@@ -90,6 +92,8 @@ import { InputButtonGroupComponent } from './components/forms/input-button-group
     InputToggleComponent,
     InputSingleSelectComponent,
     InputRangeComponent,
+    LoadSpinnerComponent,
+    ConfirmModalComponent,
   ],
   imports: [
     CommonModule,
@@ -159,6 +163,8 @@ import { InputButtonGroupComponent } from './components/forms/input-button-group
     InputToggleComponent,
     InputSingleSelectComponent,
     InputRangeComponent,
+    LoadSpinnerComponent,
+    ConfirmModalComponent,
   ],
   providers: [NgbActiveModal],
 })
