@@ -22,6 +22,7 @@ import {
   of,
   startWith,
   switchMap,
+  takeWhile,
   tap,
 } from 'rxjs';
 import { IAppData } from '../../../../core/resolvers';
@@ -47,6 +48,9 @@ import { ValidationService } from '../../../shared/services/validation.service';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../create-questions/question-form.component';
+import { ELoadingStatus } from '../../../shared/components/load-spinner/load-spinner.component';
+import { ConfirmationModalComponent } from '../../../settings/components/confirmation-modal/confirmation-modal.component';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 interface IUserStatsDisplay {
   user: {
@@ -76,6 +80,7 @@ export class EditProgramsComponent implements OnInit {
   EmojiName = EmojiName;
   ETab = ETab;
   EPlaceholderStatus = EPlaceholderStatus;
+  ELoadingStatus = ELoadingStatus;
 
   company!: Company;
   program?: Program;
@@ -130,7 +135,7 @@ export class EditProgramsComponent implements OnInit {
   tagOptions: PillOption[] = [];
   tagControls: FormControl<FormControl<PillOption>[]> = new FormControl([], { nonNullable: true });
 
-  //Summary tab
+  // Summary and results tab
   programStat?: ProgramStatsDtoApi;
   userStatsPageControl = new FormControl(1, { nonNullable: true });
   userStatsPageSize = 5;
@@ -142,8 +147,8 @@ export class EditProgramsComponent implements OnInit {
   });
 
   userStatsSearchControl = new FormControl<string | null>(null);
-
   userStatsDataStatus = EPlaceholderStatus.LOADING;
+  launchProgramButtonStatus = ELoadingStatus.DEFAULT;
 
   private readonly editProgramComponentSubscription = new Subscription();
 
@@ -526,11 +531,42 @@ export class EditProgramsComponent implements OnInit {
   }
 
   launchAcceleratedProgram(): void {
-    if (this.program) {
+    if (this.program && this.launchProgramButtonStatus === ELoadingStatus.DEFAULT) {
+      this.launchProgramButtonStatus = ELoadingStatus.LOADING;
       const hasAlreadyStarted = this.program.hasAlreadyStarted;
-      this.triggersService
-        .launchAcceleratedProgram({ acceleratedProgramId: this.program.id, companyId: this.company.id })
+
+      const modalRef = this.modalService.open(ConfirmModalComponent, { centered: true, size: 'md' });
+      const componentInstance = modalRef.componentInstance as ConfirmModalComponent;
+      componentInstance.data = {
+        title: hasAlreadyStarted
+          ? I18ns.programs.forms.step3.members.reminderDescriptionTitle
+          : I18ns.programs.forms.step3.members.launchDescriptionTitle,
+        subtitle: hasAlreadyStarted
+          ? I18ns.programs.forms.step3.members.reminderDescription
+          : I18ns.programs.forms.step3.members.launchDescription,
+        confirmText: hasAlreadyStarted
+          ? I18ns.programs.forms.step3.members.sendReminder
+          : I18ns.programs.forms.step3.members.launchProgram,
+        cancelText: I18ns.shared.cancel,
+        icon: 'bi-send',
+      };
+
+      const launchSubscription = modalRef.closed
         .pipe(
+          filter((confirmed) => {
+            if (!confirmed) {
+              launchSubscription.unsubscribe();
+              this.launchProgramButtonStatus = ELoadingStatus.DEFAULT;
+              return false;
+            }
+            return confirmed;
+          }),
+          switchMap(() => {
+            return this.triggersService.launchAcceleratedProgram({
+              acceleratedProgramId: (this.program as Program).id,
+              companyId: this.company.id,
+            });
+          }),
           switchMap(() => {
             this.store.dispatch(launchAcceleratedProgram({ programId: this.program?.id as string }));
             return this.store.select(FromRoot.selectCompany);
@@ -547,10 +583,25 @@ export class EditProgramsComponent implements OnInit {
           error: () => {
             this.toastService.show({
               type: 'danger',
-              text: I18ns.programs.forms.step3.members.reminderErrorToast,
+              text: hasAlreadyStarted
+                ? I18ns.programs.forms.step3.members.reminderErrorToast
+                : I18ns.programs.forms.step3.members.launchErrorToast,
             });
+
+            setTimeout(() => {
+              this.launchProgramButtonStatus = ELoadingStatus.ERROR;
+              setTimeout(() => {
+                this.launchProgramButtonStatus = ELoadingStatus.DEFAULT;
+              }, 3000);
+            }, 500); // animation delay
           },
           complete: () => {
+            setTimeout(() => {
+              this.launchProgramButtonStatus = ELoadingStatus.SUCCESS;
+              setTimeout(() => {
+                this.launchProgramButtonStatus = ELoadingStatus.DEFAULT;
+              }, 3000);
+            }, 500); // animation delay
             this.toastService.show({
               type: 'success',
               text: hasAlreadyStarted
@@ -561,6 +612,7 @@ export class EditProgramsComponent implements OnInit {
         });
     }
   }
+
   deleteProgram(): void {
     const modalRef = this.modalService.open(DeleteModalComponent, {
       centered: true,
