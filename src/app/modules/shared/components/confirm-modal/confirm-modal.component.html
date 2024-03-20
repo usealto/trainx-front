@@ -6,14 +6,16 @@
   <p class="mb-3 alto-grey">
     {{ data.subtitle }}
   </p>
-  <div class="row mt-6">
-    <div class="col-6">
-      <button class="btn btn-outline-secondary w-100" (click)="exit()">
+  <div class="row mt-6" [ngClass]="{
+    'justify-content-center': !data.cancelText,
+  }">
+    <div *ngIf="data.cancelText" class="col-6">
+      <button class="btn btn-outline-secondary" (click)="exit()">
         {{ data.cancelText }}
       </button>
     </div>
     <div class="col-6">
-      <button class="btn btn-danger w-100" (click)="exit(true)">
+      <button class="btn btn-danger" (click)="exit(true)">
         {{ data.confirmText }}
       </button>
     </div>

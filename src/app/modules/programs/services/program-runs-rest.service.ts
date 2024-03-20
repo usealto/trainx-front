@@ -28,14 +28,14 @@ export class ProgramRunsRestService {
   }
 
   getAllProgramRuns(req: GetProgramRunsRequestParams): Observable<ProgramRun[]> {
-    return this.programRunApi.getProgramRuns(req).pipe(
+    return this.programRunApi.getProgramRuns({ ...req, itemsPerPage: 1000 }).pipe(
       switchMap(({ data, meta }) => {
         const reqs: Observable<ProgramRunDtoApi[]>[] = [of(data ? data : [])];
         let totalPages = meta.totalPage ?? 1;
 
         for (let i = 2; i <= totalPages; i++) {
           reqs.push(
-            this.programRunApi.getProgramRuns({ page: i, itemsPerPage: 300, ...req }).pipe(
+            this.programRunApi.getProgramRuns({ page: i, itemsPerPage: 1000, ...req }).pipe(
               tap(({ meta }) => {
                 if (meta.totalPage !== totalPages) {
                   totalPages = meta.totalPage;

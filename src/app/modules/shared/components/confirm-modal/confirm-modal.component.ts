@@ -5,7 +5,7 @@ export interface IConfirmModalData {
   title: string;
   subtitle: string;
   confirmText: string;
-  cancelText: string;
+  cancelText?: string;
   icon?: string;
 }
 

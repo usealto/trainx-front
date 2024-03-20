@@ -22,7 +22,6 @@ import {
   of,
   startWith,
   switchMap,
-  takeWhile,
   tap,
 } from 'rxjs';
 import { IAppData } from '../../../../core/resolvers';
@@ -39,7 +38,9 @@ import { Company } from '../../../../models/company.model';
 import { Program } from '../../../../models/program.model';
 import { EScoreDuration } from '../../../../models/score.model';
 import { TriggersService } from '../../../settings/services/triggers.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
+import { ELoadingStatus } from '../../../shared/components/load-spinner/load-spinner.component';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { ITabOption } from '../../../shared/components/tabs/tabs.component';
 import { PillOption, SelectOption } from '../../../shared/models/select-option.model';
@@ -48,9 +49,6 @@ import { ValidationService } from '../../../shared/services/validation.service';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../create-questions/question-form.component';
-import { ELoadingStatus } from '../../../shared/components/load-spinner/load-spinner.component';
-import { ConfirmationModalComponent } from '../../../settings/components/confirmation-modal/confirmation-modal.component';
-import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 interface IUserStatsDisplay {
   user: {
@@ -408,7 +406,6 @@ export class EditProgramsComponent implements OnInit {
               })
               .flat()
               .sort((a, b) => b.answeredQuestionsCount - a.answeredQuestionsCount)
-              .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
               .slice((page - 1) * this.userStatsPageSize, page * this.userStatsPageSize);
 
             this.userStatsDataStatus =
@@ -532,27 +529,51 @@ export class EditProgramsComponent implements OnInit {
 
   launchAcceleratedProgram(): void {
     if (this.program && this.launchProgramButtonStatus === ELoadingStatus.DEFAULT) {
-      this.launchProgramButtonStatus = ELoadingStatus.LOADING;
-      const hasAlreadyStarted = this.program.hasAlreadyStarted;
+      const hasAlreadyStarted = (this.program as Program).hasAlreadyStarted;
 
-      const modalRef = this.modalService.open(ConfirmModalComponent, { centered: true, size: 'md' });
-      const componentInstance = modalRef.componentInstance as ConfirmModalComponent;
-      componentInstance.data = {
-        title: hasAlreadyStarted
-          ? I18ns.programs.forms.step3.members.reminderDescriptionTitle
-          : I18ns.programs.forms.step3.members.launchDescriptionTitle,
-        subtitle: hasAlreadyStarted
-          ? I18ns.programs.forms.step3.members.reminderDescription
-          : I18ns.programs.forms.step3.members.launchDescription,
-        confirmText: hasAlreadyStarted
-          ? I18ns.programs.forms.step3.members.sendReminder
-          : I18ns.programs.forms.step3.members.launchProgram,
-        cancelText: I18ns.shared.cancel,
-        icon: 'bi-send',
-      };
-
-      const launchSubscription = modalRef.closed
+      const launchSubscription = this.questionsRestService
+        .getProgramQuestionsCount(this.program.id)
         .pipe(
+          filter((count) => {
+            if (count === 0) {
+              const cannotLaunchModal = this.modalService.open(ConfirmModalComponent, {
+                centered: true,
+                size: 'md',
+              });
+              const componentInstance = cannotLaunchModal.componentInstance as ConfirmModalComponent;
+              componentInstance.data = {
+                title: I18ns.programs.forms.step3.members.cannotLaunchTitle,
+                subtitle: I18ns.programs.forms.step3.members.cannotLaunch,
+                confirmText: I18ns.shared.confirm,
+                icon: 'bi-send',
+              };
+
+              launchSubscription.unsubscribe();
+              return false;
+            }
+            return true;
+          }),
+          switchMap(() => {
+            this.launchProgramButtonStatus = ELoadingStatus.LOADING;
+
+            const modalRef = this.modalService.open(ConfirmModalComponent, { centered: true, size: 'md' });
+            const componentInstance = modalRef.componentInstance as ConfirmModalComponent;
+            componentInstance.data = {
+              title: hasAlreadyStarted
+                ? I18ns.programs.forms.step3.members.reminderDescriptionTitle
+                : I18ns.programs.forms.step3.members.launchDescriptionTitle,
+              subtitle: hasAlreadyStarted
+                ? I18ns.programs.forms.step3.members.reminderDescription
+                : I18ns.programs.forms.step3.members.launchDescription,
+              confirmText: hasAlreadyStarted
+                ? I18ns.programs.forms.step3.members.sendReminder
+                : I18ns.shared.confirm,
+              cancelText: I18ns.shared.cancel,
+              icon: 'bi-send',
+            };
+
+            return modalRef.closed;
+          }),
           filter((confirmed) => {
             if (!confirmed) {
               launchSubscription.unsubscribe();

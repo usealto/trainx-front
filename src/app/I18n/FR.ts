@@ -4,6 +4,7 @@ export const FR = {
     edit: 'Éditer',
     save: 'Enregistrer',
     submit: 'Valider',
+    confirm: 'Confirmer',
     next: 'Suivant',
     previous: 'Précédent',
     cancel: 'Annuler',
@@ -376,6 +377,10 @@ export const FR = {
           reminderDescription:
             `Les équipes assignées recevront une nouvelle notification pour réaliser le programme. ` +
             `Les participants ayant déjà terminé le programme ne recevront pas de notification. `,
+          cannotLaunchTitle: 'Erreur lors du lancement du programme',
+          cannotLaunch:
+            'Vous ne pouvez pas lancer un programme sans question. ' +
+            'Pour associer des questions à votre programme accéléré, veuillez vous rendre sur l’onglet “Questions”.',
           launchProgram: 'Lancer le programme',
           sendReminder: 'Envoyer une relance',
           launchSuccess: 'Le programme a bien été lancé',
