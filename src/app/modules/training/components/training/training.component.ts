@@ -75,7 +75,6 @@ export class TrainingComponent implements OnInit {
     private readonly offCanvasService: NgbOffcanvas,
     private readonly usersRestService: UsersRestService,
     private readonly guessRestService: GuessesRestService,
-    private readonly programsRestService: ProgramsRestService,
     private readonly programRunsRestService: ProgramRunsRestService,
     private readonly questionsSubmittedRestService: QuestionsSubmittedRestService,
     private readonly route: ActivatedRoute,
@@ -106,9 +105,11 @@ export class TrainingComponent implements OnInit {
             createdBy: this.user.id,
           }),
         ),
-        switchMap(({ data }) => {
-          if (data && data?.length > 0 && !data[0].finishedAt) {
-            return of(data[0]);
+        switchMap(({ data = [] }) => {
+          const unfinishedProgramRun = data.find((pr) => !pr.finishedAt);
+
+          if (unfinishedProgramRun) {
+            return of(unfinishedProgramRun);
           } else {
             return this.programRunsRestService.create({ programId: this.programId }).pipe(map((a) => a.data));
           }

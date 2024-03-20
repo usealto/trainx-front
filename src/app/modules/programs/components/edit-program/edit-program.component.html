@@ -512,8 +512,23 @@
         {{ I18ns.shared.previous }}
       </button>
 
-      <button *ngIf="isAccelerated" class="btn launch-btn" (click)="launchAcceleratedProgram()">
-        <i class="bi bi-send"></i><span>
+      <button *ngIf="isAccelerated"
+      class="btn launch-btn async-button"
+      [ngClass]="{
+        'loading': launchProgramButtonStatus === ELoadingStatus.LOADING,
+        'error': launchProgramButtonStatus === ELoadingStatus.ERROR,
+        'success': launchProgramButtonStatus === ELoadingStatus.SUCCESS,
+      }"
+      (click)="launchAcceleratedProgram()">
+      <div class="button-icon">
+        <ng-container *ngIf="launchProgramButtonStatus !== ELoadingStatus.DEFAULT; else buttonIcon">
+          <alto-load-spinner [status]="launchProgramButtonStatus"></alto-load-spinner>
+        </ng-container>
+        <ng-template #buttonIcon>
+          <i class="bi bi-send"></i>
+        </ng-template>
+      </div>
+        <span>
           {{ program?.hasAlreadyStarted ? I18ns.programs.forms.step3.members.sendReminder : I18ns.programs.forms.step3.members.launchProgram }}
         </span>
       </button>

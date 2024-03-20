@@ -144,8 +144,36 @@ form {
     }
   }
 }
-.launch-btn {
-  background-color: var(--orange-600);
 
+.launch-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+
+  background-color: var(--orange-600);
   color: white;
+
+  .button-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+  }
+
+  &.loading {
+    background-color: var(--gray-400);
+  }
+
+  &.error {
+    background-color: var(--bs-danger);
+    transition: all .5s ease;
+  }
+
+  &.success {
+    background-color: var(--bs-success);
+    transition: all .5s ease;
+  }
 }

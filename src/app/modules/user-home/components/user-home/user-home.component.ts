@@ -67,7 +67,7 @@ export class UserHomeComponent implements OnInit, OnDestroy {
     this.userHomeComponentSubscription.add(
       combineLatest([
         this.programRunsRestService.getAllProgramRuns({
-          userId: this.user.id,
+          createdBy: this.user.id,
           programIds: this.programs.map(({ id }) => id).join(','),
         }),
         this.guessesRestService.getPaginatedGuesses({
@@ -112,7 +112,7 @@ export class UserHomeComponent implements OnInit, OnDestroy {
             return combineLatest([
               this.scoreRestService.getAllUsersStats(duration),
               this.scoreRestService.getAllUsersStats(duration, true),
-            ])
+            ]);
           }),
         )
         .subscribe({
@@ -123,7 +123,7 @@ export class UserHomeComponent implements OnInit, OnDestroy {
             );
 
             this.leaderboardUsers = filteredUsersStats
-              .filter(({score}) => typeof score === 'number')
+              .filter(({ score }) => typeof score === 'number')
               .map((scoredUser) => {
                 const user = this.users.find((user) => user.id === scoredUser.id);
                 const previousScoredUser = filteredPreviousScoredUsers.find(
@@ -138,7 +138,7 @@ export class UserHomeComponent implements OnInit, OnDestroy {
                   score: scoredUser.score as number,
                   progression: progression,
                 };
-              })
+              });
 
             this.leaderboardDataStatus =
               this.leaderboardUsers.length > 0 ? EPlaceholderStatus.GOOD : EPlaceholderStatus.NO_DATA;

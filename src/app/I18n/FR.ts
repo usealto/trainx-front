@@ -4,6 +4,7 @@ export const FR = {
     edit: 'Éditer',
     save: 'Enregistrer',
     submit: 'Valider',
+    confirm: 'Confirmer',
     next: 'Suivant',
     previous: 'Précédent',
     cancel: 'Annuler',
@@ -367,9 +368,23 @@ export const FR = {
           title: 'Participants : {{}}',
           subtitle: 'Retrouvez les participants dont le programme n’est pas terminé.',
           teamFilter: 'Équipes',
+          launchDescriptionTitle: 'Vous êtes sur le point de lancer un programme accéléré.',
+          launchDescription:
+            `Les équipes assignées recevront une notification pour réaliser le programme accéléré. ` +
+            `Une fois lancé, vous ne pourrez plus associer de nouvelles questions, ni en supprimer. ` +
+            `Vous pourrez toujours assigner de nouvelles équipes pour qu'elles puissent elles aussi les compléter.`,
+          reminderDescriptionTitle: 'Vous êtes sur le point d’envoyer une relance aux participants.',
+          reminderDescription:
+            `Les équipes assignées recevront une nouvelle notification pour réaliser le programme. ` +
+            `Les participants ayant déjà terminé le programme ne recevront pas de notification. `,
+          cannotLaunchTitle: 'Erreur lors du lancement du programme',
+          cannotLaunch:
+            'Vous ne pouvez pas lancer un programme sans question. ' +
+            'Pour associer des questions à votre programme accéléré, veuillez vous rendre sur l’onglet “Questions”.',
           launchProgram: 'Lancer le programme',
           sendReminder: 'Envoyer une relance',
           launchSuccess: 'Le programme a bien été lancé',
+          launchErrorToast: 'Une erreur est survenue lors du lancement du programme',
           reminderToast: 'Un notification de rappel a été envoyé aux participants sur leurs connecteurs.',
           reminderErrorToast: "Une erreur est survenue lors de l'envoi du rappel.",
           table: {

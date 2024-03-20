@@ -38,7 +38,9 @@ import { Company } from '../../../../models/company.model';
 import { Program } from '../../../../models/program.model';
 import { EScoreDuration } from '../../../../models/score.model';
 import { TriggersService } from '../../../settings/services/triggers.service';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 import { DeleteModalComponent } from '../../../shared/components/delete-modal/delete-modal.component';
+import { ELoadingStatus } from '../../../shared/components/load-spinner/load-spinner.component';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
 import { ITabOption } from '../../../shared/components/tabs/tabs.component';
 import { PillOption, SelectOption } from '../../../shared/models/select-option.model';
@@ -76,6 +78,7 @@ export class EditProgramsComponent implements OnInit {
   EmojiName = EmojiName;
   ETab = ETab;
   EPlaceholderStatus = EPlaceholderStatus;
+  ELoadingStatus = ELoadingStatus;
 
   company!: Company;
   program?: Program;
@@ -130,7 +133,7 @@ export class EditProgramsComponent implements OnInit {
   tagOptions: PillOption[] = [];
   tagControls: FormControl<FormControl<PillOption>[]> = new FormControl([], { nonNullable: true });
 
-  //Summary tab
+  // Summary and results tab
   programStat?: ProgramStatsDtoApi;
   userStatsPageControl = new FormControl(1, { nonNullable: true });
   userStatsPageSize = 5;
@@ -142,8 +145,8 @@ export class EditProgramsComponent implements OnInit {
   });
 
   userStatsSearchControl = new FormControl<string | null>(null);
-
   userStatsDataStatus = EPlaceholderStatus.LOADING;
+  launchProgramButtonStatus = ELoadingStatus.DEFAULT;
 
   private readonly editProgramComponentSubscription = new Subscription();
 
@@ -403,7 +406,6 @@ export class EditProgramsComponent implements OnInit {
               })
               .flat()
               .sort((a, b) => b.answeredQuestionsCount - a.answeredQuestionsCount)
-              .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
               .slice((page - 1) * this.userStatsPageSize, page * this.userStatsPageSize);
 
             this.userStatsDataStatus =
@@ -526,11 +528,66 @@ export class EditProgramsComponent implements OnInit {
   }
 
   launchAcceleratedProgram(): void {
-    if (this.program) {
-      const hasAlreadyStarted = this.program.hasAlreadyStarted;
-      this.triggersService
-        .launchAcceleratedProgram({ acceleratedProgramId: this.program.id, companyId: this.company.id })
+    if (this.program && this.launchProgramButtonStatus === ELoadingStatus.DEFAULT) {
+      const hasAlreadyStarted = (this.program as Program).hasAlreadyStarted;
+
+      const launchSubscription = this.questionsRestService
+        .getProgramQuestionsCount(this.program.id)
         .pipe(
+          filter((count) => {
+            if (count === 0) {
+              const cannotLaunchModal = this.modalService.open(ConfirmModalComponent, {
+                centered: true,
+                size: 'md',
+              });
+              const componentInstance = cannotLaunchModal.componentInstance as ConfirmModalComponent;
+              componentInstance.data = {
+                title: I18ns.programs.forms.step3.members.cannotLaunchTitle,
+                subtitle: I18ns.programs.forms.step3.members.cannotLaunch,
+                confirmText: I18ns.shared.confirm,
+                icon: 'bi-send',
+              };
+
+              launchSubscription.unsubscribe();
+              return false;
+            }
+            return true;
+          }),
+          switchMap(() => {
+            this.launchProgramButtonStatus = ELoadingStatus.LOADING;
+
+            const modalRef = this.modalService.open(ConfirmModalComponent, { centered: true, size: 'md' });
+            const componentInstance = modalRef.componentInstance as ConfirmModalComponent;
+            componentInstance.data = {
+              title: hasAlreadyStarted
+                ? I18ns.programs.forms.step3.members.reminderDescriptionTitle
+                : I18ns.programs.forms.step3.members.launchDescriptionTitle,
+              subtitle: hasAlreadyStarted
+                ? I18ns.programs.forms.step3.members.reminderDescription
+                : I18ns.programs.forms.step3.members.launchDescription,
+              confirmText: hasAlreadyStarted
+                ? I18ns.programs.forms.step3.members.sendReminder
+                : I18ns.shared.confirm,
+              cancelText: I18ns.shared.cancel,
+              icon: 'bi-send',
+            };
+
+            return modalRef.closed;
+          }),
+          filter((confirmed) => {
+            if (!confirmed) {
+              launchSubscription.unsubscribe();
+              this.launchProgramButtonStatus = ELoadingStatus.DEFAULT;
+              return false;
+            }
+            return confirmed;
+          }),
+          switchMap(() => {
+            return this.triggersService.launchAcceleratedProgram({
+              acceleratedProgramId: (this.program as Program).id,
+              companyId: this.company.id,
+            });
+          }),
           switchMap(() => {
             this.store.dispatch(launchAcceleratedProgram({ programId: this.program?.id as string }));
             return this.store.select(FromRoot.selectCompany);
@@ -547,10 +604,25 @@ export class EditProgramsComponent implements OnInit {
           error: () => {
             this.toastService.show({
               type: 'danger',
-              text: I18ns.programs.forms.step3.members.reminderErrorToast,
+              text: hasAlreadyStarted
+                ? I18ns.programs.forms.step3.members.reminderErrorToast
+                : I18ns.programs.forms.step3.members.launchErrorToast,
             });
+
+            setTimeout(() => {
+              this.launchProgramButtonStatus = ELoadingStatus.ERROR;
+              setTimeout(() => {
+                this.launchProgramButtonStatus = ELoadingStatus.DEFAULT;
+              }, 3000);
+            }, 500); // animation delay
           },
           complete: () => {
+            setTimeout(() => {
+              this.launchProgramButtonStatus = ELoadingStatus.SUCCESS;
+              setTimeout(() => {
+                this.launchProgramButtonStatus = ELoadingStatus.DEFAULT;
+              }, 3000);
+            }, 500); // animation delay
             this.toastService.show({
               type: 'success',
               text: hasAlreadyStarted
@@ -561,6 +633,7 @@ export class EditProgramsComponent implements OnInit {
         });
     }
   }
+
   deleteProgram(): void {
     const modalRef = this.modalService.open(DeleteModalComponent, {
       centered: true,

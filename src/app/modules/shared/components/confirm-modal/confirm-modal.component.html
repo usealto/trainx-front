@@ -1,0 +1,23 @@
+<div class="modal-body text-center p-5">
+  <i *ngIf="data.icon" class="alto-badge-big alto-badge-red mt-3 mb-4 bi fs-4" [class]="data.icon"></i>
+  <h2 class="fw-bold mb-4">
+    {{ data.title }}
+  </h2>
+  <p class="mb-3 alto-grey">
+    {{ data.subtitle }}
+  </p>
+  <div class="row mt-6" [ngClass]="{
+    'justify-content-center': !data.cancelText,
+  }">
+    <div *ngIf="data.cancelText" class="col-6">
+      <button class="btn btn-outline-secondary" (click)="exit()">
+        {{ data.cancelText }}
+      </button>
+    </div>
+    <div class="col-6">
+      <button class="btn btn-danger" (click)="exit(true)">
+        {{ data.confirmText }}
+      </button>
+    </div>
+  </div>
+</div>
