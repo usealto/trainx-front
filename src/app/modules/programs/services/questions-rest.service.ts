@@ -29,6 +29,10 @@ export class QuestionsRestService {
     return this.questionApi.getQuestions(par).pipe();
   }
 
+  getProgramQuestionsCount(programId: string) {
+    return this.getQuestionsPaginated({ programIds: programId }).pipe(map(({ meta }) => meta.totalItems));
+  }
+
   createQuestion(createQuestionDtoApi: CreateQuestionDtoApi) {
     return this.questionApi.createQuestion({ createQuestionDtoApi }).pipe(map((d) => d.data));
   }
