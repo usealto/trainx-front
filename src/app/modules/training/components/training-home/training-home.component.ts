@@ -127,7 +127,6 @@ export class TrainingHomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly programRunsRestService: ProgramRunsRestService,
-    private readonly scoresService: ScoresService,
     private readonly router: Router,
     private readonly resolversService: ResolversService,
     private readonly activatedRoute: ActivatedRoute,

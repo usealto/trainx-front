@@ -125,7 +125,7 @@ export class UserHomeStatisticsComponent implements OnInit, OnDestroy {
                   duration,
                   true,
                 ),
-                this.programRunsRestService.getAllProgramRuns({ userId: this.user.id }),
+                this.programRunsRestService.getAllProgramRuns({ createdBy: this.user.id }),
               ]),
             ]);
           }),
