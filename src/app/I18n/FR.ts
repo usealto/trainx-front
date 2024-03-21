@@ -843,6 +843,7 @@ export const FR = {
         name: 'Nom',
         team: 'Équipe',
         globalScore: 'Niveau global (30 derniers jours)',
+        noTeam: 'Aucune équipe',
         noScore: 'Aucune réponse',
         questionsPerMonth: 'Questions (30 derniers jours)',
         noData: 'Aucune donnée',
