@@ -187,9 +187,14 @@
             <alto-profile-card data-cy="profileCard" [user]="userInfos.user"></alto-profile-card>
           </td>
           <td>
-            <span *ngIf="userInfos.user.teamId && teamsById.has(userInfos.user.teamId)" data-cy="memberTeamName" class="alto-badge" [style]="userInfos.user.teamId | teamColor">
-              {{ teamsById.get(userInfos.user.teamId)?.name }}
-            </span>
+            <ng-container *ngIf="userInfos.user.teamId && teamsById.has(userInfos.user.teamId); else noTeam">
+              <span data-cy="memberTeamName" class="alto-badge" [style]="userInfos.user.teamId | teamColor">
+                {{ teamsById.get(userInfos.user.teamId)?.name }}
+              </span>
+            </ng-container>
+            <ng-template #noTeam>
+              <span>{{ I18ns.leadTeam.members.table.noTeam }}</span>
+            </ng-template>
           </td>
           <td class="text-center">
             <ng-container *ngIf="(userInfos.stats.totalGuessesCount || 0) > 0; else noScore">
