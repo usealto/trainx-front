@@ -86,8 +86,7 @@
     <h2>{{ I18ns.training.donePrograms.title }}</h2>
     <p class="mt-2 mb-4 alto-grey">{{ I18ns.training.donePrograms.subtitle }}</p>
 
-    <alto-placeholder-manager>
-
+    <alto-placeholder-manager [status]="toImproveDataStatus">
       <alto-training-cards-list [pageSize]="toImprovePageSize" [data]="toImproveTrainingCards">
       </alto-training-cards-list>
 
@@ -95,17 +94,17 @@
       [pageControl]="toImprovePageControl"
       [itemsCount]="toImproveTotalItems"
       [itemsPerPage]="toImprovePageSize">
-    </alto-pagination>
+      </alto-pagination>
 
-    <div noData class="panel text-center p-6 mb-4">
-      <i class="alto-badge-big fs-5 bi bi-file-text"></i>
-      <h2 class="my-4">{{ I18ns.training.donePrograms.noData }}</h2>
-      <p class="alto-grey mb-4">{{ I18ns.training.donePrograms.noDataSubtitle }}</p>
-      <button class="btn btn-outline-secondary" (click)="backToTrainings()">
-        {{ I18ns.training.donePrograms.backButton }}
-      </button>
-    </div>
-  </alto-placeholder-manager>
+      <div noData class="panel text-center p-6 mb-4">
+        <i class="alto-badge-big fs-5 bi bi-file-text"></i>
+        <h2 class="my-4">{{ I18ns.training.donePrograms.noData }}</h2>
+        <p class="alto-grey mb-4">{{ I18ns.training.donePrograms.noDataSubtitle }}</p>
+        <button class="btn btn-outline-secondary" (click)="backToTrainings()">
+          {{ I18ns.training.donePrograms.backButton }}
+        </button>
+      </div>
+    </alto-placeholder-manager>
 
     <hr />
 
