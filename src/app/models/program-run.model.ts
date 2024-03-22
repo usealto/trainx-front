@@ -55,7 +55,7 @@ export class ProgramRun implements IProgramRun {
       authorId: dto.author?.id,
       companyId: dto.companyId,
       updatedAt: dto.updatedAt,
-      lastLaunchDate: dto.lastLaunchDate ?? dto.createdAt,
+      lastLaunchDate: dto.lastLaunchDate,
     });
   }
 }
