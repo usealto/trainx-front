@@ -9,12 +9,12 @@ import { ProgramRunsRestService } from 'src/app/modules/programs/services/progra
 import { ITabOption } from 'src/app/modules/shared/components/tabs/tabs.component';
 import { AltoRoutes } from 'src/app/modules/shared/constants/routes';
 import { PillOption, SelectOption } from 'src/app/modules/shared/models/select-option.model';
-import { ScoresService } from 'src/app/modules/shared/services/scores.service';
 import { IAppData } from '../../../../core/resolvers';
 import { Program } from '../../../../models/program.model';
 import { EScoreFilter, Score } from '../../../../models/score.model';
-import { ITrainingCardData } from '../../../shared/components/training-card/training-card.component';
 import { EPlaceholderStatus } from '../../../shared/components/placeholder-manager/placeholder-manager.component';
+import { ITrainingCardData } from '../../../shared/components/training-card/training-card.component';
+import { ProgramRun } from '../../../../models/program-run.model';
 
 enum EtrainingTabs {
   Ongoing = 'Ongoing',
@@ -142,21 +142,32 @@ export class TrainingHomeComponent implements OnInit, OnDestroy {
       .getAllProgramRuns({ createdBy: this.me.id })
       .pipe(
         tap((programRuns) => {
-          this.allTrainingCards = programRuns
-            .filter((programRun) => this.programsById.has(programRun.programId))
-            .map((programRun) => {
-              const program = this.programsById.get(programRun.programId) as Program;
-              return {
-                title: program.name,
-                score: (programRun.goodGuessesCount / programRun.questionsCount) * 100,
-                updatedAt: programRun.updatedAt,
-                programRunId: programRun.id,
-                programId: programRun.programId,
-                expectation: program.expectation ?? 0,
-                inProgress: !programRun.finishedAt,
-                duration: programRun.questionsCount * 30,
-              };
-            });
+          const latestProgramRunByProgramId = new Map<string, ProgramRun>();
+
+          programRuns.forEach((programRun) => {
+            if (!latestProgramRunByProgramId.has(programRun.programId)) {
+              latestProgramRunByProgramId.set(programRun.programId, programRun);
+            } else if (
+              programRun.lastLaunchDate.getTime() >
+              (latestProgramRunByProgramId.get(programRun.programId) as ProgramRun).lastLaunchDate.getTime()
+            ) {
+              latestProgramRunByProgramId.set(programRun.programId, programRun);
+            }
+          });
+
+          this.allTrainingCards = Array.from(latestProgramRunByProgramId.values()).map((programRun) => {
+            const program = this.programsById.get(programRun.programId) as Program;
+            return {
+              title: program.name,
+              score: (programRun.goodGuessesCount / programRun.questionsCount) * 100,
+              updatedAt: programRun.updatedAt,
+              programRunId: programRun.id,
+              programId: programRun.programId,
+              expectation: program.expectation ?? 0,
+              inProgress: !programRun.finishedAt,
+              duration: programRun.questionsCount * 30,
+            };
+          });
         }),
       )
       .subscribe({

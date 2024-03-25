@@ -11,6 +11,7 @@ export interface IProgramRun {
   authorId?: string;
   companyId: string;
   updatedAt?: Date;
+  lastLaunchDate: Date;
 }
 
 export class ProgramRun implements IProgramRun {
@@ -25,6 +26,7 @@ export class ProgramRun implements IProgramRun {
   companyId: string;
   updatedAt?: Date;
   duration: number;
+  lastLaunchDate: Date;
 
   constructor(data: IProgramRun) {
     this.id = data.id;
@@ -38,6 +40,7 @@ export class ProgramRun implements IProgramRun {
     this.companyId = data.companyId;
     this.updatedAt = data.updatedAt;
     this.duration = data.questionsCount * 30;
+    this.lastLaunchDate = data.lastLaunchDate;
   }
 
   static fromDto(dto: ProgramRunDtoApi): ProgramRun {
@@ -52,6 +55,7 @@ export class ProgramRun implements IProgramRun {
       authorId: dto.author?.id,
       companyId: dto.companyId,
       updatedAt: dto.updatedAt,
+      lastLaunchDate: dto.lastLaunchDate,
     });
   }
 }
