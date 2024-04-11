@@ -1,13 +1,3 @@
-:host {
-  top: 0;
-  z-index: 400;
-  background-color: #101828;
-  height: 100vh;
-  position: fixed;
-  color: #f2f4f7;
-  left: 0;
-  width: 5rem;
-}
 :host ::ng-deep {
   .menu-tooltip-class {
     .tooltip-inner {
@@ -66,85 +56,270 @@
     border-top-color: var(--gray-900);
   }
 }
-.logo {
-  width: 1.6666rem;
-  margin: 1.3333rem 0 2rem 1.6666rem;
 
-  .company-name {
-    margin-left: 0.5rem;
-    vertical-align: middle;
-    font-weight: 600;
-    font-size: 1.429rem;
+.menu-container {
+  top: 0;
+  z-index: 400;
+  background-color: #101828;
+  height: 100vh;
+  position: fixed;
+  color: #f2f4f7;
+  left: 0;
+  width: 5rem;
+
+  &.extended {
+    width: 17rem;
   }
-}
 
-.menu {
-  a.module {
+  .extended-item {
     display: flex;
-    justify-content: space-around;
-    padding: 0.67rem 0rem;
-    color: var(--gray-700);
-    font-weight: 500;
-    font-size: 1.143rem;
-    i {
-      padding: 0.3rem;
-      font-size: 1.666rem;
-      color: var(--alto-grey);
-    }
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
 
-    &:hover {
-      background-color: var(--alto-blue-second);
-      i {
-        color: var(--gray-100);
+  .logo-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      height: 70px;
+      width: 60px;
+
+      .company-name {
+        margin-left: 0.5rem;
+        margin-bottom: 0;
+        font-weight: 600;
+        font-size: 1.429rem;
       }
     }
-    &.menu-selected,
-    &:active {
-      background-color: var(--alto-blue-second);
-      i {
-        color: var(--gray-100);
+
+    .rounded-button {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      background-color: var(--gray-900);
+      border: solid 1px var(--gray-500);
+      border-radius: 50%;
+      height: 20px;
+      width: 20px;
+      cursor: pointer;
+      margin: 5px;
+
+      .i {
+        color: var(--gray-700);
+      }
+
+      &.floating {
+        position: absolute;
+        right: -25%;
       }
     }
   }
-  .bottom-block {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    .build-time {
-      color: var(--gray-900);
+
+  .menu {
+    .module {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      font-weight: 500;
+      font-size: 1.143rem;
+      cursor: pointer;
+      color: var(--gray-500);
+      height: 50px;
+
+      span {
+        color: var(--gray-500);
+      }
+
+      .module-icon {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 50px;
+        width: 60px;
+
+        i {
+          font-size: 1.666rem;
+          color: var(--gray-500);
+        }
+
+        &:hover {
+          background-color: var(--alto-blue-second);
+          i {
+            color: var(--gray-100);
+          }
+        }
+        &.menu-selected,
+        &:active {
+          background-color: var(--alto-blue-second);
+
+          i {
+            color: var(--gray-100);
+          }
+
+          span {
+            color: var(--gray-100);
+          }
+        }
+      }
+
       &:hover {
-        color: grey;
+        background-color: var(--alto-blue-second);
+        i {
+          color: var(--gray-100);
+        }
+      }
+      &.menu-selected,
+      &:active {
+        background-color: var(--alto-blue-second);
+
+        span {
+          color: var(--gray-100);
+        }
+
+        .module-icon {
+          i {
+            color: var(--gray-100);
+          }
+        }
       }
     }
-  }
 
-  hr {
-    margin: 0 1.5rem;
-  }
+    .bottom-block {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      .build-time {
+        color: var(--gray-900);
+        &:hover {
+          color: grey;
+        }
+      }
 
-  .img-badge-menu {
-    padding: 1.3333rem 0.8333rem;
-  }
+      .profile-menu-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        // transition is built from height property set in html
+        transition: all ease 0.2s;
 
-  .form-check-input {
-    margin: 0.3rem 0.3333rem 0.2083rem 0.6667rem;
-  }
+        .profile-container {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          height: 70px;
+          width: 100%;
 
-  .form-check {
-    margin-bottom: 0;
-    height: 2.167rem;
-  }
+          .profile-badge {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            height: 70px;
+          }
 
-  .logout {
-    color: var(--error-500);
-    i {
-      color: var(--error-500);
+          i {
+            padding: 1rem;
+            color: var(--gray-100);
+          }
+        }
+
+        .extended-profile-menu {
+          width: 100%;
+          margin-bottom: 1rem;
+        }
+
+        .module {
+          width: 100%;
+          height: 30px;
+
+          .module-icon {
+            height: 100%;
+          }
+
+          &.menu-selected {
+            background-color: var(--alto-blue-second);
+            span {
+              color: var(--gray-100);
+            }
+            .module-icon {
+              i {
+                color: var(--gray-100);
+              }
+            }
+          }
+
+          i {
+            font-size: 1.666rem;
+            color: var(--gray-500);
+          }
+
+          span {
+            color: var(--gray-500);
+            font-size: 1rem;
+            font-weight: 500;
+          }
+
+          .form-check {
+            margin: 0;
+          }
+
+          .form-switch {
+            display: flex;
+            justify-content: space-around;
+            width: 60px;
+            padding: 0;
+          }
+
+          .logout {
+            color: var(--error-500);
+          }
+        }
+      }
     }
-  }
-  .profile {
-    display: block;
-    margin: 1rem;
-    color: #f2f4f7;
+
+    hr {
+      margin: 0 1.5rem;
+    }
+
+    .img-badge-menu {
+      padding: 1.3333rem 0.8333rem;
+    }
+
+    .form-check-input {
+      margin: 0.3rem 0.3333rem 0.2083rem 0.6667rem;
+    }
+
+    .form-check {
+      margin-bottom: 0;
+      height: 2.167rem;
+    }
+
+    .logout {
+      color: var(--error-500);
+      i {
+        color: var(--error-500);
+      }
+    }
+    .profile {
+      display: block;
+      margin: 1rem;
+      color: #f2f4f7;
+    }
   }
 }
+

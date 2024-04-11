@@ -20,6 +20,8 @@ export class MenuComponent implements OnInit {
   AltoRoutes = AltoRoutes;
   I18ns = I18ns;
   toggleTooltip = false;
+  isExtended = false;
+  toggleProfileMenu = false;
 
   isAdmin = false;
   displayAdmin = false;
@@ -71,5 +73,13 @@ export class MenuComponent implements OnInit {
   logOut() {
     this.auth.logout({ logoutParams: { returnTo: window.location.origin } });
     return;
+  }
+
+  extendOrCollapse(): void {
+    this.isExtended = !this.isExtended;
+  }
+
+  toggleProfileContainerMenu(): void {
+    this.toggleProfileMenu = !this.toggleProfileMenu;
   }
 }
