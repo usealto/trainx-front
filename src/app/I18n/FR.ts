@@ -298,7 +298,7 @@ export const FR = {
       subtitle: "Retrouvez l'ensemble des thèmes de votre organisation.",
       createTag: 'Créer un thème',
       table: {
-        name: 'Nom du tag',
+        name: 'Nom du thème',
         score: 'Score moyen de vos équipes',
         associatedQuestions: 'Nombre de questions associées',
         questions: ' questions',
