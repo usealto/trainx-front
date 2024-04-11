@@ -20,6 +20,7 @@ export const AltoRoutes = {
   teams: 'teams',
   statTeam: 'team',
   statUser: 'user',
+  parcours: 'parcours',
 
   // USER
 

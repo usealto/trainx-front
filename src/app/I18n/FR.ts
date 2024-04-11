@@ -1,3 +1,6 @@
+import { create } from "cypress/types/lodash";
+import { sub } from "date-fns";
+
 export const FR = {
   shared: {
     smiley: '👍',
@@ -918,6 +921,22 @@ export const FR = {
         subtitle:
           'Cette équipe contient {{}} membres, êtes-vous sûr de vouloir la supprimer ? Cette action est irréversible.',
       },
+    },
+  },
+  parcours: {
+    title: 'Mes parcours d’apprentissage continu',
+    subtitle: 'Retrouvez l’ensemble des parcours assignés à vos équipes.',
+    list: {
+      title: 'Parcours de vos équipes',
+      subtitle: 'Pour assigner des parcours à vos équipes, cliquer sur “Créer”',
+      placeholder: 'Aucun parcours n’est attribué à cette équipe.',
+      createBtn: 'Créer',
+      createBtnHover: 'Créer un parcours',
+      editBtn: 'Éditer',
+      editBtnHover: 'Éditer le parcours',
+    },
+    create: {
+      title: 'Création du parcours',
     },
   },
   challenges: {

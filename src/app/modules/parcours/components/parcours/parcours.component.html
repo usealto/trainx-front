@@ -1,0 +1,27 @@
+<div class="header-panel mb-5">
+  <img [src]="Emoji.Bullseye | emoji" height="32" width="32" />
+  <div>
+    <h1>{{ I18ns.parcours.title }}</h1>
+    <p>{{ I18ns.parcours.subtitle }}</p>
+  </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+  <div>
+    <h2>
+      <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" width="16" height="16" />
+      {{ I18ns.parcours.list.title }} ({{ totalParcours }})
+    </h2>
+    <p class="mt-2 alto-grey">{{ I18ns.parcours.list.subtitle }}</p>
+  </div>
+</div>
+
+<div *ngFor="let team of teams">
+  <h3>{{ team.name }}</h3>
+  <div class="team-programs">
+    <div *ngFor="let programId of team.parcour; let isLast = last">
+      <span>{{ getProgramName(programId) }}</span>
+      <!-- <img *ngIf="!isLast" class="arrow" src="/path-to-arrow-image.png" /> -->
+    </div>
+  </div>
+</div>
