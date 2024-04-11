@@ -33,9 +33,9 @@ export const FR = {
     textNotFound: 'Aucun résultat',
     period: 'Période',
     soon: 'Bientôt',
-    tag: 'tag',
+    tag: 'thème',
     program: 'programme',
-    tags: 'tags',
+    tags: 'thèmes',
     programs: 'programmes',
     teams: 'équipes',
     assignedTeams: 'Équipes assignées',
@@ -101,7 +101,7 @@ export const FR = {
     deletedUsername: 'Utilisateur supprimé',
     noScore: 'Aucun niveau',
     noEvolution: 'Aucune évolution',
-    noTag: 'Aucun tag',
+    noTag: 'Aucun thème',
     error: 'Une erreur est survenue',
     placeholders: {
       noResultInTimeframe: {
@@ -143,7 +143,7 @@ export const FR = {
     graph: {
       period: 'Période',
       score: 'Score (%)',
-      tagFilter: 'Tags',
+      tagFilter: 'Thèmes',
       placeholder:
         'Embarquez vos équipes dans un programme pour commencer à les entraîner et à les évaluer !',
     },
@@ -153,7 +153,7 @@ export const FR = {
       chartSubtitle: 'Évolution du taux de bonnes réponses de vos équipes dans le temps.',
       tabs: {
         program: 'Programmes',
-        tag: 'Tags',
+        tag: 'Thèmes',
         team: 'Équipe',
         member: 'Membre',
       },
@@ -206,7 +206,7 @@ export const FR = {
     tabs: {
       programs: 'Programmes',
       questions: 'Questions',
-      tags: 'Tags',
+      tags: 'Thèmes',
     },
     activePrograms: {
       titleIcon: '🎯',
@@ -261,7 +261,7 @@ export const FR = {
         noDataSubtitle:
           "Votre recherche n'a donné aucun résultat, essayez une autre formulation ou d'autres filtres.",
         noQuestionSubtitle:
-          'Créez, ou importez, vos premières questions et assignez à des programmes ou des tags existants.',
+          'Créez, ou importez, vos premières questions et assignez à des programmes ou des thèmes existants.',
         createQuestionPlaceholder: 'Créer une question',
         importQuestionPlaceholder: 'Importer des questions',
       },
@@ -269,13 +269,13 @@ export const FR = {
         question: 'Intitulé',
         score: 'Score moyen',
         author: 'Ajoutée par',
-        tags: 'Tags',
+        tags: 'Thèmes',
         programs: 'Programmes',
         placeholder: 'Créez vos premières questions pour challenger vos équipes !',
       },
       filters: {
         programs: 'Programmes',
-        tags: 'Tags',
+        tags: 'Thèmes',
         contributors: 'Contributeurs',
       },
     },
@@ -294,15 +294,15 @@ export const FR = {
       },
     },
     tags: {
-      title: 'Tags',
-      subtitle: "Retrouvez l'ensemble des tags de votre organisation.",
-      createTag: 'Créer un tag',
+      title: 'Thèmes',
+      subtitle: "Retrouvez l'ensemble des thèmes de votre organisation.",
+      createTag: 'Créer un thème',
       table: {
         name: 'Nom du tag',
         score: 'Score moyen de vos équipes',
         associatedQuestions: 'Nombre de questions associées',
         questions: ' questions',
-        placeholder: 'Créez vos premiers tags pour cibler les axes d’amélioration de vos équipes !',
+        placeholder: 'Créez vos premiers thèmes pour cibler les axes d’amélioration de vos équipes !',
       },
     },
     forms: {
@@ -321,9 +321,9 @@ export const FR = {
         descriptionSubtitle: 'Ecrivez une brève description du contenu du programme',
         descriptionPlaceholder:
           "Le programme d'onboarding vise à entraîner les nouveaux arrivants avec les notions fondamentales à connaître au sein de l'entreprise.",
-        tags: 'Tags',
+        tags: 'Thèmes',
         tagsSubtitle: 'Ciblez les sujets abordés dans le programme.',
-        tagsPlaceholder: 'Rechercher dans vos tags',
+        tagsPlaceholder: 'Rechercher dans vos thèmes',
         teams: 'Équipes',
         teamsSubtitle: 'Assignez les équipes concernées par ce programme.',
         teamsPlaceholder: 'Rechercher dans vos équipes',
@@ -349,12 +349,12 @@ export const FR = {
         existing: {
           title: 'Choisir des questions à associer à ce programme :',
           subtitle:
-            'Retrouvez ici les questions associées aux tags sélectionnés dans la partie “Informations”.',
+            'Retrouvez ici les questions associées aux thèmes sélectionnés dans la partie “Informations”.',
         },
         existing2: {
           title: 'Questions pouvant être ajoutées au programme',
           subtitle:
-            'Retrouvez ici les questions associées aux tags sélectionnés dans la partie “Informations”.',
+            'Retrouvez ici les questions associées aux thèmes sélectionnés dans la partie “Informations”.',
         },
       },
       step3: {
@@ -490,28 +490,27 @@ export const FR = {
         },
       },
       perThemePerformance: {
-        title: 'Niveau de maîtrise par thématiques',
-        subtitle:
-          "Retrouvez une vue d'ensemble sur le niveau de maîtrise de vos équipes selon leurs thématiques.",
+        title: 'Niveau de maîtrise par thème',
+        subtitle: "Retrouvez une vue d'ensemble sur le niveau de maîtrise de vos équipes selon leurs thèmes.",
         spiderChart: {
-          title: 'Aperçu des thématiques',
+          title: 'Aperçu des thèmes',
           subtitle: "Évaluation du niveau moyen de l'entreprise sur les 12 derniers mois.",
           global: 'Score global',
           placeholders: {
-            noData: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
-            notEnoughTags: 'Vous devez avoir créé au moins 3 tags.',
-            noTag: 'Vous devez avoir créé des tags pour pouvoir visualiser cette donnée.',
-            lessThan3Tags: 'Vous devez sélectionner au moins 3 tags.',
-            moreThan6Tags: 'Vous devez sélectionner au maximum 6 tags.',
+            noData: 'Vous pourrez bientôt passer au peigne fin toutes les thèmes',
+            notEnoughTags: 'Vous devez avoir créé au moins 3 thèmes.',
+            noTag: 'Vous devez avoir créé des thèmes pour pouvoir visualiser cette donnée.',
+            lessThan3Tags: 'Vous devez sélectionner au moins 3 thèmes.',
+            moreThan6Tags: 'Vous devez sélectionner au maximum 6 thèmes.',
           },
         },
         control: {
-          title: 'Classement des thématiques',
-          subtitle: 'Aperçu du niveau global de maîtrise des thématiques.',
-          placeholder: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
+          title: 'Classement des thèmes',
+          subtitle: 'Aperçu du niveau global de maîtrise des thèmes.',
+          placeholder: 'Vous pourrez bientôt passer au peigne fin toutes les thèmes',
         },
         nav: {
-          tags: 'Tags',
+          tags: 'Thèmes',
           programs: 'Programmes',
         },
       },
@@ -525,8 +524,8 @@ export const FR = {
           noScore: 'Aucune réponse',
           lessMasteredPrograms: 'Programmes les moins maitrîsés',
           noPrograms: 'Aucun programme',
-          lessMasteredTags: 'Tags les moins maitrîsés',
-          noTags: 'Aucun tag',
+          lessMasteredTags: 'Thèmes les moins maitrîsés',
+          noTags: 'Aucun thème',
           scoreEvolution: 'Évolution du niveau',
           noScoreEvolution: 'Aucune évolution',
         },
@@ -566,8 +565,8 @@ export const FR = {
         answeredQuestions: 'Réponses',
         comments: 'Commentaires',
         suggestedQuestions: 'Questions suggérées',
-        leastMasteredTags: 'Tags les moins maîtrisés',
-        noTag: 'Aucun tag',
+        leastMasteredTags: 'Thèmes les moins maîtrisés',
+        noTag: 'Aucun thème',
         team: 'Équipe',
         member: 'Membre',
         noGuess: 'Aucune réponse',
@@ -637,15 +636,15 @@ export const FR = {
         subtitle: 'Retrouvez les statistiques détaillées d’engagement pour chaque membre de l’équipe.',
       },
       perThemes: {
-        title: 'Niveau de maîtrise par thématiques de l’équipe',
-        subtitle: 'Retrouvez une vue d’ensemble sur le niveau de l’équipe selon ses thématiques.',
-        chartTitle: 'Aperçu des thématiques',
+        title: 'Niveau de maîtrise par thèmes de l’équipe',
+        subtitle: 'Retrouvez une vue d’ensemble sur le niveau de l’équipe selon ses thèmes.',
+        chartTitle: 'Aperçu des thèmes',
         chartSubtitle: "Évaluation du niveau moyen de l'équipe sur les 12 derniers mois.",
-        tagFilter: 'Tags',
+        tagFilter: 'Thèmes',
         teamScore: "Score de l'équipe",
         globalScore: 'Score global',
-        leaderboardTitle: 'Classement des thématiques',
-        leaderboardSubtitle: 'Aperçu de la maîtrise des thématiques par les collaborateurs de cette équipe.',
+        leaderboardTitle: 'Classement des thèmes',
+        leaderboardSubtitle: 'Aperçu de la maîtrise des thèmes par les collaborateurs de cette équipe.',
       },
       members: {
         title: 'Membres de l’équipe',
@@ -654,7 +653,7 @@ export const FR = {
           name: 'Nom',
           globalScore: 'Niveau global',
           scoreEvolution: 'Évolution du niveau',
-          lessMasteredTags: 'Tags les moins maîtrisés',
+          lessMasteredTags: 'Thèmes les moins maîtrisés',
         },
       },
       questions: {
@@ -690,25 +689,25 @@ export const FR = {
           },
         },
         themeMastering: {
-          title: 'Niveau de maîtrise par thématiques du collaborateur',
+          title: 'Niveau de maîtrise par thèmes du collaborateur',
           subtitle:
-            'Retrouvez une vue d’ensemble sur le niveau de maîtrise de votre collaborateur par thématiques.',
+            'Retrouvez une vue d’ensemble sur le niveau de maîtrise de votre collaborateur par thèmes.',
           chartTitle: 'Évolution du niveau de maîtrise',
-          chartSubtitle: 'Évolution du niveau moyen de votre collaborateur par tag.',
-          tagFilter: 'Tags',
+          chartSubtitle: 'Évolution du niveau moyen de votre collaborateur par thème.',
+          tagFilter: 'Thèmes',
           placeholder: {
-            title: 'Vous pourrez bientôt passer au peigne fin toutes les thématiques',
+            title: 'Vous pourrez bientôt passer au peigne fin tous les thèmes',
           },
           spiderChart: {
-            title: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
-            subtitle: 'Niveau de maîtrise des thématiques de votre collaborateur par rapport à son équipe.',
+            title: 'Niveau de maîtrise des thèmes de votre collaborateur par rapport à son équipe.',
+            subtitle: 'Niveau de maîtrise des thèmes de votre collaborateur par rapport à son équipe.',
             placeholder: {
-              empty: 'Vous devez avoir créé au moins 3 tags',
-              createTag: 'Créer un tag',
+              empty: 'Vous devez avoir créé au moins 3 thèmes',
+              createTag: 'Créer un thème',
               noData: 'Les équipes sont en train de s’échauffer',
               noDataSubtitle: 'Les premiers résultats ne devraient plus tarder !',
-              lessThan3Tags: 'Vous devez sélectionner au moins 3 tags.',
-              MoreThan6Tags: 'Vous devez sélectionner au maximum 6 tags.',
+              lessThan3Tags: 'Vous devez sélectionner au moins 3 thèmes.',
+              MoreThan6Tags: 'Vous devez sélectionner au maximum 6 thèmes.',
             },
           },
         },
@@ -775,8 +774,8 @@ export const FR = {
       addBadAnswer: 'Ajouter une autre mauvaise réponse',
       programs: 'Programmes',
       programsPlaceholder: 'Sélectionner le(s) programme(s) associé(s) à la question',
-      tags: 'Tags',
-      tagsPlaceholder: 'Sélectionner les tags associés à la question',
+      tags: 'Thèmes',
+      tagsPlaceholder: 'Sélectionner les thèmes associés à la question',
       explanation: 'Brève explication',
       explanationPlaceholder:
         'Exemple: Connaître notre principal concurrent sur le marché des PMEs est primordial pour mieux convaincre les prospects en mettant les forces de notre entreprise en avant.',
@@ -788,32 +787,32 @@ export const FR = {
     },
     deleteModal: {
       title: 'Supprimer la question "{{}}"',
-      subtitle: 'Cette question est associée à {{}} programmes et {{}} tags.',
+      subtitle: 'Cette question est associée à {{}} programmes et {{}} thèmes.',
       subtitle2: ' Êtes-vous sûr de vouloir la supprimer ? Cette action est irréversible.',
     },
   },
   tags: {
     form: {
       title: {
-        create: 'Créer un tag',
-        edit: 'Modifier un tag',
+        create: 'Créer un thème',
+        edit: 'Modifier un thème',
       },
       subtitle:
-        "Indiquer le nom de votre nouveau tag ainsi que les programmes et questions auxquels vous souhaitez l'associer.",
-      tagName: 'Nom du tag',
+        "Indiquer le nom de votre nouveau thème ainsi que les programmes et questions auxquels vous souhaitez l'associer.",
+      tagName: 'Nom du thème',
       tagNamePlaceholder: 'Exemple: Règlement Général de Protection des Données (RGPD)',
       programs: 'Programmes',
       programsPlaceholder: 'Rechercher dans vos programmes',
       questions: 'Questions',
       questionsPlaceholder: 'Rechercher dans vos questions',
       description: 'Description',
-      successCreate: 'Le nouveau tag a bien été ajouté',
-      successEdit: 'Le tag a bien été modifié',
+      successCreate: 'Le nouveau thème a bien été ajouté',
+      successEdit: 'Le thème a bien été modifié',
     },
     deleteModal: {
-      title: 'Supprimer le tag "{{}}"',
+      title: 'Supprimer le thème "{{}}"',
       subtitle:
-        'Ce tag est associé à {{}} questions. Êtes-vous sûrs de vouloir le supprimer ? Cette action est irreversible.',
+        'Ce thème est associé à {{}} questions. Êtes-vous sûrs de vouloir le supprimer ? Cette action est irreversible.',
     },
   },
   leadTeam: {
