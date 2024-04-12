@@ -937,6 +937,11 @@ export const FR = {
     },
     create: {
       title: 'Création du parcours',
+      subtitle: 'Pour créer un parcours, glissez-déposez les programmes dans l’ordre souhaité.',
+    },
+    edit: {
+      title: 'Édition du parcours',
+      subtitle: 'Pour éditer un parcours, glissez-déposez les programmes dans l’ordre souhaité.',
     },
   },
   challenges: {

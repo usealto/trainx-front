@@ -2,3 +2,49 @@
   display: block;
   padding: var(--alto-page-padding);
 }
+
+.no-parcours {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px; 
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border: 1px dashed #dcdcdc;
+  border-radius: 6px;
+}
+
+.list-parcours {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px; 
+  margin-bottom: 20px;
+  border: 1px dashed #2E90FA;
+  border-radius: 6px;
+}
+
+.prog-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 12px;
+}
+
+.block-parcours {
+  display: flex;
+  background-color: #ffffff;
+  border: 1px solid #dcdcdc;
+  height: 40px;
+  width: 160px;
+  justify-content: center;
+  align-items: center;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-right: 12px;
+  border-radius: 7px;
+  span {
+    color: #2E90FA;
+    text-align: center;
+  }
+}

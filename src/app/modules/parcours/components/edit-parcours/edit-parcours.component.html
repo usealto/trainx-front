@@ -1,0 +1,24 @@
+<div class="header-panel mb-5">
+  <img [src]="Emoji.Bullseye | emoji" height="32" width="32" />
+  <div>
+    <h1>{{ I18ns.parcours.title }}</h1>
+    <p>{{ I18ns.parcours.subtitle }}</p>
+  </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+  <div *ngIf="!isEdit">
+    <h2>
+      <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" width="16" height="16" />
+      {{ I18ns.parcours.create.title }}
+    </h2>
+    <p class="mt-2 alto-grey">{{ I18ns.parcours.create.subtitle }}</p>
+  </div>
+  <div *ngIf="isEdit">
+    <h2>
+      <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" width="16" height="16" />
+      {{ I18ns.parcours.edit.title }}
+    </h2>
+    <p class="mt-2 alto-grey">{{ I18ns.parcours.edit.subtitle }}</p>
+  </div>
+</div>

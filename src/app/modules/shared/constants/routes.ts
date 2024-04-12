@@ -21,6 +21,7 @@ export const AltoRoutes = {
   statTeam: 'team',
   statUser: 'user',
   parcours: 'parcours',
+  parcoursEdit: 'e',
 
   // USER
 

@@ -9,6 +9,7 @@ import { I18ns } from '../../../../core/utils/i18n/I18n';
 import { EmojiName } from '../../../../core/utils/emoji/data';
 import { ReplaceInTranslationPipe } from '../../../../core/utils/i18n/replace-in-translation.pipe';
 import { Team } from '../../../../models/team.model';
+import { AltoRoutes } from '../../../shared/constants/routes';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { Team } from '../../../../models/team.model';
 export class ParcoursComponent implements OnInit {
   I18ns = I18ns;
   Emoji = EmojiName;
+  AltoRoutes = AltoRoutes;
 
   company: Company | null = null;
   teams: Team[] = [];
