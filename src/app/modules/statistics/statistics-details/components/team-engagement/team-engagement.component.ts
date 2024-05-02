@@ -43,7 +43,7 @@ export class TeamEngagementComponent implements OnInit, OnDestroy {
   usersById: Map<string, User> = new Map();
 
   durationOptions = Score.getTimepickerOptions();
-  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
     nonNullable: true,
   });
 

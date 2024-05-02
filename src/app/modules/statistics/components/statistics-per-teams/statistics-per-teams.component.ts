@@ -30,7 +30,7 @@ export class StatisticsPerTeamsComponent implements OnInit, OnDestroy {
   EPlaceholderStatus = EPlaceholderStatus;
 
   durationOptions = Score.getTimepickerOptions();
-  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
     nonNullable: true,
   });
   searchControl = new FormControl<string | null>(null);

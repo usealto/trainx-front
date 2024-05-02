@@ -55,7 +55,7 @@ export class StatisticsGlobalEngagementComponent implements OnInit {
   hasConnector = false;
 
   durationOptions = Score.getTimepickerOptions();
-  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
     nonNullable: true,
   });
   pageControl: FormControl<number> = new FormControl(1, { nonNullable: true });
