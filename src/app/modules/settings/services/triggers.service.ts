@@ -17,8 +17,7 @@ export class TriggersService {
   }
 
   sendTeamsInstruction(): Observable<void> {
-    //return this.triggersApi.triggerSendTeamsInstruction();
-    return this.triggersApi.triggerSendGchatInstruction();
+    return this.triggersApi.triggerSendTeamsInstruction();
   }
 
   launchAcceleratedProgram(params: TriggerAcceleratedProgramRequestParams): Observable<void> {
