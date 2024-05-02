@@ -36,7 +36,7 @@ export class UserPerformanceComponent implements OnInit, OnDestroy {
   team!: Team;
 
   durationOptions = Score.getTimepickerOptions();
-  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
     nonNullable: true,
   });
   userChartOptions!: any;

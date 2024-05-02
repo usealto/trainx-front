@@ -26,7 +26,7 @@ export class PerformanceTeamsTableComponent implements OnInit, OnDestroy {
   AltoRoutes = AltoRoutes;
   EPlaceholderStatus = EPlaceholderStatus;
 
-  @Input() durationControl: FormControl<EScoreDuration> = new FormControl(EScoreDuration.Trimester, {
+  @Input() durationControl: FormControl<EScoreDuration> = new FormControl(EScoreDuration.Year, {
     nonNullable: true,
   });
   @Input() company: Company = {} as Company;
