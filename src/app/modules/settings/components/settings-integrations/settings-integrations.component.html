@@ -70,12 +70,24 @@
             </label>
           </div>
         </div>
-        <div class="py-3 connector" style="border-radius: 4px; padding-left: 1rem; padding-right: 1rem">
+        <div class="px-3 me-5 connector" [class]="connector === Connector.Teams ? 'activated' : ''">
           <div class="form-check">
-            <input class="form-check-input me-3" type="radio" id="exampleRadios3" value="option3" disabled />
+            <input 
+              class="form-check-input me-3" 
+              type="radio" 
+              id="exampleRadios3" 
+              value="option3" 
+              [checked]="connector === Connector.Teams"
+              (click)="validateModal(ModalType.ChangeConnector, true, $event, Connector.Teams)" 
+            />
             <label class="form-check-label" for="exampleRadios3">
               <img src="assets/img/teams-logo.svg" width="16" height="16" alt="Teams Logo" class="me-2" />
               <span>{{ I18ns.settings.continuousSession.integrations.teams }}</span>
+              <i
+              [hidden]="connector !== Connector.Teams"
+              class="bi bi-check-circle-fill ms-3"
+              style="color: #32d583"
+            ></i>
             </label>
           </div>
         </div>
@@ -133,6 +145,61 @@
           </div>
         </div>
       </div>
+      
+      <div [hidden]="connector !== Connector.Teams">
+        <div class="flex-container gap-5 d-flex onboarding">
+          <div class="panel" style="min-width: 40rem">
+            <h2 class="mb-4 onboarding-titles">
+              {{ I18ns.settings.continuousSession.integrations.teamsSubtitle.teamsInstructionsTitle }}
+            </h2>
+            <p class="mb-3 onboarding-texts">
+              {{ I18ns.settings.continuousSession.integrations.teamsSubtitle.teamsInstructions }}
+            </p>
+            <a
+              class="d-inline-block text-primary text-decoration-underline mb-3"
+              [href]="environment.teamsAppUrl"
+              target="_blank"
+              >{{ environment.teamsAppUrl }}</a
+            >
+            <p class="onboarding-texts">
+              {{ I18ns.settings.continuousSession.integrations.teamsSubtitle.teamsInstructions2 }}
+            </p>
+          </div>
+
+          <div class="panel" style="min-width: 40rem">
+            <h2 class="mb-4 onboarding-titles">
+              {{ I18ns.settings.continuousSession.integrations.teamsSubtitle.emailSendTitle }}
+            </h2>
+            <button [hidden]="emailSent" class="btn btn-primary" (click)="sendTeamsInstruction()">
+              <i class="bi bi-send"></i>
+              {{ I18ns.settings.continuousSession.integrations.teamsSubtitle.emailSendButtonText }}
+            </button>
+            <div [hidden]="!emailSent" class="d-flex flex-row align-items-center mb-4">
+              <p [hidden]="!emailSent" class="onboarding-confirmations">
+                <i class="bi bi-check-circle-fill me-3" style="color: #32d583"></i
+                >{{ I18ns.settings.continuousSession.integrations.teamsSubtitle.teamsEmailSent }}
+              </p>
+              <button
+                [hidden]="!emailSent"
+                (click)="sendTeamsInstruction()"
+                class="btn btn-link onboarding-resend"
+              >
+                {{ I18ns.settings.continuousSession.integrations.teamsSubtitle.teamsSendAgain }}
+              </button>
+            </div>
+            <div>
+              <span class="alto-badge orange">{{
+                nbUsersConnectorInactive +
+                  '/' +
+                  nbUsers +
+                  ' ' +
+                  I18ns.settings.continuousSession.integrations.teamsSubtitle.nonConnectedUsersText
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div [hidden]="isSlackPending() === false">
         <div class="flex-container d-flex gap-5 onboarding">
           <div class="panel" style="min-width: 40rem">
