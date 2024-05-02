@@ -142,6 +142,7 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
         confirmText: 'Confirmer',
         cancelText: 'Annuler',
         icon: 'bi-pin-angle',
+        color: 'blue',
       };
   
       modalRef.closed.subscribe((confirm) => {

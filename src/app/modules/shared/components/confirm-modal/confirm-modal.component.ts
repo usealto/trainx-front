@@ -7,6 +7,7 @@ export interface IConfirmModalData {
   confirmText: string;
   cancelText?: string;
   icon?: string;
+  color?: string;
 }
 
 @Component({
