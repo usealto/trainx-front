@@ -33,7 +33,7 @@ export class PerformanceQuestionsTableComponent implements OnInit, OnDestroy {
   EPlaceholderStatus = EPlaceholderStatus;
   AltoRoutes = AltoRoutes;
 
-  @Input() durationControl: FormControl<EScoreDuration> = new FormControl(EScoreDuration.Trimester, {
+  @Input() durationControl: FormControl<EScoreDuration> = new FormControl(EScoreDuration.Year, {
     nonNullable: true,
   });
 

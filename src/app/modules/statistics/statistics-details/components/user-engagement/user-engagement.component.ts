@@ -31,7 +31,7 @@ export class UserEngagementComponent implements OnInit, OnDestroy {
   userTeam!: Team;
 
   durationOptions = Score.getTimepickerOptions();
-  durationControl = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
+  durationControl = new FormControl<EScoreDuration>(EScoreDuration.Year, {
     nonNullable: true,
   });
 

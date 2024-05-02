@@ -1,172 +1,329 @@
-<div class="logo">
-  <a [routerLink]="['/', displayAdmin ? AltoRoutes.lead : AltoRoutes.user, AltoRoutes.leadHome]">
-    <img width="20" src="assets/img/favicon.png" alt="Alto Logo" />
-  </a>
-</div>
-
-<!-- USER -->
-
-<div class="menu">
-  <div [hidden]="displayAdmin">
-    <div ngbTooltip="{{ I18ns.menu.home }}" placement="right" tooltipClass="menu-tooltip-class">
-      <a
-        data-cy="userMenuHome"
-        class="module"
-        [routerLink]="AltoRoutes.user + '/' + AltoRoutes.userHome"
-        routerLinkActive="menu-selected"
-      >
-        <i class="bi bi-house-door"></i>
+<div class="menu-container" [class.extended]="isExtended">
+  <div class="logo-container">
+    <div class="logo">
+      <a [routerLink]="['/', displayAdmin ? AltoRoutes.lead : AltoRoutes.user, AltoRoutes.leadHome]">
+        <img width="25" src="assets/img/favicon.png" alt="Alto Logo" />
       </a>
     </div>
-    <div ngbTooltip="{{ I18ns.menu.training }}" placement="right" tooltipClass="menu-tooltip-class">
-      <a
-        data-cy="userMenuTraining"
-        class="module"
-        [routerLink]="AltoRoutes.user + '/' + AltoRoutes.training"
-        routerLinkActive="menu-selected"
-      >
-        <i class="bi bi-check2-square"></i>
-      </a>
+    <div class="rounded-button" [class.floating]="!isExtended" (click)="extendOrCollapse()">
+      <i
+      class="bi"
+      [ngClass]="{
+        'bi-chevron-left': isExtended,
+        'bi-chevron-right': !isExtended
+      }">
+      </i>
     </div>
-
-    <!-- Team tab hidden -->
-
-    <!-- <div ngbTooltip="{{ I18ns.menu.team }}" placement="right" tooltipClass="menu-tooltip-class">
-      <a
-        class="module"
-        [routerLink]="AltoRoutes.user + '/' + AltoRoutes.userTeams"
-        routerLinkActive="menu-selected"
-      >
-        <i class="bi bi-people"></i>
-      </a>
-    </div> -->
   </div>
 
-  <!-- LEAD -->
-
-  <div [hidden]="!displayAdmin">
-    <div ngbTooltip="{{ I18ns.menu.home }}" placement="right" tooltipClass="menu-tooltip-class">
-      <a
-        data-cy="leadMenuHome"
-        class="module"
+  <div class="menu">
+    <ng-container *ngIf="displayAdmin; else displayUser">
+      <ng-container *ngIf="isExtended; else collapsedLeadMenu">
+        <!-- HOME -->
+        <div
+        class="module extended-item"
         [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadHome"
-        routerLinkActive="menu-selected"
-      >
-        <i class="bi bi-house-door"></i>
-      </a>
-    </div>
-    <div ngbTooltip="{{ I18ns.menu.statistics }}" placement="right" tooltipClass="menu-tooltip-class">
-      <a
-        data-cy="leadMenuStatistics"
-        class="module"
+        routerLinkActive="menu-selected">
+          <a class="module-icon" data-cy="leadMenuHome">
+            <i class="bi bi-house-door"></i>
+          </a>
+          <span>{{ I18ns.menu.home }}</span>
+        </div>
+
+        <!-- STATISTICS -->
+        <div
+        class="module extended-item"
         [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.statistics"
-        routerLinkActive="menu-selected"
-      >
-        <i class="bi bi-bar-chart"></i>
-      </a>
-    </div>
-    <div ngbTooltip="{{ I18ns.menu.contribution }}" placement="right" tooltipClass="menu-tooltip-class">
-      <a
-      data-cy="leadMenuCollaboration"
-        class="module"
+        routerLinkActive="menu-selected">
+          <a class="module-icon" data-cy="leadMenuStatistics">
+            <i class="bi bi-bar-chart"></i>
+          </a>
+          <span>{{ I18ns.menu.statistics }}</span>
+        </div>
+
+        <!-- COLLABORATION -->
+        <div
+        class="module extended-item"
         [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.collaboration"
-        routerLinkActive="menu-selected"
-      >
-        <i class="bi bi-puzzle"></i>
-      </a>
-    </div>
-    <div ngbTooltip="{{ I18ns.menu.team }}" placement="right" tooltipClass="menu-tooltip-class">
-      <a
-        data-cy="leadMenuTeams"
-        class="module"
+        routerLinkActive="menu-selected">
+          <a class="module-icon" data-cy="leadMenuCollaboration">
+            <i class="bi bi-puzzle"></i>
+          </a>
+          <span>{{ I18ns.menu.contribution }}</span>
+        </div>
+
+        <!-- TEAMS -->
+        <div
+        class="module extended-item"
         [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadTeams"
-        routerLinkActive="menu-selected"
-      >
-        <i class="bi bi-people"></i>
-      </a>
-    </div>
-    <!--
-    <div ngbTooltip="{{ I18ns.menu.challenges }}" placement="right" tooltipClass="menu-tooltip-class">
-      <a
-        data-cy="leadMenuChallenges"
-        class="module"
-        [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.challenges"
-        routerLinkActive="menu-selected"
-      >
-        <i class="bi bi-puzzle"></i>
-      </a>
-    </div> -->
-    <div ngbTooltip="{{ I18ns.menu.programs }}" placement="right" tooltipClass="menu-tooltip-class">
-      <a
-        data-cy="leadMenuPrograms"
-        class="module"
+        routerLinkActive="menu-selected">
+          <a class="module-icon" data-cy="leadMenuTeams">
+            <i class="bi bi-people"></i>
+          </a>
+          <span>{{ I18ns.menu.team }}</span>
+        </div>
+
+        <!-- PROGRAMS -->
+        <div
+        class="module extended-item"
         [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.programs"
-        routerLinkActive="menu-selected"
-      >
-        <i class="bi bi-check2-square"></i>
-      </a>
-    </div>
-  </div>
+        routerLinkActive="menu-selected">
+          <a class="module-icon" data-cy="leadMenuPrograms">
+            <i class="bi bi-check2-square"></i>
+          </a>
+          <span>{{ I18ns.menu.programs }}</span>
+        </div>
+      </ng-container>
+      <ng-template #collapsedLeadMenu>
+        <!-- COLLAPSED HOME -->
+        <div class="module" ngbTooltip="{{ I18ns.menu.home }}" placement="right" tooltipClass="menu-tooltip-class">
+          <a
+            data-cy="leadMenuHome"
+            class="module-icon"
+            [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadHome"
+            routerLinkActive="menu-selected"
+          >
+            <i class="bi bi-house-door"></i>
+          </a>
+        </div>
 
-  <div class="bottom-block">
-    <div [hidden]="!displayAdmin">
-      <div ngbTooltip="{{ I18ns.menu.settings }}" placement="right" tooltipClass="menu-tooltip-class">
-        <a
-          data-cy="leadMenuSettings"
-          class="module"
-          [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.settings"
-          routerLinkActive="menu-selected"
-          tooltipClass="menu-tooltip-class"
-        >
-          <i class="bi bi-gear"></i>
-        </a>
-      </div>
-    </div>
+        <!-- COLLAPSED STATISTICS -->
+        <div class="module" ngbTooltip="{{ I18ns.menu.statistics }}" placement="right" tooltipClass="menu-tooltip-class">
+          <a
+            data-cy="leadMenuStatistics"
+            class="module-icon"
+            [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.statistics"
+            routerLinkActive="menu-selected"
+          >
+            <i class="bi bi-bar-chart"></i>
+          </a>
+        </div>
 
-    <hr />
-    <ng-template #popContent>
-      <a
-        data-cy="profile"
-        [routerLink]="
-          displayAdmin
-            ? AltoRoutes.lead + '/' + AltoRoutes.profile
-            : AltoRoutes.user + '/' + AltoRoutes.profile
-        "
-      >
-        <div><i class="bi bi-person"></i>{{ I18ns.menu.profile }}</div>
-      </a>
-      <div *ngIf="isAdmin" class="form-check form-switch">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          id="adminSwitch"
-          #adminSwitch
-          [checked]="displayAdmin"
-          (change)="switchToAdmin(adminSwitch.checked)"
-        />
-        <label class="form-check-label" for="adminSwitch">
-          {{ I18ns.menu.adminMode }}
-        </label>
-      </div>
-      <a href="https://airtable.com/appIyNNDxAgaqKMAJ/shr4vWMugZ5uEc5a4" target="_blank">
-        <div><i class="bi bi-chat-text"></i>{{ I18ns.menu.feedback }}</div>
-      </a>
-      <a class="logout" (click)="logOut()">
-        <div><i class="bi bi-box-arrow-right"></i>{{ I18ns.menu.disconnect }}</div>
-      </a>
+        <!-- COLLAPSED COLLABORATION -->
+        <div class="module" ngbTooltip="{{ I18ns.menu.contribution }}" placement="right" tooltipClass="menu-tooltip-class">
+          <a
+          data-cy="leadMenuCollaboration"
+          class="module-icon"
+          [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.collaboration"
+          routerLinkActive="menu-selected">
+            <i class="bi bi-puzzle"></i>
+          </a>
+        </div>
+
+        <!-- COLLAPSED TEAMS -->
+        <div class="module" ngbTooltip="{{ I18ns.menu.team }}" placement="right" tooltipClass="menu-tooltip-class">
+          <a
+          data-cy="leadMenuTeams"
+          class="module-icon"
+          [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.leadTeams"
+          routerLinkActive="menu-selected">
+            <i class="bi bi-people"></i>
+          </a>
+        </div>
+
+        <!-- COLLAPSED PROGRAMS -->
+        <div class="module" ngbTooltip="{{ I18ns.menu.programs }}" placement="right" tooltipClass="menu-tooltip-class">
+          <a
+          data-cy="leadMenuPrograms"
+          class="module-icon"
+          [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.programs"
+          routerLinkActive="menu-selected">
+            <i class="bi bi-check2-square"></i>
+          </a>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-template #displayUser>
+      <ng-container *ngIf="isExtended; else collapsedUserMenu">
+        <!-- HOME -->
+        <div
+        class="module extended-item"
+        [routerLink]="AltoRoutes.user + '/' + AltoRoutes.userHome"
+        routerLinkActive="menu-selected">
+          <a class="module-icon" data-cy="userMenuHome">
+            <i class="bi bi-house-door"></i>
+          </a>
+          <span>{{ I18ns.menu.home }}</span>
+        </div>
+
+        <!-- TRAINING -->
+        <div
+        class="module extended-item"
+        [routerLink]="AltoRoutes.user + '/' + AltoRoutes.training"
+        routerLinkActive="menu-selected">
+          <a class="module-icon" data-cy="userMenuTraining">
+            <i class="bi bi-check2-square"></i>
+          </a>
+          <span>{{ I18ns.menu.training }}</span>
+        </div>
+      </ng-container>
+      <ng-template #collapsedUserMenu>
+        <!-- COLLAPSED HOME -->
+        <div class="module" ngbTooltip="{{ I18ns.menu.home }}" placement="right" tooltipClass="menu-tooltip-class">
+          <a
+            data-cy="userMenuHome"
+            class="module-icon"
+            [routerLink]="AltoRoutes.user + '/' + AltoRoutes.userHome"
+            routerLinkActive="menu-selected"
+          >
+            <i class="bi bi-house-door"></i>
+          </a>
+        </div>
+
+        <!-- COLLAPSED TRAINING -->
+        <div class="module" ngbTooltip="{{ I18ns.menu.training }}" placement="right" tooltipClass="menu-tooltip-class">
+          <a
+            data-cy="userMenuTraining"
+            class="module-icon"
+            [routerLink]="AltoRoutes.user + '/' + AltoRoutes.training"
+            routerLinkActive="menu-selected"
+          >
+            <i class="bi bi-check2-square"></i>
+          </a>
+        </div>
+      </ng-template>
     </ng-template>
-    <alto-img-badge
-      data-cy="profileImgBadge"
-      [toggleTooltip]="toggleTooltip"
-      class="img-badge-menu"
-      type="button"
-      placement="right"
-      [ngbPopover]="popContent"
-      popoverClass="menu-popover"
-      placement="right-bottom"
-      [user]="me"
-      [size]="40"
-    >
-    </alto-img-badge>
+
+    <div class="bottom-block">
+      <ng-container *ngIf="displayAdmin">
+        <ng-container *ngIf="isExtended; else collapsedSettings">
+          <div
+          class="module extended-item"
+          [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.settings"
+          routerLinkActive="menu-selected">
+            <a class="module-icon" data-cy="leadMenuSettings">
+              <i class="bi bi-gear"></i>
+            </a>
+            <span>{{ I18ns.menu.settings }}</span>
+          </div>
+        </ng-container>
+        <ng-template #collapsedSettings>
+          <div class="module">
+            <a
+              data-cy="leadMenuSettings"
+              class="module-icon"
+              [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.settings"
+              routerLinkActive="menu-selected"
+              tooltipClass="menu-tooltip-class"
+            >
+              <i class="bi bi-gear"></i>
+            </a>
+          </div>
+        </ng-template>
+      </ng-container>
+
+      <hr />
+      <ng-template #popContent>
+        <a
+          data-cy="profile"
+          [routerLink]="
+            displayAdmin
+              ? AltoRoutes.lead + '/' + AltoRoutes.profile
+              : AltoRoutes.user + '/' + AltoRoutes.profile
+          "
+        >
+          <div><i class="bi bi-person"></i>{{ I18ns.menu.profile }}</div>
+        </a>
+        <div *ngIf="isAdmin" class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            id="adminSwitch"
+            #adminSwitch
+            [checked]="displayAdmin"
+            (change)="switchToAdmin(adminSwitch.checked)"
+          />
+          <label class="form-check-label" for="adminSwitch">
+            {{ I18ns.menu.adminMode }}
+          </label>
+        </div>
+        <a href="https://airtable.com/appIyNNDxAgaqKMAJ/shr4vWMugZ5uEc5a4" target="_blank">
+          <div><i class="bi bi-chat-text"></i>{{ I18ns.menu.feedback }}</div>
+        </a>
+        <a class="logout" (click)="logOut()">
+          <div><i class="bi bi-box-arrow-right"></i>{{ I18ns.menu.disconnect }}</div>
+        </a>
+      </ng-template>
+
+      <!-- Container height = sum of elements height -->
+      <div
+      class="profile-menu-container"
+      [ngStyle]="{'height': isExtended && toggleProfileMenu ? isAdmin ? '220px' : '190px' : '70px'}">
+        <ng-container *ngIf="isExtended; else collapsedProfile">
+          <div class="profile-container" (click)="toggleProfileContainerMenu()">
+            <div class="profile-badge">
+              <alto-img-badge
+                data-cy="profileImgBadge"
+                class="img-badge-menu"
+                type="button"
+                [user]="me"
+                [size]="40"
+                [toggleTooltip]="false"
+              >
+              </alto-img-badge>
+
+              <span>{{ me.fullname }}</span>
+            </div>
+
+            <i class="bi" [ngClass]="{'bi-chevron-down': toggleProfileMenu, 'bi-chevron-up': !toggleProfileMenu}"></i>
+          </div>
+
+          <div *ngIf="toggleProfileMenu" class="extended-profile-menu">
+            <div
+            class="module extended-item"
+            [routerLink]="
+            displayAdmin
+              ? AltoRoutes.lead + '/' + AltoRoutes.profile
+              : AltoRoutes.user + '/' + AltoRoutes.profile"
+            routerLinkActive="menu-selected">
+              <a class="module-icon" data-cy="profile">
+                <i class="bi bi-person"></i>
+              </a>
+              <span>{{ I18ns.menu.profile }}</span>
+            </div>
+
+            <div *ngIf="isAdmin" class="module extended-item">
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="adminSwitch"
+                  #adminSwitch
+                  [checked]="displayAdmin"
+                  (change)="switchToAdmin(adminSwitch.checked)"
+                />
+              </div>
+              <span>{{ I18ns.menu.adminMode }}</span>
+            </div>
+
+            <a class="module extended-item">
+              <i class="module-icon bi bi-chat-text"></i>
+              <span>{{ I18ns.menu.feedback }}</span>
+            </a>
+
+            <div class="module extended-item" (click)="logOut()">
+              <a class="module-icon">
+                <i class="bi bi-box-arrow-right logout"></i>
+              </a>
+              <span class="logout">{{ I18ns.menu.disconnect }}</span>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #collapsedProfile>
+          <alto-img-badge
+            data-cy="profileImgBadge"
+            [toggleTooltip]="toggleTooltip"
+            class="img-badge-menu"
+            type="button"
+            [ngbPopover]="popContent"
+            popoverClass="menu-popover"
+            placement="right-bottom"
+            [user]="me"
+            [size]="40"
+          >
+          </alto-img-badge>
+        </ng-template>
+      </div>
+    </div>
   </div>
 </div>
