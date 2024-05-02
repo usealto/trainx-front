@@ -1121,6 +1121,20 @@ export const FR = {
           gchatError:
             'Impossible d’envoyer l’email avec les instructions à vos utilisateurs. Réessayez plus tard ou contactez notre support client si le problème persiste.',
         },
+        teamsSubtitle: {
+          teamsInstructionsTitle: 'Comment vos utilisateurs peuvent ajouter Teams :',
+          teamsInstructions: 'Ils ont simplement besoin de cliquer sur ce lien :',
+          teamsInstructions2: 'Puis cliquer sur “Installer”. C’est tout.',
+          emailSendTitle: 'Vous pouvez aussi envoyer les instructions aux utilisateurs non connectés :',
+          emailSendButtonText: 'Envoyer les instructions par email',
+          nonConnectedUsersText: 'utilisateurs non connectés',
+          teamsEmailSent: 'Un email a été envoyé aux utilisateurs non connectés.',
+          teamsSendAgain: 'Renvoyer un email',
+          teamsSuccess:
+            'Un email avec les instructions a bien été envoyé à tous les utilisateurs non connectés.',
+          teamsError:
+            'Impossible d’envoyer l’email avec les instructions à vos utilisateurs. Réessayez plus tard ou contactez notre support client si le problème persiste.',
+        },
         slackSubtitle: {
           notAdminTitle: 'Je ne suis pas administrateur Slack :',
           notAdminText:
