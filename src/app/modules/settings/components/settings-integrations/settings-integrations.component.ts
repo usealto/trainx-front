@@ -68,6 +68,8 @@ export class SettingsIntegrationsComponent implements OnInit {
         ? AltoConnectorEnumApi.Slack
         : this.company.connector === CompanyDtoApiConnectorEnumApi.GoogleChat
         ? AltoConnectorEnumApi.GoogleChat
+        : this.company.connector === CompanyDtoApiConnectorEnumApi.Teams
+        ? AltoConnectorEnumApi.Teams
         : AltoConnectorEnumApi.Unknown;
 
     this.nbUsers = this.users.length;
@@ -135,6 +137,7 @@ export class SettingsIntegrationsComponent implements OnInit {
               } else if (type === ModalType.ToggleWebApp) {
                 this.activateWebApp(toggle);
               } else if (type === ModalType.ChangeConnector) {
+                console.log(connector);
                 this.changeConnector(connector);
               }
             }
@@ -194,6 +197,8 @@ export class SettingsIntegrationsComponent implements OnInit {
               ? AltoConnectorEnumApi.Slack
               : connector === AltoConnectorEnumApi.GoogleChat
               ? AltoConnectorEnumApi.GoogleChat
+              : connector === AltoConnectorEnumApi.Teams
+              ? AltoConnectorEnumApi.Teams
               : AltoConnectorEnumApi.Unknown,
         })
         .pipe(
@@ -245,6 +250,24 @@ export class SettingsIntegrationsComponent implements OnInit {
       complete: () => {
         this.toastService.show({
           text: I18ns.settings.continuousSession.integrations.gchatSubtitle.gchatSuccess,
+          type: 'success',
+        });
+      },
+    });
+  }
+
+  sendTeamsInstruction() {
+    this.emailSent = true;
+    this.triggersService.sendTeamsInstruction().subscribe({
+      error: () => {
+        this.toastService.show({
+          text: I18ns.settings.continuousSession.integrations.teamsSubtitle.teamsError,
+          type: 'danger',
+        });
+      },
+      complete: () => {
+        this.toastService.show({
+          text: I18ns.settings.continuousSession.integrations.teamsSubtitle.teamsSuccess,
           type: 'success',
         });
       },
