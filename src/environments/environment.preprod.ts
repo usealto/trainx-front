@@ -7,6 +7,7 @@ export const environment = {
   slackAuthorization: 'https://staging-alto-slack-app-cinunhosha-od.a.run.app/slack/install?companyId=',
   applicationId: '5de36fd6-36c0-49ac-97bc-9e0517527d1c',
   googleChatAppURL: 'https://workspace.google.com/marketplace/app/alto/1076506336192',
+  teamsAppUrl: 'https://appsource.microsoft.com/product/office/WA200006872',
   sentryDsn: 'https://1a9f0e07b9404c1ced5df9b98d821209@o4506417447174144.ingest.sentry.io/4506558380048384',
   sentryTracesSampleRate: 1.0,
   sentryReplaysSessionSampleRate: 0,
