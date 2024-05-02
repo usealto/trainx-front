@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { EResolvers, ResolversService } from '../../../../core/resolvers/resolvers.service';
 import * as FromRoot from '../../../../core/store/store.reducer';
@@ -10,6 +10,9 @@ import { Team } from '../../../../models/team.model';
 import { th } from 'date-fns/locale';
 import { EmojiName } from '../../../../core/utils/emoji/data';
 import { I18ns } from '../../../../core/utils/i18n/I18n';
+import { ParcoursRestService } from '../../services/parcours-rest.service';
+import { setTeams } from '../../../../core/store/root/root.action';
+import { AltoRoutes } from '../../../shared/constants/routes';
 
 
 @Component({
@@ -21,7 +24,7 @@ import { I18ns } from '../../../../core/utils/i18n/I18n';
 export class EditParcoursComponent implements OnInit {
   I18ns = I18ns;
   Emoji = EmojiName;
-  
+
   company: Company | null = null;
   team: Team | null = null;
   isEdit = false;
@@ -30,6 +33,8 @@ export class EditParcoursComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private readonly resolversService: ResolversService,
     private readonly store: Store<FromRoot.AppState>,
+    private readonly parcoursService: ParcoursRestService,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -39,6 +44,17 @@ export class EditParcoursComponent implements OnInit {
     this.team = this.company?.teams.find((team) => team.id === id) || null;
     if (this.team && this.team.parcour.length > 0) {
       this.isEdit = true;
+    }
+  }
+
+  onParcoursChanged(updatedParcourIds: string[]): void {
+    if (this.team) {
+      this.parcoursService.updateParcour(this.team.id, updatedParcourIds).subscribe((team) => {
+        this.store.dispatch(
+          setTeams({ teams: this.company?.teams.map((t) => (t.id === team.id ? team : t)) || [] }),
+        );
+        this.router.navigate([AltoRoutes.lead, AltoRoutes.parcours]);
+      });
     }
   }
 }

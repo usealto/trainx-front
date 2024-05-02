@@ -55,6 +55,7 @@ import { TeamColorPipe } from './helpers/team-color.pipe';
 import { InputButtonGroupComponent } from './components/forms/input-button-group/input-button-group.component';
 import { LoadSpinnerComponent } from './components/load-spinner/load-spinner.component';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
+import { DropdownFilterSingleComponent } from './components/dropdown-filter-single/dropdown-filter-single.component';
 @NgModule({
   declarations: [
     ProgressionPillPipe,
@@ -94,6 +95,7 @@ import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.
     InputRangeComponent,
     LoadSpinnerComponent,
     ConfirmModalComponent,
+    DropdownFilterSingleComponent,
   ],
   imports: [
     CommonModule,
@@ -165,6 +167,7 @@ import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.
     InputRangeComponent,
     LoadSpinnerComponent,
     ConfirmModalComponent,
+    DropdownFilterSingleComponent,
   ],
   providers: [NgbActiveModal],
 })

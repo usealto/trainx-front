@@ -18,7 +18,7 @@
 
 <div *ngFor="let team of teams">
   <div class="d-flex justify-content-between align-items-center">
-    <h2>{{ team.name }}</h2>
+    <h2 class="alto-badge" [style]="team.id | teamColor">{{ team.name }}</h2>
     <div *ngIf="team.parcour.length === 0">
       <a class="link" style="color: #2E90FA; text-decoration: underline;" [routerLink]=" [ '/', AltoRoutes.lead, AltoRoutes.parcours, AltoRoutes.parcoursEdit, team.id ]">{{ I18ns.parcours.list.createBtn }}</a>
     </div>
@@ -26,11 +26,11 @@
       <a class="link" style="color: #2E90FA; text-decoration: underline"  [routerLink]=" [ '/', AltoRoutes.lead, AltoRoutes.parcours, AltoRoutes.parcoursEdit, team.id ] ">{{ I18ns.parcours.list.editBtn }}</a>
     </div>
   </div>
-  <div class="team-parcours">
-    <div class="list-parcours" *ngIf="team.parcour.length > 0">
+  <div class="team-parcours" #teamParcours>
+    <div class="list-parcours" *ngIf="team.parcour.length > 0" #listParcours>
       <div class="prog-arrow" *ngFor="let programId of team.parcour; let isLast = last">
        <div class="block-parcours">
-         <span>{{ getProgramName(programId) }}</span>
+         <span class="program-name">{{ getProgramName(programId) }}</span>
        </div>
        <div *ngIf="!isLast">
          <i class="bi bi-arrow-right fs-1" style="color: #667085;"></i>

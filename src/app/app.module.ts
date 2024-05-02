@@ -31,6 +31,7 @@ import { NotFoundComponent } from './layout/not-found/not-found.component';
 import { TestComponent } from './layout/test/test.component';
 import { SharedModule } from './modules/shared/shared.module';
 import { Router } from '@angular/router';
+import { DndModule } from 'ngx-drag-drop';
 @NgModule({
   declarations: [
     AppComponent,
@@ -74,6 +75,7 @@ import { Router } from '@angular/router';
       },
     }),
     ToastComponent,
+    DndModule
   ],
   providers: [
     {

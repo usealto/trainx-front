@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ILeadData } from '../../../../core/resolvers/lead.resolver';
@@ -18,7 +18,9 @@ import { AltoRoutes } from '../../../shared/constants/routes';
   styleUrls: ['./parcours.component.scss'],
   providers: [ReplaceInTranslationPipe],
 })
-export class ParcoursComponent implements OnInit {
+export class ParcoursComponent implements OnInit, AfterViewInit {
+  @ViewChildren('teamParcours') wrappers!: QueryList<ElementRef<HTMLDivElement>>;
+  @ViewChildren('listParcours') parcours!: QueryList<ElementRef<HTMLDivElement>>;
   I18ns = I18ns;
   Emoji = EmojiName;
   AltoRoutes = AltoRoutes;
@@ -54,8 +56,26 @@ export class ParcoursComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit() {
+    this.parcours.forEach((parcour) => {
+      console.log('hello');
+      console.log(parcour.nativeElement.clientWidth);
+    });
+    this.adjustAllScrolls();
+  }
+
   getProgramName(programId: string): string {
     const program = this.company?.programs.find((p) => p.id === programId);
     return program ? program.name : 'Unknown Program';
+  }
+
+  adjustAllScrolls() {
+    this.parcours.forEach((parcour) => {
+      const wrapper = this.wrappers.find((w) => w.nativeElement.contains(parcour.nativeElement));
+      if (wrapper) {
+        const hasHorizontalScrollbar = parcour.nativeElement.scrollWidth > wrapper.nativeElement.clientWidth;
+        parcour.nativeElement.style.justifyContent = hasHorizontalScrollbar ? 'flex-start' : 'center';
+      }
+    });
   }
 }

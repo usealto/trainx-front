@@ -16,12 +16,33 @@
 
 .list-parcours {
   display: flex;
-  justify-content: center;
+  padding-left: 20px;
   align-items: center;
   height: 70px; 
   margin-bottom: 20px;
   border: 1px dashed #2E90FA;
   border-radius: 6px;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    margin-block: 4px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: var(--Gray-200, #EAECF0);
+
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--Gray-300, #D0D5DD);
+    border-radius: 8px;
+  }
 }
 
 .prog-arrow {
@@ -47,4 +68,18 @@
     color: #2E90FA;
     text-align: center;
   }
+}
+
+.program-name {
+  display: block;
+  flex-grow: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.alto-badge {
+  font-size: medium;
+  padding: 4px 12px;
 }

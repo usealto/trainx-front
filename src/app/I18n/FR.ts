@@ -1,6 +1,3 @@
-import { create } from "cypress/types/lodash";
-import { sub } from "date-fns";
-
 export const FR = {
   shared: {
     smiley: '👍',
@@ -942,6 +939,24 @@ export const FR = {
     edit: {
       title: 'Édition du parcours',
       subtitle: 'Pour éditer un parcours, glissez-déposez les programmes dans l’ordre souhaité.',
+    },
+    programsList: {
+      title: 'Liste des programmes',
+      selectAll: 'Tout les programmes',
+      selectAssigned: 'Programmes assignés',
+    },
+    modal: {
+      title: 'Certains programmes ne sont pas assignés à cette équipe',
+      description:
+        'En enregistrant le parcours, les programmes non assignés à cette équipe deviendront assignés.',
+    },
+    placeholder: {
+      parcours: 'Glisser un programme pour initier un parcours.',
+      programs: 'Aucun programme n’a été trouvé.',
+    },
+    modalDelete: {
+      title: 'Supprimer le parcours',
+      description: 'Êtes-vous sûr de vouloir supprimer ce parcours ?',
     },
   },
   challenges: {
