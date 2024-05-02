@@ -185,7 +185,7 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
   }
 
   onListDragStart(event: DragEvent, index: number) {
-    this.currentlyDraggedProgram = this.programs[index];
+    this.currentlyDraggedProgram = this.programsFiltered[index];
   }
 
   onEnd() {

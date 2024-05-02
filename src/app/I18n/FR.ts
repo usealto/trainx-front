@@ -1030,6 +1030,7 @@ export const FR = {
     disconnect: 'Se déconnecter',
     feedback: 'Envoyer un feedback',
     contribution: 'Contribution',
+    parcours: 'Mes parcours',
   },
   settings: {
     title: 'Paramètres',
