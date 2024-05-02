@@ -1,55 +1,3 @@
-<div class="d-flex justify-content-between align-items-center mb-5">
-  <div>
-    <h2>
-      <img class="emoji align-middle mb-2" [src]="EmojiName.FlexedBiceps | emoji" height="16" width="16" />
-      {{ I18ns.statistics.user.performance.masteringLevel.title }}
-      <div class="ms-4 user-profile d-inline-block">
-        <alto-img-badge [user]="user" [size]="24" class="d-inline-block align-bottom"></alto-img-badge>
-        <span class="mb-2 ms-2 fw-medium alto-grey d-inline-block align-middle">
-          {{ user.fullname }}
-        </span>
-      </div>
-      <span class="ms-4 alto-badge" [style]="team.id | teamColor">{{ team.name }}</span>
-    </h2>
-    <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.user.performance.masteringLevel.subtitle }}</p>
-  </div>
-
-  <alto-time-picker
-  class="me-4 float-end"
-  [options]="durationOptions"
-  [durationControl]="durationControl"
-  ></alto-time-picker>
-</div>
-
-<alto-placeholder-manager [status]="userChartStatus">
-  <div class="panel">
-    <h3>{{ I18ns.statistics.user.performance.masteringLevel.chartTitle }}</h3>
-    <p class="alto-grey mb-4">
-      {{ I18ns.statistics.user.performance.masteringLevel.chartSubtitle }}
-    </p>
-    <div class="chart-container">
-      <alto-chart-basicline [chartOption]="userChartOptions" [tooltipTitleFormatter]="tooltipTitleFormatter"></alto-chart-basicline>
-    </div>
-  </div>
-  <div class="nodata-placeholder" noData>
-    <h3 class="mb-5 fs-6">
-      {{ I18ns.statistics.user.performance.masteringLevel.chartTitle }}
-    </h3>
-    <div class="text-center">
-      <img [src]="EmojiName.FourOclock | emoji" height="24" width="24" />
-      <p class="mt-3">
-        {{ I18ns.statistics.user.performance.masteringLevel.placeholder.title }}
-      </p>
-      <span class="d-inline-block mt-3">
-        {{ I18ns.statistics.user.performance.masteringLevel.placeholder.subtitle }}
-      </span>
-    </div>
-  </div>
-  <div class="skeleton-panel mb-5" style="height: 497px" loading></div>
-</alto-placeholder-manager>
-
-<hr class="my-7" />
-
 <div>
   <h2>
     <img class="emoji align-middle mb-2" [src]="EmojiName.Label | emoji" height="16" width="16" />
@@ -128,3 +76,57 @@
     <div class="skeleton-panel" style="height: 500px" loading></div>
   </alto-placeholder-manager>
 </div>
+
+<hr class="my-7" />
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+  <div>
+    <h2>
+      <img class="emoji align-middle mb-2" [src]="EmojiName.FlexedBiceps | emoji" height="16" width="16" />
+      {{ I18ns.statistics.user.performance.masteringLevel.title }}
+      <div class="ms-4 user-profile d-inline-block">
+        <alto-img-badge [user]="user" [size]="24" class="d-inline-block align-bottom"></alto-img-badge>
+        <span class="mb-2 ms-2 fw-medium alto-grey d-inline-block align-middle">
+          {{ user.fullname }}
+        </span>
+      </div>
+      <span class="ms-4 alto-badge" [style]="team.id | teamColor">{{ team.name }}</span>
+    </h2>
+    <p class="mb-4 alto-grey fs-4">{{ I18ns.statistics.user.performance.masteringLevel.subtitle }}</p>
+  </div>
+
+  <alto-time-picker
+  class="me-4 float-end"
+  [options]="durationOptions"
+  [durationControl]="durationControl"
+  ></alto-time-picker>
+</div>
+
+<alto-placeholder-manager [status]="userChartStatus">
+  <div class="panel">
+    <h3>{{ I18ns.statistics.user.performance.masteringLevel.chartTitle }}</h3>
+    <p class="alto-grey mb-4">
+      {{ I18ns.statistics.user.performance.masteringLevel.chartSubtitle }}
+    </p>
+    <div class="chart-container">
+      <alto-chart-basicline [chartOption]="userChartOptions" [tooltipTitleFormatter]="tooltipTitleFormatter"></alto-chart-basicline>
+    </div>
+  </div>
+  <div class="nodata-placeholder" noData>
+    <h3 class="mb-5 fs-6">
+      {{ I18ns.statistics.user.performance.masteringLevel.chartTitle }}
+    </h3>
+    <div class="text-center">
+      <img [src]="EmojiName.FourOclock | emoji" height="24" width="24" />
+      <p class="mt-3">
+        {{ I18ns.statistics.user.performance.masteringLevel.placeholder.title }}
+      </p>
+      <span class="d-inline-block mt-3">
+        {{ I18ns.statistics.user.performance.masteringLevel.placeholder.subtitle }}
+      </span>
+    </div>
+  </div>
+  <div class="skeleton-panel mb-5" style="height: 497px" loading></div>
+</alto-placeholder-manager>
+
+

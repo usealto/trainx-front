@@ -104,7 +104,7 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
   readonly scoreOptions: PillOption[] = Score.getFiltersPillOptions();
 
   durationOptions = Score.getTimepickerOptions();
-  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Trimester, {
+  durationControl: FormControl<EScoreDuration> = new FormControl<EScoreDuration>(EScoreDuration.Year, {
     nonNullable: true,
   });
   private readonly performanceByTeamsSubscription: Subscription = new Subscription();
@@ -520,7 +520,7 @@ export class TeamPerformanceComponent implements OnInit, OnDestroy {
   resetQuestionsFilters(): void {
     this.questionsSearchControl.patchValue(null);
     this.questionsScoreControl.patchValue(null);
-    this.durationControl.patchValue(EScoreDuration.Trimester);
+    this.durationControl.patchValue(EScoreDuration.Year);
   }
 
   getScoreParams(duration: EScoreDuration, global: boolean): ChartFilters {

@@ -1,5 +1,18 @@
 <div class="mb-5 position-relative">
   <div class="col-6">
+    <h2 class>
+      <img class="emoji" [src]="EmojiName.Label | emoji" height="16" width="16" />
+      {{ I18ns.statistics.globalPerformance.perThemePerformance.title }}
+    </h2>
+    <p class="mb-4 alto-grey">{{ I18ns.statistics.globalPerformance.perThemePerformance.subtitle }}</p>
+  </div>
+</div>
+
+<alto-performance-by-themes [tags]="tags"></alto-performance-by-themes>
+<hr class="my-7">
+
+<div class="mb-5 position-relative">
+  <div class="col-6">
     <h2>
       <img class="emoji" [src]="EmojiName.FlexedBiceps | emoji" height="16" width="16" />
       {{ I18ns.statistics.globalPerformance.perTeamPerformance.title }}
@@ -16,19 +29,6 @@
 </div>
 
 <alto-performance-by-teams [durationControl]="durationControl" [company]="company"></alto-performance-by-teams>
-<hr class="my-7">
-
-<div class="mb-5 position-relative">
-  <div class="col-6">
-    <h2 class>
-      <img class="emoji" [src]="EmojiName.Label | emoji" height="16" width="16" />
-      {{ I18ns.statistics.globalPerformance.perThemePerformance.title }}
-    </h2>
-    <p class="mb-4 alto-grey">{{ I18ns.statistics.globalPerformance.perThemePerformance.subtitle }}</p>
-  </div>
-</div>
-
-<alto-performance-by-themes [tags]="tags"></alto-performance-by-themes>
 <hr class="my-7">
 
 <div class="mb-4 position-relative">
