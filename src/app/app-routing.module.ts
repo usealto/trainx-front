@@ -100,6 +100,10 @@ const routes: Routes = [
             loadChildren: () =>
               import('./modules/collaboration/collaboration.module').then((m) => m.CollaborationModule),
           },
+          {
+            path: AltoRoutes.parcours,
+            loadChildren: () => import('./modules/parcours/parcours.module').then((m) => m.ParcoursModule),
+          },
         ],
       },
       {

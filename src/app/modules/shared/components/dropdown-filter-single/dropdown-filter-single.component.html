@@ -1,0 +1,25 @@
+<ng-select
+  [items]="data"
+  [disabled]="disabled"
+  [multiple]="false"
+  [bindValue]="returnValue"
+  [bindLabel]="displayLabel"
+  [placeholder]="placeholder"
+  [closeOnSelect]="true"
+  [(ngModel)]="selectedItems"
+  [searchable]="false"
+  (change)="selectChange.emit(selectedItems)"
+  [dropdownPosition]="position"
+  [clearable]="false"
+  [markFirst]="true"
+  #select
+>
+
+  <ng-template ng-option-tmp let-item="item">
+    <span class="me-4 text-truncate">
+      {{ item[displayLabel] }} 
+    </span>
+    <i class="bi bi-check-circle-fill"></i>
+  </ng-template>
+
+</ng-select>

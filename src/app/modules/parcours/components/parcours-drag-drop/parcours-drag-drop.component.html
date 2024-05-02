@@ -1,0 +1,81 @@
+<div class="d-flex justify-content-between align-items-center">
+  <h2 class="alto-badge" [style]="team?.id | teamColor">{{ team?.name }}</h2>
+</div>
+<div class="parcours-drag-drop">
+  <div #wrapper class="parcours-wrapper">
+    <div #parcours class="parcours" dndDropzone (dndDrop)="onDrop($event, parcour)">
+      <div *ngFor="let program of parcour; let i = index; let isLast = last" class="prog-arrow">
+        <div
+        class="parcour-program-item"
+        dnd-draggable 
+        [dndDraggable]="program" 
+        [dndEffectAllowed]="'move'"
+        (dndStart)="onDragStart($event, i)"
+        (dndEnd)="onEnd()"
+        [ngClass]="{'dragging': currentlyDraggedProgram && currentlyDraggedProgram.id === program.id}">
+          <span class="program-name" style="color: #2E90FA;">{{ program.name }}</span>
+          <button class="remove-btn" (click)="removeFromParcours(program)">
+            <i class="bi bi-x" style="font-size: 15px;"></i>
+          </button>
+        </div>
+        <div *ngIf="!isLast">
+         <i class="bi bi-arrow-right fs-1" style="color: #667085;"></i>
+       </div>
+      </div>
+      <div class="parcour-program-item" style="border: 1px #2E90FA dashed; background-color: #EFF8FF;"
+          dndPlaceholderRef
+          >
+          <span class="program-name" style="width: 160px; color: #2E90FA;">{{ currentlyDraggedProgram?.name || 'Drop here' }}</span>
+      </div>
+      <p class="parcour-placeholder" *ngIf="parcour.length === 0 && currentlyDraggedProgram === null">
+        {{ I18ns.parcours.placeholder.parcours }}
+      </p>
+  </div>
+</div>
+
+<div class="programs-container">
+  <div class="filter-settings">
+    <h2>{{ I18ns.parcours.programsList.title }} ({{ programs.length }})</h2>
+    <alto-dropdown-filter-single
+  displayLabel="name"
+  returnValue="id"
+  [data]="[{id: 'all', name: 'Tous les programmes'}, {id: 'team', name: 'Programmes assignés', icon: 'bi bi-pin-angle'}]"
+  [placeholder]="''"
+  (selectChange)="onSelectChange($event)"
+></alto-dropdown-filter-single>
+    <alto-input-search [searchControl]="programSearchControl" class="search-input"></alto-input-search>
+  </div>
+  <div class="program-list">
+    <div *ngFor="let program of programsFiltered; let i = index"
+    [class.disabled]="isProgramInParcours(program)"
+    dnd-draggable
+    [dndDraggable]="program"
+    [dndEffectAllowed]="isProgramInParcours(program) ? 'none' : 'move'"
+    (dndStart)="onListDragStart($event, i)"
+    (dndEnd)="onEnd()"
+    [ngClass]="{'dragging': currentlyDraggedProgram && currentlyDraggedProgram.id === program.id, 'assigned-class': isProgramAssigned(program.id)}">
+      <i *ngIf="isProgramAssigned(program.id)" class="bi bi-pin-angle program-pin"></i>
+      <span class="program-name">{{ program.name }}</span>
+    </div>
+    <p class="program-placeholder" *ngIf="programsFiltered.length === 0">
+        {{ I18ns.parcours.placeholder.programs }}
+      </p>
+  </div>
+</div>
+
+
+      <div style="display: flex; width: 100%; margin-top: 40px; margin-bottom: 12px;">
+        <div class="separator"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-top: 0;">
+        <div>
+          <button class="btn btn-outline-secondary" (click)="goPrevious()">Annuler</button>
+          <button class="btn btn-danger" [style]="'width: fit-content; margin-left: 25px'" (click)="deleteParcours()">
+            <i class="bi bi-trash3"></i><span>Supprimer le parcours</span>
+          </button>
+        </div>
+        <div>
+          <button class="btn btn-primary" (click)="saveParcours()">Enregistrer</button>
+        </div>
+      </div>
+</div>

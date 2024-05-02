@@ -1,6 +1,6 @@
 <div class="modal-body text-center p-5">
-  <i *ngIf="data.icon" class="alto-badge-big alto-badge-red mt-3 mb-4 bi fs-4" [class]="data.icon"></i>
-  <h2 class="fw-bold mb-4">
+  <i *ngIf="data.color && data.color === 'blue'" class="alto-badge-big alto-badge-blue mt-3 mb-4 bi fs-4" [class]="data.icon"></i>
+  <i *ngIf="!data.color || data.color !== 'blue'" class="alto-badge-big alto-badge-red mt-3 mb-4 bi fs-4" [class]="data.icon"></i>  <h2 class="fw-bold mb-4">
     {{ data.title }}
   </h2>
   <p class="mb-3 alto-grey">
@@ -15,7 +15,10 @@
       </button>
     </div>
     <div class="col-6">
-      <button class="btn btn-danger" (click)="exit(true)">
+      <button *ngIf="data.color && data.color === 'blue'" class="btn btn-primary" (click)="exit(true)">
+        {{ data.confirmText }}
+      </button>
+      <button *ngIf="!data.color || data.color !== 'blue'" class="btn btn-danger" (click)="exit(true)">
         {{ data.confirmText }}
       </button>
     </div>

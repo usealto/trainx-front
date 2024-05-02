@@ -50,6 +50,7 @@
     "date-fns": "^2.29.3",
     "echarts": "^5.4.2",
     "memoizee": "^0.4.15",
+    "ngx-drag-drop": "^15.1.0",
     "ngx-echarts": "^15.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
