@@ -165,7 +165,8 @@
         cursor: move;
 
         &.disabled {
-          background: #e0e0e0;
+          opacity: 0.3;
+          cursor: not-allowed;
         }
       }
     }
