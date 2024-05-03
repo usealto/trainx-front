@@ -73,13 +73,13 @@
           </a>
           <span>{{ I18ns.menu.programs }}</span>
         </div>
-        <!-- Parcours -->
+        <!-- PARCOURS -->
         <div
         class="module extended-item"
         [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.parcours"
         routerLinkActive="menu-selected">
           <a class="module-icon" data-cy="leadMenuParcours">
-            <i class="bi bi-arrow-right-square"></i>
+            <i class="bi bi-signpost"></i>
           </a>
           <span>{{ I18ns.menu.parcours }}</span>
         </div>
@@ -142,14 +142,14 @@
           </a>
         </div>
 
-         <!-- COLLAPSED PROGRAMS -->
+         <!-- COLLAPSED PARCOURS -->
         <div class="module" ngbTooltip="{{ I18ns.menu.parcours }}" placement="right" tooltipClass="menu-tooltip-class">
           <a
           data-cy="leadMenuParcours"
           class="module-icon"
           [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.parcours"
           routerLinkActive="menu-selected">
-            <i class="bi bi-arrow-right-square"></i>
+            <i class="bi bi-signpost"></i>
           </a>
         </div>
       </ng-template>
