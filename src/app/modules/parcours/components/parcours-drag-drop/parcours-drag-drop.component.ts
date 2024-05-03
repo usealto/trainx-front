@@ -40,6 +40,7 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.parcour = this.team?.parcour.map((id) => this.programs.find((p) => p.id === id) as Program) ?? [];
+    this.programs = this.programs.filter((p) => !p.isAccelerated);
     this.programsFiltered = this.programs;
 
     this.programSearchControl.valueChanges.subscribe((value) => {
