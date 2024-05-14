@@ -52,6 +52,13 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
     this.adjustScroll();
   }
 
+  isDirty(): boolean {
+    if (!this.team?.parcour) {
+      return false;
+    }
+    return this.parcour.map((prog) => prog.id).every((id, index) => id === this.team?.parcour[index]);
+  }
+
   onSelectChange(value: string): void {
     this.selectedOption = value;
     this.applyFilters(this.programSearchControl.value?.toLowerCase() ?? '', value);
@@ -76,6 +83,7 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
     this.parcours.nativeElement.style.paddingRight = hasHorizontalScrollbar ? '100px' : '0';
     this.parcours.nativeElement.style.paddingLeft = hasHorizontalScrollbar ? '100px' : '0';
     this.parcours.nativeElement.style.justifyContent = hasHorizontalScrollbar ? 'flex-start' : 'center';
+    this.wrapper.nativeElement.style.paddingBottom = hasHorizontalScrollbar ? '9px' : '0';
     // if isAdd is true, we scroll to the end of the parcours
     if (isAdd) {
       this.parcours.nativeElement.scrollLeft = this.parcours.nativeElement.scrollWidth;
@@ -145,7 +153,7 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
         icon: 'bi-pin-angle',
         color: 'blue',
       };
-  
+
       modalRef.closed.subscribe((confirm) => {
         if (confirm) {
           this.parcoursChanged.emit(this.parcour.map((p) => p.id));

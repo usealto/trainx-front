@@ -922,6 +922,8 @@ export const FR = {
   parcours: {
     title: 'Mes parcours d’apprentissage continu',
     subtitle: 'Retrouvez l’ensemble des parcours assignés à vos équipes.',
+    createTooltip: 'Créer un parcours',
+    editTooltip: 'Éditer le parcours',
     list: {
       title: 'Parcours de vos équipes',
       subtitle: 'Pour assigner des parcours à vos équipes, cliquer sur “Créer”',
