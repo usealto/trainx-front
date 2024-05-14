@@ -14,13 +14,21 @@
   border-radius: 6px;
 }
 
+.wrapper-list {
+  border: 1px dashed #2E90FA;
+  border-radius: 6px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 9px;
+  margin-bottom: 20px;
+}
+
 .list-parcours {
   display: flex;
-  padding-left: 20px;
+
   align-items: center;
   height: 70px; 
-  margin-bottom: 20px;
-  border: 1px dashed #2E90FA;
+  
   border-radius: 6px;
   overflow-x: auto;
 
@@ -77,9 +85,16 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 600;
 }
 
 .alto-badge {
-  font-size: medium;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 20px !important;
   padding: 4px 12px;
+}
+
+.no-margin {
+  margin: 0;
 }

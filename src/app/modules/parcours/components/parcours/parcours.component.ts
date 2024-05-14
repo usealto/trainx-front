@@ -19,7 +19,7 @@ import { AltoRoutes } from '../../../shared/constants/routes';
   providers: [ReplaceInTranslationPipe],
 })
 export class ParcoursComponent implements OnInit, AfterViewInit {
-  @ViewChildren('teamParcours') wrappers!: QueryList<ElementRef<HTMLDivElement>>;
+  @ViewChildren('wrapperList') wrappers!: QueryList<ElementRef<HTMLDivElement>>;
   @ViewChildren('listParcours') parcours!: QueryList<ElementRef<HTMLDivElement>>;
   I18ns = I18ns;
   Emoji = EmojiName;
@@ -75,6 +75,8 @@ export class ParcoursComponent implements OnInit, AfterViewInit {
       if (wrapper) {
         const hasHorizontalScrollbar = parcour.nativeElement.scrollWidth > wrapper.nativeElement.clientWidth;
         parcour.nativeElement.style.justifyContent = hasHorizontalScrollbar ? 'flex-start' : 'center';
+        wrapper.nativeElement.style.justifyContent = hasHorizontalScrollbar ? 'flex-start' : 'center';
+        wrapper.nativeElement.style.paddingBottom = hasHorizontalScrollbar ? '9px' : '0';
       }
     });
   }

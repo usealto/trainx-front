@@ -4,7 +4,9 @@
     border: 1px dashed #2E90FA;
     border-radius: 6px;
     margin-bottom: 20px;
-    padding-bottom: 0px;
+    padding-bottom: 9px;
+    padding-left: 15px;
+    padding-right: 15px;
     justify-content: center;
     height: 86px; 
     .parcours {
@@ -26,7 +28,6 @@
       &::-webkit-scrollbar-thumb {
         border-radius: 8px;
         background: var(--Gray-200, #EAECF0);
-
       }
 
       &::-webkit-scrollbar-thumb:hover {
@@ -186,10 +187,11 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 600;
 }
 
 .separator {
-  border-top: 2px solid #ccc;
+  border-top: 1px solid #D0D5DD;
   width: 100%;
   margin-top: 20px;
 }
@@ -224,6 +226,8 @@
 }
 
 .alto-badge {
-  font-size: medium;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 20px !important;
   padding: 4px 12px;
 }
