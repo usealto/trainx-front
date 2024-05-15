@@ -38,7 +38,6 @@ export class ParcoursComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     const data = this.resolversService.getDataFromPathFromRoot(this.activatedRoute.pathFromRoot);
     this.company = (data[EResolvers.LeadResolver] as ILeadData).company;
-    console.log(this.company);
 
     if (this.company) {
       this.teams = [...this.company.teams];
@@ -57,10 +56,6 @@ export class ParcoursComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.parcours.forEach((parcour) => {
-      console.log('hello');
-      console.log(parcour.nativeElement.clientWidth);
-    });
     this.adjustAllScrolls();
   }
 
