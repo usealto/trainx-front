@@ -47,3 +47,5 @@ cypress/videos
 documentation.json
 # Sentry Config File
 .sentryclirc
+
+/sdk-ts-angular

@@ -1,0 +1,99 @@
+:host {
+  display: block;
+  padding: var(--alto-page-padding);
+}
+
+.no-parcours {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px; 
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border: 1px dashed #dcdcdc;
+  border-radius: 6px;
+}
+
+.wrapper-list {
+  border: 1px dashed #2E90FA;
+  border-radius: 6px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 9px;
+  margin-bottom: 20px;
+}
+
+.list-parcours {
+  display: flex;
+
+  align-items: center;
+  height: 70px; 
+  
+  border-radius: 6px;
+  overflow-x: auto;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    margin-block: 4px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: var(--Gray-200, #EAECF0);
+
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--Gray-300, #D0D5DD);
+    border-radius: 8px;
+  }
+}
+
+.prog-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.block-parcours {
+  display: flex;
+  background-color: #ffffff;
+  border: 1px solid #dcdcdc;
+  height: 40px;
+  width: 160px;
+  justify-content: center;
+  align-items: center;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-right: 12px;
+  border-radius: 7px;
+  span {
+    color: #2E90FA;
+    text-align: center;
+  }
+}
+
+.program-name {
+  display: block;
+  flex-grow: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+
+.alto-badge {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 20px !important;
+  padding: 4px 12px;
+}
+
+.no-margin {
+  margin-right: 1px !important;
+}

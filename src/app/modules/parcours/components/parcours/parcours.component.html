@@ -1,0 +1,46 @@
+<div class="header-panel mb-5">
+  <img [src]="Emoji.RoundPushpin | emoji" height="32" width="32" />
+  <div>
+    <h1>{{ I18ns.parcours.title }}</h1>
+    <p>{{ I18ns.parcours.subtitle }}</p>
+  </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+  <div>
+    <h2>
+      <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" width="16" height="16" />
+      {{ I18ns.parcours.list.title }} ({{ totalParcours }})
+    </h2>
+    <p class="mt-2 alto-grey">{{ I18ns.parcours.list.subtitle }}</p>
+  </div>
+</div>
+
+<div *ngFor="let team of teams">
+  <div class="d-flex justify-content-between align-items-center">
+    <h2 class="alto-badge" [style]="team.id | teamColor">{{ team.name }}</h2>
+    <div *ngIf="team.parcour.length === 0" ngbTooltip="{{ I18ns.parcours.createTooltip }}" placement="top" tooltipClass="menu-tooltip-class">
+      <a class="link" style="color: #2E90FA; text-decoration: underline;" [routerLink]=" [ '/', AltoRoutes.lead, AltoRoutes.parcours, AltoRoutes.parcoursEdit, team.id ]">{{ I18ns.parcours.list.createBtn }}</a>
+    </div>
+    <div *ngIf="team.parcour.length > 0" ngbTooltip="{{ I18ns.parcours.editTooltip }}" placement="top" tooltipClass="menu-tooltip-class">
+      <a class="link" style="color: #2E90FA; text-decoration: underline"  [routerLink]=" [ '/', AltoRoutes.lead, AltoRoutes.parcours, AltoRoutes.parcoursEdit, team.id ] ">{{ I18ns.parcours.list.editBtn }}</a>
+    </div>
+  </div>
+  <div class="team-parcours" #teamParcours>
+    <div class="wrapper-list" *ngIf="team.parcour.length > 0" #wrapperList>
+      <div class="list-parcours" *ngIf="team.parcour.length > 0" #listParcours>
+        <div class="prog-arrow" *ngFor="let programId of team.parcour; let isLast = last">
+         <div class="block-parcours" [ngClass]="{'no-margin': isLast}">
+           <span class="program-name">{{ getProgramName(programId) }}</span>
+         </div>
+         <div *ngIf="!isLast" style="margin-right: 12px;">
+           <i class="bi bi-arrow-right fs-1" style="color: #667085;"></i>
+         </div>
+        </div>
+      </div>
+    </div>
+    <div class="no-parcours" *ngIf="team.parcour.length === 0">
+      <p>{{ I18ns.parcours.list.placeholder }}</p>
+    </div>
+  </div>
+</div>

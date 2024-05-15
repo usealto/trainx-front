@@ -919,6 +919,47 @@ export const FR = {
       },
     },
   },
+  parcours: {
+    title: 'Mes parcours d’apprentissage continu',
+    subtitle: 'Retrouvez l’ensemble des parcours assignés à vos équipes.',
+    createTooltip: 'Créer un parcours',
+    editTooltip: 'Éditer le parcours',
+    list: {
+      title: 'Parcours de vos équipes',
+      subtitle: 'Pour assigner des parcours à vos équipes, cliquer sur “Créer”',
+      placeholder: 'Aucun parcours n’est attribué à cette équipe.',
+      createBtn: 'Créer',
+      createBtnHover: 'Créer un parcours',
+      editBtn: 'Éditer',
+      editBtnHover: 'Éditer le parcours',
+    },
+    create: {
+      title: 'Création du parcours',
+      subtitle: 'Pour créer un parcours, glissez-déposez les programmes dans l’ordre souhaité.',
+    },
+    edit: {
+      title: 'Édition du parcours',
+      subtitle: 'Pour éditer un parcours, glissez-déposez les programmes dans l’ordre souhaité.',
+    },
+    programsList: {
+      title: 'Liste des programmes',
+      selectAll: 'Tout les programmes',
+      selectAssigned: 'Programmes assignés',
+    },
+    modal: {
+      title: 'Certains programmes ne sont pas assignés à cette équipe',
+      description:
+        'En enregistrant le parcours, les programmes non assignés à cette équipe deviendront assignés.',
+    },
+    placeholder: {
+      parcours: 'Glisser un programme pour initier un parcours.',
+      programs: 'Aucun programme n’a été trouvé.',
+    },
+    modalDelete: {
+      title: 'Supprimer le parcours',
+      description: 'Êtes-vous sûr de vouloir supprimer ce parcours ?',
+    },
+  },
   challenges: {
     title: 'Challenges',
     subtitle: "Retrouvez l'ensemble des challenges de vos équipes.",
@@ -991,6 +1032,7 @@ export const FR = {
     disconnect: 'Se déconnecter',
     feedback: 'Envoyer un feedback',
     contribution: 'Contribution',
+    parcours: 'Mes parcours',
   },
   settings: {
     title: 'Paramètres',

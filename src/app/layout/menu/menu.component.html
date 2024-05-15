@@ -73,6 +73,16 @@
           </a>
           <span>{{ I18ns.menu.programs }}</span>
         </div>
+        <!-- PARCOURS -->
+        <div
+        class="module extended-item"
+        [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.parcours"
+        routerLinkActive="menu-selected">
+          <a class="module-icon" data-cy="leadMenuParcours">
+            <i class="bi bi-signpost"></i>
+          </a>
+          <span>{{ I18ns.menu.parcours }}</span>
+        </div>
       </ng-container>
       <ng-template #collapsedLeadMenu>
         <!-- COLLAPSED HOME -->
@@ -129,6 +139,17 @@
           [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.programs"
           routerLinkActive="menu-selected">
             <i class="bi bi-check2-square"></i>
+          </a>
+        </div>
+
+         <!-- COLLAPSED PARCOURS -->
+        <div class="module" ngbTooltip="{{ I18ns.menu.parcours }}" placement="right" tooltipClass="menu-tooltip-class">
+          <a
+          data-cy="leadMenuParcours"
+          class="module-icon"
+          [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.parcours"
+          routerLinkActive="menu-selected">
+            <i class="bi bi-signpost"></i>
           </a>
         </div>
       </ng-template>
@@ -224,7 +245,7 @@
         >
           <div><i class="bi bi-person"></i>{{ I18ns.menu.profile }}</div>
         </a>
-        <div *ngIf="isAdmin" class="form-check form-switch">
+        <!-- <div *ngIf="isAdmin" class="form-check form-switch">
           <input
             class="form-check-input"
             type="checkbox"
@@ -236,7 +257,7 @@
           <label class="form-check-label" for="adminSwitch">
             {{ I18ns.menu.adminMode }}
           </label>
-        </div>
+        </div> -->
         <a href="https://airtable.com/appIyNNDxAgaqKMAJ/shr4vWMugZ5uEc5a4" target="_blank">
           <div><i class="bi bi-chat-text"></i>{{ I18ns.menu.feedback }}</div>
         </a>
@@ -248,7 +269,7 @@
       <!-- Container height = sum of elements height -->
       <div
       class="profile-menu-container"
-      [ngStyle]="{'height': isExtended && toggleProfileMenu ? isAdmin ? '220px' : '190px' : '70px'}">
+      [ngStyle]="{'height': isExtended && toggleProfileMenu ? '190px' : '70px'}">
         <ng-container *ngIf="isExtended; else collapsedProfile">
           <div class="profile-container" (click)="toggleProfileContainerMenu()">
             <div class="profile-badge">
@@ -282,7 +303,7 @@
               <span>{{ I18ns.menu.profile }}</span>
             </div>
 
-            <div *ngIf="isAdmin" class="module extended-item">
+            <!-- <div *ngIf="isAdmin" class="module extended-item">
               <div class="form-check form-switch">
                 <input
                   class="form-check-input"
@@ -294,7 +315,7 @@
                 />
               </div>
               <span>{{ I18ns.menu.adminMode }}</span>
-            </div>
+            </div> -->
 
             <a class="module extended-item">
               <i class="module-icon bi bi-chat-text"></i>

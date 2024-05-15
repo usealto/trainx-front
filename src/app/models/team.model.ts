@@ -12,18 +12,21 @@ import { EScoreDuration } from './score.model';
 export interface ITeam extends IBaseModel {
   name: string;
   programIds: string[];
+  parcour: string[];
   stats: ITeamStats[];
 }
 
 export class Team extends BaseModel implements ITeam {
   name: string;
   programIds: string[];
+  parcour: string[];
   stats: TeamStats[];
 
   constructor(data: ITeam) {
     super(data);
     this.name = data.name;
     this.programIds = data.programIds;
+    this.parcour = data.parcour;
     this.stats = data.stats.map((s) => new TeamStats(s));
   }
 
@@ -35,6 +38,7 @@ export class Team extends BaseModel implements ITeam {
       updatedAt: data.updatedAt,
       deletedAt: data.deletedAt,
       programIds: data.programs.map(({ id }) => id),
+      parcour: data.parcour,
       stats: [],
     });
   }
@@ -44,6 +48,7 @@ export class Team extends BaseModel implements ITeam {
       ...super.rawData,
       name: this.name,
       programIds: this.programIds,
+      parcour: this.parcour,
       stats: this.stats.map((s) => s.rawData),
     };
   }
