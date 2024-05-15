@@ -43,6 +43,18 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
     this.programs = this.programs.filter((p) => !p.isAccelerated);
     this.programsFiltered = this.programs;
 
+    // put assigned programs first in the list
+    this.programsFiltered = this.programsFiltered.sort((a, b) => {
+      const isAAssigned = this.isProgramAssigned(a.id);
+      const isBAssigned = this.isProgramAssigned(b.id);
+      if (isAAssigned && !isBAssigned) {
+        return -1;
+      } else if (!isAAssigned && isBAssigned) {
+        return 1;
+      }
+      return 0;
+    });
+
     this.programSearchControl.valueChanges.subscribe((value) => {
       this.applyFilters(value?.toLowerCase() ?? '', this.selectedOption);
     });
@@ -67,6 +79,17 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
   applyFilters(searchValue: string, filterValue: string): void {
     let filtered = this.programs;
 
+    filtered = filtered.sort((a, b) => {
+      const isAAssigned = this.isProgramAssigned(a.id);
+      const isBAssigned = this.isProgramAssigned(b.id);
+      if (isAAssigned && !isBAssigned) {
+        return -1;
+      } else if (!isAAssigned && isBAssigned) {
+        return 1;
+      }
+      return 0;
+    });
+
     if (filterValue === 'team') {
       filtered = filtered.filter((p) => this.isProgramAssigned(p.id));
     }
@@ -79,7 +102,7 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
   adjustScroll(isAdd = false) {
     console.log(this.parcours.nativeElement.scrollWidth, this.wrapper.nativeElement.clientWidth);
     const hasHorizontalScrollbar =
-      this.parcours.nativeElement.scrollWidth > this.wrapper.nativeElement.clientWidth;
+      this.parcours.nativeElement.scrollWidth > this.wrapper.nativeElement.clientWidth - 30;
     this.parcours.nativeElement.style.paddingRight = hasHorizontalScrollbar ? '100px' : '0';
     this.parcours.nativeElement.style.paddingLeft = hasHorizontalScrollbar ? '100px' : '0';
     this.parcours.nativeElement.style.justifyContent = hasHorizontalScrollbar ? 'flex-start' : 'center';

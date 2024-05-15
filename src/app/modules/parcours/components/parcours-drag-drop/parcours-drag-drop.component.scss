@@ -122,7 +122,7 @@
       gap: 10px;
       padding: 24px;
       margin-right: 4px;
-      max-height: calc(100vh - 570px);
+      max-height: calc(100vh - 520px);
       overflow-y: auto;
 
       &::-webkit-scrollbar {
@@ -193,7 +193,7 @@
 .separator {
   border-top: 1px solid #D0D5DD;
   width: 100%;
-  margin-top: 20px;
+  margin-top: 12px;
 }
 
 .button-group {
