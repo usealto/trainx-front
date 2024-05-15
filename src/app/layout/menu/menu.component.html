@@ -269,7 +269,7 @@
       <!-- Container height = sum of elements height -->
       <div
       class="profile-menu-container"
-      [ngStyle]="{'height': isExtended && toggleProfileMenu ? isAdmin ? '220px' : '190px' : '70px'}">
+      [ngStyle]="{'height': isExtended && toggleProfileMenu ? '190px' : '70px'}">
         <ng-container *ngIf="isExtended; else collapsedProfile">
           <div class="profile-container" (click)="toggleProfileContainerMenu()">
             <div class="profile-badge">
