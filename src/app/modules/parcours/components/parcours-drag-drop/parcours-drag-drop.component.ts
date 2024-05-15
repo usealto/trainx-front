@@ -100,7 +100,6 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
   }
 
   adjustScroll(isAdd = false) {
-    console.log(this.parcours.nativeElement.scrollWidth, this.wrapper.nativeElement.clientWidth);
     const hasHorizontalScrollbar =
       this.parcours.nativeElement.scrollWidth > this.wrapper.nativeElement.clientWidth - 30;
     this.parcours.nativeElement.style.paddingRight = hasHorizontalScrollbar ? '100px' : '0';
