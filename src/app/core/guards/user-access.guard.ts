@@ -11,7 +11,7 @@ export const userAccessGuard: CanActivateFn = () => {
 
   return combineLatest([store.select(FromRoot.selectUserMe), store.select(FromRoot.selectCompany)]).pipe(
     map(([{ data: user }]) => {
-      if (!user.isAltoAdmin) {
+      if (user.isCompanyAdmin()) {
         router.navigate(['/', AltoRoutes.lead]);
       } else {
         router.navigate(['/', AltoRoutes.noAccess]);
