@@ -19,10 +19,10 @@
 <div *ngFor="let team of teams">
   <div class="d-flex justify-content-between align-items-center">
     <h2 class="alto-badge" [style]="team.id | teamColor">{{ team.name }}</h2>
-    <div *ngIf="team.parcour.length === 0" ngbTooltip="{{ I18ns.parcours.createTooltip }}" placement="right" tooltipClass="menu-tooltip-class">
+    <div *ngIf="team.parcour.length === 0" ngbTooltip="{{ I18ns.parcours.createTooltip }}" placement="top" tooltipClass="menu-tooltip-class">
       <a class="link" style="color: #2E90FA; text-decoration: underline;" [routerLink]=" [ '/', AltoRoutes.lead, AltoRoutes.parcours, AltoRoutes.parcoursEdit, team.id ]">{{ I18ns.parcours.list.createBtn }}</a>
     </div>
-    <div *ngIf="team.parcour.length > 0" ngbTooltip="{{ I18ns.parcours.editTooltip }}" placement="right" tooltipClass="menu-tooltip-class">
+    <div *ngIf="team.parcour.length > 0" ngbTooltip="{{ I18ns.parcours.editTooltip }}" placement="top" tooltipClass="menu-tooltip-class">
       <a class="link" style="color: #2E90FA; text-decoration: underline"  [routerLink]=" [ '/', AltoRoutes.lead, AltoRoutes.parcours, AltoRoutes.parcoursEdit, team.id ] ">{{ I18ns.parcours.list.editBtn }}</a>
     </div>
   </div>
