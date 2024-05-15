@@ -10,10 +10,10 @@ export const userAccessGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   return combineLatest([store.select(FromRoot.selectUserMe), store.select(FromRoot.selectCompany)]).pipe(
-    map(([{ data: user }, { data: company }]) => {
-      if (!user.teamId) {
-        router.navigate(['/', AltoRoutes.noTeam]);
-      } else if (!company.usersHaveWebAccess || user.hasNoAccess()) {
+    map(([{ data: user }]) => {
+      if (!user.isAltoAdmin) {
+        router.navigate(['/', AltoRoutes.lead]);
+      } else {
         router.navigate(['/', AltoRoutes.noAccess]);
       }
       return !!user;
