@@ -39,26 +39,27 @@ const routes: Routes = [
       },
       {
         path: AltoRoutes.user,
-        canActivate: [userAccessGuard],
-        children: [
-          { path: '', redirectTo: AltoRoutes.userHome, pathMatch: 'full' },
-          {
-            path: AltoRoutes.userHome,
-            loadChildren: () => import('./modules/user-home/user-home.module').then((m) => m.UserHomeModule),
-          },
-          {
-            path: AltoRoutes.userTeams,
-            loadChildren: () => import('./modules/user-team/user-team.module').then((m) => m.UserTeamModule),
-          },
-          {
-            path: AltoRoutes.training,
-            loadChildren: () => import('./modules/training/training.module').then((m) => m.TrainingModule),
-          },
-          {
-            path: AltoRoutes.profile,
-            loadChildren: () => import('./modules/profile/profile.module').then((m) => m.ProfileModule),
-          },
-        ],
+        component: NoWebAccessComponent,
+        // canActivate: [userAccessGuard],
+        // children: [
+        //   { path: '', redirectTo: AltoRoutes.userHome, pathMatch: 'full' },
+        //   {
+        //     path: AltoRoutes.userHome,
+        //     loadChildren: () => import('./modules/user-home/user-home.module').then((m) => m.UserHomeModule),
+        //   },
+        //   {
+        //     path: AltoRoutes.userTeams,
+        //     loadChildren: () => import('./modules/user-team/user-team.module').then((m) => m.UserTeamModule),
+        //   },
+        //   {
+        //     path: AltoRoutes.training,
+        //     loadChildren: () => import('./modules/training/training.module').then((m) => m.TrainingModule),
+        //   },
+        //   {
+        //     path: AltoRoutes.profile,
+        //     loadChildren: () => import('./modules/profile/profile.module').then((m) => m.ProfileModule),
+        //   },
+        // ],
       },
       {
         path: AltoRoutes.lead,
