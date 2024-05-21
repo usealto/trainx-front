@@ -34,7 +34,7 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
 
   programsFiltered: Program[] = [];
 
-  selectedOption = 'all';
+  switchAssigned = true;
 
   constructor(private readonly router: Router, private readonly modalService: NgbModal) {}
 
@@ -56,8 +56,10 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
     });
 
     this.programSearchControl.valueChanges.subscribe((value) => {
-      this.applyFilters(value?.toLowerCase() ?? '', this.selectedOption);
+      this.applyFilters(value?.toLowerCase() ?? '', this.switchAssigned);
     });
+
+    this.applyFilters(this.programSearchControl.value?.toLowerCase() ?? '', this.switchAssigned);
   }
 
   ngAfterViewInit() {
@@ -68,15 +70,19 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
     if (!this.team?.parcour) {
       return false;
     }
+    if (this.parcour.length !== this.team.parcour.length) {
+      return false;
+    }
     return this.parcour.map((prog) => prog.id).every((id, index) => id === this.team?.parcour[index]);
   }
 
-  onSelectChange(value: string): void {
-    this.selectedOption = value;
-    this.applyFilters(this.programSearchControl.value?.toLowerCase() ?? '', value);
+  onSwitchChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.switchAssigned = inputElement.checked;
+    this.applyFilters(this.programSearchControl.value?.toLowerCase() ?? '', this.switchAssigned);
   }
 
-  applyFilters(searchValue: string, filterValue: string): void {
+  applyFilters(searchValue: string, switchValue: boolean): void {
     let filtered = this.programs;
 
     filtered = filtered.sort((a, b) => {
@@ -90,7 +96,7 @@ export class ParcoursDragDropComponent implements OnInit, AfterViewInit {
       return 0;
     });
 
-    if (filterValue === 'team') {
+    if (switchValue === true) {
       filtered = filtered.filter((p) => this.isProgramAssigned(p.id));
     }
 

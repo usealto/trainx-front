@@ -943,8 +943,8 @@ export const FR = {
     },
     programsList: {
       title: 'Liste des programmes',
-      selectAll: 'Tout les programmes',
-      selectAssigned: 'Programmes assignés',
+      switchAssigned1: 'Programmes',
+      switchAssigned2: 'assignés',
     },
     modal: {
       title: 'Certains programmes ne sont pas assignés à cette équipe',

@@ -122,7 +122,7 @@
       gap: 10px;
       padding: 24px;
       margin-right: 4px;
-      max-height: calc(100vh - 500px);
+      max-height: calc(100vh - 510px);
       overflow-y: auto;
 
       &::-webkit-scrollbar {
@@ -208,6 +208,11 @@
   color: #FB6514;
 }
 
+.switch-pin {
+  display: inline-block;
+  color: #FB6514;
+}
+
 .assigned-class {
   border: 1px solid #FDDCAB !important;
 }
@@ -230,4 +235,18 @@
   font-weight: 600 !important;
   line-height: 20px !important;
   padding: 4px 12px;
+}
+
+.switch-assigned {
+  display: flex;
+  justify-items: center;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+
+.label-content {
+    display: flex;
+    align-items: center;
+    gap: 3px;
 }
