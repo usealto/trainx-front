@@ -1,6 +1,9 @@
 <div class="modal-body text-center p-5">
-  <i *ngIf="data.color && data.color === 'blue'" class="alto-badge-big alto-badge-blue mt-3 mb-4 bi fs-4" [class]="data.icon"></i>
-  <i *ngIf="!data.color || data.color !== 'blue'" class="alto-badge-big alto-badge-red mt-3 mb-4 bi fs-4" [class]="data.icon"></i>  <h2 class="fw-bold mb-4">
+  <div class="mb-4">
+    <alto-icon-badge *ngIf="data.color && data.color === 'blue'" [size]="4" [icon]="data.icon ? data.icon : 'bi-exclamation-triangle'" [color]="'badge-double-primary'"></alto-icon-badge>
+    <alto-icon-badge *ngIf="!data.color || data.color !== 'blue'" [size]="4" [icon]="data.icon ? data.icon : 'bi-exclamation-triangle'" [color]="'badge-double-error'"></alto-icon-badge>
+  </div>
+  <h2 class="fw-bold mb-4">
     {{ data.title }}
   </h2>
   <p class="mb-3 alto-grey">
