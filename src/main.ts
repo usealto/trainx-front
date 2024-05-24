@@ -4,6 +4,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import * as Sentry from '@sentry/angular-ivy';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
+import { Crisp } from 'crisp-sdk-web';
 
 if (environment.production) {
   Sentry.init({
