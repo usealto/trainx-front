@@ -27,6 +27,10 @@ if (environment.production) {
   });
 }
 
+if (environment.crispWebsiteId) {
+  Crisp.configure(environment.crispWebsiteId);
+}
+
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
   .catch((err) => console.error(err));
