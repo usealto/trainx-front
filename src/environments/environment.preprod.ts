@@ -13,4 +13,5 @@ export const environment = {
   sentryReplaysSessionSampleRate: 0,
   sentryReplaysOnErrorSampleRate: 1.0,
   sentryEnvironment: 'development',
+  crispWebsiteId: 'ab707f9e-f835-4dac-b063-dd1fd3153f7f',
 };

@@ -47,6 +47,7 @@
     "@usealto/sdk-ts-angular": "^1.0.202405021218-dev",
     "bootstrap": "^5.3.0",
     "bootstrap-icons": "^1.10.5",
+    "crisp-sdk-web": "^1.0.25",
     "date-fns": "^2.29.3",
     "echarts": "^5.4.2",
     "memoizee": "^0.4.15",

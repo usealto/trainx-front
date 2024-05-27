@@ -274,6 +274,10 @@ textarea.form-control:focus {
   justify-content: space-between;
 }
 
+.modal-content {
+  --bs-modal-border-radius: 0.75rem;
+}
+
 @media (min-width: 700px) {
   .modal-md {
     --bs-modal-width: 400px;

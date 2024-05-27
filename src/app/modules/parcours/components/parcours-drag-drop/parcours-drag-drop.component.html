@@ -35,14 +35,19 @@
 
 <div class="programs-container">
   <div class="filter-settings">
-    <h2>{{ I18ns.parcours.programsList.title }} ({{ programs.length }})</h2>
-    <alto-dropdown-filter-single
-  displayLabel="name"
-  returnValue="id"
-  [data]="[{id: 'all', name: 'Tous les programmes'}, {id: 'team', name: 'Programmes assignés', icon: 'bi bi-pin-angle'}]"
-  [placeholder]="''"
-  (selectChange)="onSelectChange($event)"
-></alto-dropdown-filter-single>
+    <div class="flex">
+      <h2>{{ I18ns.parcours.programsList.title }} ({{ programs.length }})</h2>
+      <div class="form-check form-switch switch-assigned">
+        <input class="form-check-input" type="checkbox" id="assignedSwitch" (change)="onSwitchChange($event)" [(ngModel)]="switchAssigned">
+        <label class="form-check-label" for="assignedSwitch">
+          <div class="label-content">
+            <span style="display: inline-block;" class="program-name">{{ I18ns.parcours.programsList.switchAssigned1 }}</span> 
+            <span style="display: inline-block; color: #FB6514;" class="program-name">{{ I18ns.parcours.programsList.switchAssigned2 }}</span>
+            <i class="bi bi-pin-angle switch-pin"></i>
+          </div>
+        </label>
+      </div>
+    </div>
     <alto-input-search [searchControl]="programSearchControl" class="search-input"></alto-input-search>
   </div>
   <div class="program-list">

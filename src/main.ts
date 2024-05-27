@@ -4,6 +4,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import * as Sentry from '@sentry/angular-ivy';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
+import { Crisp } from 'crisp-sdk-web';
 
 if (environment.production) {
   Sentry.init({
@@ -25,6 +26,10 @@ if (environment.production) {
     replaysSessionSampleRate: environment.sentryReplaysSessionSampleRate, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
     replaysOnErrorSampleRate: environment.sentryReplaysOnErrorSampleRate, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
   });
+}
+
+if (environment.crispWebsiteId) {
+  Crisp.configure(environment.crispWebsiteId);
 }
 
 platformBrowserDynamic()
