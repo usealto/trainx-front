@@ -30,16 +30,39 @@
           <span>{{ I18ns.menu.home }}</span>
         </div>
 
-        <!-- STATISTICS -->
-        <div
-        class="module extended-item"
-        [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.statistics"
-        routerLinkActive="menu-selected">
+       <!-- STATISTICS -->
+        <div class="module extended-item" (click)="toggleStatisticsSubmenu()" [class.menu-selected]="isStatisticsMenuActive()">
           <a class="module-icon" data-cy="leadMenuStatistics">
-            <i class="bi bi-bar-chart"></i>
+            <i class="bi bi-graph-up"></i>
           </a>
           <span>{{ I18ns.menu.statistics }}</span>
+          <i class="bi chevron" [ngClass]="{'bi-chevron-down': statisticsMenuOpen && isExtended, 'bi-chevron-up': !statisticsMenuOpen || !isExtended}"></i>
         </div>
+        <div *ngIf="statisticsMenuOpen && isExtended" class="submenu">
+          <div class="submenu-lines">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="last-line"></div>
+          </div>
+          <div>
+            <!-- STATISTICS PER COMPANY -->
+            <div class="sub-module extended-item submenu-item" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.statistics" [class.menu-selected]="isStatisticsCompanyActive()">
+              <span>{{ I18ns.menu.statisticsPerCompany }}</span>
+            </div>
+  
+            <!-- STATISTICS PER TEAMS -->
+            <div class="sub-module extended-item submenu-item" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.statistics + '/' + AltoRoutes.teamsStatistics" routerLinkActive="menu-selected">
+              <span>{{ I18ns.menu.statisticsPerTeam }}</span>
+            </div>
+  
+            <!-- STATISTICS PER USERS -->
+            <div class="sub-module extended-item submenu-item" [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.statistics + '/' + AltoRoutes.usersStatistics" routerLinkActive="menu-selected">
+              <span>{{ I18ns.menu.statisticsPerUser }}</span>
+            </div>
+          </div>
+        </div>
+
+
 
         <!-- COLLABORATION -->
         <div
@@ -99,13 +122,8 @@
 
         <!-- COLLAPSED STATISTICS -->
         <div class="module" ngbTooltip="{{ I18ns.menu.statistics }}" placement="right" tooltipClass="menu-tooltip-class">
-          <a
-            data-cy="leadMenuStatistics"
-            class="module-icon"
-            [routerLink]="AltoRoutes.lead + '/' + AltoRoutes.statistics"
-            routerLinkActive="menu-selected"
-          >
-            <i class="bi bi-bar-chart"></i>
+          <a class="module-icon" data-cy="leadMenuStatistics" (click)="expandAndToggleStatistics()" [class.menu-selected]="isStatisticsMenuActive()">
+            <i class="bi bi-graph-up"></i>
           </a>
         </div>
 
