@@ -486,7 +486,8 @@ export class EditProgramsComponent implements OnInit {
     instance.question = question;
     instance.createdQuestion.subscribe({
       next: () => {
-        this.resetQuestionsTab();
+        this.refreshQuestions();
+        this.refreshAssociatedQuestions();
       },
     });
   }
@@ -494,7 +495,8 @@ export class EditProgramsComponent implements OnInit {
   addAssociatedQuestion(question: QuestionDtoApi): void {
     this.programRestService.addQuestionToProgram(this.program?.id as string, question.id).subscribe({
       next: () => {
-        this.resetQuestionsTab();
+        this.refreshQuestions();
+        this.refreshAssociatedQuestions();
       },
     });
   }
@@ -502,7 +504,8 @@ export class EditProgramsComponent implements OnInit {
   removeAssociatedQuestion(question: QuestionDtoApi): void {
     this.programRestService.removeQuestionFromProgram(this.program?.id as string, question.id).subscribe({
       next: () => {
-        this.resetQuestionsTab();
+        this.refreshQuestions();
+        this.refreshAssociatedQuestions();
       },
     });
   }
@@ -518,6 +521,66 @@ export class EditProgramsComponent implements OnInit {
   private resetQuestionsTab(): void {
     this.resetAssociatedQuestionsSearch();
     this.resetQuestionsSearch();
+  }
+
+  private refreshQuestions(): void {
+    const currentPage = this.questionsPageControl.value;
+    const search = this.questionsSearchControl.value;
+    const selectedTagsIds = this.tagControls.value.map((tagControl) => tagControl.value.value);
+
+    this.questionsRestService
+      .getQuestionsPaginated({
+        itemsPerPage: this.questionsPageSize,
+        page: currentPage,
+        tagIds: selectedTagsIds.length ? selectedTagsIds.join(',') : undefined,
+        search: search || undefined,
+        notInProgramIds: this.program?.id,
+      })
+      .subscribe(({ data: questions = [], meta }) => {
+        this.questionsCount = meta.totalItems;
+        this.questions = questions;
+        this.questionsDataStatus = questions.length
+          ? EPlaceholderStatus.GOOD
+          : this.questionsSearchControl.value !== ''
+          ? EPlaceholderStatus.NO_RESULT
+          : EPlaceholderStatus.NO_DATA;
+
+        // Adjust the page if no data on the current page
+        const totalPages = Math.ceil(this.questionsCount / this.questionsPageSize);
+        if (currentPage > totalPages && totalPages > 0) {
+          this.questionsPageControl.setValue(totalPages);
+          this.refreshQuestions();
+        }
+      });
+  }
+
+  private refreshAssociatedQuestions(): void {
+    const currentPage = this.associatedQuestionsPageControl.value;
+    const search = this.associatedQuestionsSearchControl.value;
+
+    this.questionsRestService
+      .getQuestionsPaginated({
+        itemsPerPage: this.questionsPageSize,
+        page: currentPage,
+        programIds: this.program?.id,
+        search: search || undefined,
+      })
+      .subscribe(({ data: associatedQuestions = [], meta }) => {
+        this.associatedQuestionsCount = meta.totalItems;
+        this.associatedQuestions = associatedQuestions;
+        this.associatedQuestionsDataStatus = associatedQuestions.length
+          ? EPlaceholderStatus.GOOD
+          : this.associatedQuestionsSearchControl.value !== ''
+          ? EPlaceholderStatus.NO_RESULT
+          : EPlaceholderStatus.NO_DATA;
+
+        // Adjust the page if no data on the current page
+        const totalPages = Math.ceil(this.associatedQuestionsCount / this.questionsPageSize);
+        if (currentPage > totalPages && totalPages > 0) {
+          this.associatedQuestionsPageControl.setValue(totalPages);
+          this.refreshAssociatedQuestions();
+        }
+      });
   }
 
   // SUMMARY TAB
