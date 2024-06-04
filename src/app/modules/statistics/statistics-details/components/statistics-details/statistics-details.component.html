@@ -1,7 +1,10 @@
 <div *ngIf="!emptyTeam; else emptyAlert" class="header-panel">
   <img [src]="EmojiName.ChartIncreasing | emoji" height="32" width="32" />
-  <h1 data-cy="leadStatisticsTitle">
-    {{ I18ns.statistics.title }} <i class="mx-3 bi bi-arrow-right"></i> {{ name }}
+  <h1 *ngIf="type === 'user'" data-cy="leadStatisticsTitle">
+    {{ I18ns.statistics.title }} <i class="mx-3 bi bi-arrow-right"></i> {{ I18ns.statistics.titleUser }} <i class="mx-3 bi bi-arrow-right"></i> {{ name }}
+  </h1>
+  <h1 *ngIf="type === 'team'" data-cy="leadStatisticsTitle">
+    {{ I18ns.statistics.title }} <i class="mx-3 bi bi-arrow-right"></i> {{ I18ns.statistics.titleTeam }} <i class="mx-3 bi bi-arrow-right"></i> {{ name }}
   </h1>
 </div>
 
@@ -10,7 +13,7 @@
     <div class="main">
       <img [src]="EmojiName.ChartIncreasing | emoji" height="32" width="32" />
       <h1 data-cy="leadStatisticsTitle">
-        {{ I18ns.statistics.title }} <i class="mx-3 bi bi-arrow-right"></i> {{ name }}
+        {{ I18ns.statistics.title }} <i class="mx-3 bi bi-arrow-right"></i> {{ I18ns.statistics.titleTeam }} <i class="mx-3 bi bi-arrow-right"></i> {{ name }}
       </h1>
     </div>
     <div class="alertMsg">
