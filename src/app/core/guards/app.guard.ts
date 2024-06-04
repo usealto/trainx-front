@@ -10,6 +10,7 @@ import { UsersRestService } from '../../modules/profile/services/users-rest.serv
 import { ProgramsRestService } from '../../modules/programs/services/programs-rest.service';
 import { setCompany, setUserMe } from '../store/root/root.action';
 import * as FromRoot from '../store/store.reducer';
+import { CoachsRestService } from 'src/app/modules/programs/services/coachs-rest.service';
 
 export const AppGuard: CanActivateFn = () => {
   const store = inject<Store<FromRoot.AppState>>(Store<FromRoot.AppState>);
@@ -17,6 +18,7 @@ export const AppGuard: CanActivateFn = () => {
   const companiesRestService = inject<CompaniesRestService>(CompaniesRestService);
   const teamsRestService = inject<TeamsRestService>(TeamsRestService);
   const programsRestService = inject<ProgramsRestService>(ProgramsRestService);
+  const coachsRestService = inject<CoachsRestService>(CoachsRestService);
 
   const router = inject(Router);
 
@@ -46,8 +48,9 @@ export const AppGuard: CanActivateFn = () => {
                 companiesRestService.getCompanyById(user.companyId),
                 teamsRestService.getTeams(),
                 programsRestService.getAllPrograms(),
+                coachsRestService.getAllCoachs(),
               ]).pipe(
-                switchMap(([company, teams, programs]) => {
+                switchMap(([company, teams, programs, coachs]) => {
                   if (!company) {
                     return of(company);
                   }
@@ -55,6 +58,7 @@ export const AppGuard: CanActivateFn = () => {
                     ...company.rawData,
                     teams: teams.map((team) => team.rawData),
                     programs: programs.map((program) => program.rawData),
+                    coachs: coachs.map((coach) => coach.rawData),
                   });
 
                   store.dispatch(setCompany({ company: companyWithTeamsAndPrograms }));
