@@ -366,6 +366,11 @@
   position: relative;
 }
 
+.first-line {
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
 .line {
   width: 2px;
   height: 33.33%;
