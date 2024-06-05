@@ -15,6 +15,8 @@ export const AltoRoutes = {
   collaborationSeeQuestion: 'question',
   //
   statistics: 'statistics',
+  teamsStatistics: 'team',
+  usersStatistics: 'user',
   performance: 'performance',
   engagement: 'engagement',
   teams: 'teams',

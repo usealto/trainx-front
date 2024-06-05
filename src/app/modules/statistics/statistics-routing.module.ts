@@ -2,11 +2,20 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { StatisticsGlobalPerformanceComponent } from './components/global-performance/statistics-global-performance/statistics-global-performance.component';
 import { StatisticsGlobalEngagementComponent } from './components/statistics-global-engagement/statistics-global-engagement.component';
-import { StatisticsPerTeamsComponent } from './components/statistics-per-teams/statistics-per-teams.component';
 import { StatisticsComponent } from './components/statistics/statistics.component';
 import { AltoRoutes } from '../shared/constants/routes';
+import { TeamsStatisticsComponent } from './teams-statistics/teams-statistics.component';
+import { UsersStatisticsComponent } from './users-statistics/users-statistics.component';
 
 const routes: Routes = [
+  {
+    path: AltoRoutes.statTeam,
+    component: TeamsStatisticsComponent,
+  },
+  {
+    path: AltoRoutes.statUser,
+    component: UsersStatisticsComponent,
+  },
   {
     path: AltoRoutes.statTeam,
     loadChildren: () =>
@@ -34,10 +43,6 @@ const routes: Routes = [
       {
         path: AltoRoutes.engagement,
         component: StatisticsGlobalEngagementComponent,
-      },
-      {
-        path: AltoRoutes.teams,
-        component: StatisticsPerTeamsComponent,
       },
     ],
   },

@@ -22,6 +22,7 @@ export class MenuComponent implements OnInit {
   toggleTooltip = false;
   isExtended = false;
   toggleProfileMenu = false;
+  statisticsMenuOpen = false;
 
   isAdmin = false;
   displayAdmin = false;
@@ -81,5 +82,43 @@ export class MenuComponent implements OnInit {
 
   toggleProfileContainerMenu(): void {
     this.toggleProfileMenu = !this.toggleProfileMenu;
+  }
+
+  toggleStatisticsSubmenu() {
+    this.statisticsMenuOpen = !this.statisticsMenuOpen;
+  }
+
+  expandAndToggleStatistics() {
+    if (!this.isExtended) {
+      this.isExtended = true;
+    }
+    this.statisticsMenuOpen = true;
+  }
+
+  isStatisticsMenuActive(): boolean {
+    return (
+      this.router.isActive(AltoRoutes.lead + '/' + AltoRoutes.statistics, false) ||
+      this.router.isActive(
+        AltoRoutes.lead + '/' + AltoRoutes.statistics + '/' + AltoRoutes.teamsStatistics,
+        false,
+      ) ||
+      this.router.isActive(
+        AltoRoutes.lead + '/' + AltoRoutes.statistics + '/' + AltoRoutes.usersStatistics,
+        false,
+      )
+    );
+  }
+
+  isStatisticsCompanyActive(): boolean {
+    return (
+      this.router.isActive(
+        AltoRoutes.lead + '/' + AltoRoutes.statistics + '/' + AltoRoutes.performance,
+        true,
+      ) ||
+      this.router.isActive(
+        AltoRoutes.lead + '/' + AltoRoutes.statistics + '/' + AltoRoutes.engagement,
+        true,
+      )
+    );
   }
 }
