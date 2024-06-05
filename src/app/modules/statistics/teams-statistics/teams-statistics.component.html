@@ -1,0 +1,31 @@
+<div class="header-panel">
+  <img [src]="Emoji.ChartIncreasing | emoji" height="32" width="32" />
+  <h1 data-cy="leadStatisticsTitle">{{ I18ns.statistics.title }} <i class="mx-3 bi bi-arrow-right"></i> {{ I18ns.statistics.titleTeam }}</h1>
+</div>
+<!-- TEAMS -->
+<alto-time-picker
+  [options]="durationOptions"
+  [durationControl]="durationControl"
+  class="float-end"
+></alto-time-picker>
+<h2 id="teamsAnchor" class="me-3">
+  <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" height="16" width="16" /> {{ I18ns.statistics.perTeams.sections.teams }}
+</h2>
+<p class="mb-5 alto-grey">{{ I18ns.statistics.perTeams.sections.teamsSubtitle }}</p>
+
+<alto-placeholder-manager [status]="teamsDataStatus">
+  <alto-per-teams-table *ngIf="teamsDataStatus === EPlaceholderStatus.GOOD" [type]="'team'" [data]="teamsDisplay"></alto-per-teams-table>
+
+  <div class="nodata-placeholder" noData>
+    <div class="text-center">
+      <img [src]="Emoji.FlexedBiceps | emoji" height="24" width="24" />
+      <p class="mt-3">
+        {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderTitle }}
+      </p>
+      <span class="d-inline-block mt-3">
+        {{ I18ns.statistics.globalPerformance.perTeamPerformance.scoreEvolution.placeholderSubtitle }}
+      </span>
+    </div>
+  </div>
+  <div class="skeleton-panel" style="height: 356px" loading></div>
+</alto-placeholder-manager>

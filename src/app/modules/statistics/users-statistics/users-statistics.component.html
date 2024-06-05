@@ -1,0 +1,50 @@
+<div class="header-panel">
+  <img [src]="Emoji.ChartIncreasing | emoji" height="32" width="32" />
+  <h1 data-cy="leadStatisticsTitle">{{ I18ns.statistics.title }} <i class="mx-3 bi bi-arrow-right"></i> {{ I18ns.statistics.titleUser }}</h1>
+</div>
+<!-- MEMBERS -->
+<div class="mt-6">
+  <alto-time-picker
+    [options]="durationOptions"
+    [durationControl]="durationControl"
+    class="float-end"
+  ></alto-time-picker>
+  <h2 id="membersAnchor">
+    <img class="emoji" [src]="Emoji.BustsInSilhouette | emoji" height="16" width="16" />
+    {{ I18ns.statistics.perTeams.sections.members }}
+  </h2>
+  <p class="alto-grey mb-4">{{ I18ns.statistics.perTeams.sections.membersSubtitle }}</p>
+  <div class="d-flex justify-content-between mb-5">
+    <alto-input-search [searchControl]="searchControl" [placeholder]="I18ns.shared.search"></alto-input-search>
+    <alto-input-multiple-select
+    [placeholder]="I18ns.statistics.perTeams.teamsFilter"
+    [controls]="teamsControl"
+    [enableSearch]="true"
+    [options]="teamsOptions"
+    >
+  </alto-input-multiple-select>
+</div>
+
+  <alto-placeholder-manager [status]="membersDataStatus">
+    <alto-per-teams-table *ngIf="membersDataStatus === EPlaceholderStatus.GOOD" [type]="'user'" [data]="membersDisplay"></alto-per-teams-table>
+    <div class="text-center nodata-placeholder" noData>
+      <img [src]="Emoji.FourOclock | emoji" height="24" width="24" />
+      <p class="mt-3">
+        {{ I18ns.statistics.perTeams.table.noDataPlaceholder.title }}
+      </p>
+      <span class="d-inline-block mt-3">
+        {{ I18ns.statistics.perTeams.table.noDataPlaceholder.subtitle }}
+      </span>
+    </div>
+    <div class="text-center nodata-placeholder" noResult>
+      <img [src]="Emoji.MagnifyingGlassTiltedLeft | emoji" height="24" width="24" />
+      <p class="mt-3">
+        {{ I18ns.shared.noData }}
+      </p>
+      <span class="d-inline-block mt-3">
+        {{ I18ns.shared.noDataSubtitle }}
+      </span>
+    </div>
+  <div class="skeleton-panel" style="height: 356px" loading></div>
+  </alto-placeholder-manager>
+</div>
