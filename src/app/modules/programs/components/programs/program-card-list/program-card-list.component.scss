@@ -178,6 +178,34 @@
         }
       }
 
+      .coach-badge {
+        margin-left: 0.3333rem;
+        border-radius: 0.5rem;
+        padding: 0.3333rem 0.6667rem;
+        gap: 0.5rem;
+  
+      .coach-details {
+        display: flex;
+        flex-direction: column; 
+        text-align: left;
+        line-height: normal;
+
+        .coach-details-title {
+          font-size: 0.7rem;
+          font-weight: 300;
+        }
+      }
+      
+      
+      .coach-avatar {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        border-radius: 8.3333rem;
+      }
+    }
+
       .alto-badge {
         line-height: 2.1rem;
       }
