@@ -419,6 +419,11 @@ export const FR = {
   },
   statistics: {
     title: 'Statistiques',
+    titleGlobal: 'Statistiques Globales',
+    titleTeams: 'Équipes',
+    titleTeam: 'Équipe',
+    titleUsers: 'Collaborateurs',
+    titleUser: 'Collaborateur',
     subtitle: "Retrouvez l'ensemble des statistiques de vos équipes.",
     globalEngagement: {
       title: 'Engagement',
@@ -1023,6 +1028,9 @@ export const FR = {
     home: 'Dashboard',
     programs: 'Mes programmes',
     statistics: 'Statistiques',
+    statisticsPerCompany: 'Global',
+    statisticsPerTeam: 'Équipes',
+    statisticsPerUser: 'Collaborateurs',
     team: 'Mes équipes',
     challenges: 'Challenges',
     settings: 'Paramètres',

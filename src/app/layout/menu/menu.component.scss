@@ -195,6 +195,30 @@
       }
     }
 
+    .sub-module {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      font-weight: 500;
+      font-size: 1.143rem;
+      cursor: pointer;
+      color: var(--gray-500);
+      height: 50px;
+
+      span {
+        color: var(--gray-500);
+      }
+
+      &.menu-selected,
+      &:active,
+      &:hover {
+        span {
+          color: var(--gray-100);
+        }
+      }
+    }
+
     .bottom-block {
       position: absolute;
       bottom: 0;
@@ -323,3 +347,114 @@
   }
 }
 
+.sub-module {
+  span {
+    padding-left: 2rem;
+  }
+}
+
+.submenu {
+  display: flex;
+  padding-left: 20px;
+  padding-top: 2px;
+}
+
+.submenu-lines {
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+  position: relative;
+}
+
+.first-line {
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+}
+
+.line {
+  width: 2px;
+  height: 33.33%;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  background-color: var(--gray-700);
+  position: relative;
+}
+
+.line::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  width: 10px;
+  height: 2px;
+  background-color: var(--gray-700);
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  transform: translateY(-50%);
+}
+
+.line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 10px;
+  height: 8px;
+  border: 2px solid var(--gray-700);
+  border-right: 0;
+  border-top: 0;
+  border-bottom-left-radius: 8px;
+  transform: translateY(-88%);
+}
+
+.last-line {
+  width: 2px;
+  height: 14%;
+  background-color: var(--gray-700);
+  position: relative;
+}
+
+.last-line::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 119%;
+  width: 10px;
+  height: 2px;
+  background-color: var(--gray-700);
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.last-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 124%;
+  width: 10px;
+  height: 8px;
+  border: 2px solid var(--gray-700);
+  border-right: 0;
+  border-top: 0;
+  border-bottom-left-radius: 8px;
+  transform: translateY(-88%);
+}
+
+.submenu-items {
+  display: flex;
+  flex-direction: column;
+}
+
+.submenu-item {
+  padding-left: 20px;
+  position: relative;
+}
+
+.submenu-item:hover span {
+  color: var(--white);
+}
+
+.chevron {
+  margin-left: auto;
+  margin-right: 1rem;
+}

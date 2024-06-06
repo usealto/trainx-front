@@ -18,7 +18,6 @@ export class StatisticsComponent implements OnInit {
   tabOptions: ITabOption[] = [
     { label: I18ns.statistics.globalPerformance.navbarTitle, value: AltoRoutes.performance },
     { label: I18ns.statistics.globalEngagement.title, value: AltoRoutes.engagement },
-    { label: I18ns.statistics.perTeams.title, value: AltoRoutes.teams },
   ];
   tabControl = new FormControl<ITabOption>(this.tabOptions[0], { nonNullable: true });
 
