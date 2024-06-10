@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { combineLatest, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, combineLatest, map, Observable, of, switchMap, tap } from 'rxjs';
 import { CoachDtoApi, CoachsApiService } from '@usealto/sdk-ts-angular';
 import { Coach } from 'src/app/models/coach.model';
 
@@ -31,6 +31,7 @@ export class CoachsRestService {
       }),
       map((coachs) => coachs.flat()),
       map((coachs) => coachs.map((coach) => Coach.fromDto(coach))),
+      catchError(() => of([])),
     );
   }
 }
