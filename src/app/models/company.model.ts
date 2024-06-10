@@ -10,6 +10,7 @@ import { ITeam, Team, TeamStats } from './team.model';
 import { BaseModel, IBaseModel } from './base.model';
 import { IProgram, Program } from './program.model';
 import { EScoreDuration } from './score.model';
+import { Coach, ICoach } from './coach.model';
 
 export interface ICompany extends IBaseModel {
   name: string;
@@ -26,6 +27,7 @@ export interface ICompany extends IBaseModel {
   licenseCount: number;
   teams: ITeam[];
   programs: IProgram[];
+  coachs: ICoach[];
 }
 
 export class Company extends BaseModel implements ICompany {
@@ -43,8 +45,10 @@ export class Company extends BaseModel implements ICompany {
   licenseCount: number;
   teams: Team[];
   programs: Program[];
+  coachs: Coach[];
   teamById: Map<string, Team>;
   programById: Map<string, Program>;
+  coachById: Map<string, Coach>;
 
   constructor(data: ICompany) {
     super(data);
@@ -62,8 +66,10 @@ export class Company extends BaseModel implements ICompany {
     this.licenseCount = data.licenseCount ?? 0;
     this.teams = data.teams ? data.teams.map((team) => new Team(team)) : [];
     this.programs = data.programs ? data.programs.map((program) => new Program(program)) : [];
+    this.coachs = data.coachs ? data.coachs.map((coach) => new Coach(coach)) : [];
     this.teamById = new Map(this.teams.map((team) => [team.id, team]));
     this.programById = new Map(this.programs.map((program) => [program.id, program]));
+    this.coachById = new Map(this.coachs.map((coach) => [coach.id, coach]));
   }
 
   static fromDto(data: CompanyDtoApi): Company {
@@ -85,6 +91,7 @@ export class Company extends BaseModel implements ICompany {
       licenseCount: data.licenseCount,
       teams: [],
       programs: [],
+      coachs: [],
     });
   }
 
@@ -160,6 +167,7 @@ export class Company extends BaseModel implements ICompany {
       licenseCount: this.licenseCount,
       teams: this.teams.map((team) => team.rawData),
       programs: this.programs.map((program) => program.rawData),
+      coachs: this.coachs.map((coach) => coach.rawData),
     };
   }
 }

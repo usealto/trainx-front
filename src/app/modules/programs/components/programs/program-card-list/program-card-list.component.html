@@ -57,44 +57,62 @@
     >
       <div class="title-section">
         <div class="badges-section">
-          <span
-            class="fs-6 alto-badge pill d-flex flex-nowrap"
-            [class]="programCard.program.isAccelerated ? 'orange' : 'primary'"
-          >
-            <i
+          <div class="d-flex flex-nowrap">
+            <div
+            [class]="programCard.coach ? 'mt-2' : ''">
+              <span
+              class="fs-6 alto-badge d-flex"
+              [class]="programCard.program.isAccelerated ? 'orange' : 'primary'"
+              >
+              <i
               class="bi me-2"
               [class]="programCard.program.isAccelerated ? 'bi-rocket-takeoff' : 'bi-bullseye'"
-            ></i>
-            <p>
-              {{
-                programCard.program.isAccelerated
+              ></i>
+              <p *ngIf="!programCard.coach">
+                {{
+                  programCard.program.isAccelerated
                   ? (I18ns.programs.programs.accelerated | plural : 1)
                   : (I18ns.programs.programs.classic | plural : 1)
-              }}
-            </p>
+                }}
+              </p>
+            </span>
+          </div>
+          <ng-container *ngIf="programCard.coach">
+            <span
+            class="fs-6 alto-badge coach-badge d-flex flex-nowrap orange"
+            >
+            <img class="coach-avatar" [src]="programCard.coach.pictureUrl" height="24" width="24" />
+            <div class="coach-details">
+              <p class="coach-details-title">Crée par</p> 
+              <p class="coach-details-name">{{ programCard.coach.name }}</p>
+            </div>
           </span>
-          <div class="d-flex flex-nowrap" (click)="$event.stopPropagation()">
-            <button
+        </ng-container> 
+      </div>
+          <div>
+            <div class="d-flex flex-nowrap" (click)="$event.stopPropagation()">
+              <button
               *ngIf="programCard.isActiveControl.value"
               type="button"
               class="edit-btn me-3"
               [routerLink]="
-                programCard.isActiveControl.value
-                  ? [
-                      '/',
-                      AltoRoutes.lead,
-                      AltoRoutes.programs,
-                      AltoRoutes.programsEdit,
-                      programCard.program.id
-                    ]
-                  : null
+              programCard.isActiveControl.value
+              ? [
+              '/',
+              AltoRoutes.lead,
+              AltoRoutes.programs,
+              AltoRoutes.programsEdit,
+              programCard.program.id
+              ]
+              : null
               "
               [queryParams]="programCard.isActiveControl.value ? { tab: ETab.Informations } : null"
-            >
+              >
               {{ I18ns.shared.edit }}
             </button>
             <alto-input-toggle [control]="programCard.isActiveControl" [color]="programCard.program.isAccelerated ? EInputToggleColor.ORANGE : EInputToggleColor.DEFAULT"></alto-input-toggle>
           </div>
+        </div>
         </div>
         <p class="title-overflow title">
           {{ programCard.program.name }}

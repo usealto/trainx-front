@@ -18,6 +18,7 @@ import { AltoRoutes } from '../../../../shared/constants/routes';
 import { PillOption, SelectOption } from '../../../../shared/models/select-option.model';
 import { ScoresRestService } from '../../../../shared/services/scores-rest.service';
 import { ProgramsRestService } from '../../../services/programs-rest.service';
+import { Coach } from 'src/app/models/coach.model';
 
 interface IProgramCard {
   program: Program;
@@ -27,6 +28,7 @@ interface IProgramCard {
   totalUsersCount?: number;
   teamsTooltip?: string;
   isActiveControl: FormControl<boolean>;
+  coach?: Coach;
 }
 
 enum EProgramType {
@@ -165,8 +167,11 @@ export class ProgramCardListComponent implements OnInit, OnDestroy {
               : EPlaceholderStatus.GOOD;
 
           this.programCards = stats.map((stat) => {
+            const program = this.company.programById.get(stat.program.id) as Program;
+            const coach = program.coachId ? this.company.coachById.get(program.coachId) : undefined;
             return {
-              program: this.company.programById.get(stat.program.id) as Program,
+              program: program,
+              coach: coach,
               score: stat.score,
               participation: stat.participation,
               userValidatedProgramCount: stat.userValidatedProgramCount,
