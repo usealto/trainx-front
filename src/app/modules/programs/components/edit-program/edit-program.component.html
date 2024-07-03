@@ -190,6 +190,13 @@
               [checked]="true"
               (click)="removeAssociatedQuestion(associatedQuestion)"
             />
+            <button
+              *ngIf="associatedQuestion.imageLink"
+              class="btn btn-light btn-photos d-flex justify-content-center align-items-center"
+              style="color: var(--gray-50); border-radius: 20px; width: 40px; margin-right: 10px;"
+              (click)="openImageModal(associatedQuestion)">
+              <i class="bi bi-image"></i>
+            </button>
             <span class="question-overflow fs-7 fw-medium">{{ associatedQuestion.title }}</span>
           </div>
 
@@ -281,6 +288,13 @@
                 [checked]="false"
                 (click)="addAssociatedQuestion(question)"
               />
+              <button
+                *ngIf="question.imageLink"
+                class="btn btn-light btn-photos d-flex justify-content-center align-items-center"
+                style="color: var(--gray-50); border-radius: 20px; width: 40px; margin-right: 10px;"
+                (click)="openImageModal(question)">
+                <i class="bi bi-image"></i>
+              </button>
               <span class="question-overflow fs-7 fw-medium">{{ question.title }}</span>
             </div>
 

@@ -177,3 +177,16 @@ form {
     transition: all .5s ease;
   }
 }
+
+.btn-photos:hover {
+    background-color: #EFF8FF;
+    border: 0;
+}
+
+.btn-photos i {
+    color: var(--gray-400);
+}
+
+.btn-photos:hover i {
+    color: #2E90FA;
+}

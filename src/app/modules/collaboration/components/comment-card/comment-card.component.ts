@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CommentDtoApi, QuestionLightDtoApi, TagDtoApi } from '@usealto/sdk-ts-angular';
+import { CommentDtoApi, QuestionDtoApi, QuestionLightDtoApi, TagDtoApi } from '@usealto/sdk-ts-angular';
 import { of, switchMap, tap } from 'rxjs';
 import { EResolvers, ResolversService } from 'src/app/core/resolvers/resolvers.service';
 import { ToastService } from 'src/app/core/toast/toast.service';
@@ -18,6 +18,7 @@ import { IAppData } from '../../../../core/resolvers';
 import { CollaborationModalComponent } from '../collaboration-modal/collaboration-modal.component';
 import { ILeadData } from '../../../../core/resolvers/lead.resolver';
 import { Company } from '../../../../models/company.model';
+import { QuestionImageModalComponent } from '../../../shared/components/question-image-modal/question-image-modal.component';
 
 @UntilDestroy()
 @Component({
@@ -124,5 +125,14 @@ export class CommentCardComponent implements OnInit {
         )
         .subscribe();
     }
+  }
+
+  openImageModal(question?: QuestionLightDtoApi) {
+    if (!question) {
+      return;
+    }
+    const modalRef = this.modalService.open(QuestionImageModalComponent, { centered: true, size: 'lg' });
+    const componentInstance = modalRef.componentInstance as QuestionImageModalComponent;
+    componentInstance.question = question;
   }
 }

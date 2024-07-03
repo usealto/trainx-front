@@ -56,6 +56,7 @@ import { InputButtonGroupComponent } from './components/forms/input-button-group
 import { LoadSpinnerComponent } from './components/load-spinner/load-spinner.component';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 import { DropdownFilterSingleComponent } from './components/dropdown-filter-single/dropdown-filter-single.component';
+import { QuestionImageModalComponent } from './components/question-image-modal/question-image-modal.component';
 @NgModule({
   declarations: [
     ProgressionPillPipe,
@@ -96,6 +97,7 @@ import { DropdownFilterSingleComponent } from './components/dropdown-filter-sing
     LoadSpinnerComponent,
     ConfirmModalComponent,
     DropdownFilterSingleComponent,
+    QuestionImageModalComponent,
   ],
   imports: [
     CommonModule,

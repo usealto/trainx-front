@@ -49,6 +49,7 @@ import { ValidationService } from '../../../shared/services/validation.service';
 import { ProgramsRestService } from '../../services/programs-rest.service';
 import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionFormComponent } from '../create-questions/question-form.component';
+import { QuestionImageModalComponent } from '../../../shared/components/question-image-modal/question-image-modal.component';
 
 interface IUserStatsDisplay {
   user: {
@@ -736,5 +737,11 @@ export class EditProgramsComponent implements OnInit {
           });
         },
       });
+  }
+
+  openImageModal(question: QuestionDtoApi) {
+    const modalRef = this.modalService.open(QuestionImageModalComponent, { centered: true, size: 'lg' });
+    const componentInstance = modalRef.componentInstance as QuestionImageModalComponent;
+    componentInstance.question = question;
   }
 }

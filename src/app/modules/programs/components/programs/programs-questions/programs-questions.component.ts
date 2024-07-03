@@ -21,6 +21,7 @@ import { EPlaceholderStatus } from '../../../../shared/components/placeholder-ma
 import { PillOption, SelectOption } from '../../../../shared/models/select-option.model';
 import { ScoresRestService } from '../../../../shared/services/scores-rest.service';
 import { QuestionsRestService } from '../../../services/questions-rest.service';
+import { QuestionImageModalComponent } from '../../../../shared/components/question-image-modal/question-image-modal.component';
 
 interface IQuestionInfos {
   question: QuestionDtoApi;
@@ -159,6 +160,12 @@ export class ProgramsQuestionsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.programsQuestionsComponentSubscription.unsubscribe();
+  }
+
+  openImageModal(question: QuestionDtoApi) {
+    const modalRef = this.modalService.open(QuestionImageModalComponent, { centered: true, size: 'lg' });
+    const componentInstance = modalRef.componentInstance as QuestionImageModalComponent;
+    componentInstance.question = question;
   }
 
   openQuestionForm(question?: QuestionDtoApi) {
