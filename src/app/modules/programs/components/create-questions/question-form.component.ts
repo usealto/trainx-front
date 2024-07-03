@@ -157,7 +157,6 @@ export class QuestionFormComponent implements OnInit {
       this.pictureService.postPicture(file).subscribe(
         (response) => {
           this.imageUrl = response.url;
-          console.log('Image URL:', response.url); // Assurez-vous que response contient l'URL de l'image
         },
         (error) => {
           console.error('Error uploading picture:', error);
