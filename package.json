@@ -44,7 +44,7 @@
     "@popperjs/core": "^2.11.6",
     "@sentry/angular-ivy": "^7.93.0",
     "@sentry/cli": "^2.25.0",
-    "@usealto/sdk-ts-angular": "file:sdk-ts-angular/dist",
+    "@usealto/sdk-ts-angular": "^1.0.202406031227-dev",
     "bootstrap": "^5.3.0",
     "bootstrap-icons": "^1.10.5",
     "crisp-sdk-web": "^1.0.25",
