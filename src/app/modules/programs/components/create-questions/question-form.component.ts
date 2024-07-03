@@ -127,6 +127,7 @@ export class QuestionFormComponent implements OnInit {
         explanation: this.question.explanation,
         link: this.question.link,
       });
+      this.imageUrl = this.question.imageLink ?? null;
       this.questionForm.controls.answersAccepted.patchValue(this.question.answersAccepted);
       this.questionForm.controls.answersWrong.patchValue(this.question.answersWrong);
     } else if (this.questionSubmitted) {
