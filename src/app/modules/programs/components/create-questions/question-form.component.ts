@@ -32,6 +32,8 @@ import { QuestionsRestService } from '../../services/questions-rest.service';
 import { QuestionsSubmittedRestService } from '../../services/questions-submitted-rest.service';
 import { TagsRestService } from '../../services/tags-rest.service';
 import { Company } from '../../../../models/company.model';
+import { PicturesService } from '../../../shared/services/pictures.service';
+import { EmojiName } from '../../../../core/utils/emoji/data';
 
 @UntilDestroy()
 @Component({
@@ -41,6 +43,7 @@ import { Company } from '../../../../models/company.model';
 })
 export class QuestionFormComponent implements OnInit {
   I18ns = I18ns;
+  EmojiName = EmojiName;
   QuestionSubmittedStatusEnum = PatchQuestionSubmittedDtoApiStatusEnumApi;
 
   @Input() program: ProgramDtoApi | undefined;
@@ -64,6 +67,7 @@ export class QuestionFormComponent implements OnInit {
   questionSoftLimit = 150;
   answerHardLimit = 200;
   answerSoftLimit = 75;
+  imageUrl: string | null = null;
 
   get answersAccepted(): FormArray<FormControl<string>> {
     return this.questionForm.controls.answersAccepted as FormArray<FormControl<string>>;
@@ -80,6 +84,7 @@ export class QuestionFormComponent implements OnInit {
     public activeOffcanvas: NgbActiveOffcanvas,
     private readonly toastService: ToastService,
     private readonly store: Store<FromRoot.AppState>,
+    private pictureService: PicturesService,
   ) {
     this.fb = fob;
   }
@@ -139,6 +144,31 @@ export class QuestionFormComponent implements OnInit {
     return array as IFormControl<string>[];
   }
 
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      // File size limit: 4MB
+      const maxSize = 4 * 1024 * 1024;
+      if (file.size > maxSize) {
+        alert('Le fichier est trop volumineux. Veuillez choisir un fichier de moins de 4 Mo.');
+        return;
+      }
+
+      this.pictureService.postPicture(file).subscribe(
+        (response) => {
+          this.imageUrl = response.url;
+        },
+        (error) => {
+          console.error('Error uploading picture:', error);
+        },
+      );
+    }
+  }
+
+  deleteImage() {
+    this.imageUrl = null;
+  }
+
   createQuestion() {
     if (!this.questionForm.value) return;
 
@@ -156,6 +186,9 @@ export class QuestionFormComponent implements OnInit {
       explanation,
       link,
     };
+    if (this.imageUrl) {
+      params.imageLink = this.imageUrl;
+    }
     let obs$;
     if ((!this.isEdit && !this.question) || this.isSubmitted) {
       obs$ = this.questionService.createQuestion(params).pipe(

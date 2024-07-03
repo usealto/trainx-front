@@ -83,3 +83,57 @@ hr {
   font-size: 1.1667rem;
   font-weight: 600;
 }
+
+.custom-file-input {
+  position: relative;
+  width: 100%;
+}
+
+.custom-file-input input[type="file"] {
+  display: none;
+}
+
+.custom-file-input .file-input-label {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
+  background-color: white;
+  border: 1px solid var(--bs-gray-300);
+  border-radius: 5px;
+  color: var(--gray-500);;
+  font-size: 0.833rem;
+  font-weight: 400;
+  text-align: start;
+  cursor: pointer;
+}
+
+.icon-image {
+  color: var(--gray-500);
+}
+
+.custom-file-input .file-input-label:hover {
+  background-color: #e0e0e0;
+}
+
+.custom-file-input .file-input-label i {
+  margin-right: 10px;
+}
+
+.delete-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.image-container {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container img {
+  max-width: 100%;
+  height: auto;
+}

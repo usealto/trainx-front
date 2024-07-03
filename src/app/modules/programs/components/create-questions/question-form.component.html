@@ -34,6 +34,30 @@
       formControlName="explanation"
       placeholder="{{ I18ns.questions.form.explanationPlaceholder }}"
     ></textarea>
+
+    <div class="mb-4">
+      <label class="form-label mb-1">{{ I18ns.questions.form.image }}</label>
+      <p class="alto-grey mb-3 fs-7">
+        {{ I18ns.questions.form.imageSubtitle }}
+      </p>
+      <div class="custom-file-input" *ngIf="!imageUrl">
+        <input type="file" (change)="onFileSelected($event)" id="fileInput">
+        <label for="fileInput" class="file-input-label">
+          <i class="bi bi-image icon-image"></i>
+          <span>Télécharger une image</span>
+        </label>
+        <p class="alto-grey mb-3 fs-7">
+          {{ I18ns.questions.form.imageRequirements }}
+        </p>
+      </div>
+       <div class="image-container">
+        <button *ngIf="imageUrl" (click)="deleteImage()" class="delete-button">
+          <i class="bi bi-x" style="font-size: 20px;"></i>
+        </button>
+        <img [src]="imageUrl" alt="image" *ngIf="imageUrl" />
+      </div>
+    </div>
+
     <ng-container *ngIf="!isProgramEdit">
       <label class="form-label">{{ I18ns.questions.form.programs }}</label>
       <ng-select
