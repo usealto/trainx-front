@@ -4,6 +4,10 @@
   align-items: center;
 }
 
+.table th, .table td {
+  word-break: break-word;
+}
+
 .filters-row {
   display: flex;
   flex-direction: row;
@@ -16,4 +20,17 @@
     justify-content: space-between;
     gap: 1rem;
   }
+}
+
+.btn-photos:hover {
+    background-color: #EFF8FF;
+    border: 0;
+}
+
+.btn-photos i {
+    color: var(--gray-400);
+}
+
+.btn-photos:hover i {
+    color: #2E90FA;
 }

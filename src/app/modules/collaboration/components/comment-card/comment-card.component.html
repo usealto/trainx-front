@@ -8,13 +8,23 @@
       <span data-cy="contributionType" class="fw-medium text-blue">{{
         I18ns.collaboration.commentCard.comment
       }}</span>
-      <div>
-        <span class="contribution-text d-inline-block">
-          {{ I18ns.collaboration.commentCard.concerningQuestion }} </span
-        >&nbsp;
-        <span class="contribution-text fw-medium d-inline-block text-truncate align-bottom fs-7"
-          >"{{ comment?.question?.title }}"</span
-        >
+      <div class="d-flex align-items-center">
+        <div>
+          <span class="contribution-text d-inline-block">
+            {{ I18ns.collaboration.commentCard.concerningQuestion }} </span
+          >&nbsp;
+          <span class="contribution-text fw-medium d-inline-block text-truncate align-bottom fs-7"
+            >"{{ comment?.question?.title }}"</span>
+        </div>
+          
+          <button
+                *ngIf="comment?.question?.imageLink"
+                class="btn btn-light btn-photos d-flex justify-content-center align-items-center"
+                style="color: var(--gray-50); border-radius: 20px; width: 40px; margin-right: 10px;"
+                (click)="openImageModal(comment?.question)">
+                <i class="bi bi-image"></i>
+          </button>
+
       </div>
       <div class="alto-badge" [ngClass]="comment?.isRead ? 'gray' : 'orange'">
         {{ comment?.isRead ? I18ns.collaboration.comment.read : I18ns.collaboration.comment.unread }}

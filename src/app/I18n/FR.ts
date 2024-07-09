@@ -789,6 +789,9 @@ export const FR = {
       remainingCharacters: 'caractères restants',
       createSuccess: 'La question a bien été ajoutée',
       editSuccess: 'La question a bien été modifiée',
+      image: 'Image',
+      imageSubtitle: 'Ajoutez une image pour illustrer votre question',
+      imageRequirements: 'Taille maximale: 4Mo',
     },
     deleteModal: {
       title: 'Supprimer la question "{{}}"',
