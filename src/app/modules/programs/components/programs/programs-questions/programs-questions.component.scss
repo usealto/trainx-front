@@ -4,6 +4,10 @@
   align-items: center;
 }
 
+.table th, .table td {
+  word-break: break-word;
+}
+
 .filters-row {
   display: flex;
   flex-direction: row;

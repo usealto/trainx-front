@@ -41,7 +41,7 @@
         {{ I18ns.questions.form.imageSubtitle }}
       </p>
       <div class="custom-file-input" *ngIf="!imageUrl">
-        <input type="file" (change)="onFileSelected($event)" id="fileInput">
+        <input type="file" (change)="onFileSelected($event)" id="fileInput" accept="image/*">
         <label for="fileInput" class="file-input-label">
           <i class="bi bi-image icon-image"></i>
           <span>Télécharger une image</span>
